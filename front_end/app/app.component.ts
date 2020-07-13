@@ -137,8 +137,8 @@ export class AppComponent {
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.isInIframe = (window.location.pathname.indexOf('/embed') === 0);
-        if (this.isInIframe) {
+        this.CONFIG.isInIframe = (window.location.pathname.indexOf('/embed') === 0 || window.location.search.indexOf('adminPreview=true') !== -1);
+        if (this.CONFIG.isInIframe) {
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
         }

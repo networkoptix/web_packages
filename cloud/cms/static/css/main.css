@@ -228,3 +228,33 @@ img.light {
     display: block;
     margin-bottom: 4px;
 }
+
+.slidingContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.slidingContainer .previewFrame, .inlineFrame {
+    min-height: 500px;
+}
+
+.split {
+    flex-grow: 1;
+}
+
+.split iframe {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.gutter {
+    background-color: black;
+    background-repeat: no-repeat;
+    background-position: 50% 50vh;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+}

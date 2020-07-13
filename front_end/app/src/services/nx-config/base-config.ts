@@ -29,6 +29,7 @@ export interface BaseConfig {
     // This is on line 107
     integration: Integration | any;
     ipvd: Ipvd;
+    isInIframe: boolean;
     isLocal: boolean;
     layout: Layout;
     maintenanceTimeout: number;

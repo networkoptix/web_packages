@@ -225,6 +225,9 @@ class CustomContextForm(forms.Form):
                                                                disabled=disabled,
                                                                validators=[validator])
 
+        if self.fields.get('language', None):
+            fieldsets[None].append('language')
+
         for data_structure in data_structures:
             if data_structure.name in self.fields:
                 fieldset = data_structure.fieldset or None

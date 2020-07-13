@@ -11,7 +11,7 @@ from django.utils.html import format_html
 import nested_admin
 
 from cms.forms import *
-from cms.controllers.modify_db import get_records_for_version
+from cms.controllers.modify_db import get_records_for_version, generate_preview_link
 from cms.views.asset import page_editor, review
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
@@ -512,6 +512,7 @@ class AssetAdmin(CMSAdmin):
         context['site_header'] = admin.site.site_header
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
+        context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
@@ -639,7 +640,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context = extra_context or {}
         customization_review = AssetCustomizationReview.objects.get(id=object_id)
         version = customization_review.version
-        extra_context['contexts'] = get_records_for_version(version.asset,
+        extra_context['contexts'], extra_context['context_preview_links'] = get_records_for_version(version.asset,
                                                             version,
                                                             customization_review.customization)
 
@@ -654,9 +655,10 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['allowed'] = self.template_allowed(request, customization_review)
         is_integration = version.asset.is_integration
         is_article = version.asset.is_article
+        is_agreement = version.asset.is_agreement
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
-                    is_integration or is_article)
-        extra_context['whole_preview'] = is_integration or is_article
+                    is_integration or is_article or is_agreement)
+        extra_context['whole_preview'] = is_integration or is_article or is_agreement
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name

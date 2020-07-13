@@ -3,7 +3,8 @@
 <div *ngIf="plugin && LANG" class="integration-details">
     <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
         <div class="p-0" style="width: 300px;">
-            <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations">
+            <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations"
+                    [disabled]="CONFIG.isInIframe">
                 <span class="back-arrow"></span>
                 <span translate>All Integrations</span>
             </button>

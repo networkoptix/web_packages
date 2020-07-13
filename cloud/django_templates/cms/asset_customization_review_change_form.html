@@ -6,6 +6,7 @@
     {{ block.super }}
     <script>window.$ = django.jQuery;</script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/split.min.js' %}"></script>
 {% endblock %}
 {% block content_title %}
 <h1 style="display: flex; justify-content: space-between;">
@@ -62,73 +63,93 @@
             </div>
         </div>
         {% endif %}
+
         {% if contexts %}
-        <div>
-            <h2>Change list</h2>
-            <ul>
-            {% for context_name, records in contexts.items %}
-                <li>
-                    <div>
-                        {% with context_url=records.0.data_structure.context.url %}
-                            {{ context_name }}
-                            {% if partial_preview %}
-                                <a class="float-right preview" href="{% url 'preview' %}"
-                                   value="{{records.0.data_structure.context.id}}">Preview</a>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                    <ul>
-                    {% for record in records %}
-                        {% with data_structure=record.data_structure language=record.language %}
-                        <li class="{% if record.version.id != original.version.id %}muted{% endif %}">
-                            <span>
-                            {% if data_structure.label %}
-                                {{ data_structure.label }}:
-                            {% else %}
-                                {{ data_structure.name }}
-                            {% endif %}
-
-                            {% if language %}
-                                ({{ language.code }})
-                            {% endif %}
-                            </span>
-
-                            {% if data_structure.type == DataStructureTypes.image or data_structure.type == DataStructureTypes.external_image  %}
-                                <div><img class="
-                                    {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
-                                        {{ data_structure.meta_settings.background }}
+        <div class="slidingContainer">
+            <div id="fields" class="split">
+                <h2>Change list</h2>
+                <ul>
+                {% for context_name, records in contexts.items %}
+                    <li>
+                        <div>
+                            {% with context_url=records.0.data_structure.context.url %}
+                                {{ context_name }}
+                                {% if partial_preview %}
+                                    <a class="float-right preview" href="{% url 'preview' %}"
+                                       value="{{records.0.data_structure.context.id}}">Preview</a>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <ul>
+                        <div class="slidingContainer">
+                            <div id="left_{{ forloop.counter }}" class="split left">
+                            {% for record in records %}
+                                {% with data_structure=record.data_structure language=record.language %}
+                                <li class="{% if record.version.id != original.version.id %}muted{% endif %}">
+                                    <span>
+                                    {% if data_structure.label %}
+                                        {{ data_structure.label }}:
                                     {% else %}
-                                        default-background
+                                        {{ data_structure.name }}
                                     {% endif %}
-                                    review-preview"
-                                          {% if data_structure.type == DataStructureTypes.image %}
-                                            src="data:image/png;base64,{{ record }}"
-                                          {% else %}
-                                            src="{{ record }}"
-                                          {% endif %}></div>
-                            {% elif data_structure.type == DataStructureTypes.file %}
-                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&asset_id={{ asset.id }}&lang={{ language.code }}&draft"
-                                   download>Download</a>
-                            {% elif data_structure.type == DataStructureTypes.external_file %}
-                                <a href="{{ record }}">Download</a>
-                            {% elif data_structure.type == DataStructureTypes.select and 'multi' in data_structure.meta_settings and data_structure.meta_settings.multi %}
-                                <div class="show-html">{{ record|nice_multiselect }}</div>
-                            {% elif data_structure.type == DataStructureTypes.html %}
-                                <div class="preview-html show-html">{{ record|safe }}</div>
-                            {% else %}
-                                <div class="show-html">{{ record|safe }}</div>
+
+                                    {% if language %}
+                                        ({{ language.code }})
+                                    {% endif %}
+                                    </span>
+
+                                    {% if data_structure.type == DataStructureTypes.image or data_structure.type == DataStructureTypes.external_image  %}
+                                        <div><img class="
+                                            {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                                {{ data_structure.meta_settings.background }}
+                                            {% else %}
+                                                default-background
+                                            {% endif %}
+                                            review-preview"
+                                                  {% if data_structure.type == DataStructureTypes.image %}
+                                                    src="data:image/png;base64,{{ record }}"
+                                                  {% else %}
+                                                    src="{{ record }}"
+                                                  {% endif %}></div>
+                                    {% elif data_structure.type == DataStructureTypes.file %}
+                                        <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&asset_id={{ asset.id }}&lang={{ language.code }}&draft"
+                                           download>Download</a>
+                                    {% elif data_structure.type == DataStructureTypes.external_file %}
+                                        <a href="{{ record }}">Download</a>
+                                    {% elif data_structure.type == DataStructureTypes.select and 'multi' in data_structure.meta_settings and data_structure.meta_settings.multi %}
+                                        <div class="show-html">{{ record|nice_multiselect }}</div>
+                                    {% elif data_structure.type == DataStructureTypes.html %}
+                                        <div class="preview-html show-html">{{ record|safe }}</div>
+                                    {% else %}
+                                        <div class="show-html">{{ record|safe }}</div>
+                                    {% endif %}
+                                    {% if asset.asset_type.single_customization %}
+                                        <a href="{% url 'admin:change_page' asset.id data_structure.context.id %}"
+                                           target="_blank">(edit)</a>
+                                    {% endif %}
+                                </li>
+                                {% endwith %}
+                            {% endfor %}
+                            </div>
+
+                            {% if partial_preview %}
+                            <div id="right_{{ forloop.counter }}" class="split right">
+                                <iframe class="inlineFrame" src="{{ context_preview_links|dict_key:context_name }}&adminPreview=true"></iframe>
+                            </div>
                             {% endif %}
-                            {% if asset.asset_type.single_customization %}
-                                <a href="{% url 'admin:change_page' asset.id data_structure.context.id %}"
-                                   target="_blank">(edit)</a>
-                            {% endif %}
-                        </li>
-                        {% endwith %}
-                    {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-            </ul>
+                        </div>
+                        </ul>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            {% if whole_preview and context_preview_links.whole_preview %}
+            <div id="preview" class="split">
+                <iframe class="previewFrame" src="{{ context_preview_links.whole_preview }}&adminPreview=true" width="1000"
+                    height="1000"></iframe>
+            </div>
+            {% endif %}
         </div>
         {% else %}
         <div>There are no changes to review</div>
@@ -254,6 +275,29 @@
                 $('#addNotes').modal('hide');
             });
         })();
+
+        {% if whole_preview %}
+            Split(['#fields', '#preview'], {
+                sizes: [50, 50],
+                minSize: 200,
+                gutterSize: 20,
+                gutterAlign: 'center',
+                direction: 'horizontal'
+            });
+        {% endif %}
+
+        {% if partial_preview %}
+            {% for context in contexts %}
+            Split(['#left_{{ forloop.counter }}', '#right_{{ forloop.counter }}'], {
+                sizes: [50, 50],
+                minSize: 200,
+                gutterSize: 20,
+                gutterAlign: 'center',
+                direction: 'horizontal'
+            });
+            {% endfor %}
+        {% endif %}
     </script>
+    <script src="{% static 'js/previewFrame.js' %}"></script>
     {% endwith %}
 {% endblock %}

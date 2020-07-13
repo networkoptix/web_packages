@@ -181,7 +181,7 @@ def get_integration(request, asset_id=None):
         if not request.user.is_authenticated:
             return api_success(f"You do not have permission to view this integration",
                                status_code=status.HTTP_403_FORBIDDEN)
-        if integration.id not in request.user.assets:
+        if integration.id not in request.user.assets and not request.user.is_superuser:
             if draft:
                 return api_success(f"You do not have permission to view this draft.",
                                    status_code=status.HTTP_403_FORBIDDEN)

@@ -74,7 +74,7 @@ import { Nx503Module }               from './503/503.module';
         IntegrationsListModule,
         NxSettingsModule,
         NxHealthModule,
-        ContentModule, // TODO: Remove it after test
+        ContentModule,
         // RightMenuModule, // TODO: Remove it after test
         PushNotificationsModule,
         IpvdModule,

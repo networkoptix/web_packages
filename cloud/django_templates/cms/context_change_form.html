@@ -10,6 +10,7 @@
     <script>window.$ = django.jQuery;</script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'tiny_mce/tiny_mce.js' %}"></script>
+    <script src="{% static 'js/split.min.js' %}"></script>
 {% endblock %}
 <{% block breadcrumbs %}
     <div class="breadcrumbs">
@@ -24,106 +25,117 @@
 {% block content %}
 {% autoescape off %}{{ original.description }}{% endautoescape %}
 <hr>
+
 <form id="context_form" class="aligned" action="" enctype="multipart/form-data" method="post" novalidate>
-    {% csrf_token %}
-    <input type="hidden" name="context_id" value="{{ original.id }}">
-    <input type="hidden" name="asset_id" value="{{ asset.id }}">
-    <input type="hidden" name="currentLanguage" value="{{ language_code }}">
-    <input type="hidden" id="languageChanged">
-    {% for fieldset, fields in custom_form.fieldsets.items %}
-        <fieldset class="module">
-            {% if fieldset %}<h2>{{ fieldset }}</h2>{% endif %}
-        {% for field_id in fields %}
-            {% with custom_form|get_form_item:field_id as field %}
-            <div class="form-row{% if field.errors %} errors {% endif %}{% if field.field.disabled %} disabled-row{% endif %}">
-                <ul class="errorlist">
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                </ul>
-                <div>
-                    {% get_data_structure field.name original as data_structure %}
-                    {% get_datastructure_type data_structure as data_structure_type %}
-                    {% is_external_file_or_image field.name original as is_external %}
-                    {% is_protected data_structure asset as protected %}
-                    {% has_value field.name asset original language_code as record_exists %}
-                    <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
-                            for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
-                        {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
-                        {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
-                        {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
-                    </label>
-                    <div id="{{ field.name }}" class="ml-160">
-                        {% if field.has_image_field and field.value %}
-                            <div>
-                                {% if data_structure.optional and record_exists %}
-                                    <label><input id="delete_{{ field.name }}" type="checkbox"
-                                                  name="delete_{{ field.name }}" value="false"/>&nbsp;Clear Value</label>
-                                    <br><br>
-                                {% endif %}
-                                <img class="
-                                    {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
-                                        {# TODO: Note that optional was here #}
-                                        {{ data_structure.meta_settings.background }}
-                                    {% else %}
-                                        default-background
-                                    {% endif %}
-                                    context-preview {% if not record_exists %} placeholder-image {% endif %}"
-                                     src="data:image/png;base64,{{ field.value }}">
-                            </div>
-                            <div>
-                                <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}" download>
-                                    Download Original
-                                </a>
-                            </div>
-
-                        {% elif field.has_file_field and field.value %}
-                            <div>
-                                {% if data_structure.optional and record_exists %}
-                                    <label><input id="delete_{{ field.name }}" type="checkbox" name="delete_{{ field.name }}"
-                                                  value="false"/>&nbsp;Clear Value</label>
-                                {% endif %}
-                                {% if data_structure_type == EXTERNAL_IMAGE %}
-                                    <img class="
-                                        {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
-                                            {{ data_structure.meta_settings.background }}
-                                        {% else %}
-                                            default-background
+{% csrf_token %}
+    <div class="slidingContainer">
+        <div id="fields" class="split resizable">
+            <input type="hidden" name="context_id" value="{{ original.id }}">
+            <input type="hidden" name="asset_id" value="{{ asset.id }}">
+            <input type="hidden" name="currentLanguage" value="{{ language_code }}">
+            <input type="hidden" id="languageChanged">
+            {% for fieldset, fields in custom_form.fieldsets.items %}
+                <fieldset class="module">
+                    {% if fieldset %}<h2>{{ fieldset }}</h2>{% endif %}
+                {% for field_id in fields %}
+                    {% with custom_form|get_form_item:field_id as field %}
+                    <div class="form-row{% if field.errors %} errors {% endif %}{% if field.field.disabled %} disabled-row{% endif %}">
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                        </ul>
+                        <div>
+                            {% get_data_structure field.name original as data_structure %}
+                            {% get_datastructure_type data_structure as data_structure_type %}
+                            {% is_external_file_or_image field.name original as is_external %}
+                            {% is_protected data_structure asset as protected %}
+                            {% has_value field.name asset original language_code as record_exists %}
+                            <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
+                                    for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
+                                {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
+                                {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
+                                {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
+                            </label>
+                            <div id="{{ field.name }}" class="ml-160">
+                                {% if field.has_image_field and field.value %}
+                                    <div>
+                                        {% if data_structure.optional and record_exists %}
+                                            <label><input id="delete_{{ field.name }}" type="checkbox"
+                                                          name="delete_{{ field.name }}" value="false"/>&nbsp;Clear Value</label>
+                                            <br><br>
                                         {% endif %}
-                                        context-preview {% if not record_exists %} placeholder-image {% endif %}"
-                                         src="{{ field.value }}">
-                                {% else %}
-                                <a href={% if not is_external %}
-                                            "{% url 'download_file' field.name %}?asset_id={{ asset.id }}&lang={{ language_code }}&draft"
+                                        <img class="
+                                            {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                                {# TODO: Note that optional was here #}
+                                                {{ data_structure.meta_settings.background }}
+                                            {% else %}
+                                                default-background
+                                            {% endif %}
+                                            context-preview {% if not record_exists %} placeholder-image {% endif %}"
+                                             src="data:image/png;base64,{{ field.value }}">
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}" download>
+                                            Download Original
+                                        </a>
+                                    </div>
+
+                                {% elif field.has_file_field and field.value %}
+                                    <div>
+                                        {% if data_structure.optional and record_exists %}
+                                            <label><input id="delete_{{ field.name }}" type="checkbox" name="delete_{{ field.name }}"
+                                                          value="false"/>&nbsp;Clear Value</label>
+                                        {% endif %}
+                                        {% if data_structure_type == EXTERNAL_IMAGE %}
+                                            <img class="
+                                                {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                                    {{ data_structure.meta_settings.background }}
+                                                {% else %}
+                                                    default-background
+                                                {% endif %}
+                                                context-preview {% if not record_exists %} placeholder-image {% endif %}"
+                                                 src="{{ field.value }}">
                                         {% else %}
-                                            "{{ field.value }}"
-                                        {% endif %} download>
-                                    {% if not record_exists %}
-                                        {# TODO: Note that data_structure.optional was here #}
-                                        Download Example
-                                    {% else %}
-                                        Download
-                                    {% endif %}
-                                </a>
+                                        <a href={% if not is_external %}
+                                                    "{% url 'download_file' field.name %}?asset_id={{ asset.id }}&lang={{ language_code }}&draft"
+                                                {% else %}
+                                                    "{{ field.value }}"
+                                                {% endif %} download>
+                                            {% if not record_exists %}
+                                                {# TODO: Note that data_structure.optional was here #}
+                                                Download Example
+                                            {% else %}
+                                                Download
+                                            {% endif %}
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                {% if not field.field.disabled or data_structure_type != HTML%}
+                                    {{ field }}
+                                {% elif data_structure_type == HTML %}
+                                    <div class="show-html">{{ field.value|safe }}</div>
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <p class="help">{{ field.help_text|safe }}</p>
                                 {% endif %}
                             </div>
-                        {% endif %}
-                        {% if not field.field.disabled or data_structure_type != HTML%}
-                            {{ field }}
-                        {% elif data_structure_type == HTML %}
-                            <div class="show-html">{{ field.value|safe }}</div>
-                        {% endif %}
-
-                        {% if field.help_text %}
-                            <p class="help">{{ field.help_text|safe }}</p>
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-            </div>
-            {% endwith %}
-        {% endfor %}
-        </fieldset>
-    {% endfor %}
+                    {% endwith %}
+                {% endfor %}
+                </fieldset>
+            {% endfor %}
+        </div>
+
+        {% if asset.can_preview_on_portal and preview_url %}
+        <div id="preview" class="split">
+            <iframe class="previewFrame" src="{{ preview_url }}&adminPreview=true"></iframe>
+        </div>
+        {% endif %}
+    </div>
     {% has_permission user asset 'cms.edit_content' as can_edit_content %}
     {% if can_edit_content %}
         <div class="submit-row">
@@ -136,7 +148,7 @@
                    download>Download Draft</a>
             {% endif %}
             {% if asset.can_preview_on_portal %}
-                <button class="btn btn-sm btn-info" type="submit" name="Preview">Save draft & Open preview</button>
+                <button class="btn btn-sm btn-info" type="submit" name="Preview">Save draft</button>
             {% else %}
                 <button class="btn btn-sm btn-info" type="submit" name="SaveDraft">Save Draft</button>
             {% endif %}
@@ -156,9 +168,9 @@
         win.opener = null;
     }
 
-    {% if preview_link %}
-        openPreview();
-    {% endif %}
+{#    {% if preview_link %}#}
+{#        openPreview();#}
+{#    {% endif %}#}
 
     function wasTouched() {
         var inputs = document.getElementsByTagName('input');
@@ -320,5 +332,17 @@
         theme_advanced_toolbar_align: 'left',
         theme_advanced_resizing: true
     });
+
+    if ($('#preview').length) {
+        Split(['#fields', '#preview'], {
+            sizes: [50, 50],
+            minSize: 200,
+            gutterSize: 20,
+            gutterAlign: 'center',
+            direction: 'horizontal'
+        })
+    }
+
 </script>
+    <script src="{% static 'js/previewFrame.js' %}"></script>
 {% endblock %}

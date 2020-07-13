@@ -55,8 +55,8 @@ export class NxBootstrapProvider {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
                 this.languageService.defaultLanguage = 'en_US';
-                this.setSettings(result[0]);
                 this.setLanguage(result[1]);
+                this.setSettings(result[0]);
 
                 if (result[2].reply) {
                     this.setLocalInfo(result[2].reply);

@@ -449,7 +449,7 @@ def generate_preview_link(context=None, asset=None, state=""):
         elif asset.is_agreement:
             return '/agreement?' + urlencode({'state': state, 'id': asset.id})
 
-    return f"{context.url}?preview=true" if context else "/content/about?preview=true"
+    return f"{context.url}?preview=true" if context and context.url else None
 
 
 def generate_preview(asset, context=None, version_id=None, send_to_review=False):
@@ -535,6 +535,9 @@ def get_records_for_version(asset, version, customization):
     data_records = data_records.\
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}
+    context_preview_links = {'whole_preview': generate_preview_link(
+        None, asset, 'review'
+    )}
     used_data_structures = set()
 
     for record in data_records:
@@ -548,7 +551,11 @@ def get_records_for_version(asset, version, customization):
             contexts[context_name].append(record)
         else:
             contexts[context_name] = [record]
-    return contexts
+            if asset.asset_type.type != AssetType.ASSET_TYPES.integration:
+                context_preview_links[context_name] = generate_preview_link(
+                    record.data_structure.context, asset, 'review'
+                )
+    return contexts, context_preview_links
 
 
 # File upload helpers

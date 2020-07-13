@@ -85,3 +85,8 @@ def nice_multiselect(multiselect_record):
 @register.filter
 def get_form_item(form, key):
     return form[key]
+
+
+@register.filter
+def dict_key(d, key):
+    return d.get(key, None)
