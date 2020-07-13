@@ -17,11 +17,13 @@ export class Account {
     // eslint-disable-next-line camelcase
     is_superuser: boolean;
     permissions: string[];
+    // eslint-disable-next-line camelcase
+    can_publish_integration: boolean;
 
     constructor({ email, fullName, id, permissions, name, isAdmin }: User) {
         this.email = email;
         const [first, ...rest] = (fullName || name || '').split(' ');
-        this.id = id
+        this.id = id;
         this.first_name = first;
         this.last_name = (rest || ['']).reverse()[0];
         this.permissions = (permissions || '').split('|');

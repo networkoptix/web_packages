@@ -1,7 +1,16 @@
 <ng-container *ngIf="showRibbon">
     <div class="clearfix ribbon" *ngIf="!type">
         <div class="message">{{message}}</div>
-        <div class="action"><a [routerLink]="actionUrl" target="_blank">{{action}}</a></div>
+        <div class="action">
+            <ng-container *ngFor="let action of actions">
+                <a *ngIf="action.type === 'link'" [routerLink]="action.value" target="_blank">{{action.text}}</a>
+                <nx-process-button *ngIf="action.type === 'process-button'"
+                                   [buttonText]="action.text"
+                                   [actionType]="'default'"
+                                   [customClass]="'small-button'"
+                                   [process]="action.value"></nx-process-button>
+            </ng-container>
+        </div>
     </div>
 
     <div class="clearfix alert-ribbon ribbon" *ngIf="type === 'alert'">
@@ -11,17 +20,16 @@
                     <div [innerHTML]="message"></div>
                     <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                         <svg-icon
-                            *ngIf="action === 'Refresh'"
+                            *ngIf="actions.length && actions[0].text === 'Refresh'"
                             nx-add-svg-src
                             [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                             [svgStyle]="{'height.px': '20'}" title="Reload"></svg-icon>
-                        <span>{{action}}</span>
+                        <span>{{actions[0}.text}</span>
                     </a>
                 </div>
             </div>
-            <ng-container *ngIf="action">
-                <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank" class="ml-2">{{action}}</a>
-            </ng-container>
+            <a *ngIf="actions.length && actions[0] && !updateFunction"
+               [href]="actions[0].value" target="_blank" class="ml-2">{{actions[0].text}}</a>
         </div>
     </div>
 </ng-container>

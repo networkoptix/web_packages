@@ -9,7 +9,8 @@ from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import APIException
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -171,6 +172,34 @@ def page_editor(request):
             return redirect(redirect_url), []
 
     return preview_link, context_errors
+
+
+@api_view(['POST'])
+@permission_classes((IsAdminUser,))
+def accept_review(request):
+    review_id = request.data.get('review_id')
+    asset_review = AssetCustomizationReview.objects.filter(id=review_id).first()
+    if not asset_review:
+        return APINotFoundException("Review doesn't exist")
+
+    asset = asset_review.version.asset
+    customization = asset_review.customization
+
+    if asset.asset_type.type != AssetType.ASSET_TYPES.integration:
+        raise APIException('Can only accept integrations')
+
+    has_asset_type_permission = UserGroupsToAssetType.check_asset_type(
+        request.user, asset.asset_type, 'cms.publish_version'
+    )
+    can_accept = has_asset_type_permission and UserGroupsToAssetPermissions.check_customization_publish(
+        request.user, customization.name,
+    )
+
+    if can_accept and asset_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
+        modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
+        return api_success('Accepted')
+
+    raise APIException("Can't accept this review")
 
 
 @require_http_methods(["POST"])

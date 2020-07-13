@@ -6,14 +6,17 @@ import { combineLatest, Subscription }  from 'rxjs';
 import { map }                          from 'rxjs/operators';
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../../services/nx-config';
-import { NxAccountService }             from '../../../services/account.service';
+import { NxAccountService, Account }    from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
-import { NxRibbonService }              from '../../../components/ribbon';
+import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
 import { NxMenuService }                from '../../../menu';
 import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
+import { NxProcessService, Process }    from '../../../services/process.service';
+import { NxCloudApiService }            from '../../../services/nx-cloud-api';
+import { NxUriService }                 from '../../../services/uri.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,6 +34,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     private integrationSubscription: Subscription;
     private menuDetailsSubscription: Subscription;
     private routeSubscription: Subscription;
+    private acceptProcess: Process;
+    private account: Account;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -48,7 +53,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private menuService: NxMenuService,
                 private accountService: NxAccountService,
-                private pageService: NxPageService
+                private pageService: NxPageService,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
+                private uriService: NxUriService
     ) {
         this.setupDefaults(configService);
     }
@@ -61,6 +69,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 this.content.selectedDetailsSection = selection;
                 this.content = { ...this.content }; // trigger onChange
             });
+
+        this.accountService.get().then(account => {
+            if (account) {
+                this.account = account;
+            }
+        });
 
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
             .pipe(map(results => ({ params: results[0], query: results[1] })))
@@ -107,10 +121,41 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 this.plugin = this.integrationService.format(result[0]);
 
                                 if (this.plugin.pending || this.plugin.draft) {
+                                    const ribbonActions: RibbonActionInput[] = [
+                                        {
+                                            type: 'link',
+                                            text: this.LANG.ribbon.integration.backToEditText,
+                                            value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                        }
+                                    ];
+
+                                    if (this.plugin.pending && this.account.can_publish_integration) {
+                                        this.acceptProcess = this.processService.createProcess(() => {
+                                            return this.cloudApiService.acceptIntegration(this.plugin.review_id);
+                                        }, {
+                                            successMessage: this.LANG.account.agreementAccepted
+                                        }).then(() => {
+                                            this.router.navigate([this.uriService.getURL()]);
+                                            this.ribbonService.hide();
+                                        });
+
+                                        ribbonActions.unshift(
+                                            {
+                                                type  : 'process-button',
+                                                text  : this.LANG.ribbon.integration.accept,
+                                                value : this.acceptProcess
+                                            },
+                                            {
+                                                type  : 'link',
+                                                text  : this.LANG.ribbon.integration.reject,
+                                                value : `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
+                                            }
+                                        );
+                                    }
+
                                     this.ribbonService.show(
                                         this.LANG.ribbon.integration.previewRibbon,
-                                        this.LANG.ribbon.integration.backToEditText,
-                                        this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                        ribbonActions
                                     );
                                 }
 

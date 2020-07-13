@@ -1,13 +1,17 @@
 import { Injectable }      from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { RibbonAction }    from './ribbon.component';
+
+export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
+    text: string | Function;
+}
 
 @Injectable()
 export class NxRibbonService {
     context = {
         visibility     : false,
         message        : '',
-        text           : '',
-        url            : '',
+        actions        : [],
         type           : '',
         updateFunction : ''
     };
@@ -17,14 +21,18 @@ export class NxRibbonService {
     constructor() {
     }
 
-    show(message, text, url, type?, updateFunction?) {
+    show(message, actions: RibbonActionInput[], type?, updateFunction?) {
+        actions.forEach(action => {
+            if (action.type === 'link') {
+                action.text = (typeof action.text === 'function') ? action.text() : action.text;
+            }
+        });
         const msg = (typeof message === 'function') ? message() : message;
-        const txt = (typeof text === 'function') ? text() : text;
+
         this.context = {
             visibility : true,
             message    : msg,
-            text       : txt,
-            url,
+            actions,
             type,
             updateFunction
         };
@@ -35,8 +43,7 @@ export class NxRibbonService {
         this.context = {
             visibility     : false,
             message        : '',
-            text           : '',
-            url            : '',
+            actions        : [],
             type           : '',
             updateFunction : ''
         };

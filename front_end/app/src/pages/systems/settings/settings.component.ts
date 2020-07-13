@@ -270,7 +270,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             }
                             if (!this.system.isOnline) {
                                 this.ribbonService.hide();
-                                this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
                             }
                             if (this.system.canViewInfo()) {
                                 // Makes request to get health, this is used to cache request.
@@ -313,7 +313,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
                 if (!this.system.isOnline) {
                     this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
                 } else if (primary && primary.id === this.system.id) {
                     this.secondaryMerge = false;
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
@@ -328,14 +328,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                         </div>`;
                     this.ribbonService.hide();
-                    this.ribbonService.show(template, '', '', 'alert');
+                    this.ribbonService.show(template, [], 'alert');
                 } else if (secondary && secondary.id === this.system.id) {
                     this.mergeTargetSystem = this.systemsService.systems
                         .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
                     this.secondaryMerge = true;
                 } else if (mergeInProgress) {
                     this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, '', '', 'alert');
+                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, [], 'alert');
                 } else {
                     this.secondaryMerge = false;
                     this.ribbonService.hide();

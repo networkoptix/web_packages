@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { NxRibbonService } from './ribbon.service';
+import { NxRibbonService, RibbonActionInput } from './ribbon.service';
 import { BehaviorSubject } from 'rxjs';
 
 describe('NxRibbonService', () => {
@@ -17,24 +17,27 @@ describe('NxRibbonService', () => {
     it('should be initialized', inject([NxRibbonService], (service: NxRibbonService) => {
         expect(service.context.visibility).toBeFalsy();
         expect(service.context.message).toBe('');
-        expect(service.context.text).toBe('');
-        expect(service.context.url).toBe('');
+        expect(service.context.actions).toBe([]);
         expect(service.context.type).toBe('');
     }));
 
     it('show() should emit data to contextSubject',
             inject([NxRibbonService], (service: NxRibbonService) => {
+                const actions: RibbonActionInput[] = [{
+                    type  : 'link',
+                    text  : 'Go back',
+                    value : '/admin/cms/asset',
+                }];
                 const context = {
                     visibility: true,
                     message: 'Alcohol! Because no great story started with someone eating a salad.',
-                    text : 'Go back',
-                    url    : '/admin/cms/asset',
+                    actions,
                     type: '',
                     updateFunction: ''
                 };
                 service.contextSubject = new BehaviorSubject(context);
 
-                service.show(context.message, context.text, context.url);
+                service.show(context.message, context.actions);
 
                 service.contextSubject.subscribe((message) => {
                     expect(message).toBe(context);
@@ -46,8 +49,7 @@ describe('NxRibbonService', () => {
                 const context = {
                     visibility: false,
                     message   : '',
-                    text      : '',
-                    url       : '',
+                    actions   : [],
                     type      : '',
                     updateFunction: ''
                 };

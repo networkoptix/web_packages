@@ -60,6 +60,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
 
         for integration in integrations:
             current_version = integration.version_id()
+            review_id = None
             customization_id_state_key = f"{settings.CUSTOMIZATION}-{language.code}-{integration.id}-{state}"
 
             if show_pending:
@@ -71,6 +72,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                 if not pending_version:
                     continue
                 current_version = pending_version.version.id
+                review_id = pending_version.id
 
             if show_drafts:
                 if integration.preview_status != Asset.PREVIEW_STATUS.draft:
@@ -123,6 +125,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                 else:
                     integration_dict['lastModified'] = integration.last_modified
                 integration_dict['version'] = current_version
+                integration_dict['review_id'] = review_id
                 integration_dict['id'] = integration.id
                 if not show_drafts:
                     INTEGRATION_CACHE[customization_id_state_key] = integration_dict

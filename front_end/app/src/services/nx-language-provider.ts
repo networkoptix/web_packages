@@ -19,7 +19,6 @@ export class NxLanguageProviderService {
     ) {}
 
     loadLanguage() {
-        return this.http.get('/static/language_compiled.json').toPromise();
         return this.cloudApiService.getLanguage().toPromise();
     }
 

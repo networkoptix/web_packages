@@ -747,10 +747,10 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         )
         can_force_update = UserGroupsToAssetPermissions.check_customization_permission(
             request.user, customization_name, 'cms.force_update'
-        ) & has_asset_type_permission
+        ) and has_asset_type_permission
         can_publish_or_accept = UserGroupsToAssetPermissions.check_customization_permission(
             request.user, customization_name, 'cms.publish_version'
-        ) & has_asset_type_permission
+        ) and has_asset_type_permission
 
         developer_access_customization = UserGroupsToAssetPermissions.check_customization_permission(
             customization_review.version.created_by, customization_name, 'cms.access_customization')

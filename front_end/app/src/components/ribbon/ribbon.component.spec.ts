@@ -5,7 +5,7 @@ import {
   inject
 } from '@angular/core/testing';
 import { NxRibbonComponent } from './ribbon.component';
-import { NxRibbonService } from './ribbon.service';
+import { NxRibbonService, RibbonActionInput } from './ribbon.service';
 
 describe('NxRibbonComponent', () => {
   let component: NxRibbonComponent;
@@ -32,26 +32,29 @@ describe('NxRibbonComponent', () => {
     component.ngOnInit();
     expect(component.showRibbon).toBeFalsy();
     expect(component.message).toBe('');
-    expect(component.action).toBe('');
-    expect(component.actionUrl).toBe('');
+    expect(component.actions).toBe([]);
   });
 
   it('should use NxRibbonService to get data', inject(
     [NxRibbonService],
     (service: NxRibbonService) => {
-      const context = {
-        message:
-          'Alcohol! Because no great story started with someone eating a salad.',
-        text: 'Go back',
-        url: '/admin/cms/asset'
-      };
-
-      service.show(context.message, context.text, context.url);
+        const actions: RibbonActionInput[] = [{
+            type: 'link',
+            text: 'Go back',
+            value: '/admin/cms/asset',
+        }];
+        const context = {
+            visibility: true,
+            message: 'Alcohol! Because no great story started with someone eating a salad.',
+            actions,
+            type: '',
+            updateFunction: ''
+        };
+        service.show(context.message, context.actions);
 
       expect(component.showRibbon).toBeTruthy();
       expect(component.message).toBe(context.message);
-      expect(component.action).toBe(context.text);
-      expect(component.actionUrl).toBe(context.url);
+      expect(component.actions).toBe(context.actions);
     }
   ));
 
@@ -62,22 +65,27 @@ describe('NxRibbonComponent', () => {
 
       expect(component.showRibbon).toBeFalsy();
       expect(component.message).toBe('');
-      expect(component.action).toBe('');
-      expect(component.actionUrl).toBe('');
+      expect(component.actions).toBe([]);
     }
   ));
 
   it('renders correctly', inject(
     [NxRibbonService],
     (service: NxRibbonService) => {
-      const context = {
-        message:
-          'Alcohol! Because no great story started with someone eating a salad.',
-        text: 'Go back',
-        url: '/admin/cms/asset'
-      };
+      const actions: RibbonActionInput[] = [{
+            type: 'link',
+            text: 'Go back',
+            value: '/admin/cms/asset',
+        }];
+        const context = {
+            visibility: true,
+            message: 'Alcohol! Because no great story started with someone eating a salad.',
+            actions,
+            type: '',
+            updateFunction: ''
+        };
+        service.show(context.message, context.actions);
 
-      service.show(context.message, context.text, context.url);
       fixture.detectChanges();
       expect(fixture).toMatchSnapshot();
     }
