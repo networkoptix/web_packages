@@ -16,7 +16,7 @@
                 font-weight: bold;
                 line-height: 40px;
                 height: 40px;
-                margin-right: 8px;
+                margin: 0 8px 0 0;
             }
         }
         .edit-button {
@@ -24,24 +24,6 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-        }
-        .tag {
-            @include typography.medium11;
-            margin-left: 8px;
-            float: left;
-            color: $light1;
-            padding: 4px 8px;
-            text-transform: uppercase;
-            border-radius: 2px;
-        }
-        .online {
-            background-color: typography.$brand_core;
-        }
-        .offline {
-            background-color: $error;
-        }
-        .checking {
-            background-color: $light16;
         }
         .buttons {
             display: flex;
@@ -70,20 +52,6 @@
                         g, path {
                             fill: $light16 !important;
                         }
-                    }
-                }
-                .animate-rotation {
-                    animation-name: rotate;
-                    animation-duration: 1.8s;
-                    animation-iteration-count: infinite;
-                    transform-origin: 50% 50%;
-                }
-                @keyframes rotate {
-                    0% {
-                        transform: rotate(0deg);
-                    }
-                    100% {
-                        transform: rotate(360deg);
                     }
                 }
                 a {

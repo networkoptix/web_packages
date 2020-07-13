@@ -1,5 +1,35 @@
 <div class="row auth-visible">
     <nx-page-placeholder class="sectional-div server-placeholder" type="NO_SETTINGS" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
+    <div *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting || checking" class="col-12">
+        <nx-alert-block
+            *ngIf="serverOffline"
+            type="error"
+            id="server-offline"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [line1]="'Server offline' | translate"
+            [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+            [btnCaption]="'Check Status' | translate"
+            (onAction)="checkStatus()">
+        </nx-alert-block>
+        <nx-alert-block
+            *ngIf="selectedServer.internalStatus === CONFIG.servers.status.restarting"
+            type="info"
+            id="restarting"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info.svg'"
+            [line1]="'Restarting' | translate"
+            [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+            [btnCaption]="'Check Status' | translate"
+            (onAction)="checkStatus()">
+        </nx-alert-block>
+        <nx-alert-block
+            *ngIf="checking"
+            type="info"
+            id="checking-active"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info.svg'"
+            [line1]="'Checking' | translate"
+            (onAction)="checkStatus()">
+        </nx-alert-block>
+    </div>
     <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !serverLoaded">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
@@ -28,28 +58,7 @@
                             <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
                         </div>
                     </ng-template>
-                    <span
-                        *ngIf="selectedServer.internalStatus"
-                        [ngClass]="{
-                            tag: true,
-                            offline: serverOffline,
-                            online: selectedServer.internalStatus === CONFIG.servers.status.restarting
-                                || selectedServer.internalStatus === CONFIG.servers.status.resetting,
-                            checking: checking,
-                            'd-none' : editMode
-                        }">
-                        {{ selectedServer.shownStatus }}
-                    </span>
                     <div class="buttons" [ngClass]="{ 'd-none' : editMode }">
-                        <button class="server-buttons pr-0"
-                            *ngIf="serverOffline"
-                            (click)="checkStatus()">
-                            <span [ngClass]="{ 'animate-rotation': checking }">
-                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                                    [applyCss]="true"></svg-icon>
-                            </span>
-                            <span class="ml-1" translate>Check Status</span>
-                        </button>
                         <button *ngIf="canSeeInfo" class="server-buttons pr-0"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
