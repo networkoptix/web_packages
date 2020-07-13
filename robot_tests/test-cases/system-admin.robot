@@ -458,39 +458,45 @@ Changes made in the thick client are displayed in System Settings block in Cloud
     Log    Step 1
     Set Auto System Settings via API    autoDiscoveryEnabled    false
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
     
     Log    Step 2
     Set Auto System Settings via API    autoDiscoveryEnabled    true
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
     
     Log    Step 3
     Set Auto System Settings via API    statisticsAllowed    false
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
     
     Log    Step 4
     Set Auto System Settings via API    statisticsAllowed    true
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
     
     Log    Step 5
     Set Auto System Settings via API    cameraSettingsOptimization    false
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked 
     
     Log    Step 6
     Set Auto System Settings via API    cameraSettingsOptimization    true
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked   
     
     Log    Step 7
     Set Auto System Settings via API    autoDiscoveryEnabled    false
     Set Auto System Settings via API    statisticsAllowed    false
     Set Auto System Settings via API    cameraSettingsOptimization    false
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
@@ -499,7 +505,8 @@ Changes made in the thick client are displayed in System Settings block in Cloud
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
     Set Auto System Settings via API    cameraSettingsOptimization    true
-    Sleep    30
+    Reload Page
+    Wait Until System Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
@@ -551,45 +558,51 @@ Changes made in the thick client are displayed in the security block in Cloud Po
     Log    Step 1
     Set Auto System Settings via API    auditTrailEnabled    false
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible
-    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick unchecked
     
     Log    Step 2
     Set Auto System Settings via API    auditTrailEnabled    true
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
     
     Log    Step 3
     Set Auto System Settings via API    trafficEncryptionForced    true
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
     
     Log    Step 4
     Set Auto System Settings via API    videoTrafficEncryptionForced    true
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
     
     Log    Step 5
     Set Auto System Settings via API    videoTrafficEncryptionForced    false
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked 
     
     Log    Step 6
     Set Auto System Settings via API    trafficEncryptionForced    false
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked   
     
     Log    Step 7
     Set Auto System Settings via API    sessionLimitMinutes    30
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked 
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 30    Fail
     
     Log    Step 8
     Set Auto System Settings via API    sessionLimitMinutes    0
-    Sleep    30
+    Reload Page
+    Wait Until Security Settings Are Visible
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
 
 Security block is available for administrator or owner
