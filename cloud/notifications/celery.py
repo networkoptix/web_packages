@@ -39,6 +39,8 @@ def clean_logs():
     call_command('clearsessions')
     logger.info('Cleaning emails from last month')
     call_command('cleanoldemails')
+    logger.info('Cleaning push notifications from last month')
+    call_command('cleanoldpush')
     logger.info('Cleaning access logs from last month')
     call_command('cleanaccesslog')
 

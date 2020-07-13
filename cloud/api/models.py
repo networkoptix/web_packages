@@ -216,6 +216,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
             named_group = Group.objects.filter(user=self, name__contains='Developer').exists()
             return permission_based_group or named_group
 
+    # Called when password is changed
+    def password_changed(self):
+        from notifications.models import PushDevice
+        PushDevice.delete_for_account(self)
+
     def short_email(self):
         return format_html("<div class='truncate-email'><span>{}</span></div>", self.email)
 
