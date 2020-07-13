@@ -88,30 +88,32 @@ export interface Common {
     cameraLinks:                CameraLinks;
     cameraStates:               CameraStates;
     chromeCastWarning:          any;
+    login:                      any;
     recordingSettingsWarning:   any;
     recordingModes:             RecordingModes;
     resolution:                 Resolution;
-    general:                    string;
-    searchCamPlaceholder:       string;
-    systemHasNoCameras:         string;
-    systemHasNoCamerasMessage:  string;
-    systemNewVersion:           string;
-    systemNewVersionMessage:    string;
-    systemNoAlerts:             string;
-    systemNoAlertsMessage:      string;
-    systemOffline:              string;
-    systemOfflineMessage:       string;
-    systemServerError:          string;
-    systemServerErrorMessage:   string;
-    systemUnreachable:          string;
-    inaccessibleFeatureMessage: string;
-    unknown:                    string;
-    vendor:                     string;
-    model:                      string;
-    ip:                         string;
-    server:                     string;
-    os:                         string;
-    version:                    string;
+    general:                    any;
+    inaccessibleFeatureMessage: any;
+    searchCamPlaceholder:       any;
+    server:                     any;
+    system:                     any;
+    systemHasNoCameras:         any;
+    systemHasNoCamerasMessage:  any;
+    systemNewVersion:           any;
+    systemNewVersionMessage:    any;
+    systemNoAlerts:             any;
+    systemNoAlertsMessage:      any;
+    systemOffline:              any;
+    systemOfflineMessage:       any;
+    systemServerError:          any;
+    systemServerErrorMessage:   any;
+    systemUnreachable:          any;
+    unknown:                    any;
+    vendor:                     any;
+    model:                      any;
+    ip:                         any;
+    os:                         any;
+    version:                    any;
     voiceCommands:              VoiceCommands;
     viewingOutdatedReport:      any;
 }
@@ -248,12 +250,12 @@ export interface NoOtherSystemsError {
 }
 
 export interface UsageLabels {
-    currentRecordings: string;
-    whenFullyUsed:     string;
-    amountUsed:        string;
-    archiveFrom:       string;
-    recordingBitrate:  string;
-    delayFromLive:     string;
+    currentRecordings: any;
+    whenFullyUsed:     any;
+    amountUsed:        any;
+    archiveFrom:       any;
+    recordingBitrate:  any;
+    delayFromLive:     any;
 }
 
 export interface DialogsMerge {
@@ -730,7 +732,8 @@ export interface SystemStatuses {
 }
 
 export interface ToastMessage {
-    system: ToastMessageSystem;
+    nameFail: any;
+    system:   ToastMessageSystem;
 }
 
 export interface ToastMessageSystem {
@@ -968,12 +971,15 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "any" },
+        { json: "login", js: "login", typ: "any" },
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "any" },
         { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "any" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
+        { json: "system", js: "system", typ: "any" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "any" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "any" },
         { json: "systemNewVersion", js: "systemNewVersion", typ: "any" },
@@ -989,7 +995,6 @@ const typeMap: any = {
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "model", js: "model", typ: "any" },
         { json: "ip", js: "ip", typ: "any" },
-        { json: "server", js: "server", typ: "any" },
         { json: "os", js: "os", typ: "any" },
         { json: "version", js: "version", typ: "any" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
@@ -1112,12 +1117,12 @@ const typeMap: any = {
         { json: "message", js: "message", typ: "any" },
     ], false),
     "UsageLabels": o([
-        { json: "currentRecordings", js: "currentRecordings", typ: "" },
-        { json: "whenFullyUsed", js: "whenFullyUsed", typ: "" },
-        { json: "amountUsed", js: "amountUsed", typ: "" },
-        { json: "archiveFrom", js: "archiveFrom", typ: "" },
-        { json: "recordingBitrate", js: "recordingBitrate", typ: "" },
-        { json: "delayFromLive", js: "delayFromLive", typ: "" },
+        { json: "currentRecordings", js: "currentRecordings", typ: "any" },
+        { json: "whenFullyUsed", js: "whenFullyUsed", typ: "any" },
+        { json: "amountUsed", js: "amountUsed", typ: "any" },
+        { json: "archiveFrom", js: "archiveFrom", typ: "any" },
+        { json: "recordingBitrate", js: "recordingBitrate", typ: "any" },
+        { json: "delayFromLive", js: "delayFromLive", typ: "any" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },
@@ -1545,6 +1550,7 @@ const typeMap: any = {
         { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
     "ToastMessage": o([
+        { json: "nameFail", js: "nameFail", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
     ], false),
     "ToastMessageSystem": o([
