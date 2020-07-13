@@ -20,6 +20,7 @@ import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/syste
 import { NxProcessService, Process }            from '../../../../services/process.service';
 import { NxUriService }                         from '../../../../services/uri.service';
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
+import { NxToastService }                       from '../../../../dialogs/toast.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -46,9 +47,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
-    name = new Watcher<string>();
+    // name = new Watcher<string>();
     fullName = new Watcher<string>();
     email = new Watcher<string>();
+
+    localUserName: string;
+    editMode = false;
+    emptyName = false;
 
     private routeParamsSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -72,6 +77,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private processService: NxProcessService,
         private uriService: NxUriService,
+        private toastService: NxToastService,
         location: Location
     ) {
         this.location = location;
@@ -135,7 +141,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             [
                 this.userEnabled,
                 this.userRole,
-                this.name,
+                // this.name,
                 this.fullName,
                 this.email
             ]);
@@ -170,6 +176,41 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
             });
         });
+    }
+
+    handleBlur() {
+        const originalName = this.selectedUser.name;
+        this.editMode = false;
+
+        if (!this.localUserName || this.emptyName) {
+            this.localUserName = originalName;
+        } else if (this.localUserName !== originalName) {
+            const user = this.selectedUser;
+            user.name = this.localUserName;
+            this.locked[user.email] = true;
+            this.system.saveUser(user, user.role)
+                .then(() => this.system.getUsers(true))
+                .then(() => { this.locked[user.email] = false; })
+                .catch(() => {
+                    this.selectedUser.name = originalName;
+                    this.localUserName = originalName;
+                    const options = {
+                        classname : this.CONFIG.toast.warning,
+                        autohide  : true,
+                        delay     : this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'login'), options);
+                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'login'), options);
+                });
+        }
+    }
+
+    handleFocus() {
+        this.editMode = true;
+    }
+
+    handleNameChange(newName) {
+        this.emptyName = /^\s+$/.test(newName);
     }
 
     removeUser() {
@@ -232,6 +273,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
             this.applyService.hardReset();
             this.selectedUser = { ...user };
+            this.localUserName = this.selectedUser.name;
 
             this.deleteMessage = this.selectedUser.isCloud
                 ? this.LANG.system.users.cloudDelete()
@@ -244,7 +286,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             // watchers set
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
-            this.name.value = this.selectedUser.name;
+            // this.name.value = this.selectedUser.name;
             this.fullName.value = this.selectedUser.fullName;
             this.email.value = this.selectedUser.email;
 

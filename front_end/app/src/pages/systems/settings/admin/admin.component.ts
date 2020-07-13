@@ -208,6 +208,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         } else if (this.systemName !== originalName) {
             this.cloudApiService.renameSystem(this.system.id, this.systemName)
                 .catch(() => {
+                    this.systemName = originalName;
                     const options = {
                         classname : this.CONFIG.toast.warning,
                         autohide  : true,
