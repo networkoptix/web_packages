@@ -697,3 +697,11 @@ Server URL is empty
     Log    Step 4
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE FAILED HEADER}
+
+    Log    Test Teardown
+    Reload Page
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}

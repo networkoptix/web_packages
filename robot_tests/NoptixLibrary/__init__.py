@@ -455,9 +455,10 @@ class NoptixLibrary(object):
         running_containers = client.containers.list()
         if container in running_containers:
             container.stop()
-        all_containers = client.containers.list(all=True)
-        if remove and container in all_containers:
-            container.remove()
+        if remove:
+            all_containers = client.containers.list(all=True)
+            if container in all_containers:
+                container.remove()
 
     def stop_containers(self, allContainers=True):
         client = docker.from_env()

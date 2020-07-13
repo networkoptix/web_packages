@@ -1,4 +1,24 @@
 *** Keywords ***
+Merge Suite Setup
+    Open Browser and go to url    ${ENV}
+    Set Suite Variable    @{test containers}    @{EMPTY}
+
+Merge Test Restart
+    Reload Page
+    Sleep    5
+    ${logged in}=   Run Keyword and return Status    Element Should Be Visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out
+    Go To    ${ENV}
+
+Merge Suite Teardown
+    Close All Browsers
+    Remove Test Containers
+
+Remove Test Containers
+    FOR    ${c}    IN    @{test containers}
+        Stop Container    ${c}    remove=True
+    END
+
 Validate Check Merge Dialog
     [Arguments]      ${lonely}=${False}
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -121,40 +141,3 @@ Complete merge steps till final password input
     Choose Primary System    ${from target}
     Click Button    ${MERGE NEXT BUTTON}
     Validate Confirm Merge Dialog
-
-Disconnect all systems from the account
-    [Arguments]    ${email}    ${password}
-    ${systems}=   Get Account Systems   ${ENV}    ${email}    ${password}
-    FOR    ${system id}    IN    @{systems}
-        Disconnect    ${ENV}    ${email}    ${password}    ${system id}
-    END
-
-Merge Suite Setup
-    Open Browser and go to url    ${ENV}
-    Set Suite Variable    @{test containers}    @{EMPTY}
-
-Merge Test Restart
-    Reload Page
-    Sleep    5
-    ${logged in}=   Run Keyword and return Status    Element Should Be Visible    ${ACCOUNT DROPDOWN}
-    Run Keyword If    ${logged in}    Log Out
-    Go To    ${ENV}
-
-Merge Suite Teardown
-    Close All Browsers
-    Remove Test Containers
-
-Remove Test Containers
-    FOR    ${c}    IN    @{test containers}
-        Stop Container    ${c}    remove=True
-    END
-
-Reset Systems State
-    Disconnect all systems from the account    ${email 1 owner}    ${password}
-    Disconnect all systems from the account    ${email 2 owner}    ${password}
-    FOR    ${i}    IN RANGE    1  5
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
-    END
-    Close Browser
-    Open Browser and go to url    ${ENV}
