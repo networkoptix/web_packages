@@ -43,7 +43,7 @@ def get_variables(cloud_url, test_email):
     if key == 'nxvms':
         key = 'prod'
     vars["IMAGE 4.0"] = f'4.0_{key}'
-    vars["IMAGE 4.1"] = f'4.0_{key}'
+    vars["IMAGE 4.1"] = f'4.1_{key}'
 
     # return the dictionary as variables into robot
     return vars

@@ -1,12 +1,17 @@
 *** Keywords ***
 Validate Check Merge Dialog
+    [Arguments]      ${lonely}=${False}
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE X BUTTON}
     ...    ${MERGE NEXT BUTTON}
-    ...    ${MERGE CURRENT SYSTEM WITH}
-    ...    ${MERGE SYSTEM DROPDOWN}
-#    ...    ${MERGE ONLY AS OWNER}
+    Run Keyword If    ${lonely}    Wait Until Elements Are Visible
+    ...    ${MERGE FORM SERVER URL INPUT}
+    ...    ${MERGE ENTER THE ADDRESS}
+    ...    ELSE    Wait Until Elements are Visible
+        ...    ${MERGE CURRENT SYSTEM WITH}
+        ...    ${MERGE SYSTEM DROPDOWN}
+#        ...    ${MERGE ONLY AS OWNER}
 
 Validate Admin Password Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -40,6 +45,18 @@ Validate Confirm Merge Dialog
     ...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE SYSTEMS BUTTON}
 
+Validate Merge Failed Dialog
+    [Arguments]    ${system}    ${server}
+    ${s}=  Replace String    ${FAILED TO MERGE SYSTEM TEXT}    %SYSTEM%    ${system}
+    ${s}=  Replace String    ${s}    %URL%    ${server}
+    ${error text}=   Get Text    //div[@class="modal-content"]//p/p[1]
+    Should Contain    ${error text}    ${s}
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+#    ...    //*[contains(text(), "${s}")]
+    ...    ${MERGE FAILED X BUTTON}
+    ...    ${MERGE FAILED DIALOG HEADER}
+    ...    ${MERGE FAILED OK BUTTON}
+
 Validate System Page
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
@@ -54,7 +71,8 @@ Validate Merge
     #TODO: add checking the merge text appears and Merge and Disconnect buttons are disabled during the merge.
     ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
     ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
-    Run keyword and continue on failure    Check For Alert    ${s}
+#    Run keyword and continue on failure    Check For Alert    ${s}
+    Run keyword and ignore error    Check For Alert    ${s}
 
 Choose System From Dropdown
     [Arguments]
@@ -65,6 +83,9 @@ Choose System From Dropdown
     ...    ${check url}=${False}
 
     Click Element    ${MERGE SYSTEM DROPDOWN}
+    Sleep   1
+    ${menu shown}=   Run Keyword and Return Status    Element Should Be Visible    ${MERGE SYSTEMS MENU}
+    Run Keyword Unless    ${menu shown}    Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
     Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
     # TODO: add validating server info in dropdown if check url==${True}
     Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
