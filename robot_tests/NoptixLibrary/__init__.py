@@ -414,11 +414,6 @@ class NoptixLibrary(object):
         image = client.images.get(image_name)
         return image.id
 
-    def get_image_id(self, image_name):
-        client = docker.from_env()
-        image = client.images.get(image_name)
-        return image.id
-
     # def run_container(self, image, port, network):
     #     tmp = {'/run':'', '/run/lock':''}
     #     vol = {'/sys/fs/cgroup': {
