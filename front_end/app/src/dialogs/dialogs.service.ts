@@ -1,30 +1,26 @@
-import { Inject, Injectable, Injector }                  from '@angular/core';
+import { Inject, Injectable, Injector }        from '@angular/core';
 import { DOCUMENT, Location }                  from '@angular/common';
 import { DomSanitizer }                        from '@angular/platform-browser';
 import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
 import { Router }                              from '@angular/router';
-import {
-    BehaviorSubject, SubscriptionLike
-}                                              from 'rxjs';
+import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
 import { NgForm }                              from '@angular/forms';
 import { UntilDestroy }                        from '@ngneat/until-destroy';
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '../services/nx-language-provider';
 import { NxConfigService, IConfig }            from '../services/nx-config';
-import { NxAccountService }                from '../services/account.service';
-import { NxSystem, ICamera, NxSystemUser } from '../services/system.service';
-import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { NxAccountService }                    from '../services/account.service';
+import { NxSystem, ICamera, NxSystemUser }     from '../services/system.service';
+import { LanguageI18NStaticTypes }             from '../../language_i18n_static_types';
 import { LoginModalContent }                   from './login/login.component';
 import { GenericModalContent }                 from './generic/generic.component';
 import { AddUserModalContent }                 from './add-user/add-user.component';
 import { DisconnectModalContent }              from './disconnect/disconnect.component';
-import { RenameModalContent }                  from './rename/rename.component';
 import { MessageModalContent }                 from './message/message.component';
 import { EmbedModalContent }                   from './embed/embed.component';
 import { MergeModalContent }                   from './merge/merge.component';
 import { ApplyModalContent }                   from './apply/apply.component';
 import { RemoveUserModalContent }              from './remove-user/remove-user.component';
-import { RenameServerModalContent }            from './rename-server/rename-server.component';
 import { RestartServerModalContent }           from './restart-server/restart-server.component';
 import { DetachServerModalContent }            from './detach-server/detach-server.component';
 import { ResetServerModalContent }             from './reset-server/reset-server.component';
@@ -39,7 +35,7 @@ import { Process }                             from '../services/process.service
 import { NxCloudApiService }                   from '../services/nx-cloud-api';
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
-import {CloudConnectModalContent} from "./cloud-connect/cloud-connect.component";
+import { CloudConnectModalContent }            from "./cloud-connect/cloud-connect.component";
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
@@ -286,37 +282,6 @@ export class NxDialogsService {
         };
 
         return this.createModal(RemoveUserModalContent, options, params);
-    }
-
-    rename(systemId: string, systemName: string) {
-        const options: IParams = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
-        };
-
-        const params: IParams = {
-            systemId,
-            systemName,
-            closable: true
-        };
-
-        return this.createModal(RenameModalContent, options, params);
-    }
-
-    renameServer(system: NxSystem, serverId: string, serverName: string) {
-        const options: IParams = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
-        };
-
-        const params: IParams = {
-            system,
-            serverId,
-            serverName,
-            closable: true
-        };
-
-        return this.createModal(RenameServerModalContent, options, params);
     }
 
     restartServer(system: NxSystem, serverId: string, serverName: string) {

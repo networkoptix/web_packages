@@ -228,8 +228,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                         autohide  : true,
                         delay     : this.CONFIG.alertTimeout
                     };
-                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'server'), options);
-                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'server'), options);
+                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'server'), options);
                 });
         }
     }
@@ -241,16 +240,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     handleNameChange(newName) {
         this.emptyName = /^\s+$/.test(newName);
     }
-
-    // renameServer() {
-    //     const { id, name } = this.selectedServer;
-    //     return this.dialogs.renameServer(this.system, id, name)
-    //         .then(newName => {
-    //             if (newName) {
-    //                 this.selectedServer.name = newName;
-    //             }
-    //         });
-    // }
 
     restartServer() {
         const { id, name } = this.selectedServer;

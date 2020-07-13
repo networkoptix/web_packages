@@ -715,6 +715,7 @@
         "unavailable": "unavailable"
     },
     "toastMessage": {
+        "nameFail": "Failed to change {type} name",
         "system": {
             "deleted" :{
                 "success": "System {systemName} is successfully deleted from your account"

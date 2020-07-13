@@ -47,7 +47,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
-    // name = new Watcher<string>();
     fullName = new Watcher<string>();
     email = new Watcher<string>();
 
@@ -141,7 +140,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             [
                 this.userEnabled,
                 this.userRole,
-                // this.name,
                 this.fullName,
                 this.email
             ]);
@@ -199,8 +197,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                         autohide  : true,
                         delay     : this.CONFIG.alertTimeout
                     };
-                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'login'), options);
-                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'login'), options);
+                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'login'), options);
                 });
         }
     }
@@ -286,7 +283,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             // watchers set
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
-            // this.name.value = this.selectedUser.name;
             this.fullName.value = this.selectedUser.fullName;
             this.email.value = this.selectedUser.email;
 

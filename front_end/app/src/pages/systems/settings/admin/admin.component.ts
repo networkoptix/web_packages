@@ -214,8 +214,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         autohide  : true,
                         delay     : this.CONFIG.alertTimeout
                     };
-                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'system'), options);
-                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'system'), options);
+                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'system'), options);
                 });
         }
     }
@@ -299,19 +298,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
         }
     }
-
-    // rename() {
-    //     return this.dialogs
-    //         .rename(this.system.id, this.system.info.systemName)
-    //         .then((finalName) => {
-    //             if (finalName) {
-    //                 this.system.info.systemName = finalName;
-    //             }
-
-    //             this.pageService.pageTitle = this.system.info.systemName;
-    //             this.systemsService.forceUpdateSystems(this.accountService.email);
-    //         });
-    // }
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.email, this.system.id);

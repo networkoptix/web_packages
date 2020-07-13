@@ -4,7 +4,6 @@ import { ComponentsModule }            from '../components/components.module';
 import { DirectivesModule }            from '../directives/directives.module';
 import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
-import { RenameModalContent }          from './rename/rename.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
 import { RemoveUserModalContent }      from './remove-user/remove-user.component';
 import { MergeModalContent }           from './merge/merge.component';
@@ -13,7 +12,6 @@ import { EmbedModalContent }           from './embed/embed.component';
 import { FormsModule, EmailValidator } from '@angular/forms';
 import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';
-import { RenameServerModalContent }    from './rename-server/rename-server.component';
 import { RestartServerModalContent }   from './restart-server/restart-server.component';
 import { DetachServerModalContent }    from './detach-server/detach-server.component';
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
@@ -56,7 +54,6 @@ import { PipesModule }                    from '../pipes/pipes.module';
         LoginModalContent,
         LoginWebadminModalContent,
         DisconnectModalContent,
-        RenameModalContent,
         AddUserModalContent,
         MergeModalContent,
         MessageModalContent,
@@ -65,7 +62,6 @@ import { PipesModule }                    from '../pipes/pipes.module';
         GenericModalContent,
         ApplyModalContent,
         NxModalApplyComponent,
-        RenameServerModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
@@ -82,7 +78,6 @@ import { PipesModule }                    from '../pipes/pipes.module';
         LoginModalContent,
         LoginWebadminModalContent,
         DisconnectModalContent,
-        RenameModalContent,
         AddUserModalContent,
         MergeModalContent,
         MessageModalContent,
@@ -91,7 +86,6 @@ import { PipesModule }                    from '../pipes/pipes.module';
         GenericModalContent,
         ApplyModalContent,
         NxModalApplyComponent,
-        RenameServerModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,

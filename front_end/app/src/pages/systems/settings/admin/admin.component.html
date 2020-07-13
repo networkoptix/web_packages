@@ -87,12 +87,6 @@
             <nx-section *ngIf="system.permissions.isAdmin">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
-                        <!-- <div class="float-left mr-2">
-                            <button class="btn btn-default"
-                                    [disabled]="settings.renameDisabled"
-                                    (click)="rename()"><span class="ellipsis" translate>Rename</span>
-                            </button>
-                        </div> -->
                         <div class="float-left mr-2" *ngIf="settings.showMerge">
                             <button class="btn btn-default"
                                     [disabled]="settings.mergeDisabled"
