@@ -3,9 +3,9 @@ import {
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
 } from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
-import { of, interval }                from 'rxjs';
-import { delayWhen, catchError }       from 'rxjs/operators';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
+import { of, interval }                        from 'rxjs';
+import { delayWhen, catchError, debounceTime } from 'rxjs/operators';
+import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
 import { NxConfigService, IConfig }    from '../../../../../services/nx-config';
 import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService }   from '../../../../../services/nx-language-provider';
@@ -202,7 +202,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     checkStatus() {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
-        this.system.getServers().toPromise()
+        this.system.getServers()
+            // add time to avoid server status flashing "Checking..." if system is offline
+            .pipe(debounceTime(this.CONFIG.servers.checkDebounceTime)).toPromise()
             .then(res => {
                 if (res) {
                     const servers: any[] = Object.entries(res).map(server => server[1]);
