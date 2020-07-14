@@ -23,16 +23,21 @@ export class NaiveArchiveController extends AbstractArchiveController {
   public render (debug: boolean = false) {
     const eventBirdView = this.getEventBirdView()
     const msPerPx = this.visibleRange.duration / this.ctx.canvas.width
+    const prevFillStyle = this.ctx.fillStyle
+    const y = this.ctx.canvas.height * 0.6
+    const h = this.ctx.canvas.height * 0.23
+    // background
+    this.ctx.fillStyle = '#eceff1'
+    this.ctx.fillRect(0, y, this.ctx.canvas.width, h)
+    
+    // records
+    this.ctx.fillStyle = 'rgba(76,188,40)'
     eventBirdView.events.map(e => {
-      const x = (e.startTime - eventBirdView.range.startTime) / msPerPx
-      const y = this.ctx.canvas.height * 0.6
-      const h = this.ctx.canvas.height * 0.2
-      const w = e.duration / msPerPx
-      const prevFillStyle = this.ctx.fillStyle
-      this.ctx.fillStyle = '#6cb844'
+      const x = (e.startTime - eventBirdView.range.startTime) / msPerPx      
+      const w = e.duration / msPerPx      
       this.ctx.fillRect(x, y, w, h)
-      this.ctx.fillStyle = prevFillStyle
     })
+    this.ctx.fillStyle = prevFillStyle
   }
 
   protected getEventBirdView (): IEventBirdView {

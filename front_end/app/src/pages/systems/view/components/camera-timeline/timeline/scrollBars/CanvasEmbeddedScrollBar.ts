@@ -6,8 +6,8 @@ import AbstractScrollBar from './AbstractScrollBar'
 export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
 
   static DEFAULT_MIN_SCROLL_WIDTH = 50 * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)
-  static DEFAULT_SCROLL_BAR_RELATIVE_Y = 0.82
-  static DEFAULT_SCROLL_BAR_RELATIVE_H = 0.18
+  static DEFAULT_SCROLL_BAR_RELATIVE_Y = 0.84
+  static DEFAULT_SCROLL_BAR_RELATIVE_H = 0.15
   static DEFAULT_SCROLL_BAR_AS_FINE_STEPS = 3
 
   constructor (
