@@ -27,8 +27,14 @@ export class NxSystemCameraViewComponent implements OnInit {
     public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
     public qualitySelected: PlaybackQuality = 'auto'
 
+    public isTimelineAreaVisible: boolean = true
+
     constructor (
     ) {
+    }
+
+    public toggleTimelineAreaVisibility () {
+      this.isTimelineAreaVisible = !this.isTimelineAreaVisible
     }
 
     public onLivePlayRequest (play_or_pause: boolean) {

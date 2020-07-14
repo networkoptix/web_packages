@@ -3,7 +3,7 @@ import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChange
 import TimeRange from './timeline/time_range/TimeRange'
 import TimeLineController from './timeline/TimeLineController'
 import installFpsMeter from './timeline/utils/installFpsMeter'
-import { int } from './timeline/basic_types/numbers'
+import { int, float } from './timeline/basic_types/numbers'
 import { timeStampMs, timeStampS } from './timeline/basic_types/time'
 import requestEventsBirdView from './timeline/utils/requestEventsBirdView'
 import { NxSystem, NxCamera } from '../../../../../services/system.service'
@@ -53,7 +53,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   public playbackStartedAt: timeStampMs
 
   protected mouseIsOverCanvas: boolean = false
-  protected mouseIsOverCanvasAt: float = -1
+  protected mouseIsOverCanvasAt: float = -1.0
   protected mouseIsOverCanvasAtTime: int = -1
 
   constructor (
@@ -73,7 +73,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
             console.error('catched timeline exception', e)
             this.initTimeline()
           }
-          if (this.mouseIsOverCanvas !== -1) {
+          if (this.mouseIsOverCanvas) {
             this.mouseIsOverCanvasAtTime = Math.round(
               this.timelineController.visibleRange.startTime + 
               this.timelineController.visibleRange.duration * this.mouseIsOverCanvasAt
