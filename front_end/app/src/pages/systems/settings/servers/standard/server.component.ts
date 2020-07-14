@@ -181,6 +181,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
+
+        this.checking = false;
     }
 
     checkIfOnline(serverId) {
@@ -218,9 +220,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     const servers: any[] = Object.entries(result).map(server => server[1]);
                     const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
                     this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
-                    this.checking = false;
                 } else {
-                    this.checking = false;
                     this.setStatus(this.CONFIG.servers.status.offline);
                 }
             });
