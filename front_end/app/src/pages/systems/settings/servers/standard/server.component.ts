@@ -1,23 +1,23 @@
 import {
     Component, OnInit, Inject,
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
-} from '@angular/core';
-import { ActivatedRoute }              from '@angular/router';
-import { of, interval }                        from 'rxjs';
-import { delayWhen, catchError, debounceTime } from 'rxjs/operators';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxConfigService, IConfig }    from '../../../../../services/nx-config';
-import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
-import { NxLanguageProviderService }   from '../../../../../services/nx-language-provider';
-import { NxMenuService }               from '../../../../../components/menu/menu.service';
-import { NxProcessService }            from '../../../../../services/process.service';
-import { NxSystem }                    from '../../../../../services/system.service';
-import { NxApplyService, Watcher }     from '../../../../../services/apply.service';
-import { NxUriService }                from '../../../../../services/uri.service';
-import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
-import { NxSettingsService }           from '../../settings.service';
-import { NxUtilsService }              from '../../../../../services/utils.service';
-import { InfoBlockSection, InfoBlockLine }            from '../../../../../components/info-block/info-block.component';
+}                                          from '@angular/core';
+import { ActivatedRoute }                             from '@angular/router';
+import { finalize, map } from 'rxjs/operators';
+import { AutoUnsubscribe }                            from 'ngx-auto-unsubscribe';
+import { NxConfigService, IConfig }        from '../../../../../services/nx-config';
+import { NxDialogsService }                from '../../../../../dialogs/dialogs.service';
+import { NxLanguageProviderService }       from '../../../../../services/nx-language-provider';
+import { NxMenuService }                   from '../../../../../components/menu/menu.service';
+import { NxProcessService }                from '../../../../../services/process.service';
+import { NxSystem }                        from '../../../../../services/system.service';
+import { NxApplyService, Watcher }         from '../../../../../services/apply.service';
+import { NxUriService }                    from '../../../../../services/uri.service';
+import { LanguageI18NStaticTypes }         from '../../../../../../language_i18n_static_types';
+import { NxSettingsService }               from '../../settings.service';
+import { NxUtilsService }                  from '../../../../../services/utils.service';
+import { InfoBlockSection, InfoBlockLine }              from '../../../../../components/info-block/info-block.component';
+import { pipe, timer, combineLatest, SubscriptionLike } from 'rxjs';
 
 @AutoUnsubscribe()
 @Component({
@@ -55,6 +55,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     fullInfoPath: string;
     parsedServerId: string;
     serverDetails: InfoBlockSection;
+    serversSubscription: SubscriptionLike;
 
     private setupDefaults() {
         this.checking = false;
@@ -202,22 +203,26 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     checkStatus() {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
-        this.system.getServers()
-            // add time to avoid server status flashing "Checking..." if system is offline
-            .pipe(debounceTime(this.CONFIG.servers.checkDebounceTime)).toPromise()
-            .then(res => {
-                if (res) {
-                    const servers: any[] = Object.entries(res).map(server => server[1]);
+
+        // add time to avoid server status flashing "Checking..." if system is offline
+        if (this.serversSubscription) {
+            this.serversSubscription.unsubscribe();
+        }
+        this.serversSubscription = combineLatest(timer(this.CONFIG.servers.minLoaderTime), this.system.getServers())
+            .pipe(
+                map(x => x[1]),
+                finalize(() => (this.checking = false))
+            )
+            .subscribe(result => {
+                if (result) {
+                    const servers: any[] = Object.entries(result).map(server => server[1]);
                     const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
-                    setTimeout(() => {
-                        this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
-                        this.checking = false;
-                    }, this.CONFIG.servers.checkStatusTimeout);
+                    this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                    this.checking = false;
+                } else {
+                    this.checking = false;
+                    this.setStatus(this.CONFIG.servers.status.offline);
                 }
-            })
-            .catch(() => {
-                this.checking = false;
-                this.setStatus(this.CONFIG.servers.status.offline);
             });
     }
 

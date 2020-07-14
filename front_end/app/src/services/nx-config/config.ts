@@ -302,7 +302,7 @@ export const nxConfig: IConfig = {
     },
     servers: {
         checkStatusTimeout : 3400,
-        checkDebounceTime  : 500,
+        minLoaderTime      : 500,
         port               : {
             max           : 65535,
             min           : 1,

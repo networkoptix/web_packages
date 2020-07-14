@@ -451,7 +451,7 @@ export interface Search {
 
 export interface Servers {
     checkStatusTimeout: number;
-    checkDebounceTime: number;
+    minLoaderTime: number;
     port: Port;
     status: ServersStatus;
 }
