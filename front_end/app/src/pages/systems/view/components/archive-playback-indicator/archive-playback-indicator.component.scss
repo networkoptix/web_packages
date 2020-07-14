@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .global-archive-playback-indicator {
   position: absolute;
   bottom: 0;
@@ -10,20 +12,28 @@
 .visible-range-archive-playback-indicator {
   position: absolute;
   height: 45px;
-  width: 160px;
+  width: 140px;
   top: 5px;
   padding-left: 5px;
   pointer-events: none;
-  background: #414b51aa;
+  background: rgba(43,56,63, 0.9); // $dark9
   color: #fff;
 
   > span {
-    line-height: 22.5px;
     text-align: center;
     display: block;
 
+    &.date-label {
+      padding-top: 2px;
+      font-size: 13px;
+      line-height: 1.5em;
+    }
+
     &.time-label {
       font-weight: bold;
+      font-size: 16px;
+      line-height: 1.0em;
+      font-family: 'robotobold', Roboto, Helvetica, sans-serif;
     }
   }
 
@@ -33,7 +43,7 @@
     bottom: -10px;
     left: 90px; // to be overriden by the micro-state offset
 
-    // background: #414b51aa;
+    // background: rgba(43,56,63, 0.9);
     // height: 20px;
     // width: 20px;
 
@@ -43,7 +53,7 @@
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid #414b51aa;
+    border-top: 10px solid rgba(43,56,63, 0.9);
 
     &:after {
       content: '';
@@ -64,7 +74,7 @@
     border-left: none;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-right: 10px solid #414b51aa;
+    border-right: 10px solid rgba(43,56,63, 0.9);
 
     &:after {
       display: none;
@@ -80,7 +90,7 @@
     border-right: none;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-left: 10px solid #414b51aa;
+    border-left: 10px solid rgba(43,56,63, 0.9);
 
     &:after {
       display: none;

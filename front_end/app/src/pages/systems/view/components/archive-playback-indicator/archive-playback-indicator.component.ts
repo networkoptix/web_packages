@@ -34,7 +34,7 @@ export class NxArchivePlaybackIndicatorComponent implements OnChanges {
     @Input() canvas: HTMLCanvasElement
 
     protected MIN_MARGIN_X: domPixels = 20
-    protected WHOLE_INDICATOR_HALF_WIDTH: domPixels = 80
+    protected WHOLE_INDICATOR_HALF_WIDTH: domPixels = 70
     protected ARROW_HALF_WIDTH: domPixels = 10
 
     protected canvasWidth: domPixels
