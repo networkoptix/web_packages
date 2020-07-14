@@ -25,11 +25,9 @@
             right: 0;
             top: 0;
             bottom: 0;
-            background-color: #0003;
-            color: white;
-            font-size: 6em;
-            line-height: 100%;
-            text-align: center;
+            background-color: #0007;
+            display: grid;
+            place-items: center;
         }
     }
 }

@@ -9,5 +9,5 @@
         class="video video-even"
         [ngClass]="{ 'video-active' : isEvenVideoActive }"
     ></video>
-    <div class="loading-indicator" *ngIf="isVideoLoading">Loading</div>
+    <nx-pre-loader class="loading-indicator" *ngIf="isVideoLoading"></nx-pre-loader>
 </div>
