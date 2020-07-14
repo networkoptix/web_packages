@@ -25,6 +25,14 @@ export class StaticCanvasRuler extends AbstractRuler {
       new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
         visibleRange,
         ctx.canvas,
+        4,
+      ),
+      protected topIntervalSetProvider: AbstractIntervalSetProvider =
+      new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
+        visibleRange,
+        ctx.canvas,
+        1,
+        true
       ),
 
     protected intervalSetExpander: AbstractIntervalSetExpander =
@@ -37,13 +45,22 @@ export class StaticCanvasRuler extends AbstractRuler {
     this.topRenderer = new CanvasTopRulerRenderer(this.visibleRange, this.ctx)
   }
 
+  // public render (debug: boolean = false) {
+  //   const intervals = this.intervalSetProvider.getIntervals()
+  //   const topIntervals = intervals.length ? [intervals[intervals.length - 1]] : []
+  //   const primaryIntervals = intervals.slice(0, intervals.length) // -1
+  //   const primarySerifs = this.intervalSetExpander.expand(primaryIntervals, topIntervals) as Array<WeightedRegularIntervalSerif>
+  //   const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
+  //   this.primaryRenderer.render(primarySerifs, debug)
+  //   this.topRenderer.render(topSerifs, debug)
+  // }
+
   public render (debug: boolean = false) {
-    const intervals = this.intervalSetProvider.getIntervals()
-    const topIntervals = intervals.length ? [intervals[intervals.length - 1]] : []
-    const primaryIntervals = intervals.slice(0, intervals.length - 1)
+    const primaryIntervals = this.intervalSetProvider.getIntervals()
+    const topIntervals = this.topIntervalSetProvider.getIntervals()
     const primarySerifs = this.intervalSetExpander.expand(primaryIntervals, topIntervals) as Array<WeightedRegularIntervalSerif>
-    const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
     this.primaryRenderer.render(primarySerifs, debug)
+    const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
     this.topRenderer.render(topSerifs, debug)
   }
 

@@ -6,7 +6,8 @@ import Ranger from './ranger/Ranger'
 // import AbstractRanger from './ranger/AbstractRanger'
 
 import AbstractRuler from "./rulers/AbstractRuler"
-import AnimatedCanvasRuler from "./rulers/AnimatedCanvasRuler"
+import StaticCanvasRuler from "./rulers/StaticCanvasRuler"
+// import AnimatedCanvasRuler from "./rulers/AnimatedCanvasRuler"
 
 import AbstractScrollBar from './scrollBars/AbstractScrollBar'
 import CanvasEmbeddedScrollBar from './scrollBars/CanvasEmbeddedScrollBar'
@@ -50,9 +51,10 @@ export class TimeLineController {
     this.ctx = setupCanvas(containerId, true) // resize will shoot anyway, so this line is not obligatory
 
     this.ranger = new Ranger(archiveRange, this.ctx.canvas.width, animate)
-      // new this.rangerClass(archiveRange, this.ctx, embed, animate) as Ranger
-    this.ruler = new AnimatedCanvasRuler(this.ranger.visibleRange, this.ctx)
-      // new this.rulerClass(this.ranger.visibleRange, this.ctx)
+    
+    this.ruler = new StaticCanvasRuler(this.ranger.visibleRange, this.ctx)
+    // this.ruler = new AnimatedCanvasRuler(this.ranger.visibleRange, this.ctx)
+    
     this.scrollBar = new CanvasEmbeddedScrollBar(this.ranger.status, this.ranger.controls, this.canvas)
     this.archiveController = new NaiveArchiveController(this.archiveRange, this.ranger.visibleRange, this.ctx, archiveBirdViewProvider)
 
