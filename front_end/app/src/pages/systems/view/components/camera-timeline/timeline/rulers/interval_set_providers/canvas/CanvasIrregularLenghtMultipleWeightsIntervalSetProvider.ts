@@ -12,6 +12,7 @@ export class CanvasIrregularLenghtMultipleWeightsIntervalSetProvider extends Abs
     protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
     protected WEIGHT_COUNT_TO_RETURN = 4,
+    protected targetTopRuler = false,
   ) {
     super(visibleRange, canvas)
   }
@@ -38,11 +39,48 @@ export class CanvasIrregularLenghtMultipleWeightsIntervalSetProvider extends Abs
     'century': [ 15, 40, 400, 4000 ].map(i => i * devicePixelRatio),
   }
 
+  // // fallback version
+  // protected TOP__MIN_WIDTH_FOR_INTERVALS = {
+  //   [SECOND]: [ Infinity ].map(i => i * devicePixelRatio),
+  //   [5 * SECOND]: [ Infinity ].map(i => i * devicePixelRatio),
+  //   [10 * SECOND]: [ 1000 ].map(i => i * devicePixelRatio),
+  //   [30 * SECOND]: [ 1500 ].map(i => i * devicePixelRatio),
+  //   [MINUTE]: [ 300 ].map(i => i * devicePixelRatio),
+  //   [5 * MINUTE]: [ 500 ].map(i => i * devicePixelRatio),
+  //   [10 * MINUTE]: [ 1000 ].map(i => i * devicePixelRatio),
+  //   [30 * MINUTE]: [ 1500 ].map(i => i * devicePixelRatio),
+  //   [HOUR]: [ 300 ].map(i => i * devicePixelRatio),
+  //   [3 * HOUR]: [ 900 ].map(i => i * devicePixelRatio),
+  //   [6 * HOUR]: [ 1800 ].map(i => i * devicePixelRatio),
+  //   [12 * HOUR]: [ 1200 ].map(i => i * devicePixelRatio),
+  //   [24 * HOUR]: [ 200 ].map(i => i * devicePixelRatio),
+  //   'month': [ 600 ].map(i => i * devicePixelRatio),
+  //   'quarter-year': [ 9000 ].map(i => i * devicePixelRatio),
+  //   'half-year': [ 3600 ].map(i => i * devicePixelRatio),
+  //   'year': [ 720 ].map(i => i * devicePixelRatio),
+  //   'decade': [ 9000 ].map(i => i * devicePixelRatio),
+  //   'century': [ 4000 ].map(i => i * devicePixelRatio),
+  // }
+
+  protected TOP__MIN_WIDTH_FOR_INTERVALS = {
+    [SECOND]: [ 200 ].map(i => i * devicePixelRatio),
+    [MINUTE]: [ 170 ].map(i => i * devicePixelRatio),
+    [24 * HOUR]: [ 170 ].map(i => i * devicePixelRatio),
+    'month': [ 170 ].map(i => i * devicePixelRatio),
+    'year': [ 100 ].map(i => i * devicePixelRatio),
+    'century': [ 0 ].map(i => i * devicePixelRatio),
+  }
+
   public getIntervals (): Array<IrregularLengthInterval> {
     const result = []
     for (let interval of irregularLengthIntervals) {
       const displayWidth = estimateIrregularLengthIntervalPessimistically(interval) * this.pxPerMs
-      const requiredWidth = this.MIN_WIDTH_FOR_INTERVALS[interval][result.length]
+      let requiredWidth = Infinity
+      try {
+        requiredWidth = (this.targetTopRuler ? this.TOP__MIN_WIDTH_FOR_INTERVALS : this.MIN_WIDTH_FOR_INTERVALS)[interval][result.length]
+      } catch (TypeError) {
+        continue
+      }
       if (displayWidth >= requiredWidth) {
         result.push(interval)
         if (result.length >= this.WEIGHT_COUNT_TO_RETURN) {
