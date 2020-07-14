@@ -20,7 +20,9 @@ export class RangerStatus implements IRangerStatus {
         return {
             factor,
             // @ts-ignore
-            isMax: (this.ranger.visibleRange.duration / this.ranger.canvasWidth) <= 1,
+            isMax: (this.ranger.visibleRange.duration / (this.ranger.canvasWidth * (
+                (typeof(window) === 'object' ? window.devicePixelRatio : 1)
+            ))) <= 1,
             isMin: factor <= 1
 
         }
