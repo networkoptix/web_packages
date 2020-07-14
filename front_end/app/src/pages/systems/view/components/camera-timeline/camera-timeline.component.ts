@@ -52,7 +52,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   public playbackPositionAbsolute: timeStampMs
   public playbackStartedAt: timeStampMs
 
-  protected mouseIsOverCanvas: boolean = false
+  public mouseIsOverCanvas: boolean = false
   protected mouseIsOverCanvasAt: float = -1.0
   protected mouseIsOverCanvasAtTime: int = -1
 
