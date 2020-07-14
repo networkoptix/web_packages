@@ -11,6 +11,9 @@ import IEventBirdView from './timeline/archive/birdViews/IEventBirdView'
 import ProxyEventBirdViewProvider from './timeline/archive/birdViews/providers/ProxyEventBirdViewProvider'
 import ITimeRange from './timeline/time_range/ITimeRange'
 
+import * as df from 'dateformat'
+const dateformat = df.default || df
+
 
 const now = Date.now()
 const DAY = 24 * 60 * 60 * 1000
@@ -49,6 +52,10 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   public playbackPositionAbsolute: timeStampMs
   public playbackStartedAt: timeStampMs
 
+  protected mouseIsOverCanvas: boolean = false
+  protected mouseIsOverCanvasAt: float = -1
+  protected mouseIsOverCanvasAtTime: int = -1
+
   constructor (
   ) {
   }
@@ -65,6 +72,13 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
           } catch (e) {
             console.error('catched timeline exception', e)
             this.initTimeline()
+          }
+          if (this.mouseIsOverCanvas !== -1) {
+            this.mouseIsOverCanvasAtTime = Math.round(
+              this.timelineController.visibleRange.startTime + 
+              this.timelineController.visibleRange.duration * this.mouseIsOverCanvasAt
+            )
+            // console.log('mouseIsOverCanvasAt', this.mouseIsOverCanvasAt, dateformat(this.mouseIsOverCanvasAtTime))
           }
         // }
       }
@@ -179,6 +193,21 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     if (this.zoomingDirection) {
       this.timelineController.rangerControls.zoom.atCenter.fine(this.zoomingDirection, false)
     }
+  }
+
+  public onCanvasMouseEnter (e: MouseEvent) {    
+  }
+
+  public onCanvasMouseMove (e: MouseEvent) {
+    const rect = document.getElementById('timeline-canvas').getBoundingClientRect()
+    const relativeX = (e.clientX - rect.left) / rect.width
+    this.mouseIsOverCanvas = true
+    this.mouseIsOverCanvasAt = relativeX
+  }
+
+  public onCanvasMouseLeave (e: MouseEvent) {
+    this.mouseIsOverCanvas = false
+    this.mouseIsOverCanvasAt = -1
   }
 
 

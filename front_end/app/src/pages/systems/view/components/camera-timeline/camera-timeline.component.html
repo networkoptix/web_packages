@@ -31,7 +31,20 @@
       [isActive]="!timelineController.rangerStatus.scroll.isMax"
     ></nx-timeline-scroll-button>
     <div *ngIf="archiveRequestFailed" class="no-archive-message">No Records Archive Available</div>
-    <canvas id="timeline-canvas" (click)="onCanvasClick($event)"></canvas>
+    
+    <canvas
+      id="timeline-canvas"
+      (click)="onCanvasClick($event)"
+      (mouseenter)="onCanvasMouseEnter($event)"
+      (mousemove)="onCanvasMouseMove($event)"
+      (mouseleave)="onCanvasMouseLeave($event)"
+    ></canvas>
+
+    <nx-timeline-hover      
+      *ngIf="mouseIsOverCanvas"
+      [relativeX]="mouseIsOverCanvasAt"
+      [time]="mouseIsOverCanvasAtTime"
+    ></nx-timeline-hover>
   </div>
   <nx-archive-playback-indicator
     *ngIf="timelineController"
