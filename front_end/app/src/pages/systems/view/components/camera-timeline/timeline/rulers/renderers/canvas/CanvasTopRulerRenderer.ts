@@ -41,7 +41,7 @@ export class CanvasTopRulerRenderer {
         opacity: 1.0,
       },
       backgroundOddColor: '#f0f3f4', // [240, 243, 244]
-    }
+    }    
 
     serifs = serifs.filter(s => s.weight > 0)
 
@@ -87,6 +87,15 @@ export class CanvasTopRulerRenderer {
         this.drawBottomLabel(serif, x, y + h + this.BOTTOM_LABEL_OFFSET_PX * devicePixelRatio, drawingConfig.bottomLabel)
       }
     }
+
+    // draw the horizontal line separating top ruler from the primary ruler
+    const h = this.H_BASE_RELATIVE * this.ctx.canvas.height
+    this.ctx.strokeStyle = '#e5e7e9'
+    this.ctx.beginPath()
+    this.ctx.moveTo(0, h)
+    this.ctx.lineTo(this.ctx.canvas.width, h)
+    this.ctx.stroke()
+    this.ctx.lineWidth = 1
   }
 
   public get canvas () {
