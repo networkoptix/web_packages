@@ -77,10 +77,15 @@ export class TimeLineController {
         setupCanvas(this.containerId, true)
       })
     }
-    document.addEventListener('resize', () => setupCanvas(this.containerId, true))
+    window.addEventListener('resize', () => {
+      setupCanvas(this.containerId, true)
+      this.ranger.canvasWidth = this.ctx.canvas.width
+      // console.debug('window resized, canvas width changed', this.ctx.canvas.width)
+    })
     window.matchMedia('screen and (min-resolution: 2dppx)').addListener(e => {
       setupCanvas(this.containerId, true)
       this.ranger.canvasWidth = this.ctx.canvas.width
+      // console.debug('media resolution (pixel density), canvas width changed', this.ctx.canvas.width)
     });
   }
 
