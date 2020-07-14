@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "연결 끊기",
             "message": "더이상 이 시스템에 접속 할 수 없습니다.",
-            "title": "Disconnect System from your Account?"
+            "title": "계정에서 시스템을 분리 하시겠습니까?"
         },
         "titles": {
             "error": "오류",
@@ -489,7 +489,7 @@
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "오디오",
         "isDualStreamingSupported": "듀얼 스트리밍",
-        "isFisheye": "Fisheye",
+        "isFisheye": "어안카메라",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "움직임 감지:",
@@ -713,7 +713,7 @@
     "license": {
         "info": {
             "type": "형식",
-            "channels": "개의 채널",
+            "channels": "채널 수",
             "server": "서버:",
             "hwid": "하드웨어 ID:",
             "status": "상태",

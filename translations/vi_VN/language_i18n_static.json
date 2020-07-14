@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Ngắt kết nối",
             "message": "Bạn sẽ không thể đăng nhập vào hệ thống này nữa.",
-            "title": "Disconnect System from your Account?"
+            "title": "Ngắt kết nối hệ thống khỏi tài khoản của bạn?"
         },
         "titles": {
             "error": "Lỗi",
