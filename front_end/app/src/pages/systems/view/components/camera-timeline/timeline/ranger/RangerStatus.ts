@@ -23,7 +23,7 @@ export class RangerStatus implements IRangerStatus {
             isMax: (this.ranger.visibleRange.duration / (this.ranger.canvasWidth * (
                 (typeof(window) === 'object' ? window.devicePixelRatio : 1)
             ))) <= 1,
-            isMin: factor <= 1
+            isMin: factor <= 1.01
 
         }
     }
@@ -36,7 +36,7 @@ export class RangerStatus implements IRangerStatus {
                 absolute: absOffset
             },
             isMax: absOffset >= this.ranger.fullRange.duration - this.ranger.visibleRange.duration,
-            isMin: absOffset <= 0,
+            isMin: absOffset <= 60 * 1000,
         }
         return result
     }
