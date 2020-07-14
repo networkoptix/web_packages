@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
-import { int } from '../camera-timeline/timeline/basic_types/numbers'
+import { int, float } from '../camera-timeline/timeline/basic_types/numbers'
 import { timeStampMs } from '../camera-timeline/timeline/basic_types/time'
-import ITimeRange from '../camera-timeline/timeline/time_range/ITimeRange'
 import * as df from 'dateformat'
 const dateformat = df.default || df
 

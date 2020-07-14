@@ -1,5 +1,5 @@
 <div class="nx-camera-page" id="nx-camera-page" [ngClass]="{ fullscreen: isFullScreen }">
-  <div class="camera-view" id="nx-camera-view">
+  <div class="camera-view" id="nx-camera-view" [ngClass]="{ expanded: !isTimelineAreaVisible } ">
     <div class="player-header">
       <div class="camera-name" [ngClass]="camera.status">
         <span class="name">{{ camera.name }}</span>
@@ -44,21 +44,24 @@
     ></nx-camera-hls-player>
   </div>
 
-  <div class="controls">
-    <div
-      class="play-pause-button"
-      [ngClass]="{ playing: isPlaying, paused: !isPlaying }"
-      (click)="onPlayPauseButtonClick()"
-    ></div>
-    <nx-camera-timeline
-      [system]="system"
-      [camera]="camera"
-      (archivePlayRequest)="onArchivePlayRequest($event)"
-      (livePlayRequest)="onLivePlayRequest($event)"
-      [playbackStartedTime]="playbackStartedTime"
-      (playbackTimeUpdate)="onPlaybackTimeUpdate($event)"
-    ></nx-camera-timeline>
-  </div>
+  <div class="timeline-area" [ngClass]="{ visible: isTimelineAreaVisible } ">
+    <div class="timeline-area-visibility-toggler" (click)="toggleTimelineAreaVisibility()"></div>
+    <div class="controls">
+      <div
+        class="play-pause-button"
+        [ngClass]="{ playing: isPlaying, paused: !isPlaying }"
+        (click)="onPlayPauseButtonClick()"
+      ></div>
+      <nx-camera-timeline
+        [system]="system"
+        [camera]="camera"
+        (archivePlayRequest)="onArchivePlayRequest($event)"
+        (livePlayRequest)="onLivePlayRequest($event)"
+        [playbackStartedTime]="playbackStartedTime"
+        (playbackTimeUpdate)="onPlaybackTimeUpdate($event)"
+      ></nx-camera-timeline>
+    </div>
 
-  <div class="live-status-indicator"></div>
+    <div class="live-status-indicator"></div>
+  </div>
 </div>
