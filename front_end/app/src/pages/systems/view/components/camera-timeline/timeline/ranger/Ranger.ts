@@ -124,7 +124,7 @@ export class Ranger extends AbstractRanger {
         this.visibleRange.trim(trimmer, skipAnimation)        
     }
 
-    this.vetVisibleRange()
+    this.vetVisibleRange(position)
     return true
   }
 
@@ -182,8 +182,14 @@ export class Ranger extends AbstractRanger {
     return true
   }
 
-  protected vetVisibleRange () {
+  protected vetVisibleRange (position: float = 0.5) {
     this.visibleRange.trim(this.fullRange, true)
+    
+    const diff = this.canvasWidth * (typeof(window) === 'object' ? window.devicePixelRatio : 1) - this.visibleRange.duration
+    if (diff > 0) {
+      this.visibleRange.expand(diff, position, true)
+      console.debug('prevented zooming too deep')
+    }
   }
 
 }
