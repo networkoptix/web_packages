@@ -1,0 +1,13 @@
+<div
+  class="nx-timeline-hover"
+  [ngStyle]="{ 'left.px': outerOffsetLeft }"
+  *ngIf="!hideMe"
+>
+  <span class="date-label">{{ playbackDate }}</span>
+  <span class="time-label">{{ playbackTime }}</span>
+
+  <span
+    class="indicating-arrow"
+    [ngStyle]="{ 'left.px': innerOffsetLeft }"
+  ></span>
+</div>
