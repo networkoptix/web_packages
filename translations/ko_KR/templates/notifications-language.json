@@ -9,7 +9,7 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{{message.asset}}}에 대한 구매 문의"
+    "emailSubject": "{{{message.asset}}에 대한 판매 문의}"
   },
   "technical_inquiry": {
     "emailSubject": "{{{message.asset}}}에 대한 기술 문의"
