@@ -1,6 +1,6 @@
-<nx-pre-loader *ngIf="!system || !systemLoaded"></nx-pre-loader>
+<nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
-<div *ngIf="system && systemLoaded" class="row d-flex align-items-start">
+<div *ngIf="system" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
         <nx-block header-style="extended">
             <header>

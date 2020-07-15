@@ -41,7 +41,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     userDisconnectSystem: any;
     deletingSystem: any;
     currentlyMerging = false;
-    systemLoaded = false;
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
@@ -114,7 +113,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 if (!system) {
                     this.system = undefined;
-                    this.systemLoaded = false;
                     return;
                 }
                 this.system = system;
@@ -139,11 +137,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsSubscription = this.system.updateOrGetSystemSettings()
                             .subscribe((res: any) => {
                                 this.settingsForSystem = res.reply.settings;
-                                this.systemLoaded = true;
                             }, (err) => {
                                 this.settingsForSystem = false;
                                 console.error(err);
-                                this.systemLoaded = true;
                             });
                     });
                 this.deletingSystem = this.processService.createProcess(
@@ -164,9 +160,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
-            this.systemsService.forceUpdateSystems().toPromise().finally(() => {
-                this.systemLoaded = true;
-            });
+            this.systemsService.forceUpdateSystems().toPromise();
         }
 
         if (this.systemsSubscription) {
@@ -176,11 +170,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 if (this.systemsService.finishedMerged) {
                     this.systemsService.finishedMerged = false;
-                    this.system.getInfo(true, false).finally(() => {
-                        this.systemLoaded = true;
-                    });
-                } else {
-                    this.systemLoaded = true;
+                    this.system.getInfo(true, false);
                 }
             });
     }
