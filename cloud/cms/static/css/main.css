@@ -210,3 +210,11 @@ img.light {
 .defaultSkin * {
     color: #aaaaaa !important;
 }
+
+.sort-links {
+    margin-top: 10px;
+}
+
+.sort-links .selected {
+    font-weight: bold;
+}
