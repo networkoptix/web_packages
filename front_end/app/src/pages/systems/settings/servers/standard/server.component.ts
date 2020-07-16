@@ -102,7 +102,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);
-        this.applyService.setVisible(true);
+
+        this.applyService.setVisible(false);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -118,9 +119,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
         if (changes.selectedServer?.currentValue) {
             const { currentValue, previousValue } = changes.selectedServer;
-            if (previousValue && currentValue.id !== previousValue.id) {
-                this.serverLoaded = false;
+            if (previousValue?.id === currentValue.id) {
+                return;
             }
+            this.serverLoaded = false;
             this.setServer();
         }
     }
@@ -145,9 +147,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.portChangeDisabled = !this.system.permissions.editAdmins;
 
         this.serverDetails = new InfoBlockSection([
-            new InfoBlockLine(this.LANG.common.ip, this.selectedServer.ip || '-'),
-            new InfoBlockLine(this.LANG.common.os, this.selectedServer.osName || '-'),
-            new InfoBlockLine(this.LANG.common.version, this.selectedServer.version || '-')
+            new InfoBlockLine(this.LANG.common.ip(), this.selectedServer.ip || '-'),
+            new InfoBlockLine(this.LANG.common.os(), this.selectedServer.osName || '-'),
+            new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
 
         if (!this.applyService.locked) {

@@ -1,17 +1,16 @@
-import { Component, Input }          from '@angular/core';
+import { Component }                 from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { BaseDropdown } from '../../dropdowns/injDropdown';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { filter } from 'rxjs/operators';
-import { MenuNode } from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { BehaviorSubject } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { BaseDropdown }              from '../../dropdowns/injDropdown';
+import { NxHeaderService }           from '../../../services/nx-header.service';
+import { MenuNode }                  from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { BehaviorSubject }           from 'rxjs';
+import { environment }               from '../../../../environments/environment';
 
 @Component({
-    selector   : 'nx-nav-dropdown',
-    templateUrl: 'nav-dropdown.component.html',
-    styleUrls  : [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
+    selector    : 'nx-nav-dropdown',
+    templateUrl : 'nav-dropdown.component.html',
+    styleUrls   : [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     name = new BehaviorSubject('');
@@ -28,8 +27,15 @@ export class NxNavDropdownComponent extends BaseDropdown {
             const nodes = parentNode?.nodes;
             if (!nodes) {
                 return;
-            };
-            this.name.next(nodes.find(({ url }) => url === path).name);
+            }
+
+            const node = nodes.find(({ url }) => {
+                return url === path;
+            });
+            if (node) {
+                this.name.next(node.name);
+            }
+
             this.nodes.next(nodes);
         });
     }
