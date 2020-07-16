@@ -13,7 +13,7 @@ import { NxUtilsService }              from '../../services/utils.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 import StateMachine                    from './stateMachine';
 import { State }                       from './stateForMergeDialog';
-import * as md5                        from 'md5';
+import { timer }                       from 'rxjs';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -50,6 +50,7 @@ export class MergeModalContent {
     systemsLoaded = false;
     checking = false;
     dryRunAvailable = false;
+    systemUpdating = false;
     primaryName: string;
     secondaryName: string;
     systemUrls = {};
@@ -110,7 +111,7 @@ export class MergeModalContent {
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
-            this.getPeerSystems()
+            return this.getPeerSystems()
                 .then(() => {
                     return this.user.get().then(account => {
                         this.account = account;
@@ -200,6 +201,7 @@ export class MergeModalContent {
                         }
                     }
                     this.systemsLoaded = true;
+                    this.systemUpdating = false;
                     this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                     this.initProcesses();
                 });
@@ -254,7 +256,7 @@ export class MergeModalContent {
 
     setTargetSystem(targetSystem, serverUrlInputValue = '') {
         // cancels process service if new system selected while checking
-        if (this.checkMergeabilityProcess.processing) {
+        if (this.checkMergeabilityProcess.processing && !this.systemUpdating) {
             this.checkMergeabilityProcess.processing = false;
             this.checkMergeabilityProcess.finished = true;
             this.checking = false;
@@ -366,10 +368,6 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.checking = true;
-                this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
-                if (!this.serverUrlInputExists) {
-                    this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
-                }
                 return this.precheckSystemMerge();
             }, { ignoreError: true })
             .then(
@@ -591,6 +589,21 @@ export class MergeModalContent {
 
     async precheckSystemMerge() {
         const isNew = { isNew: true };
+        this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
+        if (!this.serverUrlInputExists) {
+            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+        }
+        if (!this.dryRunAvailable) {
+            this.systemUpdating = true;
+            await this.system.update().toPromise();
+            if (this.system.info.capabilities.merge_systems >= 1) {
+                this.systemsLoaded = false;
+                this.processedSystems = [];
+                await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
+                const res = await this.precheckSystemMerge();
+                return res;
+            }
+        }
         /**
          * targetSystem
          * no id = Other System
@@ -610,10 +623,13 @@ export class MergeModalContent {
             this.nonCloudMerge = true;
             this.getSecondaryName();
             if (!this.dryRunAvailable) {
-                this.checkMergeabilityProcess.processing = false;
-                this.checkMergeabilityProcess.finished = true;
-                this.checking = false;
-                this.machine.transition('adminPassword');
+                return timer(1000).toPromise()
+                    .then(() => {
+                        this.checkMergeabilityProcess.processing = false;
+                        this.checkMergeabilityProcess.finished = true;
+                        this.checking = false;
+                        this.machine.transition('adminPassword');
+                    });
             } else {
                 return this.system.mergeSystems(this.serverUrl, true).toPromise()
                     .then(res => {
