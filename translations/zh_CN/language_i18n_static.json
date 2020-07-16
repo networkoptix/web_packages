@@ -157,12 +157,12 @@
         "systemUnreachable": "系统无法连接",
         "inaccessibleFeatureMessage": "系统处于离线状态，无法读取资讯",
         "unknown": "未知的",
-        "vendor": "Vendor",
+        "vendor": "厂商",
         "model": "型号",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "IP地址",
+        "server": "服务器",
+        "os": "操作系统",
+        "version": "版本",
         "voiceCommands": {
             "clear search": "清除搜索",
             "collapse all servers": "隐藏所有服务器",
@@ -201,12 +201,12 @@
             "camera": "摄像机",
             "cameras": "摄像机",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "当前录像",
+                "whenFullyUsed": "当耗尽时",
+                "amountUsed": "总使用量",
+                "archiveFrom": "存档来自",
+                "recordingBitrate": "录像比特率",
+                "delayFromLive": "与实时影像差距"
             },
             "remove": {
                 "success": "云存储已成功从系统中删除",
@@ -271,7 +271,7 @@
             "systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
             "systemOfflineUrl": "无法访问{{targetSystem}}.",
             "systemsIncompatible": "该服务器的软件版本不兼容。请将两个系统都更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "系统的软件版本不相容。请将两个系统更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
             "urlEmpty": "输入服务器地址",
             "urlNotValid": "请输入有效的URL。",
             "unknownError": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "断开连接",
             "message": "您将无法再登录此系统。",
-            "title": "Disconnect System from your Account?"
+            "title": "您将登出系统?"
         },
         "titles": {
             "error": "错误",

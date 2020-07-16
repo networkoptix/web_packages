@@ -204,9 +204,9 @@
                 "currentRecordings": "當前錄影影像",
                 "whenFullyUsed": "當耗盡時",
                 "amountUsed": "總使用量",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "archiveFrom": "檔案來自",
+                "recordingBitrate": "錄影頻寬",
+                "delayFromLive": "與即時影像差距"
             },
             "remove": {
                 "success": "雲端儲存已成功從系統中刪除",
@@ -256,22 +256,22 @@
             "passwordRequired": "密碼是必填的",
             "passwordWrong": "密碼不正確",
             "primaryCannotMerge": "系統 {{targetSystem}} 的軟體版本較新，與當前系統不相容。請更新目前系統<a href=\"/download\" target=\"_blank\" translate>為最新版本</a>，再與 {{targetSystem}} 合併。",
-            "primarySystemOffline": "系統{{primarySystem}}處於離線   狀態, 無法合併系{targetSystem}}",
-            "primarySystemUnavailable": "系統 {{primarySystem}}目前無法 連上。請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
+            "primarySystemOffline": "系統 {{primarySystem}} 處於離線 狀態, 無法合併系{{targetSystem}}",
+            "primarySystemUnavailable": "系統 {{primarySystem}} 目前無法 連上。請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
             "recommendSupport": {
                 "a_recommend": "建議您諮詢",
                 "b_support": "支援",
                 "c_proceeding": "在繼續執行之前。"
             },
             "secondaryCannotMerge": "系統 {{targetSystem}} 的軟體版本較舊，與當前系統不相容。請將 {{targetSystem}} 更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 與其當前版本合併。",
-            "secondarySystemUnavailable": "系統 {{targetSystem}}目前無法  連上。請稍後再試一次, 或聯繫<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
+            "secondarySystemUnavailable": "系統 {{targetSystem}} 目前無法 連上。請稍後再試一次, 或聯繫<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
             "serverAtUrl": "伺服器位於{{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">無法連接系統 {{targetSystem}}。</p><p>請確認選定伺服器在線並重試。</p>",
             "serverNotYours": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
             "systemOfflineUrl": "無法連接{{targetSystem}}",
             "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統都更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "系統的軟體版本不相容。請將兩個系統更新至 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "斷線",
             "message": "您將無法再登入此系統。",
-            "title": "Disconnect System from your Account?"
+            "title": "您將被登出系統?"
         },
         "titles": {
             "error": "錯誤",
@@ -776,7 +776,7 @@
         "cloudConnectRelayingEnabled": "啟用雲端連接轉發",
         "cloudConnectUdpHolePunchingEnabled": "啟用雲端連結 UDP洞穿技術",
         "cloudHost": "雲端主機地址",
-        "cloudSystemID": "雲端系統 ID",
+        "cloudSystemID": "雲端系統 id",
         "disabledVendors": "禁用的供應商",
         "ec2AliveUpdateIntervalSec": "系統偵測更新間隔（秒）",
         "ec2ConnectionKeepAliveTimeoutSec": "連線偵測逾時（秒）",
@@ -797,7 +797,7 @@
         "maxRecordQueueSizeBytes": "最大錄影佇列(bytes)",
         "maxRecordQueueSizeElements": "最大錄影佇列(元件)",
         "maxRemoteArchiveSynchronizationThreads": "最大遠程歸檔同步執行緒",
-        "maxRtspConnectDurationSeconds": "RTSP 持續連線秒數上限",
+        "maxRtspConnectDurationSeconds": "Rtsp 持續連線秒數上限",
         "maxSceneItems": "最大場景項目 (預設為0)",
         "proxyConnectTimeoutSec": "代理連接逾時 (秒)",
         "rtpTimeoutMs": "RTP 超時時間 (毫秒)",
@@ -813,7 +813,7 @@
         "statisticsReportLastNumber": "統計報告 - 最後一個數值",
         "statisticsReportLastTime": "統計報告 - 上次",
         "statisticsReportLastVersion": "統計報告 - 最新版本",
-        "statisticsReportServerApi": "統計伺服器 API",
+        "statisticsReportServerApi": "統計伺服器 api",
         "statisticsReportTimeCycle": "統計報告間隔",
         "statisticsReportUpdateDelay": "統計報告 - 延遲資訊",
         "synchronizeTimeWithInternet": "與網際網路校時",
@@ -835,6 +835,6 @@
         "watermarkSettings": "浮水印設定",
         "maxWebMTranscoders": "伺服器最大的WEBM連線數。Chrome會立刻開啟2個連接，然後關閉第一個連接。因此建議將參數值設定為> = 2。",
         "maxEventLogRecords": "要保留最多筆在資料庫中的事件日誌記錄。實際未刪除記錄的數量可能比預定高出20％。",
-        "forceLiveCacheForPrimaryStream": "是否為主串流緩存一些幀數。數值：“是” - 一直啟用（可能占用大量RAM），“否” - 一直停用，除非回放需要（例如HLS），“自動” - 類似於“否”，但會在開啟時改進使用者體驗（例如當某些分析插件在攝影機上作用時）。"
+        "forceLiveCacheForPrimaryStream": "是否為主串流緩存一些幀數。數值：“是” - 一直啟用(可能占用大量RAM)，“否” - 一直停用，除非回放需要(例如HLS)，“自動” - 類似於“否”，但會在開啟時改進使用者體驗(例如當某些分析插件在攝影機上作用時)。"
     }
 }

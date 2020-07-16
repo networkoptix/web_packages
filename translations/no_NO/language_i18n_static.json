@@ -157,12 +157,12 @@
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
         "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
         "unknown": "Ukjent",
-        "vendor": "Vendor",
+        "vendor": "Leverandør",
         "model": "Modell",
-        "ip": "IP Address",
+        "ip": "IP adresse",
         "server": "Server",
         "os": "OS",
-        "version": "Version",
+        "version": "Versjon",
         "voiceCommands": {
             "clear search": "nullstill søk",
             "collapse all servers": "kollapse alle servere",
@@ -201,12 +201,12 @@
             "camera": "kamera",
             "cameras": "kameraer",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Aktuelle opptak",
+                "whenFullyUsed": "Ved full bruk",
+                "amountUsed": "Benyttet",
+                "archiveFrom": "Arkiv fra",
+                "recordingBitrate": "Opptak Bitrate",
+                "delayFromLive": "Forsinkelse fra live"
             },
             "remove": {
                 "success": "Skylagring ble fjernet fra systemet",

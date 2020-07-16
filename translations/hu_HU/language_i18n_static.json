@@ -246,7 +246,7 @@
             "differentOwners": "Mind a kiválasztott, mind a jelenlegi rendszer %CLOUD_NAME% csatlakoztatva van, és különböznek a tulajdonosok. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "duplicateServers": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
             "enterSystemAddressTitle": "Írja be annak a kiszolgálónak a címét, amellyel a jelenlegit kívánja egyesíteni.",
-            "mergeConfirmation": "<p class=\"mb-0\">Az <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>rendszerek egyesítésével készül.</p><p>A beállítások és a név az alábbi szerverről kerülnek átvételre:  <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Az <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong> rendszerek egyesítésével készül.</p><p>A beállítások és a név az alábbi szerverről kerülnek átvételre: <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Egyesítse a jelenlegi rendszert a",
             "mergeFailedTitle": "A rendszeregyesítés sikertelen",
             "noServerFound": "Nem találhatók szerverek",
@@ -256,10 +256,10 @@
             "passwordRequired": "Jelszó megadása szükséges",
             "passwordWrong": "Hibás jelszó",
             "primaryCannotMerge": "A {{targetSystem}} rendszernek van egy újabb szoftver verziója, amely nem kompatibilis az aktuális rendszerrel. Frissítse az aktuális rendszert a <a href=\"/download\" target=\"_blank\" translate>legutóbbi</a> verzióra, hogy összekapcsolja azt a {{targetSystem}} rendszerrel.",
-            "primarySystemOffline": "A {{primarySystem}} rendszer offline állapotban van, és nem egyesíthető az {{targetSystem}}rendszerrel",
+            "primarySystemOffline": "A {{primarySystem}} rendszer offline állapotban van, és nem egyesíthető az {{targetSystem}} rendszerrel",
             "primarySystemUnavailable": "A {{primarySystem}} rendszer jelenleg nem érhető el. Próbálkozzon néhány perc múlva, vagy lépjen kapcsolatba az <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
             "recommendSupport": {
-                "a_recommend": "Javasoljuk, hogy konzultáljon ",
+                "a_recommend": "Javasoljuk, hogy konzultáljon",
                 "b_support": "támogatás",
                 "c_proceeding": "mielőtt folytatná."
             },
@@ -267,7 +267,7 @@
             "secondarySystemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Próbálkozzon néhány perc múlva, vagy lépjen kapcsolatba az <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
             "serverAtUrl": "szerver {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Nem érhető el az {{targetSystem}} rendszer.</p><p>Ellenőrizze, hogy a megadott kiszolgáló online-e, és próbálkozzon újra.</p>",
-            "serverNotYours": "Ez a rendszer %CLOUD_NAME%csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+            "serverNotYours": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel",
             "systemOfflineUrl": "{{targetSystem}} elérhetetlen.",
             "systemsIncompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Kérjük, frissítse mindkét rendszer a <a href=\"/download\" target=\"_blank\" translate>legújabb verzióra</a>.",
@@ -313,7 +313,7 @@
             "changeAccount": "Már be van jelentkezve, mint {email}",
             "deleteUser": "Törli a felhasználót?",
             "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
-            "noClientDetected": "Telepítse a {{VMS_NAME}} alkalmazást a rendszer megtekintéshez",
+            "noClientDetected": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
             "removeUser": "Eltávolítja a felhasználót?",
             "serversDetach": "Leválasztja a \"{{ title }}\" szervert az aktuális rendszertől?",
             "serversReset": "Alaphelyzetbe állítja a \"{{ title }}\" szervert?",
@@ -484,7 +484,7 @@
             "c_Info": "további kérdések / aggályok a támogatott eszközökkel kapcsolatban."
         },
         "hardwareType": "Típus",
-        "isAnalyticsSupported": "analitika",
+        "isAnalyticsSupported": "Analitika",
         "isAptzSupported": "Speciális PTZ",
         "isAptzSupportedShort": "Spec. PTZ",
         "isAudioSupported": "Audio",
@@ -525,7 +525,7 @@
         "debug": "Hibakeresés",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% letöltése",
-        "downloadPlatform": "{{VMS_NAME}} letöltése ",
+        "downloadPlatform": "%VMS_NAME% letöltése ",
         "failedToAccessSystem": "Belépés sikertelen",
         "integrations": "Integrációk",
         "login": "Bejelentkezés",
@@ -578,10 +578,10 @@
     "pleaseSelect": "Kérem válasszon...",
     "privacyPolicy": {
         "integration": "A {{INTEGRATION_COMPANY}} adatvédelmi irányelvet <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">itt találja</a>. A %COMPANY_NAME% adatvédelmi politikáka, amely magában foglalja utasítást, hogy hogyan visszavonja a beleegyezését, elérhető <a href=\"%PRIVACY_LINK%\" target=\"_blank\">itt</a>.",
-        "ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME%zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
+        "ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME% zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
     },
     "registration": {
-        "agreement": "<span class=\"text\"> Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a></span>"
+        "agreement": "Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a>"
     },
     "ribbon": {
         "beingMerged": {
@@ -599,7 +599,7 @@
     "search": {
         "Any": "Bármely",
         "Search": "Keresés",
-        "analytics": "analitika",
+        "analytics": "Analitika",
         "analyticsSelected": "analitikai események",
         "filter applied": "alkalmazott szűrő",
         "filters applied": "alkalmazott szűrők",

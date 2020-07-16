@@ -240,7 +240,7 @@
     "Type": "类型",
     "UNAVAILABLE": "无法使用",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "请更新到<a routerLink=\"/download\" target=\"_blank\">最新版本</a>",
-    "Update your system to the <a routerLink=\"/download\" target=\"_blank\">latest build</a> to enable Cloud Storage.": "为了启用云存储, 请将您的系统更新为 <a routerLink=\"/download\" target=\"_blank\">最新版本</a> ",
+    "Update your system to the <a routerLink=\"/download\" target=\"_blank\">latest build</a> to enable Cloud Storage.": "为了启用云存储, 请将您的系统更新为 <a routerLink=\"/download\" target=\"_blank\">最新版本</a>",
     "Updated": "更新",
     "Use Shift + Wheel for horizontal scrolling.": "使用Shift +鼠标滚轮进行左右横滑。",
     "User disabled": "用户已被禁用",

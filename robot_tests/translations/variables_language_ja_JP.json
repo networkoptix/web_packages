@@ -184,7 +184,7 @@
     "SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT": "現在のシステムと互換性のない古いソフトウェアバージョンがあります",
     "SYSTEM HAS A NEWER SOFTWARE VERSION TEXT": "現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを更新してください",
     "SERVER HAS AN OLDER SOFTWARE VERSION TEXT": "このサーバーには、現在のシステムと互換性のない古いバージョンのソフトウェアがあります。 最新のビルドに更新して、現在のビルドと統合します。",
-    "SYSTEM IS BEING MERGED TEXT": "is being merged to this system",
+    "SYSTEM IS BEING MERGED TEXT": "このシステムと統合されています",
     "SYSTEMS MERGE FAILED TEXT": "システム統合が失敗しました",
     "SYSTEM MERGE COMPLETED TEXT": "Merge of systems %PRIMARY% and %SECONDARY% completed",
     "MERGE CURRENT SYSTEM WITH TEXT": "現在のシステムと統合：",
