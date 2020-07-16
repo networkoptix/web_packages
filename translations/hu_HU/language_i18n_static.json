@@ -27,7 +27,7 @@
 		"hardwareType": "Típus",
 		"hardwareTypes": "Típusok",
 		"minResolution": "Minimális felbontás",
-		"analytics": "analitika",
+		"analytics": "Analitika",
 		"analyticsSelected": "analitikai események"
 	},
 	"cameraFilters": {
@@ -133,7 +133,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Több érzékelő",
-		"isAnalyticsSupported": "analitika",
+		"isAnalyticsSupported": "Analitika",
 		"camera": "Kamera",
 		"multiSensorCamera": "Többérzékelős kamerák",
 		"encoder": "Jeladók",
@@ -192,7 +192,7 @@
 		"debug": "Hibakeresés",
 		"login": "Bejelentkezés",
 		"download": "%VMS_NAME% letöltése",
-		"downloadPlatform": "{{VMS_NAME}} letöltése ",
+		"downloadPlatform": "%VMS_NAME% letöltése ",
 		"pageNotFound": "Az oldal nem található",
 		"supportedDevices": "Támogatott eszközök",
 		"integrations": "Integrációk"
@@ -208,7 +208,7 @@
 		"logoutAuthorisedTitle": "Már bejelentkezett",
 		"logoutAuthorisedContinueButton": "Folyatatás",
 		"logoutAuthorisedLogoutButton": "Kijelentkezés",
-		"noClientDetectedTitle": "Telepítse a {{VMS_NAME}} alkalmazást a rendszer megtekintéshez",
+		"noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
 		"stayAs": "Maradjon naplózva, mint {email} ",
 		"stayLoggedIn": "Maradjon bejelentkezve",
 		"download": "%VMS_NAME% letöltése",
@@ -313,7 +313,7 @@
 		"missingMessage": "Jelszó megadása szükséges"
 	},
 	"registration": {
-		"agreement": "<span class=\"text\"> Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a></span>"
+		"agreement": "Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a>"
 	},
 	"system": {
 		"yourSystem": "Az Ön rendszere",
@@ -423,8 +423,8 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Az űrlap kitöltésével vállalja, hogy {{INTEGRATION_COMPANY}} és / vagy %COMPANY_NAME%kapcsolatba lépnek.\nItt talál {{INTEGRATION_COMPANY}} adatvédelmi irányelvet <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">itt</a> és %COMPANY_NAME% adatvédelmi irányelvet <a href=\"%PRIVACY_LINK%\" target=\"_blank\">itt</a> amelyek tartalmazzák az Ön hozzájárulásának visszavonására vonatkozó utasításokat.",
-		"ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME%zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
+		"integration": "Az űrlap kitöltésével vállalja, hogy {{INTEGRATION_COMPANY}} és / vagy %COMPANY_NAME% kapcsolatba lépnek.\nItt talál {{INTEGRATION_COMPANY}} adatvédelmi irányelvet <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">itt</a> és %COMPANY_NAME% adatvédelmi irányelvet <a href=\"%PRIVACY_LINK%\" target=\"_blank\">itt</a> amelyek tartalmazzák az Ön hozzájárulásának visszavonására vonatkozó utasításokat.",
+		"ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME% zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
 	},
 	"common": {
 		"cameraLinks": {

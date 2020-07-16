@@ -92,7 +92,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Scarta",
     "APPLY CHANGES BUTTON TEXT": "Applica",
     "CANCEL CHANGES BUTTON TEXT": "Annulla",
-    "THIS LINK IS BROKEN TEXT": "Questo collegamento è interrotto,  Il sistema potrebbe essere disconnesso da %PRODUCT_NAME%,  L'accesso a questo sistema potrebbe essere revocato,  o potrebbe aver effettuato l'accesso ad un altro account.",
+    "THIS LINK IS BROKEN TEXT": "Questo collegamento è interrotto, Il sistema potrebbe essere disconnesso da %PRODUCT_NAME%, l'accesso a questo sistema potrebbe essere revocato, o potrebbe aver effettuato l'accesso ad un altro account.",
     "PAGE NOT FOUND TEXT": "Pagina non trovata",
     "TAKE ME HOME TEXT": "Torna all’inizio",
     "OPEN NX WITNESS BUTTON TEXT": "Apri in %VMS_NAME%",

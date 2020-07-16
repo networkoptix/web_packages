@@ -464,8 +464,8 @@
 		"searchCamPlaceholder": "Tìm kiếm",
 		"resolution": {
 			"auto": "tự động",
-			"high": "cao (H)",
-			"low": "Cao (H)"
+			"high": "Cao",
+			"low": "Thấp"
 		},
 		"chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
 		"voiceCommands": {

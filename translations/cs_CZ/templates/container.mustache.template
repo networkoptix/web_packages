@@ -68,7 +68,7 @@
                         {{^system}}
                             <td class="right-border">
                                 <b>Webová stránka</b> <br>
-                                <a href="%COMPANY_LINK%">%ODKAZ_NA_SPOLEČNOST%</a>
+                                <a href="%COMPANY_LINK%">%COMPANY_LINK%</a>
                             </td>
                         {{/system}}
                         <td class="left-border">

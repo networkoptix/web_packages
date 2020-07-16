@@ -155,7 +155,7 @@
 		"disclaimer": "รายการนี้ จำกัด เฉพาะอุปกรณ์ที่พบใน {{vmsName}} ที่ผู้ใช้อนุญาตการรายงานอัตโนมัติของข้อมูลจำเพาะของอุปกรณ์เป็น {{companyName}} ไม่มีการรวบรวมข้อมูลส่วนบุคคลและผู้ใช้แต่ละคนยังคงไม่ระบุชื่ออย่างสมบูรณ์"
 	},
 	"integration": {
-		"myIntegrationsLabel": "เหมือง (Automatic Translation)",
+		"myIntegrationsLabel": "เหมือง",
 		"previewRibbonText": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ",
 		"backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
 		"requirements": "{{name}} ข้อกำหนด",
@@ -192,7 +192,7 @@
 		"debug": "การ​แก้ไข​จุด​บกพร่อง",
 		"login": "ลงชื่อเข้าสู่ระบบ",
 		"download": "ดาวน์โหลด %VMS_NAME%",
-		"downloadPlatform": "ดาวน์โหลด {{VMS_NAME}} สำหรับ ",
+		"downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
 		"pageNotFound": "ไม่พบหน้านี้",
 		"supportedDevices": "อุปกรณ์ที่รองรับ",
 		"integrations": "Integration"
@@ -208,7 +208,7 @@
 		"logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
 		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
 		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
-		"noClientDetectedTitle": "ติดตั้ง {{VMS_NAME}} เพื่อดูระบบของคุณ",
+		"noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
 		"stayAs": "คงสถานะเป็น {email} ",
 		"stayLoggedIn": "คงอยู่ในระบบ",
 		"download": "ดาวน์โหลด %VMS_NAME%",
@@ -313,7 +313,7 @@
 		"missingMessage": "จำเป็นต้องใช้รหัสผ่าน"
 	},
 	"registration": {
-		"agreement": "<span class=\"text\"> ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a></span>"
+		"agreement": "ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a>"
 	},
 	"system": {
 		"yourSystem": "ระบบของคุณ",
@@ -322,7 +322,7 @@
 		"offline": "ระบบออฟไลน์",
 		"offlineAlertRibbon": "ระบบออฟไลน์ การตั้งค่าบางอย่างอาจไม่สามารถใช้ได้",
 		"openClient": "เปิดใน %VMS_NAME%",
-		"openClientNoSystem": "เปิด {{VMS_NAME}}",
+		"openClientNoSystem": "เปิด %VMS_NAME%",
 		"confirmMergeAction": "ผสาน",
 		"mergeSystemTitle": "รวมระบบ",
 		"confirmRenameTitle": "ชื่อระบบ",
@@ -498,7 +498,7 @@
 	"WHEN_MERGE_FINISHES": "เมื่อการผสานเสร็จสิ้นผู้ใช้และกล้องทั้งหมดจากระบบนี้จะพร้อมใช้งานในระบบ <strong>{{targetSystemName}}</strong> และระบบนี้จะถูกลบ",
 	"FAILED_SYSTEM_DESCR": "ลิงก์นี้ใช้งานไม่ได้<br>ระบบอาจถูกยกเลิกการเชื่อมต่อจาก %CLOUD_NAME%,<br>การเข้าถึงระบบนี้อาจถูกเพิกถอน <br>หรือคุณอาจลงชื่อเข้าใช้บัญชีอื่น",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ {{VMS_NAME}}",
+	"NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
 	"topXByVolume": "{{value}} อันดับสูงสุดตามปริมาณ:",

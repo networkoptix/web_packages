@@ -423,8 +423,8 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
-		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
+		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME% ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+		"ipvd": "Bu formu göndererek, %COMPANY_NAME% ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
 	},
 	"common": {
 		"cameraLinks": {
