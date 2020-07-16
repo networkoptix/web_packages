@@ -29,6 +29,7 @@ import { ButtonArrowType, NxSearchService } from '../../services/search.service'
      (ngModelChange)="modelChanged($event)"
      layout?="[compact | full]"     <- DEFAULT to "full"
      [placeholder]?="placeholder"   <- DEFAULT to "Search"
+     instant?                       <- no debounce for search criteria DEFAULT to CONFIG.search.debounceTime
      ngDefaultControl?>
  </nx-search>
 
@@ -67,6 +68,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() layout;
     @Input() layoutMod; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder;
+    @Input() instant;
     @Input() dataLoaded: boolean;
 
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
@@ -79,6 +81,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    private debounceTime: number;
     private searchSubscription: Subscription;
     private locationSubscription: SubscriptionLike;
     private modelSubscription: SubscriptionLike;
@@ -122,6 +125,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     ngOnInit() {
         this.dataLoaded = this.dataLoaded === undefined ? true : this.dataLoaded;
         this.placeholder = this.placeholder || ''; // optional param
+        this.debounceTime = (this.instant !== undefined) ? 0 : this.CONFIG.search.debounceTime; // optional param
         this.layout = (this.layout !== undefined) ? this.layout : 'full';
         this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout
         this.filterSelected = '';
@@ -134,14 +138,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         });
 
         this.searchSubscription = this.searchUpdated
-            .pipe(debounceTime(this.CONFIG.search.debounceTime))
+            .pipe(debounceTime(this.debounceTime))
             .subscribe(data => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
 
         this.modelSubscription = this.modelUpdated
-            .pipe(debounceTime(this.CONFIG.search.debounceTime))
+            .pipe(debounceTime(this.debounceTime))
             .subscribe(data => {
                 this.modelChanged();
             });
