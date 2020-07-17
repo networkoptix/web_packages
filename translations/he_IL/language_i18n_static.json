@@ -313,7 +313,7 @@
 		"missingMessage": "נדרשת סיסמא"
 	},
 	"registration": {
-		"agreement": "<span class=\"text\"> אני מסכים ל <a href=\"/content/eula\" target=\"_blank\"> תנאים וההגבלות </a> ו <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> מדיניות פרטיות </a></span>"
+		"agreement": "אני מסכים ל <a href=\"/content/eula\" target=\"_blank\"> תנאים וההגבלות </a> ו <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> מדיניות פרטיות </a>"
 	},
 	"system": {
 		"yourSystem": "המערכת שלך",
@@ -495,8 +495,8 @@
 	"Supported Devices": "התקנים נתמכים",
 	"Terms": "תנאי שימוש",
 	"pleaseSelect": "נא לבחור...",
-	"WHEN_MERGE_FINISHES": "כאשר המיזוג יסתיים, כל המשתמשים והמצלמות ממערכת זו יהפכו לזמינים                במערכת \"<strong>{{targetSystemName}}</strong> \", ומערכת זו תימחק.",
-	"FAILED_SYSTEM_DESCR": "קישור זה אינו תקין,<br>            המערכת עלולה להתנתק מ %CLOUD_NAME%,<br>            יתכן והגישה למערכת תישלל, <br>            או שתחובר לחשבון אחר.",
+	"WHEN_MERGE_FINISHES": "כאשר המיזוג יסתיים, כל המשתמשים והמצלמות ממערכת זו יהפכו לזמינים במערכת \"<strong>{{targetSystemName}}</strong> \", ומערכת זו תימחק.",
+	"FAILED_SYSTEM_DESCR": "קישור זה אינו תקין,<br> המערכת עלולה להתנתק מ %CLOUD_NAME%,<br> יתכן והגישה למערכת תישלל, <br>            או שתחובר לחשבון אחר.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "אין לך מערכות המחוברות ל- %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "היכנס למערכת שלך באמצעות %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "עבור אל הכרטיסייה \"ענן\" בחלון \"ניהול מערכת\"",

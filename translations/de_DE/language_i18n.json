@@ -55,7 +55,7 @@
     "Discard": "Verwerfen",
     "Disconnect": "Trennen",
     "Disconnect System from %CLOUD_NAME%?": "System von %CLOUD_NAME% trennen?",
-    "Disconnect from %CLOUD_NAME%": " Verbindung zu %CLOUD_NAME% trennen ",
+    "Disconnect from %CLOUD_NAME%": "Verbindung zu %CLOUD_NAME% trennen",
     "Disconnect from My Account": "Von meinem Account trennen",
     "Download": "Download",
     "Download %VMS_NAME%": "%VMS_NAME% herunterladen",
@@ -191,7 +191,7 @@
     "Your access level": "Ihr Zugriffslevel",
     "Your account is successfully activated": "Ihr Konto wurde erfolgreich aktiviert",
     "Your browser is not supported": "Ihr Browser wird nicht unterstützt",
-    "devices": "Geräte",
+    "devices": "geräte",
     "manufacturers": "hersteller",
     "support": "support",
     "you": "du"

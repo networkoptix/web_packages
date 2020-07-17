@@ -1,4 +1,4 @@
 <h1>Buongiorno, {{ message.userFullName }}</h1>
 
-{{ message.sender_email }} ({{ message.sender_name }}) ha dato il seguente feedback{{#message.asset}} per {{ message.asset }}{{/message.asset}}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a> ha dato il seguente feedback{{#message.asset}} per {{ message.asset }}{{/message.asset}}:
 <div>{{ message.message }}</div>

@@ -9,7 +9,7 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "שאלת מכירות עבור {{message.asset}}"
+    "emailSubject": "שאלת מכירות עבור {{{message.asset}}}"
   },
   "technical_inquiry": {
     "emailSubject": "בירור טכני עבור {{{message.asset}}}"
@@ -27,9 +27,9 @@
     "emailSubject": "אפס את סיסמתך"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}} מזמין אותך למערכת וידוא {{^message.sharer_name}}\n{{{message.system_name}} שותפה איתך על ידי {{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{{message.system_name}}} היה לשתף איתך{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "מערכת הווידאו {{message.system_name}} שותפה איתך"
+    "emailSubject": "מערכת הווידאו {{{message.system_name}}} שותפה איתך"
   }
 }

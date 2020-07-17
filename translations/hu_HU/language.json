@@ -34,7 +34,7 @@
     "passwordMismatch": "Hibás jelszó",
     "cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",
     "cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
-    "cantOpenClient": "{{VMS_NAME}} nincs telepítve. <a href=\"/download\">Letöltés</a>",
+    "cantOpenClient": "%VMS_NAME% nincs telepítve. <a href=\"/download\">Letöltés</a>",
     "lostConnection": "{{systemName}} kapcsolat megszakadt",
     "thisSystem": "a rendszer",
     "oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",

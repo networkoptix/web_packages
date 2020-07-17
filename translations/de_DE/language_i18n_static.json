@@ -469,8 +469,8 @@
 		},
 		"chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
 		"voiceCommands": {
-			"play": "Abspielen",
-			"pause": "Pause",
+			"play": "abspielen",
+			"pause": "pause",
 			"live": "live gehen | live anzeigen",
 			"view": "ansicht + [kameraname]",
 			"search": "finden + [text für suchleiste]",
