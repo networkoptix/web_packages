@@ -21,6 +21,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() item: any = {};
     @Input() selected: boolean;
     @Input() first: boolean;
+    @Input() idx: number;
 
     CONFIG: IConfig;
 
@@ -29,6 +30,8 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     menuNavItemId: string;
 
     navItemSubscription: SubscriptionLike;
+
+    public hovered: boolean;
 
     constructor(
         configService: NxConfigService,
@@ -56,5 +59,9 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
                 ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
         }
+    }
+
+    setNavIdx(item) {
+        this.menuService.hoverItemId = item.id;
     }
 }

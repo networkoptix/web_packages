@@ -440,7 +440,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     modelChanged(resetUri?) {
-        this.setRouteParams(resetUri)
+        this.searchService.searchModelChanged = true;
+            this.setRouteParams(resetUri)
             .then(() => {
                 this.numberOfOptionsSelected();
                 this.onChangeCallback(this.localFilter);

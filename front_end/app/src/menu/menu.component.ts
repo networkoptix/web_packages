@@ -56,7 +56,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         languageService: NxLanguageProviderService,
         private router: Router,
         private route: ActivatedRoute,
-        private menuService: NxMenuService,
+        public menuService: NxMenuService,
         private searchService: NxSearchService
     ) {
         this.CONFIG = configService.getConfig();
@@ -76,10 +76,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                this.menuModel.query = params?.search ?? '';
+                this.transition = true;
                 this.searchMode = (this.isSearchable && this.menuModel.query !== '');
+                this.menuModel.query = params?.search ?? '';
                 NxSearchService.getMatchPatterns(this.menuModel);
-                this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
+                this.modelChanged(this.menuModel);
             });
 
         this.navDirectionSubscription = this.searchService.navDirectionSubject
@@ -97,6 +98,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
             .subscribe(() => {
                 const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
                 if (item) {
+                    this.navItemIdx++;
+                    this.menuService.navItemId = this.navItems[this.navItemIdx].id;
                     this.router
                         .navigate([`${this.content.base}/${item.path}`], { queryParams: { search: this.menuModel.query } })
                         .catch((ex) => {
@@ -107,20 +110,29 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     resetNav() {
-        this.navItemIdx = 0;
+        this.navItemIdx = -1;
+        this.menuService.hoverItemId = undefined;
         this.menuService.navItemId = undefined;
     }
 
     setNav() {
+        // this.searchMode = true;
         this.modelChanged(this.menuModel);
     }
 
     private assignItemId() {
+        if (this.menuService.hoverItemId) {
+            this.navItemIdx = this.navItems.findIndex((item: any) => item.id === this.menuService.hoverItemId);
+            // remove info for hovered item
+            this.menuService.hoverItemId = undefined;
+        }
+
         if (this.searchService.navDirection === ButtonArrowType.up) {
             this.navItemIdx = (this.navItemIdx > 0) ? --this.navItemIdx : this.navItems.length - 1;
         } else {
             this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
         }
+
         return this.navItems[this.navItemIdx].id;
     }
 
@@ -140,6 +152,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
             this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+
+            this.transition = false;
         }
 
         if (changes.content.currentValue.selectedSection) {
@@ -148,20 +162,21 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
+        this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.transition = true;
         this.menuModel = model;
 
         this.menuContent = this.menuService.fillerItemsBy(model);
         this.transition = false;
 
+        this.navItemIdx = -1;
+        this.menuService.hoverItemId = undefined;
+        this.menuService.navItemId = undefined;
+
         this.navItems = [];
         if (model.query !== '') {
             setTimeout(() => { // Avoid selection before filter finishes
-                this.navItems = this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3');
-                if (this.navItems.length) {
-                    this.navItemIdx = 0;
-                    this.menuService.navItemId = this.navItems[this.navItemIdx].id;
-                }
+                this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
             });
         }
     }

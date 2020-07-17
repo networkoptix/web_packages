@@ -15,6 +15,7 @@ export class NxMenuService implements OnDestroy {
     navItemSubject = new BehaviorSubject('');
 
     private regex;
+    private _hoverItemId;
 
     constructor() {
     }
@@ -33,6 +34,14 @@ export class NxMenuService implements OnDestroy {
 
     get navItemId() {
         return this.navItemSubject.getValue();
+    }
+
+    set hoverItemId(id) {
+        this._hoverItemId = id;
+    }
+
+    get hoverItemId() {
+        return this._hoverItemId;
     }
 
     get section() {
