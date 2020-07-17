@@ -17,6 +17,7 @@ export interface BaseConfig {
     alertTimeout: number;
     animations: Animations;
     apiBase: string;
+    cameraCredentialUpdateTimeout: number;
     cameraSettings: CameraSettings;
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;

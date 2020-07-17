@@ -411,7 +411,7 @@ export class NxDialogsService {
         return this.createModal(DeleteCloudUserModalContent, options, params);
     }
 
-    updateCameraCredentials(camera: ICamera, system: NxSystem, updateCallback: () => void) {
+    updateCameraCredentials(camera: ICamera, system: NxSystem, updateCallback: () => Promise<any>) {
         const options: any = {
             windowClass : 'modal-holder',
             backdrop    : 'static'

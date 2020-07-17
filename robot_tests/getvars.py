@@ -4,7 +4,15 @@ import re
 
 
 # default english and default customization
-def get_variables(lang="en_US", cust="default"):
+def get_variables(cust="default", lang="en_US", env="cloud-test"):
+    if cust == "dw" or cust == "hanwha":
+        env = f'https://{cust}.{env}.hdw.mx'
+    elif cust != "default":    
+        env = f'https://{cust}.cloud.hdw.mx'
+    else:
+        env = f'https://{env}.hdw.mx'
+    env_json = {"ENV": env}
+    
     # open up the customization file we want and create a dictionary called customization_json
     with codecs.open("customizations/" + cust + ".json", 'r', encoding='utf-8-sig') as customization_variables:
         customization_json = json.load(customization_variables)
@@ -25,5 +33,6 @@ def get_variables(lang="en_US", cust="default"):
             translation_variables['LANGUAGE'] = lang
             # add the customization variables
             translation_variables.update(customization_json)
+            translation_variables.update(env_json)
             all_variables = translation_variables
             return all_variables

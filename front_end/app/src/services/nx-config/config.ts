@@ -8,8 +8,9 @@ export const nxConfig: IConfig = {
             leave : '0.25s ease-out'
         }
     },
-    apiBase        : '/api',
-    cameraSettings : {
+    apiBase                       : '/api',
+    cameraCredentialUpdateTimeout : 1500,
+    cameraSettings                : {
         sensitivityColors: [
             '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
         ]
