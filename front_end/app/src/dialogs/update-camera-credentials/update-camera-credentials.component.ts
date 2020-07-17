@@ -16,7 +16,7 @@ import { ICamera, NxSystem }           from '../../services/system.service';
 export class UpdateCameraCredentialsModalContent implements OnInit {
     @Input() camera: ICamera;
     @Input() system: NxSystem;
-    @Input() updateCallback: () => void;
+    @Input() updateCallback: () => Promise<any>;
     @Input() closable;
     @ViewChild('updateForm') updateForm: HTMLFormElement;
 
@@ -52,12 +52,9 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
                 return Promise.resolve();
             }
             return this.system.updateCameraSettings(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
-                .then(_ => new Promise(resolve => setTimeout(resolve, 1500, this.system.getCameras().then(_ => {
-                    this.system.systemInfo = this.system;
-                }))));
+                .then(this.updateCallback);
         }).then(() => {
             this.activeModal.close();
-            this.updateCallback();
         });
     }
 

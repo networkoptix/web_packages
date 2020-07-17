@@ -433,7 +433,7 @@ class ServerManager {
         if (!cameras) {
             return Promise.reject(new Error(`Request to server has failed ${cameras}`));
         }
-        this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
+        const mappedCameras = await <ICamera[]> cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
             const server = servers.find(({ serverId }) => serverId === parentId);
             let dayOfWeek;
             let secondsToday;
@@ -491,7 +491,8 @@ class ServerManager {
             };
             return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
         });
-        return this.cameras;
+        this.cameras = mappedCameras;
+        return mappedCameras;
     }
 
     updateCameraSettings(resourceId: string, params: Object) {
