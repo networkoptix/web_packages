@@ -1,6 +1,5 @@
 *** Variables ***
 
-${LOCALHOST}                          https://localhost
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx

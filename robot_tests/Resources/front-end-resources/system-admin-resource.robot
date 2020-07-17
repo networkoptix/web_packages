@@ -1,4 +1,5 @@
-*** Keywords *** 
+*** Keywords ***
+
 Log in to Autotests 2 System
     [Arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}

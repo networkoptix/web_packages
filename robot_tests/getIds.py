@@ -4,7 +4,7 @@ import re
 
 def get_variables(cloud_url, test_email):
     vars = {}
-    # the post request gets upset about ssl if you put the s so we remove it
+    the post request gets upset about ssl if you put the s so we remove it
     if cloud_url == "https://vm201.la.hdw.mx":
         p = re.compile("https")
         cloud_url = p.sub("http", cloud_url)

@@ -1,10 +1,4 @@
 *** Settings ***
-Library      SeleniumLibrary    run_on_failure=Failure Tasks
-Library      String
-Library      Collections
-Library      NoptixImapLibrary
-Library      NoptixLibrary
-Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
@@ -13,6 +7,14 @@ Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
+Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      String
+Library      DateTime
+Library      Collections
+Library      NoptixImapLibrary
+Library      NoptixLibrary
+Library      NoptixLibrary/CloudPortalAPI.py
+Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}    ${LM AUTH}
 
 *** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
@@ -491,6 +493,12 @@ Wait Until Elements Are Not Visible
     FOR    ${element}    IN    @{elements}
         Wait Until Element Is Not Visible    ${element}
     END
+
+Slow
+    [Arguments]    ${keyword}    @{args}    ${timeout}=0.1
+    Sleep    ${timeout}
+    Run Keyword    ${keyword}    @{args}
+    Sleep    ${timeout}
 
 #Reset resources
 Clean up email noperm

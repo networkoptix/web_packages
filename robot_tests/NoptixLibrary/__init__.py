@@ -414,17 +414,6 @@ class NoptixLibrary(object):
         image = client.images.get(image_name)
         return image.id
 
-    # def run_container(self, image, port, network):
-    #     tmp = {'/run':'', '/run/lock':''}
-    #     vol = {'/sys/fs/cgroup': {
-    #                 'bind':'/sys/fs/cgroup',
-    #                 'mode':'rw'}
-    #             }
-    #     prt = {7001:port}
-    #     client = docker.from_env()
-    #     cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=f"mergemediaserver{time.time()}")
-    #     return cont
-
     def run_container(self, image_name, port, network='host'):
         if network == 'host':
             cmd = f'docker run -d --name {image_name}_{port} --restart=always -e PORT={port} --network={network} -t {image_name}'
@@ -448,6 +437,7 @@ class NoptixLibrary(object):
         running_containers = client.containers.list()
         if container not in running_containers:
             container.start()
+            time.sleep(10)
 
     def stop_container(self, name, remove=False):
         client = docker.from_env()
@@ -459,6 +449,15 @@ class NoptixLibrary(object):
             all_containers = client.containers.list(all=True)
             if container in all_containers:
                 container.remove()
+
+    def get_container_id(self, name):
+        client = docker.from_env()
+        container = client.containers.get(name)
+        all_containers = client.containers.list(all=True)
+        if container in all_containers:
+            return container.short_id
+        else:
+            return 'Container not found'
 
     def stop_containers(self, allContainers=True):
         client = docker.from_env()
