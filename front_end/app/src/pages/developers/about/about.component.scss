@@ -8,6 +8,7 @@
     & > h1 {
         font-size: 64px;
         font-weight: 200;
+        text-align: center;
     }
     & > p {
         @include typography.regular14;
