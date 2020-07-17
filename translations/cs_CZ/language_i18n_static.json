@@ -157,12 +157,12 @@
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
         "inaccessibleFeatureMessage": "Systém je offline a informace proto nejsou dostupné.",
         "unknown": "Neznámý",
-        "vendor": "Vendor",
+        "vendor": "Výrobce",
         "model": "Model",
-        "ip": "IP Address",
+        "ip": "IP adresa",
         "server": "Server",
         "os": "OS",
-        "version": "Version",
+        "version": "Verze",
         "voiceCommands": {
             "clear search": "smazat hledání",
             "collapse all servers": "sbalit všechny servery",
@@ -201,12 +201,12 @@
             "camera": "kamera",
             "cameras": "kamery",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Aktuální nahrávky",
+                "whenFullyUsed": "Při plném použití",
+                "amountUsed": "Použité množství",
+                "archiveFrom": "Archiv z",
+                "recordingBitrate": "Nahrávání datového toku",
+                "delayFromLive": "Zpoždění živého přenosu"
             },
             "remove": {
                 "success": "Cloudové úložiště bylo úspěšně odebráno ze systému",

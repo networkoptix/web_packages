@@ -157,12 +157,12 @@
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "inaccessibleFeatureMessage": "Система офлайн, інформація недоступна.",
         "unknown": "Невідомо",
-        "vendor": "Vendor",
+        "vendor": "Виробник",
         "model": "Модель",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "IP-адреса",
+        "server": "Сервер",
+        "os": "ОС",
+        "version": "Версія",
         "voiceCommands": {
             "clear search": "очистити вікно пошуку",
             "collapse all servers": "згорнути всі сервери",
@@ -201,12 +201,12 @@
             "camera": "камера",
             "cameras": "камери",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Поточні записи",
+                "whenFullyUsed": "Коли повністю використано",
+                "amountUsed": "Використана сума",
+                "archiveFrom": "Архів від",
+                "recordingBitrate": "Бітрейт запису",
+                "delayFromLive": "Затримка в онлайні"
             },
             "remove": {
                 "success": "Хмарне сховище успішно видалено із системи",
@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Відключити",
             "message": "You will not be able to log into this system anymore.",
-            "title": "Disconnect System from your Account?"
+            "title": "Відключити систему від облікового запису?"
         },
         "titles": {
             "error": "Помилка",

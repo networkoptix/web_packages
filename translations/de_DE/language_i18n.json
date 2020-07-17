@@ -74,7 +74,7 @@
     "Discard": "Verwerfen",
     "Disconnect": "Trennen",
     "Disconnect System from %CLOUD_NAME%?": "System von %CLOUD_NAME% trennen?",
-    "Disconnect from %CLOUD_NAME%": " Verbindung zu %CLOUD_NAME% trennen ",
+    "Disconnect from %CLOUD_NAME%": "Verbindung zu %CLOUD_NAME% trennen",
     "Disconnect from My Account": "Von meinem Account trennen",
     "Download": "Download",
     "Download %VMS_NAME%": "%VMS_NAME% herunterladen",
@@ -260,7 +260,7 @@
     "Your account and all data associated with it will be permanently deleted without the possibility to restore it.": "Ihr Konto und alle damit verbundenen Daten werden dauerhaft gelöscht, ohne dass die Möglichkeit zur Wiederherstellung besteht.",
     "Your browser is not supported": "Ihr Browser wird nicht unterstützt",
     "current": "aktuell",
-    "devices": "Geräte",
+    "devices": "geräte",
     "manufacturers": "hersteller",
     "you": "du"
 }

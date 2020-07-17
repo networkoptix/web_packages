@@ -157,10 +157,10 @@
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
         "inaccessibleFeatureMessage": "Le système est hors ligne et, par conséquent, les informations ne sont pas accessibles.",
         "unknown": "Inconnu",
-        "vendor": "Vendor",
+        "vendor": "Vendeur:",
         "model": "Modèle",
-        "ip": "IP Address",
-        "server": "Server",
+        "ip": "Adresse IP",
+        "server": "Serveur",
         "os": "OS",
         "version": "Version",
         "voiceCommands": {
@@ -201,12 +201,12 @@
             "camera": "caméra",
             "cameras": "caméras",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Enregistrements actuels",
+                "whenFullyUsed": "Lorsqu'il est entièrement utilisé",
+                "amountUsed": "Quantité utilisée",
+                "archiveFrom": "Archive de",
+                "recordingBitrate": "Bitrate d'enregistrement",
+                "delayFromLive": "Délai avec le direct"
             },
             "remove": {
                 "success": "Stockage cloud a bien été supprimé du système",
@@ -446,7 +446,7 @@
         "wrongCode": "Compte déjà activé ou le code de confirmation est incorrect",
         "wrongCodeRestore": "Code de confirmation est déjà utilisé ou incorrecte",
         "wrongParameters": "Certains paramètres dans le formulaire sont incorrects",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter l'assistance.",
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau."

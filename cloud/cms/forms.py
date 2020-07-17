@@ -79,6 +79,7 @@ class CustomContextForm(forms.Form):
         widget=forms.Select, label="Language")
 
     def __init__(self, *args, **kwargs):
+        self.order = kwargs.pop('order', None)
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
 
@@ -88,6 +89,8 @@ class CustomContextForm(forms.Form):
 
     def add_fields(self, asset, context, language, user):
         data_structures = context.datastructure_set.all()
+        if self.order:
+            data_structures = data_structures.order_by(self.order)
 
         if len(data_structures) < 1:
             return

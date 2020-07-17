@@ -17,6 +17,7 @@ export interface BaseConfig {
     alertTimeout: number;
     animations: Animations;
     apiBase: string;
+    cameraCredentialUpdateTimeout: number;
     cameraSettings: CameraSettings;
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;
@@ -451,7 +452,7 @@ export interface Search {
 
 export interface Servers {
     checkStatusTimeout: number;
-    checkDebounceTime: number;
+    minLoaderTime: number;
     port: Port;
     status: ServersStatus;
 }

@@ -240,7 +240,7 @@
     "ENABLE AUDIT TRAIL DESCRIPTION TEXT": "Rastreia e regista todas as acções do utilizador.",
     "ALLOW ONLY SECURE TEXT": "Permitir apenas conexões seguras",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Encriptar o tráfego de vídeo",
-    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
+    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Apenas o tráfego de vídeo cliente-servidor pode ser criptografado.",
     "LIMIT SESSION DURATION TEXT": "Limit session duration to",
     "RELEASES TAB TEXT": "Versões",
     "PATCHES TAB TEXT": "Patches",
