@@ -1,1 +1,24 @@
-<div>Get Started: CLOUD-5423</div>
+<ng-template #stepBlock let-block="block">
+    <div class="detail-wrapper">
+        <div class="detail-block">
+            <div class="step">{{block.step}}</div>
+            <div class="step-image" [id]="'step-image-' + block.step">
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + block.icon"></svg-icon>
+            </div>
+            <div class="step-text">
+                <h3 [routerLink]="block.link" 
+                    (mouseover)="slideUp('step-image-' + block.step)"
+                    (mouseleave)="slideBack('step-image-' + block.step)"
+                >{{block.lead}}</h3>
+                <span>{{block.description}}</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<h2 class="get-started-heading">{{heading}}</h2>
+<section class="get-started-blocks">
+    <ng-container *ngFor="let block of blocks">
+        <ng-container *ngTemplateOutlet="stepBlock;context{block:block}"></ng-container>
+    </ng-container>
+</section>
