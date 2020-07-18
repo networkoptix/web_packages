@@ -4,6 +4,7 @@ from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.html import format_html
@@ -889,7 +890,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        Menu.cache_all_customizations()
+        transaction.on_commit(Menu.cache_all_customizations)
 
 
 @admin.register(MenuNode)
@@ -903,7 +904,7 @@ class MenuNodeAdmin(CMSAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        Menu.cache_all_customizations()
+        transaction.on_commit(Menu.cache_all_customizations)
 
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()
