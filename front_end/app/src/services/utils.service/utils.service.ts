@@ -53,7 +53,12 @@ export class NxUtilsService {
     }
 
     static deepCopy<T extends {}>(obj: T): T {
+        // will not copy any methods ... i.e. pluralization functions
         return JSON.parse(JSON.stringify(obj));
+    }
+
+    static escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
     // Sort array of objects

@@ -13,14 +13,7 @@ export enum ButtonArrowType {
 })
 export class NxSearchService {
     navDirectionSubject = new BehaviorSubject('');
-    searchModelSubject = new BehaviorSubject(false);
     navSelectionSubject = new Subject();
-
-    // eslint-disable-next-line accessor-pairs
-    set searchModelChanged(val: boolean) {
-        debugger;
-        this.searchModelSubject.next(val);
-    }
 
     set navDirection(dir: string) {
         this.navDirectionSubject.next(dir);

@@ -96,18 +96,22 @@ export class NxMenuService implements OnDestroy {
                 if (node.level3?.length) {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
                     node.level3.forEach((item) => {
-                        let searchAggregate = item.label;
-                        searchAggregate += (item.additionalLabel) ? ' ' + item.additionalLabel : '';
-                        searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
+                        if (item.id) { // skip separators
+                            const additional = (typeof item.additionalLabel === 'function') ? item.additionalLabel() : item.additionalLabel;
+                            let searchAggregate = item.label || '';
+                            searchAggregate += (additional) ? ' ' + additional : '';
+                            searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
 
-                        if (NxSearchService.findMatch(searchAggregate, model)) {
-                            if (!haveNode) {
-                                haveNode = { ...node };
-                                haveNode.level3 = []; // remove items so we can all only matches
+                            if (NxSearchService.findMatch(searchAggregate, model)) {
+                                if (!haveNode) {
+                                    haveNode = { ...node };
+                                    haveNode.level3 = []; // remove items so we can all only matches
+                                }
+                                const filteredItem = NxUtilsService.deepCopy(item);
+                                filteredItem.additionalLabel = (typeof item.additionalLabel === 'function') ? item.additionalLabel() : item.additionalLabel;
+                                filteredItem.query = { search: model.query };
+                                haveNode.level3.push(this.highlighted(filteredItem));
                             }
-                            const filteredItem = NxUtilsService.deepCopy(item);
-                            filteredItem.query = { search: model.query };
-                            haveNode.level3.push(this.highlighted(filteredItem));
                         }
                     });
                     if (haveNode?.level3?.length) {
@@ -131,11 +135,13 @@ export class NxMenuService implements OnDestroy {
     }
 
     private setHighlightPattern(model) {
-        const pattern = (model.queryExactMatch ||
+        let pattern = (model.queryExactMatch ||
             model.queryEndsWith ||
             model.queryStartsWith ||
             model.queryOrMatch ||
             model.queryAndMatch).join('|');
+
+        pattern = NxUtilsService.escapeRegExp(pattern);
 
         this.regex = new RegExp(pattern, 'gi');
     }
