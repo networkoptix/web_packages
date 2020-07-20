@@ -1,7 +1,7 @@
 *** Settings ***
 Resource    ../resource.robot
 Suite Setup    LM Suite Set Up
-Test Teardown   Run KEyword If Test Failed    LM Test Restart
+Test Teardown   Run Keyword If Test Failed    LM Test Restart
 Suite Teardown    LM Suite Teardown
 
 
@@ -81,7 +81,7 @@ Input validation errors
     Input Text    ${LICENSE KEY INPUT}    why again?
     Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "Invalid license key")]
 
-    Log    C76540: License already activated in another system
+    Log    C76540: License is already activated in another system
     ${key}=   Generate Licenses
     Activate License    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${key}
     ${activated}=   License Is Activated    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${key}
@@ -106,6 +106,8 @@ Input validation errors
 
 Successful scenarios
     [Tags]    C76548    C76549    C76554
+    Log    Test Set Up
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -187,7 +189,7 @@ Successful scenarios
 
 # License Detail Block
 License details for purchase licenses with different types
-    [Tags]    C76557    C76560    C76563    C76564    C76565    C76566
+    [Tags]    C76557    C76560    C76563    C76564    C76565    C76566   deb
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -243,18 +245,25 @@ License details for purchase licenses with different types
         Activate Key    ${key}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
         Should Be True    ${activated}
-        Deactivate Licenses    ${key}
-        Reload Page
-        Sleep    20
-        Validate Licenses Page
         Validate License Info    ${key}
+        Deactivate Licenses    ${key}
+        Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+        Sleep    30
+        Click Link    ${SYSTEM GENERAL LINK}
+        Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+        Open Licenses Page
+        Validate Licenses Page
     END
+    Activate Key    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    Should Be True    ${activated}
+    Validate License Info    ${key}
 
     Log Out
 
 #VMS integration
 
-Two Systems
+Two Servers
     [Tags]    C76550    two_servers
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
