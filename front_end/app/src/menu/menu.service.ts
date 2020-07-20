@@ -112,6 +112,8 @@ export class NxMenuService implements OnDestroy {
                                 filteredItem.query = { search: model.query };
                                 haveNode.level3.push(this.highlighted(filteredItem));
                             }
+                        } else {
+                            haveNode.level3.push(item);
                         }
                     });
                     if (haveNode?.level3?.length) {
