@@ -9,7 +9,7 @@ import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxAccountService }            from '../../services/account.service';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxRibbonService }             from '../../components/ribbon';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }   from '../../services/process.service';
 import { NxSystemService }             from '../../services/system.service';
 import { NxSystemsService }            from '../../services/systems.service';
 import { NxUtilsService }              from '../../services/utils.service';
