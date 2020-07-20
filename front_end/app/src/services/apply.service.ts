@@ -217,12 +217,12 @@ export class NxApplyService {
 
     canMove() {
         return new Promise<boolean>((resolve) => {
-            if (this.locked) {
+            if (this.locked && this.isOnline$.value) {
                 this.showDialog().then((state) => {
                     resolve(state);
                 });
             } else {
-                resolve(!this.locked);
+                resolve(true);
             }
         });
     }

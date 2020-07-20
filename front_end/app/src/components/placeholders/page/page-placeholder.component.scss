@@ -74,8 +74,9 @@ $preloader_small_circle_distance : 8px;
 }
 
 .page-placeholder {
-    width            : calc(100% - 16px);
     margin           : 0 auto;
+    min-height       : 400px;
+    height           : calc(100% - 48px);
     z-index          : 1;
     /*This is used for the preloaders.
                      It should always be higher than the video,

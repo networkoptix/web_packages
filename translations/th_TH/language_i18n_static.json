@@ -157,12 +157,12 @@
         "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
         "inaccessibleFeatureMessage": "ระบบออฟไลน์และทำให้ข้อมูลไม่สามารถเข้าถึงได้",
         "unknown": "ม่รู้จัก",
-        "vendor": "Vendor",
+        "vendor": "ผู้ติดต่อ:",
         "model": "รุ่น",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "ที่อยู่ IP:",
+        "server": "เซิร์ฟเวอร์",
+        "os": "ระบบปฏิบัติการ",
+        "version": "เวอร์ชัน",
         "voiceCommands": {
             "clear search": "ล้างการค้นหา",
             "collapse all servers": "ยุบเซิร์ฟเวอร์ทั้งหมด",
@@ -201,12 +201,12 @@
             "camera": "กล้อง",
             "cameras": "กล้อง",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "การบันทึกปัจจุบัน",
+                "whenFullyUsed": "เมื่อใช้อย่างเต็มที่",
+                "amountUsed": "จำนวนที่ใช้",
+                "archiveFrom": "เก็บถาวรจาก",
+                "recordingBitrate": "บันทึกบิตเรต",
+                "delayFromLive": "ความล่าช้าในการถ่ายทอดสด"
             },
             "remove": {
                 "success": "ลบที่เก็บข้อมูลบนคลาวด์ได้สำเร็จจากระบบ",
@@ -257,14 +257,14 @@
             "passwordWrong": "รหัสผ่านผิด",
             "primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
             "primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
-            "primarySystemUnavailable": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
+            "primarySystemUnavailable": "ระบบ {{primarySystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
             "recommendSupport": {
                 "a_recommend": "เราขอแนะนำให้คุณปรึกษากับ",
                 "b_support": "ทีมช่วยเหลือ",
                 "c_proceeding": "ก่อนดำเนินการต่อ"
             },
             "secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
-            "secondarySystemUnavailable": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
+            "secondarySystemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
             "serverAtUrl": "เซิร์ฟเวอร์ที่ {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">ไม่สามารถเข้าถึงระบบ {{targetSystem}}</p><p>ตรวจสอบให้แน่ใจว่าเซิร์ฟเวอร์ที่ระบุนั้นออนไลน์แล้วลองอีกครั้ง</p>",
             "serverNotYours": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของคนอื่น ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
@@ -313,7 +313,7 @@
             "changeAccount": "คุณเข้าสู่ระบบเป็น {email}",
             "deleteUser": "ลบผู้ใช้หรือไม่?",
             "loggedFromOtherAccount": "คุณจะเข้าสู่ระบบด้วยบัญชีอื่น",
-            "noClientDetected": "ติดตั้ง {{VMS_NAME}} เพื่อดูระบบของคุณ",
+            "noClientDetected": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
             "removeUser": "นำผู้ใช้ออกหรือไม่",
             "serversDetach": "แยกเซิร์ฟเวอร์ \"{{ title }}\" ออกจากระบบปัจจุบันหรือไม่",
             "serversReset": "รีเซ็ตเซิร์ฟเวอร์ \"{{ title }}\" เป็นค่าเริ่มต้นหรือไม่",
@@ -449,7 +449,7 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "ไม่สามารถเปิดใช้งานใบอนุญาตเนื่องจากการหมดเวลาการเชื่อมต่อ โปรดตรวจสอบว่าเซิร์ฟเวอร์ออนไลน์และลองอีกครั้ง",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "ไม่สามารถดาวน์โหลดได้ โปรดตรวจสอบการเชื่อมต่อเครือข่ายของคุณ"
+        "networkConnection": "ไม่สามารถเชื่อมต่อกับ {{cloudName}} ได้โปรดตรวจสอบการเชื่อมต่อเครือข่ายของคุณ"
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",
@@ -458,7 +458,7 @@
         "Drone": "Drone",
         "Health Monitor": "การตรวจสอบสุขภาพ",
         "Storage": "พื้นที่จัดเก็บ",
-        "myIntegrationsLabel": "เหมือง (Automatic Translation)",
+        "myIntegrationsLabel": "เหมือง",
         "phoneNumberWithLabel": "โทร: {{number}}",
         "requirements": "{{name}} ข้อกำหนด",
         "testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
@@ -525,7 +525,7 @@
         "debug": "การ​แก้ไข​จุด​บกพร่อง",
         "default": "%CLOUD_NAME%",
         "download": "ดาวน์โหลด %VMS_NAME%",
-        "downloadPlatform": "ดาวน์โหลด {{VMS_NAME}} สำหรับ ",
+        "downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
         "failedToAccessSystem": "ไม่สามารถเข้าถึงระบบ",
         "integrations": "Integration",
         "login": "ลงชื่อเข้าสู่ระบบ",
@@ -581,7 +581,7 @@
         "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
     },
     "registration": {
-        "agreement": "<span class=\"text\"> ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a></span>"
+        "agreement": "ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a>"
     },
     "ribbon": {
         "beingMerged": {
@@ -823,7 +823,7 @@
         "primaryTimeServer": "เซิร์ฟเวอร์การซิงโครไนซ์เวลาหลัก",
         "osTimeChangeCheckPeriodMs": "ระยะเวลาการตรวจสอบการเปลี่ยนแปลงเวลาระบบปฏิบัติการ",
         "syncTimeExchangePeriod": "ซิงค์ช่วงเวลาการซิงโครไนซ์สำหรับคำขอเครือข่าย",
-        "syncTimeEpsilon": "epsilon ซิงค์เวลา ค่าใหม่จะไม่ถูกใช้หากเวลา detla น้อยกว่า epsilon",
+        "syncTimeEpsilon": "Epsilon ซิงค์เวลา ค่าใหม่จะไม่ถูกใช้หากเวลา detla น้อยกว่า epsilon",
         "maxWearableArchiveSynchronizationThreads": "หัวข้อการซิงค์ไฟล์เก็บถาวรสูงสุดของกล้องที่สวมใส่ได้",
         "updateNotificationsEnabled": "เปิดใช้งานการแจ้งเตือนการปรับปรุง",
         "upnpPortMappingEnabled": "เปิดใช้การแมปพอร์ต UPnP",

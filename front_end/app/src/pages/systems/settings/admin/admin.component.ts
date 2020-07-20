@@ -13,7 +13,7 @@ import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
 import { Subscription }              from 'rxjs';
-import { auditTime }         from 'rxjs/operators';
+import { auditTime }                 from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxSystemsService }          from '../../../../services/systems.service';
@@ -53,7 +53,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     userDisconnectSystem;
     deletingSystem: Process;
     currentlyMerging = false;
-    systemLoaded = false;
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
@@ -133,7 +132,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 if (!system) {
                     this.system = undefined;
-                    this.systemLoaded = false;
                     return;
                 }
                 this.system = system;
@@ -159,11 +157,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsSubscription = this.system.updateOrGetSystemSettings()
                             .subscribe((res: any) => {
                                 this.settingsForSystem = res.reply.settings;
-                                this.systemLoaded = true;
                             }, (err) => {
                                 this.settingsForSystem = false;
                                 console.error(err);
-                                this.systemLoaded = true;
                             });
                     });
                 this.deletingSystem = this.processService.createProcess(
@@ -185,9 +181,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
             if (!this.CONFIG.isLocal) {
-                this.systemsService.forceUpdateSystems().toPromise().catch(console.error).finally(() => {
-                    this.systemLoaded = true;
-                });
+                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
             } else {
                 this.ribbonService.hide();
             }
@@ -200,11 +194,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 if (this.systemsService.finishedMerged) {
                     this.systemsService.finishedMerged = false;
-                    this.system.getInfo(true, false).finally(() => {
-                        this.systemLoaded = true;
-                    });
-                } else {
-                    this.systemLoaded = true;
+                    this.system.getInfo(true, false);
                 }
             });
     }

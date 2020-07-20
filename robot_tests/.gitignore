@@ -17,3 +17,4 @@ __pycache__
 pabot_results
 /libspecs/
 *.idea
+*check.robot

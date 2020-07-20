@@ -157,12 +157,12 @@
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "inaccessibleFeatureMessage": "Система находится в автономном режиме и, следовательно, информация не доступна.",
         "unknown": "Неизвестный",
-        "vendor": "Vendor",
+        "vendor": "Производитель:",
         "model": "Модель",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "IP адрес",
+        "server": "Сервер",
+        "os": "ОС",
+        "version": "Версия",
         "voiceCommands": {
             "clear search": "очистить поиск",
             "collapse all servers": "свернуть все серверы",
@@ -201,12 +201,12 @@
             "camera": "камера",
             "cameras": "камеры",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Текущие записи",
+                "whenFullyUsed": "При полном использовании",
+                "amountUsed": "Использовано",
+                "archiveFrom": "Архив от",
+                "recordingBitrate": "Битрейт записи",
+                "delayFromLive": "Задержка с эфира"
             },
             "remove": {
                 "success": "Облачное хранилище успешно удалено из системы",
@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Отключить",
             "message": "Вы больше не сможете войти в эту систему.",
-            "title": "Disconnect System from your Account?"
+            "title": "Отключить систему от вашей учетной записи?"
         },
         "titles": {
             "error": "Ошибка",
@@ -446,7 +446,7 @@
         "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
         "wrongCodeRestore": "Код подтверждения уже используется или неверен",
         "wrongParameters": "Некоторые параметры в форме неверны",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Не удалось активировать лицензию. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
         "licenseTimeout": "Не удалось активировать лицензию из-за таймаута соединения. Пожалуйста, убедитесь, что сервер онлайн, и повторите попытку.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Невозможно подключиться к {{cloudName}}, проверьте подключение к сети."

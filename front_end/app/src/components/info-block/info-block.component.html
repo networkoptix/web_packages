@@ -19,7 +19,7 @@
                         [ngClass]="line.customClass"
                         [style.height.px]="line.overrideHeightPx"
                        [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
-                        [title]="line.value"
+                        title="{{line.name}}-{{line.value}}"
                         (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)">
                     {{line.value}}
                     <svg-icon *ngIf="line.icon"

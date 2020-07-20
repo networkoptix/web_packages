@@ -9,6 +9,15 @@ ${customization}    default
 
 *** Keywords ***
 # Keywords which use Cloud and cloud Portal API
+Merge Systems
+    [Documentation]    Merge two cloud systems which have the same owner
+    [Arguments]    ${auth}    ${primary id}    ${secondary id}
+    &{data}=   Create Dictionary    systemId=${secondary id}
+    Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
     &{data}=   Create Dictionary    name=${name}    customization=${customization}
@@ -26,7 +35,7 @@ Unbind System
     Return From Keyword    ${resp.json()}
 
 Create system and attach to cloud
-    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
+    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}=${BASE PASSWORD}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     @{default auth}=    Create List    admin    admin
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    name=${system name}
@@ -232,7 +241,38 @@ Detach Server From Cloud
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+Activate License
+    [Arguments]    ${auth}    ${server url}    ${license}
+    &{data}=   Create Dictionary    licenseKey=${license}
+    Create Digest Session    Activate License session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Get Licenses
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get Licenses session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get Licenses session   /ec2/getLicenses
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+License Is Activated
+    [Arguments]    ${auth}    ${server url}    ${license}
+    ${licenses}=   Get Licenses    ${auth}    ${server url}
+    FOR    ${lic}    IN    @{licenses}
+        Run Keyword If    '${lic}[key]'=='${license}'    Return From Keyword    ${True}
+    END
+    [Return]    ${False}
+
+Change License Portal Host
+    [Arguments]    ${auth}    ${server url}    ${new host}
+    Create Digest Session    Change License host session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Change License host session   /api/systemSettings?licenseServer=${new host}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 # Local user management
+
 Get System Settings
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1

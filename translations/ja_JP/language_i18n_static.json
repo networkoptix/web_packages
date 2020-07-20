@@ -577,7 +577,7 @@
     },
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
-        "integration": "{{INTEGRATION_COMPANY}} プライバシーポリシーは<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">こちら</a>にあります。同意を撤回する方法についての説明を含む％COMPANY_NAME％プライバシーポリシーは、<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a>から入手できます。",
+        "integration": "{{INTEGRATION_COMPANY}} プライバシーポリシーは<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">こちら</a>にあります。同意を撤回する方法についての説明を含む%COMPANY_NAME%プライバシーポリシーは、<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a>から入手できます。",
         "ipvd": "このフォームを送信すると、 %COMPANY_NAME%から連絡を受けることにに同意したことになります。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> には、同意を取り消す方法の説明が含まれています。"
     },
     "registration": {

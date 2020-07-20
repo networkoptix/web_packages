@@ -1,672 +1,707 @@
 *** Settings ***
-Resource          ../resource.robot
-Resource          ../APIresource.robot
-Library           ../NoptixLibrary/
+Resource    ../resource.robot
 
-Suite Setup       Startup
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset State
-Suite Teardown    Remove Containers
-Force Tags        Threaded File    merge
-
-*** Variables ***
-${email}             ${EMAIL OWNER}
-${password}          ${BASE PASSWORD}
-${url}               ${ENV}
-${merge timeout}     180
-${email admin no reg}    noptixautoqa+adminunreg@gmail.com
-${email viewer no reg}    noptixautoqa+viewerunreg@gmail.com
-${email client custom no reg}    noptixautoqa+clientcustomunreg@gmail.com
-&{users dict 1}
-...    cloudAdmin=${EMAIL ADMIN}
-...    Viewer=${EMAIL VIEWER}
-...    Custom=${EMAIL CLIENT CUSTOM}
-...    liveViewer=${EMAIL LIVE VIEWER}
-&{users dict 2}
-...    cloudAdmin=${email admin no reg}
-...    Viewer=${email viewer no reg}
-...    Custom=${email client custom no reg}
-...    liveViewer=${EMAIL LIVE VIEWER}
-&{all users dict}
-...    ${ADMIN TEXT}=${EMAIL ADMIN}
-...    ${VIEWER TEXT}=${EMAIL VIEWER}
-...    ClientCustom=${EMAIL CLIENT CUSTOM}
-...    ${ADMIN TEXT}=${email admin no reg}
-...    ${VIEWER TEXT}=${email viewer no reg}
-...    ClientCustom=${email client custom no reg}
-
-*** Keywords ***
-Merge
-    [arguments]    ${primary}    ${target}    ${expected dropdown}
-    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Wait Until Elements Are Visible
-    ...    ${MERGE DIALOG}
-    ...    ${MERGE X BUTTON}
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE CANCEL BUTTON}
-    ...    ${MERGE CURRENT SYSTEM WITH}
-    ...    ${MERGE ONLY AS OWNER}
-    Element Text Should Be    ${MERGE SYSTEM DROPDOWN}    ${expected dropdown}
-    Click Element    ${MERGE SYSTEM DROPDOWN}
-    Wait Until Element Is Visible    ${MERGE FORM}//li/a//span[text()="${target}"]
-    Click Element    ${MERGE FORM}//li/a//span[text()="${target}"]
-    ${radio button}    Radio Button    ${primary}
-    Wait Until Element Is Visible   ${radio button}
-    Click Element    ${radio button}
-    Wait Until Element Is Visible    ${radio button}/span[contains(@class, "checked")]
-    sleep    5
-    Click Button    ${MERGE OK BUTTON}
-    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-    Wait Until Elements Are Visible
-    ...    ${MERGE BUTTON MODAL}
-    ...    ${MERGE PASSWORD INPUT}
-    ...    ${MERGE CANCEL BUTTON}
-    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE BUTTON MODAL}
-    sleep    1
-
-Validate Merge
-    Check For Alert    ${SYSTEM MERGING TEXT}
-    Element Should Not Be Visible    ${MERGE DIALOG}
-    Wait Until Elements Are Visible    ${CURRENTLY MERGING CARD}    ${CURRENTLY MERGING DOTS}
-
-Validate system available
-    [arguments]    ${system name}
-    Verify In System    ${system name}
-    Go to Users List
-    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
-    ${elements}    Set Variable    ${ADD USER BUTTON SYSTEMS}
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-
-Prepare System With Users
-    [arguments]
-    ...    ${user}
-    ...    ${auth}
-    ...    ${image}
-    ...    ${port}
-    ...    ${system name}
-    ...    ${users dict}
-    ...    ${network}=bridge
-    ${system id}=    Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    ${port}
-    ...    ${system name}
-    ...   network=${network}
-    Sleep    5
-    Add users to system    ${auth}    ${users dict}    ${system id}
-    &{Save User role json}=    Save User Role
-    ...    ${auth}
-    ...    https://localhost:${port}
-    ...    ClientCustom
-    ...    GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
-    Set user to client custom
-    ...    ${auth}
-    ...    ${port}
-    ...    ${Save User role json["id"]}
-
-    [Return]    ${system id}
-
-Create system and attach to cloud
-    [arguments]
-    ...    ${user}
-    ...    ${image}
-    ...    ${port}
-    ...    ${system name}
-    ...    ${network}=bridge
-    ${cont}    Run Container    ${image}    ${port}    ${network}
-    sleep    5
-    ${auth}=    Create List    ${user}    ${password}
-    ${default auth}=    Create List    admin    admin
-    &{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
-    sleep    5
-    &{Setup Cloud System json}=    Setup Cloud System
-    ...    ${default auth}
-    ...    https://localhost:${port}
-    ...    ${bind json["authKey"]}
-    ...    ${bind json["name"]}
-    ...    ${bind json["id"]}
-    ...    ${bind json["ownerAccountEmail"]}
-    [return]    ${bind json["id"]}
-
-Add users to system
-    [arguments]    ${auth}    ${users}    ${system id}
-    FOR     ${key}    IN    @{users.keys()}
-        Share    ${auth}    ${system id}    ${key}    ${users["${key}"]}
-    END
-
-Set user to client custom
-    [arguments]    ${auth}    ${port}    ${role id}
-    FOR    ${index}    IN RANGE    100
-        @{users list}=    Get Users    ${auth}    https://localhost:${port}
-        ${length}    Get Length     ${users list}
-        Exit For Loop If    ${length}>3
-        Sleep    2
-    END
-
-    FOR    ${user}    IN    @{users list}
-        ${user id}    Set Variable    ${user["id"]}
-        log    ${user["email"]}
-        Exit For Loop If    "${user["email"]}"=="${EMAIL CLIENT CUSTOM}" or "${user["email"]}"=="noptixautoqa+clientcustomunreg@gmail.com"
-    END
-    &{Save User json}=    Save User    ${auth}    https://localhost:${port}    ${user id}    ${role id}
-
-Radio Button
-    [arguments]    ${text}
-    [return]    //form[@name="mergeForm"]//input[@type="radio"]/parent::label[contains(text(), "${text}")]
-
-Remove containers
-    Stop Containers
-    Prune Containers
-    Remove Images
-    Close All Browsers
-
-Startup
-    Open Browser and go to URL    ${url}
-    ${image}    Build Image    ${ENV}
-    Set Suite Variable    ${image}    ${image}
-
-Restart
-    Stop containers
-    Prune Containers
-    Common Restart Logout    ${url}
-    Validate Log Out
-
-Reset state
-    Stop Containers
-    Prune Containers
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-    ${systems owner 1}=   Get Account Systems   ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}
-    ${systems owner 2}=   Get Account Systems   ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}
-    FOR    ${system id}    IN    @{systems owner 1}
-        Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${systems owner 1}
-    END
-    FOR    ${system id}    IN    @{systems owner 2}
-        Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${systems owner 2}
-    END
-
+Suite Setup       Merge Suite Setup
+Test Teardown     Run Keyword If Test Failed    Merge Test Restart
+Suite Teardown    Merge Suite Teardown
 
 *** Test Cases ***
-Wrong and empty password
-    [Tags]    C54685    deb
-    ${user}=    Set Variable    ${EMAIL MERGE OWNER 2}
-    @{auth}=    Create List    ${user}    ${password}
-    ${system id 1}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
-    ${system id 2}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
+Merge button availability
+    [Tags]    C70976    C70977    pos
+    Log    C70976: "Merge with Another System" button is available only for owner
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port}=   Set Variable    7021
+    ${system}=   Set Variable    ${IMAGE 4.0}_${port}
+    ${cont}=   Run Container    ${IMAGE 4.0}    ${port}    network=bridge
+    Append To List    ${test containers}    ${cont}
+    ${sys id}=   Create system and attach to cloud    ${LOCALHOST}    ${port}    ${system}    ${owner email}
+    @{auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+    &{users}=   Create Dictionary
+    FOR    ${role}    IN    cloudAdmin    viewer    custom
+        ${email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+        Set To Dictionary    ${users}    ${role}=${email}
+        Share    ${auth}    ${sys id}    ${role}    ${email}
+    END
 
-    Log In    ${user}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
-
-    Go To    ${url}/systems
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Reload page
-    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
-    Click Button    ${MERGE BUTTON SYSTEM}
-
-#    Reload Page
-    # Merge dialog state 1
-    Wait Until Elements Are Visible
-    ...    ${MERGE DIALOG}
-    ...    ${MERGE X BUTTON}
-    ...    ${MERGE NEXT BUTTON}
-    ...    ${MERGE CURRENT SYSTEM WITH}
-    ...    ${MERGE ONLY AS OWNER}
-
-#    Click Button    ${MERGE NEXT BUTTON}
-#    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-#
-#    # Merge dialog state 2
-#    Wait Until Elements Are Visible
-#    ...    ${MERGE CHOOSE PRIMARY FORM}
-#    ...    ${MERGE X BUTTON}
-#    ...    ${MERGE GO BACK BUTTON}
-#    ...    ${MERGE NEXT BUTTON}
-#    Click Button    ${MERGE NEXT BUTTON}
-#
-#    # Merge dialog state 3
-#    Wait Until Elements Are Visible
-#    ...    ${MERGE PASSWORD INPUT}
-#    ...    ${MERGE X BUTTON}
-#    ...    ${MERGE GO BACK BUTTON}
-#    ...    ${MERGE NEXT BUTTON}
-#    Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
-#    Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
-#    Click Button    ${MERGE NEXT BUTTON}
-#    Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
-#    Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
-
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 1}
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
-
-Only one system connected to Cloud Account - Merge Button should be disabled
-    ${user}=    Set Variable    ${EMAIL MERGE OWNER 1}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    Log In    ${EMAIL MERGE OWNER 1}    ${password}
-    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
-    Run keyword and expect error    *    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    5
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id}
-
-2 Systems: 1 as Owner & 1 as non-Owner
-    ${system id 1}=   Create system and attach to cloud
-    ...    ${EMAIL MERGE OWNER 1}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    ${system id 2}=   Create system and attach to cloud
-    ...    ${EMAIL MERGE OWNER 2}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    Log In    ${EMAIL MERGE OWNER 1}    ${password}
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    #TODO switch to share via API
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-    Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
+    Log    Step 1: Log in as owner
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id}
+    Reload Page
+    Wait until element is visible    ${MERGE BUTTON SYSTEM}
     Log Out
 
-    Log In    ${EMAIL MERGE OWNER 2}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go to System Administration
-    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
-    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
+    Log    Steps 2-4: Log in as administrator, viewer, custom
+    FOR    ${user}    IN    @{users.keys()}
+        Log In    ${users}[${user}]    ${BASE PASSWORD}
+        Go To    ${ENV}/systems/${sys id}
+        Wait until element is visible    ${DISCONNECT FROM MY ACCOUNT}    timeout=30
+        Wait until element is not visible    ${MERGE BUTTON SYSTEM}    timeout=30
+        Log Out
+    END
 
+    Log    C70977: "Merge with Another System" button is disabled if system is offline
+    Stop Container    ${cont}
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id}
+    Wait until element is visible    ${MERGE BUTTON SYSTEM DISABLED}
+
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont}    remove=True
+    Remove Values From List    ${test containers}    ${cont}
+
+# Positive scenarios
+Positive scenario with selected cloud system (selected system is secondary)
+    [Tags]    C70930    pos
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7031
+    ${port 2}=   Set Variable    7032
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+
+    Log    Step 1: Open System 1 page
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 2 id}
+    Reload Page
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    180    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+
+    Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
 
-    Wait Until Elements Are Visible
-    ...    ${MERGE NOT OWNER MESSAGE 2}
-    ...    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE X BUTTON}
-    Element Text Should Be    ${MERGE NOT OWNER MESSAGE 2}    ${MERGE NOT OWNER MESSAGE 2 TEXT}
-    Click Button    ${MERGE OK BUTTON}
-    Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    Log    Step 3: Select System 2 and press 'Next'
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Validate Choose Primary Dialog
 
+    Log    Step 4: Keep primary system and press 'Next'
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+    Log    Step 5: Enter correct password and press 'Merge Systems'
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
+
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+
+Positive scenario with selected cloud system (selected system is primary)
+    [Tags]    C70931    pos
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7041
+    ${port 2}=   Set Variable    7042
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+
+    Log    Step 1: Open System 1 page
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 2 id}
+    Reload Page
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    180    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+
+    Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
-    Sleep    2
-    Wait Until Elements Are Visible
-    ...    ${MERGE NOT OWNER MESSAGE 2}
-    ...    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE X BUTTON}
-    Click Button    ${MERGE X BUTTON}
-    Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    Validate Check Merge Dialog
 
+    Log    Step 3: Select System 2 and press 'Next'
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+
+    Log    Step 4: Select system 2 as primary an press 'Next'
+    Choose Primary System   from target=True
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+    Log    Step 5: Enter correct password and press 'Merge Systems'
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 2}    ${system 1}
+
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+
+Positive scenario with selected local autodiscovered system not connected to the cloud
+    [Tags]    C70932        pos
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7051
+    ${port 2}=   Set Variable    7052
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${r}=   Setup Local System    ${LOCALHOST}:${port 2}    ${base password}    ${system 2}
+    ${sys 2 id}=   Set Variable    ${r}[reply][settings][localSystemId]
+
+    Log    Step 1: Open System 1 page
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    180    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+
+    Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
-    Sleep    2
-    Wait Until Elements Are Visible
-    ...    ${MERGE NOT OWNER MESSAGE 2}
-    ...    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE X BUTTON}
-    Press Keys    ${MERGE OK BUTTON}    ESCAPE
-    Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    Validate Check Merge Dialog
 
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
+    Log    Steps 3, 4: Select System 2 and press 'Next'
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
 
-2 Systems: 1 online and 1 offline
-    [tags]    C53960
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id 1}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    Stop Containers
-    Prune Containers
-    ${system id 2}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    Log In    ${user}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go to System Administration
-    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
-    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
+    Log    Steps 5, 6: Validate Admin dialog, enter correct password and press 'Merge Systems'
+    Validate Admin Password Dialog
+    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE NEXT BUTTON}
+
+    Log    Step 7: Enter the corect password for System 2 and press 'Next'
+    Validate Confirm Merge Dialog
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
+
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+
+Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
+    [Tags]    C76220    pos
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7061
+    ${port 2}=   Set Variable    7062
+    ${port 3}=   Set Variable    7063
+    ${port 4}=   Set Variable    7064
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${system 3}=   Set Variable    ${IMAGE 4.0}_${port 3}
+    ${system 4}=   Set Variable    ${IMAGE 4.0}_${port 4}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=host
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    ${cont 3}=   Run Container    ${IMAGE 4.0}    ${port 3}    network=host
+    ${cont 4}=   Run Container    ${IMAGE 4.0}    ${port 4}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    Append To List    ${test containers}    ${cont 3}
+    Append To List    ${test containers}    ${cont 4}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${r}=   Setup Local System    ${LOCALHOST}:${port 2}    ${base password}    ${system 2}
+    Setup Local System    ${LOCALHOST}:${port 3}    ${base password}    ${system 3}
+    Setup Local System    ${LOCALHOST}:${port 4}    ${base password}    ${system 4}
+    ${sys 2 id}=   Set Variable    ${r}[reply][settings][localSystemId]
+
+    Log    Step 1: Open System 1 page
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    180    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+
+    Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
-    Wait until elements are visible
-    ...    ${MERGE FORM}
-    ...    ${MERGE SYSTEM DROPDOWN}
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE CANCEL BUTTON}
-    Click Button    ${MERGE OK BUTTON}
-    ${error message}    Replace String
-    ...    ${CANNOT MERGE WITH OFFLINE SYSTEM TEXT}
-    ...    %SYSTEM NAME%
-    ...    API made system 1
-    Wait Until Element Is Visible    ${MERGE FORM}//p[contains(@class,"warning-label") and contains(text(),"${error message}")]
-    Click Button    ${MERGE CANCEL BUTTON}
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 2}
+    Validate Check Merge Dialog
 
-Merge with 3.0
-    Log In    ${EMAIL MERGE OWNER 3.0}    ${password}
-    Validate Log In
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 3.0}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-    Elements Should Not Be Visible    ${MERGE BUTTON SYSTEM}
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-    Go to System Administration
-    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}
+    Log    Steps 3, 4: Select Other System
+    Choose System From Dropdown    ${OTHER SYSTEM}    target system ip=${LOCALHOST}    target system port=${port 2}    input url=${LOCALHOST}:${port 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+
+    Log    Steps 5, 6: Validate Admin dialog, enter correct password and press 'Merge Systems'
+    Validate Admin Password Dialog
+    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE NEXT BUTTON}
+
+    Log    Step 7: Enter the corect password for System 2 and press 'Next'
+    Validate Confirm Merge Dialog
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
+
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Stop Container    ${cont 3}    remove=True
+    Stop Container    ${cont 4}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+    Remove Values From List    ${test containers}    ${cont 3}
+    Remove Values From List    ${test containers}    ${cont 4}
+
+Positive scenario with selected non-autodiscovered system (only Server URL input)
+    [Tags]    C76221    pos
+    Log    Test setup
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7071
+    ${port 2}=   Set Variable    7072
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    Setup Local System    ${LOCALHOST}:${port 2}    ${base password}    ${system 2}
+
+    Log    Step 1: Press Merge button and validate the dialog
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    120    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
     Click Button    ${MERGE BUTTON SYSTEM}
-    Wait Until Elements Are Visible
-    ...    ${MERGE FORM}
-    ...    ${MERGE SYSTEM DROPDOWN}
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE CANCEL BUTTON}
-    ...    ${MERGE X BUTTON}
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(),"– ${INCOMPATIBLE}")]
-    Click Button    ${MERGE CANCEL BUTTON}
+    Validate Check Merge Dialog    lonely=True
 
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 3.0}    ${password}    ${system id 1}
+    Log    Step 2: Input System 2 url and press Next
+    Input Text    ${MERGE FORM SERVER URL INPUT}    ${LOCALHOST}:${port 2}
+    Click Button    ${MERGE NEXT BUTTON}
+#    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
 
-2 Systems with identical servers
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id 1}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    ${system id 2}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    log in    ${user}    ${password}
-    Validate Log in
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Verify In System    API made system 2
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
+    Log    Step 3: Finish merge process
+    Validate Admin Password Dialog
+    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
 
-    Go to System Administration
-    Merge    API made system 1    API made system 1    API made system 1
-    Validate Merge
+    Log    Test teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
 
-    stop containers    allContainers=False
+# Commented out due to CLOUD-5439
+#Positive scenario with selected new system
+#    [Tags]    C76269    pos
+#    Log    Test set up
+#    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+#    ${port 1}=   Set Variable    7081
+#    ${port 2}=   Set Variable    7082
+#    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+#    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+#    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=host
+#    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=host
+#    Append To List    ${test containers}    ${cont 1}
+#    Append To List    ${test containers}    ${cont 2}
+#    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+#    Setup Local System    ${LOCALHOST}:${port 2}    ${base password}    ${system 2}
+#
+#    Log    Step 1
+#    Log In    ${owner email}    ${BASE PASSWORD}
+#    Go To    ${ENV}/systems/${sys 1 id}
+#    Reload Page
+#    Sleep    120    # To avoid false negative tests
+#    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+#
+#    Log    Test teardown
+#    Log Out
+#    Stop Container    ${cont 1}    remove=True
+#    Stop Container    ${cont 2}    remove=True
+#    Remove Values From List    ${test containers}    ${cont 1}
+#    Remove Values From List    ${test containers}    ${cont 2}
 
-    Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Verify In System    API made system 2
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
-    Go To    ${url}/systems
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Verify In System    API made system 1
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    Go to Users List
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
+Positive scenario with back button use (on choosing primary system)
+    [Tags]    C76270    pos
+    Log    Test set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7091
+    ${port 2}=   Set Variable    7022
+    ${port 3}=   Set Variable    7093
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${system 3}=   Set Variable    ${IMAGE 4.0}_${port 3}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    ${cont 3}=   Run Container    ${IMAGE 4.0}    ${port 3}    network=bridge
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    Append To List    ${test containers}    ${cont 3}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+    ${sys 3 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 3}    ${system 3}    ${owner email}
 
-    Go to System Administration
-    Merge    API made system 1    API made system 2    API made system 2
+    Log    Step 1
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    180    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Choose Primary Dialog
 
-    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
-    Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
+    Log    Step 2
+    Click Button    ${MERGE GO BACK BUTTON}
+    Validate Check Merge Dialog
+
+    Log    Step 3
+    Choose System From Dropdown    ${system 3}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Validate Choose Primary Dialog
+
+    Log    Step 4
+    Choose Primary System    from target=True
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+    Log    Step 5
+    Click Button    ${MERGE GO BACK BUTTON}
+    Validate Choose Primary Dialog
+
+    Log    Step 6
+    Click Button    ${MERGE GO BACK BUTTON}
+    Validate Check Merge Dialog
+
+    Log    Step 7
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Validate Choose Primary Dialog
+
+    Log    Step 8
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+    Log    Step 9
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
+
+    Log    Test Teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Stop Container    ${cont 3}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+    Remove Values From List    ${test containers}    ${cont 3}
+
+Different types of users in both Systems
+    [Tags]    C76326    pos
+    Log    Test Set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7111
+    ${port 2}=   Set Variable    7112
+    ${port 3}=   Set Variable    7113
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${system 3}=   Set Variable    ${IMAGE 4.0}_${port 3}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    ${cont 3}=   Run Container    ${IMAGE 4.0}    ${port 3}    network=bridge
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    Append To List    ${test containers}    ${cont 3}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+    ${sys 3 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 3}    ${system 3}    ${owner email}
+    Sleep    180
+
+    ${sys 1 admin}=   Register and activate account with random email    sys1    admin    ${BASE PASSWORD}
+    ${sys 2 adv viewer}=   Register and activate account with random email    sys2    adviewer    ${BASE PASSWORD}
+    ${sys 3 custom}=   Register and activate account with random email    sys3    custom    ${BASE PASSWORD}
+    ${all systems user}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+
+    @{auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+    Share     ${auth}    ${sys 1 id}    ${ACCESS ROLES}[admin]    ${sys 1 admin}
+    Share     ${auth}    ${sys 2 id}    ${ACCESS ROLES}[advancedViewer]    ${sys 2 adv viewer}
+    Share     ${auth}    ${sys 3 id}    ${ACCESS ROLES}[custom]    ${sys 3 custom}
+    Share     ${auth}    ${sys 1 id}    ${ACCESS ROLES}[admin]    ${all systems user}
+    Share     ${auth}    ${sys 2 id}    ${ACCESS ROLES}[advancedViewer]    ${all systems user}
+    Share     ${auth}    ${sys 3 id}    ${ACCESS ROLES}[custom]    ${all systems user}
+
+    Log    Step 1: Merge System 1(primary) with System 2(secondary), check users
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Sleep    240    # To avoid false negative tests
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Complete merge steps till final password input    ${system 2}
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 1}    ${system 2}
+
+    ${sys 1 users}=   Get Cloud System Users    ${auth}    ${sys 1 id}
+    ${sys 1 user emails}=   Create List
+    FOR    ${user}    IN    @{sys 1 users}
+        Append To List    ${sys 1 user emails}    ${user}[accountEmail]
+    END
+    Should Contain    ${sys 1 user emails}    ${sys 2 adv viewer}
+    Should Contain    ${sys 1 user emails}    ${all systems user}
+    FOR    ${user}    IN    @{sys 1 users}
+        Run Keyword If    '${user}[accountEmail]' == '${sys 2 adv viewer}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[cloudAdmin]
+        Run Keyword If    '${user}[accountEmail]' == '${all systems user}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[cloudAdmin]
+    END
+
+    Log    Step 2: Merge System 1(secondary) with System 3(primary), check users
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Complete merge steps till final password input    ${system 3}
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge    ${system 3}    ${system 1}
+
+    ${sys 3 users}=   Get Cloud System Users    ${auth}    ${sys 3 id}
+    ${sys 3 user emails}=   Create List
+    FOR    ${user}    IN    @{sys 1 users}
+        Append To List    ${sys 3 user emails}    ${user}[accountEmail]
+    END
+    Should Contain    ${sys 3 user emails}    ${sys 1 admin}
+    Should Contain    ${sys 3 user emails}    ${sys 2 adv viewer}
+    Should Contain    ${sys 3 user emails}    ${all systems user}
+    Should Contain    ${sys 3 user emails}    ${sys 3 custom}
+
+    FOR    ${user}    IN    @{sys 3 users}
+        Run Keyword If    '${user}[accountEmail]' == '${sys 3 custom}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[custom]
+        Run Keyword If    '${user}[accountEmail]' == '${all systems user}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[custom]
+    END
+
+    Log    Test Teardown
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Stop Container    ${cont 3}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+    Remove Values From List    ${test containers}    ${cont 3}
+
+
+# Negative scenarios
+Checking state for selected Cloud system
+    [Tags]    C70983    C70987    C70984    C70985   neg    deb
+    Log    Test Set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7121
+    ${port 2}=   Set Variable    7122
+    ${port 3}=   Set Variable    7123
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${system 3}=   Set Variable    ${IMAGE 4.1}_${port 3}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=bridge
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=bridge
+    ${cont 3}=   Run Container    ${IMAGE 4.1}    ${port 3}    network=bridge
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    Append To List    ${test containers}    ${cont 3}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+    ${sys 3 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 3}    ${system 3}    ${owner email}
+    Sleep    180
+    Stop Container    ${cont 2}    remove=False
+
+    Log    C70983: System offline
+    Log    Step 1
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+
+    Log    Step 2
+    Choose System From Dropdown    ${system 2}
+    ${s}=   Replace String    ${CANNOT MERGE WITH OFFLINE SYSTEM TEXT}    %SYSTEM NAME%    ${system 2}
+    Wait until element is visible    //p[contains(text(),"${s}")]
+
+    Log    Step 3
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Validate Check Merge Dialog
+
+
+    Log    C70987: Checking state - offline system becomes online
+    Log    Step 2: Bring system 2 back online and click Next
+    Start Container    ${cont 2}
+    Sleep    60
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Validate Choose Primary Dialog
+
+    Log    Step 3: Click <- button
+    Click Button    ${MERGE GO BACK BUTTON}
+    Validate Check Merge Dialog
+
+    Log    Step 4: Click Next
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    # Dialog might not go to the next state after first click
+    ${switched}=   Run Keyword And Return Status    Wait Until Element Is Visible    ${MERGE CHOOSE PRIMARY FORM}    timeout=10
+    Run Keyword Unless    ${switched}    Run Keywords
+        ...    Click Button    ${MERGE NEXT BUTTON}
+        ...    AND    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+        ...    AND    Validate Choose Primary Dialog
+
+    Log    C70984: System has an older software version
+    Go To    ${ENV}/systems/${sys 3 id}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait until element is visible   ${SYSTEMS HAVE MISMATCHING VERSIONS}
+
+    Log    C70985: System has a newer software version
+    Go To    ${ENV}/systems/${sys 2 id}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Choose System From Dropdown    ${system 3}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait until element is visible   ${SYSTEMS HAVE MISMATCHING VERSIONS}
+
+    Log    Test Teardown
+    Reload Page
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Stop Container    ${cont 3}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+    Remove Values From List    ${test containers}    ${cont 3}
+
+Duplicate servers
+    [Tags]    C71004    neg
+    Log    Test Set up
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7131
+    ${port 2}=   Set Variable    7132
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=host
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+    ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
+    Sleep    180
+
+    Log    Step 1
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+
+    Log    Step 2
+    Choose System From Dropdown    ${system 2}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait until element is visible    ${SERVER APPEARS TO BE LISTING ITSELF}
+
+    Log    Test Teardown
+    Reload Page
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}
+
+# Checking state for selected local system
+Server URL is empty
+    [Tags]    C76223    neg
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+    ${port 1}=   Set Variable    7131
+    ${port 2}=   Set Variable    7132
+    ${system 1}=   Set Variable    ${IMAGE 4.0}_${port 1}
+    ${system 2}=   Set Variable    ${IMAGE 4.1}_${port 2}
+    ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}    network=host
+    ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}    network=host
+    Append To List    ${test containers}    ${cont 1}
+    Append To List    ${test containers}    ${cont 2}
+    ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
+
+    Log    Step 1
+    Log In    ${owner email}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys 1 id}
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+
+    Log    Step 2
+    Choose System From Dropdown    ${OTHER SYSTEM}
+    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
+    Input Text   ${MERGE FORM SERVER URL INPUT}    ${EMPTY}
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait until element is visible    ${MERGE ENTER SERVER ADDRESS}
+
+    Log    C76528: No server is found for system 4.0
+    Log    Step 1
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+    Choose System From Dropdown    ${OTHER SYSTEM}
+    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
+    Input Text   ${MERGE FORM SERVER URL INPUT}    http://example.com:7001
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Admin Password Dialog
+
+    Log    Step 2
+    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+    Log    Step 3
+    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${MERGE SYSTEMS BUTTON}
+    Validate Merge Failed Dialog    ${system 1}    http://example.com:7001
+
+    Log    Step 4
     Click Button    ${MERGE FAILED OK BUTTON}
-    Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
+    Wait until element is not visible    ${MERGE FAILED HEADER}
 
-    Go to System Administration
-    Merge    API made system 1    API made system 2    API made system 2
-
-    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
-    Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
-    Click Button    ${MERGE FAILED X BUTTON}
-    Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
-
-    Disconnect from cloud
-    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
-    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
-    FOR    ${idx}    IN RANGE   ${count}[1]-1
-        Click Element    ${SYSTEMS TILE}
-        Disconnect from cloud
-    END
-    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
-
-From secondary system merge to primary with no other systems
-    [tags]    C53944
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id 1}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    ${system id 2}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    Log In    ${user}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
-    Go To    ${url}/systems
+    Log    Test Teardown
     Reload Page
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-
-    Go to System Administration
-    Merge    API made system 1    API made system 1    API made system 1
-    Validate Merge
-
-    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
-    Sleep    35
-    Go to Users List
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
-    Validate system available    API made system 1
-
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
-
-From secondary system merge to primary with other systems
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
-    ${system id 1}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    ${system id 2}=   Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7004
-    ...    API made system 3
-    log in    ${user}    ${password}
-    Validate Log in
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
-    Validate system available    API made system 3
-
-    Go to System Administration
-    Merge    API made system 1    API made system 1    API made system 1
-    Validate Merge
-    Sleep    35
-    Validate system available    API made system 1
-    Go to    ${url}/systems
-    Wait Until Elements Are Visible
-    ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
-    Sleep    1
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
-
-
-From primary system
-    [tags]    C48946
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
-    ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7001
-    ...    API made system 2
-    ${system id 1}=  Create system and attach to cloud
-    ...    ${user}
-    ...    ${image}
-    ...    7003
-    ...    API made system 1
-    log in    ${user}    ${password}
-    Validate Log in
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go To    ${url}/systems
-    Reload Page
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
-
-    Go to System Administration
-    Merge    API made system 1    API made system 2    API made system 2
-    Validate Merge
-
-    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
-    Go to Users List
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
-    Validate system available    API made system 1
-
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
-
-Merge with different types of users
-    [tags]    C53946
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=   Create List    ${user}    ${password}
-    ${system id 1}=   Prepare System With Users
-    ...    ${user}
-    ...    ${auth}
-    ...    ${image}
-    ...    7001
-    ...    API made system 1
-    ...    ${users dict 1}
-    ...    network=bridge
-    ${system id 2}=   Prepare System With Users
-    ...    ${user}
-    ...    ${auth}
-    ...    ${image}
-    ...    7003
-    ...    API made system 2
-    ...    ${users dict 2}
-    ...    network=bridge
-    Log In    ${user}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
-    Go To    ${url}/systems
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go to System Administration
-
-    Merge    API made system 1    API made system 1    API made system 1
-    Validate Merge
-
-    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
-
-    Validate system available    API made system 1
-    FOR     ${idx}    IN RANGE    90
-        ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible
-        ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}']
-        Run Keyword Unless    '${result[0]}'=='PASS'    Reload Page
-        Exit For Loop If    '${result[0]}'=='PASS'
-    END
-    FOR    ${key}    IN    @{all users dict.keys()}
-        Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
-    END
-
-    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
+    Log Out
+    Stop Container    ${cont 1}    remove=True
+    Stop Container    ${cont 2}    remove=True
+    Remove Values From List    ${test containers}    ${cont 1}
+    Remove Values From List    ${test containers}    ${cont 2}

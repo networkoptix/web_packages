@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Verbinding verbreken",
             "message": "U kunt niet meer inloggen in dit systeem.",
-            "title": "Disconnect System from your Account?"
+            "title": "Wilt u dit systeem loskoppelen van uw account?"
         },
         "titles": {
             "error": "Error",

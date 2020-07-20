@@ -591,7 +591,7 @@ Cloud Owner Can Change Local User Full Name
     Verify Changed Info Via API    ${new locals}
 
 Cloud Owner Can Change Local User Email
-    [Tags]    local_user
+    [Tags]    local_user    C76244
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -656,7 +656,7 @@ Cloud Owner Can Change Local User Password
     END
 
 Cloud owner can change local users' information
-    [Tags]    local_user    C76239
+    [Tags]    local_user    C76239    C76244
     @{local users} =    Local User Start   ${email}
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}
     Verify Changed Info Via API    ${new locals}
