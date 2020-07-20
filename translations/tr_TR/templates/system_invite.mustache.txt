@@ -4,7 +4,7 @@
 {{message.sharer_name}} ({{message.sharer_email}}) sizi %CLOUD_NAME% e katılmak için ve {{message.system_name}} için davet etti.
 {{/message.sharer_name}}
 
-{{#message.sharer_name}}
+{{^message.sharer_name}}
 %CLOUD_NAME% e katılmaya davet edildiniz.
 {{message.system_name}} adresine erişim izni verildi.
 {{/message.sharer_name}}

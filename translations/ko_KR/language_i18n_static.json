@@ -246,7 +246,7 @@
             "differentOwners": "선택한 시스템과 현재 시스템이 모두 %CLOUD_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
             "duplicateServers": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
             "enterSystemAddressTitle": "이 서버와 병합하려는 시스템에있는 서버의 주소를 입력하십시오.",
-            "mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
+            "mergeConfirmation": "<p class=\"mb-0\">시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>.</p><p>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.</p>",
             "mergeSystemsTitle": "와 현재 시스템을 병합",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "noServerFound": "미디어 서버 없음",
@@ -257,14 +257,14 @@
             "passwordWrong": "잘못된 암호",
             "primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다",
-            "primarySystemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
+            "primarySystemUnavailable": "시스템 {{primarySystem}} 에 현재 연결할 수 없습니다. 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
             "recommendSupport": {
                 "a_recommend": "우리는 당신과 상담하는 것이 좋습니다",
                 "b_support": "지원",
                 "c_proceeding": "계속하기 전에."
             },
             "secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-            "secondarySystemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
+            "secondarySystemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
             "serverAtUrl": "{{url}} 서버",
             "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} 시스템에 액세스 할 수 없습니다.</p><p>지정된 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.</p>",
             "serverNotYours": "이 시스템은 %CLOUD_NAME%연결되어 있지만 소유자가 다릅니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
@@ -293,8 +293,8 @@
                 "integration_feedback": "{{asset}} 통합에 대한 피드백",
                 "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
                 "ipvd_feedback_page": "카메라 페이지에 대한 피드백",
-                "sales_inquiry": "{{asset}}에 대한 판매 문의",
-                "technical_inquiry": "{{asset}}에 대한 기술 문의"
+                "sales_inquiry": "{{asset}} 에 대한 판매 문의",
+                "technical_inquiry": "{{asset}} 에 대한 기술 문의"
             },
             "title": {
                 "integration": "{{companyName}} 과 연락",
@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "연결 끊기",
             "message": "더이상 이 시스템에 접속 할 수 없습니다.",
-            "title": "Disconnect System from your Account?"
+            "title": "계정에서 시스템을 분리 하시겠습니까?"
         },
         "titles": {
             "error": "오류",
@@ -315,7 +315,7 @@
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
             "removeUser": "사용자를 삭제 하시겠습니까?",
-            "serversDetach": "현재 시스템에서 서버 분리?",
+            "serversDetach": "\"{{ title }}\"현재 시스템에서 서버 분리?",
             "serversReset": "서버 \"{{ title }}\"을 (를) 기본값으로 재설정 하시겠습니까?",
             "serversRestart": "\"{{ title }}\"서버를 다시 시작 하시겠습니까?"
         },
@@ -438,7 +438,7 @@
         "oldPasswordMistmatch": "현재 패스워드가 잘못되었습니다.",
         "oldSafariNotSupported": "10 이전의 Safari 버전은 지원되지 않습니다.",
         "passwordMismatch": "패스워드가 틀립니다.",
-        "systemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
+        "systemUnavailable": "시스템 {{failedSystem}} 에 현재 연결할 수 없습니다. 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
         "thisSystem": "시스템",
         "unknownError": "예기치 않은 오류가 발생했습니다.",
         "unknownMergeError": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오.",
@@ -449,7 +449,7 @@
         "licenseFail": "라이센스를 활성화하지 못했습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
         "licenseTimeout": "연결 시간이 초과되어 라이센스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
         "licenseServerError": "라이센스를 활성화하지 못했습니다. 라이센스 서버가 응답하지 않았습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
-        "networkConnection": "다운로드 할 수 없습니다. 네트워크 연결을 확인하세요."
+        "networkConnection": "{{cloudName}} 에 연결할 수 없습니다. 네트워크 연결을 확인하십시오."
     },
     "integration": {
         "Access Control": "접근 제어",
@@ -489,7 +489,7 @@
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "오디오",
         "isDualStreamingSupported": "듀얼 스트리밍",
-        "isFisheye": "Fisheye",
+        "isFisheye": "어안카메라",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "움직임 감지:",
@@ -696,7 +696,7 @@
     "toastMessage": {
         "system": {
             "deleted": {
-                "success": "시스템 {{systemName}}이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다."
+                "success": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다."
             },
             "disconnected": {
                 "success": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다."
@@ -713,7 +713,7 @@
     "license": {
         "info": {
             "type": "형식",
-            "channels": "개의 채널",
+            "channels": "채널 수",
             "server": "서버:",
             "hwid": "하드웨어 ID:",
             "status": "상태",
@@ -765,7 +765,7 @@
         "webSocketEnabled": "웹 소켓",
         "arecontRtspEnabled": "Arecont RTSP 활성화",
         "auditTrailEnabled": "감사 추적 사용",
-        "auditTrailPeriodDays": "감사 추적 일정",
+        "auditTrailPeriodDays": "시스템 감사 일정",
         "autoDiscoveryEnabled": "장치 자동 검색 활성화",
         "autoUpdateThumbnails": "자동업데이트 미리보기",
         "backupNewCamerasByDefault": "기본적으로 새 카메라 녹화 시작",

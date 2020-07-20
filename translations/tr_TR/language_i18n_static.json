@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Bağlantıyı kes",
             "message": "Artık bu sisteme giriş yapamazsınız.",
-            "title": "Disconnect System from your Account?"
+            "title": "Sisteminizin bağlantısı hesabınızdan kesilecek?"
         },
         "titles": {
             "error": "Hata",
@@ -315,7 +315,7 @@
             "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
             "noClientDetected": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
             "removeUser": "Kullanıcı kaldırılsın mı?",
-            "serversDetach": "Sunucuyu mevcut sistemden ayır?",
+            "serversDetach": "Sunucuyu \"{{ title }}\" mevcut sistemden ayır?",
             "serversReset": "\"{{ title }}\" sunucusu varsayılanlara sıfırlansın mı?",
             "serversRestart": "\"{{ title }}\" sunucusu yeniden başlatılsın mı?"
         },
@@ -396,12 +396,12 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Bu sistem %CLOUD_NAME%bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
         "DUPLICATE_MEDIASERVER_FOUND": "Bazı sunucular, her iki sistemde de mevcut olanları - seçilenleri ve geçerli olanları listeler.<br>Çevrimdışı ve uyumsuz sunucuları her bir Sistemden kaldırın ve tekrar deneyin.",
         "EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
         "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
         "INCOMPATIBLE": "Sistemler, uyumsuz yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürüm</a>.",
-        "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME%bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+        "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
         "fail": "{{failedSystem}} erişilemez.",
         "incompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
@@ -428,7 +428,7 @@
         "cantSharePrefix": "Sistem paylaşılamıyor",
         "cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
         "emailNotFound": "Hesap mevcut değil.",
-        "failedToAccessSystem": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %CLOUD_NAME%bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
+        "failedToAccessSystem": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %CLOUD_NAME% bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
         "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
         "lostConnection": "{{systemName}} ile bağlantı kayboldu",
         "mergedSystemIsOffline": "Sistem <strong>{{failedSystem}}</strong> çevrimdışı.",
@@ -578,7 +578,7 @@
     "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
         "integration": "{{INTEGRATION_COMPANY}} gizlilik politikası <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada bulacaksınız</a>. %COMPANY_NAME% onayınızı geri çekmek konusunda talimat içeren gizlilik politikası, geçerli <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a>.",
-        "ipvd": "Bu formu göndererek %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
+        "ipvd": "Bu formu göndererek %COMPANY_NAME% ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
     },
     "registration": {
         "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"

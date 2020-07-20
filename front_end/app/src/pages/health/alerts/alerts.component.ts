@@ -266,7 +266,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         for (const [key, value] of Object.entries(this.healthService.manifest)) {
             const val: any = value;
-            if (val.resource !== '') {
+            if (val.resource !== '' && key in this.healthService.values) {
                 const item = { value: val.resource, name: val.resource };
                 typesItems.push(item);
 
@@ -337,8 +337,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
          * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
          * Note: alarm levels are sorted alphabetically
          */
-        const alarmTypes = Object.values(this.healthService.manifest).filter((resource: any) => {
-            return resource.id !== 'systems';
+        const alarmTypes: any = Object.values(this.healthService.manifest).filter((resource: any) => {
+            return resource.id !== 'systems' && resource.name in this.healthService.values;
         }).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
@@ -352,7 +352,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthService.alertsValues.filter((value: any) => {
             return value.metric !== 'systems';
         }).forEach((item) => {
-            alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+            if (alarmTypes[item.metric]) {
+                alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+            }
         });
         this.alertCards = Object.values(alarmTypes).map((alarmType: any) => {
             return {

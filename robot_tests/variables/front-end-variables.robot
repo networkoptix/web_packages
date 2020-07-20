@@ -7,3 +7,4 @@ Resource     front-end-variables/register-variables.robot
 Resource     front-end-variables/system-camera-variables.robot
 Resource     front-end-variables/system-admin-variables.robot
 Resource     front-end-variables/systems-page-variables.robot
+Resource     front-end-variables/licenses-variables.robot

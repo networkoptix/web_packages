@@ -27,6 +27,7 @@ import { NxGridLayoutModule }        from './layout/layout.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
+import { NxDevelopersModule }        from './developers/developers.module';
 
 @NgModule({
     imports: [
@@ -52,6 +53,7 @@ import { Nx503Module }               from './503/503.module';
         NxHealthModule,
         NxSystemsListModule,
         NxSystemViewModule,
+        NxDevelopersModule,
         NxAccountModule,
         NxDebugModule,
         NxGridLayoutModule,
@@ -73,6 +75,7 @@ import { Nx503Module }               from './503/503.module';
         IntegrationsModule,
         IntegrationsListModule,
         NxSettingsModule,
+        NxDevelopersModule,
         NxHealthModule,
         ContentModule,
         // RightMenuModule, // TODO: Remove it after test

@@ -1,0 +1,18 @@
+@use '../../../styles/typography';
+
+.about-heading {
+    padding: 60px 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    & > h1 {
+        font-size: 64px;
+        font-weight: 200;
+    }
+    & > p {
+        @include typography.regular14;
+        margin: 10px 0 25px 0;
+        text-align: center;
+        max-width: 620px;
+    }
+}

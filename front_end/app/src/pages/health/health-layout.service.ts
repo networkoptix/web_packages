@@ -212,7 +212,7 @@ export class NxHealthLayoutService {
         // ... have a feeling that making the table off screen causes table header and table title
         // to report 0 height initially and screw pageSize calc.
         //
-        if (!table || table.offsetLeft === 0 && tableHeader.innerText.length && !tableHeader.offsetHeight) {
+        if (!table || table.offsetLeft === 0 && tableHeader?.innerText.length && !tableHeader.offsetHeight) {
             if (this.metricsValuesCount > 1) { // short circuit single entity - this was going until metric w/ page is loaded -- TT
                 setTimeout(() => this.setTableDimensions());
                 this.healthService.tableReady = false;

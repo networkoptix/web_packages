@@ -4,6 +4,7 @@ from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.html import format_html
@@ -485,6 +486,10 @@ class AssetAdmin(CMSAdmin):
 
     @staticmethod
     def change_page(request, context_id=None, asset_id=None):
+        order_options = {'name': 'Tag/File name', 'label': 'Label'}
+        order = request.GET.get('order', None)
+        if order not in order_options.keys():
+            order = None
         context = {'errors': []}
         if request.method == "POST" and 'asset_id' in request.POST:
             context['preview_link'], context['errors'] = page_editor(request)
@@ -514,8 +519,9 @@ class AssetAdmin(CMSAdmin):
         context['site_url'] = admin.site.site_url
         context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
+        context['order_options'] = order_options
 
-        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
+        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id}, order=order)
         form.add_fields(asset, target_context, Language.objects.get(code=context['language_code']), request.user)
         form.cleaned_data = {}
         for field_error in context['errors']:
@@ -889,7 +895,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        Menu.cache_all_customizations()
+        transaction.on_commit(Menu.cache_all_customizations)
 
 
 @admin.register(MenuNode)
@@ -903,7 +909,7 @@ class MenuNodeAdmin(CMSAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        Menu.cache_all_customizations()
+        transaction.on_commit(Menu.cache_all_customizations)
 
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()

@@ -16,7 +16,9 @@ import { NxSystem }                  from '../../../../../services/system.servic
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { InfoBlockSection, InfoBlockLine }            from '../../../../../components/info-block/info-block.component';
+import { InfoBlockSection, InfoBlockLine }        from '../../../../../components/info-block/info-block.component';
+import { finalize, map }                          from 'rxjs/operators';
+import { timer, combineLatest, SubscriptionLike } from 'rxjs';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -58,6 +60,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     fullInfoPath: string;
     parsedServerId: string;
     serverDetails: InfoBlockSection;
+    serversSubscription: SubscriptionLike;
 
     private setupDefaults() {
         this.checking = false;
@@ -184,6 +187,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
+
+        this.checking = false;
     }
 
     checkIfOnline(serverId) {
@@ -206,20 +211,24 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     checkStatus() {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
-        this.system.getServers().toPromise()
-            .then(res => {
-                if (res) {
-                    const servers: any[] = Object.entries(res).map(server => server[1]);
+
+        // add time to avoid server status flashing "Checking..." if system is offline
+        if (this.serversSubscription) {
+            this.serversSubscription.unsubscribe();
+        }
+        this.serversSubscription = combineLatest(timer(this.CONFIG.servers.minLoaderTime), this.system.getServers())
+            .pipe(
+                map(x => x[1]),
+                finalize(() => (this.checking = false))
+            )
+            .subscribe(result => {
+                if (result) {
+                    const servers: any[] = Object.entries(result).map(server => server[1]);
                     const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
-                    setTimeout(() => {
-                        this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
-                        this.checking = false;
-                    }, this.CONFIG.servers.checkStatusTimeout);
+                    this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                } else {
+                    this.setStatus(this.CONFIG.servers.status.offline);
                 }
-            })
-            .catch(() => {
-                this.checking = false;
-                this.setStatus(this.CONFIG.servers.status.offline);
             });
     }
 

@@ -174,7 +174,7 @@
         "name": "For developers",
         "url": "https://support.networkoptix.com/hc/en-us/categories/360000737654-Develop-with-Nx-Meta",
         "new_window": true,
-        "enabled": true,
+        "enabled": false,
         "order": 4,
         "authentication": "both"
       },

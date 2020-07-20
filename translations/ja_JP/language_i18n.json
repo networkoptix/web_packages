@@ -199,7 +199,7 @@
     "Save": "保存",
     "Search in google": "Google で検索",
     "Security": "セキュリティ",
-    "Select some area on camera to change the sensitivity settings for it": "カメラの一部のエリアを選択して感度設定を変更します",
+    "Select some area on camera to change the sensitivity setting for it. Hold Shift key to make complex shape selection.": "Select some area on camera to change the sensitivity setting for it. Hold Shift key to make complex shape selection.",
     "Send": "送信",
     "Send anonymous usage and crash statistics to developers": "匿名の使用状況とクラッシュ統計を開発者に送信する",
     "Send feedback about this device": "この端末についてフィードバックを送信",

@@ -157,12 +157,12 @@
         "systemUnreachable": "SISTEMA INACESSÍVEL",
         "inaccessibleFeatureMessage": "O sistema está offline e, portanto, a informação não está acessível.",
         "unknown": "Desconhecido",
-        "vendor": "Vendor",
+        "vendor": "Fabricante:",
         "model": "Modelo",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "Endereço IP",
+        "server": "Servidor",
+        "os": "SO",
+        "version": "Versão",
         "voiceCommands": {
             "clear search": "limpar pesquisa",
             "collapse all servers": "recolher todos os servidores",
@@ -201,12 +201,12 @@
             "camera": "câmara",
             "cameras": "câmeras",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Gravações atuais",
+                "whenFullyUsed": "Quando totalmente usado",
+                "amountUsed": "Quantidade utilizada",
+                "archiveFrom": "Arquivar de",
+                "recordingBitrate": "Bitrate de gravação",
+                "delayFromLive": "Atraso ao vivo"
             },
             "remove": {
                 "success": "Armazenamento em nuvem removido com sucesso do sistema",

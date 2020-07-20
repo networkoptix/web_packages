@@ -33,6 +33,10 @@
     @include font-source($font-family-medium, $font-size-xlg, $font-color-medium);
 }
 
+@mixin medium20 {
+    @include font-source($font-family-medium, $font-size-20, $font-color-medium);
+}
+
 @mixin regular20 {
     @include font-source($font-family-regular, $font-size-20, $font-color-regular);
 }

@@ -24,6 +24,7 @@ ${TIME DURATION SELECTION MINUTES}         //*[@aria-labelledby='genericSelect']
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
+${SYSTEM GENERAL LINK}                //a[@id="general"]
 
 ${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
 ${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]

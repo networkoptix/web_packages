@@ -1,6 +1,7 @@
 {% extends "admin/change_form.html" %}
 {% load i18n admin_urls static admin_modify %}
 {% load cms_filters %}
+{% load util_tags %}
 
 {% block extrahead %}
     {{ block.super }}
@@ -24,6 +25,12 @@
 {% endblock %}
 {% block content %}
 {% autoescape off %}{{ original.description }}{% endautoescape %}
+<div class="sort-links">Sort By
+    <a class="{% if not request.GET.order or request.GET.order == '' %}selected{% endif %}" href="?{% url_replace request 'order' '' %}">Default</a>
+    {% for order_key, order_val in order_options.items %}
+    <a class="{% if request.GET.order == order_key %}selected{% endif %}" href="?{% url_replace request 'order' order_key %}">{{ order_val }}</a>
+    {% endfor %}
+</div>
 <hr>
 
 <form id="context_form" class="aligned" action="" enctype="multipart/form-data" method="post" novalidate>
@@ -58,7 +65,7 @@
                                 {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
                             </label>
                             <div id="{{ field.name }}" class="ml-160">
-                                {% if field.has_image_field and field.value %}
+                                {% if data_structure.has_image_field and field.value %}
                                     <div>
                                         {% if data_structure.optional and record_exists %}
                                             <label><input id="delete_{{ field.name }}" type="checkbox"
@@ -81,7 +88,7 @@
                                         </a>
                                     </div>
 
-                                {% elif field.has_file_field and field.value %}
+                                {% elif data_structure.has_file_field and field.value %}
                                     <div>
                                         {% if data_structure.optional and record_exists %}
                                             <label><input id="delete_{{ field.name }}" type="checkbox" name="delete_{{ field.name }}"

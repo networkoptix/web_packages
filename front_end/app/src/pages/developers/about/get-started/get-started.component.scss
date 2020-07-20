@@ -1,0 +1,100 @@
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/typography';
+
+.get-started-heading {
+    font-family: $font-family-light;
+    font-size: 56px;
+    color: $dark10;
+    margin: 106px 16px 45px 16px;
+    justify-content: center;
+}
+
+.get-started-blocks{
+    background: $light1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 48px 16px 0 16px;
+}
+
+.detail-wrapper {
+    flex: 1 0 232px;
+    max-width: 376px;
+    min-height: 246px;
+    display: flex;
+    margin-bottom: 32px;
+    justify-content: center;;
+}
+
+.detail-block {
+    position: relative;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+
+    .step {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-family: $font-family-bold;
+        font-weight: 900;
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .step-image {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1 1 100%;
+
+        svg-icon {
+            transition: all ease-out 0.25s;
+            z-index: 2;
+            & > svg {
+                width: 140px;
+                height: 140px;
+            }
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 48px;
+            background: radial-gradient(ellipse farthest-corner at center center, rgba($light16, 0.5), transparent 60%);
+            transition: all ease-out 0.25s;
+        }
+    }
+
+    .step-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & > h3 {
+            @include typography.medium20;
+            &:hover {
+                cursor: pointer;
+                color: $brand_core;
+            }
+        }
+
+        & > span {
+            @include typography.regular14;
+            color: $brand_core;
+        }
+    }
+}
+
+.slide-up {
+    & > svg-icon {
+        transform: translate3d(0, -20px, 0);
+    }
+
+    &:after {
+        filter: opacity(.75) brightness(1.25);
+    }
+}

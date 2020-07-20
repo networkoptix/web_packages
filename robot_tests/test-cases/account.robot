@@ -121,6 +121,12 @@ First name is required
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Element Should Be Visible    ${ACCOUNT SAVE}
+    Element Should Be Visible    ${ACCOUNT CANCEL}
 
 Last name is required
     [tags]    C41573    Threaded
@@ -133,6 +139,12 @@ Last name is required
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    Element Should Be Visible    ${ACCOUNT SAVE}
+    Element Should Be Visible    ${ACCOUNT CANCEL}
 
 Change first and last name shows in system
     [Tags]    C41573    C30655    Threaded

@@ -21,11 +21,10 @@ import { NxMenuService }             from '../../../../menu';
 import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import {
-    Subscription, BehaviorSubject
+    Subscription, BehaviorSubject, from, throwError, of
 }                                    from 'rxjs';
 import {
-    filter, map, retryWhen, delay,
-    distinctUntilChanged
+    filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
 }                                    from 'rxjs/operators';
 import { NxUtilsService }            from '../../../../services/utils.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -294,13 +293,34 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     updateCredentials() {
         const update = () => {
+            const { cameraCredentialUpdateTimeout } = this.CONFIG;
             this.showUnauthorized = false;
-            this.selectedCamera.status = 'Online';
-            setTimeout(() => {
-                this.system.getCameras().then(() => {
-                    this.reload$.next(this.reload$.value + 1);
-                });
-            }, 2000);
+            return of('').pipe(
+                delay(cameraCredentialUpdateTimeout),
+                switchMap(() => from(this.system.getCameras()).pipe(
+                    switchMap(cameras => {
+                        const selectedCamera = cameras.find(({ id }) => id === this.selectedCamera.id);
+                        const unauthorized = selectedCamera.status === 'Unauthorized';
+                        if (unauthorized) {
+                            return throwError('Camera Unauthorized');
+                        }
+                        return of(selectedCamera);
+                    }),
+                    delay(cameraCredentialUpdateTimeout)
+                )),
+                retry(5),
+                delay(cameraCredentialUpdateTimeout),
+                tap(_ => this.settingsService.systemSubject.next(this.system)),
+                catchError(err => {
+                    console.error(err);
+                    return of(err);
+                })
+            ).toPromise().finally(() => {
+                const selectedCamera = this.system.cameras.find(({ id }) => id === this.selectedCamera.id);
+                this.selectedCamera = selectedCamera;
+                this.showUnauthorized = selectedCamera.status === 'Unauthorized';
+                this.reload$.next(this.reload$.value + 1);
+            });
         };
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
     }
@@ -704,6 +724,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
+            this.reload$.next(this.reload$.value + 1);
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();

@@ -1,4 +1,4 @@
-{{ message.asset }}{{message.asset_type}}有新版本可供檢視.
+{{ message.asset }} ({{message.asset_type}})有新版本可供檢視.
 
 點擊連接以查看{{ message.asset }}的{{ message.id }}草稿
 

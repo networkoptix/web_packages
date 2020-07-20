@@ -246,7 +246,7 @@
             "differentOwners": "גם המערכת שנבחרה וגם המערכת הנוכחית מחוברים ל- %CLOUD_NAME% ויש להם בעלים שונים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
             "duplicateServers": "<p class=\"mb-2\">ישנו שרת המציג את עצמו שמערכת הנוכחית וגם כמערכת שנבחרה.</p><p>הסר שרתים לא מקוונים ו\\או עם גרסה שונה מכל מערכת ונסה שוב.</p>",
             "enterSystemAddressTitle": "הזן את הכתובת של כל שרת הממוקם במערכת שברצונך למזג עם זה.",
-            "mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
+            "mergeConfirmation": "<p class=\"mb-0\">אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>.</p><p> ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
             "noServerFound": "לא נמצא שרת",
@@ -577,11 +577,11 @@
     },
     "pleaseSelect": "נא לבחור...",
     "privacyPolicy": {
-        "integration": "תוכל למצוא את מדיניות פרטיות של {{INTEGRATION_COMPANY}}  <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">כאן</a>. מדיניות הפרטיות %COMPANY_NAME% הכוללת הוראות כיצד לבטל את הסכמתך נמצאת<a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a>.",
+        "integration": "תוכל למצוא את מדיניות פרטיות של {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">כאן</a>. מדיניות הפרטיות %COMPANY_NAME% הכוללת הוראות כיצד לבטל את הסכמתך נמצאת<a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a>.",
         "ipvd": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם %COMPANY_NAME%.\nתוכלו למצוא את מדיניות פרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים."
     },
     "registration": {
-        "agreement": "<span class=\"text\"> אני מסכים ל <a href=\"/content/eula\" target=\"_blank\"> תנאים וההגבלות </a> ו <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> מדיניות פרטיות </a></span>"
+        "agreement": "אני מסכים ל <a href=\"/content/eula\" target=\"_blank\"> תנאים וההגבלות </a> ו <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> מדיניות פרטיות </a>"
     },
     "ribbon": {
         "beingMerged": {
@@ -614,7 +614,7 @@
     "servers": {
         "beginDetach": "השרת נפרד מהמיזוג כעת",
         "beginReset": "השרת מתאפס כעת.",
-        "detachSystemFailed": "ניתוק השרת מהמערכת נכשל . אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת אינו במצב לא מקוון ונסה שוב.",
+        "detachSystemFailed": "ניתוק השרת מהמערכת נכשל. אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת אינו במצב לא מקוון ונסה שוב.",
         "detachSystemSuccess": "השרת נותק בהצלחה מהמערכת.",
         "portWarning": "מספרי פורטים קטנים מ- 1024 אסורים לשימוש. השרת עלול להפוך ללא נגיש.",
         "removeMediaserverFailed": "הסרת השרת מהמערכת נכשלה.",
@@ -633,7 +633,7 @@
         "successRename": "שם השרת נשמר."
     },
     "system": {
-        "MERGE_FINISHES": "כאשר המיזוג יסתיים, כל המשתמשים והמצלמות ממערכת זו יהפכו לזמינים                במערכת \"<strong>{{targetSystemName}}</strong> \", ומערכת זו תימחק.",
+        "MERGE_FINISHES": "כאשר המיזוג יסתיים, כל המשתמשים והמצלמות ממערכת זו יהפכו לזמינים במערכת \"<strong>{{targetSystemName}}</strong> \", ומערכת זו תימחק.",
         "mergeUnknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)",
         "mySystemSearch": "IMeMyMine",
         "settings": {

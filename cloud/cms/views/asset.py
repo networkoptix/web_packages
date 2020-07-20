@@ -21,6 +21,8 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.permissions import IsSuperuser
 
+from .integration import INTEGRATION_CACHE
+
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
 
@@ -233,6 +235,7 @@ def review(request):
                 messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
             else:
                 messages.success(request, f"Version {publishing_errors} has been published")
+            INTEGRATION_CACHE.clear_cache()
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
