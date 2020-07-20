@@ -71,7 +71,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.menuModel = {
             query: ''
         };
-        this.isSearchable = (this.searchable !== undefined);
+
+        this.isSearchable = this.searchable || false;
 
         this.routeParamsSubscription = this.route
             .queryParams

@@ -7,7 +7,7 @@
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
                 <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
-                <nx-menu *ngIf="menuVisible" [content]="content" [system]="system" searchable></nx-menu>
+                <nx-menu *ngIf="menuVisible" [content]="content" [system]="system" [searchable]="searchableResults"></nx-menu>
             </div>
             <!-- Offset for the fixed menu -->
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">

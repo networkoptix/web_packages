@@ -48,6 +48,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     systems;
     deletingSystem;
 
+    searchableResults: boolean;
     menuVisible: boolean;
     systemId;
     systemNoAccess: boolean;
@@ -507,6 +508,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             });
         }
+
+        // hide search if no permissions for potentially long list ... cameras, servers and users
+        this.searchableResults = (this.system.permissions.editCameras && this.system.permissions.isAdmin && this.system.permissions.editUsers);
 
         this.content = { ...this.content };
     }
