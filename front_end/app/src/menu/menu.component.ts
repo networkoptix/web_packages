@@ -116,7 +116,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     setNav() {
-        // this.searchMode = true;
         this.modelChanged(this.menuModel);
     }
 
