@@ -1,0 +1,101 @@
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/typography';
+@use '~bootstrap/scss/bootstrap';
+
+.support-footer {
+    background: $light1;
+    color: $dark10;
+    margin-top: 88px;
+    padding-top: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > h2 {
+        @include typography.regular24;
+        line-height: 28px;
+    }
+}
+
+.support-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin: 16px 0;
+    background-size: cover !important;
+    background-position: center !important;
+    @include bootstrap.media-breakpoint-down(sm) {
+        background: $light1 !important;
+    }
+    &:before, &:after {
+        content: "";
+        flex: 1 2 30%;
+        border-bottom: 16px solid $dark7;
+        @include bootstrap.media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+    &:before {
+        margin-right: -64px;
+    }
+    &:after {
+        margin-left: -64px;
+    }
+    .support-block {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 6px 16px 32px 16px;
+        min-width: 436px;
+        flex: 0 3 50%;
+        @include bootstrap.media-breakpoint-down(sm) {
+            min-width: unset;
+            max-width: 436px;
+            flex-basis: 100%;
+        } 
+        & > * {
+            z-index: 2;
+            text-align: center;
+        }
+        .support-body {
+            margin-bottom: 40px;
+            line-height: 1.23;
+        }
+        & > button {
+            @include typography.regular18;
+            display: block;
+            letter-spacing: 0.3px;
+            height: auto;
+            padding: 24px;
+            max-width: 280px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 15px 0 rgba($light7, 0.5);
+            background: $light1;
+
+            &:hover {
+                box-shadow: 0 2px 15px 0 rgba($dark15, 0.3);
+            }
+        }
+        &:before, &:after {
+            content: "";
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            width: calc(50% + 64px);
+            height: 100%;
+            background: $light1;
+            transform-origin: bottom;
+        }
+        &:before {
+            transform: skewX(23deg);
+            left: 64px;
+        }
+        &:after {
+            transform: skewX(-23deg);
+            right: 64px;
+        }
+    }
+}

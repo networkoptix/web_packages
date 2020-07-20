@@ -1,1 +1,10 @@
-<div>Support: CLOUD-5426</div>
+<div class="support-footer">
+    <h2>{{supportHeading}}</h2>
+    <div class="support-wrapper" [ngStyle]="{backgroundColor: backgroundColor, backgroundImage: 'url(' + backgroundImage + ')'}">
+        <div class="support-block">
+            <p class="support-body">{{supportBody}}</p>
+            <button [routerLink]="forumLink">{{forumText}}</button>
+            <p>{{forumLead}}</p>
+        </div>
+    </div>
+</div>
