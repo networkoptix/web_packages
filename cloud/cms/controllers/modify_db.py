@@ -23,7 +23,7 @@ GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-f
 
 
 def update_draft_state(review_id, target_state, user):
-    review = AssetCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
+    review = AssetCustomizationReview.objects.filter(id=review_id).last()
     if not review:
         return " is currently publishing or has already been published"
 
@@ -31,6 +31,11 @@ def update_draft_state(review_id, target_state, user):
         review.version.accepted_by = user
         review.version.accepted_date = datetime.now()
         review.version.save()
+
+    review.state = target_state
+    review.reviewed_by = user
+    review.reviewed_date = datetime.now()
+    review.save()
 
     review.update_between_published_and_current(user, target_state)
 
@@ -463,8 +468,10 @@ def generate_preview(asset, context=None, version_id=None, send_to_review=False)
     return generate_preview_link(context, asset=asset, state=PENDING)
 
 
-def publish_latest_version(asset, review_id, user):
-    publish_errors = update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+def publish_latest_version(asset, review_id, user, state=None):
+    if not state:
+        state = AssetCustomizationReview.REVIEW_STATES.accepted
+    publish_errors = update_draft_state(review_id, state, user)
     if not publish_errors:
         fill_content(asset, preview=False, incremental=True)
     return publish_errors
