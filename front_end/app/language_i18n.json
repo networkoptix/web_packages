@@ -88,6 +88,7 @@
     "Download Links:": "Download Links:",
     "Downloads": "Downloads",
     "Draft": "Draft",
+    "Drag & drop report anywhere": "Drag & drop report anywhere",
     "Edit Credentials": "Edit Credentials",
     "Email": "Email",
     "Email format incorrect": "Email format incorrect",
@@ -123,6 +124,7 @@
     "Go to the \"Cloud\" tab in the \"System Administration\" dialog": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",
     "Hardware Calculator": "Hardware Calculator",
     "Header": "Header",
+    "Health Report Viewer": "Health Report Viewer",
     "Hide Advanced Settings": "Hide Advanced Settings",
     "How it works": "How it works",
     "How to setup?": "How to setup?",
@@ -177,6 +179,7 @@
     "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Only one starter license is allowed per system": "Only one starter license is allowed per system",
     "Open %VMS_NAME%": "Open %VMS_NAME%",
+    "Open Report File": "Open Report File",
     "Open in %VMS_NAME%": "Open in %VMS_NAME%",
     "Other packages:": "Other packages:",
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
@@ -284,6 +287,7 @@
     "Your browser is not supported": "Your browser is not supported",
     "devices": "devices",
     "manufacturers": "manufacturers",
+    "or": "or",
     "result": "result",
     "you": "you"
 }

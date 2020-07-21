@@ -15,16 +15,33 @@ import { AuthGuard, SystemGuard } from '../../routeGuards';
 import { PipesModule }            from '../../pipes/pipes.module';
 
 import {
-    NxHealthComponent, NxSystemAlertsComponent,
+    NxHealthComponent, NxReportViewerComponent, NxSystemAlertsComponent,
     NxSystemMetricsComponent, NxDynamicTableComponent,
     NxDynamicTablePanelComponent, NxSingleEntityComponent,
     NxImageComponent, NxImageSectionComponent,
     NxSystemAlertCardComponent, NxUpdateInfoComponent
-} from './';
-import { DirectivesModule }       from '../../directives/directives.module';
-import { nxConfig } from '../../services/nx-config/config';
+}                                  from './';
+import { DirectivesModule }        from '../../directives/directives.module';
+import { nxConfig }                from '../../services/nx-config/config';
 
 const appRoutes: Routes = !nxConfig.isLocal ? [
+    {
+        path      : 'report_viewer',
+        component : NxReportViewerComponent,
+        children  : [
+            {
+                path      : '',
+                component : NxSystemAlertsComponent,
+                pathMatch : 'full'
+            },
+            {
+                path: 'alerts', component: NxSystemAlertsComponent
+            },
+            {
+                path: ':metric', component: NxSystemMetricsComponent
+            }
+        ]
+    },
     {
         path        : 'systems/:systemId/health',
         component   : NxHealthComponent,
@@ -83,6 +100,7 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
     providers    : [],
     declarations : [
         NxHealthComponent,
+        NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
         NxDynamicTableComponent,
@@ -96,6 +114,7 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
     bootstrap       : [],
     entryComponents : [
         NxHealthComponent,
+        NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
         NxImageSectionComponent,
@@ -104,6 +123,7 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
     ],
     exports: [
         NxHealthComponent,
+        NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
         NxImageComponent
