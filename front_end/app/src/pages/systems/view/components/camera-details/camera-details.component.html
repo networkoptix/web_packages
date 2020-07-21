@@ -1,5 +1,10 @@
 <div class="nx-camera-page" id="nx-camera-page" [ngClass]="{ fullscreen: isFullScreen }">
-  <div class="camera-view" id="nx-camera-view" [ngClass]="{ expanded: !isTimelineAreaVisible } ">
+  <div
+    class="camera-view"
+    id="nx-camera-view"
+    [ngClass]="{ expanded: !isTimelineAreaVisible } "
+    (dblclick)="toggleFullScreen()"
+  >
     <div class="player-header">
       <div class="camera-name" [ngClass]="camera.status">
         <span class="name">{{ camera.name }}</span>

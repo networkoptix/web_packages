@@ -21,13 +21,17 @@ export class NxTimelineHoverComponent implements OnChanges {
 
     public playbackTime: string
     public playbackDate: string
+
+    constructor () {
+      this.updateView()
+    }
     
     protected outerOffsetLeft: domPixels
     protected innerOffsetLeft: domPixels
     protected INDICATOR_WIDTH: domPixels = 140
     protected ARROW_WIDTH: domPixels = 20
     protected MIN_MARGIN: domPixels = 20
-    protected hideMe: boolean = false
+    public hideMe: boolean = false
 
     public ngOnChanges (changes: SimpleChanges) {
       if (changes.time) {
