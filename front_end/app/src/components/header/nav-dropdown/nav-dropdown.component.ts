@@ -29,7 +29,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
             if (!nodes) {
                 return;
             };
-            this.name.next(nodes.find(({ url }) => url === path).name);
+            this.name.next(nodes.find(({ url }) => url === path)?.name);
             this.nodes.next(nodes);
         });
     }

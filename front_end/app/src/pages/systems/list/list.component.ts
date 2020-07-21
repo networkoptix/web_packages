@@ -10,11 +10,14 @@ import { NxPageService }             from '../../../services/page.service';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxUrlProtocolService }      from '../../../services/url-protocol.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxUriService }              from '../../../services/uri.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { debounceTime }              from 'rxjs/operators';
 import { Subject, Subscription }     from 'rxjs';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxSystemsService }          from '../../../services/systems.service';
+import { NxHeaderService }           from '../../../services/nx-header.service';
+import { NxMenusService }             from '../../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -33,6 +36,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     openClient;
     systems;
     filteredSystems;
+    endpoint: any = {};
     userEmail: string;
     searchChanged = new Subject();
     private searchSubscription: Subscription;
@@ -55,6 +59,9 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
+        private uriService: NxUriService,
+        private headerService: NxHeaderService,
+        private menusService: NxMenusService,
         private router: Router,
         private location: Location
     ) {
@@ -139,12 +146,28 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.searchChanged.next();
     }
 
+    private isActive(val: string) {
+        return this.router.url.indexOf(val) >= 0;
+    }
+
+    updateEndpoint(id: string) {
+        this.endpoint.ipvd = this.isActive('/ipvd');
+        this.endpoint.integrations = this.isActive('/integrations');
+        this.endpoint.register = this.isActive('/register');
+        this.endpoint.view = this.isActive('/view');
+        this.endpoint.information = this.isActive('/health');
+        this.endpoint.settings = id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+    }
+
     openSystem(system) {
-        this.router
-            .navigate(['/systems/' + system.id])
-            .catch(error => {
-                console.error(error);
-            });
+        this.updateEndpoint(system.id);
+        this.headerService.show$ = false;
+        this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
+            .then(() => {
+                const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+                this.menusService.updateActiveSystemMenu(activeSystem);
+            })
+            .catch(err => { console.error(err); });
     }
 
     canShowTag(system) {
@@ -156,6 +179,4 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {}
-
 }
-
