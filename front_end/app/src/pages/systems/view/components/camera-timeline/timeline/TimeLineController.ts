@@ -18,7 +18,6 @@ import AbstractArchiveController from './archive/AbstractArchiveController'
 import NaiveArchiveController from './archive/NaiveArchiveController'
 import { timeStampMs } from './basic_types/time'
 
-import * as screenfull from 'screenfull'
 import AbstractEventBirdViewProvider from './archive/birdViews/providers/AbstractEventBirdViewProvider'
 
 import EmbeddedWheelZoom from './embedded/EmbeddedWheelZoom'
@@ -74,11 +73,7 @@ export class TimeLineController {
   }
 
   protected registerScreenChangeEventHandlers () {
-    if (screenfull.isEnabled) {
-      screenfull.on('change', () => {
-        setupCanvas(this.containerId, true)
-      })
-    }
+    // TODO: check whether canvas responds to fullscreen change properly
     window.addEventListener('resize', () => {
       setupCanvas(this.containerId, true)
       this.ranger.canvasWidth = this.ctx.canvas.width
