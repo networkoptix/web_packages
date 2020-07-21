@@ -84,17 +84,20 @@
             <button class="btn btn-primary main-button mx-auto" translate>Open Report File</button>
         </div>
 
-        <div>
-            <div>Drop file anywhere</div>
-            <ngx-file-drop dropZoneClassName="importZone"
-                           accept="json"
-                           [directory]="false"
-                           [multiple]="false"
-                           [showBrowseBtn]="false"
-                           (onFileLeave)="fileLeave()"
-                           [ngClass]="!importShow ? 'pointer-ignore' : ''"
-                           (onFileDrop)="fileDropped($event)">
-            </ngx-file-drop>
-        </div>
+        <ngx-file-drop dropZoneClassName="importZone"
+                       accept="json"
+                       [directory]="false"
+                       [multiple]="false"
+                       [showBrowseBtn]="false"
+                       (onFileLeave)="fileLeave()"
+                       [ngClass]="!importShow ? 'pointer-ignore' : ''"
+                       (onFileDrop)="fileDropped($event)">
+            <ng-template ngx-file-drop-content-tmp>
+                <svg-icon class="circular"
+                          nx-add-svg-src [src]="CONFIG.icons.dir + 'external.svg'">
+                </svg-icon>
+                Drop file anywhere to import report
+            </ng-template>
+        </ngx-file-drop>
     </div>
 </ng-template>

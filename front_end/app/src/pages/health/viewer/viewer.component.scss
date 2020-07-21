@@ -147,8 +147,31 @@ nx-health-viewer-component {
     height   : calc(100% - 48px);
     z-index  : 10000;
 
+    .ngx-file-drop__content {
+      display : none;
+    }
+
     &.ngx-file-drop__drop-zone--over {
       background-color : $light16;
+      display         : flex;
+      align-items     : center;
+      justify-content : center;
+
+      .ngx-file-drop__content {
+        display: block;
+        pointer-events : none;
+        @include typography.medium24;
+        color :  $light1;
+
+        svg-icon {
+          float : left;
+          width : 40px;
+
+          svg  path{
+            fill : $light1;
+          }
+        }
+      }
     }
   }
 
