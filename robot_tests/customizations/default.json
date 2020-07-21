@@ -32,5 +32,7 @@
     "ERROR COLOR WITH OPACITY"   :    "rgba(240, 44, 44, 1)",
     "INTEGRATION REQUIRED FIELDS":    "Ya Basic",
     "INTEGRATION ALL FIELDS"     :    "vis - QA - face_recognition",
-    "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}"
+    "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}",
+    "CUST LANGUAGE LIST"	     :	  "default_lang_list.json",
+    "DEFAULT LANGUAGE"		     :	  "en_US"
 }

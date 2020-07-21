@@ -14,11 +14,6 @@ ${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdown
 ${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
 
-@{LANGUAGES LIST}                             en_US                  en_GB                  ru_RU                           fr_FR                  de_DE                 es_ES                       hu_HU                           zh_CN      zh_TW      ja_JP            ko_KR       tr_TR              th_TH                  nl_NL                he_IL                  pl_PL                  vi_VN
-@{LANGUAGES ACCOUNT TEXT LIST}                Account                Account                Учетная запись                  Compte                 Account               Cuenta                      Fiók                            帐户        帳號       アカウント        계정         Hesap             บัญชีผู้ใช้                 Account             חשבון                   Konto                  Tài khoản
-@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Compte Information     Kontoinformationen    Información de la Cuenta    Felhasználói fiók információ    帐户信息    帳號資訊    アカウント情報    계정 정보    Hesap Bilgileri    ข้อมูลบัญชีสมาชิก    Accountinformatie    פרטי חשבון             Informacje o koncie    Thông tin tài khoản
-
-@{LANGUAGES CREATE ACCOUNT TEXT LIST}    Create Account  Create Account  Зарегистрироваться  Créer compte  Account erstellen  Crear Cuenta  Fiók létrehozása  创建帐户  新建帳號  アカウント作成  계정 만들기  Hesap oluştur  สร้างบัญชี   Account aanmaken  צור חשבון   Utwórz konto  Tạo tài khoản
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
 
 ${BACKDROP}                           //ngb-modal-backdrop
