@@ -240,7 +240,12 @@ Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-    FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT INFORMATION TEXT LIST}
+    ${lang dict} =    Get Lang List
+    @{LANGUAGES LIST} =    Get Dictionary Keys    ${lang dict}
+    FOR    ${lang}    IN    @{LANGUAGES LIST}
+        # &{d} =    Copy Dictionary    &{lang dict}[${lang}]
+        # ${info text} =    Set Variable    ${d['ACCOUNT INFORMATION']} 
+        ${info text} =    Get From Dictionary   ${lang dict}[${lang}]   ACCOUNT INFORMATION 
         Sleep    1
         Verify in Account Page
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
@@ -249,10 +254,11 @@ Language is changeable on the account page
         ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
+        Sleep    1
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    //nx-apply//nx-process-button//button
         Sleep    1    #to allow the system to change languages
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    //header/span[text()='${account}']
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"  
+        ...    Wait Until Element is Visible    //header/span[text()='${info text}']
     END
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
@@ -306,6 +312,9 @@ Language change affects emails
 
 Language change is new default
     [tags]    C41574
+    ${lang dict} =    Get Lang List
+    ${ja_JP account info} =    Get From Dictionary    ${lang dict}[ja_JP]    ACCOUNT INFORMATION
+    ${de_DE account info} =    Get From Dictionary    ${lang dict}[de_DE]    ACCOUNT INFORMATION
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -317,15 +326,15 @@ Language change is new default
     Click Button    ${ACCOUNT SAVE}
     Sleep    1    #to allow the system to change languages
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
-    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${de_DE account info} ']
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
-    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info} ']
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
 Should open account page in anonymous state

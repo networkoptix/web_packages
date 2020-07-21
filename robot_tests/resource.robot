@@ -16,6 +16,7 @@ Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}    ${LM AUTH}
+Library      OperatingSystem
 
 *** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
@@ -810,3 +811,8 @@ Check System Text
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
     Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    
+Get Lang List
+    ${lang file} =    Get File    customizations/${CUST LANGUAGE LIST}
+    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json 
+    [Return]    ${lang dict}
