@@ -76,11 +76,11 @@
                      [translateParams]="{number: plugin.support.supportPhone}"></div>
                 <div *ngIf="plugin.support.supportWeb">
                     <a [href]="plugin.support.supportWeb"
-                       target="_blank" translate>Support URL</a>
+                       target="_blank">{{plugin.support.supportWeb}}</a>
                 </div>
                 <div *ngIf="plugin.support.supportEmail">
                     <a href="mailto:{{plugin.support.supportEmail}}"
-                       target="_blank" translate>Support E-mail</a>
+                       target="_blank">{{plugin.support.supportEmail}}</a>
                 </div>
             </div>
         </div>
