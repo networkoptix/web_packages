@@ -1,13 +1,13 @@
 import AbstractCanvasIntervalSetProvider from './AbstractCanvasIntervalSetProvider'
 import RegularLengthInterval from '../../intervals/RegularLengthInterval'
 import regularLengthIntervals from '../../intervals/regularLengthIntervals'
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../../time_range/ITimeRange';
 
 
 export class CanvasRegularLenghtSingleWeightIntervalSetProvider extends AbstractCanvasIntervalSetProvider {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
     protected MIN_INTERVAL_WIDTH_PX = 15 * devicePixelRatio
   ) {

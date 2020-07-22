@@ -65,11 +65,12 @@ $item_height : 40px;
     right : 0;
 
     &-label {
+        @include typography.regular13;
         color : $light16;
     }
 
     svg-icon {
-        margin: 0 10px;
+        margin: 0 .5rem 0 .25rem;
     }
 
     .nav-arrow {

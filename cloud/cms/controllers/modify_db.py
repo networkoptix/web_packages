@@ -619,6 +619,10 @@ def check_image_dimensions(data_structure_name,
     return size_error_msgs
 
 
+def has_wrong_image_sizes(multi_image_file_sizes, required_image_sizes):
+    return not all(image_size in multi_image_file_sizes for image_size in required_image_sizes)
+
+
 def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
     if 'format' in meta_settings and is_not_valid_file_extension(new_file.name, meta_settings['format']) and \
@@ -629,6 +633,14 @@ def check_meta_settings(data_structure, new_file):
     if 'size' in meta_settings and meta_settings['size'] < new_file.size:
         error_msg = f"The file's size it too large. Its size was {new_file.size/BYTES_TO_MEGABYTES:.2f}MB but must be less than {meta_settings['size']/BYTES_TO_MEGABYTES:.2f}MB"
         return [(data_structure.name, error_msg)]
+
+    if "multi_image_sizes" in meta_settings:
+        multi_image_file = Image.open(new_file)
+        image_file_sizes = [list(image_size[:2]) for image_size in multi_image_file.info["sizes"]]
+        if has_wrong_image_sizes(image_file_sizes, meta_settings["multi_image_sizes"]):
+            error_msg = f"The file does not have the required sizes. Uploaded file has sizes {image_file_sizes}. It " \
+                        f"should have {meta_settings['multi_image_sizes']}"
+            return [(data_structure.name, error_msg)]
 
     if data_structure.is_image:
         try:

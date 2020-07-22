@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
-from notifications.models import Message, Event, Feedback, PushDevice
+from notifications.models import Message, Event, Feedback, PushDevice, PushNotification
 from cms.models import Asset, get_cloud_portal_asset
 
 
@@ -179,6 +179,7 @@ def process_push_response(responses, notification_object, dry_run=False):
                         log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
     if not resend_tokens and not dry_run and not error:
+        notification_object.state = PushNotification.RESULT_STATES.success
         log_push_result(notification_object, 'Successfully completed')
 
     return resend_tokens

@@ -1,4 +1,4 @@
-import { durationMs } from '../../numberTypeAliases';
+import { durationMs } from '../../basic_types/time';
 
 export type RegularLengthInterval = durationMs
 

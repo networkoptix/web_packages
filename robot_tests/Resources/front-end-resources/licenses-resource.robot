@@ -20,7 +20,6 @@ LM Suite Set Up
 
     Open Browser and go to URL    ${ENV}
 
-
 LM Suite Teardown
     FOR   ${i}    IN RANGE    1    4
         Stop Container    ${cont ${i}}    remove=True
@@ -36,6 +35,17 @@ LM Test Restart
     FOR    ${i}    IN RANGE    1    4
         Start Container    ${cont ${i}}
     END
+
+Remove all keys from system
+    [Arguments]    ${serevr url}    ${server auth}
+    ${licenses}=   Get Licenses    ${server auth}    ${serevr url}
+    FOR    ${lic}    IN    @{licenses}
+        Disable License    ${lic['key']}
+    END
+    Restart Server    ${serevr url}    ${server auth}
+    Sleep    10
+    ${keys}=   Get Licenses    ${server auth}    ${serevr url}
+    Should be Empty    ${keys}
 
 Open Licenses Page
     Wait Until Element Is Visible    ${LICENSES LINK}

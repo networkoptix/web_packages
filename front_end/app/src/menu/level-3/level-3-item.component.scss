@@ -19,7 +19,7 @@
         &.focus {
             &, * {
                 // overwrite whatinput's focus outline
-                background-color : $light6;
+                background-color : $light7 !important;
                 outline          : none !important;
                 box-shadow       : none !important;
             }
@@ -31,6 +31,32 @@
                 outline          : none !important;
                 box-shadow       : none !important;
             }
+        }
+    }
+
+    &.selected:hover {
+        &, * {
+            color            : $light1 !important;
+            fill             : $light1 !important;
+            background-color : $light16 !important;
+            min-height       : auto;
+        }
+    }
+
+    &.selected {
+        &, * {
+            color            : $light1 !important;
+            fill             : $light1 !important;
+            background-color : $light16 !important;
+            min-height       : auto;
+        }
+
+        .menu-level-3-icon {
+            background-position : -123px -135px;
+        }
+
+        .menu-level-3-additional {
+            font-family : $font-family-regular;
         }
     }
 
@@ -76,23 +102,6 @@
         align-items: center;
         justify-content: center;
         margin-left: -2px;
-    }
-
-    &.selected {
-        &, * {
-            color: $light1 !important;
-            fill: $light1 !important;
-            background-color: $light16 !important;
-            min-height: auto;
-        }
-
-        .menu-level-3-icon {
-            background-position : -123px -135px;
-        }
-
-        .menu-level-3-additional {
-            font-family : $font-family-regular;
-        }
     }
 
     &.item-disabled {

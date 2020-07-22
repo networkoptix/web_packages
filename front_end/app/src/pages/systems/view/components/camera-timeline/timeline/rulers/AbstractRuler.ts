@@ -1,4 +1,4 @@
-import IDuratedTimeRange from '../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../time_range/ITimeRange'
 import AbstractIntervalSetProvider from './interval_set_providers/AbstractIntervalSetProvider'
 import AbstractIntervalSetExpander from './interval_set_expanders/AbstractIntervalSetExpander'
 
@@ -9,7 +9,7 @@ export abstract class AbstractRuler {
   protected intervalSetExpander: AbstractIntervalSetExpander
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
   ) {
   }
 

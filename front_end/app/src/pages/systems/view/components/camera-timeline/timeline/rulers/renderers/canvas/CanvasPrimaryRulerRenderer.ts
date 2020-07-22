@@ -1,5 +1,5 @@
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
-import { int, percentage } from '../../../numberTypeAliases'
+import ITimeRange from '../../../time_range/ITimeRange'
+import { percentage, int } from '../../../basic_types/numbers';
 import WeightedRegularIntervalSerif from '../../serifs/WeightedRegularIntervalSerif'
 import primaryRulerDateFormats from '../../dateformats/primary_ruler_date_formats'
 import WeightedIrregularIntervalSerif from '../../serifs/WeightedIrregularIntervalSerif'
@@ -11,7 +11,7 @@ const dateformat = df.default || df
 export class CanvasPrimaryRulerRenderer {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected Y_0_RELATIVE: percentage = 0.2,
     protected H_BASE_RELATIVE: percentage = 0.1,
@@ -33,7 +33,7 @@ export class CanvasPrimaryRulerRenderer {
 
   protected serifDrawingConfigs = {
     0: {
-      baseColorHex: '#adbdc5',
+      baseColorHex: '#698796', // rgba(105,135,150), NOT #adbdc5
       heightRelative: 0.0,
       opacity: 0.0,
       label: {
@@ -41,7 +41,7 @@ export class CanvasPrimaryRulerRenderer {
       },
     },
     1: {
-      baseColorHex: '#adbdc5',
+      baseColorHex: '#698796',
       heightRelative: 0.0705, // used to be .06
       opacity: 0.3,
       label: {
@@ -50,7 +50,7 @@ export class CanvasPrimaryRulerRenderer {
     },
     2: {
       heightRelative: 0.0705, // used to be .06
-      baseColorHex: '#adbdc5',
+      baseColorHex: '#698796',
       opacity: 0.6,
       label: {
         fontSize: 11,
@@ -58,7 +58,7 @@ export class CanvasPrimaryRulerRenderer {
     },
     3: {
       heightRelative: 0.1294, // used to be .11
-      baseColorHex: '#adbdc5',
+      baseColorHex: '#698796',
       opacity: 0.8,
       label: {
         fontSize: 13
@@ -66,7 +66,7 @@ export class CanvasPrimaryRulerRenderer {
     },
     4: {
       heightRelative: 0.2, // used to be .17
-      baseColorHex: '#adbdc5',
+      baseColorHex: '#698796',
       opacity: 1.0,
       label: {
         fontSize: 14

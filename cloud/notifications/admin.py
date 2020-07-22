@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django_celery_results.models import TaskResult
 import pytz
+import re
 from push_notifications.admin import GCMDeviceAdmin
 
 # Register your models here.
@@ -181,13 +182,34 @@ class TaskResultAdmin(NotificationAdmin):
 @admin.register(PushSubscription)
 class PushSubscriptionAdmin(admin.ModelAdmin):
     form = PushSubscriptionForm
+    list_display = ('system_id',)
 
 
 @admin.register(PushNotification)
 class PushNotificationAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_date',)
     search_fields = ('title', 'body', 'raw_system_id', 'raw_targets', 'devices__user__email', 'result_data')
-    list_filter = ('customization',)
+    list_filter = ('customization', 'state')
+    list_display = ('short_title', 'customization', 'state', 'created_date_formatted', 'send_date_formatted', 'result_errors')
+
+    def created_date_formatted(self, obj):
+        return obj.created_date.strftime('%B %d, %Y %H:%M:%S') if obj.created_date else ''
+    created_date_formatted.short_description = 'created_date'
+
+    def send_date_formatted(self, obj):
+        return obj.send_date.strftime('%B %d, %Y %H:%M:%S') if obj.send_date else ''
+    send_date_formatted.short_description = 'send_date'
+
+    def short_title(self, obj):
+        return obj.title if len(obj.title) < 50 else f'{obj.title[:47]}...'
+    short_title.short_description = 'Title'
+
+    def result_errors(self, obj):
+        result = obj.result_data
+        if result:
+            error = re.search(r'[^"\']{0,30}([Ee]rror|[Ww]arning)[^"]{0,100}', result)
+            if error:
+                return f'{error.group(0)}...'
+        return ''
 
 
 admin.site.register(PushDevice, GCMDeviceAdmin)

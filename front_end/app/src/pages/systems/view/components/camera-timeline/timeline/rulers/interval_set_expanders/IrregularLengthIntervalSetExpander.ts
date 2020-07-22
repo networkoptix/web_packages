@@ -1,12 +1,12 @@
 import RegularLengthInterval from '../intervals/RegularLengthInterval'
 import WeightedRegularIntervalSerif from '../serifs/WeightedRegularIntervalSerif'
 import AbstractIntervalSetExpander from './AbstractIntervalSetExpander'
-import IDuratedTimeRange from '../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../time_range/ITimeRange';
 import RegularLengthIntervalSetExpander from './RegularLengthIntervalSetExpander'
 import WeightedIrregularIntervalSerif from '../serifs/WeightedIrregularIntervalSerif'
 import IrregularLengthInterval from '../intervals/IrregularLengthInterval'
 import { isAlignedByIrregularInterval } from '../intervals/utils/isAlignedByIrregularInterval'
-import { timeStampMs } from '../../numberTypeAliases'
+import { timeStampMs } from '../../basic_types/time'
 import alignTimeStamp from '../intervals/utils/alignTimeStamp'
 
 
@@ -15,7 +15,7 @@ export class IrregularLengthIntervalSetExpander extends AbstractIntervalSetExpan
   protected regularExpander: RegularLengthIntervalSetExpander
 
   constructor (
-    protected visibleRange: IDuratedTimeRange
+    protected visibleRange: ITimeRange
   ) {
     super(visibleRange)
     this.regularExpander = new RegularLengthIntervalSetExpander(visibleRange)

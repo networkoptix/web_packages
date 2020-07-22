@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -7,4 +8,28 @@ import { UntilDestroy } from '@ngneat/until-destroy';
     templateUrl : 'dev-tools.component.html',
     styleUrls   : ['dev-tools.component.scss']
 })
-export class NxDevToolsComponent {};
+export class NxDevToolsComponent {
+    @Input() devToolsLink: string = '/developers/';
+    @Input() devToolsHeading: string = 'Developer Tools';
+    @Input() devTools: DevToolBlock[] = mockTools;
+
+    CONFIG: IConfig;
+    constructor(configService: NxConfigService) {
+        this.CONFIG = configService.config;
+    }
+};
+
+export class DevToolBlock {
+    constructor(
+        public name: string,
+        public body: string,
+        public link: string,
+        public icon: string
+    ) {}
+}
+const mockTools = [
+    new DevToolBlock('Server Plugin SDK (C++)', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
+    new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
+    new DevToolBlock('Cloud API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
+    new DevToolBlock('Other Tools', '', '/developers/', 'servers.svg')
+]

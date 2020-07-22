@@ -26,6 +26,12 @@
     background-position: center center;
     background-attachment: fixed;
 
+    
+    transition: bottom .2s ease-in-out;
+    &.expanded {
+      bottom: 0;
+    }
+
     .player-header {
       z-index: 1000;
       position: absolute;
@@ -34,7 +40,7 @@
       right: 0;
       height: 60px;
       color: white;
-      background: #000a;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
       padding: 7px 0;
 
       .camera-name {
@@ -147,54 +153,103 @@
     }
   }
 
-  .controls {
+  .timeline-area {
     position: absolute;
-    left: 0;
-    bottom: 0;
+    left: 0;    
     right: 0;
-    height: 100px;
-    .play-pause-button {
-      width: 60px;
+    bottom: -100px;
+    transition: bottom .2s ease-in-out;
+
+    &.visible {
+      bottom: 0;
+
+      > .timeline-area-visibility-toggler:after {
+        content: '▽';
+      }
+    }
+    
+    > .timeline-area-visibility-toggler {
+      position: absolute;
+      left: 50%;
+      top: -125px;
+      margin-left: -25px;
+      width: 50px;
+      height: 25px;
+      background: #000a;
+      border-radius: 20px 20px 0 0;
+      border-top: 1px solid #fff3;
+      border-left: 1px solid #fff3;
+      border-right: 1px solid #fff3;
+      cursor: pointer;
+      
+      &:after {
+        content: '△';
+        color: #fffd;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        line-height: 25px;
+        text-align: center;
+      }
+    }
+
+    .controls {
       position: absolute;
       left: 0;
       bottom: 0;
+      right: 0;
       height: 100px;
-      background-size: 30px auto;
-      background-repeat: no-repeat;
-      background-position: center center;
-      border-right: 1px solid #cdd7dc;
-      z-index: 10;
+      .play-pause-button {
+        width: 60px;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 100px;
+        background-size: 30px auto;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border-right: 1px solid #cdd7dc;
+        z-index: 10;
 
-      &.paused {
-        background-image: url('../../svg/play.svg');
-      }
+        &.paused {
+          background-image: url('../../svg/play.svg');
+        }
 
-      &.playing {
-        background-image: url('../../svg/pause.svg');
+        &.playing {
+          background-image: url('../../svg/pause.svg');
+        }
       }
     }
-  }
 
-  .live-status-indicator {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 64px;
-    height: 100px;
-    background: #F0F3F4;
-    border-left: 1px solid #CDD7DC;    
-    background-size: 15px auto;
-    background-repeat: no-repeat;
-    background-position: 5px center;
-    background-image: url('../../svg/live_on.svg');
+    .live-status-indicator {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 64px;
+      height: 100px;
+      background: #F0F3F4;
+      border-left: 1px solid #CDD7DC;    
+      background-size: 12px auto;
+      background-repeat: no-repeat;
+      background-position: 10px center;
+      background-image: url('../../svg/live_off.svg');
+      margin-top: 2px;
+      
+      &:after {
+        display: block;
+        content: 'live';
+        color: black;
+        text-transform: uppercase;
+        padding-left: 23px;
+        font-size: 13px;
+        line-height: 100px;
+      }
 
-    &.live:after {
-      display: block;
-      content: 'live';
-      text-transform: uppercase;
-      padding-left: 20px;
-      font-size: 12px;
-      line-height: 100px;
+      &.live {
+        background-image: url('../../svg/live_on.svg');      
+      }
     }
   }
 }

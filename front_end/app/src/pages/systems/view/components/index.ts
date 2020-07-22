@@ -5,6 +5,7 @@ import NxMediaServerListHeaderComponent from './media-server-list-header/media-s
 import NxCameraHlsPlayer from './NxCameraHlsPlayer'
 import NxArchivePlaybackIndicator from './archive-playback-indicator/archive-playback-indicator.component'
 import NxTimelineScrollButtonComponent from './timeline-scroll-button/timeline-scroll-button.component'
+import NxTimelineHoverComponent from './timeline-hover/timeline-hover.component'
 
 export default [
   NxSystemCameraDetailsComponent,
@@ -14,4 +15,5 @@ export default [
   NxCameraHlsPlayer,
   NxArchivePlaybackIndicator,
   NxTimelineScrollButtonComponent,
+  NxTimelineHoverComponent,
 ]

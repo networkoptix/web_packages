@@ -1,4 +1,4 @@
-import { float } from '../../numberTypeAliases'
+import { float } from '../../basic_types/numbers'
 import IrregularIntervalSerif from './IrregularIntervalSerif'
 
 export interface AnimatedWeightedIrregularIntervalSerif extends IrregularIntervalSerif {

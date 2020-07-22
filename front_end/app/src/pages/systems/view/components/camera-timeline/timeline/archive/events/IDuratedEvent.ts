@@ -1,4 +1,7 @@
-import IDuratedTimeRange from '../../timeRanges/IDuratedTimeRange'
+import IEvent from './IEvent'
+import { durationMs } from '../../basic_types/time'
 
-export type IDuratedEvent = IDuratedTimeRange
+export interface IDuratedEvent extends IEvent {
+    duration: durationMs
+}
 export default IDuratedEvent
