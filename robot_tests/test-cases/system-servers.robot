@@ -65,7 +65,7 @@ Rename server requires a name
     Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
 
 Server name can be changed
-    [Tags]    C69881
+    [Tags]    C71000
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
