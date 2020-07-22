@@ -7,7 +7,7 @@ ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input[@type="number"]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
-${CHECK STATUS BUTTON}              //header//button/span[contains(text(),"${CHECK STATUS TEXT}")]
+${CHECK STATUS BUTTON}              //header//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
 ${SERVER DETAILED INFO BUTTON}      //header//button/span[contains(text(),"${DETAILED INFO TEXT}")]/..
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..

@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Server Settings Test Setup    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
-Force Tags        system    threaded file
+Force Tags        system
 
 *** Variables ***
 ${email}       ${EMAIL OWNER}
@@ -21,7 +21,7 @@ Server Settings Test Setup
 
 *** Test Cases ***
 Rename server close button works
-    [Tags]    C70960
+    [Tags]    C70960    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -32,7 +32,7 @@ Rename server close button works
     Element Text Should Be    ${SERVER NAME}    server 1
 
 Rename server cancel button works
-    [Tags]    C70960
+    [Tags]    C70960    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -43,7 +43,7 @@ Rename server cancel button works
     Element Text Should Be    ${SERVER NAME}    server 1
 
 Rename server pressing ESC works
-    [Tags]    C70960
+    [Tags]    C70960    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -54,7 +54,7 @@ Rename server pressing ESC works
     Element Text Should Be    ${SERVER NAME}    server 1
 
 Rename server requires a name
-    [Tags]    C70960
+    [Tags]    C70960    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -65,7 +65,7 @@ Rename server requires a name
     Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
 
 Server name can be changed
-    [Tags]    C71000
+    [Tags]    C71000    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -87,7 +87,7 @@ Server name can be changed
     Check for Alert    ${SERVER NAME SAVED}
 
 Server name changed via API updates on cloud
-    [Tags]    C70961
+    [Tags]    C70961    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
@@ -102,7 +102,7 @@ Server name changed via API updates on cloud
     Change server name via API    ${auth}    server 1    ${split[1]}    ${AUTO SYS IP}
     
 Restart close button works
-    [Tags]    C70968
+    [Tags]    C70968    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -111,7 +111,7 @@ Restart close button works
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
 Restart cancel button works
-    [Tags]    C70968
+    [Tags]    C70968    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -152,7 +152,7 @@ Restart server as admin
     Check For Alert    ${SERVER RESTARTED TEXT}    timeout=40
     
 Change port is only available for owner
-    [Tags]    C70927
+    [Tags]    C70927    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Log Out
@@ -162,7 +162,7 @@ Change port is only available for owner
     Element Should Be Disabled    ${PORT INPUT}
 
 Port field validation
-    [Tags]    C70929
+    [Tags]    C70929    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Log    Step 1
@@ -223,7 +223,7 @@ Change port
 # I can validate that the api fails correctly but I can't make it work either.
 # It gives a 200 but does not update. It works correctly in postman.
 Admin cannot change port via API
-    [Tags]    C70975
+    [Tags]    C70975    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL ADMIN}    ${AUTO TESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page
@@ -255,7 +255,7 @@ Check status
     ${results}    Execute Command    docker container stop 2server1
 
 Detailed info 1 server
-    [Tags]   C70923
+    [Tags]   C70923    threaded
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
@@ -263,7 +263,7 @@ Detailed info 1 server
     Page Should Not Contain Element    ${HM TABLE}
 
 Detailed info 2 servers
-    [Tags]    C70923
+    [Tags]    C70923    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page
@@ -274,7 +274,7 @@ Detailed info 2 servers
     Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"Server 2")]
 
 Offline system server settings
-    [Tags]    C70950
+    [Tags]    C70950    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
     Element Should not be Visible    ${PORT INPUT}
@@ -283,14 +283,14 @@ Offline system server settings
     Element Should not be Visible    ${SERVER DETAILED INFO BUTTON}
 
 Online two servers
-    [Tags]    C70955
+    [Tags]    C70955    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     
 Offline two servers
-    [Tags]    C70955
+    [Tags]    C70955    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 1
     Verify on Servers Page
@@ -302,13 +302,13 @@ Offline two servers
     Element Should Not be Visible    ${SYSTEM NAME OFFLINE}
 
 Owner has Access
-    [Tags]    C69853    C70927
+    [Tags]    C69853    C70927    threaded
     Wait Until Element is Visible    ${SERVERS LINK}
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
 Admin has Access
-    [Tags]    C69853    C70927
+    [Tags]    C69853    C70927    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL ADMIN}    ${AUTOTESTS SYSTEM ID}
     Wait Until Element is Visible    ${SERVERS LINK}
     Verify on Servers Page
@@ -316,27 +316,27 @@ Admin has Access
     Element Should Be Disabled    ${RENAME SERVER BUTTON}
 
 Viewer does not have Access
-    [Tags]    C69853
+    [Tags]    C69853    threaded
     [Setup]    Log in to Auto Tests System    ${EMAIL VIEWER} 
     Element Should not be Visible    ${SERVERS LINK}
 
 Advanced Viewer does not have Access
-    [Tags]    C69853
+    [Tags]    C69853    threaded
     [Setup]    Log in to Auto Tests System    ${EMAIL ADVVIEWER}    
     Element Should not be Visible    ${SERVERS LINK}
 
 Live Viewer does not have Access
-    [Tags]    C69853
+    [Tags]    C69853    threaded
     [Setup]    Log in to Auto Tests System    ${EMAIL LIVE VIEWER}    
     Element Should not be Visible    ${SERVERS LINK}
 
 Custom User does not have Access
-    [Tags]    C69853
+    [Tags]    C69853    threaded
     [Setup]    Log in to Auto Tests System    ${EMAIL CUSTOM}    
     Element Should not be Visible    ${SERVERS LINK}
 
 Tab order is correct for online system
-    [Tags]    C69882
+    [Tags]    C69882    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Verify on Servers Page
     Press Keys    None    TAB
