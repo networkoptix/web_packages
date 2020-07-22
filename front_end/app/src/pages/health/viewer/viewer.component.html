@@ -1,32 +1,11 @@
 <div class="h-100">
-<!--    <div *ngSwitchCase="false" class="h-100">-->
-<!--        <nx-page-placeholder *ngIf="canShowOffline()"-->
-<!--                             [condition]="system && !system.isOnline"-->
-<!--                             type="OFFLINE"-->
-<!--                             [preloader]="!healthService.ready">-->
-<!--        </nx-page-placeholder>-->
-
-<!--        <nx-page-placeholder *ngIf="hasServerError" type="500" withFooter>-->
-<!--            <button class="btn btn-primary support-button mx-auto">-->
-<!--                <a [href]="CONFIG.company.links.support" target="_blank" rel="noopener" translate>-->
-<!--                    Go to Support Page-->
-<!--                </a>-->
-<!--            </button>-->
-<!--        </nx-page-placeholder>-->
-
-<!--        <nx-page-placeholder *ngIf="outdatedVersion"-->
-<!--                             type="NEW_VERSION">-->
-<!--        </nx-page-placeholder>-->
-<!--        <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>-->
-<!--    </div>-->
-
     <div class="h-100" [ngClass]="!healthService.ready ? 'hiddenElm' : ''">
         <div class="mainGrid"
              [ngClass]="mediaLayoutClass">
 
             <div class="gridMenu">
                 <div class="gridMenuComponent">
-<!--                    <nx-menu [content]="menu" class="pb-2 d-block"></nx-menu>-->
+                    <nx-menu [content]="menu" class="pb-2 d-block"></nx-menu>
 
                     <ng-template
                             [ngTemplateOutlet]="healthLinks"
@@ -50,7 +29,6 @@
     <div class="h-100" [ngClass]="healthService.ready ? 'hiddenElm' : ''">
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>
-
 </div>
 
 <ng-template #healthLinks>
@@ -80,7 +58,7 @@
             <h2 class="placeholder-title"
                 translate>Drag & drop report anywhere</h2>
             <div class="placeholder-message mb-3" translate>or</div>
-            <button class="btn btn-primary main-button mx-auto"
+            <button class="btn btn-primary mx-auto"
                     (click)="openFileMain()"
                     translate>Open Report File</button>
             <input #loadReportMain id="loadReportMain" type="file" (change)="uploadFileMain()" style="visibility: hidden; height: 0">

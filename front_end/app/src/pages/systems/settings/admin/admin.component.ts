@@ -159,7 +159,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 if (response.ok) {
                                     this.settingsForSystem = response.reply.settings;
                                 }
-                                this.systemLoaded = true;
+
                             }, (err) => {
                                 this.settingsForSystem = false;
                                 console.error(err);

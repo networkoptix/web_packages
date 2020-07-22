@@ -2,9 +2,9 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                   from '@angular/core';
-import { ActivatedRoute }           from '@angular/router';
-import { Location }                 from '@angular/common';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxUriService }             from '../../../services/uri.service';
 import { NxMenuService }            from '../../../menu';
@@ -44,6 +44,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     fixedLayoutClassSubscription: SubscriptionLike;
     elementReadySubscription: SubscriptionLike;
 
+    reportView: boolean;
     layoutReady: boolean;
     fixedLayoutClass: string;
     smallDesktopMode: boolean;
@@ -71,11 +72,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     constructor(
         public healthLayoutService: NxHealthLayoutService,
+        public healthService: NxHealthService,
         private route: ActivatedRoute,
+        private router: Router,
         private location: Location,
         private menuService: NxMenuService,
         private configService: NxConfigService,
-        public healthService: NxHealthService,
         private uriService: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
@@ -114,7 +116,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.params = this.route.snapshot.queryParams;
         this.menuService.section = 'alerts';
 
+        const { url } = this.router;
+        this.reportView = url.includes('report_viewer');
         if (!this.healthService.alertsValues) {
+            if (this.reportView) {
+                this.router.navigate(['report_viewer']);
+            }
+
             return;
         }
 

@@ -231,4 +231,6 @@ nx-health-viewer-component {
 .hiddenElm {
   visibility: hidden;
   height: 0 !important;
+  position: absolute;
+  top: 0;
 }

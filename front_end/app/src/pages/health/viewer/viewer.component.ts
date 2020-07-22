@@ -57,7 +57,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
 
     @ViewChild('loadReport') loadReport: ElementRef;
-    @ViewChild('loadReportMain') loadReportMain: ElementRef;
+    @ViewChild('loadReportMain') loadReportMain;
+
+    // systemLoaded: ElementRef;
     // files = [];
 
     constructor(
