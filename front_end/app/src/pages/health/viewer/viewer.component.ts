@@ -1,7 +1,7 @@
 import {
     Component, Inject, OnInit,
-    OnDestroy, ViewEncapsulation
-}                                                from '@angular/core';
+    OnDestroy, ViewEncapsulation, ViewChild, ElementRef, AfterViewInit
+} from '@angular/core';
 import { ActivatedRoute, Router }                from '@angular/router';
 import { BreakpointObserver }                    from '@angular/cdk/layout';
 import { DOCUMENT }                              from '@angular/common';
@@ -56,6 +56,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     private resizeSubscription: Subscription;
 
+    @ViewChild('loadReport') loadReport: ElementRef;
+    @ViewChild('loadReportMain') loadReportMain: ElementRef;
+    // files = [];
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -81,18 +85,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    // private cleanUp() {
-    //     this.stopSystemPoll();
-    //     this.ribbonService.hide();
-    // }
-
-    // private stopSystemPoll() {
-    //     if (this.system && this.system.stopPoll !== undefined) {
-    //         this.system.stopPoll();
-    //         this.healthService.system = undefined;
-    //     }
-    // }
-
     ngOnInit(): void {
         this.window.addEventListener('dragenter', event => {
             let types = event.dataTransfer.types;
@@ -117,7 +109,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     path  : 'alerts',
                     svg   : 'alerts'
                 }
-            ],
+            ]
         };
 
         this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
@@ -135,51 +127,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     console.error(error);
                 });
         }
-
-        // this.route.params.subscribe((params: any) => {
-            // this.cleanUp();
-            // this.importedData = {};
-            // const systemId = params.systemId;
-            // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
-            // let infoPromise = Promise.resolve();
-            // this.accountService.get().then((account) => {
-            //     this.healthService.ready = false;
-            //     this.hasServerError = false;
-            //     this.outdatedVersion = false;
-            //     if (account && typeof account !== 'undefined') {
-            //         this.account = account;
-            //         this.system = this.systemService.createSystem(account.email, systemId);
-            //         this.menu.base = this.sourceService.getMenuBase(this.system);
-            //         infoPromise = this.system.getInfo();
-            //     } else {
-            //         // Create a mock system. All we need is the mediaserver.
-            //         this.system = {
-            //             id   : '',
-            //             info : {
-            //                 capabilities: {
-            //                     vms_metrics: true
-            //                 }
-            //             },
-            //             isOnline    : true,
-            //             mediaserver : undefined
-            //         };
-            //         this.system.mediaserver = this.serverApi.createConnection(
-            //             undefined, undefined,
-            //             undefined, () => {}
-            //         );
-            //         this.menu.base = '/health';
-            //     }
-            //     this.healthService.system = this.system;
-            //     infoPromise.then(() => {
-            //         if (this.system.isOnline) {
-            //             this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
-            //         }
-            //         if (!this.outdatedVersion) {
-            //             this.updateValues();
-            //         }
-            //     });
-            // });
-        // });
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
@@ -489,56 +436,72 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.reportSnapshot.system = systems[0].info.systemName;
     }
 
-    exportReport() {
-        let filename;
-        if (this.reportSnapshot.system) {
-            filename = `report-${this.reportSnapshot.system}-${this.reportSnapshot.time}.json`;
+    uploadFile() {
+        this.fileDropped(this.loadReport.nativeElement.files[0]);
+    }
+
+    uploadFileMain() {
+        this.fileDropped(this.loadReportMain.nativeElement.files[0]);
+    }
+
+    openFile() {
+        this.loadReport.nativeElement.click();
+    }
+
+    openFileMain() {
+        this.loadReportMain.nativeElement.click();
+    }
+
+    fileDropped(files: NgxFileDropEntry[] | File) {
+        this.healthService.importedData = true;
+
+        // let fileEntry;
+        let file;
+
+        if (files[0]?.fileEntry) {
+            file = files[0].fileEntry as FileSystemFileEntry;
         } else {
-            filename = `report-${this.reportSnapshot.time}.json`;
+            file = files;
         }
 
-        this.utilsService.saveAs(this.reportSnapshot, filename, 'text/json');
-    }
+        if (file.name.match(/\.(json)$/i)) {
+            const fileReader = new FileReader();
+            fileReader.onload = _ => {
+                const data = JSON.parse(fileReader.result as string);
+                this.setupReport(data);
 
-    fileDropped(files: NgxFileDropEntry[]) {
-        debugger;
-        this.importShow = false;
-        this.healthService.importedData = true;
-        const fileEntry = files[0].fileEntry as FileSystemFileEntry;
-        const fileReader = new FileReader();
-        fileReader.onload = _ => {
-            const data = JSON.parse(fileReader.result as string);
-            this.setupReport(data);
+                this.router
+                    .navigate([this.menu.base + '/alerts'])
+                    .catch(error => {
+                        console.error(error);
+                    });
 
-            this.router
-                .navigate([this.menu.base + 'alerts'])
-                .catch(error => {
-                    console.error(error);
+                let time = '-';
+                if (data.time) {
+                    time = new Date(data.time).toUTCString();
+                }
+                this.importedData = {
+                    imported : true,
+                    system   : data.system || '-',
+                    time
+                };
+                // String is here because it does not need to be translated and probably doesn't belong in CONFIG
+                this.ribbonService.show(this.LANG.toastMessage.viewingReport, [], 'alert');
+                setTimeout(() => {
+                    this.setHeaderHeight();
                 });
-
-            let time = '-';
-            if (data.time) {
-                time = new Date(data.time).toUTCString();
-            }
-            this.importedData = {
-                imported : true,
-                system   : data.system || '-',
-                time
             };
-            // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', [], 'alert');
-            setTimeout(() => {
-                this.setHeaderHeight();
-            });
-        };
 
-        fileEntry.file((file: File) => {
-            fileReader.readAsText(file);
-        });
-    }
-
-    fileLeave() {
-        this.importShow = false;
+            if (typeof file.file === 'function') {
+                file.file((file: File) => {
+                    fileReader.readAsText(file);
+                });
+            } else {
+                fileReader.readAsText(file);
+            }
+        } else {
+            alert('File not supported, JSON files only');
+        }
     }
 
     updateValues(forceUpdate = false) {

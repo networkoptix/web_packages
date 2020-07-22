@@ -295,6 +295,11 @@ button, .btn {
 .btn-text {
     text-decoration: none;
 
+    svg-icon svg{
+        width: 20px;
+        height: 20px;
+    }
+
     .nav-arrow {
         height       : 20px;
         float        : left;

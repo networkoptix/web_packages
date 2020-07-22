@@ -753,7 +753,8 @@
             "rename": {
                 "success": "System name saved"
             }
-        }
+        },
+        "viewingReport" : "You are viewing an imported report"
     },
     "settingsConfig": {
         "additionalLocalFsTypes": "Additional local FS types",
