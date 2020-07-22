@@ -8,6 +8,7 @@ Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      SSHLibrary
 Library      String
 Library      DateTime
 Library      Collections
