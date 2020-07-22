@@ -36,7 +36,8 @@ export class DeleteCloudUserModalContent {
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
-                        missingPassword: () => {
+                        wrongParameters: () => {
+                            this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
                             this.passwordError = this.LANG.passwordRequirements.missingMessage;
                         },
                         wrongPassword: () => {
@@ -51,6 +52,10 @@ export class DeleteCloudUserModalContent {
                     this.activeModal.close(res);
                 }
             });
+    }
+
+    clearErrors() {
+        this.deleteForm.form.controls.password.setErrors({});
     }
 
     setPassword(input) {

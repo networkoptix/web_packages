@@ -157,7 +157,7 @@
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Desconhecido",
-        "vendor": "Fabricante:",
+        "vendor": "Fabricante",
         "model": "Modelo",
         "ip": "Endereço IP",
         "server": "Servidor",

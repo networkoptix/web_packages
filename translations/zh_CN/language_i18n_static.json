@@ -565,7 +565,7 @@
         "merge": {
             "title": "此系统正合并到 {{systemName}}。",
             "message": {
-                "dependingOnSize": "根据录影资料的大小，可能会花费数小时",
+                "dependingOnSize": "根据录像资料的大小，可能会花费数小时",
                 "untilFinished": "在合并完成前，您可以登录到此系统并观看视频，但无法更改任何配置",
                 "whenFinished": "合并完成后, 此系统中的所有用户和摄相机都将可用于{{systemName}}, 同时此系统将被删除"
             }
@@ -586,7 +586,7 @@
     "ribbon": {
         "beingMerged": {
             "to": "正合并到该系统",
-            "mayTake": "根据录影资料的大小，可能会花费数小时"
+            "mayTake": "根据录像资料的大小，可能会花费数小时"
         },
         "finishingMerge": "完成系统合并",
         "integration": {
@@ -720,7 +720,7 @@
             "expires": "到期",
             "time": "时效性",
             "deactivations": "剩余重置次数",
-            "trial": "测试版",
+            "trial": "试用版",
             "online": "在线",
             "error": "错误",
             "expired": "已经到期",

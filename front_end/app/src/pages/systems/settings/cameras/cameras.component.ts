@@ -741,35 +741,29 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateValues() {
         this.healthService.ready = false;
         if (this.system.canViewInfo) {
-            if (!this.alertsLoaded) {
-                this.healthReportSubscription = this.system.mediaserver
-                    .getAggregateHealthReport()
-                    .pipe(takeUntil(this.unsub$))
-                    .subscribe(
-                        result => {
-                            this.applyService.setVisible();
-                            const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
-                            this.alerts = Object.entries(alerts || {}).map(
-                                ([cameraId, alertInfo]) =>
-                                    new Alert(cameraId, alertInfo, 'Camera')
-                            );
-                            if (!this.applyService.locked) {
-                                this.updateAlerts();
-                            }
-                        },
-                        () => {
-                            if (!this.system.id) {
-                                !this.window.parent
-                                    ? this.window.location.reload()
-                                    : this.window.parent.location.reload();
-                            }
+            this.healthReportSubscription = this.system.mediaserver
+                .getAggregateHealthReport()
+                .pipe(takeUntil(this.unsub$))
+                .subscribe(
+                    result => {
+                        this.applyService.setVisible();
+                        const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
+                        this.alerts = Object.entries(alerts || {}).map(
+                            ([cameraId, alertInfo]) =>
+                                new Alert(cameraId, alertInfo, 'Camera')
+                        );
+                        this.updateAlerts();
+                    },
+                    () => {
+                        if (!this.system.id) {
+                            !this.window.parent
+                                ? this.window.location.reload()
+                                : this.window.parent.location.reload();
                         }
-                    );
-            } else {
-                this.updateAlerts();
-            }
+                    }
+                );
         } else {
-            this.alertsLoaded = true;
+            this.updateAlerts();
         }
     }
 

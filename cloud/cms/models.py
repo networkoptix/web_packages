@@ -655,11 +655,16 @@ class DataStructure(models.Model):
                     new_review_records = content_record.\
                         filter(version__assetcustomizationreview__state=AssetCustomizationReview.
                                REVIEW_STATES.accepted)
-                    # If new versions or records dont exist use old vay of getting records
-                    if new_review_records.exists():
+                    # If the version matches take it
+                    if content_record.last().version.id == version_id:
+                        content_record = content_record.last()
+                    # Take any record that is accepted
+                    elif new_review_records.exists():
                         content_record = new_review_records.last()
+                    # Take any record that has been reviewed
                     else:
-                        content_record = content_record.filter(version__accepted_by__isnull=False).last()
+                        content_record = content_record.\
+                            filter(version__accepted_by__isnull=False).last()
                 else:
                     content_record = content_record.last()
 
