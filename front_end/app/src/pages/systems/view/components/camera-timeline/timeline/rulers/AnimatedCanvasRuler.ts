@@ -1,14 +1,8 @@
-import IDuratedTimeRange from '../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../time_range/ITimeRange'
 import AbstractIntervalSetProvider from './interval_set_providers/AbstractIntervalSetProvider'
 
-// import DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtMultipleWeighstIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtMultipleWeighstIntervalSetProvider'
-// import CanvasIrregularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasIrregularLenghtSingleWeightIntervalSetProvider'
 import CanvasIrregularLenghtMultipleWeightsIntervalSetProvider from './interval_set_providers/canvas/CanvasIrregularLenghtMultipleWeightsIntervalSetProvider'
 
-// import RegularLengthIntervalSetExpander from './interval_set_expanders/RegularLengthIntervalSetExpander'
-// import IrregularLengthIntervalSetExpander from './interval_set_expanders/IrregularLengthIntervalSetExpander'
 import DynamicWeightIrregularLengthIntervalSetExpander from './interval_set_expanders/DynamicWeightIrregularLengthIntervalSetExpander'
 
 import AbstractRuler from './AbstractRuler'
@@ -28,7 +22,7 @@ import {
   ROUGH_YEAR,
 } from './intervals/regularLengthIntervals'
 
-import AnimatedFloat from '../timeRanges/animations/AnimatedFloat'
+import AnimatedFloat from '../animation_primitives/AnimatedFloat'
 
 
 export class AnimatedCanvasRuler extends AbstractRuler {
@@ -37,20 +31,15 @@ export class AnimatedCanvasRuler extends AbstractRuler {
   protected topRenderer: CanvasTopRulerRenderer
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected intervalSetProvider: AbstractIntervalSetProvider =
-      // new DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtMultipleWeighstIntervalSetProvider(
-      // new CanvasIrregularLenghtSingleWeightIntervalSetProvider(
       new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
         visibleRange,
         ctx.canvas,
       ),
 
     protected intervalSetExpander: AbstractIntervalSetExpander =
-    // new RegularLengthIntervalSetExpander(
     new DynamicWeightIrregularLengthIntervalSetExpander(
         visibleRange,
       ),
@@ -81,16 +70,14 @@ export class AnimatedCanvasRuler extends AbstractRuler {
     const _intervals = this.intervalSetProvider.getIntervals()
 
     const intervals = _intervals.slice(0, _intervals.length - 1)
-    // const primarySerifs = this.intervalSetExpander.expand(primaryIntervals, topIntervals) as Array<WeightedRegularIntervalSerif>
 
     if (this._haveIntervalsChanged(intervals)) {
-      // const prevSerifs = this.intervalSetExpander.expand(this._prevIntervals, []) as Array<WeightedRegularIntervalSerif>
       const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals)
       Object.keys(intervalDiffDict).map(k => {
         const v = intervalDiffDict[k]
         if (v.length) {
           this._lastIntervalChanges[k] = Date.now()
-          // HERE animations
+          // HERE animations happen
           if (k in this._intervalWeightAnimations) {
             this._intervalWeightAnimations[k].abort()
             this._intervalWeightAnimations[k].set(v[1])
@@ -100,42 +87,13 @@ export class AnimatedCanvasRuler extends AbstractRuler {
           }
         }
       })
-      // console.log(
-      //   'intervals changed',
-      //   stringifyIntervalDiffDict(intervalDiffDict),
-      //   stringifyIntervalChangeTimeStamps(this._lastIntervalChanges)
-      // )
       this._prevIntervals = [...intervals]
-    } else {
-      let stabilized = true
-      Object.keys(this._intervalWeightAnimations).map(k => {
-        const v = this._intervalWeightAnimations[k] as AnimatedFloat
-        if (v.target !== v.get()) {
-          // console.log('animating weight', k, v.get())
-          stabilized = false
-        }
-      })
-      if (stabilized) {
-        // console.log('all weights stabilized')
-      }
-      // const sicts = stringifyIntervalChangeTimeStamps(this._lastIntervalChanges)
-      // let noChanges = true
-      // Object.keys(sicts).filter(k => {
-      //   const v = sicts[k]
-      //   const dt = v
-      //   if (dt < ANIMATION_DURATION) {
-      //     console.log('animating', stringifyInterval(k), dt / ANIMATION_DURATION)
-      //     noChanges = false
-      //   }
-      // })
-      // if (noChanges) {
-      //   console.log('all animations are already done')
-      // }
     }
 
     const topIntervals = _intervals.length ? [_intervals[_intervals.length - 1]] : []
 
-    const targetSerifs = this.intervalSetExpander.expand(intervals, topIntervals, this._intervalWeightAnimations) as Array<WeightedRegularIntervalSerif>
+    const targetSerifs = this.intervalSetExpander.expand(intervals, topIntervals,
+      this._intervalWeightAnimations) as Array<WeightedRegularIntervalSerif>
 
     this.primaryRenderer.render(targetSerifs, debug)
     const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>

@@ -169,6 +169,10 @@
                 <a href="{% url opts|admin_urlname:'delete' object_id %}" class="btn btn-sm btn-danger pull-left">{% trans "Delete" %}</a>
                 {% endif %}
 
+                {% if allowed.revoke %}
+                <button class="btn btn-sm btn-danger" type="submit" name="revoke">Revoke Review</button>
+                {% endif %}
+
                 {% if allowed.force_update %}
                 <button class="btn btn-sm btn-danger" type="submit" name="force_update">Force Update</button>
                 {% endif %}

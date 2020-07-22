@@ -1,0 +1,107 @@
+@use '../../../../styles/typography';
+@use '../../../../../styles/theme_variables' as *;
+@use '~bootstrap/scss/bootstrap';
+
+.heading-link {
+    @include typography.regular24;
+    cursor: pointer;
+    margin-bottom: 48px;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.integrations {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 96px auto 0 auto;
+    padding: 0 16px;
+    color: $dark10;
+
+    &-wrapper {
+        display: flex;
+        justify-content: stretch;
+        flex-direction: row;
+        margin: 0 -16px -16px 0;
+    }
+
+    button {
+        font-size: 14px !important;
+    }
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 275px;
+    padding: 16px;
+
+    p {
+        line-height: 16px;
+        margin-bottom: 16px;
+    }
+}
+
+.integrations-block {
+    flex: 0 1 100%;
+    padding: 16px;
+
+    @media screen and (max-width: 600px) {
+        margin: 56px -32px 56px -16px !important;
+        border-radius: 0 !important;
+    }
+}
+
+.info-block, .integrations-block {
+    margin: 0 16px 16px 0;
+    h3 {
+        @include typography.medium15;
+        margin-bottom: 16px;
+    }
+}
+
+.integrations-blocks-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 -48px -48px 0;
+    & > div {
+        cursor: pointer;
+        margin: 0 64px 64px 0;
+        width: 80px;
+    }
+
+}
+
+.integration-block {
+    svg-icon > svg {
+        width: 80px;
+        height: 80px;
+    }
+    p {
+        text-align: center;
+        font-size: 14px;
+        line-height: 16px;
+    }
+}
+
+.more-integrations {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    width: 80px;
+    border-radius: 15px;
+    border: solid 2px $light4;
+    p {
+        word-spacing: 80px;
+        text-align: center;
+        line-height: 15px;
+        margin-bottom: 0;
+        b {
+            font-size: 24px;
+            line-height: 28px;
+        }
+    }
+}

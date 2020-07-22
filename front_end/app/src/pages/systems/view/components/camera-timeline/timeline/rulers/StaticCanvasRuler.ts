@@ -1,13 +1,8 @@
-import IDuratedTimeRange from '../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../time_range/ITimeRange'
 import AbstractIntervalSetProvider from './interval_set_providers/AbstractIntervalSetProvider'
 
-// import DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtMultipleWeighstIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtMultipleWeighstIntervalSetProvider'
-// import CanvasIrregularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasIrregularLenghtSingleWeightIntervalSetProvider'
 import CanvasIrregularLenghtMultipleWeightsIntervalSetProvider from './interval_set_providers/canvas/CanvasIrregularLenghtMultipleWeightsIntervalSetProvider'
 
-// import RegularLengthIntervalSetExpander from './interval_set_expanders/RegularLengthIntervalSetExpander'
 import IrregularLengthIntervalSetExpander from './interval_set_expanders/IrregularLengthIntervalSetExpander'
 
 import AbstractRuler from './AbstractRuler'
@@ -24,20 +19,23 @@ export class StaticCanvasRuler extends AbstractRuler {
   protected topRenderer: CanvasTopRulerRenderer
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected intervalSetProvider: AbstractIntervalSetProvider =
-      // new DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtMultipleWeighstIntervalSetProvider(
-      // new CanvasIrregularLenghtSingleWeightIntervalSetProvider(
       new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
         visibleRange,
         ctx.canvas,
+        4,
+      ),
+      protected topIntervalSetProvider: AbstractIntervalSetProvider =
+      new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
+        visibleRange,
+        ctx.canvas,
+        1,
+        true
       ),
 
     protected intervalSetExpander: AbstractIntervalSetExpander =
-    // new RegularLengthIntervalSetExpander(
     new IrregularLengthIntervalSetExpander(
         visibleRange,
       ),
@@ -47,13 +45,22 @@ export class StaticCanvasRuler extends AbstractRuler {
     this.topRenderer = new CanvasTopRulerRenderer(this.visibleRange, this.ctx)
   }
 
+  // public render (debug: boolean = false) {
+  //   const intervals = this.intervalSetProvider.getIntervals()
+  //   const topIntervals = intervals.length ? [intervals[intervals.length - 1]] : []
+  //   const primaryIntervals = intervals.slice(0, intervals.length) // -1
+  //   const primarySerifs = this.intervalSetExpander.expand(primaryIntervals, topIntervals) as Array<WeightedRegularIntervalSerif>
+  //   const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
+  //   this.primaryRenderer.render(primarySerifs, debug)
+  //   this.topRenderer.render(topSerifs, debug)
+  // }
+
   public render (debug: boolean = false) {
-    const intervals = this.intervalSetProvider.getIntervals()
-    const topIntervals = intervals.length ? [intervals[intervals.length - 1]] : []
-    const primaryIntervals = intervals.slice(0, intervals.length - 1)
+    const primaryIntervals = this.intervalSetProvider.getIntervals()
+    const topIntervals = this.topIntervalSetProvider.getIntervals()
     const primarySerifs = this.intervalSetExpander.expand(primaryIntervals, topIntervals) as Array<WeightedRegularIntervalSerif>
-    const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
     this.primaryRenderer.render(primarySerifs, debug)
+    const topSerifs = this.intervalSetExpander.expand(topIntervals) as Array<WeightedRegularIntervalSerif>
     this.topRenderer.render(topSerifs, debug)
   }
 

@@ -1,33 +1,32 @@
-import TimeRange from './timeRanges/TimeRange'
+import TimeRange from './time_range/TimeRange'
 
 import setupCanvas from './utils/setupCanvas'
 
-import RangerClass from './rangers/RangerClass'
-import AbsoluteRanger from './rangers/absolute'
-import AbstractRanger from './rangers/abstract/AbstractRanger'
+import Ranger from './ranger/Ranger'
+// import AbstractRanger from './ranger/AbstractRanger'
 
-import RulerClass from "./rulers/RulerClass"
 import AbstractRuler from "./rulers/AbstractRuler"
-// import StaticCanvasRuler from "./rulers/StaticCanvasRuler"
-import AnimatedCanvasRuler from "./rulers/AnimatedCanvasRuler"
+import StaticCanvasRuler from "./rulers/StaticCanvasRuler"
+// import AnimatedCanvasRuler from "./rulers/AnimatedCanvasRuler"
 
 import AbstractScrollBar from './scrollBars/AbstractScrollBar'
 import CanvasEmbeddedScrollBar from './scrollBars/CanvasEmbeddedScrollBar'
 
 import AbstractScrollButtons from './scrollButtons/AbstractScrollButtons'
-// import CanvasEmbeddedScrollButtons from './scrollButtons/CanvasEmbeddedScrollButtons'
 
 import AbstractArchiveController from './archive/AbstractArchiveController'
 import NaiveArchiveController from './archive/NaiveArchiveController'
-import { timeStampMs, timeStampS } from './numberTypeAliases'
+import { timeStampMs } from './basic_types/time'
 
-import * as screenfull from 'screenfull'
 import AbstractEventBirdViewProvider from './archive/birdViews/providers/AbstractEventBirdViewProvider'
+
+import EmbeddedWheelZoom from './embedded/EmbeddedWheelZoom'
+import EmbeddedWheelScroll from './embedded/EmbeddedWheelScroll'
 
 
 export class TimeLineController {
 
-  protected ranger: AbstractRanger
+  protected ranger: Ranger
   protected ctx: CanvasRenderingContext2D
 
   protected ruler: AbstractRuler
@@ -35,36 +34,55 @@ export class TimeLineController {
   protected scrollButtons: AbstractScrollButtons
   protected archiveController: AbstractArchiveController
 
+  protected embeddedWheelZoom: EmbeddedWheelZoom
+  protected embeddedWheelScroll: EmbeddedWheelScroll
+
   constructor (
     protected containerId: string,
     protected archiveRange: TimeRange,
     protected archiveBirdViewProvider: AbstractEventBirdViewProvider,    
     protected embed: boolean = true,
     protected animate: boolean = false,
-    protected rangerClass: RangerClass = AbsoluteRanger,
-    protected rulerClass: RulerClass = AnimatedCanvasRuler,  // StaticCanvasRuler,
     protected debug: boolean = false,
   ) {
 
     this.registerScreenChangeEventHandlers()
     this.ctx = setupCanvas(containerId, true) // resize will shoot anyway, so this line is not obligatory
 
-    this.ranger = new this.rangerClass(archiveRange, this.ctx, embed, animate) as AbsoluteRanger
-    this.ruler = new this.rulerClass(this.ranger.visibleRange, this.ctx)
+    this.ranger = new Ranger(archiveRange, this.ctx.canvas.width, animate)
+    
+    this.ruler = new StaticCanvasRuler(this.ranger.visibleRange, this.ctx)
+    // this.ruler = new AnimatedCanvasRuler(this.ranger.visibleRange, this.ctx)
+    
     this.scrollBar = new CanvasEmbeddedScrollBar(this.ranger.status, this.ranger.controls, this.canvas)
-    // this.scrollButtons = new CanvasEmbeddedScrollButtons(this.ranger.status, this.ranger.controls, this.canvas)
     this.archiveController = new NaiveArchiveController(this.archiveRange, this.ranger.visibleRange, this.ctx, archiveBirdViewProvider)
+
+    if (embed) {
+      this.embeddedWheelZoom = new EmbeddedWheelZoom(
+        this.canvas,
+        this.ranger.status,
+        this.ranger.controls,
+      )
+
+      this.embeddedWheelScroll = new EmbeddedWheelScroll(
+        this.canvas,
+        this.ranger.status,
+        this.ranger.controls,
+      )
+    }
   }
 
   protected registerScreenChangeEventHandlers () {
-    if (screenfull.isEnabled) {
-      screenfull.on('change', () => {
-        setupCanvas(this.containerId, true)
-      })
-    }
-    document.addEventListener('resize', () => setupCanvas(this.containerId, true))
+    // TODO: check whether canvas responds to fullscreen change properly
+    window.addEventListener('resize', () => {
+      setupCanvas(this.containerId, true)
+      this.ranger.canvasWidth = this.ctx.canvas.width
+      // console.debug('window resized, canvas width changed', this.ctx.canvas.width)
+    })
     window.matchMedia('screen and (min-resolution: 2dppx)').addListener(e => {
       setupCanvas(this.containerId, true)
+      this.ranger.canvasWidth = this.ctx.canvas.width
+      // console.debug('media resolution (pixel density), canvas width changed', this.ctx.canvas.width)
     });
   }
 
@@ -76,6 +94,9 @@ export class TimeLineController {
     this.scrollBar && this.scrollBar && this.scrollBar.dispose()
     this.scrollButtons && this.scrollButtons.dispose && this.scrollButtons.dispose()
     this.archiveController && this.archiveController.dispose && this.archiveController.dispose()
+    
+    this.embeddedWheelZoom && this.embeddedWheelZoom.dispose()
+    this.embeddedWheelScroll && this.embeddedWheelScroll.dispose()
     console.log('timeline controller dispose end')
   }
 

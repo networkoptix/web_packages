@@ -1,1 +1,20 @@
-<div>Dev tools: CLOUD-5424</div>
+<ng-template #toolBlock let-tool="tool">
+    <div class="card hoverable tool-card" [routerLink]="tool.link">
+        <header>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tool.icon"></svg-icon>
+        </header>
+        <div class="tool-detail">
+            <h3>{{tool.name}}</h3>
+            <p>{{tool.body}}</p>
+        </div>
+    </div>
+</ng-template>
+
+<section class="dev-tools">
+    <h2 [routerLink]="devToolsLink" class="heading-link">{{devToolsHeading}}</h2>
+    <div class="detail-blocks">
+        <ng-container *ngFor="let tool of devTools">
+            <ng-container *ngTemplateOutlet="toolBlock;context{tool:tool}"></ng-container>
+        </ng-container>
+    </div>
+</section>

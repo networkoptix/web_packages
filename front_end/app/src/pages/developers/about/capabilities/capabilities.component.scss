@@ -16,6 +16,7 @@
     margin: 0 auto 84px auto;
     padding: 0 16px;
     max-width: 896px;
+    color: $dark10;
 }
 
 .detail-blocks {
@@ -48,7 +49,7 @@
         }
         & > .intro-line {
             @include typography.regular14;
-            color: $light12;
+            color: rgba($light1, 0.5);
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
@@ -72,6 +73,7 @@
     align-items: center;
     flex-direction: column;
     padding: 52px 16px 64px 16px;
+    color: $dark10;
 
     .heading-link {
         margin-bottom: 10px;

@@ -65,20 +65,36 @@
     cursor: pointer;
     background-color: #e6ebed;
 
-    > svg {      
-      > path,
-      > circle {
-        fill: #698796;
+    > svg {
+      > * {
         transition: fill .2s ease-in-out;
+      }
+      > .outer-circle {
+        stroke: #698796;
+        stroke-width: 2;
+        fill: transparent;
+      }
+      > .i-body {
+        stroke: #698796;
+        stroke-width: 2;
+      }
+      > .point-over-i {
+        stroke-width: 0;
+        fill: #698796;
       }
     }    
 
     &.active {
       > svg {
-        > path,
-        > circle {
+        > .outer-circle {
+          stroke: #2fa2db;
+        }
+        > .i-body {
+          stroke: #2fa2db;
+        }
+        > .point-over-i {
           fill: #2fa2db;
-        }        
+        }
       }
     }
   }

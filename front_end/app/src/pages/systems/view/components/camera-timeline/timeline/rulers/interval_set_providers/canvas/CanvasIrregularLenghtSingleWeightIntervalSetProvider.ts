@@ -1,14 +1,14 @@
 import AbstractCanvasIntervalSetProvider from './AbstractCanvasIntervalSetProvider'
 import IrregularLengthInterval from '../../intervals/IrregularLengthInterval'
 import irregularLengthIntervals from '../../intervals/irregularLengthIntervals'
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../../time_range/ITimeRange';
 import estimateIrregularLengthIntervalPessimistically from '../../intervals/utils/estimateIrregularLengthIntervalPessimistically'
 
 
 export class CanvasIrregularLenghtSingleWeightIntervalSetProvider extends AbstractCanvasIntervalSetProvider {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
     protected MIN_INTERVAL_WIDTH_PX = 15 * devicePixelRatio
   ) {
@@ -21,7 +21,7 @@ export class CanvasIrregularLenghtSingleWeightIntervalSetProvider extends Abstra
 
   protected getInterval (): IrregularLengthInterval {
     for (let interval of irregularLengthIntervals) {
-      const displayWidth = estimateIrregularLengthIntervalPessimistically(interval) * this.pxPerMs
+      const displayWidth: estimateIrregularLengthIntervalPessimistically(interval) * this.pxPerMs
       if (displayWidth >= this.MIN_INTERVAL_WIDTH_PX) {
         return interval
       }

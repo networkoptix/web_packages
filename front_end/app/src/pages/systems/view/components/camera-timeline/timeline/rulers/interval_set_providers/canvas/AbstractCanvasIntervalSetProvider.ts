@@ -1,10 +1,10 @@
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../../time_range/ITimeRange';
 import AbstractIntervalSetProvider from '../AbstractIntervalSetProvider'
 
 
 export abstract class AbstractCanvasIntervalSetProvider extends AbstractIntervalSetProvider {
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
   ) {
     super(visibleRange)

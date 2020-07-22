@@ -218,6 +218,8 @@ def review(request):
     force_update = "force_update" in request.POST
     publish = "publish" in request.POST
     reject = "reject" in request.POST
+    revoke = "revoke" in request.POST
+    can_publish = UserGroupsToAssetPermissions.check_customization_publish(request.user)
 
     if force_update and UserGroupsToAssetPermissions.\
             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.force_update'):
@@ -228,17 +230,31 @@ def review(request):
         else:
             messages.error(request, "You cannot force update this asset")
 
-    elif publish and UserGroupsToAssetPermissions.check_customization_publish(request.user):
-        if asset.is_cloud_portal and asset.can_preview_on_portal:
-            publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
-            if publishing_errors:
-                messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
+    elif publish and can_publish:
+        if asset.is_cloud_portal:
+            if asset.can_preview_on_portal:
+                publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
+                if publishing_errors:
+                    messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
+                else:
+                    messages.success(request, f"Version {publishing_errors} has been published")
+                INTEGRATION_CACHE.clear_cache()
             else:
-                messages.success(request, f"Version {publishing_errors} has been published")
-            INTEGRATION_CACHE.clear_cache()
+                messages.error(request, f"Cannot publish on this portal")
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
+
+    elif revoke and can_publish:
+        if asset.is_cloud_portal and not asset.can_preview_on_portal:
+            messages.error(request, f"Cannot revoke on this portal")
+        else:
+            if asset.is_cloud_portal:
+                modify_db.publish_latest_version(asset, review_id, request.user,
+                                                 AssetCustomizationReview.REVIEW_STATES.rejected)
+            else:
+                modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.rejected, request.user)
+            messages.success(request, f"Version {asset_review.version.id} has been revoked")
 
     elif ask_question or reject:
         if reject:
@@ -260,7 +276,7 @@ def review(request):
         asset_review.notes += message
         asset_review.save()
 
-    elif publish or force_update:
+    elif force_update or publish or revoke:
         raise PermissionDenied
     else:
         messages.error(request, "Invalid option selected")

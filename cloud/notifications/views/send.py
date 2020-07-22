@@ -268,7 +268,7 @@ def cloud_notification_action(request):
     for customization in customizations:
         if not UserGroupsToAssetPermissions.check_customization_permission(request.user,
                                                                            customization,
-                                                                           'send_cloud_notification'):
+                                                                           'notifications.send_cloud_notification'):
             raise PermissionDenied
 
     notification_id = str(update_or_create_notification(request.data, customizations))
