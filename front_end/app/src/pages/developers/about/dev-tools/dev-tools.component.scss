@@ -1,0 +1,54 @@
+@use '../../../../styles/typography';
+@use '../../../../../styles/theme_variables' as *;
+
+.heading-link {
+    @include typography.regular24;
+    cursor: pointer;
+    margin-bottom: 48px;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.dev-tools {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 96px auto 0 auto;
+    padding: 0 16px;
+    max-width: 1200px;
+    color: $dark10;
+}
+
+.detail-blocks {
+    margin-right: -16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tool-card {
+    min-height: 242px;
+    flex: 1 0 20%;
+    min-width: 275px;
+    margin: 0 16px 16px 0;
+    cursor: pointer;
+
+    & > header {
+        background: $additional_light1;
+        padding: 16px;
+        & > svg-icon > svg {
+            height: 48px;
+        }
+    }
+}
+
+.tool-detail {
+    padding: 8px 16px;
+    h3 {
+        line-height: 32px;
+    }
+    p {
+        line-height: 16px;
+    }
+}

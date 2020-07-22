@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { timeStampMs } from '../camera-timeline/timeline/numberTypeAliases'
-import * as screenfull from 'screenfull'
+import { timeStampMs } from '../camera-timeline/timeline/basic_types/time'
 import { NxCamera, NxSystem } from '../../../../../services/system.service'
 import { PlaybackQuality } from '../../view.types'
 
@@ -28,8 +27,14 @@ export class NxSystemCameraViewComponent implements OnInit {
     public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
     public qualitySelected: PlaybackQuality = 'auto'
 
+    public isTimelineAreaVisible: boolean = true
+
     constructor (
     ) {
+    }
+
+    public toggleTimelineAreaVisibility () {
+      this.isTimelineAreaVisible = !this.isTimelineAreaVisible
     }
 
     public onLivePlayRequest (play_or_pause: boolean) {
@@ -81,23 +86,18 @@ export class NxSystemCameraViewComponent implements OnInit {
     }
 
     public toggleFullScreen () {
-      // console.log('toggling fullscreen')
-      if (screenfull.isEnabled) {
-        if (!this.isFullScreen) {
-          screenfull.request(document.getElementById('nx-camera-page'))
-        } else {
-          screenfull.exit()
-        }
-      }
+      const fsArea = document.getElementById('nx-camera-page')
+      if (this.isFullScreen) {
+        document.exitFullscreen()
+      } else {
+        fsArea.requestFullscreen()
+      }      
     }
 
     public ngOnInit () {
-      if (screenfull.isEnabled) {
-        screenfull.on('change', () => {
-          // @ts-ignore
-          this.isFullScreen = screenfull.isFullscreen
-        })
-      }
+      document.addEventListener('fullscreenchange', e => {
+        this.isFullScreen = !this.isFullScreen
+      })      
     }
 
     public toggleSettings () {

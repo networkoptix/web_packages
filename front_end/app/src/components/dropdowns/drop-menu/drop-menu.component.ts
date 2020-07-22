@@ -90,83 +90,28 @@ export class NxDropMenu extends BaseDropdown {
         this.additionalSystems$.next(additionalSystems);
     }
 
-    getUrl(sid = this.headerService.activeSystem.id, endpoint = this.endpoint) {
-        this.headerService.show$ = false;
-        let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + sid;
-        if (!this.CONFIG.isLocal && sid) {
-            if (endpoint.view) {
-                url += '/view';
-            }
-
-            if (endpoint.information) {
-                url += '/health';
-            }
-        } else {
-            if (endpoint.view) {
-                url = '/view';
-            }
-
-            if (endpoint.information) {
-                url = '/health';
-            }
-        }
-        return url;
-    }
-
     updateURI(sid = this.headerService.activeSystem.id, endpoint = this.endpoint) {
-        this.uriService.updateURI(this.getUrl(sid, endpoint)).then(_ => {
-            this.updateActiveSystemMenu();
+        this.headerService.show$ = false;
+        this.uriService.updateURI(this.menusService.getUrl(sid, endpoint)).then(() => {
+            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            this.menusService.updateActiveSystemMenu(activeSystem);
         });
-    }
-
-    updateActiveSystemMenu() {
-        const { endpoint: { view = false, settings = false, information = false } } = this;
-        const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-        const name = activeSystem.name || activeSystem.moduleInfo.name;
-        const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';
-
-        const viewNode = new MenuNode(
-            'View',
-            this.getUrl(activeSystem.id, { view: true })
-        );
-        viewNode.currentRoute = view;
-        const settingsNode = new MenuNode(
-            'Settings',
-            this.getUrl(activeSystem.id, { settings: true })
-        );
-        settingsNode.currentRoute = settings;
-
-        const informationNode = new MenuNode(
-            'Information',
-            this.getUrl(activeSystem.id, { information: true })
-        );
-        informationNode.currentRoute = information;
-        const nodes = [viewNode, settingsNode, informationNode];
-
-        this.activeSystemMenu = new MenuNode(
-            name,
-            '',
-            icon,
-            nodes,
-            Auth.LOGGED_IN,
-            name
-        );
-
-        this.menusService.currentSystemNode$.next(this.activeSystemMenu);
     }
 
     ngOnInit(): void {
         if (this.systems) {
             this.systemCounter = this.systems.length;
             this.systems$.next(this.systems);
-            this.updateActiveSystemMenu();
+            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            this.menusService.updateActiveSystemMenu(activeSystem);
         }
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
             this.systems$.next(changes.systems.currentValue);
-            this.updateActiveSystemMenu();
+            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            this.menusService.updateActiveSystemMenu(activeSystem);
         }
         this.systemCounter = this.systems && this.systems.length;
     }

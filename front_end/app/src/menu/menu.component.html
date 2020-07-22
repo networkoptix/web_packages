@@ -14,6 +14,7 @@
      [ngClass]="{ 'mb-2 searchable' : searchMode }" #menuWrapper>
 
     <div class="nx-menu-overlay" *ngIf="transition" ></div>
+
     <div class="nx-menu-placeholder" *ngIf="!menuContent.length" translate>Nothing found</div>
     <div class="nx-menu-section" *ngFor="let item of menuContent; let idx = index">
         <div class="level-1-container"
@@ -57,9 +58,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="level-3-items"
-                 *ngIf="(selectedLevel1 == item.id || menuModel.query != '') && item.level3"
+                 *ngIf="(selectedLevel1 === item.id || menuModel.query !== '' && searchMode) && item.level3?.length"
                  [ngClass]="{
                     'min-height-level-3': item.level3 && item.level3.length > 4,
                     'toggle-level-3': item.toggle

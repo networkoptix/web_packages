@@ -1,14 +1,13 @@
-import { durationMs } from '../../numberTypeAliases';
+import { durationMs } from '../../basic_types/time';
 
 export type IrregularLengthInterval =
-  // 'millenia' |
+  'millenia' |
   'century' |
   'decade' |
   'year' |
   'half-year' |
   'quarter-year' |
   'month' |
-  // 'week' |
   durationMs
 
 export default IrregularLengthInterval

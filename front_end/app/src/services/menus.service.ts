@@ -27,6 +27,8 @@ export class NxMenusService implements OnDestroy {
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     private unsub$ = new Subject();
 
+    endpoint: Partial<{ view: boolean, settings: boolean, information: boolean }> = {};
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -85,5 +87,62 @@ export class NxMenusService implements OnDestroy {
         const name = this.translate.instant(node.name);
         const nodes = node.nodes?.map(this.translateNode(lang)) || [];
         return { ...node, display_name, name, nodes };
+    }
+
+    getUrl(systemId: string, endpoint = this.endpoint) {
+        let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        if (!this.CONFIG.isLocal && systemId) {
+            if (endpoint.view) {
+                url += '/view';
+            }
+
+            if (endpoint.information) {
+                url += '/health';
+            }
+        } else {
+            if (endpoint.view) {
+                url = '/view';
+            }
+
+            if (endpoint.information) {
+                url = '/health';
+            }
+        }
+        return url;
+    }
+
+    updateActiveSystemMenu(activeSystem) {
+        const { endpoint: { view = false, settings = false, information = false } } = this;
+        const name = activeSystem.name || activeSystem.moduleInfo.name;
+        const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';
+
+        const viewNode = new MenuNode(
+            'View',
+            this.getUrl(activeSystem.id, { view: true })
+        );
+        viewNode.currentRoute = view;
+        const settingsNode = new MenuNode(
+            'Settings',
+            this.getUrl(activeSystem.id, { settings: true })
+        );
+        settingsNode.currentRoute = settings;
+
+        const informationNode = new MenuNode(
+            'Information',
+            this.getUrl(activeSystem.id, { information: true })
+        );
+        informationNode.currentRoute = information;
+        const nodes = [viewNode, settingsNode, informationNode];
+
+        const activeSystemMenu = new MenuNode(
+            name,
+            '',
+            icon,
+            nodes,
+            Auth.LOGGED_IN,
+            name
+        );
+
+        this.currentSystemNode$.next(activeSystemMenu);
     }
 }

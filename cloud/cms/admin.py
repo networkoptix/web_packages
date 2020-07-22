@@ -762,10 +762,12 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
 
+        is_current_version = asset.version_id(customization_name) == customization_review.version.id
+
         allowed = dict()
         allowed['force_update'] = \
             is_cloud_portal and state == AssetCustomizationReview.REVIEW_STATES.accepted and matching_portal \
-            and can_force_update
+            and can_force_update and is_current_version
         allowed['reject'] = \
             can_publish_or_accept and \
             state in [AssetCustomizationReview.REVIEW_STATES.blocked,
@@ -779,6 +781,8 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         allowed['question'] = \
             (state == AssetCustomizationReview.REVIEW_STATES.pending or
              state == AssetCustomizationReview.REVIEW_STATES.rejected)
+        allowed['revoke'] = state == AssetCustomizationReview.REVIEW_STATES.accepted \
+            and can_publish_or_accept and is_current_version
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
         allowed['access_customization_checkbox'] = not developer_access_customization and can_publish_or_accept

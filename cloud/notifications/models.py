@@ -266,6 +266,10 @@ class PushDevice(GCMDevice):
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
+    RESULT_STATES = Choices(('open', 'Open'),
+                            ('in_progress', 'In Progress'),
+                            ('success', 'Success'),
+                            ('failure', 'Failure'))
 
     title = models.CharField(max_length=255, blank=True)
     body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)], blank=True)
@@ -283,6 +287,7 @@ class PushNotification(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     send_date = models.DateTimeField(null=True, blank=True)
+    state = models.CharField(choices=RESULT_STATES, default=RESULT_STATES.open, max_length=20)
 
     def __str__(self):
         return self.title or 'Untitled Notification'

@@ -127,16 +127,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.content = {
-            selectedSection: '',         // updated by selectedSectionSubject
-            selectedSubSection: '',         // updated by selectedSubSectionSubject
-            system: {},         // updated by getSystemInfo
-            base: this.CONFIG.systemMenu.baseUrl + this.systemId,
-            level1: [
+            selectedSection    : '', // updated by selectedSectionSubject
+            selectedSubSection : '', // updated by selectedSubSectionSubject
+            system             : {}, // updated by getSystemInfo
+            base               : this.CONFIG.systemMenu.baseUrl + this.systemId,
+            level1             : [
                 {
-                    id: this.CONFIG.systemMenu.admin.id,
-                    icon: this.CONFIG.systemMenu.admin.icon,
-                    label: this.LANG.systemAdministration,
-                    path: this.CONFIG.systemMenu.admin.path,
+                    id    : this.CONFIG.systemMenu.admin.id,
+                    icon  : this.CONFIG.systemMenu.admin.icon,
+                    label : this.LANG.systemAdministration,
+                    path  : this.CONFIG.systemMenu.admin.path
                 }
             ]
         };
@@ -152,14 +152,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
-                this.content = {...this.content}; // trigger onChange
+                this.content = { ...this.content }; // trigger onChange
             });
 
         this.menuSelectedDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
-                this.content = {...this.content}; // trigger onChange
+                this.content = { ...this.content }; // trigger onChange
             });
 
         // TODO: add processes back
@@ -170,9 +170,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
         }).then(() => {
             const toastOptions = {
-                classname: 'danger',
-                delay: this.CONFIG.alertTimeout,
-                autohide: true
+                classname : 'danger',
+                delay     : this.CONFIG.alertTimeout,
+                autohide  : true
             };
             this.systemReady();
             if (!this.settingsService.share) {
@@ -192,12 +192,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             return this.system.getInfo(true); // Force reload system info when opening page
         }, {
             errorCodes: {
-                forbidden: (error) => {
+                forbidden: () => {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;
                 },
-                notFound: (error) => {
+                notFound: () => {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;

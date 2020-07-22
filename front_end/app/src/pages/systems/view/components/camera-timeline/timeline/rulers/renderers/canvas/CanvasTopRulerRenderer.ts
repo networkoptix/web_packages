@@ -1,5 +1,6 @@
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
-import { int, percentage, timeStampMs } from '../../../numberTypeAliases'
+import ITimeRange from '../../../time_range/ITimeRange'
+import { percentage, int } from '../../../basic_types/numbers';
+import { timeStampMs } from '../../../basic_types/time';
 import WeightedRegularIntervalSerif from '../../serifs/WeightedRegularIntervalSerif'
 import topRulerDateFormats from '../../dateformats/top_ruler_date_formats'
 import WeightedIrregularIntervalSerif from '../../serifs/WeightedIrregularIntervalSerif'
@@ -12,7 +13,7 @@ const dateformat = df.default || df
 export class CanvasTopRulerRenderer {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected Y_0_RELATIVE: percentage = 0,
     protected H_BASE_RELATIVE: percentage = 0.2,
@@ -40,7 +41,7 @@ export class CanvasTopRulerRenderer {
         opacity: 1.0,
       },
       backgroundOddColor: '#f0f3f4', // [240, 243, 244]
-    }
+    }    
 
     serifs = serifs.filter(s => s.weight > 0)
 
@@ -86,6 +87,15 @@ export class CanvasTopRulerRenderer {
         this.drawBottomLabel(serif, x, y + h + this.BOTTOM_LABEL_OFFSET_PX * devicePixelRatio, drawingConfig.bottomLabel)
       }
     }
+
+    // draw the horizontal line separating top ruler from the primary ruler
+    const h = this.H_BASE_RELATIVE * this.ctx.canvas.height
+    this.ctx.strokeStyle = '#e5e7e9'
+    this.ctx.beginPath()
+    this.ctx.moveTo(0, h)
+    this.ctx.lineTo(this.ctx.canvas.width, h)
+    this.ctx.stroke()
+    this.ctx.lineWidth = 1
   }
 
   public get canvas () {

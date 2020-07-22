@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, OnInit, OnDestroy } from '@angular/core'
-import { IBasicScrollControls } from '../camera-timeline/timeline/rangers/abstract/IRangerControls'
-import { float } from '../camera-timeline/timeline/numberTypeAliases'
+import { IBasicScrollControls } from '../camera-timeline/timeline/ranger/IRangerControls'
+import { float } from '../camera-timeline/timeline/basic_types/numbers'
 
 
 @Component({

@@ -1,1 +1,38 @@
-<div>Integrations: CLOUD-5425</div>
+<ng-template #integrationBlock let-integration="integration">
+    <div class="integration-block" [routerLink]="integration.link">
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + integration.icon"></svg-icon>
+        <p>{{integration.name}}</p>
+    </div>
+</ng-template>
+
+<ng-template #integrationsBlocks>
+    <div class="card integrations-block">
+        <h3>{{integrationBlocksIntro}}</h3>
+        <div class="integrations-blocks-wrapper">
+            <ng-container *ngFor="let integration of integrations">
+                <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
+            </ng-container>
+            <div class="more-integrations">
+                <p>and <b>{{moreIntegrations}}</b> more</p>
+            </div>
+        </div>
+        <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationStoreLink">{{integrationStoreText}}</button>
+    </div>
+</ng-template>
+
+<section class="integrations">
+    <h2 [routerLink]="integrationsLink" class="heading-link">{{integrationsHeading}}</h2>
+    <div class="integrations-wrapper">
+        <div class="card info-block">
+            <h3>{{integrationInfoHeading}}</h3>
+            <p>{{integrationInfoBody}}</p>
+            <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationInfoLink">{{integrationInfoLinkText}}</button>
+        </div>
+        <ng-container *ngIf="currentWindowWidth > 600">
+            <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
+        </ng-container>
+    </div>
+    <ng-container *ngIf="currentWindowWidth <= 600">
+        <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
+    </ng-container>
+</section>

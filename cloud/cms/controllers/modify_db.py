@@ -23,7 +23,7 @@ GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-f
 
 
 def update_draft_state(review_id, target_state, user):
-    review = AssetCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
+    review = AssetCustomizationReview.objects.filter(id=review_id).last()
     if not review:
         return " is currently publishing or has already been published"
 
@@ -31,6 +31,11 @@ def update_draft_state(review_id, target_state, user):
         review.version.accepted_by = user
         review.version.accepted_date = datetime.now()
         review.version.save()
+
+    review.state = target_state
+    review.reviewed_by = user
+    review.reviewed_date = datetime.now()
+    review.save()
 
     review.update_between_published_and_current(user, target_state)
 
@@ -463,8 +468,10 @@ def generate_preview(asset, context=None, version_id=None, send_to_review=False)
     return generate_preview_link(context, asset=asset, state=PENDING)
 
 
-def publish_latest_version(asset, review_id, user):
-    publish_errors = update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+def publish_latest_version(asset, review_id, user, state=None):
+    if not state:
+        state = AssetCustomizationReview.REVIEW_STATES.accepted
+    publish_errors = update_draft_state(review_id, state, user)
     if not publish_errors:
         fill_content(asset, preview=False, incremental=True)
     return publish_errors
@@ -612,6 +619,10 @@ def check_image_dimensions(data_structure_name,
     return size_error_msgs
 
 
+def has_wrong_image_sizes(multi_image_file_sizes, required_image_sizes):
+    return not all(image_size in multi_image_file_sizes for image_size in required_image_sizes)
+
+
 def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
     if 'format' in meta_settings and is_not_valid_file_extension(new_file.name, meta_settings['format']) and \
@@ -622,6 +633,14 @@ def check_meta_settings(data_structure, new_file):
     if 'size' in meta_settings and meta_settings['size'] < new_file.size:
         error_msg = f"The file's size it too large. Its size was {new_file.size/BYTES_TO_MEGABYTES:.2f}MB but must be less than {meta_settings['size']/BYTES_TO_MEGABYTES:.2f}MB"
         return [(data_structure.name, error_msg)]
+
+    if "multi_image_sizes" in meta_settings:
+        multi_image_file = Image.open(new_file)
+        image_file_sizes = [list(image_size[:2]) for image_size in multi_image_file.info["sizes"]]
+        if has_wrong_image_sizes(image_file_sizes, meta_settings["multi_image_sizes"]):
+            error_msg = f"The file does not have the required sizes. Uploaded file has sizes {image_file_sizes}. It " \
+                        f"should have {meta_settings['multi_image_sizes']}"
+            return [(data_structure.name, error_msg)]
 
     if data_structure.is_image:
         try:

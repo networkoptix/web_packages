@@ -467,12 +467,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
+                    const id = NxUtilsService.cleanId(server.id);
 
                     serversNode.level3.push({
                         id              : server.id,
                         icon            : '',
                         label           : server.name,
-                        path            : `servers/${server.id}`,
+                        path            : `servers/${id}`,
                         additionalLabel : server.ip
                     });
                 });

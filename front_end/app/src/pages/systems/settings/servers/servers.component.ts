@@ -153,14 +153,19 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             let server;
             if (this.serverIdFromParams) {
                 server = this.system.servers.find((server: any) => {
-                    return server.id === this.serverIdFromParams;
+                    return server.id === `{${this.serverIdFromParams}}`;
                 });
             }
             if (typeof server === 'undefined') {
-                if (this.system.servers.length > 0 && this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
+                if (this.system.servers.length > 0 || this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
                     server = this.system.servers[0];
+                    const id = NxUtilsService.cleanId(server.id);
+                    let path = this.CONFIG.menus.systemSettings.baseUrl;
+                    path += (this.CONFIG.isLocal) ? '' : `${this.system.id}`;
+                    path += `/servers/${id}`;
+
                     this.uriService
-                        .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}/servers/${server.id}`)
+                        .updateURI(path, {}, true)
                         .catch(error => {
                             console.error(error);
                         });

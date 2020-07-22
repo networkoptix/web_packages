@@ -1,4 +1,4 @@
-import { timeStampMs, durationMs } from '../../../numberTypeAliases'
+import { timeStampMs, durationMs } from '../../../basic_types/time'
 import IrregularLengthInterval from '../IrregularLengthInterval'
 
 
@@ -29,11 +29,15 @@ export function alignTimeStamp (
       break
     case 'quarter-year':
       date.setHours(0, 0, 0, 0)
-      date.setMonth(round(date.getMonth() / 3 + 0.1) * 3)
+      date.setDate(1)
+      const qy = Math.floor(date.getMonth() / 3)
+      date.setMonth((qy + incIfRight) * 3)
       break
     case 'half-year':
       date.setHours(0, 0, 0, 0)
-      date.setMonth(round(date.getMonth() / 6 + 0.1) * 6)
+      date.setDate(1)
+      const hy = Math.floor(date.getMonth() / 6)
+      date.setMonth((hy + incIfRight) * 6)
       break
     case 'year':
       date.setHours(0, 0, 0, 0)
@@ -47,10 +51,10 @@ export function alignTimeStamp (
       date.setHours(0, 0, 0, 0)
       date.setFullYear((round(date.getFullYear() / 100 + 0.1) + incIfRight) * 100, 0, 1)
       break
-    // case 'millenia':
-    //   date.setHours(0, 0, 0, 0)
-    //   date.setFullYear((round(date.getFullYear() / 1000 + 0.1) + incIfRight) * 1000, 0, 1)
-    //   break
+    case 'millenia':
+      date.setHours(0, 0, 0, 0)
+      date.setFullYear((round(date.getFullYear() / 1000 + 0.1) + incIfRight) * 1000, 0, 1)
+      break
     default:
       d = <durationMs>d
       return round(t / d + 0.1) * d

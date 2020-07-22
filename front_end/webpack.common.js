@@ -92,7 +92,7 @@ module.exports = {
             'jQuery': 'jquery',
             'window.jQuery': 'jquery',
             '_': 'underscore',
-            'screenfull': 'screenfull',
+            'screenfull': 'screenfull', // probably not used anymore, TODO: check
             'jquery-mousewheel': 'jquery-mousewheel'
         }),
         // new webpack.optimize.CommonsChunkPlugin({

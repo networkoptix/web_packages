@@ -1,18 +1,22 @@
-import ITimeRange from "../../../timeRanges/ITimeRange"
-import TimeRange from "../../../timeRanges/TimeRange"
-import IEvent from '../../events/IEvent'
-import Event from "../../events/Event"
+import ITimeRange from "../../../time_range/ITimeRange"
 import IEventBirdViewProvider from "./IEventBirdViewProvider"
 import IEventBirdView from "../IEventBirdView"
-import { durationMs, timeStampMs } from "../../../numberTypeAliases"
+import { durationMs, timeStampMs } from "../../../basic_types/time"
+import TimeRange from "../../../time_range/TimeRange"
 
 
 export abstract class AbstractEventBirdViewProvider implements IEventBirdViewProvider {
 
+  protected _fullRange
+
   constructor (
-    protected _fullRange: ITimeRange,
+    fullRange: ITimeRange,
   ) {
-    console.log('abstract constructor')
+    this._fullRange = TimeRange.fromRange(fullRange)
+  }
+
+  public get fullRange (): TimeRange {
+    return this._fullRange.clone()
   }
 
   public abstract getEventBirdView (visibleRange: ITimeRange, roughness: durationMs): IEventBirdView
