@@ -73,6 +73,7 @@ class NoptixLibrary(object):
         element = seleniumlib.find_element(locator)
         text = seleniumlib.get_value(locator)
         logger.debug(text)
+        element.send_keys(Keys.END)
         for x in range(len(text)):
             element.send_keys(Keys.BACKSPACE)
 
