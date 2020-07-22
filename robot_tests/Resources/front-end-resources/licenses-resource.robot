@@ -9,7 +9,7 @@ LM Suite Set Up
         Set Suite Variable    ${server ${i}}    ${server name}
         ${sys id}=   Create system and attach to cloud    ${LOCALHOST}   ${LM PORT ${i}}    System ${i}    ${LM OWNER}    ${BASE PASSWORD}
         Set Suite Variable    ${sys id ${i}}    ${sys id}
-        Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    http://nxlicensed.test.hdw.mx/
+        Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
     END
     Sleep    90     # Make all systems available on cloud
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
@@ -21,12 +21,12 @@ LM Suite Set Up
     Open Browser and go to URL    ${ENV}
 
 LM Suite Teardown
-    FOR   ${i}    IN RANGE    1    4
-        Stop Container    ${cont ${i}}    remove=True
-    END
     ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
     FOR   ${sys id}    IN    @{systems}
         Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys id}
+    END
+    FOR   ${i}    IN RANGE    1    4
+        Stop Container    ${cont ${i}}    remove=True
     END
     Close All Browsers
 

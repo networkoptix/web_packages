@@ -1,6 +1,6 @@
 import requests
 import re
-
+import socket
 
 def get_variables(cloud_url, test_email):
     vars = {}
@@ -44,6 +44,10 @@ def get_variables(cloud_url, test_email):
         key = 'prod'
     vars["IMAGE 4.0"] = f'4.0_{key}'
     vars["IMAGE 4.1"] = f'4.1_{key}'
+
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    vars["LOCALHOST"] = f'http://{ip}'
 
     # return the dictionary as variables into robot
     return vars

@@ -14,7 +14,7 @@ Library      Collections
 Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
-Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}    ${LM AUTH}
+Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 
 *** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
