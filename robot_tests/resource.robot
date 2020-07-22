@@ -11,6 +11,7 @@ Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      String
 Library      DateTime
 Library      Collections
+Library      OperatingSystem
 Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
