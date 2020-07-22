@@ -85,6 +85,7 @@ def send_email(msg_id, queue="", attempt=1):
 @shared_task
 def send_push_notification(notification_id, request_data, device_tokens=None, count=1):
     notification_object = PushNotification.objects.get(id=notification_id)
+    notification_object.state = PushNotification.RESULT_STATES.in_progress
     # Prevent duplicate notification processing
     if notification_object.count >= count:
         return
@@ -94,6 +95,8 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
 
     if count == 1:
         logger.info(f'Start processing push notification: {notification_id}')
+    else:
+        logger.info(f'Retrying push notification: {notification_id} (count={count})')
 
     try:
         if device_tokens is None:
@@ -106,13 +109,18 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             responses = notification_object.send_notifications(device_tokens=device_tokens)
         resend_tokens = notifications_api.process_push_response(responses, notification_object)
 
-        if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
-            send_push_notification.apply_async(
-                countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
-                args=[notification_object.id],
-                kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1},
-                queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-            )
+        if resend_tokens:
+            if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
+                log_push_result(notification_object, f'Requeuing (count={count+1})')
+                send_push_notification.apply_async(
+                    countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
+                    args=[notification_object.id],
+                    kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1},
+                    queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
+                )
+            else:
+                notification_object.state = PushNotification.RESULT_STATES.failure
+                log_push_result(notification_object, 'Retries exceeded')
 
     except Exception as exception:
         if 'responses' not in locals() or not responses:
@@ -125,11 +133,13 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
                     queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
                 )
         elif 'resend_tokens' not in locals():
+            notification_object.state = PushNotification.RESULT_STATES.failure
             log_push_result(
                 notification_object, f'{type(exception)}: {exception},\nResponse: {responses}.', logging.ERROR,
                 stack_trace=True
             )
         else:
+            notification_object.state = PushNotification.RESULT_STATES.failure
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR, stack_trace=True)
     else:
         notification_object.send_date = timezone.now()
