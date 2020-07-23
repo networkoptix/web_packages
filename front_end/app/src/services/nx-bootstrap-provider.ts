@@ -65,7 +65,8 @@ export class NxBootstrapProvider {
 
                 this.isLoaded = true;
                 resolve(true);
-            }).catch(() => {
+            }).catch(err => {
+                console.error(err);
                 // handle fail in app component
                 this.languageService.defaultLanguage = 'en_US';
                 resolve(true);

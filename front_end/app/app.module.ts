@@ -17,7 +17,9 @@ import { NgbToast, NgbModal }                 from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                        from 'ngx-order-pipe';
 import { DeviceDetectorModule }               from 'ngx-device-detector';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
-import { TranslateMessageFormatCompiler }     from 'ngx-translate-messageformat-compiler';
+import {
+    TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG
+}                                             from 'ngx-translate-messageformat-compiler';
 import { CookieService }                      from 'ngx-cookie-service';
 import { WebStorageModule }                   from 'ngx-store';
 import { AppComponent }                       from './app.component';
@@ -116,7 +118,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         SystemGuard,
         DatePipe,
         NxBootstrapProvider,
-        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true }
+        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
     ],
     declarations: [
         AppComponent
