@@ -35,4 +35,12 @@
         </div>
         {% endif %}
     </form>
+    <script>
+        function toggleUserList(userListId) {
+            let userList = document.getElementById(userListId);
+            if (userList) {
+                userList.style.display = userList.style.display === "none" ? "block" : "none";
+            }
+        }
+    </script>
 {% endblock %}
