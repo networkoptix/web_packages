@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Ngắt kết nối từ %PRODUCT_NAME%",
     "RENAME": "đổi tên",
     "RESTART": "Khởi động lại",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Đặt lại về Mặc định",
     "DETAILED INFO TEXT": "Thông tin chi tiết",
     "DISCONNECT MODAL WARNING TEXT": "Bạn sẽ không thể đăng nhập vào hệ thống này nữa.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Xóa tài khoản?",
     "DELETE ACCOUNT INFO TEXT": "Tài khoản của bạn và tất cả dữ liệu liên quan đến nó sẽ bị xóa vĩnh viễn mà không có khả năng khôi phục nó.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Nhập mật khẩu tài khoản của bạn để tiếp tục",
-    "ENCRYPTING VIDEO WARNING TEXT": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU."
+    "ENCRYPTING VIDEO WARNING TEXT": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

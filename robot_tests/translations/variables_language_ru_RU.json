@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Отключиться от %PRODUCT_NAME%",
     "RENAME": "Переименовать",
     "RESTART": "Перезапуск",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Сброс по умолчанию",
     "DETAILED INFO TEXT": "Подробная информация",
     "DISCONNECT MODAL WARNING TEXT": "Вы больше не сможете войти в эту систему.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Удалить учетную запись?",
     "DELETE ACCOUNT INFO TEXT": "Ваша учетная запись и все связанные с ней данные будут удалены без возможности восстановления.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Для продолжения введите пароль вашей учетной записи",
-    "ENCRYPTING VIDEO WARNING TEXT": "Шифрование видео трафика значительно увеличит нагрузку на процессор."
+    "ENCRYPTING VIDEO WARNING TEXT": "Шифрование видео трафика значительно увеличит нагрузку на процессор.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

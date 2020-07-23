@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "ตัดการเชื่อมต่อจาก %PRODUCT_NAME%",
     "RENAME": "เปลี่ยนชื่อ",
     "RESTART": "รีสตาร์ท",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "รีเซ็ตเป็นค่าเริ่มต้น",
     "DETAILED INFO TEXT": "รายละเอียดข้อมูล",
     "DISCONNECT MODAL WARNING TEXT": "คุณจะไม่สามารถเข้าสู่ระบบนี้ได้อีกต่อไป",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "ลบบัญชี?",
     "DELETE ACCOUNT INFO TEXT": "บัญชีของคุณและข้อมูลทั้งหมดที่เกี่ยวข้องจะถูกลบอย่างถาวรโดยไม่สามารถกู้คืนได้",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "ป้อนรหัสผ่านบัญชีของคุณเพื่อดำเนินการต่อ",
-    "ENCRYPTING VIDEO WARNING TEXT": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น"
+    "ENCRYPTING VIDEO WARNING TEXT": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

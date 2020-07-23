@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Verbindung zu %PRODUCT_NAME% trennen",
     "RENAME": "Umbenennen",
     "RESTART": "Neu starten",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Auf Standardeinstellungen zurücksetzen",
     "DETAILED INFO TEXT": "Detaillierte Informationen",
     "DISCONNECT MODAL WARNING TEXT": "Sie können sich nicht mehr bei diesem System anmelden.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Account löschen?",
     "DELETE ACCOUNT INFO TEXT": "Ihr Konto und alle damit verbundenen Daten werden dauerhaft gelöscht, ohne dass die Möglichkeit zur Wiederherstellung besteht.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Geben Sie Ihr Kontopasswort ein, um fortzufahren",
-    "ENCRYPTING VIDEO WARNING TEXT": "Die Verschlüsselung des Videoverkehrs wird die CPU-Auslastung deutlich erhöhen."
+    "ENCRYPTING VIDEO WARNING TEXT": "Die Verschlüsselung des Videoverkehrs wird die CPU-Auslastung deutlich erhöhen.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

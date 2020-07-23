@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "قطع الاتصال من %PRODUCT_NAME%",
     "RENAME": "Rename",
     "RESTART": "Restart",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
     "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
     "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

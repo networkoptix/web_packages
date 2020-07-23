@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Leválasztás %PRODUCT_NAME% termékről",
     "RENAME": "Átnevezés",
     "RESTART": "Újraindítás",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Visszaállítás alapértelmezésekre",
     "DETAILED INFO TEXT": "Részletes információ",
     "DISCONNECT MODAL WARNING TEXT": "Többé nem lesz képes bejelentkezni ebbe a rendszerbe.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Törli a fiókot?",
     "DELETE ACCOUNT INFO TEXT": "Fiókját és az ahhoz kapcsolódó összes adatot véglegesen töröljük anélkül, hogy visszaállíthatnánk.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Adja meg a fiók jelszavát a folytatáshoz",
-    "ENCRYPTING VIDEO WARNING TEXT": "A videoforgalom titkosítása jelentősen növeli a CPU használatát."
+    "ENCRYPTING VIDEO WARNING TEXT": "A videoforgalom titkosítása jelentősen növeli a CPU használatát.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

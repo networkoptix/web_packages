@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Verbinding verbreken met %PRODUCT_NAME%",
     "RENAME": "Naam wijzigen",
     "RESTART": "Herstarten",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "Standaardinstellingen herstellen",
     "DETAILED INFO TEXT": "Gedetailleerde info",
     "DISCONNECT MODAL WARNING TEXT": "U kunt niet meer inloggen in dit systeem.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Verwijder account?",
     "DELETE ACCOUNT INFO TEXT": "Uw account en alle bijbehorende gegevens worden definitief verwijderd zonder de mogelijkheid om deze te herstellen.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
-    "ENCRYPTING VIDEO WARNING TEXT": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
+    "ENCRYPTING VIDEO WARNING TEXT": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

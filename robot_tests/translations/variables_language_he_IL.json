@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "התנתק מ %PRODUCT_NAME%",
     "RENAME": "שנה שם",
     "RESTART": "איתחול",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "איפוס לברירות מחדל",
     "DETAILED INFO TEXT": "מידע מפורט",
     "DISCONNECT MODAL WARNING TEXT": "לא תוכל להתחבר למערכת זו יותר.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "מחק חשבון?",
     "DELETE ACCOUNT INFO TEXT": "חשבונך וכל הנתונים המשויכים אליו יימחקו לצמיתות ללא אפשרות לשחזר אותו.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "הזן את סיסמת חשבונך כדי להמשיך",
-    "ENCRYPTING VIDEO WARNING TEXT": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במשאבי המחשב (מעבד)."
+    "ENCRYPTING VIDEO WARNING TEXT": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במשאבי המחשב (מעבד).",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

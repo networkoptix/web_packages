@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME% 에서 연결 끊기",
     "RENAME": "이름변경",
     "RESTART": "재시작",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "기본값 복원",
     "DETAILED INFO TEXT": "상세 정보",
     "DISCONNECT MODAL WARNING TEXT": "더이상 이 시스템에 접속 할 수 없습니다.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "계정 삭제?",
     "DELETE ACCOUNT INFO TEXT": "계정 및 계정과 관련된 모든 데이터는 복원 할 수없이 영구적으로 삭제됩니다.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "계속하려면 직장 비밀번호를 입력하세요.",
-    "ENCRYPTING VIDEO WARNING TEXT": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
+    "ENCRYPTING VIDEO WARNING TEXT": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

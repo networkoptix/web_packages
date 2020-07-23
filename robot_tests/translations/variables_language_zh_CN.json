@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "从%PRODUCT_NAME%断开连接",
     "RENAME": "重命名",
     "RESTART": "重启",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "重置为默认值",
     "DETAILED INFO TEXT": "详细信息",
     "DISCONNECT MODAL WARNING TEXT": "您将无法再登录此系统。",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "删除账户吗？",
     "DELETE ACCOUNT INFO TEXT": "您的帐户及其相关数据将被永久删除，无法恢复。",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "请输入您的帐户密码",
-    "ENCRYPTING VIDEO WARNING TEXT": "加密视频通信量将显著增加 CPU 使用率。"
+    "ENCRYPTING VIDEO WARNING TEXT": "加密视频通信量将显著增加 CPU 使用率。",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }

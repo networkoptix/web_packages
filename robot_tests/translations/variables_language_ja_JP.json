@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME%から切断",
     "RENAME": "名前の変更",
     "RESTART": "再起動",
+    "RESTARTING": "restarting...",
     "RESET TO DEFAULTS TEXT": "デフォルトにリセット",
     "DETAILED INFO TEXT": "詳細情報",
     "DISCONNECT MODAL WARNING TEXT": "このシステムにログインできなくなります。",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "アカウントを削除しますか？",
     "DELETE ACCOUNT INFO TEXT": "アカウントと関連付けられているすべてのデータは、復元することなく完全に削除されます。",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "パスワードを入力して続行",
-    "ENCRYPTING VIDEO WARNING TEXT": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
+    "ENCRYPTING VIDEO WARNING TEXT": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "SERVER RESTARTED TEXT": "Server has successfully restarted."
 }
