@@ -19,7 +19,7 @@
 }
 
 h1, h2 {
-    @include font-source($font-family-light, $h1-font-size, $font-color-medium);
+    @include font-source($font-family-medium, $h1-font-size, $font-color-medium);
     margin-top    : $line-height-computed;
     margin-bottom : $line-height-computed;
     padding       : 0;
@@ -27,8 +27,12 @@ h1, h2 {
     align-items   : center;
 }
 
+.old-h12 {
+    @include font-source($font-family-light, rem(22px), $font-color-medium);
+}
+
 h2 {
-    @include font-source($font-family-light, $h2-font-size, $font-color-medium);
+    @include font-source($font-family-medium, $h2-font-size, $font-color-medium);
     margin      : 0;
     padding     : 0;
 }
