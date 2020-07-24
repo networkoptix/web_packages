@@ -1,14 +1,16 @@
 from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.html import format_html
 from django_celery_results.models import TaskResult
+import pystache
 import pytz
 import re
 from push_notifications.admin import GCMDeviceAdmin
 
 # Register your models here.
-
+from notifications.conf import CLOUD_NOTIFICATIONS_USERS_TEMPLATE
 from notifications.models import *
 from notifications.forms import *
 admin.site.unregister(TaskResult)
@@ -38,7 +40,7 @@ class MessageAdmin(NotificationAdmin):
     readonly_fields = ('user_email', 'external_id', 'task_id', 'type', 'customization',
                        'message', 'created_date', 'send_date', 'delivery_time_interval', 'event')
     list_filter = ('type', 'created_date', 'send_date')
-    search_fields = ('user_email', 'created_date', 'send_date',)
+    search_fields = ('user_email', 'created_date', 'send_date', 'message')
     actions = ['clean_old_messages']
 
     def clean_old_messages(self, request, queryset):
@@ -70,17 +72,19 @@ class FeedbackAdmin(NotificationAdmin):
 
 @admin.register(CloudNotification)
 class CloudNotificationAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'body', 'sent_by', 'convert_date')
-    change_form_template = 'notifications/cloud_notifications_change_form.html'
-    readonly_fields = ('sent_by', 'convert_date')
+    list_display = ("subject", "body", "sent_by", "convert_date")
+    change_form_template = "notifications/cloud_notifications_change_form.html"
+    readonly_fields = ("sent_by", "convert_date", "user_customizations_list", "emails_with_subject")
     form = CloudNotificationAdminForm
     fieldsets = [
         ("Subject and Body for email", {
-            'fields': ('subject', 'body'),
-            'description': "<div>Body should be formated in html</div>"
+            "fields": ("subject", "body"),
+            "description": "<div>Body should be formated in html</div>"
         }),
-        ("When and who sent the notification", {'fields': (('sent_by', 'convert_date'))}),
-        ("Target Customizations", {"fields": ("customizations",)})
+        ("Test users", {"fields": ("test_users", "emails_with_subject")}),
+        ("When and who sent the notification", {"fields": (("sent_by", "convert_date"))}),
+        ("Target Customizations", {"fields": ("customizations",)}),
+        ("Recipients of the email by customization", {"fields": ("user_customizations_list", )})
     ]
 
     def get_form(self, request, obj=None, **kwargs):
@@ -129,6 +133,30 @@ class CloudNotificationAdmin(admin.ModelAdmin):
         if obj and obj.sent_date:
             return self.readonly_fields + ('subject', 'body', 'customizations')
         return self.readonly_fields
+
+    def emails_with_subject(self, obj=None):
+        return format_html(
+            f"<a class=\"btn btn-sm btn-primary\" style=\"color: white;\""
+            f"href=\"{reverse('admin:notifications_message_changelist')}?q={obj.subject or ''}\""
+            f"target=\"_blank\">Goto messages</a>"
+        )
+
+    emails_with_subject.short_description = "Check messages with subject"
+
+    def user_customizations_list(self, obj=None):
+        if obj and obj.customizations.exists():
+            customizations = list(obj.customizations.values_list("name", flat=True))
+            users_by_customization = []
+            for customization in customizations:
+                users_by_customization.append({
+                    "name": customization,
+                    "users": ", ".join(list(Account.objects.filter(customization=customization)
+                                       .values_list("email", flat=True)))
+                })
+            return format_html(pystache.render(CLOUD_NOTIFICATIONS_USERS_TEMPLATE,
+                                               {"users_by_customization": users_by_customization}))
+        return "No customizations"
+    user_customizations_list.short_description = "Recipients by customization"
 
 
 @admin.register(TaskResult)

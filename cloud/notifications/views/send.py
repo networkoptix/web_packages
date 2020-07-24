@@ -277,10 +277,15 @@ def cloud_notification_action(request):
         messages.success(request._request, "Changes have been saved")
 
     elif (can_add and not notification_id or can_change) and 'Preview' in request.data:
-        message = format_message(CloudNotification.objects.get(id=notification_id))
-        message['userFullName'] = request.user.get_full_name()
+        request_target_users = request.data.getlist('test_users', default=[request.user.id])
 
-        notifications_api.send(request.user.email, 'cloud_notification', message, request.user.customization)
+        target_users = Account.objects.filter(id__in=request_target_users)
+        original_message = format_message(CloudNotification.objects.get(id=notification_id))
+
+        for user in target_users:
+            message = original_message.copy()
+            message["userFullName"] = user.get_full_name()
+            notifications_api.send(user.email, 'cloud_notification', message, user.customization)
         messages.success(request._request, "Preview has been sent")
 
     elif can_send and 'Send' in request.data and notification_id:
