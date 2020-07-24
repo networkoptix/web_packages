@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME% 에서 연결 끊기",
     "RENAME": "이름변경",
     "RESTART": "재시작",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "재시작 중...",
     "RESET TO DEFAULTS TEXT": "기본값 복원",
     "DETAILED INFO TEXT": "상세 정보",
     "DISCONNECT MODAL WARNING TEXT": "더이상 이 시스템에 접속 할 수 없습니다.",
@@ -125,7 +125,7 @@
     "CHANNELS TEXT": "채널 수",
     "AVAILABLE TEXT": "사용할 수 있는",
     "YOU HAVE UNUSED TRIAL LICENSE TEXT": "사용하지 않은 체험용 라이선스가 있습니다.",
-    "ONCE ACTIVATED TEXT": "Once activated, it will allow you to record up to 4 cameras for 30 days",
+    "ONCE ACTIVATED TEXT": "한번 활성화되면, 30일 동안 최대 4대의 카메라 영상을 녹화할 수 있습니다.",
     "LICENSE IS ACTIVATED TEXT": "라이센스 비활성화 됨",
     "TRIAL LICENSE ACTIVATED TEXT": "체험용 라이선스가 활성화 되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다.",
     "IPVD SEARCH PLACEHOLDER TEXT": "검색",
@@ -282,7 +282,7 @@
     "ENCRYPTING VIDEO WARNING TEXT": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "버전",
+    "PORT TOO LOW TEXT": "1024 미만의 포트 번호는 제한되어 있습니다. 서버에 접속할 수 없게 될 수 있습니다.",
+    "SERVER RESTARTED TEXT": "서버가 성공적으로 재시작 되었습니다."
 }

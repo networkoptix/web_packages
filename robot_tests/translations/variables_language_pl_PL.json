@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Odłącz od %PRODUCT_NAME%",
     "RENAME": "Zmień nazwę",
     "RESTART": "Uruchom ponownie",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "restartowanie...",
     "RESET TO DEFAULTS TEXT": "Przywróć ustawienia domyślne",
     "DETAILED INFO TEXT": "Informacje szczegółowe",
     "DISCONNECT MODAL WARNING TEXT": "Nie będziesz już mógł zalogować się do tego systemu.",
@@ -282,7 +282,7 @@
     "ENCRYPTING VIDEO WARNING TEXT": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "Wersja",
+    "PORT TOO LOW TEXT": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
+    "SERVER RESTARTED TEXT": "Serwer został uruchomiony ponownie."
 }

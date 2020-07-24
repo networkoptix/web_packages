@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Bağlantıyı kes %PRODUCT_NAME%",
     "RENAME": "Yeniden Adlandır",
     "RESTART": "Yeniden Başlat",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "yeniden başlatılıyor...",
     "RESET TO DEFAULTS TEXT": "Varsayılanlara sıfırla",
     "DETAILED INFO TEXT": "Detaylı bilgi",
     "DISCONNECT MODAL WARNING TEXT": "Artık bu sisteme giriş yapamazsınız.",
@@ -282,7 +282,7 @@
     "ENCRYPTING VIDEO WARNING TEXT": "Video trafiğini şifrelemek, CPU kullanımını önemli ölçüde artıracaktır.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "Sürüm",
+    "PORT TOO LOW TEXT": "1024'ten küçük bağlantı noktası numaraları kısıtlanır. Sunucuya erişilemez hale gelebilir.",
+    "SERVER RESTARTED TEXT": "Sunucu başarıyla yeniden başlatıldı."
 }

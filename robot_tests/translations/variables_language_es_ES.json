@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Desconectarse de %PRODUCT_NAME%",
     "RENAME": "Renombra",
     "RESTART": "Reiniciar",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "reiniciando...",
     "RESET TO DEFAULTS TEXT": "Reiniciar a valores por defecto",
     "DETAILED INFO TEXT": "Información detallada",
     "DISCONNECT MODAL WARNING TEXT": "Ya no podrá iniciar sesión en este sistema.",
@@ -281,8 +281,8 @@
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Introduzca la contraseña de su cuenta para continuar",
     "ENCRYPTING VIDEO WARNING TEXT": "Cifrar el tráfico de vídeo aumentará significativamente el uso de la CPU.",
     "IP TEXT": "IP",
-    "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "OS TEXT": "SO",
+    "VERSION TEXT": "Versión",
+    "PORT TOO LOW TEXT": "Los números de puerto inferiores a 1024 están restringidos. El servidor puede quedar inaccesible.",
+    "SERVER RESTARTED TEXT": "El servidor se reinició correctamente."
 }

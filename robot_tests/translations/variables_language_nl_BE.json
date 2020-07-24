@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Verbinding verbreken met %PRODUCT_NAME%",
     "RENAME": "Naam wijzigen",
     "RESTART": "Herstarten",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "herstarten...",
     "RESET TO DEFAULTS TEXT": "Standaardinstellingen herstellen",
     "DETAILED INFO TEXT": "Gedetailleerde info",
     "DISCONNECT MODAL WARNING TEXT": "U zal niet meer kunnen inloggen in dit systeem.",
@@ -282,7 +282,7 @@
     "ENCRYPTING VIDEO WARNING TEXT": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "Versie",
+    "PORT TOO LOW TEXT": "Poortnummers lager dan 1024 zijn beperkt. De server kan ontoegankelijk worden.",
+    "SERVER RESTARTED TEXT": "Server is succesvol opnieuw gestart."
 }
