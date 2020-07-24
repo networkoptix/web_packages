@@ -1,8 +1,8 @@
-Hello {{message.userFullName}},
+Hola, {{message.userFullName}},
 
-  Please open the link below to confirm your email address and activate the account.
+  Si us plau, feu clic al següent butó per confirmar la vostra adreça de correu electrònic i activar el compte.
 
 {{config.portal_url}}/activate/{{message.code}}
 
-If you didn't register in %CLOUD_NAME%, just ignore this email.
-Do not share the message or the link with anyone.
+Si no us heu registrat a %CLOUD_NAME%, ignora aquest correu electrònic.
+No compartiu el missatge ni l’enllaç amb ningú.
