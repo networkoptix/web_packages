@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Koppla från %PRODUCT_NAME%",
     "RENAME": "Döp om",
     "RESTART": "Starta om",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "startar om...",
     "RESET TO DEFAULTS TEXT": "Återställ till standardvärden",
     "DETAILED INFO TEXT": "Detaljerad information",
     "DISCONNECT MODAL WARNING TEXT": "Du kommer inte att kunna logga in på det här systemet längre.",
@@ -283,6 +283,6 @@
     "IP TEXT": "IP",
     "OS TEXT": "OS",
     "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "PORT TOO LOW TEXT": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
+    "SERVER RESTARTED TEXT": "Servern har startat om."
 }
