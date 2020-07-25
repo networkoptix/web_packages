@@ -1,17 +1,17 @@
-import { NgModule }          from '@angular/core';
+import { NgModule }                      from '@angular/core';
 import { CommonModule }                  from '@angular/common';
 import { BrowserModule }                 from '@angular/platform-browser';
 import { UpgradeModule }                 from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
-import { AngularSvgIconModule }        from 'angular-svg-icon';
-import { ComponentsModule }              from '../../components/components.module';
+import { AngularSvgIconModule }          from 'angular-svg-icon';
 
-import { MenuModule }                    from '../../menu';
-import { DirectivesModule }             from '../../directives/directives.module';
-import { NxAboutModule } from './about/about.module';
-import { NxAboutComponent } from './about/about.component';
+import { ComponentsModule }         from '../../components/components.module';
+import { DirectivesModule }         from '../../directives/directives.module';
+import { NxAboutModule }            from './about/about.module';
+import { MenuModule }               from '../../menu';
+import { NxAboutComponent }         from './about/about.component';
 import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 
 const appRoutes: Routes = [

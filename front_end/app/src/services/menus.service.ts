@@ -1,15 +1,16 @@
 /* eslint-disable camelcase */
-import { Inject, Injectable, OnDestroy } from '@angular/core';
-import { WINDOW } from './window-provider';
-import { IConfig, NxConfigService } from './nx-config';
-import { MenuStructure } from './nx-config/base-config';
+import { Inject, Injectable, OnDestroy }  from '@angular/core';
+import { TranslateService }               from '@ngx-translate/core';
 import { BehaviorSubject, Subject, from } from 'rxjs';
-import { MenuNode } from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { takeUntil, map }                 from 'rxjs/operators';
+
+import { WINDOW }                    from './window-provider';
+import { MenuNode }                  from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { IConfig, NxConfigService }  from './nx-config';
+import { MenuStructure }             from './nx-config/base-config';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { takeUntil, map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
-import { NxSessionService } from './session.service';
+import { NxSessionService }          from './session.service';
 
 export enum Auth {
     BOTH='Both',

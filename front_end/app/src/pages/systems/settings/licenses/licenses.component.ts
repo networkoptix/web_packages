@@ -1,15 +1,13 @@
-import {
-    Component, LOCALE_ID, Inject,
-    OnInit
-}                                        from '@angular/core';
+import { Component, OnInit }             from '@angular/core';
+import { SubscriptionLike }              from 'rxjs';
+import { delay, filter, map, retryWhen } from 'rxjs/operators';
+
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { SubscriptionLike }              from 'rxjs';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxSettingsService }             from '../settings.service';
 import { NxSystem, NxSystemServer }      from '../../../../services/system.service';
 import { NxMenuService }                 from '../../../../menu/menu.service';
-import { delay, filter, map, retryWhen } from 'rxjs/operators';
+import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-system-licenses',
@@ -87,7 +85,6 @@ export class NxSystemLicensesComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        @Inject(LOCALE_ID) private locale: string,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService
     ) {

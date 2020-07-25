@@ -1,6 +1,6 @@
+import { Injectable }                           from '@angular/core';
 import { Observable, interval, defer, Subject } from 'rxjs';
 import { concatMap, takeUntil }                 from 'rxjs/operators';
-import { Injectable }                           from '@angular/core';
 
 @Injectable({
     providedIn: 'root'

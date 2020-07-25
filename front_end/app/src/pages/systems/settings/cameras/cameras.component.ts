@@ -3,6 +3,14 @@ import {
     Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+    Subscription, BehaviorSubject, from, throwError, of
+}                                    from 'rxjs';
+import {
+    filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
+}                                    from 'rxjs/operators';
+
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
@@ -10,24 +18,15 @@ import { NxProcessService, Process } from '../../../../services/process.service'
 import { WINDOW }                    from '../../../../services/window-provider';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import {
-    ICamera, IRecordingModes,
-    IRecordingSettings,
-    ITask, MotionType,
-    NxSystem, StreamQuality
+    ICamera, IRecordingModes, IRecordingSettings,
+    ITask, MotionType, NxSystem, StreamQuality
 }                                    from '../../../../services/system.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
 import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
-import {
-    Subscription, BehaviorSubject, from, throwError, of
-}                                    from 'rxjs';
-import {
-    filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
-}                                    from 'rxjs/operators';
 import { NxUtilsService }            from '../../../../services/utils.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
 
 @UntilDestroy()

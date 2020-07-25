@@ -52,7 +52,7 @@ export class IpvdSearchService {
                 result = result || (lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
 
                 result = result || c.analyticsEvents.find((event) => {
-                    return event.toLowerCase().includes(queryLowerNoDashes)
+                    return event.toLowerCase().includes(queryLowerNoDashes);
                 });
             }
 

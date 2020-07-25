@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
-import { NxSessionService } from '../../../../services/session.service';
-import { NxHeaderService } from '../../../../services/nx-header.service';
+import { Router }           from '@angular/router';
+import { UntilDestroy }     from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
-import { Auth } from '../../../../services/menus.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { IConfig, NxConfigService } from '../../../../services/nx-config';
+import { NxSessionService }         from '../../../../services/session.service';
+import { NxHeaderService }          from '../../../../services/nx-header.service';
+import { Auth }                     from '../../../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

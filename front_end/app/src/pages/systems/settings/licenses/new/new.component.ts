@@ -4,14 +4,14 @@ import {
     SimpleChanges, ViewChild
 } from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+import { SubscriptionLike }          from 'rxjs';
+
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { SubscriptionLike }          from 'rxjs';
-import { NxScrollMechanicsService }  from '../../../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -141,8 +141,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;

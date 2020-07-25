@@ -1,6 +1,6 @@
 import { Component, OnInit }         from '@angular/core';
 import { Router }                    from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
@@ -34,8 +34,7 @@ export class NxLandingComponent implements OnInit {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
-                private router: Router,
-                private localStorage: LocalStorageService,
+                private router: Router
     ) {
         this.setupDefaults(configService);
     }

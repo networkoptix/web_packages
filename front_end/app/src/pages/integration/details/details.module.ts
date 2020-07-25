@@ -3,21 +3,20 @@ import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }      from '@ngx-translate/core';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ComponentsModule }              from '../../../components/components.module';
+import { MenuModule }                    from '../../../menu/menu.module';
 import { NxIntegrationDetailsComponent } from './details.component';
-
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../components/components.module';
-import { NxOverviewComponent } from './overview/overview.component';
-import { NxSetupComponent }    from './setup/setup.component';
-import { MenuModule }          from '../../../menu/menu.module';
+import { NxOverviewComponent }           from './overview/overview.component';
+import { NxSetupComponent }              from './setup/setup.component';
 
 const appRoutes: Routes = [
     {
-        path    : 'integrations/:id', component: NxIntegrationDetailsComponent,
-        children: [
+        path      : 'integrations/:id',
+        component : NxIntegrationDetailsComponent,
+        children  : [
             { path: '', component: NxOverviewComponent },
             { path: 'how-to-setup', component: NxSetupComponent },
         ]
@@ -33,19 +32,18 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
-
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers      : [],
-    declarations   : [
+    providers : [],
+    declarations : [
         NxIntegrationDetailsComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap : [],
+    entryComponents : [
         NxIntegrationDetailsComponent
     ],
-    exports        : [
+    exports: [
         NxIntegrationDetailsComponent
     ]
 })

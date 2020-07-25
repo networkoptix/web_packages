@@ -2,16 +2,16 @@ import {
     Component, OnDestroy, Input,
     OnChanges, SimpleChanges
 }                                    from '@angular/core';
+import { DatePipe }                  from '@angular/common';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { DatePipe }                  from '@angular/common';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import {
     InfoBlockSection, InfoBlockStyle,
-    InfoDetailClass,
-    InfoLineStyle
+    InfoDetailClass, InfoLineStyle
 } from '../../../../../components/info-block/info-block.component';
 
 @UntilDestroy({ checkProperties: true })

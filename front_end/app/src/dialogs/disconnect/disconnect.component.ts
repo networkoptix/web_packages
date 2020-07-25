@@ -1,16 +1,17 @@
 import {
     Component, Input,
     Renderer2, ViewChild
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService, Process }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import {IConfig, NxConfigService} from "../../services/nx-config";
-import {NxSystemAPI, NxSystemAPIService} from "../../services/system-api.service";
-import {of} from "rxjs";
-import {NxAccountService} from "../../services/account.service";
+}                         from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { of }             from 'rxjs';
+
+import { NxLanguageProviderService }       from '../../services/nx-language-provider';
+import { NxProcessService, Process }       from '../../services/process.service';
+import { NxCloudApiService }               from '../../services/nx-cloud-api';
+import { IConfig, NxConfigService }        from '../../services/nx-config';
+import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { NxAccountService }                from '../../services/account.service';
+import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 
 @Component({
     selector : 'nx-modal-disconnect-content',
@@ -27,8 +28,8 @@ export class DisconnectModalContent {
     password: string;
     wrongPassword: boolean;
     auth = {
-        username: '',
-        password: ''
+        username : '',
+        password : ''
     };
 
     mediaServerApi: NxSystemAPI;

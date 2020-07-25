@@ -1,4 +1,5 @@
 import { Inject, Injectable }        from '@angular/core';
+
 import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
@@ -69,7 +70,7 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol?.() ||this.window.location.protocol;
+        const protocol = settings.native && this.LANG.clientProtocol?.() || this.window.location.protocol;
         const host     = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };

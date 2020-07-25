@@ -1,8 +1,9 @@
 import { NgModule }                  from '@angular/core';
+import { Angular2CsvModule }         from 'angular2-csv';
+
 import { DirectivesModule }          from '../directives/directives.module';
 import { SandboxModule }             from './sandbox/sandbox.module';
 import { IpvdModule }                from './ipvd/ipvd.module';
-import { Angular2CsvModule }         from 'angular2-csv';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
@@ -61,10 +62,13 @@ import { NxDevelopersModule }        from './developers/developers.module';
         Nx503Module,
         Nx404Module // Must be last module for routing
     ],
-    declarations : [],
-    entryComponents : [],
-    providers : [],
-    exports : [
+    declarations: [
+    ],
+    entryComponents: [
+    ],
+    providers: [
+    ],
+    exports: [
         SandboxModule,
         DownloadModule,
         DownloadHistoryModule,

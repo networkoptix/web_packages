@@ -1,17 +1,18 @@
-import { Component, Input, Injector }          from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { of, timer }                 from 'rxjs';
+import { Component, Input, Injector } from '@angular/core';
+import { NgbActiveModal }             from '@ng-bootstrap/ng-bootstrap';
+import { timer }                      from 'rxjs';
 import {
     delayWhen, retryWhen, map,
     tap, mergeMap
-}                                    from 'rxjs/operators';
+}                                     from 'rxjs/operators';
+
 import { NxRibbonService }           from '../../components/ribbon';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxToastService }            from '../toast.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxApplyService }            from '../../services/apply.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-restart-server-content',

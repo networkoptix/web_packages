@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy }     from '@ngneat/until-destroy';
+
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
@@ -50,6 +51,6 @@ export const mockCapabilities = [
     new CapabilitiesBlock('creating', 'Scalable Integration', '/developers/', 'Integrate your product or service with the platform to reach a large existing customer base.', 'systems.svg', 'https://www.networkoptix.com/wp-content/uploads/2018/10/World-MAP.png')
 ];
 
-export const mockTech = ['Mac', 'Ubuntu', 'Windows', 'Android', 'Docker', "Arm", "VMware"].map(name => new SupportedTech(name, '/developers/about/','systems.svg'));
+export const mockTech = ['Mac', 'Ubuntu', 'Windows', 'Android', 'Docker', 'Arm', 'VMware'].map(name => new SupportedTech(name, '/developers/about/', 'systems.svg'));
 
-export const mockLanguages = ['C++', 'Node.js', '.NET, C#', 'Python', 'JavaScript/TypeScript', 'and Others'].map(name=> new SupportedTech(name, '/developers/about/'));
+export const mockLanguages = ['C++', 'Node.js', '.NET, C#', 'Python', 'JavaScript/TypeScript', 'and Others'].map(name => new SupportedTech(name, '/developers/about/'));

@@ -2,14 +2,11 @@ import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }      from '@ngx-translate/core';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { NxSetupComponent } from './setup.component';
-
-import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../../../components/components.module';
+import { NxSetupComponent } from './setup.component';
 
 // TODO: Remove it after test
 
@@ -22,12 +19,12 @@ import { ComponentsModule } from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule
     ],
-    providers: [],
-    declarations: [
+    providers : [],
+    declarations : [
         NxSetupComponent
     ],
-    bootstrap: [],
-    entryComponents: [
+    bootstrap : [],
+    entryComponents : [
         NxSetupComponent
     ],
     exports: [

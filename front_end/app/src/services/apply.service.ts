@@ -2,14 +2,14 @@ import {
     ComponentFactoryResolver, Injectable,
     ViewContainerRef, ComponentRef
 }                                               from '@angular/core';
+import { NgForm }                               from '@angular/forms';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import {
     distinctUntilChanged, filter, skip, map
 }                                               from 'rxjs/operators';
-import { NxDialogsService }                     from '../dialogs/dialogs.service';
+
 import { NxApplyComponent }                     from '../components/apply/apply.component';
-import { NgForm }                               from '@angular/forms';
-import { NxUtilsService }                       from './utils.service';
+import { NxDialogsService }                     from '../dialogs/dialogs.service';
 import { Process, NxProcessService }            from './process.service';
 
 /**

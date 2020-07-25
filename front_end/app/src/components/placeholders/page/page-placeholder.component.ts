@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { UntilDestroy }                                           from '@ngneat/until-destroy';
+import { SubscriptionLike }                                       from 'rxjs';
+
 import { NxLanguageProviderService }                              from '../../../services/nx-language-provider';
 import { IConfig, NxConfigService }                               from '../../../services/nx-config';
 import { NxScrollMechanicsService }                               from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }                                from '../../../../language_i18n_static_types';
-import { SubscriptionLike }                                       from 'rxjs';
-import { UntilDestroy }                                           from '@ngneat/until-destroy';
 
 /* Usage
  <nx-page-placeholder

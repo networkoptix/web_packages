@@ -1,15 +1,14 @@
+import { Component, Input, OnDestroy } from '@angular/core';
+import { UntilDestroy }                from '@ngneat/until-destroy';
 import {
-    Component, Input, OnDestroy
-}                                    from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import {
-    BehaviorSubject, combineLatest, Subject, SubscriptionLike
+    BehaviorSubject, combineLatest, SubscriptionLike
 } from 'rxjs';
+
 import { BaseDropdown }              from '../injDropdown';
+import { environment }               from '../../../../environments/environment';
 import { NxConfigService }           from '../../../services/nx-config';
 import { Account, NxAccountService } from '../../../services/account.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { environment }               from '../../../../environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

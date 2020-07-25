@@ -8,18 +8,16 @@ import {
 import { FormsModule }           from '@angular/forms';
 import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }       from '@ngx-translate/core';
-
-import { EMPTY as empty }        from 'rxjs';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { EMPTY as empty }        from 'rxjs';
 
-import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
-import { NxConfigService }       from '../../services/nx-config';
 import { DirectivesModule }      from '../../directives/directives.module';
+import { DownloadComponent }     from './download.component';
+import { NxConfigService }       from '../../services/nx-config';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
-
     deviceInfo;
     platform: string;
     platformMatch: {};
@@ -48,8 +46,8 @@ export class OsResolver implements Resolve<any> {
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
     // {path: '', redirectTo: 'download', pathMatch: 'full'},
-    {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
-    {path: 'download/:platform', component: DownloadComponent}
+    { path: 'download', component: DownloadComponent, resolve: { platform: OsResolver } },
+    { path: 'download/:platform', component: DownloadComponent }
 ];
 
 @NgModule({
@@ -67,10 +65,10 @@ const appRoutes: Routes = [
         OsResolver
     ],
     declarations: [
-        DownloadComponent,
+        DownloadComponent
     ],
-    bootstrap: [],
-    entryComponents: [
+    bootstrap : [],
+    entryComponents : [
         DownloadComponent
     ],
     exports: [

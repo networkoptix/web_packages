@@ -6,11 +6,14 @@ import {
     ActivatedRoute, ActivationEnd, Router
 }                                       from '@angular/router';
 import {
-    DOCUMENT, isPlatformBrowser,
-    Location, TitleCasePipe
+    isPlatformBrowser, TitleCasePipe
 }                                       from '@angular/common';
-import { isNumeric }                    from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
+import { isNumeric }                    from 'rxjs/util/isNumeric';
+import { Subscription }                 from 'rxjs';
+import { filter }                       from 'rxjs/operators';
+
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../services/nx-config';
 import { NxAccountService }             from '../../services/account.service';
@@ -18,17 +21,14 @@ import { NxPageService }                from '../../services/page.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
-import { Subscription }                 from 'rxjs';
-import { filter }                       from 'rxjs/operators';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
 
 import isArray = require('core-js/features/array/is-array');
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'download-history',
+    selector : 'download-history',
     templateUrl : 'download-history.component.html',
-    styleUrls   : ['download-history.component.scss']
+    styleUrls : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
@@ -63,7 +63,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     constructor(configService: NxConfigService,
-                @Inject(DOCUMENT) private document: any,
                 private cloudApiService: NxCloudApiService,
                 private accountService: NxAccountService,
                 private route: ActivatedRoute,
@@ -71,7 +70,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
-                private location: Location,
                 @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.setupDefaults(configService);

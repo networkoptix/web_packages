@@ -6,15 +6,16 @@ import {
     ElementRef, ViewChild, HostListener, Renderer2
 }                                         from '@angular/core';
 import { Router }                         from '@angular/router';
+import { UntilDestroy }                   from '@ngneat/until-destroy';
+import { Subscription, SubscriptionLike } from 'rxjs';
+import { delay }                          from 'rxjs/operators';
+
 import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
 import { NxConfigService, IConfig }       from '../../../../services/nx-config';
 import { NxUriService }                   from '../../../../services/uri.service';
-import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { delay }                          from 'rxjs/operators';
-import { UntilDestroy }                   from '@ngneat/until-destroy';
 import { NxUtilsService }                 from '../../../../services/utils.service';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -25,7 +26,7 @@ interface Params {
     selector : 'nx-cam-table',
     templateUrl : './cam-table.component.html',
     styleUrls : ['./cam-table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation : ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
@@ -84,15 +85,15 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public csvFilename;
     public csvCameraData: any[];
     public csvOptions = {
-        fieldSeparator  : ',',
-        quoteStrings    : '"',
-        decimalseparator: '.',
-        showLabels      : true,
-        headers         : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
-        showTitle       : true,
-        title           : 'Camera List',
-        useBom          : false,
-        removeNewLines  : true
+        fieldSeparator   : ',',
+        quoteStrings     : '"',
+        decimalseparator : '.',
+        showLabels       : true,
+        headers          : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
+        showTitle        : true,
+        title            : 'Camera List',
+        useBom           : false,
+        removeNewLines   : true
     };
 
     @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
@@ -262,10 +263,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private setPagerSize() {
         if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md) ||
             (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl) && this.selectedCamera)) {
-            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeMedium;
+            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
             this.pagerEllipses = false;
         } else {
-            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
+            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
             this.pagerEllipses = true;
         }
     }
@@ -306,7 +307,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 param === 'maxFps' ||
                 param === 'isAnalyticsSupported' ||
                 param === 'count') {
-            byParam = NxUtilsService.byParam((elm) => {
+            byParam = NxUtilsService.byParam((elm: any) => {
                 if (param === 'maxResolution') {
                     return elm.resolutionArea;
                 } else {
@@ -328,7 +329,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else if (param === 'isPtzSupported') {
-            byParam = NxUtilsService.byParam((elm) => {
+            byParam = NxUtilsService.byParam((elm: any) => {
                 if (elm.isAptzSupported) {
                     return 0;
                 }
@@ -343,7 +344,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else if (param === 'isAudioSupported') {
-            byParam = NxUtilsService.byParam((elm) => {
+            byParam = NxUtilsService.byParam((elm: any) => {
                 if (elm.isAudioSupported === null) {
                     return 3;
                 }

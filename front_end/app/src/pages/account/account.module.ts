@@ -5,7 +5,9 @@ import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
+
 import { ComponentsModule }              from '../../components/components.module';
+import { DirectivesModule }              from '../../directives/directives.module';
 import { ApplyGuard, AuthGuard }         from '../../routeGuards';
 import {
     NxAccountComponent,
@@ -13,7 +15,6 @@ import {
     NxAccountPasswordModule, NxAccountPasswordComponent
 }                                        from './';
 import { MenuModule }                    from '../../menu';
-import { DirectivesModule }             from '../../directives/directives.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -26,8 +27,10 @@ export class TypeResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     {
-        path: 'account', component: NxAccountComponent, canActivate: [AuthGuard],
-        children: [
+        path        : 'account',
+        component   : NxAccountComponent,
+        canActivate : [AuthGuard],
+        children    : [
             { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
             { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }
         ]

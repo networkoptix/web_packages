@@ -2,6 +2,7 @@ import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { timer }                     from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
+
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -39,9 +40,9 @@ export class ResetServerModalContent {
         this.resetServer = this.processService
             .createProcess(() => {
                 const options = {
-                    classname: this.CONFIG.toast.warning,
-                    autohide : true,
-                    delay    : this.CONFIG.alertTimeout
+                    classname : this.CONFIG.toast.warning,
+                    autohide  : true,
+                    delay     : this.CONFIG.alertTimeout
                 };
                 return this.system.restoreFactorySettings(this.serverId, this.password).toPromise().then(res => {
                     this.activeModal.close();

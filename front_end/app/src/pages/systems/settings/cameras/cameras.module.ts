@@ -6,12 +6,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouterModule }         from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-import { DirectivesModule }     from '../../../../directives/directives.module';
-import { NxCamerasComponent }   from './cameras.component';
 import { TranslateModule }      from '@ngx-translate/core';
-import { ComponentsModule }     from '../../../../components/components.module';
-import { NxHealthModule }       from '../../../health/health.module';
+
+import { DirectivesModule }         from '../../../../directives/directives.module';
+import { ComponentsModule }         from '../../../../components/components.module';
+import { NxHealthModule }           from '../../../health/health.module';
 import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
+import { NxCamerasComponent }       from './cameras.component';
 
 @NgModule({
     imports: [
@@ -27,16 +28,18 @@ import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-dete
         AngularSvgIconModule.forRoot(),
         NxHealthModule
     ],
-    providers       : [],
-    declarations    : [
+    providers: [
+    ],
+    declarations: [
         NxCamerasComponent,
         NxMotionDetectionOverlay
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [
+    ],
+    entryComponents: [
         NxCamerasComponent
     ],
-    exports         : [
+    exports: [
         NxCamerasComponent
     ]
 })

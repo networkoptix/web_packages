@@ -4,19 +4,22 @@ import { DomSanitizer }                 from '@angular/platform-browser';
 import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { combineLatest, Subscription }  from 'rxjs';
 import { map }                          from 'rxjs/operators';
+
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../../services/nx-config';
 import { NxAccountService, Account }    from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
-import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
+import {
+    NxRibbonService, RibbonActionInput
+}                                       from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
 import { NxMenuService }                from '../../../menu';
 import { NxDialogsService }             from '../../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 import { NxProcessService, Process }    from '../../../services/process.service';
 import { NxCloudApiService }            from '../../../services/nx-cloud-api';
 import { NxUriService }                 from '../../../services/uri.service';
+import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -87,25 +90,25 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                     const query = results.query;
 
                     this.content = {
-                        selectedSection: '', // updated by selectedSectionSubject
-                        base           : '/integrations/', // updated by route param
-                        level1         : [
+                        selectedSection : '', // updated by selectedSectionSubject
+                        base            : '/integrations/', // updated by route param
+                        level1          : [
                             {
-                                id    : '',
-                                label : '',
-                                path  : '',
-                                level3: [
+                                id     : '',
+                                label  : '',
+                                path   : '',
+                                level3 : [
                                     {
-                                        id   : 'how-it-works',
-                                        label: this.LANG['How it works']() || 'How it works',
-                                        // path : 'how-it-works',
-                                        path : '',
+                                        id    : 'how-it-works',
+                                        label : this.LANG['How it works']() || 'How it works',
+                                        // path  : 'how-it-works',
+                                        path  : '',
                                         query
                                     },
                                     {
-                                        id   : 'how-to-setup',
-                                        label: this.LANG['How to setup?']() || 'How to setup?',
-                                        path : 'how-to-setup',
+                                        id    : 'how-to-setup',
+                                        label : this.LANG['How to setup?']() || 'How to setup?',
+                                        path  : 'how-to-setup',
                                         query
                                     }]
                             }]
@@ -123,9 +126,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 if (this.plugin.pending || this.plugin.draft) {
                                     const ribbonActions: RibbonActionInput[] = [
                                         {
-                                            type: 'link',
-                                            text: this.LANG.ribbon.integration.backToEditText,
-                                            value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                            type  : 'link',
+                                            text  : this.LANG.ribbon.integration.backToEditText,
+                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         }
                                     ];
 
@@ -185,11 +188,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         disclaimer = disclaimer.replace(/{{INTEGRATION_COMPANY}}/g, this.plugin.information.companyName);
         disclaimer = disclaimer.replace(/{{INTEGRATION_PRIVACY_POLICY}}/g, this.plugin.information.companyPrivacyPolicyLink);
         const data: MessageParams = {
-            to     : this.plugin.information.companyName,
-            email  : this.plugin.support.supportEmail,
+            to      : this.plugin.information.companyName,
+            email   : this.plugin.support.supportEmail,
             disclaimer,
-            assetId: this.plugin.id,
-            asset  : this.plugin.information.name
+            assetId : this.plugin.id,
+            asset   : this.plugin.information.name
         };
         this.dialogs
             .message(this.CONFIG.dialogs.message.type.integration, data)

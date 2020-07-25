@@ -1,7 +1,8 @@
 import { Injectable }        from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
+
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
-import { HttpClient }        from '@angular/common/http';
 import { environment }       from '../../../environments/environment';
 import webAdminMenus         from '../../../customization/menu.json';
 

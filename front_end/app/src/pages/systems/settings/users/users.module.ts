@@ -1,21 +1,19 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-import { FormsModule }                       from '@angular/forms';
-import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
+import { NgModule }             from '@angular/core';
+import { CommonModule }         from '@angular/common';
+import { BrowserModule }        from '@angular/platform-browser';
+import { UpgradeModule }        from '@angular/upgrade/static';
+import { RouterModule }         from '@angular/router';
+import { FormsModule }          from '@angular/forms';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }      from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule }       from '../../../../directives/directives.module';
+import { ComponentsModule }       from '../../../../components/components.module';
 import { NxSystemUsersComponent } from './users.component';
 
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../../components/components.module';
-
-import { AngularSvgIconModule }      from 'angular-svg-icon';
-
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -27,15 +25,17 @@ import { AngularSvgIconModule }      from 'angular-svg-icon';
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
     ],
-    providers      : [],
-    declarations   : [
+    providers: [
+    ],
+    declarations: [
         NxSystemUsersComponent
     ],
-    bootstrap      : [],
+    bootstrap: [
+    ],
     entryComponents: [
         NxSystemUsersComponent
     ],
-    exports        : [
+    exports: [
         NxSystemUsersComponent
     ]
 })

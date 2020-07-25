@@ -3,15 +3,16 @@ import {
     LOCALE_ID, Input, OnChanges,
     SimpleChanges
 }                                    from '@angular/core';
-import { Subscription }              from 'rxjs';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { Watcher }                   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

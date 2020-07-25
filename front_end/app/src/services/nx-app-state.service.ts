@@ -1,6 +1,7 @@
 import { Injectable }                from '@angular/core';
-import { NxConfigService, IConfig }  from './nx-config';
 import { BehaviorSubject }           from 'rxjs';
+
+import { NxConfigService, IConfig }  from './nx-config';
 
 @Injectable({
     providedIn: 'root'

@@ -1,12 +1,13 @@
-import { Injectable }                          from '@angular/core';
-import { NxLanguageProviderService }           from './nx-language-provider';
-import { NxToastService }                      from '../dialogs/toast.service';
-import { NxCloudApiService }                   from './nx-cloud-api';
-import { NxConfigService, IConfig }            from './nx-config';
-import { NxSessionService }                    from './session.service';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
-import { Observable, from, Subject, defer } from 'rxjs';
-import { takeUntil, map, tap, retryWhen, catchError } from 'rxjs/operators';
+import { Injectable }                 from '@angular/core';
+import { Observable, Subject, defer } from 'rxjs';
+import { takeUntil }                  from 'rxjs/operators';
+
+import { NxLanguageProviderService } from './nx-language-provider';
+import { NxToastService }            from '../dialogs/toast.service';
+import { NxCloudApiService }         from './nx-cloud-api';
+import { NxConfigService, IConfig }  from './nx-config';
+import { NxSessionService }          from './session.service';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 
 type Handler = (...args: any[]) => any
 

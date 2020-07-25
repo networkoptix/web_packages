@@ -1,7 +1,8 @@
 import { ElementRef, Injectable }   from '@angular/core';
-import { NxHealthService }          from './health.service';
 import { BehaviorSubject }          from 'rxjs';
 import { debounceTime }             from 'rxjs/operators';
+
+import { NxHealthService }          from './health.service';
 import { NxRibbonService }          from '../../components/ribbon';
 import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
 import { NxConfigService, IConfig } from '../../services/nx-config';

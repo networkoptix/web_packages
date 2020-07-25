@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy }     from '@ngneat/until-destroy';
+
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
@@ -32,4 +33,4 @@ const mockTools = [
     new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
     new DevToolBlock('Cloud API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
     new DevToolBlock('Other Tools', '', '/developers/', 'servers.svg')
-]
+];

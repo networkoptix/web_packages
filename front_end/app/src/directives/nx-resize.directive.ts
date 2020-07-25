@@ -14,22 +14,22 @@ const observer = new ResizeObserver(entries => {
 
 @Directive({ selector: '[resize]' })
 export class NxResizeObserver implements OnDestroy {
-  @Output()
-  resize = new EventEmitter();
+    @Output()
+    resize = new EventEmitter();
 
-  constructor(private el: ElementRef) {
-      const target = this.el.nativeElement;
-      entriesMap.set(target, this);
-      observer.observe(target);
-  }
+    constructor(private el: ElementRef) {
+        const target = this.el.nativeElement;
+        entriesMap.set(target, this);
+        observer.observe(target);
+    }
 
-  _resizeCallback({ contentRect: { width, height } }) {
-      this.resize.emit({ width, height });
-  }
+    _resizeCallback({ contentRect: { width, height } }) {
+        this.resize.emit({ width, height });
+    }
 
-  ngOnDestroy() {
-      const target = this.el.nativeElement;
-      observer.unobserve(target);
-      entriesMap.delete(target);
-  }
+    ngOnDestroy() {
+        const target = this.el.nativeElement;
+        observer.unobserve(target);
+        entriesMap.delete(target);
+    }
 }

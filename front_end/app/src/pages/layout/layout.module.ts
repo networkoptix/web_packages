@@ -13,7 +13,7 @@ import { DirectivesModule }      from '../../directives/directives.module';
 // ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -22,15 +22,15 @@ import { DirectivesModule }      from '../../directives/directives.module';
         DirectivesModule
         // RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
-    declarations   : [
-        NxGridLayoutComponent,
+    providers : [],
+    declarations : [
+        NxGridLayoutComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
-        NxGridLayoutComponent,
+    bootstrap : [],
+    entryComponents : [
+        NxGridLayoutComponent
     ],
-    exports        : [
+    exports: [
         NxGridLayoutComponent
     ]
 })

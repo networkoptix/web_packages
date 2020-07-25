@@ -5,10 +5,13 @@ import {
 import {
     ActivatedRoute, ActivationEnd, Router
 }                                       from '@angular/router';
-import { isPlatformBrowser, Location }  from '@angular/common';
-import { filter }                       from 'rxjs/operators';
+import { isPlatformBrowser }            from '@angular/common';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorService }        from 'ngx-device-detector';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
+import { filter }                       from 'rxjs/operators';
+import { Subscription }                 from 'rxjs';
+
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../services/nx-config';
 import { NxAccountService }             from '../../services/account.service';
@@ -16,14 +19,12 @@ import { NxPageService }                from '../../services/page.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
-import { Subscription }                 from 'rxjs';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'download-component',
-    templateUrl: 'download.component.html',
-    styleUrls  : [ 'download.component.scss' ]
+    selector : 'download-component',
+    templateUrl : 'download.component.html',
+    styleUrls : ['download.component.scss']
 })
 
 export class DownloadComponent implements OnInit, OnDestroy {
@@ -59,12 +60,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
         this.canViewDownloads = false;
         this.tabsVisible = false;
-        this.downloads = {... this.CONFIG.downloads};
+        this.downloads = { ...this.CONFIG.downloads };
 
         this.downloadsData = {
-            version   : '',
-            installers: [ { platform: '', appType: '' } ],
-            releaseUrl: ''
+            version    : '',
+            installers : [{ platform: '', appType: '' }],
+            releaseUrl : ''
         };
 
         this.sortedPlatforms = [];
@@ -79,8 +80,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
-                private location: Location,
-                @Inject(PLATFORM_ID) private platformId: object,
+                @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.setupDefaults(configService);
 
@@ -130,9 +130,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
             this.platform = params.platform.toLowerCase();
 
             for (const mobile in this.downloads.mobile) {
-                if (this.downloads.mobile[ mobile ].os === this.activeOs) {
-                    if (this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link !== 'disabled') {
-                        document.location.href = this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link;
+                if (this.downloads.mobile[mobile].os === this.activeOs) {
+                    if (this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link !== 'disabled') {
+                        document.location.href = this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link;
                         return;
                     }
                     break;

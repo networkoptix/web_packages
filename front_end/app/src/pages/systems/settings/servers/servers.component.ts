@@ -1,20 +1,18 @@
 import { Component, OnDestroy, OnInit }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
-import { NxConfigService, IConfig }      from '../../../../services/nx-config';
-import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
-import { NxProcessService }              from '../../../../services/process.service';
-import { NxApplyService }                from '../../../../services/apply.service';
-import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
-import { NxSettingsService }             from '../settings.service';
-import { NxMenuService }                 from '../../../../menu';
+import { Location }                      from '@angular/common';
+import { UntilDestroy }                  from '@ngneat/until-destroy';
 import { Subscription }                  from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
-import { UntilDestroy }                  from '@ngneat/until-destroy';
+
+import { NxConfigService, IConfig }      from '../../../../services/nx-config';
+import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
+import { NxSettingsService }             from '../settings.service';
+import { NxMenuService }                 from '../../../../menu';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';
 import { NxUriService }                  from '../../../../services/uri.service';
-import { Location }                      from '@angular/common';
+import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -48,10 +46,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        private applyService: NxApplyService,
-        private processService: NxProcessService,
         private route: ActivatedRoute,
-        private dialogs: NxDialogsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private uriService: NxUriService,

@@ -1,6 +1,7 @@
 import { Component, Inject }         from '@angular/core';
 import { HttpClient }                from '@angular/common/http';
 import { filter }                    from 'rxjs/operators';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
@@ -12,8 +13,8 @@ import { Watcher }                   from '../../services/apply.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import { NxSystem }                  from '../../services/system.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { WINDOW }                    from '../../services/window-provider';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-debug',

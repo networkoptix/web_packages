@@ -2,23 +2,24 @@ import { Inject, OnDestroy, Injector }                    from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
+import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
+
+import { IParams }                                        from '../../components/search/search.component';
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
 import { NxDialogsService }                               from '../../dialogs/dialogs.service';
 import { NxSessionService }                               from '../session.service';
 import { NxApplyService }                                 from '../apply.service';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { WINDOW }                                         from '../window-provider';
 import { NxAppStateService }                              from '../nx-app-state.service';
 import { NxUriService }                                   from '../uri.service';
-import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
 import { NxPollService }                                  from '../poll.service';
 import { NxUtilsService }                                 from '../utils.service';
-import { IParams }                                        from '../../components/search/search.component';
-import { Account }                                        from './account';
 import { NxSystemAPIService, NxSystemAPI }                from '../system-api.service';
+import { Account }                                        from './account';
+import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
 
 /**
  * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.

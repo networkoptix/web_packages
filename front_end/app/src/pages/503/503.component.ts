@@ -3,11 +3,12 @@ import {
 }                                        from '@angular/core';
 import { Router }                        from '@angular/router';
 import { DomSanitizer, SafeHtml }        from '@angular/platform-browser';
+
 import { NxPageService }                 from '../../services/page.service';
 import { NxConfigService, IConfig }      from '../../services/nx-config';
 import { NxAppStateService }             from '../../services/nx-app-state.service';
-import { NxCloudApiService }   from '../../services/nx-cloud-api';
-import { NxBootstrapProvider } from '../../services/nx-bootstrap-provider';
+import { NxCloudApiService }             from '../../services/nx-cloud-api';
+import { NxBootstrapProvider }           from '../../services/nx-bootstrap-provider';
 
 @Component({
     selector  : 'nx-503',

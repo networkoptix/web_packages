@@ -1,7 +1,8 @@
 import { Component, Input }          from '@angular/core';
+
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-license-summary-component',

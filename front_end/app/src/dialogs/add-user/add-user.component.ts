@@ -1,9 +1,10 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject }             from 'rxjs';
+
 import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService, Process }            from '../../services/process.service';
-import { BehaviorSubject }             from 'rxjs';
+import { NxProcessService, Process }   from '../../services/process.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
@@ -46,9 +47,9 @@ export class AddUserModalContent {
     private getRoleDescription() {
         let description;
         if (this.selectedPermission.description) {
-            description =  this.selectedPermission.description;
+            description = this.selectedPermission.description;
         } else if (this.selectedPermission.userRoleId) {
-            description =  this.LANG.accessRoles.customRole.description;
+            description = this.LANG.accessRoles.customRole.description;
         } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
             description = this.LANG.accessRoles[this.selectedPermission.name].description;
         } else {

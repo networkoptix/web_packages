@@ -1,7 +1,8 @@
 import { Component, Input, Inject } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { DOCUMENT }                 from '@angular/common';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
-import { DOCUMENT } from '@angular/common';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -10,7 +11,7 @@ import { DOCUMENT } from '@angular/common';
     styleUrls   : ['get-started.component.scss']
 })
 export class NxGetStartedComponent {
-    @Input() heading: string = "Get Started!"
+    @Input() heading: string = 'Get Started!'
     @Input() blocks: GetStartedBlock[] = mockBlocks
 
     CONFIG: IConfig;
@@ -18,7 +19,7 @@ export class NxGetStartedComponent {
     constructor(configService: NxConfigService, @Inject(DOCUMENT) private document: Document) {
         this.CONFIG = configService.config;
     }
-    
+
     slideUp(wrapperId) {
         this.document.getElementById(wrapperId).classList.add('slide-up');
     }
@@ -35,7 +36,7 @@ export class GetStartedBlock {
         public link: string,
         public description: string,
         public icon: string
-    ){}
+    ) {}
 }
 
 const mockBlocks = [

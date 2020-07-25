@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
     selector    : 'nx-additional-systems-tile',

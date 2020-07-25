@@ -2,6 +2,7 @@ import {
     Component, Input, OnChanges,
     ViewEncapsulation
 }                                   from '@angular/core';
+
 import { NxHealthService }          from '../../health.service';
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../services/utils.service';
@@ -27,7 +28,7 @@ export class NxSingleEntityComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
-        this.copyParams = {...this.params};
+        this.copyParams = { ...this.params };
         if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
             this.copyParams.values.shift();
         }

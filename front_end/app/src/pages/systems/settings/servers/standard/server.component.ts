@@ -4,21 +4,25 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+import { finalize, map }             from 'rxjs/operators';
+import {
+    timer, combineLatest, SubscriptionLike
+}                                    from 'rxjs';
+
+import {
+    InfoBlockSection, InfoBlockLine
+}                                    from '../../../../../components/info-block/info-block.component';
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../../../menu';
-import { NxSettingsService }         from '../../settings.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { InfoBlockSection, InfoBlockLine }        from '../../../../../components/info-block/info-block.component';
-import { finalize, map }                          from 'rxjs/operators';
-import { timer, combineLatest, SubscriptionLike } from 'rxjs';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -85,7 +89,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         private processService: NxProcessService,
         private route: ActivatedRoute,
         private dialogs: NxDialogsService,
-        private settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private uriService: NxUriService,
         private toastService: NxToastService

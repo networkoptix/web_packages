@@ -6,18 +6,19 @@ import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService }       from 'ngx-store';
+import { of }                        from 'rxjs';
+
+import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxModalGenericComponent }   from '../generic/generic.component';
-import { NxSystem }                  from "../../services/system.service";
+import { NxSystem }                  from '../../services/system.service';
 import {
     NxSystemAPI, NxSystemAPIService
-}                                    from "../../services/system-api.service";
-import {of}                          from "rxjs";
-import {NxDialogsService} from "../dialogs.service";
+}                                    from '../../services/system-api.service';
+import { NxDialogsService }          from '../dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'cloud-connect-modal-content',
@@ -125,7 +126,7 @@ export class CloudConnectModalContent implements OnInit {
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 badUsername: () => {
-                    this.connectForm.controls.login_email.setErrors({no_user: true});
+                    this.connectForm.controls.login_email.setErrors({ no_user: true });
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 notAuthorized: () => {
@@ -154,17 +155,15 @@ export class CloudConnectModalContent implements OnInit {
                     .then((result) => {
                         this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.success(), 'success');
                         this.activeModal.close(result);
-
                     })
                     .catch((error) => {
                         this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
                         console.error(error);
-                    })
+                    });
             } else {
                 this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
                 console.error('Invalid response while connecting system to cloud.', result);
             }
-
         }, (error) => {
             if (error?.resultCode === 'portalError') {
                 // close dialog ... process will show toaster

@@ -4,8 +4,8 @@ import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 import { DirectivesModule }             from '../../directives/directives.module';
+import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 const appRoutes: Routes = [
     { path: 'browser', component: NonSupportedBrowserComponent }
@@ -19,12 +19,12 @@ const appRoutes: Routes = [
         DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers: [],
-    declarations: [
-        NonSupportedBrowserComponent,
+    providers : [],
+    declarations : [
+        NonSupportedBrowserComponent
     ],
-    bootstrap: [],
-    entryComponents:[
+    bootstrap : [],
+    entryComponents : [
         NonSupportedBrowserComponent
     ],
     exports: [

@@ -5,9 +5,9 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { Nx503Component }       from './503.component';
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { Nx503Component }       from './503.component';
 
 const appRoutes: Routes = [
     { path: '503', component: Nx503Component }
