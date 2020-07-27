@@ -263,9 +263,9 @@ Register And Activate Account
     Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
 
 Register and activate account with random email
-    [Arguments]    ${first name}    ${last name}    ${password}
+    [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
     ${email}=    Get Random Email    ${BASE EMAIL}
-    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    act=${act}
     [Return]    ${email}
 
 # Replaced with "Restore password using API"
@@ -813,6 +813,6 @@ Check System Text
     Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
     
 Get Lang List
-    ${lang file} =    Get File    customizations/${CUST LANGUAGE LIST}
+    ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json 
     [Return]    ${lang dict}
