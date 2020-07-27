@@ -317,7 +317,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
                 if (!this.system.isOnline) {
                     ribbonText = this.LANG.ribbon.systemOffline;
-                } else if (primary && primary.id === this.system.id) {
+                } else if (primary?.id === this.system.id) {
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
                     let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName;
                     if (secondaryName.startsWith('server at ')) {
@@ -327,14 +327,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
                                         <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                                     </div>`;
-                } else if (secondary && secondary.id === this.system.id) {
+                } else if (secondary?.id === this.system.id) {
                     this.mergeTargetSystem = this.systemsService.systems
                         .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
                     this.secondaryMerge = true;
                 } else if (mergeInProgress) {
                     ribbonText = this.LANG.ribbon.systemsMerging;
                 }
-                ribbonText && this.ribbonService.show(ribbonText, [], 'alert');
+
+                if (ribbonText) {
+                    this.ribbonService.show(ribbonText, [], 'alert');
+                }
 
                 setTimeout(() => {
                     this.setHeaderHeight();
