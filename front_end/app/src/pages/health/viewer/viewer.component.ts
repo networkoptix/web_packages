@@ -59,9 +59,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     @ViewChild('loadReport') loadReport: ElementRef;
     @ViewChild('loadReportMain') loadReportMain;
 
-    // systemLoaded: ElementRef;
-    // files = [];
-
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -151,7 +148,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.cleanUp();
     }
 
     setupReport(_data) {
@@ -455,10 +451,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     }
 
     fileDropped(files: NgxFileDropEntry[] | File) {
-        this.healthService.importedData = true;
-
-        // let fileEntry;
         let file;
+        this.healthService.importedData = true;
 
         if (files[0]?.fileEntry) {
             file = files[0].fileEntry as FileSystemFileEntry;
