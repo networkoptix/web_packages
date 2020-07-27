@@ -253,6 +253,7 @@ Check status
     Sleep    1
     Wait Until Element Is Not Visible    ${OFFLINE BADGE}
     ${results}    Execute Command    docker container stop 2server1
+    Close Connection
 
 Detailed info 1 server
     [Tags]   C70923    threaded
