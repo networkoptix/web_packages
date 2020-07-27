@@ -10,7 +10,7 @@ from dal import autocomplete
 
 from api.models import Account
 from cms.models import *
-from cms.controllers.modify_db import are_asset_datarecords_unique
+from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
 from cms.controllers.special_structures import SpecialStructures
 
 BYTES_TO_MEGABYTES = 1048576.0
@@ -214,19 +214,33 @@ class CustomContextForm(forms.Form):
                 widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
 
             validator = RegexValidator('')
-            if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
-                pattern = data_structure.meta_settings['regex']
-                if not pattern.endswith('$'):
-                    pattern = f'{pattern}$'
-                validator = RegexValidator(pattern)
+            pattern = None
+            char_limit = None
+            if data_structure.type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text]:
+                if 'regex' in data_structure.meta_settings:
+                    pattern = data_structure.meta_settings['regex']
+                    if not pattern.endswith('$'):
+                        pattern = f'{pattern}$'
+                    validator = RegexValidator(pattern)
+                if 'char_limit' in data_structure.meta_settings:
+                    char_limit = data_structure.meta_settings['char_limit']
+            elif data_structure.type == DataStructure.DATA_TYPES.guid:
+                pattern = GUID_REGEXP
 
-            self.fields[data_structure.name] = forms.CharField(required=False,
+            self.fields[data_structure.name] = forms.CharField(required=not data_structure.optional,
                                                                label=ds_label,
                                                                help_text=ds_description,
                                                                initial=record_value,
                                                                widget=widget_type,
                                                                disabled=disabled,
                                                                validators=[validator])
+            if pattern:
+                self.fields[data_structure.name].widget.attrs['pattern'] = pattern
+                pattern_description = f'Regex pattern: {pattern}'
+                self.fields[data_structure.name].widget.attrs['title'] = pattern_description
+                self.fields[data_structure.name].help_text += f'<br>{pattern_description}'
+            if char_limit:
+                self.fields[data_structure.name].widget.attrs['maxlength'] = char_limit
 
         if self.fields.get('language', None):
             fieldsets[None].append('language')
