@@ -1,0 +1,86 @@
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/typography';
+
+.activated-highlight {
+    background: $light16 !important;
+    color: $light1 !important;
+    &:hover {
+        cursor: unset;
+    }
+
+    & + div.left-menu-arrow > svg-icon > svg > g > polyline {
+        stroke: $light1 !important;
+    }
+}
+
+.down > svg-icon {
+    transform: rotate(0) !important;
+}
+
+.base-level {
+    @include typography.regular14;
+    position: relative;
+    height: 32px;
+    cursor: pointer;
+    color: $dark10;
+    user-select: none;
+    & > .menu-link {
+        height: 100% !important;
+        width: 100% !important;
+        display: flex;
+        align-items: center;
+    }
+    &:hover {
+        background: $light4;
+    }
+
+    & >.left-menu-arrow {
+            position: absolute;
+            top: 0;
+            left: 8px;
+            height: 32px !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg-icon {
+                transform: rotate(-90deg);
+            }
+    }
+}
+
+.menu-level-1 {
+    @extend .base-level;
+    @include typography.medium15;
+    & > .menu-link {
+        padding-left: 40px;
+        &.arrow-padding {
+            padding-left: 40px;
+        }
+    }
+    & > .left-menu-arrow {
+        padding-left: 8px;
+        &.arrow-padding {
+            padding-left: 40px;
+        }
+    }
+}
+
+.menu-level-2 {
+    @extend .base-level;
+    & > .menu-link {
+        padding-left: 48px;
+        &.arrow-padding {
+            padding-left: 80px;
+        }
+    }
+}
+
+.menu-level-3 {
+    @extend .base-level;
+    & > .menu-link {
+        padding-left: 88px;
+        &.arrow-padding {
+            padding-left: 120px;
+        }
+    }
+}

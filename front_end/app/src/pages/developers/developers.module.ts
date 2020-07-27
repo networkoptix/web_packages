@@ -11,6 +11,7 @@ import { MenuModule }                    from '../../menu';
 import { DirectivesModule }             from '../../directives/directives.module';
 import { NxAboutModule } from './about/about.module';
 import { NxAboutComponent } from './about/about.component';
+import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 
 const appRoutes: Routes = [
     {
@@ -23,6 +24,22 @@ const appRoutes: Routes = [
             {
                 path      : 'about',
                 component : NxAboutComponent
+            },
+            {
+                path      : 'knowledge-base',
+                component : NxKnowledgeBaseComponent,
+                children  : [
+                    {
+                        path      : ':level1',
+                        component : NxKnowledgeBaseComponent,
+                        children  : [
+                            {
+                                path      : ':level2',
+                                component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     }
@@ -43,13 +60,16 @@ const appRoutes: Routes = [
     ],
     providers : [],
     declarations : [
+        NxKnowledgeBaseComponent
     ],
     bootstrap : [],
     entryComponents : [
-        NxAboutComponent
+        NxAboutComponent,
+        NxKnowledgeBaseComponent
     ],
     exports: [
-        NxAboutComponent
+        NxAboutComponent,
+        NxKnowledgeBaseComponent
     ]
 })
 export class NxDevelopersModule {}

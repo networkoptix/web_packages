@@ -53,6 +53,7 @@ import { NxTabsComponent } from './header/tabs/tabs.component';
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
 import { NxInfoBlockComponent } from './info-block/info-block.component';
+import { NxLeftMenuComponent } from './left-menu/left-menu.component';
 
 @NgModule({
     imports: [
@@ -113,7 +114,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxAdditionalSystemsTileComponent,
         NxTabsComponent,
         NxNavDropdownComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     entryComponents: [
         NxThreeDotDropdown,
@@ -161,7 +163,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxAdditionalSystemsTileComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     providers: [
         NxProcessButtonComponent,
@@ -195,7 +198,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         ToastsContainer,
         NxInfoBlockComponent,
         NxRibbonService,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     exports: [
         NxThreeDotDropdown,
@@ -244,7 +248,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxNavDropdownComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ]
 })
 export class ComponentsModule {
