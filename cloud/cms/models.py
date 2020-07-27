@@ -1229,7 +1229,7 @@ class MenuNode(models.Model):
                     if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
                             (not node.condition or global_contexts_dict.get(node.condition, False)):
                         node_list.append(node.process_node(
-                            cloud_portal_asset, customization, global_contexts_dict, depth + 1
+                            cloud_portal_asset, customization, global_contexts_dict, depth + 1, max_depth
                         ))
                 if node_list:
                     node_structure['nodes'] = node_list
