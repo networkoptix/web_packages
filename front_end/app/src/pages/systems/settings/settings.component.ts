@@ -310,37 +310,32 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.checkMergeSubscription = this.system.checkMergeStatus()
             .subscribe(res => {
+                this.secondaryMerge = false;
+                this.ribbonService.hide();
+                let ribbonText: string;
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
                 if (!this.system.isOnline) {
-                    this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
+                    ribbonText = this.LANG.ribbon.systemOffline;
                 } else if (primary && primary.id === this.system.id) {
-                    this.secondaryMerge = false;
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    let secondaryName = secondarySystem?.name ||
-                        secondary?.name || this.LANG.system.mergeUnknownName;
-                    if (secondaryName.indexOf('server at ') === 0) {
+                    let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName;
+                    if (secondaryName.startsWith('server at ')) {
                         secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
                     }
-                    const template =
-                        `<div class="my-1">
-                            <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
-                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
-                        </div>`;
-                    this.ribbonService.hide();
-                    this.ribbonService.show(template, [], 'alert');
+                    ribbonText = `<div class="my-1">
+                                        <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                                        <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
+                                    </div>`;
                 } else if (secondary && secondary.id === this.system.id) {
                     this.mergeTargetSystem = this.systemsService.systems
                         .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
                     this.secondaryMerge = true;
                 } else if (mergeInProgress) {
-                    this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, [], 'alert');
-                } else {
-                    this.secondaryMerge = false;
-                    this.ribbonService.hide();
+                    ribbonText = this.LANG.ribbon.systemsMerging;
                 }
+                ribbonText && this.ribbonService.show(ribbonText, [], 'alert');
+
                 setTimeout(() => {
                     this.setHeaderHeight();
                 });
