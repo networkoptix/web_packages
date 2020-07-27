@@ -132,7 +132,8 @@ export class NxSystemLicensesComponent implements OnInit {
             if (item.info.ordertype && item.info.ordertype === 'saas') {
                 item.info.type = this.classMap[item.info.class];
             } else {
-                if (item.info.expiration) {
+                // this is complicated as for now it matches desktop client. It will change in 4.2
+                if (item.info.expiration && item.info.class === 'videowall') {
                     item.info.type = this.LANG.license.info.time;
                 } else {
                     item.info.type = this.classMap[item.info.class];
