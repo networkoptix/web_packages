@@ -5,6 +5,7 @@ import { UpgradeModule }                 from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
+import { AngularSvgIconModule }        from 'angular-svg-icon';
 import { ComponentsModule }              from '../../components/components.module';
 
 import { MenuModule }                    from '../../menu';
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         FormsModule,
         NxAboutModule,
+        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         MenuModule
     ],

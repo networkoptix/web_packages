@@ -321,6 +321,36 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
     }
 
+    &.side-header {
+        .card--header {
+            & .heading-icon {
+                height: 48px;
+            }
+            & p {
+                @include typography.medium13;
+                color: theme_variables.$dark15;
+                opacity: 0.4;
+                margin-bottom: 6px;
+            }
+            & h3 {
+                @include typography.medium17;
+            } 
+        }
+        @include media-breakpoint-up(md) {
+            .card--header {
+                align-items: start;
+                min-width: 216px;
+                border-bottom: unset;
+                border-right: 1px solid #EBEFF1;
+                & .heading-icon {
+                    height: 120px;
+                }
+            }
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
     &.slim-header {
         .card--header {
             height  : auto;

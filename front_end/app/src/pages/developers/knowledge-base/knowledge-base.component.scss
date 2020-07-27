@@ -1,4 +1,5 @@
 @use '../../../../styles/theme_variables' as *;
+@use '../../../styles/typography';
 @use '~bootstrap/scss/bootstrap';
 
 .page-wrapper {
@@ -15,4 +16,9 @@
     @media (min-width : 1920px) {
         grid-template-columns : $grid-super-wide-menu-width $grid-super-wide-content-width;
     }
+}
+
+.knowledge-base {
+    max-width: 628px;
+    margin-bottom: 16px;
 }
