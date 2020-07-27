@@ -786,7 +786,7 @@ Move focus and check element
     Click Element    ${new focus}
     Wait Until Element is Visible    ${element}
 
-Check New Password Outline
+Check New Password Outline and Error Message
     [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
     Click Element    ${new focus} 
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}

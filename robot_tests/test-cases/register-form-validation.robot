@@ -144,7 +144,7 @@ Test Register Invalid
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
     Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check New Password Outline    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword   
+    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword   
     Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
     Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
     Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
