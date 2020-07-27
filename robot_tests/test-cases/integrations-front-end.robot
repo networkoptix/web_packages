@@ -1,7 +1,5 @@
 *** Settings ***
 Resource          ../resource.robot
-Resource          ../APIresource.robot
-Resource          ../variables.robot
 Resource          ../variables-env.robot
 
 Suite Setup       Open Browser and go to URL    ${ENV}
