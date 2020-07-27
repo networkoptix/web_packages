@@ -97,7 +97,7 @@ Test Passwords Invalid
     Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
     Input Text    ${LOCAL USER PASSWORD INPUT}    ${new pw}
     Run Keyword If    '''${new pw}'''!='''${EMPTY}'''     Check Password Badge    ${new pw}    //label[@for="newPassword"]  
-    Check New Password Outline    ${new pw}    //label[@for="newPassword"]    ${LOCAL USER PASSWORD INPUT}    newPassword
+    Check New Password Outline and Error Message    ${new pw}    //label[@for="newPassword"]    ${LOCAL USER PASSWORD INPUT}    newPassword
     Click Button    //form[@name="changePasswordForm"]//button[text()="Cancel"]
     
 Restart
