@@ -50,7 +50,8 @@ ${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 ...    ${INTEGRATION DEVELOPER LABEL}
 ...    ${INTEGRATION DEVELOPER COMPANY LINK}
 ...    ${INTEGRATION SUPPORT LABEL}
-...    ${INTEGRATION SUPPORT EMAIL}
+# Removed temporarily as there isn't a good way to target it
+#...    ${INTEGRATION SUPPORT EMAIL}
 ...    ${INTEGRATION HOW IT WORKS HEADER}
 *** Keywords ***
 Open Browser and Go To Integrations Page Anonymous
@@ -213,7 +214,7 @@ Integration Store Search
     
     ${initial number of tiles}=   Get Number of Integration Tiles
     ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
-    Should be equal as numbers    ${number of filters}    9
+    Should be equal as numbers    ${number of filters}    8
 
     Log    Step 2
     Validate changes when input text into search field    v

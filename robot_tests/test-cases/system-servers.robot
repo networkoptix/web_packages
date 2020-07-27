@@ -223,7 +223,7 @@ Change port
 # I can validate that the api fails correctly but I can't make it work either.
 # It gives a 200 but does not update. It works correctly in postman.
 Admin cannot change port via API
-    [Tags]    C70975    threaded
+    [Tags]    C70927    threaded
     [Setup]    Server Settings Test Setup    ${EMAIL ADMIN}    ${AUTO TESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page

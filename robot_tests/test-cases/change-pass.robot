@@ -125,7 +125,7 @@ more than 255 symbols can be entered in new password field and then are cut to 2
     Input Text    ${NEW PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${CURRENT PASSWORD INPUT}    ${255CHARS}
     Textfield Should Contain    ${NEW PASSWORD INPUT}    ${255CHARS}
-    Click Button    ${CANCEL CHANGES BUTTON}
+    Click Button    ${SYSTEM CANCEL}
 
 pressing Enter key saves data
     Log In To Change Password Page
@@ -143,8 +143,8 @@ pressing Tab key moves focus to the next element
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Press Keys    ${NEW PASSWORD INPUT}    TAB
     Element Should Be Focused    ${CHANGE PASSWORD BUTTON}
-    Click Button    ${CANCEL CHANGES BUTTON}
-
+    Click Button    ${SYSTEM CANCEL}
+    
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C41576
     Log In To Change Password Page
