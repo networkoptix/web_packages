@@ -756,6 +756,9 @@
         },
         "viewingReport" : "You are viewing an imported report"
     },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System %SYSTEMNAME%"
+    },
     "settingsConfig": {
         "additionalLocalFsTypes": "Additional local FS types",
         "autoDiscoveryResponseEnabled": "Auto discovery response",

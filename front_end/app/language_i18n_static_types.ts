@@ -42,6 +42,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    headerLabels:          HeaderLabels;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -427,6 +428,10 @@ export interface ReleasesTypes {
     rc:       any;
     release:  any;
     releases: any;
+}
+
+export interface HeaderLabels {
+    healthReportForSystem: any;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -931,6 +936,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
@@ -1277,6 +1283,9 @@ const typeMap: any = {
         { json: "rc", js: "rc", typ: "any" },
         { json: "release", js: "release", typ: "any" },
         { json: "releases", js: "releases", typ: "any" },
+    ], false),
+    "HeaderLabels": o([
+        { json: "healthReportForSystem", js: "healthReportForSystem", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "any" },

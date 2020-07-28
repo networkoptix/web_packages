@@ -17,7 +17,7 @@ import { NxHealthService }                 from '../health.service';
 import { LanguageI18NStaticTypes }         from '../../../../language_i18n_static_types';
 import { of, Subscription, throwError }    from 'rxjs';
 import { flatMap }                         from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { UntilDestroy }                    from '@ngneat/until-destroy';
 import { NxSystem, NxSystemService }       from '../../../services/system.service';
 import { NxUtilsService }                  from '../../../services/utils.service';
 import { NxAppStateService }               from '../../../services/nx-app-state.service';
@@ -25,6 +25,8 @@ import { NxSystemAPI, NxSystemAPIService } from '../../../services/system-api.se
 import { NxScrollMechanicsService }        from '../../../services/scroll-mechanics.service';
 import { WINDOW }                          from '../../../services/window-provider';
 import { NxAppSourceService }              from '../../../services/nx-app-source.service';
+import { NxHeaderService }                 from '../../../services/nx-header.service';
+import { translate }                       from '@angular/localize/src/translate';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -61,7 +63,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
         private systemService: NxSystemService,
@@ -76,6 +78,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         private breakpointObserver: BreakpointObserver,
         private deviceService: DeviceDetectorService,
         private sourceService: NxAppSourceService,
+        private headerService: NxHeaderService,
         public healthService: NxHealthService,
         @Inject(WINDOW) private window: any,
         @Inject(DOCUMENT) private document: any
@@ -471,6 +474,33 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     .catch(error => {
                         console.error(error);
                     });
+
+                const systemName = this.LANG.headerLabels.healthReportForSystem().replace('%SYSTEMNAME%', data.system || '');
+                this.headerService.currentLocation = {
+                    isSystem   : false,
+                    parentNode : {
+                        authentication : 'Both',
+                        display_name   : 'Services',
+                        icon           : 'services.svg',
+                        name           : 'Services',
+                        new_window     : false,
+                        nodes          : [
+                            {
+                                authentication : 'Both',
+                                display_name   : systemName,
+                                icon           : '',
+                                name           : 'ReportViewer',
+                                new_window     : false,
+                                nodes          : undefined,
+                                order          : 0,
+                                url            : 'report_viewer'
+                            }
+                        ]
+                    },
+                    order : 1,
+                    url   : '',
+                    path  : 'report_viewer'
+                };
 
                 let time = '-';
                 if (data.time) {
