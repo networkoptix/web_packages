@@ -1,3 +1,4 @@
+<!-- Templates -->
 <ng-template #toolBlock let-tool="tool">
     <div class="card hoverable tool-card" [routerLink]="tool.link">
         <header>
@@ -10,11 +11,16 @@
     </div>
 </ng-template>
 
-<section class="dev-tools">
-    <h2 [routerLink]="devToolsLink" class="heading-link">{{devToolsHeading}}</h2>
-    <div class="detail-blocks">
+<ng-template #blocks let-noMargin="noMargin">
+    <div class="detail-blocks" [ngClass]="noMargin ? '' : 'stand-alone-blocks'">
         <ng-container *ngFor="let tool of devTools">
             <ng-container *ngTemplateOutlet="toolBlock;context{tool:tool}"></ng-container>
         </ng-container>
     </div>
+</ng-template>
+<!-- End of Templates -->
+
+<section *ngIf="devToolsHeading;else blocks" class="dev-tools">
+    <h2 [routerLink]="devToolsLink" class="heading-link">{{devToolsHeading}}</h2>
+    <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
 </section>

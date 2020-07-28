@@ -13,6 +13,7 @@ import { NxAboutModule }            from './about/about.module';
 import { MenuModule }               from '../../menu';
 import { NxAboutComponent }         from './about/about.component';
 import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
 
 const appRoutes: Routes = [
     {
@@ -37,6 +38,22 @@ const appRoutes: Routes = [
                             {
                                 path      : ':level2',
                                 component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                path      : 'dev-tools',
+                component : NxDevToolsComponent,
+                children  : [
+                    {
+                        path      : ':level1',
+                        component : NxDevToolsComponent,
+                        children  : [
+                            {
+                                path      : ':level2',
+                                component : NxDevToolsComponent
                             }
                         ]
                     }
