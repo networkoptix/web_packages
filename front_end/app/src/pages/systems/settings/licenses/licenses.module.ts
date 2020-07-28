@@ -5,15 +5,16 @@ import { UpgradeModule }             from '@angular/upgrade/static';
 import { AngularSvgIconModule }      from 'angular-svg-icon';
 import { RouterModule }              from '@angular/router';
 import { FormsModule }               from '@angular/forms';
-import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
-import { DirectivesModule }          from '../../../../directives/directives.module';
-import { TranslateModule }           from '@ngx-translate/core';
-import { ComponentsModule }          from '../../../../components/components.module';
 import { OverlayModule }             from '@angular/cdk/overlay';
+import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }           from '@ngx-translate/core';
+import { NgxMaskModule }             from 'ngx-mask';
+
+import { DirectivesModule }          from '../../../../directives/directives.module';
+import { ComponentsModule }          from '../../../../components/components.module';
 import { NxLicenseNewComponent }     from './new/new.component';
 import { NxSystemLicensesComponent } from './licenses.component';
 import { NxLicenseTrialComponent }   from './trial/trial.component';
-import { NgxMaskModule }             from 'ngx-mask';
 import { NxLicenseDetailComponent }  from './license-details/license.component';
 import { NxLicenseSummaryComponent } from './summary/summary.component';
 
@@ -32,7 +33,8 @@ import { NxLicenseSummaryComponent } from './summary/summary.component';
         OverlayModule,
         NgxMaskModule
     ],
-    providers       : [],
+    providers: [
+    ],
     declarations: [
         NxLicenseNewComponent,
         NxLicenseTrialComponent,
@@ -40,11 +42,12 @@ import { NxLicenseSummaryComponent } from './summary/summary.component';
         NxLicenseDetailComponent,
         NxLicenseSummaryComponent
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [
+    ],
+    entryComponents: [
         NxSystemLicensesComponent
     ],
-    exports         : [
+    exports: [
         NxSystemLicensesComponent
     ]
 })

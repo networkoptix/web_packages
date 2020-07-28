@@ -6,13 +6,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 
-import { NxSandboxComponent }   from './sandbox.component';
 import { ComponentsModule }     from '../../components/components.module';
 import { DialogsModule }        from '../../dialogs/dialogs.module';
 import { PipesModule }          from '../../pipes/pipes.module';
-import { AuthGuard }            from '../../routeGuards';
 import { NxGridLayoutModule }   from '../layout/layout.module';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { AuthGuard }            from '../../routeGuards';
+import { NxSandboxComponent }   from './sandbox.component';
 
 const appRoutes: Routes = [
     {
@@ -34,15 +34,17 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         NxGridLayoutModule
     ],
-    providers      : [],
-    declarations   : [
+    providers: [
+    ],
+    declarations: [
         NxSandboxComponent
     ],
-    bootstrap      : [],
+    bootstrap: [
+    ],
     entryComponents: [
         NxSandboxComponent
     ],
-    exports        : [
+    exports: [
         NxSandboxComponent
     ]
 })

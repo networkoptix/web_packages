@@ -7,6 +7,10 @@ import {
 import { ActivatedRoute }            from '@angular/router';
 import { NgForm }                    from '@angular/forms';
 import { LocalStorageService }       from 'ngx-store';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { first }                     from 'rxjs/operators';
+
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxAccountService, Account } from '../../../services/account.service';
@@ -18,9 +22,6 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { Subscription }              from 'rxjs';
-import { first }                     from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -168,7 +169,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
 
     deleteUser() {
         this.dialogs.deleteCloudUser(this.cloudApiService)
-            .then(res => {
+            .then((res: any) => {
                 if (res && res.resultCode === 'ok') {
                     this.accountService.logout();
                 }

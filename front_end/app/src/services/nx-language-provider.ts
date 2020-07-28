@@ -1,9 +1,10 @@
 import { Injectable }              from '@angular/core';
-import { HttpClient }        from '@angular/common/http';
+import { HttpClient }              from '@angular/common/http';
 import { TranslateService }        from '@ngx-translate/core';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { BehaviorSubject }         from 'rxjs';
+
 import { NxCloudApiService }       from './nx-cloud-api';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'

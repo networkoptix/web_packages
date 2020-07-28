@@ -1,4 +1,5 @@
 import { Component, Input }         from '@angular/core';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({

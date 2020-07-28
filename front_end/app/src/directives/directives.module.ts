@@ -1,4 +1,6 @@
 import { NgModule }                   from '@angular/core';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
+
 import { NxArrowNavDirective }        from './nx-arrow-nav';
 import { NxClickElsewhereDirective }  from './nx-click-elsewhere';
 import { NxFocusMeDirective }         from './nx-focus-me';
@@ -9,10 +11,9 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
 import { NxEditableDirective }        from './nx-editable.directive';
 import { NxResizeObserver }           from './nx-resize.directive';
 import { NxAddSvgSrc }                from './add-data.directive';
-import { AngularSvgIconModule }       from 'angular-svg-icon';
 
 @NgModule({
-    imports     : [
+    imports: [
         AngularSvgIconModule.forRoot()
     ],
     declarations: [
@@ -27,8 +28,8 @@ import { AngularSvgIconModule }       from 'angular-svg-icon';
         NxResizeObserver,
         NxAddSvgSrc
     ],
-    entryComponents: [],
-    exports        : [
+    entryComponents : [],
+    exports         : [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,

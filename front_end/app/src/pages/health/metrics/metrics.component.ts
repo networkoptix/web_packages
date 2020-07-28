@@ -2,22 +2,22 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                 from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location }               from '@angular/common';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { Location }                  from '@angular/common';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { of, SubscriptionLike }      from 'rxjs';
+import { delay, throttleTime }       from 'rxjs/operators';
+
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxAccountService }          from '../../../services/account.service';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxMenuService }             from '../../../menu';
 import { NxHealthService }           from '../health.service';
 import { NxHealthLayoutService }     from '../health-layout.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { of, SubscriptionLike }      from 'rxjs';
-import { delay, throttleTime }       from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxSystem }                  from '../../../services/system.service';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: string;

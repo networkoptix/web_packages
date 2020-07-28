@@ -3,6 +3,9 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { LocalStorageService }       from 'ngx-store';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
@@ -13,8 +16,6 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../menu';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { Subscription }              from 'rxjs';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

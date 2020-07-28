@@ -16,8 +16,8 @@
           {
             "name": "Developer Tools",
             "display_name": "Developer Tools",
-            "url": "",
-            "new_window": false,
+            "url": "https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools",
+            "new_window": true,
             "icon": "",
             "authentication": "both",
             "order": 0,
@@ -26,8 +26,8 @@
           {
             "name": "Developers Support",
             "display_name": "Developers Support",
-            "url": "",
-            "new_window": false,
+            "url": "https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum",
+            "new_window": true,
             "icon": "",
             "authentication": "both",
             "order": 1,
@@ -36,8 +36,8 @@
           {
             "name": "API Documentation",
             "display_name": "API Documentation",
-            "url": "",
-            "new_window": false,
+            "url": "https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API",
+            "new_window": true,
             "icon": "",
             "authentication": "both",
             "order": 2,
@@ -51,7 +51,7 @@
             "icon": "",
             "authentication": "both",
             "order": 3,
-            "enabled": true
+            "enabled": false
           }
         ]
       },
@@ -68,7 +68,7 @@
           {
             "name": "Downloads",
             "display_name": "Downloads",
-            "url": "",
+            "url": "/download",
             "new_window": false,
             "icon": "",
             "authentication": "both",
@@ -78,7 +78,7 @@
           {
             "name": "Supported Devices",
             "display_name": "Supported Devices",
-            "url": "",
+            "url": "/ipvd",
             "new_window": false,
             "icon": "",
             "authentication": "both",
@@ -110,18 +110,18 @@
           {
             "name": "Hardware Calculator",
             "display_name": "Hardware Calculator",
-            "url": "",
-            "new_window": false,
+            "url": "http://networkoptix.com/calculator/",
+            "new_window": true,
             "icon": "",
             "authentication": "both",
             "order": 0,
-            "enabled": true
+            "enabled": false
           },
           {
             "name": "Support",
             "display_name": "Support",
-            "url": "",
-            "new_window": false,
+            "url": "%SUPPORT_LINK%",
+            "new_window": true,
             "icon": "",
             "authentication": "both",
             "order": 1,
@@ -130,7 +130,7 @@
           {
             "name": "Terms",
             "display_name": "Terms",
-            "url": "",
+            "url": "/content/eula",
             "new_window": false,
             "icon": "",
             "authentication": "both",
@@ -140,7 +140,7 @@
           {
             "name": "Privacy Policy",
             "display_name": "Privacy Policy",
-            "url": "",
+            "url": "%PRIVACY_LINK%",
             "new_window": false,
             "icon": "",
             "authentication": "both",

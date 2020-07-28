@@ -2,10 +2,11 @@ import {
     Component, Input, OnInit,
     OnChanges, SimpleChanges, OnDestroy
 } from '@angular/core';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { SubscriptionLike }         from 'rxjs';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
-import { SubscriptionLike }         from 'rxjs';
-import { UntilDestroy }             from '@ngneat/until-destroy';
 
 /* Usage
  */

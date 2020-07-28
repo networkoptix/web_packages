@@ -5,12 +5,13 @@ import { UpgradeModule }              from '@angular/upgrade/static';
 import { RouterModule, Routes }       from '@angular/router';
 import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }            from '@ngx-translate/core';
+
 import { ComponentsModule }           from '../../../components/components.module';
 import { NxNoSystemsComponent }       from '../no-systems/no-systems.component';
-import { MenuModule }                 from '../../../menu';
 import {
     ApplyGuard, AuthGuard, SystemGuard
 }                                     from '../../../routeGuards';
+import { MenuModule }                 from '../../../menu';
 import {
     NxSystemSettingsComponent,
     NxSystemAdminModule, NxSystemAdminComponent,
@@ -106,8 +107,9 @@ export const cloudSettingsRoutes: Routes = [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [
+    ],
+    entryComponents: [
         NxSystemSettingsComponent
     ],
     exports: [

@@ -2,6 +2,7 @@ import {
     Component, OnInit, Input,
     ViewEncapsulation
 }                                   from '@angular/core';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { Process }                  from '../../services/process.service';
 

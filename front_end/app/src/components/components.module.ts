@@ -4,6 +4,7 @@ import { TranslateModule }                    from '@ngx-translate/core';
 import { RouterModule }                       from '@angular/router';
 import { FormsModule }                        from '@angular/forms';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
+import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { DirectivesModule }                   from '../directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
@@ -21,7 +22,9 @@ import { NxVendorListComponent }              from './vendor-list/vendor-list.co
 import { NxSearchComponent }                  from './search/search.component';
 import { NxFooterComponent }                  from './footer/footer.component';
 import { NxGenericDropdown }                  from './dropdowns/generic/dropdown.component';
-import { NxLanguageDropdown, NxHeaderLanguageDropdown }                 from './dropdowns/language/language.component';
+import {
+    NxLanguageDropdown, NxHeaderLanguageDropdown
+}                                             from './dropdowns/language/language.component';
 import { NxAccountSettingsDropdown }          from './dropdowns/account-settings/account-settings.component';
 import { NxActiveSystemDropdown }             from './dropdowns/active-system/active-system.component';
 import { NxSystemsDropdown }                  from './dropdowns/systems/systems.component';
@@ -40,19 +43,19 @@ import { NxApplyComponent }                   from './apply/apply.component';
 import { NxPreLoaderComponent }               from './placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderComponent }         from './placeholders/page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
-import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
-import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-cancel-button.component';
-import { NxDropMenu } from './dropdowns/drop-menu/drop-menu.component';
-import { NxHeaderMainButtonComponent } from './header/main-button/main-button.component';
-import { NxSystemTileComponent } from './dropdowns/drop-menu/system-tile/system-tile.component';
-import { NxNavigiationTileComponent } from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
-import { NxTabsComponent } from './header/tabs/tabs.component';
-import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
-import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
-import { NxInfoBlockComponent } from './info-block/info-block.component';
+import { NxLeftMenuComponent }                from './left-menu/left-menu.component';
+import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
+import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
+import { NxHeaderMainButtonComponent }        from './header/main-button/main-button.component';
+import { NxSystemTileComponent }              from './dropdowns/drop-menu/system-tile/system-tile.component';
+import { NxNavigiationTileComponent }         from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxAdditionalSystemsTileComponent }   from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxTabsComponent }                    from './header/tabs/tabs.component';
+import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dropdown.component';
+import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
+import { NxInfoBlockComponent }               from './info-block/info-block.component';
 
 @NgModule({
     imports: [
@@ -113,7 +116,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxAdditionalSystemsTileComponent,
         NxTabsComponent,
         NxNavDropdownComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     entryComponents: [
         NxThreeDotDropdown,
@@ -161,7 +165,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxAdditionalSystemsTileComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     providers: [
         NxProcessButtonComponent,
@@ -195,7 +200,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         ToastsContainer,
         NxInfoBlockComponent,
         NxRibbonService,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ],
     exports: [
         NxThreeDotDropdown,
@@ -244,7 +250,8 @@ import { NxInfoBlockComponent } from './info-block/info-block.component';
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxNavDropdownComponent,
-        NxOverlayModalComponent
+        NxOverlayModalComponent,
+        NxLeftMenuComponent
     ]
 })
 export class ComponentsModule {

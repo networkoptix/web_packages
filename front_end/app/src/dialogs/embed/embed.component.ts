@@ -3,12 +3,13 @@ import {
     ViewChild, OnDestroy, AfterViewInit
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { Subscription }              from 'rxjs';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { IParams }                   from '../../components/search/search.component';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -36,15 +37,15 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         public activeModal: NgbActiveModal
     ) {
         this.params = {
-            authString: '',
-            nocameras : false,
-            noheader  : false,
-            nocontrols: false
+            authString : '',
+            nocameras  : false,
+            noheader   : false,
+            nocontrols : false
         };
 
         this.auth = {
-            email   : '',
-            password: ''
+            email    : '',
+            password : ''
         };
 
         this.CONFIG = configService.getConfig();

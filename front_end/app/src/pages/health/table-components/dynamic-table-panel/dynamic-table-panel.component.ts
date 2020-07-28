@@ -3,11 +3,14 @@ import {
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
 }                                   from '@angular/core';
+
+import {
+    InfoBlockSection, InfoBlockSections, InfoBlockLine
+}                                   from '../../../../components/info-block/info-block.component';
 import { NxHealthService }          from '../../health.service';
 import { NxHealthLayoutService }    from '../../health-layout.service';
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { InfoBlockSection, InfoBlockSections, InfoBlockLine } from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector    : 'nx-dynamic-table-panel-component',
@@ -57,7 +60,7 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
                                 activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
                             );
                         });
-						const maxParamWidthPercentage = 58;
+                        const maxParamWidthPercentage = 58;
 
                         return new InfoBlockSection(lines, description || name || paramGroupId, maxParamWidthPercentage);
                     });

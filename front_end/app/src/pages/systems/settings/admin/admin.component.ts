@@ -4,24 +4,25 @@ import {
 import {
     Params, Router, ActivatedRoute
 }                                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { auditTime }                 from 'rxjs/operators';
+
+import { NxRibbonService }           from '../../../../components/ribbon';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../services/process.service';
 import { NxSystem, NxSystemUser }    from '../../../../services/system.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
-import { Subscription }              from 'rxjs';
-import { auditTime }                 from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxSystemsService }          from '../../../../services/systems.service';
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
 import { NxUriService }              from '../../../../services/uri.service';
-import { NxRibbonService }           from '../../../../components/ribbon';
 import { NxToastService }            from '../../../../dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -318,7 +319,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.settingsService.system = this.system;
         return this.dialogs
             .merge(this.system, this.systems)
-            .then((mergeInfo) => {
+            .then((mergeInfo: any) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
                     const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;

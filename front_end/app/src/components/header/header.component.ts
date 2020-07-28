@@ -1,17 +1,19 @@
 import {
     Component, OnDestroy,
-    OnInit, Renderer2, ViewEncapsulation, Inject
+    OnInit, Renderer2, Inject
 }                                    from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
 }                                    from '@angular/router';
 import { LocalStorageService }       from 'ngx-store';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
-    Subscription, timer, BehaviorSubject, combineLatest, fromEvent, Subject, SubscriptionLike
+    Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
 } from 'rxjs';
+import { map, startWith }            from 'rxjs/operators';
+
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAppStateService }         from '../../services/nx-app-state.service';
@@ -21,9 +23,8 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { NxHeaderService }           from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenusService }            from '../../services/menus.service';
-import { map, startWith }            from 'rxjs/operators';
 import { WINDOW }                    from '../../services/window-provider';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { environment }               from '../../../environments/environment';
 
 class CombinedWidths {

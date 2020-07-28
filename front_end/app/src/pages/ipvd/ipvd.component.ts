@@ -3,16 +3,18 @@ import {
     Component, ElementRef, Inject,
     OnInit, PLATFORM_ID, ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import {
-    isPlatformBrowser, Location
-}                                    from '@angular/common';
-import {
-    BreakpointObserver, BreakpointState
-}                                    from '@angular/cdk/layout';
+}                                              from '@angular/core';
+import { isPlatformBrowser, Location }         from '@angular/common';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import {
     ActivatedRoute, NavigationEnd, Router
-}                                    from '@angular/router';
+}                                              from '@angular/router';
+import { SubscriptionLike }                    from 'rxjs';
+import { isArray }                             from 'rxjs/internal-compatibility';
+import { delay }                               from 'rxjs/operators';
+import { UntilDestroy }                        from '@ngneat/until-destroy';
+
+import { MessageParams }             from '../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
@@ -21,14 +23,9 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUriService }              from '../../services/uri.service';
 import { IpvdSearchService }         from './ipvd-search.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { MessageParams }             from '../../dialogs/message/message.component';
-import { SubscriptionLike }          from 'rxjs';
-import { isArray }                   from 'rxjs/internal-compatibility';
-import { delay }                     from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -238,7 +235,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         if (camera) {
             const queryParams: Params = {};
-            queryParams['vendors'] = camera.vendor;
+            queryParams.vendors = camera.vendor;
             this.uri
                 .updateURI(this.uri.getURL(), queryParams, true)
                 .catch(error => {
@@ -435,7 +432,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.addFilterTags();
 
                 this.vendors = data.vendors;
-                this.vendors.sort(NxUtilsService.byParam((elm) => {
+                this.vendors.sort(NxUtilsService.byParam((elm: any) => {
                     return elm.name.toLowerCase();
                 }, NxUtilsService.sortASC));
 

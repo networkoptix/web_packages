@@ -3,13 +3,15 @@ import { NxSafePipe }       from './nx-safe';
 import { NxHealthDatePipe } from './health-date';
 
 @NgModule({
-    imports : [],
+    imports: [
+    ],
     declarations: [
         NxHealthDatePipe,
         NxSafePipe
     ],
-    entryComponents: [],
-    exports        : [
+    entryComponents: [
+    ],
+    exports: [
         NxHealthDatePipe,
         NxSafePipe
     ],

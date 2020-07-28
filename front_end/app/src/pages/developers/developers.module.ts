@@ -1,16 +1,18 @@
-import { NgModule }          from '@angular/core';
+import { NgModule }                      from '@angular/core';
 import { CommonModule }                  from '@angular/common';
 import { BrowserModule }                 from '@angular/platform-browser';
 import { UpgradeModule }                 from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
-import { ComponentsModule }              from '../../components/components.module';
+import { AngularSvgIconModule }          from 'angular-svg-icon';
 
-import { MenuModule }                    from '../../menu';
-import { DirectivesModule }             from '../../directives/directives.module';
-import { NxAboutModule } from './about/about.module';
-import { NxAboutComponent } from './about/about.component';
+import { ComponentsModule }         from '../../components/components.module';
+import { DirectivesModule }         from '../../directives/directives.module';
+import { NxAboutModule }            from './about/about.module';
+import { MenuModule }               from '../../menu';
+import { NxAboutComponent }         from './about/about.component';
+import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 
 const appRoutes: Routes = [
     {
@@ -23,6 +25,22 @@ const appRoutes: Routes = [
             {
                 path      : 'about',
                 component : NxAboutComponent
+            },
+            {
+                path      : 'knowledge-base',
+                component : NxKnowledgeBaseComponent,
+                children  : [
+                    {
+                        path      : ':level1',
+                        component : NxKnowledgeBaseComponent,
+                        children  : [
+                            {
+                                path      : ':level2',
+                                component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     }
@@ -38,18 +56,22 @@ const appRoutes: Routes = [
         DirectivesModule,
         FormsModule,
         NxAboutModule,
+        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
     providers : [],
     declarations : [
+        NxKnowledgeBaseComponent
     ],
     bootstrap : [],
     entryComponents : [
-        NxAboutComponent
+        NxAboutComponent,
+        NxKnowledgeBaseComponent
     ],
     exports: [
-        NxAboutComponent
+        NxAboutComponent,
+        NxKnowledgeBaseComponent
     ]
 })
 export class NxDevelopersModule {}

@@ -4,6 +4,8 @@ import {
 }                                      from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService }            from '@ngx-translate/core';
+import { timer }                       from 'rxjs';
+
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxAccountService }            from '../../services/account.service';
@@ -16,7 +18,6 @@ import { NxUtilsService }              from '../../services/utils.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 import StateMachine                    from './stateMachine';
 import { State }                       from './stateForMergeDialog';
-import { timer }                       from 'rxjs';
 
 @Component({
     selector    : 'nx-modal-merge-content',

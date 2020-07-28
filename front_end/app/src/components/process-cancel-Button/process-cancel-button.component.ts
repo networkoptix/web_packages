@@ -1,7 +1,8 @@
 import {
     Component, Input,
     ViewEncapsulation
-}                                   from '@angular/core';
+}                  from '@angular/core';
+
 import { Process } from '../../services/process.service';
 
 @Component({

@@ -1,5 +1,6 @@
-import { User } from '../system-api.service';
 import { Injectable } from '@angular/core';
+
+import { User } from '../system-api.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy }     from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

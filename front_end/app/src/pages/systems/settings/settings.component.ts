@@ -1,29 +1,30 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                             from '@angular/core';
-import { ActivatedRoute, Router }             from '@angular/router';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
-import { NxLanguageProviderService }          from '../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy }           from '@ngneat/until-destroy';
+import { Subscription }           from 'rxjs';
+import { filter, tap }            from 'rxjs/operators';
+
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '../../../menu/menu.service';
-import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
+import {
+    ICamera, NxSystem, NxSystemService
+}                                    from '../../../services/system.service';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { Account, NxAccountService }          from '../../../services/account.service';
+import { Account, NxAccountService } from '../../../services/account.service';
 import { NxUtilsService }            from '../../../services/utils.service';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxToastService }            from '../../../dialogs/toast.service';
-import { Subscription }              from 'rxjs';
-import { filter, tap }               from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { NxApplyService }            from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
-import { NxSystemAPIService }        from '../../../services/system-api.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -85,24 +86,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuVisible = true;
     }
 
-    constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private accountService: NxAccountService,
-                private languageService: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private systemService: NxSystemService,
-                private systemApiService: NxSystemAPIService,
-                private systemsService: NxSystemsService,
-                private settingsService: NxSettingsService,
-                private processService: NxProcessService,
-                private uriService: NxUriService,
-                private menuService: NxMenuService,
-                private ribbonService: NxRibbonService,
-                private router: Router,
-                private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private applyService: NxApplyService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
+        private settingsService: NxSettingsService,
+        private processService: NxProcessService,
+        private uriService: NxUriService,
+        private menuService: NxMenuService,
+        private ribbonService: NxRibbonService,
+        private router: Router,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private applyService: NxApplyService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -310,37 +310,35 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.checkMergeSubscription = this.system.checkMergeStatus()
             .subscribe(res => {
+                this.secondaryMerge = false;
+                this.ribbonService.hide();
+                let ribbonText: string;
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
                 if (!this.system.isOnline) {
-                    this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
-                } else if (primary && primary.id === this.system.id) {
-                    this.secondaryMerge = false;
+                    ribbonText = this.LANG.ribbon.systemOffline;
+                } else if (primary?.id === this.system.id) {
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    let secondaryName = secondarySystem?.name ||
-                        secondary?.name || this.LANG.system.mergeUnknownName;
-                    if (secondaryName.indexOf('server at ') === 0) {
+                    let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName;
+                    if (secondaryName.startsWith('server at ')) {
                         secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
                     }
-                    const template =
-                        `<div class="my-1">
-                            <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
-                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
-                        </div>`;
-                    this.ribbonService.hide();
-                    this.ribbonService.show(template, [], 'alert');
-                } else if (secondary && secondary.id === this.system.id) {
+                    ribbonText = `<div class="my-1">
+                                        <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                                        <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
+                                    </div>`;
+                } else if (secondary?.id === this.system.id) {
                     this.mergeTargetSystem = this.systemsService.systems
                         .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
                     this.secondaryMerge = true;
                 } else if (mergeInProgress) {
-                    this.ribbonService.hide();
-                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, [], 'alert');
-                } else {
-                    this.secondaryMerge = false;
-                    this.ribbonService.hide();
+                    ribbonText = this.LANG.ribbon.systemsMerging;
                 }
+
+                if (ribbonText) {
+                    this.ribbonService.show(ribbonText, [], 'alert');
+                }
+
                 setTimeout(() => {
                     this.setHeaderHeight();
                 });

@@ -6,16 +6,17 @@ import { RouterModule }                     from '@angular/router';
 import { FormsModule }                      from '@angular/forms';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
-import { DirectivesModule }                 from '../../../../directives/directives.module';
-import { NxSystemServersComponent }         from './servers.component';
 import { TranslateModule }                  from '@ngx-translate/core';
+
+import { DirectivesModule }                 from '../../../../directives/directives.module';
 import { ComponentsModule }                 from '../../../../components/components.module';
+import { NxSystemServersComponent }         from './servers.component';
 import { NxSystemStandardServerComponent }  from './standard/server.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
 import { NxSystemAdvancedStorageComponent } from './storage/storage.component';
 
 @NgModule({
-    imports         : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -27,18 +28,20 @@ import { NxSystemAdvancedStorageComponent } from './storage/storage.component';
         DirectivesModule,
         AngularSvgIconModule.forRoot()
     ],
-    providers       : [],
-    declarations    : [
+    providers: [
+    ],
+    declarations: [
         NxSystemServersComponent,
         NxSystemStandardServerComponent,
         NxServerLoggerComponent,
         NxSystemAdvancedStorageComponent
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [
+    ],
+    entryComponents: [
         NxSystemServersComponent
     ],
-    exports         : [
+    exports: [
         NxSystemServersComponent
     ]
 })

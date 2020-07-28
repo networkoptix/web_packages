@@ -9,11 +9,12 @@ import {
     NG_VALIDATORS,
     Validator, FormControl, NgModel
 }                                   from '@angular/forms';
-import { Subscription }             from 'rxjs';
 import { UntilDestroy }             from '@ngneat/until-destroy';
-import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
+import { Subscription }             from 'rxjs';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxCloudApiService }        from '../../services/nx-cloud-api';
+import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

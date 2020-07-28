@@ -2,6 +2,7 @@ import {
     Component, EventEmitter, Input, OnInit, Output,
     ViewEncapsulation
 } from '@angular/core';
+
 import { IConfig, NxConfigService } from '../../../services/nx-config';
 
 /* Usage

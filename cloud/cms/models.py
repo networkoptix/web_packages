@@ -686,24 +686,24 @@ class DataStructure(models.Model):
                 # which is not more than version_id
                 # filter only accepted content_records
                 content_record = content_record.filter(version_id__lte=version_id)
-                if not draft:
-                    new_review_records = content_record.\
-                        filter(version__assetcustomizationreview__state=AssetCustomizationReview.
-                               REVIEW_STATES.accepted)
-                    # If the version matches take it
-                    if content_record.last().version.id == version_id:
-                        content_record = content_record.last()
-                    # Take any record that is accepted
-                    elif new_review_records.exists():
-                        content_record = new_review_records.last()
-                    # Take any record that has been reviewed
-                    else:
-                        content_record = content_record.\
-                            filter(version__accepted_by__isnull=False).last()
-                else:
-                    content_record = content_record.last()
-
                 if content_record:
+                    if not draft:
+                        new_review_records = content_record.\
+                            filter(version__assetcustomizationreview__state=AssetCustomizationReview.
+                                   REVIEW_STATES.accepted)
+                        # If the version matches take it
+                        if content_record.last().version.id == version_id:
+                            content_record = content_record.last()
+                        # Take any record that is accepted
+                        elif new_review_records.exists():
+                            content_record = new_review_records.last()
+                        # Take any record that has been reviewed
+                        else:
+                            content_record = content_record.\
+                                filter(version__accepted_by__isnull=False).last()
+                    else:
+                        content_record = content_record.last()
+
                     content_value = content_record.cast_value
 
         # if no value or optional and type file - use default value from structure
@@ -1229,7 +1229,7 @@ class MenuNode(models.Model):
                     if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
                             (not node.condition or global_contexts_dict.get(node.condition, False)):
                         node_list.append(node.process_node(
-                            cloud_portal_asset, customization, global_contexts_dict, depth + 1
+                            cloud_portal_asset, customization, global_contexts_dict, depth + 1, max_depth
                         ))
                 if node_list:
                     node_structure['nodes'] = node_list

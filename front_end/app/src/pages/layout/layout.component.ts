@@ -1,5 +1,5 @@
 import { Component }                 from '@angular/core';
-import { NxPageService }             from '../../services/page.service';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -12,8 +12,7 @@ export class NxGridLayoutComponent {
     LANG: LanguageI18NStaticTypes;
 
     constructor(
-        languageService: NxLanguageProviderService,
-        private pageService: NxPageService
+        languageService: NxLanguageProviderService
     ) {
         this.LANG = languageService.translations;
     }

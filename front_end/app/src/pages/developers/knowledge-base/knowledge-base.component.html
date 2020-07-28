@@ -1,0 +1,40 @@
+<!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
+
+<ng-template #normalCard let-node="node">
+    <nx-block type="mt-3">
+        <header>{{node.title}}</header>
+        <nx-section>
+            <div [innerHTML]="node.content"></div>
+        </nx-section>
+    </nx-block>
+</ng-template>
+
+<ng-template #sideCard let-node="node">
+    <nx-block type="mt-3" header-style="side">
+        <header>
+            <div *ngIf="node.cardIcon" class="heading-icon">
+                <svg-icon nx-add-svg-src 
+                    [src]="CONFIG.icons.dir + node.cardIcon"
+                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                ></svg-icon>
+            </div>
+            <p>{{node.cardLead}}</p>
+            <h3>{{node.title}}</h3>
+        </header>
+        <nx-section>
+            <div [innerHTML]="node.content"></div>
+        </nx-section>
+    </nx-block>
+</ng-template>
+
+<!-- End of Card Templates -->
+
+<div class="page-wrapper">
+    <nx-left-menu menuName="KnowledgeBase"></nx-left-menu>
+    <div class="knowledge-base">
+        <nx-search></nx-search>
+        <ng-container *ngFor="let node of node.nodes">
+            <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+        </ng-container>
+    </div>
+</div>

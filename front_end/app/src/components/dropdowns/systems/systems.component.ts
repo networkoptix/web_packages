@@ -2,6 +2,7 @@ import {
     Component,
     Input, SimpleChanges
 }                                    from '@angular/core';
+
 import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
@@ -20,10 +21,10 @@ export class NxSystemsDropdown extends BaseDropdown {
 
     systemCounter: number;
     active = {
-        health  : false,
-        register: false,
-        settings: false,
-        view    : false
+        health   : false,
+        register : false,
+        settings : false,
+        view     : false
     };
 
     params;

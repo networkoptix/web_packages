@@ -7,20 +7,21 @@ import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
 }                                           from '@angular/forms';
-import { ActivatedRoute, Router }           from '@angular/router';
+import { ActivatedRoute }                   from '@angular/router';
 import { Location }                         from '@angular/common';
+import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { Subscription, SubscriptionLike }   from 'rxjs';
 import { debounceTime }                     from 'rxjs/operators';
 import { Subject }                          from 'rxjs/Subject';
 import { isArray }                          from 'rxjs/internal-compatibility';
-import { UntilDestroy }                     from '@ngneat/until-destroy';
+
 import { NxLanguageProviderService }        from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }         from '../../services/nx-config';
 import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
 import { NxUriService }                     from '../../services/uri.service';
 import { NxUtilsService }                   from '../../services/utils.service';
-import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
 import { ButtonArrowType, NxSearchService } from '../../services/search.service';
+import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
 
 /* Usage
  <nx-search
@@ -98,7 +99,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        private _router: Router,
         private _route: ActivatedRoute,
         private location: Location,
         private uri: NxUriService,

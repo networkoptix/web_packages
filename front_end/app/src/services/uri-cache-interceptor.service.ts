@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
-    HttpEvent,
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-
-// Add RxJS observable
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
+import { of }         from 'rxjs';
+import { share }      from 'rxjs/operators';
+
 import { NxUriCacheService } from './uri-cache.service';
-import { of } from 'rxjs';
-import { share } from 'rxjs/operators';
 
 // Add the service we created in Step 1
 

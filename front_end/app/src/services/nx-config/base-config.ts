@@ -7,7 +7,6 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import { Watcher } from '../apply.service';
 import { MenuNode } from '../../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 
 export interface BaseConfig {

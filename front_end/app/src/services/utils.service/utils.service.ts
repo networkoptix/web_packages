@@ -1,9 +1,10 @@
 import {
     Inject, Injectable, LOCALE_ID
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
+
+import { NxConfigService, IConfig } from '../nx-config';
 import * as moment                  from 'moment';
 import * as uv                      from './utilConstants';
 

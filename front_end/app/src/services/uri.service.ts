@@ -2,6 +2,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Location }                        from '@angular/common';
 import { ActivatedRoute, Router, Params }  from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
+
 import { NxConfigService, IConfig }        from './nx-config';
 import { localSettingsRoutes }             from '../pages/systems/webadmin-system.module';
 import { cloudSettingsRoutes }             from '../pages/systems/settings/settings.module';

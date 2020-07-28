@@ -48,8 +48,8 @@ export class NxContentBlockComponent implements OnInit {
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', {static: true}) headerWrapper: ElementRef;
-    @ViewChild('footerWrapper', {static: true}) footerWrapper: ElementRef;
+    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
+    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
 
     constructor() {
         this.haveHeader = true;

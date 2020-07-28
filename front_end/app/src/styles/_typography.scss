@@ -53,6 +53,10 @@
     @include font-source($font-family-light, $h3-font-size, $font-color-light);
 }
 
+@mixin medium17 {
+    @include font-source($font-family-medium, $h3-alt-size, $font-color-medium);
+}
+
 @mixin regular16 {
     @include font-source($font-family-regular, rem(16px), $font-color-regular);
 }

@@ -1,18 +1,19 @@
 import { Injectable, OnDestroy }                       from '@angular/core';
-import { of, ReplaySubject, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { LocalStorageService }                         from 'ngx-store';
+import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
+
 import { NxConfigService, IConfig }                    from './nx-config';
 import { NxLanguageProviderService }                   from './nx-language-provider';
 import { NxCloudApiService }                           from './nx-cloud-api';
 import { NxPollService }                               from './poll.service';
-import { LocalStorageService }                         from 'ngx-store';
 import { NxToastService }                              from '../dialogs/toast.service';
 import { NxUtilsService }                              from './utils.service';
 import { NxUriService }                                from './uri.service';
 import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
-import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
 import { NxSystem }                                    from './system.service';
-import { IParams } from '../components/search/search.component';
+import { IParams }                                     from '../components/search/search.component';
+import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'

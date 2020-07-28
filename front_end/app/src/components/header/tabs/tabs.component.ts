@@ -1,18 +1,15 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input } from '@angular/core';
+
+import { environment }     from '../../../../environments/environment';
+import { MenuNode }        from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxHeaderService } from '../../../services/nx-header.service';
-import { MenuNode } from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { environment } from '../../../../environments/environment';
 
 @Component({
-    selector: 'nx-header-tabs',
-    templateUrl: './tabs.component.html',
-    styleUrls: [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss']
+    selector : 'nx-header-tabs',
+    templateUrl : './tabs.component.html',
+    styleUrls : [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss']
 })
-export class NxTabsComponent implements OnInit {
+export class NxTabsComponent {
     @Input() node: MenuNode;
-    constructor(public headerService: NxHeaderService) {
-    }
-
-    ngOnInit(): void {
-    }
+    constructor(public headerService: NxHeaderService) {}
 }

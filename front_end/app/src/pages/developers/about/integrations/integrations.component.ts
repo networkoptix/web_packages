@@ -1,8 +1,9 @@
 import { Component, Input, HostListener, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { UntilDestroy }                           from '@ngneat/until-destroy';
+
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,7 +28,7 @@ export class NxIntegrationsComponent implements OnInit {
     currentWindowWidth: number;
 
     @HostListener('window:resize') onResize() {
-        this.currentWindowWidth = window.innerWidth
+        this.currentWindowWidth = window.innerWidth;
     }
 
     CONFIG: IConfig;
@@ -52,9 +53,9 @@ class Integration {
 }
 
 const mockIntegrations = [
-    new Integration('Plugin BTO', '/developers/','users.svg'),
-    new Integration('Plugin BTO', '/developers/','systems.svg'),
-    new Integration('Plugin BTO', '/developers/','storages.svg'),
-    new Integration('Plugin BTO', '/developers/','cameras.svg'),
-    new Integration('Plugin BTO', '/developers/','interface.svg')
-]
+    new Integration('Plugin BTO', '/developers/', 'users.svg'),
+    new Integration('Plugin BTO', '/developers/', 'systems.svg'),
+    new Integration('Plugin BTO', '/developers/', 'storages.svg'),
+    new Integration('Plugin BTO', '/developers/', 'cameras.svg'),
+    new Integration('Plugin BTO', '/developers/', 'interface.svg')
+];

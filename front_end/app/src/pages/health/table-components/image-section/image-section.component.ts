@@ -3,10 +3,11 @@ import {
     ElementRef, Input, OnChanges,
     OnDestroy, ViewChild
 }                                  from '@angular/core';
-import { NxHealthService }         from '../../health.service';
+import { UntilDestroy }            from '@ngneat/until-destroy';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime }            from 'rxjs/operators';
-import { UntilDestroy }            from '@ngneat/until-destroy';
+
+import { NxHealthService }         from '../../health.service';
 
 interface ThumbNail {
     loaded: boolean;
@@ -77,6 +78,6 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
     }
 
     showPreloader() {
-        setTimeout(() => this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded));
+        setTimeout(() => { this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded); });
     }
 }

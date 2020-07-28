@@ -1,21 +1,26 @@
+import { Injectable, OnDestroy } from '@angular/core';
+import {
+    BehaviorSubject, of, Subscription, Observable
+}                                from 'rxjs';
+import { flatMap, tap }          from 'rxjs/operators';
+
 import { NxConfigService, IConfig }        from './nx-config';
 import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
-import { NxSystemsService, NxSystemWithUserInfo }                from './systems.service';
-import { Injectable, OnDestroy }           from '@angular/core';
+import {
+    NxSystemsService, NxSystemWithUserInfo
+}                                          from './systems.service';
 import {
     NxSystemAPIService, NxSystemAPI, ResourceParam
 }                                          from './system-api.service';
-import { BehaviorSubject, from, of, Subscription, Observable }       from 'rxjs';
-import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { NxAppStateService }               from './nx-app-state.service';
 import { PredefinedRole }                  from './nx-config/base-config';
-import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
-import { IParams }                         from '../components/search/search.component';
 import { SystemConfigSettings }            from './system-api.types';
-import {toPromise} from "rxjs-compat/operator/toPromise";
+import { IParams }                         from '../components/search/search.component';
+import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { trim_ids } from '../utils/api_response_cleaners';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -103,7 +108,6 @@ class SystemPermissions {
 }
 
 // <added by @gbezyuk for watch component>
-import { trim_ids } from '../utils/api_response_cleaners'
 
 export interface ServerTimeInfo {
     vmsTimeOffset: number,
@@ -457,7 +461,7 @@ class ServerManager {
             if (!res) {
                 return Promise.reject(new Error(`Request to server has failed ${res}`));
             }
-            this.servers = res.sort(NxUtilsService.byParam(server => server.name, NxUtilsService.sortASC));
+            this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
             return this.servers;
         });
         return serverSubscription;
@@ -676,7 +680,7 @@ class ServerManager {
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
-    }    
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -920,7 +924,7 @@ export class NxSystem extends System implements OnDestroy {
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
         const parseSettings = ({
             cloudAccountName: ownerAccountEmail,
-            systemName: systemName,
+            systemName,
             specificFeatures,
             mergeInfo
         }: SystemConfigSettings) => {

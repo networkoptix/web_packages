@@ -1,6 +1,7 @@
 import { Injectable }               from '@angular/core';
-import { NxConfigService, IConfig } from './nx-config';
 import { Title, Meta }              from '@angular/platform-browser';
+
+import { NxConfigService, IConfig } from './nx-config';
 import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
 
 @Injectable({

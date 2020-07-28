@@ -1,5 +1,6 @@
 import { NgModule }                  from '@angular/core';
 import { CommonModule }              from '@angular/common';
+
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';
@@ -20,9 +21,11 @@ import { NxAppSourceService }        from './nx-app-source.service';
     imports: [
         CommonModule
     ],
-    declarations : [],
-    entryComponents : [],
-    providers : [
+    declarations: [
+    ],
+    entryComponents: [
+    ],
+    providers: [
         NxAppSourceService,
         NxAppStateService,
         NxApplyService,

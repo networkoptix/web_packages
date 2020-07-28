@@ -1,4 +1,5 @@
 import { Component, Input }  from '@angular/core';
+
 import { NxDialogsService }  from '../../dialogs/dialogs.service';
 import { NxUriService }      from '../../services/uri.service';
 import { NxMenuService }     from '../menu.service';
@@ -30,7 +31,7 @@ export class NxMenuButtonComponent {
         if (this.button.id === 'addUser') {
             // Handling promise to satisfy the linter.
             this.dialogs.addUser(this.system)
-                .then((userId) => {
+                .then((userId: string) => {
                     if (userId) {
                         userId = this.system.mediaserver.cleanId(userId);
                         this.menuService.detail = userId;

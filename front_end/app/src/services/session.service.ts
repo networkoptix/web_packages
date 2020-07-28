@@ -1,6 +1,7 @@
 import { Inject, Injectable }  from '@angular/core';
 import { LocalStorageService } from 'ngx-store';
 import { ReplaySubject }       from 'rxjs';
+
 import { WINDOW }              from './window-provider';
 
 @Injectable({

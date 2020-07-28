@@ -1,17 +1,17 @@
 /* eslint-disable camelcase */
 import {
-    Component, Input, SimpleChanges, Inject
-}                           from '@angular/core';
-import { BaseDropdown }     from '../injDropdown';
-import { BehaviorSubject, Subject }  from 'rxjs';
-import { MenuNode } from './navigation-tile/navigation-tile.component';
-import { takeUntil } from 'rxjs/operators';
+    Component, Input, SimpleChanges
+}                          from '@angular/core';
+import { UntilDestroy }    from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
+
+import { MenuNode }                  from './navigation-tile/navigation-tile.component';
+import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService } from '../../../services/nx-config';
-import { NxUriService } from '../../../services/uri.service';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { NxMenusService, Auth } from '../../../services/menus.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxHeaderService }           from '../../../services/nx-header.service';
+import { NxMenusService }            from '../../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -4,12 +4,15 @@ import { BrowserModule }                    from '@angular/platform-browser';
 import { UpgradeModule }                    from '@angular/upgrade/static';
 import { RouterModule, Routes }             from '@angular/router';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
-import { NxSystemSettingsComponent }        from './settings/settings.component';
 import { TranslateModule }                  from '@ngx-translate/core';
+
 import { ComponentsModule }                 from '../../components/components.module';
 import { NxSystemAdminModule }              from './settings/admin/admin.module';
 import { NxSystemUsersModule }              from './settings/users/users.module';
 import { NxSystemServersModule }            from './settings/servers/servers.module';
+import { NxCamerasModule }                  from './settings/cameras/cameras.module';
+import { NxSystemLicensesModule }           from './settings/licenses/licenses.module';
+import { NxSystemSettingsComponent }        from './settings/settings.component';
 import { NxSystemAdminComponent }           from './settings/admin/admin.component';
 import { NxSystemUsersComponent }           from './settings/users/users.component';
 import { NxSystemServersComponent }         from './settings/servers/servers.component';
@@ -17,10 +20,8 @@ import {
     ApplyGuard, AuthGuard, SystemGuard
 }                                           from '../../routeGuards';
 import { NxCamerasComponent }               from './settings/cameras/cameras.component';
-import { NxCamerasModule }                  from './settings/cameras/cameras.module';
 import { MenuModule }                       from '../../menu';
 import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
-import { NxSystemLicensesModule }           from './settings/licenses/licenses.module';
 
 export const localSettingsRoutes: Routes = [
     {

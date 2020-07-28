@@ -1,11 +1,11 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { MenuNode } from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { environment }               from '../../../../environments/environment';
+import { MenuNode }                  from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { IConfig, NxConfigService }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { environment } from '../../../../environments/environment';
+import { NxHeaderService }           from '../../../services/nx-header.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 export enum mainButtonState {
     ALL='all',

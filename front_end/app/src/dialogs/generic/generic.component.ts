@@ -2,8 +2,9 @@ import {
     Component, OnInit, Input,
     ViewEncapsulation
 }                                                from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer }                          from '@angular/platform-browser';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 
@@ -24,9 +25,7 @@ export class GenericModalContent implements OnInit {
     @Input() closable;
     @Input() footerClass;
 
-    constructor(public activeModal: NgbActiveModal
-    ) {
-    }
+    constructor(public activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         this.footerClass = this.footerClass || '';
@@ -49,7 +48,7 @@ export class GenericModalContent implements OnInit {
     encapsulation: ViewEncapsulation.None,
     styleUrls    : []
 })
-export class NxModalGenericComponent implements OnInit {
+export class NxModalGenericComponent {
     modalRef: NgbModalRef;
     LANG: LanguageI18NStaticTypes;
 
@@ -65,8 +64,8 @@ export class NxModalGenericComponent implements OnInit {
         hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
             {
-                windowClass: 'modal-holder',
-                backdrop   : 'static'
+                windowClass : 'modal-holder',
+                backdrop    : 'static'
             });
 
         this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
@@ -105,8 +104,5 @@ export class NxModalGenericComponent implements OnInit {
             true,
             true)
             .result;
-    }
-
-    ngOnInit() {
     }
 }
