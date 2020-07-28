@@ -4,6 +4,10 @@
         [selectedServer]="this.selectedServer">
 </nx-standard-server-component>
 
+<nx-server-storage-component>
+
+</nx-server-storage-component>
+
 <ng-container *ngIf="!isOffline && system && advanced">
         <nx-alert-block
         class="d-block mt-3"
@@ -13,13 +17,13 @@
         [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
         [btnCaption]="'Hide Advanced Settings' | translate"
         (onAction)="hideAdvancedSettings()"></nx-alert-block>
-        
+
         <nx-server-advanced-storage-component
                 [system]="system"
                 [serverId]="this.selectedServer?.id">
         </nx-server-advanced-storage-component>
-        
-        
+
+
         <nx-server-logger-component
                 [system]="system"
                 [serverId]="this.selectedServer?.id">
