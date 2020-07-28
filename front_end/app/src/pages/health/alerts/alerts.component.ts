@@ -2,12 +2,12 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                   from '@angular/core';
-import { ActivatedRoute }           from '@angular/router';
-import { Location }                 from '@angular/common';
-import { UntilDestroy }             from '@ngneat/until-destroy';
-import { of, SubscriptionLike }     from 'rxjs';
-import { delay, throttleTime }      from 'rxjs/operators';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
+import { UntilDestroy }           from '@ngneat/until-destroy';
+import { of, SubscriptionLike }   from 'rxjs';
+import { delay, throttleTime }    from 'rxjs/operators';
 
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxUriService }             from '../../../services/uri.service';

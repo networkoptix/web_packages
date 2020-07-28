@@ -2,9 +2,9 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { Location }                  from '@angular/common';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { of, SubscriptionLike }      from 'rxjs';
 import { delay, throttleTime }       from 'rxjs/operators';
@@ -78,8 +78,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         languageService: NxLanguageProviderService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
-        private accountService: NxAccountService,
-        private systemService: NxSystemService,
         private route: ActivatedRoute,
         private router: Router,
         private location: Location,

@@ -8,21 +8,21 @@ import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { of, Subscription, throwError }          from 'rxjs';
 import { flatMap }                               from 'rxjs/operators';
 
-import { NxLanguageProviderService }       from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }        from '../../services/nx-config';
-import { NxAccountService, Account }       from '../../services/account.service';
-import { NxUriService }                    from '../../services/uri.service';
-import { NxMenuService }                   from '../../menu';
-import { NxRibbonService }                 from '../../components/ribbon';
-import { NxHealthService }                 from './health.service';
-import { NxSystem, NxSystemService }       from '../../services/system.service';
-import { NxUtilsService }                  from '../../services/utils.service';
-import { NxAppStateService }               from '../../services/nx-app-state.service';
-import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
-import { NxScrollMechanicsService }        from '../../services/scroll-mechanics.service';
-import { WINDOW }                          from '../../services/window-provider';
-import { NxAppSourceService }              from '../../services/nx-app-source.service';
-import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }       from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }        from '../../../services/nx-config';
+import { NxAccountService, Account }       from '../../../services/account.service';
+import { NxUriService }                    from '../../../services/uri.service';
+import { NxMenuService }                   from '../../../menu';
+import { NxRibbonService }                 from '../../../components/ribbon';
+import { NxHealthService }                 from '../health.service';
+import { NxSystem, NxSystemService }       from '../../../services/system.service';
+import { NxUtilsService }                  from '../../../services/utils.service';
+import { NxAppStateService }               from '../../../services/nx-app-state.service';
+import { NxSystemAPI, NxSystemAPIService } from '../../../services/system-api.service';
+import { NxScrollMechanicsService }        from '../../../services/scroll-mechanics.service';
+import { WINDOW }                          from '../../../services/window-provider';
+import { NxAppSourceService }              from '../../../services/nx-app-source.service';
+import { LanguageI18NStaticTypes }         from '../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
