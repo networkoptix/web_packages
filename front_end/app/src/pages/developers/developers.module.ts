@@ -9,6 +9,7 @@ import { AngularSvgIconModule }          from 'angular-svg-icon';
 
 import { ComponentsModule }         from '../../components/components.module';
 import { DirectivesModule }         from '../../directives/directives.module';
+import { PipesModule }              from '../../pipes/pipes.module';
 import { NxAboutModule }            from './about/about.module';
 import { MenuModule }               from '../../menu';
 import { NxAboutComponent }         from './about/about.component';
@@ -31,6 +32,16 @@ const appRoutes: Routes = [
                 path      : 'knowledge-base',
                 component : NxKnowledgeBaseComponent,
                 children  : [
+                    {
+                        path      : 'other-articles',
+                        component : NxKnowledgeBaseComponent,
+                        children  : [
+                            {
+                                path      : ':article',
+                                component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    },
                     {
                         path      : ':level1',
                         component : NxKnowledgeBaseComponent,
@@ -72,6 +83,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         FormsModule,
+        PipesModule,
         NxAboutModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),

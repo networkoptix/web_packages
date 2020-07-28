@@ -34,12 +34,17 @@ export class NxLeftMenuComponent implements OnInit {
     }
 
     updateActive = (url: string) => {
-        const updateActiveRoutes = (node: MenuNodeWithParent, updatedNodes = []) => {
-            updatedNodes.push(node.display_name || node.name);
-            if (node.parentNode) {
-                updateActiveRoutes(node.parentNode, updatedNodes);
+        this.activeRouteNodes = [];
+        const updateActiveRoutes = (node: MenuNodeWithParent) => {
+            const name = node.display_name || node.name;
+            const openNodeIndex = this.openNodes.indexOf(name);
+            if (openNodeIndex !== 1) {
+                this.openNodes.splice(openNodeIndex);
             }
-            this.activeRouteNodes = updatedNodes;
+            this.activeRouteNodes.push(name);
+            if (node.parentNode) {
+                updateActiveRoutes(node.parentNode);
+            }
         };
         const findActiveNode = (nodes: MenuNodeWithParent[]) => {
             const checkNode = (node: MenuNodeWithParent) => {
@@ -80,8 +85,7 @@ export class NxLeftMenuComponent implements OnInit {
                 map((event: NavigationEnd) => event.url),
                 startWith(this.location.path())
             )
-            .subscribe(url => this.updateActive(url));
-        console.log(this.location.path());
+            .subscribe(url => this.updateActive(this.location.path()));
     }
 };
 
