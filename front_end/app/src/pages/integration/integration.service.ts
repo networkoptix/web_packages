@@ -2,6 +2,7 @@ import { Injectable, OnDestroy }    from '@angular/core';
 import {
     BehaviorSubject, Observable, Subscription
 }                                   from 'rxjs';
+
 import { NxCloudApiService }        from '../../services/nx-cloud-api';
 import { NxUtilsService }           from '../../services/utils.service';
 import { NxConfigService, IConfig } from '../../services/nx-config';
@@ -37,7 +38,7 @@ export class IntegrationService implements OnDestroy {
 
                 plugins.forEach(plugin => {
                     if (plugin.mine) {
-                        plugin.information.type.push({ id: 'mine', label: 'mine'}); // label is not important - filter by ID
+                        plugin.information.type.push({ id: 'mine', label: 'mine' }); // label is not important - filter by ID
                     }
 
                     plugin.versionDetails = {
@@ -68,7 +69,7 @@ export class IntegrationService implements OnDestroy {
         return elm;
     }
 
-    private formatRequirementsAndCompatibility (plugin) {
+    private formatRequirementsAndCompatibility(plugin) {
         const section = plugin.requirementsAndCompatibility;
 
         if (section) {
@@ -124,7 +125,7 @@ export class IntegrationService implements OnDestroy {
             if (section.screenshots.length < 1) {
                 delete section.screenshots;
             } else {
-                section.screenshots.sort(NxUtilsService.byParam((elm) => {
+                section.screenshots.sort(NxUtilsService.byParam((elm: any) => {
                     return elm.sortKey;
                 }, NxUtilsService.sortASC));
             }
@@ -143,9 +144,9 @@ export class IntegrationService implements OnDestroy {
 
             if (matchScreenshot) {
                 processed.push({
-                    id     : item[0].replace('overview', ''),
-                    value  : item[1],
-                    sortKey: parseInt(matchScreenshot[1], 10)
+                    id      : item[0].replace('overview', ''),
+                    value   : item[1],
+                    sortKey : parseInt(matchScreenshot[1], 10)
                 });
             }
         });
@@ -163,7 +164,7 @@ export class IntegrationService implements OnDestroy {
         });
 
         if (processed.length) {
-            processed.sort(NxUtilsService.byParam((elm) => {
+            processed.sort(NxUtilsService.byParam((elm: any) => {
                 return elm.sortKey;
             }, NxUtilsService.sortASC));
 
@@ -226,13 +227,12 @@ export class IntegrationService implements OnDestroy {
             plugin.downloadFiles = plugin.downloadFiles.sort((a, b) => {
                 if (a.order < b.order) {
                     return -1;
-                }  else if (a.order > b.order) {
+                } else if (a.order > b.order) {
                     return 1;
                 }
                 return 0;
             });
         }
-
 
         if (plugin.versionDetails) {
             plugin.versionDetails.version = this.formatVersion(plugin.versionDetails.version);

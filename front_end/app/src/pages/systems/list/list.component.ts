@@ -2,28 +2,27 @@ import {
     Component, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
-import { ActivatedRoute, Router }    from '@angular/router';
+import { Router }                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { debounceTime }              from 'rxjs/operators';
+import { Subject, Subscription }     from 'rxjs';
+
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NxProcessService, Process } from '../../../services/process.service';
-import { NxUrlProtocolService }      from '../../../services/url-protocol.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxUriService }              from '../../../services/uri.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { debounceTime }              from 'rxjs/operators';
-import { Subject, Subscription }     from 'rxjs';
-import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxHeaderService }           from '../../../services/nx-header.service';
-import { NxMenusService }             from '../../../services/menus.service';
+import { NxMenusService }            from '../../../services/menus.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-systems-list-component',
+    selector : 'nx-systems-list-component',
     templateUrl : 'list.component.html',
-    styleUrls   : ['list.component.scss']
+    styleUrls : ['list.component.scss']
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
@@ -51,11 +50,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private urlProtocol: NxUrlProtocolService,
-        private route: ActivatedRoute,
         private language: NxLanguageProviderService,
         private pageService: NxPageService,
-        private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,

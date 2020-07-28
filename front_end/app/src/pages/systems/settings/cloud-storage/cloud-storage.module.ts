@@ -6,13 +6,14 @@ import { AngularSvgIconModule }     from 'angular-svg-icon';
 import { RouterModule }             from '@angular/router';
 import { FormsModule }              from '@angular/forms';
 import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
-import { DirectivesModule }         from '../../../../directives/directives.module';
 import { TranslateModule }          from '@ngx-translate/core';
+
+import { DirectivesModule }         from '../../../../directives/directives.module';
 import { ComponentsModule }         from '../../../../components/components.module';
 import { NxCloudStorageComponent }  from './cloud-storage.component';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -24,15 +25,17 @@ import { NxCloudStorageComponent }  from './cloud-storage.component';
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
     ],
-    providers      : [],
-    declarations   : [
+    providers: [
+    ],
+    declarations: [
         NxCloudStorageComponent
     ],
-    bootstrap      : [],
+    bootstrap: [
+    ],
     entryComponents: [
         NxCloudStorageComponent
     ],
-    exports        : [
+    exports: [
         NxCloudStorageComponent
     ]
 })

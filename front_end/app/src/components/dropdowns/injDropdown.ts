@@ -3,13 +3,13 @@ import {
     SimpleChanges, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ControlValueAccessor }      from '@angular/forms';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { Watcher }                   from '../../services/apply.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
-const noop = () => {
-};
+const noop = () => {};
 
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {

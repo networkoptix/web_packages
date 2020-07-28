@@ -3,14 +3,15 @@ import {
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewEncapsulation
 }                                    from '@angular/core';
-import { SubscriptionLike }          from 'rxjs';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+import { SubscriptionLike }          from 'rxjs';
+
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxSystem }                  from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

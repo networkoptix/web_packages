@@ -4,9 +4,10 @@ import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
-import { Nx404Component }       from './404.component';
+
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { Nx404Component }       from './404.component';
 
 const appRoutes: Routes = [
     { path: '404', component: Nx404Component },

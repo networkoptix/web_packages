@@ -6,10 +6,11 @@ import { RouterModule }               from '@angular/router';
 import { FormsModule }                from '@angular/forms';
 import { AngularSvgIconModule }       from 'angular-svg-icon';
 import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
-import { DirectivesModule }           from '../../../directives/directives.module';
-import { NxAccountSettingsComponent } from './settings.component';
 import { TranslateModule }            from '@ngx-translate/core';
+
+import { DirectivesModule }           from '../../../directives/directives.module';
 import { ComponentsModule }           from '../../../components/components.module';
+import { NxAccountSettingsComponent } from './settings.component';
 
 @NgModule({
     imports        : [

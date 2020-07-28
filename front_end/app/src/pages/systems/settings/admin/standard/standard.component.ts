@@ -2,13 +2,14 @@ import {
     Component, OnInit, Inject, Input, ViewContainerRef,
     ViewChild, ElementRef, OnChanges, SimpleChanges
 }                                    from '@angular/core';
+
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxMenuService }             from '../../../../../menu';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-system-standard-admin-component',

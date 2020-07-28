@@ -1,8 +1,9 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, SimpleChanges
-}                                    from '@angular/core';
-import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';

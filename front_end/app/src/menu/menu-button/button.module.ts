@@ -1,5 +1,6 @@
 import { NgModule }              from '@angular/core';
 import { CommonModule }          from '@angular/common';
+
 import { NxMenuButtonComponent } from './button.component';
 
 @NgModule({

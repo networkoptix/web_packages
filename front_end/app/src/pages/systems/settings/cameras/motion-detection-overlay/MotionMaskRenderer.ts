@@ -7,6 +7,7 @@ import {
     startWith, tap, buffer, withLatestFrom, takeUntil, delay
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
+
 import { Mask, Area }       from './motion-detection-types';
 import { MotionMaskState }  from './MotionMaskState';
 

@@ -1,22 +1,22 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-import { TranslateModule }                   from '@ngx-translate/core';
+import { NgModule }             from '@angular/core';
+import { CommonModule }         from '@angular/common';
+import { BrowserModule }        from '@angular/platform-browser';
+import { UpgradeModule }        from '@angular/upgrade/static';
+import { RouterModule, Routes } from '@angular/router';
+import { TranslateModule }      from '@ngx-translate/core';
 
-import { NxLandingComponent }                from './landing.component';
-import { ComponentsModule }                  from '../../components/components.module';
-import { DirectivesModule }                  from '../../directives/directives.module';
+import { NxLandingComponent }   from './landing.component';
+import { ComponentsModule }     from '../../components/components.module';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
-    { path    : '', component: NxLandingComponent },
-    { path    : 'login', component: NxLandingComponent },
-    { path    : 'logout', component: NxLandingComponent }
+    { path: '', component: NxLandingComponent },
+    { path: 'login', component: NxLandingComponent },
+    { path: 'logout', component: NxLandingComponent }
 ];
 
 @NgModule({
-    imports        : [
+    imports : [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -25,18 +25,17 @@ const appRoutes: Routes = [
         DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
-    declarations   : [
-        NxLandingComponent,
-    ],
-    bootstrap      : [],
-    entryComponents: [
+    providers : [],
+    declarations : [
         NxLandingComponent
     ],
-    exports        : [
+    bootstrap : [],
+    entryComponents : [
+        NxLandingComponent
+    ],
+    exports: [
         NxLandingComponent
     ]
 })
 export class LandingModule {
 }
-

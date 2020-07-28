@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { IParams } from "../components/search/search.component";
+import { IParams } from '../components/search/search.component';
 
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.

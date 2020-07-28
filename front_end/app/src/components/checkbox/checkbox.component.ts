@@ -53,10 +53,10 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     private invalid: boolean;
 
     private cbxStates = {
-        false    : 'unchecked',
-        true     : 'checked',
-        disabled : 'disabled',
-        undefined: 'tristate'
+        false     : 'unchecked',
+        true      : 'checked',
+        disabled  : 'disabled',
+        undefined : 'tristate'
     };
 
     // Placeholders for the callbacks which are later provided

@@ -1,5 +1,5 @@
 import {
-    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, Inject, SimpleChanges
+    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, SimpleChanges
 } from '@angular/core';
 import {
     ControlValueAccessor, NG_VALUE_ACCESSOR
@@ -39,11 +39,11 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
             Use errorClass over-ride default styling  in edit mode.
     */
     @Input() propValueAccessor = 'textContent';
-    @HostBinding('attr.contenteditable') @Input() nxEditable = true;
     @Input() editClass = 'editable-directive-edit';
     @Input() initialClass = 'editable-directive-initial';
     @Input() errorClass = 'editable-directive-error';
     @Input() hasError: boolean;
+    @HostBinding('attr.contenteditable') @Input() nxEditable = true;
     @HostBinding('attr.innerHTML') innerHTML;
 
     private _elementClass: string[] = [];

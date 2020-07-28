@@ -7,14 +7,15 @@ import {
 import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { SubscriptionLike }         from 'rxjs';
+import { delay }                    from 'rxjs/operators';
+
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxHealthLayoutService }    from '../../health-layout.service';
 import { NxRibbonService }          from '../../../../components/ribbon';
-import { SubscriptionLike }         from 'rxjs';
-import { delay }                    from 'rxjs/operators';
-import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 

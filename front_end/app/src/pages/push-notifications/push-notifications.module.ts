@@ -1,31 +1,28 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
-import {
-    downgradeComponent, UpgradeModule
-}                               from '@angular/upgrade/static';
+import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
-
-import { PushComponent }        from './push-notifications.component';
-
 import { TranslateModule }      from '@ngx-translate/core';
+
 import { ComponentsModule }     from '../../components/components.module';
-import { NxConfigService }      from '../../services/nx-config';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { PushComponent }        from './push-notifications.component';
+import { NxConfigService }      from '../../services/nx-config';
 
 const appRoutes: Routes = [
     {
-        path: 'push-notifications', component: PushComponent,
+        path: 'push-notifications', component: PushComponent
     }
 ];
 
 export function initializeApp(CONFIG: NxConfigService) {
-  return CONFIG.getConfig().pushConfig;
+    return CONFIG.getConfig().pushConfig;
 }
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -35,16 +32,17 @@ export function initializeApp(CONFIG: NxConfigService) {
         FormsModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [
+    providers: [
     ],
-    declarations   : [
-        PushComponent,
+    declarations: [
+        PushComponent
     ],
-    bootstrap      : [],
+    bootstrap: [
+    ],
     entryComponents: [
         PushComponent
     ],
-    exports        : [
+    exports: [
         PushComponent
     ]
 })

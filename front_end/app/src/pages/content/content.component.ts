@@ -5,6 +5,7 @@ import { ActivatedRoute, Router }    from '@angular/router';
 import { HttpClient, HttpParams }    from '@angular/common/http';
 import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
 import { SessionStorageService }     from 'ngx-store';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService, Account } from '../../services/account.service';
@@ -12,8 +13,8 @@ import { NxPageService }             from '../../services/page.service';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { WINDOW }                    from '../../services/window-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxStaticCacheService }      from '../../services/nx-static-cache';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'content-component',

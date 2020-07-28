@@ -1,27 +1,29 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { BrowserModule, Title }      from '@angular/platform-browser';
-import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
+import { APP_INITIALIZER, NgModule }                                 from '@angular/core';
+import { BrowserModule, Title }                                      from '@angular/platform-browser';
+import { BrowserAnimationsModule }                                   from '@angular/platform-browser/animations';
 import {
     Location, PathLocationStrategy, HashLocationStrategy, LocationStrategy, CommonModule, DatePipe
-}                                                                         from '@angular/common';
-import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
-import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }                         from '@angular/common/http';
-import { FormsModule }                                                    from '@angular/forms';
-import { AngularFireModule, FirebaseOptionsToken }                        from '@angular/fire';
-import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
-import { LayoutModule }                                                   from '@angular/cdk/layout';
-import { environment } from './environments/environment';
+}                                                                    from '@angular/common';
+import { RouterModule }                                              from '@angular/router';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule }                                               from '@angular/forms';
+import { AngularFireModule, FirebaseOptionsToken }                   from '@angular/fire';
+import { AngularFireMessagingModule }                                from '@angular/fire/messaging';
+import { LayoutModule }                                              from '@angular/cdk/layout';
 
 import { InputTrimModule }                    from 'ng2-trim-directive';
 import { NgbToast, NgbModal }                 from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                        from 'ngx-order-pipe';
 import { DeviceDetectorModule }               from 'ngx-device-detector';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { NgxMaskModule, IConfig }             from 'ngx-mask';
 import {
     TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG
 }                                             from 'ngx-translate-messageformat-compiler';
 import { CookieService }                      from 'ngx-cookie-service';
 import { WebStorageModule }                   from 'ngx-store';
+
+import { environment }                        from './environments/environment';
 import { AppComponent }                       from './app.component';
 import { ComponentsModule }                   from './src/components/components.module';
 import { DialogsModule }                      from './src/dialogs/dialogs.module';
@@ -38,8 +40,7 @@ import { WebadminPageModule }                 from './src/pages/webadmin-page.mo
 import { PagesModule }                        from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
-import { NgxMaskModule, IConfig }             from 'ngx-mask';
-import { LocalSystemStatusInterceptor }                  from './src/services/local-system-status-interceptor.service';
+import { LocalSystemStatusInterceptor }       from './src/services/local-system-status-interceptor.service';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {

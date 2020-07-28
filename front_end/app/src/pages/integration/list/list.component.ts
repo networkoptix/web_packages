@@ -2,10 +2,11 @@ import {
     Component, OnDestroy,
     Input, SimpleChanges, OnChanges
 }                                    from '@angular/core';
+
 import { NxRibbonService }           from '../../../components/ribbon';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'integrations-list-component',

@@ -2,22 +2,23 @@ import {
     Component, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { Subscription }              from 'rxjs';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+
 import { IntegrationService }        from './integration.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxUriService }              from '../../services/uri.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxUtilsService }            from '../../services/utils.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'integrations-component',
-    templateUrl: 'integrations.component.html',
-    styleUrls  : ['integrations.component.scss']
+    selector : 'integrations-component',
+    templateUrl : 'integrations.component.html',
+    styleUrls : ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
@@ -60,10 +61,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
-                private router: Router,
+                private router: Router
     ) {
         this.setupDefaults(configService);
     }
+
     ngOnDestroy() {}
 
     ngOnInit(): void {

@@ -3,15 +3,19 @@ import { DOCUMENT, Location }                  from '@angular/common';
 import { DomSanitizer }                        from '@angular/platform-browser';
 import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
 import { Router }                              from '@angular/router';
-import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
 import { NgForm }                              from '@angular/forms';
 import { UntilDestroy }                        from '@ngneat/until-destroy';
+import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
+
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '../services/nx-language-provider';
 import { NxConfigService, IConfig }            from '../services/nx-config';
 import { NxAccountService }                    from '../services/account.service';
 import { NxSystem, ICamera, NxSystemUser }     from '../services/system.service';
+import { Process }                             from '../services/process.service';
+import { NxCloudApiService }                   from '../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }             from '../../language_i18n_static_types';
+
 import { LoginModalContent }                   from './login/login.component';
 import { GenericModalContent }                 from './generic/generic.component';
 import { AddUserModalContent }                 from './add-user/add-user.component';
@@ -30,12 +34,10 @@ import { UpdateCameraCredentialsModalContent } from './update-camera-credentials
 import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
 import { IParams }                             from '../components/search/search.component';
-import './../dialogs/dialogs.scss';
-import { Process }                             from '../services/process.service';
-import { NxCloudApiService }                   from '../services/nx-cloud-api';
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
-import { CloudConnectModalContent }            from "./cloud-connect/cloud-connect.component";
+import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
+import './../dialogs/dialogs.scss';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
@@ -249,8 +251,8 @@ export class NxDialogsService {
 
     connectLocalToCloud(system: NxSystem) {
         const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
         };
 
         const params: IParams = {

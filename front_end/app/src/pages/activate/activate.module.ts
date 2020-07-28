@@ -4,11 +4,11 @@ import { BrowserModule }                 from '@angular/platform-browser';
 import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
-import { ComponentsModule }              from '../../components/components.module';
-
-import { NxActivateComponent }           from './activate.component';
 import { TranslateModule }               from '@ngx-translate/core';
+
+import { ComponentsModule }              from '../../components/components.module';
 import { DirectivesModule }              from '../../directives/directives.module';
+import { NxActivateComponent }           from './activate.component';
 
 export class ParamResolver implements Resolve<any> {
     constructor() {
@@ -40,7 +40,7 @@ export class ActivatedResolver implements Resolve<any> {
 }
 
 const appRoutes: Routes = [
-    { path: 'activate', component: NxActivateComponent, resolve: { uriParam: ParamResolver} },
+    { path: 'activate', component: NxActivateComponent, resolve: { uriParam: ParamResolver } },
     { path: 'activate/success', component: NxActivateComponent, resolve: { uriParam: ActivatedResolver } },
     { path: 'activate/:code', component: NxActivateComponent, resolve: { uriParam: ActivateResolver } }
 ];
@@ -56,19 +56,19 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule
     ],
-    providers      : [
+    providers: [
         ParamResolver,
         ActivateResolver,
-        ActivatedResolver,
+        ActivatedResolver
     ],
-    declarations   : [
-        NxActivateComponent,
-    ],
-    bootstrap      : [],
-    entryComponents: [
+    declarations: [
         NxActivateComponent
     ],
-    exports        : [
+    bootstrap       : [],
+    entryComponents : [
+        NxActivateComponent
+    ],
+    exports         : [
         NxActivateComponent
     ]
 })

@@ -2,9 +2,10 @@ import { Location }                                           from '@angular/com
 import { Component, HostListener, Inject, ViewEncapsulation } from '@angular/core';
 import { ActivationStart, Event, Router }                     from '@angular/router';
 import { CookieService }                                      from 'ngx-cookie-service';
-import { DeviceDetectorService }                   from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
-import { fromEvent }                               from 'rxjs';
+import { DeviceDetectorService }                              from 'ngx-device-detector';
+import { debounceTime, filter, finalize, timeout }            from 'rxjs/operators';
+import { fromEvent }                                          from 'rxjs';
+
 import { NxRibbonService }                         from './src/components/ribbon';
 import { WINDOW }                                  from './src/services/window-provider';
 import { NxApplyService }                          from './src/services/apply.service';
@@ -72,7 +73,6 @@ export class AppComponent {
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
             return;
-
         } else if (bootstrapProvider.newSystem) {
             this.newSystem = true;
             this.dialogsService.wizard();

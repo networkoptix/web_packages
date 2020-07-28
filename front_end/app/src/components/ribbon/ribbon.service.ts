@@ -1,5 +1,6 @@
 import { Injectable }      from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { RibbonAction }    from './ribbon.component';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{

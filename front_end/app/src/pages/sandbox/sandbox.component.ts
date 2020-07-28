@@ -1,13 +1,14 @@
 import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 import { NxProcessService, Process }     from '../../services/process.service';
 import { NxDialogsService }              from '../../dialogs/dialogs.service';
 
 @Component({
-    selector   : 'sandbox-component',
-    templateUrl: 'sandbox.component.html',
-    styleUrls  : ['sandbox.component.scss']
+    selector : 'sandbox-component',
+    templateUrl : 'sandbox.component.html',
+    styleUrls : ['sandbox.component.scss']
 })
 
 export class NxSandboxComponent {
@@ -64,11 +65,11 @@ export class NxSandboxComponent {
         this.theme = 'default';
 
         this.filter = {
-            query  : '',
-            selects: [
+            query   : '',
+            selects : [
                 {
-                    label: 'Minimum Resolution',
-                    items: [
+                    label : 'Minimum Resolution',
+                    items : [
                         { value: '0', name: 'All' },
                         { value: '84480', name: '1CIF' },
                         { value: '168960', name: '2CIF' },
@@ -90,8 +91,8 @@ export class NxSandboxComponent {
             ],
             multiselects: [
                 {
-                    label: 'Types',
-                    items: [
+                    label : 'Types',
+                    items : [
                         { id: 'Camera', label: 'Camera' },
                         { id: 'Multi-Sensor Camera', label: 'Multi-Sensor Camera' },
                         { id: 'Encoder', label: 'Encoder' },
@@ -101,18 +102,18 @@ export class NxSandboxComponent {
                     selected: undefined
                 }
             ],
-            tags   : [
+            tags: [
                 {
-                    label: 'Access Control',
-                    value: false
+                    label : 'Access Control',
+                    value : false
                 },
                 {
-                    label: 'Analytics',
-                    value: false
+                    label : 'Analytics',
+                    value : false
                 },
                 {
-                    label: 'PCIM',
-                    value: false
+                    label : 'PCIM',
+                    value : false
                 }
             ]
         };
@@ -136,7 +137,7 @@ export class NxSandboxComponent {
             { label: 'Administrator', id: 'qwerty1' },
             { label: 'Advanced Viewer', id: 'qwerty2' },
             { label: 'Viewer', id: 'qwerty3' },
-            { label: 'Live Viewer', id: 'qwerty4' },
+            { label: 'Live Viewer', id: 'qwerty4' }
             // { label: 'Administrator', id: 'qwerty11' },
             // { label: 'Advanced Viewer', id: 'qwerty12' },
             // { label: 'Viewer', id: 'qwerty13' },

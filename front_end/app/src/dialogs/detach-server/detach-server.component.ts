@@ -1,5 +1,6 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxToastService }            from '../toast.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';

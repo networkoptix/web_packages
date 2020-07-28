@@ -3,6 +3,8 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NgForm }                    from '@angular/forms';
+import { first }                     from 'rxjs/operators';
+
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxAccountService, Account } from '../../../services/account.service';
@@ -14,7 +16,6 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { first }                     from 'rxjs/operators';
 
 @Component({
     selector    : 'nx-account-password-component',

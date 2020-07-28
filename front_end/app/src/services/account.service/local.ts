@@ -4,6 +4,8 @@ import {
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
 import { LocalStorageService }        from 'ngx-store';
+import { tap, catchError }            from 'rxjs/operators';
+
 import { Exactly }                    from '../utils.service';
 import { NxConfigService }            from '../nx-config';
 import { NxCloudApiService }          from '../nx-cloud-api';
@@ -16,7 +18,6 @@ import { NxPollService }              from '../poll.service';
 import { NxSystemAPIService }         from '../system-api.service';
 import { BaseAccount }                from './base';
 import { Account }                    from './account';
-import { tap, catchError }            from 'rxjs/operators';
 
 /**
  * LocalAcount overrides BaseAccount, should maintain the same interface.
@@ -38,7 +39,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
         injector: Injector,
-        protected nxSystemAPIService: NxSystemAPIService,
+        protected nxSystemAPIService: NxSystemAPIService
     ) {
         super(
             configService,

@@ -7,11 +7,11 @@ import {
     HttpErrorResponse,
     HttpEvent
 } from '@angular/common/http';
-
-import { NxAppStateService } from './nx-app-state.service';
-import { NxConfigService, IConfig } from './nx-config';
-import { tap } from 'rxjs/operators';
+import { tap }        from 'rxjs/operators';
 import { Observable } from 'rxjs';
+
+import { NxAppStateService }        from './nx-app-state.service';
+import { NxConfigService, IConfig } from './nx-config';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {

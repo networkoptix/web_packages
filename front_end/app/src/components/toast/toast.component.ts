@@ -1,5 +1,6 @@
 import { Component, TemplateRef }              from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
+
 import { NxToastService }                      from '../../dialogs/toast.service';
 
 @Component({

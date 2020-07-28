@@ -1,10 +1,11 @@
 import { Injectable }               from '@angular/core';
 import { HttpClient, HttpHeaders }  from '@angular/common/http';
+
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
-import { NxUriCacheService } from './uri-cache.service';
+import { NxUriCacheService }        from './uri-cache.service';
 
 @Injectable({
     providedIn: 'root'
@@ -41,9 +42,9 @@ export class NxCloudApiService {
 
     connect(systemName, email, password) {
         return this.http.post<t.CloudResponse>(this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
-            name: systemName,
-            email: email,
-            password: password
+            name     : systemName,
+            email    : email,
+            password : password
         }).toPromise();
     }
 

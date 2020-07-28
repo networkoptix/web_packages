@@ -1,9 +1,10 @@
 import { Injectable }               from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { Router, NavigationStart }  from '@angular/router';
+
+import { MenuNode }                 from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxConfigService, IConfig } from './nx-config';
-import { BehaviorSubject, Subject }          from 'rxjs';
-import { Router, NavigationStart } from '@angular/router';
-import { MenuNode } from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxMenusService } from './menus.service';
+import { NxMenusService }           from './menus.service';
 
 @Injectable({
     providedIn: 'root'

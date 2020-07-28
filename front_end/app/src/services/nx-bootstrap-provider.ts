@@ -1,13 +1,12 @@
 import { Injectable }                from '@angular/core';
-import { IConfig, NxConfigService }  from './nx-config';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSystemRole }              from './system.service';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
-import { NxPageService }             from './page.service';
 import { HttpClient }                from '@angular/common/http';
 import { Location }                  from '@angular/common';
 
-import {DefaultUrlSerializer, Router, UrlTree} from "@angular/router";
+import { IConfig, NxConfigService }  from './nx-config';
+import { NxLanguageProviderService } from './nx-language-provider';
+import { NxSystemRole }              from './system.service';
+import { NxPageService }             from './page.service';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +41,7 @@ export class NxBootstrapProvider {
     private checkLocalIfNew(reload = true) {
         return NxConfigService.isLocal
             ? this.http.get('/api/moduleInformation', {}).toPromise()
-            : Promise.resolve({})
+            : Promise.resolve({});
     }
 
     load(): Promise<boolean> {
@@ -102,18 +101,18 @@ export class NxBootstrapProvider {
             });
 
             // @ts-ignore
-            const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = data;
+            const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = data;
             this.CONFIG.company = {
                 copyrightYear,
                 links: {
-                    privacy: privacyLink,
-                    support: supportLink,
-                    website: companyLink
+                    privacy : privacyLink,
+                    support : supportLink,
+                    website : companyLink
                 },
                 name: companyName
             };
 
-            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = data;
+            const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = data;
             this.CONFIG.cloudCapabilities = {
                 feedbackEnabled,
                 healthMonitor,
@@ -124,7 +123,7 @@ export class NxBootstrapProvider {
                 cloudStorageSize
             };
 
-            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = data;
+            const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
                 sortSupportedDevicesByPopularity,
@@ -133,10 +132,10 @@ export class NxBootstrapProvider {
                 vendorsShown: parseInt(vendorsShown)
             });
 
-            const {integrationFilterItems, integrationFilterLimitation} = data;
+            const { integrationFilterItems, integrationFilterLimitation } = data;
             this.CONFIG.integration.filter = {
-                items: integrationFilterItems,
-                limitation: integrationFilterLimitation
+                items      : integrationFilterItems,
+                limitation : integrationFilterLimitation
             };
 
             if (data.appTypesForPlatform) {

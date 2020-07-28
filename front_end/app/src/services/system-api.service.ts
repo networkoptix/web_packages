@@ -1,21 +1,21 @@
 import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { NxConfigService, IConfig }            from './nx-config';
+import { Location }                            from '@angular/common';
+import md5                                     from 'md5';
 import { from, of, throwError, Observable }    from 'rxjs';
 import {
     flatMap, map, mergeMap, retryWhen, timeout, tap, catchError
 }                                              from 'rxjs/operators';
-import { Location }                            from '@angular/common';
-import { ICamera, NxSystemUser }               from './system.service';
-import { IParams }                             from '../components/search/search.component';
-import * as t                                  from './system-api.types';
 
-import md5                                     from 'md5';
+import { NxConfigService, IConfig }            from './nx-config';
+import { ICamera, NxSystemUser }               from './system.service';
+import * as t                                  from './system-api.types';
 import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
+import { IParams }                             from '../components/search/search.component';
 
 export interface User {
     canBeEdited: boolean;
@@ -362,8 +362,8 @@ export class NxSystemAPI {
         const params = newAdminPassword ? { currentPassword, login, password } : { currentPassword };
 
         return NxConfigService.isLocal
-         ? this.post('/web/api/detachFromCloud', params).toPromise()
-         : this.post('/api/detachFromCloud', params).toPromise();
+            ? this.post('/web/api/detachFromCloud', params).toPromise()
+            : this.post('/api/detachFromCloud', params).toPromise();
     }
 
     setupCloudSystem(
@@ -447,9 +447,9 @@ export class NxSystemAPI {
     }
 
     checkLocalIfNew(reload = true) {
-         return NxConfigService.isLocal
+        return NxConfigService.isLocal
             ? Promise.resolve({})
-            : this.getModuleInfo().toPromise()
+            : this.getModuleInfo().toPromise();
     }
 
     createEvent(params: t.EventParams) {
@@ -823,26 +823,29 @@ export class NxSystemAPI {
     // End of Health Monitor
 
     // <added by @gbezyuk for watch component>
-    public checkCameraThumbnail (camera_id, width=70, height=40) {
+    public checkCameraThumbnail(camera_id, width = 70, height = 40) {
         // it expects JSON yet normally gets JPG, thus rejects,
         // let's override to make it more meaningful (@gbezyuk)
         const _checker = response => {
             if (!response || response.status !== 200) {
-                return Promise.reject(response)
+                return Promise.reject(response);
             } else {
-                return Promise.resolve(response)
+                return Promise.resolve(response);
             }
-        }
+        };
         return this.get(`/ec2/cameraThumbnail?cameraId=${camera_id}&width=${width}&height=${height}`)
-            .toPromise().then(_checker).catch(_checker)
-    }    
-    public getCameraThumbnailUrl (cameraId, width=68, height=38) {
-        return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}`
+            .toPromise().then(_checker).catch(_checker);
     }
-    getLiveHlsUrl(cameraId, resolution='lo') {        
+
+    public getCameraThumbnailUrl(cameraId, width = 68, height = 38) {
+        return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}`;
+    }
+
+    getLiveHlsUrl(cameraId, resolution = 'lo') {
         return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
     }
-    getHlsUrl(cameraId, position, resolution='lo') {        
+
+    getHlsUrl(cameraId, position, resolution = 'lo') {
         return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
     }
     // </added by @gbezyuk for watch component>

@@ -1,15 +1,13 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule }        from '@angular/core';
+import { CommonModule }    from '@angular/common';
+import { BrowserModule }   from '@angular/platform-browser';
+import { UpgradeModule }   from '@angular/upgrade/static';
+import { RouterModule }    from '@angular/router';
+import { NgbModule }       from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ComponentsModule }            from '../../../components/components.module';
 import { NxIntegrationsListComponent } from './list.component';
-
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
     imports: [
@@ -19,14 +17,14 @@ import { ComponentsModule } from '../../../components/components.module';
         RouterModule,
         NgbModule,
         TranslateModule,
-        ComponentsModule,
+        ComponentsModule
     ],
-    providers: [],
-    declarations: [
+    providers : [],
+    declarations : [
         NxIntegrationsListComponent
     ],
-    bootstrap: [],
-    entryComponents: [
+    bootstrap : [],
+    entryComponents : [
         NxIntegrationsListComponent
     ],
     exports: [

@@ -31,9 +31,9 @@ export class ActivatedResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     { path: 'register', component: NxRegisterComponent },
-    { path: 'register/success', component: NxRegisterComponent, resolve: { uriParam: SuccessResolver }},
-    { path: 'register/successActivated', component: NxRegisterComponent, resolve: { uriParam: ActivatedResolver }},
-    { path: 'register/:code', component: NxRegisterComponent}
+    { path: 'register/success', component: NxRegisterComponent, resolve: { uriParam: SuccessResolver } },
+    { path: 'register/successActivated', component: NxRegisterComponent, resolve: { uriParam: ActivatedResolver } },
+    { path: 'register/:code', component: NxRegisterComponent }
 ];
 
 @NgModule({
@@ -49,18 +49,18 @@ const appRoutes: Routes = [
         TranslateModule,
         InputTrimModule
     ],
-    providers      : [
+    providers: [
         SuccessResolver,
-        ActivatedResolver,
+        ActivatedResolver
     ],
-    declarations   : [
-        NxRegisterComponent,
-    ],
-    bootstrap      : [],
-    entryComponents: [
+    declarations: [
         NxRegisterComponent
     ],
-    exports        : [
+    bootstrap : [],
+    entryComponents : [
+        NxRegisterComponent
+    ],
+    exports: [
         NxRegisterComponent
     ]
 })

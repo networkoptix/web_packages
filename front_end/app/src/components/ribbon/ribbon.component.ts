@@ -1,13 +1,12 @@
 import {
     Component, OnDestroy, OnInit, ViewEncapsulation
 }                                   from '@angular/core';
-import { NxRibbonService }          from './ribbon.service';
-import { distinctUntilChanged }     from 'rxjs/operators';
-import { Subscription }             from 'rxjs';
 import { UntilDestroy }             from '@ngneat/until-destroy';
+import { Subscription }             from 'rxjs';
+
+import { NxRibbonService }          from './ribbon.service';
 import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxUtilsService }           from '../../services/utils.service';
-import { Process }         from '../../services/process.service';
+import { Process }                  from '../../services/process.service';
 
 export interface RibbonAction {
     type: 'link' | 'process-button',

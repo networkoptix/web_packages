@@ -1,9 +1,10 @@
-import { BaseAccount }                  from './base';
-import { Exactly }                      from '../utils.service';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT, Location }           from '@angular/common';
 import { LocalStorageService }          from 'ngx-store';
 import { Router }                       from '@angular/router';
+
+import { BaseAccount }                  from './base';
+import { Exactly }                      from '../utils.service';
 import { NxConfigService }              from '../nx-config';
 import { NxCloudApiService }            from '../nx-cloud-api';
 import { NxLanguageProviderService }    from '../nx-language-provider';

@@ -1,6 +1,6 @@
-import { Injectable }                                 from '@angular/core';
-import { BehaviorSubject, Subject, SubscriptionLike } from 'rxjs';
-import { UntilDestroy }                               from '@ngneat/until-destroy';
+import { Injectable }               from '@angular/core';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export enum ButtonArrowType {
     up = 'UP',

@@ -4,12 +4,13 @@ import {
     SimpleChanges, ViewChild
 }                                    from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

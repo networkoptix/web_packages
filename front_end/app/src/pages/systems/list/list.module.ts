@@ -6,10 +6,11 @@ import { RouterModule, Routes }   from '@angular/router';
 import { FormsModule }            from '@angular/forms';
 import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
+
 import { DirectivesModule }       from '../../../directives/directives.module';
 import { ComponentsModule }       from '../../../components/components.module';
-import { AuthGuard }              from '../../../routeGuards';
 import { NxSettingsModule }       from '../settings/settings.module';
+import { AuthGuard }              from '../../../routeGuards';
 import { NxSystemsListComponent } from './list.component';
 
 const appRoutes: Routes = [
@@ -19,7 +20,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports         : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -33,13 +34,16 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         NxSettingsModule
     ],
-    providers       : [],
-    declarations    : [
+    providers: [
+    ],
+    declarations: [
         NxSystemsListComponent
     ],
-    bootstrap       : [],
-    entryComponents : [],
-    exports         : [
+    bootstrap: [
+    ],
+    entryComponents: [
+    ],
+    exports: [
         NxSystemsListComponent
     ]
 })

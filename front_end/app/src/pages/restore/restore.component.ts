@@ -1,6 +1,7 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { LocalStorageService }       from 'ngx-store';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';

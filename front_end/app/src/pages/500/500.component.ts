@@ -1,4 +1,5 @@
 import { Component }                 from '@angular/core';
+
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';

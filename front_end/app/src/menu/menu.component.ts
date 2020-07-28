@@ -2,15 +2,16 @@ import {
     Component, ElementRef, HostListener, Input, OnChanges, OnInit,
     SimpleChanges, ViewChild, ViewEncapsulation
 }                                    from '@angular/core';
-import { SubscriptionLike }          from 'rxjs';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService, IConfig }  from '../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
-import { NxMenuService }             from './menu.service';
-import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { SubscriptionLike }          from 'rxjs';
+
+import { NxConfigService, IConfig }         from '../services/nx-config';
+import { NxMenuService }                    from './menu.service';
+import { NxLanguageProviderService }        from '../services/nx-language-provider';
 import { NxUtilsService }                   from '../services/utils.service';
 import { ButtonArrowType, NxSearchService } from '../services/search.service';
 import { NxSystem }                         from '../services/system.service';
+import { LanguageI18NStaticTypes }          from '../../language_i18n_static_types';
 
 /* Usage
  <nx-menu>
