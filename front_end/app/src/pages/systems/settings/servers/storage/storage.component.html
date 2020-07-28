@@ -1,10 +1,23 @@
-<nx-block type="mt-3">
-    <header><h4 translate>Storage Locations</h4></header>
+<nx-block type="mt-3 storage-info">
+    <header>
+        <div class="header-top-bar d-flex justify-content-between">
+            <h2 translate>Storage Locations</h2>
+            <div class="buttons">
+                <button class="server-buttons pr-0">
+                    <span>
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                  [applyCss]="true"></svg-icon>
+                    </span>
+                    <span class="ml-1" translate>Detailed Info</span>
+                </button>
+            </div>
+        </div>
+    </header>
     <nx-section nonPadded>
         <div class="storage-container">
             <nx-pre-loader *ngIf="loading"></nx-pre-loader>
             <nx-section-placeholder
-                    *ngIf="!loading && !storages.length"
+                    *ngIf="!loading && !storage.length"
                     svgFileName="system_settings_placeholder"
                     width="64"
                     [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
@@ -23,49 +36,18 @@
                     </thead>
                     <tbody>
                         <tr class="table-row-spacer"></tr>
-                        <tr *ngFor="let storage of storages; index as i">
-                            <td title="{{storage.url}}">{{storage.url}}</td>
-                            <td>{{friendlyBytes( storage.totalSpace )}}</td>
-                            <td>{{friendlyBytes( storage.freeSpace.bits )}}</td>
-                            <td>
-                                <input
-                                        type="number"
-                                        id="reservedSpace{{ i }}"
-                                        name="reservedSpace{{ i }}"
-                                        min="0"
-                                        [max]="storage.maxReserve[storage.reservedSpace.uom]"
-                                        [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
-                                        [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
-                                        (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.maxReserve[storage.reservedSpace.uom])"
-                                        class="w-50 p-1 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"/>
-                                <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"
-                                        [(ngModel)]="storage.reservedSpace.uom"
-                                        class="form-control input-sm w-50" style="margin-left: -1px; background-color: white; min-width: 58px;">
-                                    <option selected value="GB">GB</option>
-                                    <option value="TB">TB</option>
-                                </select>
-                            </td>
-                            <td>{{storage.storageType}}</td>
-                            <td>
-                                <nx-switch
-                                        componentId="isUsedForWriting{{ i }}"
-                                        name="isUsedForWriting{{ i }}"
-                                        [(ngModel)]="storage.isUsedForWriting.value">
-                                </nx-switch>
-                            </td>
+                        <tr *ngFor="let store of storage; index as i">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr class="table-row-spacer"></tr>
                     </tbody>
                 </table>
             </form>
-        </div>
-    </nx-section>
-    <nx-section *ngIf="watchersChanged">
-        <div class="col-12 p-0 d-flex">
-            <nx-process-button
-                    [process]="saveSettings"
-                    [buttonText]="'Save' | translate"></nx-process-button>
-            <nx-cancel-button [process]="saveSettings" [discardFn]="resetWatchers" [showDiscard]="true"></nx-cancel-button>
         </div>
     </nx-section>
 </nx-block>
