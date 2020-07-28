@@ -85,7 +85,7 @@ Integration Store Search
 
     Log    Step 4
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[7]
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,health
+    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,storage
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[7]//span[contains(@class, "tag-close-icon")]
     ${current}=   Number of Integrations Should be Higher    ${current}
     Each Integration Tile Contains    vis    Vis
@@ -95,12 +95,12 @@ Integration Store Search
     Log    Step 5
     Click Element     ${INTEGRATIONS SEARCH CLOSE BUTTON}
     Textfield Should Contain    ${INTEGRATIONS SEARCH INPUT}    ${EMPTY}
-    Wait Until Location Is    ${url}?tags=objectDetection,health
+    Wait Until Location Is    ${url}?tags=objectDetection,storage
     ${current}=   Number of Integrations Should be Higher    ${current}
 
     Log    Step 6
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
-    Wait Until Location Is    ${url}?tags=health
+    Wait Until Location Is    ${url}?tags=storage
     ${current}=   Number of Integrations Should be Lower    ${current}
 
     Log    Step 7
@@ -108,16 +108,16 @@ Integration Store Search
     Wait Until Location Is    ${url}
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=health
+    Wait Until Location Is    ${url}?tags=storage
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=objectDetection,health
+    Wait Until Location Is    ${url}?tags=objectDetection,storage
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Back
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,health
+    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,storage
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Forward
-    Wait Until Location Is    ${url}?tags=objectDetection,health
+    Wait Until Location Is    ${url}?tags=objectDetection,storage
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go To Integrations Page
 
