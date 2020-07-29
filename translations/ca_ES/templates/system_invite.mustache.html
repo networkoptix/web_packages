@@ -3,14 +3,14 @@
 {{#message.sharer_name}}
 <p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> ha compartit l'accés al sistema de gestió de vídeo "{{message.system_name}}" amb tu.
 
-To view and manage it, please create account on <a href="{{config.portal_url}}">%CLOUD_NAME%</a> using your current email address and follow further instructions.</p>
+Per visualitzar-lo i gestionar-lo, creeu un compte a <a href="{{config.portal_url}}">%CLOUD_NAME%</a> utilitzant la vostra adreça de correu electrònic actual i seguiu les instruccions.</p>
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-<p>You have been granted access to video management system "{{message.system_name}}".
+<p>Se l'ha atorgat accés al sistema de gestió de vídeo "{{message.system_name}}.
 
-To view and manage it, please create account on <a href="{{config.portal_url}}">%CLOUD_NAME%</a> using your current email address and follow further instructions.</p>
+Per visualitzar-lo i gestionar-lo, creeu un compte a <a href="{{config.portal_url}}">%CLOUD_NAME%</a> utilitzant la vostra adreça de correu electrònic actual i seguiu les instruccions.</p>
 {{/message.sharer_name}}
 
-<a class="btn" href="{{config.portal_url}}/register/{{message.code}}">Create Account</a>
+<a class="btn" href="{{config.portal_url}}/register/{{message.code}}"> Crear un compte </a>
 
