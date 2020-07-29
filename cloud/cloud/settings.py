@@ -221,8 +221,16 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION']
     },
     "deployment": REDIS_CACHE,
-    "global": REDIS_CACHE,
-    "integrations": REDIS_CACHE,
+    "global": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION']
+    },
+    "integrations": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION']
+    },
     "filters": REDIS_CACHE
 }
 

@@ -33,7 +33,7 @@ dir=../skins/$SKIN
             hg log -r . --repository "$2" | head -n 7 > dist/version.txt
         elif [ -d "$2/.git" ]; then
             git -C "$2" log -n 1 > dist/version.txt
-            git rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
+            git -C "$2" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
         else
             echo "Neither git nor hg has been detected in $2" && exit 1
         fi
