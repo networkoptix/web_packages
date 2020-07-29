@@ -6,12 +6,12 @@
         display               : grid;
         border-collapse       : collapse;
         min-width             : 100%;
-        grid-template-columns : 32% 13% 12% 18% auto 10%;
+        grid-template-columns : 35% 20% auto;
     }
 
     .table-row-spacer {
         height          : .5rem;
-        grid-column-end : span 6;
+        grid-column-end : span 3;
         display         : grid;
     }
 
@@ -59,19 +59,13 @@
 }
 
 .header-top-bar {
-    display       : flex;
+    display     : flex;
+    align-items : center;
 
     .header-title {
         display     : flex;
         align-items : center;
         flex-grow   : 1;
-
-        h2 {
-            font-family : typography.$font-family-regular;
-            height      : 32px;
-            font-weight : bold;
-            font-size   : 24px;
-        }
     }
 
     .server-buttons {
@@ -128,19 +122,6 @@
             margin-bottom : 2px;
             border-bottom : 1px dotted $light6;
             flex-grow     : 1;
-        }
-    }
-}
-
-.server-setting-buttons {
-    display         : flex;
-    justify-content : space-between;
-
-    .setting-buttons {
-        display : flex;
-
-        button:first-child {
-            margin-right : 8px;
         }
     }
 }
