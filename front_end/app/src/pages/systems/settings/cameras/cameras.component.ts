@@ -6,7 +6,7 @@ import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subscription, BehaviorSubject, from, throwError, of
-}                                    from 'rxjs';
+} from 'rxjs';
 import {
     filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
 }                                    from 'rxjs/operators';
@@ -97,7 +97,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.routeParamsSubscription = this.route
             .params
             .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(params => {
+            .subscribe((params: any) => {
                 if (params.cameraId) {
                     this.warnings = [];
                     this.errors = [];
@@ -150,7 +150,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        map(system => {
+                        map((system: NxSystem) => {
                             if (!system.cameras) {
                                 throw system;
                             }
@@ -755,7 +755,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (this.system.canViewInfo) {
             this.healthReportSubscription = this.system.mediaserver
                 .getAggregateHealthReport()
-                .pipe(takeUntil(this.unsub$))
+                .pipe(untilDestroyed(this))
                 .subscribe(
                     (result: any) => {
                         this.applyService.setVisible();
