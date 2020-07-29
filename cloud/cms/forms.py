@@ -99,7 +99,7 @@ class CustomContextForm(forms.Form):
             self.remove_language()
 
         is_published = asset.version_id() > 0
-        can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
+        can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
 
         for data_structure in data_structures:
             ds_label = data_structure.label if data_structure.label else data_structure.name

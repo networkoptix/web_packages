@@ -770,6 +770,10 @@ class UserGroupsToAssetPermissions(models.Model):
         return groups.exists()
 
     @staticmethod
+    def check_edit_advanced(user, asset):
+        return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_advanced")
+
+    @staticmethod
     def check_customization_permission(user, customization, permission=None):
         return UserGroupsToAssetPermissions.\
             check_permission(user, get_cloud_portal_asset(customization), permission)
@@ -777,12 +781,12 @@ class UserGroupsToAssetPermissions(models.Model):
     @staticmethod
     def check_customization_change_account(user, customization):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, 'api.change_account')
+            check_customization_permission(user, customization, "api.change_account")
 
     @staticmethod
     def check_customization_access(user, customization):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, 'cms.access_customization')
+            check_customization_permission(user, customization, "cms.access_customization")
 
     @staticmethod
     def user_has_beta_access(user):

@@ -13,6 +13,7 @@ from api.helpers.exceptions import APINotFoundException, api_success, require_pa
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
+from cms.models import UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 
 
@@ -80,7 +81,7 @@ def context_editor_action(request, asset, context_id, language_code):
     upload_errors = []
     asset_errors = []
 
-    if not (request.user.is_superuser or request.user.has_perm('cms.edit_advanced'))\
+    if not UserGroupsToAssetPermissions.check_edit_advanced(request.user, asset)\
             and advanced_touched_without_permission(request_data, context.datastructure_set.all(), asset):
         raise PermissionDenied
 
