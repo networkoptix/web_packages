@@ -278,7 +278,7 @@
     "LOGIN IS REQUIRED TEXT": "ログインが必要です",
     "DELETE ACCOUNT HEADER TEXT": "アカウントを削除しますか？",
     "DELETE ACCOUNT INFO TEXT": "アカウントと関連付けられているすべてのデータは、復元することなく完全に削除されます。",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "パスワードを入力して続行",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "続行するにはアカウントのパスワードを入力してください",
     "ENCRYPTING VIDEO WARNING TEXT": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
