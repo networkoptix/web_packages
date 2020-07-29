@@ -340,9 +340,9 @@ export class MotionMaskRenderer {
 
             const horizontal = fromY === toY;
             const white10Percent = '#FFFFFF1A';
-            const gray = '#666666';
+            const black20Percent = '#00000033';
             const selected = sensitivity >= 100;
-            const color = shadow ? gray : solid
+            const color = shadow ? black20Percent : solid
                 ? selected
                     ? this.brandColor
                     : 'black'
@@ -352,10 +352,25 @@ export class MotionMaskRenderer {
                 ctx.strokeStyle = color;
                 ctx.lineWidth = shadow ? 3.5 : selected ? 2 : 1;
                 ctx.beginPath();
-                ctx.moveTo(!horizontal && selected ? fromX + 0.5 : fromX, selected ? fromY + 0.5 : fromY);
+                ctx.moveTo(
+                    !horizontal && selected
+                        ? fromX + 0.5
+                        : fromX,
+                    selected
+                        ? fromY + 0.5
+                        : fromY
+                );
                 ctx.lineTo(
-                    horizontal && ctx.strokeStyle === white10Percent ? toX - 1 : !horizontal && selected ? toX + 0.5 : toX,
-                    !horizontal && ctx.strokeStyle === white10Percent ? toY - 1 : selected ? toY + 0.5 : toY
+                    horizontal && color === white10Percent
+                        ? toX - 1
+                        : !horizontal && selected
+                            ? toX + 0.5
+                            : toX,
+                    !horizontal && [white10Percent, black20Percent].includes(color)
+                        ? toY - (color === white10Percent ? 1 : 0.5)
+                        : selected
+                            ? toY + 0.5
+                            : toY
                 );
                 ctx.stroke();
             };
