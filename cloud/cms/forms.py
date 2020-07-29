@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.db.models import When, Case
 from django.template.loader import render_to_string
 from dal import autocomplete
 
@@ -93,7 +94,10 @@ class CustomContextForm(forms.Form):
         data_structures = context.datastructure_set.all()
         fieldsets = {None: []}
         if self.order:
-            data_structures = data_structures.order_by(self.order)
+            data_structures = data_structures.order_by(Case(
+                When(**{self.order: ''}, then='name'),
+                default=self.order
+            ))
 
         if len(data_structures) < 1:
             return

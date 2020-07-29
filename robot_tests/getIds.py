@@ -1,6 +1,6 @@
 import requests
 import re
-
+import socket
 
 def get_variables(cloud_url, test_email):
     vars = {}
@@ -36,6 +36,13 @@ def get_variables(cloud_url, test_email):
     e = d.json()
     vars["AUTO TESTS 4.0 SYSTEM ID"] = e["systems"][0]["id"]
 
+    #get the system id for the system with the 2serverofflineanchor email and add it to the dictionary
+    x = requests.post(f"{cloud_url}/cdb/system/get", 
+                      auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serverofflineanchor@gmail.com", "qweasd 123"), 
+                      json={"name":"Auto Tests"})
+    y = x.json()
+    vars["AUTOTESTS 2 SERVER OFFLINE SYSTEM ID"] = y["systems"][0]["id"]
+
     domain = cloud_url.split('//')[1]
     key = domain.split('.')[0]
     if key == 'cloud-test':
@@ -44,6 +51,10 @@ def get_variables(cloud_url, test_email):
         key = 'prod'
     vars["IMAGE 4.0"] = f'4.0_{key}'
     vars["IMAGE 4.1"] = f'4.1_{key}'
+
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    vars["LOCALHOST"] = f'http://{ip}'
 
     # return the dictionary as variables into robot
     return vars

@@ -24,7 +24,7 @@ Go to download page
     Click Link    ${DOWNLOAD LINK}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Log In    ${email}    ${password}    button=None
-    Validate Log In
+    Validate Log In    ${email}
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
     Click Link    ${WINDOWS TAB}
 
@@ -76,7 +76,7 @@ Going to the downloads page should show you the tab according to your OS
     Click Link    ${DOWNLOAD LINK}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Log In    ${email}    ${password}    button=None
-    Validate Log In
+    Validate Log In    ${email} 
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
     #we convert to lowercase because the ids are lowercase but the os call gives uppercase
     ${os}    Get OS

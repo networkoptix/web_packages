@@ -1,7 +1,7 @@
 *** Keywords ***
 Open Restore Password Dialog With Link
     Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamil    ${password}
+    ${user}=   Register and activate account with random email    mark    hamil    ${password}    ui    ui
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}

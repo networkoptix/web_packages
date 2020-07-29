@@ -1,6 +1,5 @@
 *** Settings ***
 Resource          ../resource.robot
-Library           OperatingSystem
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Suite Teardown    Close All Browsers
@@ -15,11 +14,6 @@ ${503 URL}           ${url}/static/503.html
 *** Keywords ***
 Restart
     Common Restart Logout    ${url}
-    
-Get Lang List
-    ${lang file} =    Get File    customizations/${CUST LANGUAGE LIST}
-    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json 
-    [Return]    ${lang dict}
     
 *** Test Cases ***
 Verify List of Available Languages

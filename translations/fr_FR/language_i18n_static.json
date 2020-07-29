@@ -157,7 +157,7 @@
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
         "inaccessibleFeatureMessage": "Le système est hors ligne et, par conséquent, les informations ne sont pas accessibles.",
         "unknown": "Inconnu",
-        "vendor": "Vendeur:",
+        "vendor": "Vendeur",
         "model": "Modèle",
         "ip": "Adresse IP",
         "server": "Serveur",

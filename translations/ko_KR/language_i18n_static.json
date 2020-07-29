@@ -137,9 +137,9 @@
         "resolution": {
             "various": "– 다른 가치 –",
             "auto": "자동",
-            "best": "최고",
+            "best": "최상",
             "high": "높은",
-            "medium": "일반",
+            "medium": "중간",
             "low": "낮은"
         },
         "general": "일반",
@@ -214,7 +214,7 @@
             },
             "activationError": {
                 "title": "클라우드 스토리지 이동",
-                "message": "이미 시스템에 추가 된 총 <volume> 클라우드 스토리지가 있으며 더 이상 추가 할 수 없습니다. <br/><br/>다른 시스템에서 스토리지를 삭제하거나이 시스템으로 이동할 수 있습니다. "
+                "message": "이미 시스템에 추가 된 총 <volume> 클라우드 스토리지가 있으며 더 이상 추가 할 수 없습니다. <br/><br/>다른 시스템에서 스토리지를 삭제하거나 이 시스템으로 이동할 수 있습니다. "
             },
             "systemDisconnectError": {
                 "title": "%CLOUD_NAME%에서 시스템을 분리 하지 못했습니다.",
@@ -224,7 +224,7 @@
                 "title": "클라우드 스토리지 이동",
                 "success": "스토리지가 성공적으로 이동",
                 "errorPrefix": "클라우드 스토리지 제거 오류",
-                "notFound": "저장 공간을 찾을 수 없습니다. 다른 사용자가 저장소를 이동하거나 삭제했을 수 있습니다",
+                "notFound": "저장 공간을 찾을 수 없습니다. 다른 사용자가 저장소를 이동하거나 삭제했을 수 있습니다.",
                 "status": {
                     "offline": "클라우드 스토리지를 오프라인 시스템으로 이동할 수 없습니다."
                 }
@@ -311,7 +311,7 @@
             "error": "오류",
             "success": "성공",
             "changeAccount": "이미 로그인 한 상태입니다 {email}",
-            "deleteUser": "사용자 삭제?",
+            "deleteUser": "사용자를 삭제하시겠습니까?",
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
             "removeUser": "사용자를 삭제 하시겠습니까?",
@@ -509,7 +509,7 @@
     },
     "menu": {
         "titles": {
-            "systemAdministration": "시스템 관리자",
+            "systemAdministration": "시스템 관리",
             "general": "일반",
             "licenses": "인증키",
             "users": "사용자"
@@ -653,7 +653,7 @@
             "unavailable": "시스템에 연결할 수 없습니다."
         },
         "users": {
-            "cloudDelete": "사용자 삭제",
+            "cloudDelete": "사용자 제거",
             "localDelete": "사용자 삭제"
         },
         "yourSystem": "귀하의 시스템",
@@ -720,7 +720,7 @@
             "expires": "만료",
             "time": "시간",
             "deactivations": "비활성화 왼쪽",
-            "trial": "기간한정",
+            "trial": "체험용",
             "online": "온라인",
             "error": "오류",
             "expired": "만료됨",
@@ -739,7 +739,7 @@
             "required": "{{number}} 더 필요",
             "activated": "라이센스 비활성화 됨",
             "inuse": "라이센스 키가 이미 활성화되어 다른 시스템에서 하드웨어 ID가 {{hwid}} 서버에 바인딩되었습니다.",
-            "trialActivated": "평가판 라이센스가 활성화되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
+            "trialActivated": "체험용 라이선스가 활성화 되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
         }
     },
     "settingsConfig": {
