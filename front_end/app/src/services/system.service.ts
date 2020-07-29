@@ -1271,7 +1271,7 @@ export class NxSystem extends System implements OnDestroy {
         });
     }
     // </changed by @gbezyuk to fix auth race condition>
-    
+
     // <added by @gbezyuk for watch component>
 
     public getResourceTypes (force: boolean = false) {
@@ -1387,7 +1387,7 @@ export class NxSystem extends System implements OnDestroy {
 
     public getServerTimes (): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
-            () => this.mediaserver.getServerTimes().toPromise().then(                
+            () => this.mediaserver.getServerTimes().toPromise().then(
                 r => {
                     const now = Date.now()
                     // @ts-ignore

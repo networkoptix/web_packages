@@ -1,8 +1,8 @@
 import {
     Component, Inject, OnDestroy,
     LOCALE_ID, Input, OnChanges,
-    SimpleChanges
-}                                    from '@angular/core';
+    SimpleChanges, OnInit
+} from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
@@ -11,8 +11,9 @@ import { NxProcessService, Process } from '../../../../../services/process.servi
 import { Watcher }                   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }  from '../../../../../../language_i18n_static_types';
-import { IConfig, NxConfigService } from '../../../../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { mapStorages }               from '../storage-advanced/storage.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -20,7 +21,7 @@ import { IConfig, NxConfigService } from '../../../../../services/nx-config';
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemStorageComponent {
+export class NxSystemStorageComponent implements OnChanges{
     @Input() system: NxSystem;
     @Input() serverId: string;
 
@@ -48,4 +49,26 @@ export class NxSystemStorageComponent {
         this.loading = true;
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        debugger;
+        if (changes.system?.currentValue || changes.serverId?.currentValue) {
+            this.init();
+        }
+    }
+
+    init() {
+        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
+            this.system.updateOrGetSystemStorage().toPromise()
+                .then(response => {
+                    this.loading = false;
+                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
+                    this.storage = response.reply.storages;
+                    // this.watchers = response.reply.storages;
+                    // this.updateSaveProcess();
+                });
+            // const selectedServer = this.system.servers.find(server => server.id === this.serverId);
+            // this.storage = selectedServer.storages;
+            // this.loading = false;
+        }
+    }
 }

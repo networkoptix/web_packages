@@ -1,7 +1,14 @@
-<nx-block type="mt-3 storage-info">
+<nx-section-placeholder
+        *ngIf="!loading && !storage.length"
+        svgFileName="system_settings_placeholder"
+        width="64"
+        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+</nx-section-placeholder>
+
+<nx-block type="mt-3 storage-info" *ngIf="!loading && storage.length">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
-            <h2 translate>Storage Locations</h2>
+            <h4 translate>Storage Locations</h4>
             <div class="buttons">
                 <button class="server-buttons pr-0">
                     <span>
@@ -15,33 +22,20 @@
     </header>
     <nx-section nonPadded>
         <div class="storage-container">
-            <nx-pre-loader *ngIf="loading"></nx-pre-loader>
-            <nx-section-placeholder
-                    *ngIf="!loading && !storage.length"
-                    svgFileName="system_settings_placeholder"
-                    width="64"
-                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
-            </nx-section-placeholder>
             <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
-                <table *ngIf="showStorage">
+                <table>
                     <thead>
                         <tr>
                             <th>Address</th>
-                            <th>Total space</th>
-                            <th>Free space</th>
-                            <th>Reserved space</th>
-                            <th>Type</th>
-                            <th>&nbsp;</th>
+                            <th>Mode</th>
+                            <th>Space</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="table-row-spacer"></tr>
-                        <tr *ngFor="let store of storage; index as i">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                        <tr *ngFor="let store of storage">
+                            <td>{{store.url}}</td>
+                            <td>{{store.storageType}}/{{store.isBackup}}/{{store.usedForWriting}}</td>
                             <td></td>
                         </tr>
                         <tr class="table-row-spacer"></tr>
@@ -49,5 +43,8 @@
                 </table>
             </form>
         </div>
+    </nx-section>
+    <nx-section>
+        <button class="btn btn-default" translate>Add External Storage</button>
     </nx-section>
 </nx-block>

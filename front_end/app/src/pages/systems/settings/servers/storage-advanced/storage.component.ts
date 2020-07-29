@@ -46,7 +46,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system || changes.serverId) {
+        if (changes.system?.currentValue || changes.serverId?.currentValue) {
             this.init();
         }
     }

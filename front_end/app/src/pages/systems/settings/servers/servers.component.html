@@ -4,8 +4,9 @@
         [selectedServer]="this.selectedServer">
 </nx-standard-server-component>
 
-<nx-server-storage-component>
-
+<nx-server-storage-component
+        [system]="system"
+        [serverId]="this.selectedServer?.id">
 </nx-server-storage-component>
 
 <ng-container *ngIf="!isOffline && system && advanced">
