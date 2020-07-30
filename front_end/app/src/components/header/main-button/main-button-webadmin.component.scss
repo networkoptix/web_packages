@@ -46,8 +46,8 @@
         }
     }
 
-    &::after {
-        background: theme_variables.$light16 !important;
+    & > svg-icon > svg > .st0{
+        fill: $light16;
     }
 }
 
