@@ -36,7 +36,9 @@
                         <tr *ngFor="let store of storage">
                             <td>{{store.url}}</td>
                             <td>{{store.storageType}}/{{store.isBackup}}/{{store.usedForWriting}}</td>
-                            <td></td>
+                            <td class="size-chart">
+                                <nx-storage-size-component [store]="store"></nx-storage-size-component>
+                            </td>
                         </tr>
                         <tr class="table-row-spacer"></tr>
                     </tbody>

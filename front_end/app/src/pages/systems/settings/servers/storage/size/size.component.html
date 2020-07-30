@@ -1,0 +1,62 @@
+
+<div class="container"
+     [ngbPopover]="popLegend"
+     placement="bottom"
+     [openDelay]="300"
+     [closeDelay]="500"
+     triggers="click">
+
+    <div class="total-label">{{totalSpaceLabel}}</div>
+    <div class="bar reserved" [style.width.%]="reservedPercentage"></div>
+    <div class="bar available" [style.width.%]="availPercentage"></div>
+    <div class="bar archive" [style.width.%]="archivePercentage"></div>
+    <div class="bar used" [style.width.%]="usedPercentage"></div>
+</div>
+
+<ng-template #popLegend>
+    <table class="table-legend">
+        <tbody>
+            <tr>
+                <td>&nbsp;</td>
+                <td class="table-legend-title" translate>Size</td>
+                <td class="table-legend-size">{{totalSpaceLabel}}</td>
+            </tr>
+            <tr>
+                <td class="table-legend-marker">
+                    <svg viewBox="2 2 12 12">
+                        <polygon class="box used" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                    </svg>
+                </td>
+                <td class="table-legend-title" translate>Other data</td>
+                <td class="table-legend-size">{{used}}</td>
+            </tr>
+            <tr>
+                <td class="table-legend-marker">
+                    <svg viewBox="2 2 12 12">
+                        <polygon class="box archive" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                    </svg>
+                </td>
+                <td class="table-legend-title" translate>VMS</td>
+                <td class="table-legend-size">{{archive}}</td>
+            </tr>
+            <tr>
+                <td class="table-legend-marker">
+                    <svg viewBox="2 2 12 12">
+                        <polygon class="box reserved" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                    </svg>
+                </td>
+                <td class="table-legend-title" translate>Reserved</td>
+                <td class="table-legend-size">{{reserved}}</td>
+            </tr>
+            <tr>
+                <td class="table-legend-marker">
+                    <svg viewBox="2 2 12 12">
+                        <polygon class="box available" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                    </svg>
+                </td>
+                <td class="table-legend-title" translate>Available</td>
+                <td class="table-legend-size">{{available}}</td>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>

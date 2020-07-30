@@ -21,7 +21,7 @@ import { mapStorages }               from '../storage-advanced/storage.component
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemStorageComponent implements OnChanges{
+export class NxSystemStorageComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
@@ -38,9 +38,7 @@ export class NxSystemStorageComponent implements OnChanges{
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        @Inject(LOCALE_ID) private locale: string,
-        private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -50,25 +48,58 @@ export class NxSystemStorageComponent implements OnChanges{
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        debugger;
-        if (changes.system?.currentValue || changes.serverId?.currentValue) {
-            this.init();
-        }
+        this.init();
+        // if (changes.system?.currentValue || changes.serverId?.currentValue) {
+        //     this.init();
+        // }
     }
 
     init() {
-        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
-            this.system.updateOrGetSystemStorage().toPromise()
-                .then(response => {
-                    this.loading = false;
-                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
-                    this.storage = response.reply.storages;
-                    // this.watchers = response.reply.storages;
-                    // this.updateSaveProcess();
-                });
-            // const selectedServer = this.system.servers.find(server => server.id === this.serverId);
-            // this.storage = selectedServer.storages;
-            // this.loading = false;
-        }
+        const replyMock = {
+            reply: {
+                storageProtocols : ['smb'],
+                storages         : [
+                    {
+                        freeSpace        : '761341648896',
+                        isBackup         : false,
+                        isExternal       : false,
+                        isOnline         : true,
+                        isUsedForWriting : true,
+                        isWritable       : true,
+                        reservedSpace    : '32212254720',
+                        storageId        : '{6ab74f2c-09df-0807-dab4-c450d7c936c6}',
+                        storageStatus    : 'used',
+                        storageType      : 'local',
+                        totalSpace       : '1968874332160',
+                        url              : '/media/tsanko/movies/HD Witness Media'
+                    }, {
+                        freeSpace        : '41420242944',
+                        isBackup         : false,
+                        isExternal       : false,
+                        isOnline         : true,
+                        isUsedForWriting : true,
+                        isWritable       : false,
+                        reservedSpace    : '10737418240',
+                        storageId        : '{b9017e44-74fe-b549-bb65-2c14418ddb02}',
+                        storageStatus    : 'used|tooSmall|system',
+                        storageType      : 'local',
+                        totalSpace       : '62220242944',
+                        url              : '/opt/networkoptix/mediaserver/var/data'
+                    }]
+            }
+        };
+
+        this.loading = false;
+        this.showStorage = true;
+        this.storage = replyMock.reply.storages;
+
+        // if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
+        //     this.system.updateOrGetSystemStorage().toPromise()
+        //         .then(response => {
+        //             this.loading = false;
+        //             this.showStorage = (Object.keys(response.reply.storages).length > 0);
+        //             this.storage = response.reply.storages;
+        //         });
+        // }
     }
 }

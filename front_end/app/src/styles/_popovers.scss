@@ -1,0 +1,11 @@
+.popover {
+    border-radius: 0;
+
+    &.bs-popover-bottom {
+        margin-top : 1px;
+
+        & > .arrow {
+            top : calc(-1rem - 1px); // move it closer to the size bar
+        }
+    }
+}
