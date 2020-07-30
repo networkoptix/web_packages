@@ -15,6 +15,7 @@ import { NxSystemStandardServerComponent }  from './standard/server.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
 import { NxSystemStorageComponent }         from './storage/storage.component';
 import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.component';
+import { NxStorageSizeComponent }           from './storage/size/size.component';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.com
         NxSystemStandardServerComponent,
         NxServerLoggerComponent,
         NxSystemStorageComponent,
-        NxSystemAdvancedStorageComponent
+        NxSystemAdvancedStorageComponent,
+        NxStorageSizeComponent
     ],
     bootstrap: [
     ],

@@ -266,7 +266,7 @@ export class NxUtilsService {
             is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
         const exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
 
-        number = Number(number / Math.pow(base, exponent)); // add toPrecision or something???
+        number = Math.round(Number(number / Math.pow(base, exponent)) * 100) / 100; // round 2 decimals
         const numberString = uv.toLocaleString(number, options.locale);
 
         const unit = UNITS[exponent];

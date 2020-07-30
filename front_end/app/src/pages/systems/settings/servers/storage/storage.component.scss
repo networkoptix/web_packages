@@ -41,16 +41,17 @@
     }
 
     td {
+        @include typography.regular13;
         padding          : 5px 15px;
         background-color : $light1;
         color            : $dark9;
         display          : flex;
         align-items      : center;
-    }
 
-    td:first-child {
-        display : block;
-        padding-top : 12px;
+        &.size-chart {
+            padding-top    : 2px !important;
+            padding-bottom : 2px !important;
+        }
     }
 
     tr:hover td {
