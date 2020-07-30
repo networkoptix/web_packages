@@ -1,11 +1,17 @@
+@use '../../styles/theme_variables' as *;
+
 .popover {
-    border-radius: 0;
+    border : none;
+    border-radius: 2px !important;
+    box-shadow : 0 1rem 2rem 0 transparentize($dark15, 0.4);
 
     &.bs-popover-bottom {
         margin-top : 1px;
 
         & > .arrow {
             top : calc(-1rem - 1px); // move it closer to the size bar
+            margin-left : -.5rem !important;
+            transform   : translateX(-50%);
         }
     }
 }
