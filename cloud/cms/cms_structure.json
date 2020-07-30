@@ -1038,11 +1038,11 @@
             "name": "shortDescription",
             "label": "Description",
             "value": "",
-            "description": "A short description for the integration tile located on the integrations page. The short description should be no more than 300 characters because the space is limited.",
+            "description": "A short description of what the integration does. Will appear in the integration's tile on the Marketplace page. Keep it concise and easy to understand.",
             "placeholder": "An example integration.",
             "type": "long_text",
             "meta": {
-              "char_limit": 500,
+              "char_limit": 250,
               "brand_vars": true
             }
           },
