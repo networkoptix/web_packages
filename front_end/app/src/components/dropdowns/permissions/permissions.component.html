@@ -1,5 +1,5 @@
 <div class="dropdown"
-     [ngClass]="{'show': show}"
+     [ngClass]="{'permissions-show': show}"
      (nxClickElsewhere)="show = false">
     <!--Todo: isValid not recognized-->
     <button class="btn btn-dropdown-toggle dropdown-toggle"
@@ -8,9 +8,8 @@
             type="button" id="permissionsSelect" data-toggle="dropdown">
 
         <span class="ellipsis" [innerHtml]="selection"></span>
-        <div class="nav-arrow">
-            <span></span>
-            <span></span>
+        <div class="arrow-flip">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
     <div class="dropdown-menu" [nxArrowNav]="show"

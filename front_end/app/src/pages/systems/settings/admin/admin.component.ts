@@ -156,7 +156,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }
                         this.settingsSubscription = this.system.updateOrGetSystemSettings()
                             .subscribe((response: any) => {
-                                if (response.ok) {
+                                if (response.reply) {
                                     this.settingsForSystem = response.reply.settings;
                                 }
                             }, (err) => {

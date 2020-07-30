@@ -24,7 +24,6 @@ import { NxGenericDropdown }                  from './dropdowns/generic/dropdown
 import { NxLanguageDropdown, NxHeaderLanguageDropdown }                 from './dropdowns/language/language.component';
 import { NxAccountSettingsDropdown }          from './dropdowns/account-settings/account-settings.component';
 import { NxActiveSystemDropdown }             from './dropdowns/active-system/active-system.component';
-import { NxSystemsDropdown }                  from './dropdowns/systems/systems.component';
 import { NxPermissionsDropdown }              from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }              from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent }          from './landing-display/landing-display.component';
@@ -74,7 +73,6 @@ import { NxLeftMenuComponent } from './left-menu/left-menu.component';
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
@@ -125,7 +123,6 @@ import { NxLeftMenuComponent } from './left-menu/left-menu.component';
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
@@ -209,7 +206,6 @@ import { NxLeftMenuComponent } from './left-menu/left-menu.component';
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,

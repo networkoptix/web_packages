@@ -107,6 +107,14 @@ nx-cam-table {
               }
             }
           }
+          .arrow-flip {
+            height: 20px;
+            svg-icon {
+              height: 20px;
+              left: 8px;
+              top: 0;
+            }
+          }
         }
       }
 

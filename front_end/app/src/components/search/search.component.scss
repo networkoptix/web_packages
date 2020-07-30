@@ -5,29 +5,17 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .nx-search {
-    .btn-text {
-        &:hover {
-            .nav-arrow span {
-                background-color : $dark15 !important;
+    .btn-arrow {
+        .arrow-flip svg-icon {
+            bottom: 10px;
+            left: 14px;
+            width: 20px;
+            svg g polyline {
+                stroke: $light16;
             }
         }
-
-        .nav-arrow {
-            position : relative;
-
-            span {
-                height : 1px;
-
-                &:nth-child(1) {
-                    top  : 10px;
-                    left : 1px;
-                }
-
-                &:nth-child(2) {
-                    top  : 9px;
-                    left : 8px;
-                }
-            }
+        &.selected .arrow-flip svg-icon svg g polyline {
+            stroke: white;
         }
     }
 
