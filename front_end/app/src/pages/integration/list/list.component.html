@@ -1,3 +1,13 @@
+<ng-template #compactTags let-tag="tag">
+    <!-- If this behavior is needed for other components in the future it's probably best to create a better abstraction, maybe make this a directive -->
+    <nx-tag *ngIf="!tag.hidden && tag.id !== 'mine'"
+        (resize)="updateTagSize(tag.label, $event)"
+        [style.grid-column]="gridColumnLookup[tag.label]"
+        [ngClass]="{ready:gridColumnLookup[tag.label]}"
+        [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
+        translate>{{tag.label}}</nx-tag>
+</ng-template>
+
 <nx-pre-loader *ngIf="!list"></nx-pre-loader>
 
 <div class="col text-placeholder d-flex align-items-center"
@@ -39,21 +49,14 @@
                     <div class="card--body-descr">{{plugin.information.shortDescription}}</div>
                 </nx-section>
 
-                <footer>
-                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
-                        <nx-tag type="danger" translate>In Review</nx-tag>
-                    </div>
-                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
-                        <nx-tag type="danger" translate>Draft</nx-tag>
-                    </div>
-                    <div *ngFor="let type of plugin.information.type">
-                        <div class="float-left m-0 mt-1 mr-1" *ngIf="type.id != 'mine'">
-                            <nx-tag>{{type.label}}</nx-tag>
-                        </div>
-                    </div>
-                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
-                        <nx-tag type="brand" translate>Mine</nx-tag>
-                    </div>
+                <footer class="tags-compact" [ngStyle]="{opacity: (ready | async) ? 1 : 0}">
+                    <ng-container *ngFor="let type of [
+                            {label: 'In Review', type: 'danger', hidden: !plugin.pending},
+                            {label: 'Draft', type: 'danger', hidden: !plugin.draft},
+                            {label: 'Mine', type: 'brand', hidden: !plugin.mine}
+                        ].concat(plugin.information.type)">
+                        <ng-container *ngTemplateOutlet="compactTags;context{tag:type}"></ng-container>
+                    </ng-container>
                 </footer>
             </nx-block>
         </a>

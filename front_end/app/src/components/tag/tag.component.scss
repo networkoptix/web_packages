@@ -61,6 +61,17 @@
     cursor : default !important;
 }
 
+.badge-integration {
+    &.ready {
+        display: flex !important;
+        justify-content: center;
+        justify-self: stretch;
+    }
+    &:not(.ready) {
+        padding: 0 8px !important;
+    }
+}
+
 $nx-theme-colors :
     "brand" theme_variables.$brand_core theme_variables.$light1,
     "default" theme_variables.$light8 theme_variables.$light1,
