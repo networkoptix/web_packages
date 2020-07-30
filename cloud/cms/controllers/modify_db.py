@@ -123,7 +123,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
 def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
-    can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
+    can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
     upload_errors = []
     # Only process non-translatable data structures if language is default.
     process_nontranslatable = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language == language
