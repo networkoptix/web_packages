@@ -90,7 +90,7 @@ export class NxDropMenu extends BaseDropdown {
         this.additionalSystems$.next(additionalSystems);
     }
 
-    updateURI(sid = this.headerService.activeSystem.id, endpoint = this.endpoint) {
+    updateURI(sid = this.headerService.activeSystem.id, endpoint) {
         this.headerService.show$ = false;
         this.uriService.updateURI(this.menusService.getUrl(sid, endpoint)).then(() => {
             const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
