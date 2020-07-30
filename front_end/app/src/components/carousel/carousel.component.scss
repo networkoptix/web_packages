@@ -78,8 +78,16 @@
 
 .nav-arrow {
     position: unset;
-
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    bottom: 6px;
+        
     & span {
+        display: block;
+        position: relative;
+        height: 2px;
+        width: 50%;
         background-color: $additional_light1;
     }
 

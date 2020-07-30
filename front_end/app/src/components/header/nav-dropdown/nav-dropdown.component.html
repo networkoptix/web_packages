@@ -1,5 +1,5 @@
 <div class="dropdown"
-     [ngClass]="{'show': show}"
+     [ngClass]="{'header-nav-show': show}"
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
@@ -8,9 +8,8 @@
         [ngClass]="{'hide-dropdown': hideDropdown}"
         type="button" id="activeSystemDropdown" data-toggle="dropdown">
         {{name | async}}
-        <div *ngIf="!hideDropdown" class="nav-arrow" id="nav-sub-menu-dropdown">
-            <span></span>
-            <span></span>
+        <div *ngIf="!hideDropdown" id="nav-sub-menu-dropdown" class="arrow-flip">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
     <div *ngIf="show" class="popup arrow up"></div>

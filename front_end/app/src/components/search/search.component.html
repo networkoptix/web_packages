@@ -40,10 +40,8 @@
                         [ngClass]="{'selected' : showAdvancedOptions}"
                         (click)="toggleOptions()"
                         *ngIf="layout == 'full'">
-
-                    <div class="nav-arrow">
-                        <span></span>
-                        <span></span>
+                    <div class="arrow-flip">
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_collapse.svg'"></svg-icon>
                     </div>
                     <span class="btn-tag-label" translate>Advanced Search</span>
                 </div>

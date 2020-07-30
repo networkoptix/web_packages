@@ -178,7 +178,6 @@ nx-dynamic-table {
             }
 
             .sort-dir {
-              //top: 0;
               right    : auto;
               position : relative;
               bottom   : 0;
@@ -196,6 +195,14 @@ nx-dynamic-table {
                   content : '+';
                 }
               }
+            }
+          }
+          .arrow-flip {
+            svg-icon {
+              width: 20px;
+              height: 20px;
+              left: 8px;
+              top: 0;
             }
           }
         }

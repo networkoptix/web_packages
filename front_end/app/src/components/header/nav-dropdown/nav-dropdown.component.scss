@@ -57,9 +57,8 @@
     }
 }
 
-.nav-arrow {
+.arrow-flip svg-icon {
     position: absolute;
+    bottom: 10px;
     right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
 }

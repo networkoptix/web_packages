@@ -47,11 +47,9 @@ nx-header-language-select {
             height: 100%;
             width: auto !important;
             box-shadow: none !important;
-            & > .nav-arrow {
+            & > .arrow-flip {
                 bottom: 10px !important;
-                & > span {
-                    background: theme_variables.$additional_light1 !important;
-                }
+                background: theme_variables.$additional_light1 !important;
             }
     
             & > .lang-sm {

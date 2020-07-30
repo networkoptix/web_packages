@@ -72,24 +72,4 @@ $item_height : 40px;
     svg-icon {
         margin: 0 .5rem 0 .25rem;
     }
-
-    .nav-arrow {
-        position : relative;
-        right    : auto;
-        bottom   : auto;
-        margin   : 0 8px 0 4px;
-        cursor   : pointer;
-
-        span {
-            background-color : $light16;
-        }
-
-        span:nth-child(odd) {
-            left : 2px;
-        }
-
-        span:nth-child(even) {
-            left : 40%;
-        }
-    }
 }
