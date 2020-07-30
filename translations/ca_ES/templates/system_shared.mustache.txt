@@ -8,4 +8,4 @@ Hola, {{message.userFullName}}
 You have been granted access to video management system "{{message.system_name}}".
 {{/message.sharer_name}}
 
-View in %CLOUD_NAME% Portal: {{config.portal_url}}/systems/{{message.system_id}}
+Veure a %CLOUD_NAME% Portal: {{config.portal_url}}/ sistemes /{{message.system_id}}
