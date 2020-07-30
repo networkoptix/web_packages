@@ -6,7 +6,6 @@ from datetime import datetime
 from distutils.util import strtobool
 
 from django.db import models
-from django.db.models.signals import m2m_changed
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -692,8 +691,9 @@ class DataStructure(models.Model):
                             filter(version__assetcustomizationreview__state=AssetCustomizationReview.
                                    REVIEW_STATES.accepted)
                         # If the version matches take it
-                        if content_record.last().version.id == version_id:
-                            content_record = content_record.last()
+                        version_content_record = content_record.filter(version_id=version_id).last()
+                        if version_content_record:
+                            content_record = version_content_record
                         # Take any record that is accepted
                         elif new_review_records.exists():
                             content_record = new_review_records.last()

@@ -346,3 +346,27 @@ Get Cameras
     ${resp}=   Get Request    Get Cameras session    /ec2/getCamerasEx
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Change server name via API
+    [Arguments]    ${auth}    ${new name}    ${server id}    ${server url}
+    &{data}=   Create Dictionary    serverId=${server id}    serverName=${new name}
+    Create Digest Session    Change Name session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Change Name session    /ec2/saveMediaServerUserAttributes    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Change server port via API
+    [Arguments]    ${auth}    ${server url}    ${new port}    ${server id} 
+    &{header}=   Create Dictionary    X-Server-guid=${server id}   
+    &{data}=   Create Dictionary    port=${new port}
+    Create Digest Session    Change Port session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10
+    Return From Keyword    ${resp}
+
+#Change server port via API
+#    [Arguments]    ${auth}    ${cloud url}    ${new port}    ${server id}
+#    &{data}=   Create Dictionary    port=${new port}
+#    &{header}=   Create Dictionary    X-Server-guid=${server id}
+#    Create Digest Session    Change Port session   ${cloud url}    auth=${auth}    headers=${header}    disable_warnings=1
+#    ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    timeout=10
+#    Return From Keyword    ${resp.json()}

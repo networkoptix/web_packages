@@ -9,7 +9,7 @@ import { NxConfigService, IConfig } from '../../../services/nx-config';
     styleUrls   : ['knowledge-base.component.scss']
 })
 export class NxKnowledgeBaseComponent {
-    @Input() node: KnowledgeNode = mockDocker;
+    @Input() node: KnowledgeNode = mockArticle;
 
     CONFIG: IConfig
 
@@ -20,7 +20,8 @@ export class NxKnowledgeBaseComponent {
 
 export enum CardClasses {
     NORMAL='normal',
-    SIDE='side'
+    SIDE='side',
+    ARTICLE='article'
 }
 
 export class KnowledgeNode {
@@ -68,6 +69,23 @@ export class KnowledgeNode {
             cardLead
         );
     }
+
+    static article(
+        title: string,
+        url: string,
+        content: string,
+        showHeader = true
+    ) {
+        return new KnowledgeNode(
+            showHeader ? title : '',
+            url,
+            content,
+            [],
+            CardClasses.ARTICLE,
+            '',
+            ''
+        );
+    }
 }
 
 export const mockDocker = KnowledgeNode.normalHeader(
@@ -105,4 +123,10 @@ export const mockDocker = KnowledgeNode.normalHeader(
             'using'
         )
     ]
+);
+
+export const mockArticle = KnowledgeNode.article(
+    'Mock Article',
+    '',
+    '<div><h2 class="mb-3">Side Content Heading</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><img style="width: 75%; margin: 0 auto; display: block" class="mt-3 mb-3" src="https://www.networkoptix.com/wp-content/uploads/2018/10/World-MAP.png"></img><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>'
 );

@@ -1114,3 +1114,31 @@ Changes made in thick client appear on cloud portal
         Exit For Loop If    '${id}' != 'None'             
     END
     Remove User    ${auth}    ${AUTO SYS IP}    ${id}
+    
+Local user list is not available for offline system
+    [Tags]    C76234    local_user    System-offline
+    Log    Preconditions
+    @{local users} =   Reset Local Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Open Connection    10.1.5.126
+    SSHLibrary.Login    docker-server-factory    qweasd 123    
+    ${results}    Execute Command    docker container stop autotests
+    Log    Step 1
+    Log in to Auto Tests System    ${email} 
+    Go To Users List
+    FOR    ${user}    IN    @{local users}
+        Element Should Not Be Visible    //span[text()="Local+${user}"]
+    END    
+    Log    Step 2   
+    ${results}    Execute Command    docker container start autotests
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element Is Visible   //span[text()="Local+${user}"]    65
+    END   
+    Log    Step 3
+    ${results}    Execute Command    docker container stop autotests
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    31
+    Reload Page   
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element Is Not Visible   //span[text()="Local+${user}"]
+    END   
+    Log    Clean up
+    ${results}    Execute Command    docker container start autotests

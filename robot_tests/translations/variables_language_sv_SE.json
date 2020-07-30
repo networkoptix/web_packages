@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Koppla från %PRODUCT_NAME%",
     "RENAME": "Döp om",
     "RESTART": "Starta om",
+    "RESTARTING": "startar om...",
     "RESET TO DEFAULTS TEXT": "Återställ till standardvärden",
     "DETAILED INFO TEXT": "Detaljerad information",
     "DISCONNECT MODAL WARNING TEXT": "Du kommer inte att kunna logga in på det här systemet längre.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Radera konto?",
     "DELETE ACCOUNT INFO TEXT": "Ditt konto och all information som är kopplad till det kommer att raderas permanent utan möjlighet att återställa det.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Ange ditt kontolösenord för att fortsätta",
-    "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
+    "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafik ökar väsentligt CPU-användningen.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Version",
+    "PORT TOO LOW TEXT": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
+    "SERVER RESTARTED TEXT": "Servern har startat om."
 }

@@ -753,7 +753,11 @@
             "rename": {
                 "success": "System name saved"
             }
-        }
+        },
+        "viewingReport" : "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System %SYSTEMNAME%"
     },
     "settingsConfig": {
         "additionalLocalFsTypes": "Additional local FS types",

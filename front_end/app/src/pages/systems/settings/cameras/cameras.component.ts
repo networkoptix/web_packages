@@ -6,7 +6,7 @@ import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subscription, BehaviorSubject, from, throwError, of
-}                                    from 'rxjs';
+} from 'rxjs';
 import {
     filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
 }                                    from 'rxjs/operators';
@@ -97,7 +97,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.routeParamsSubscription = this.route
             .params
             .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(params => {
+            .subscribe((params: any) => {
                 if (params.cameraId) {
                     this.warnings = [];
                     this.errors = [];
@@ -150,7 +150,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        map(system => {
+                        map((system: NxSystem) => {
                             if (!system.cameras) {
                                 throw system;
                             }
@@ -753,35 +753,29 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateValues() {
         this.healthService.ready = false;
         if (this.system.canViewInfo) {
-            if (!this.alertsLoaded) {
-                this.healthReportSubscription = this.system.mediaserver
-                    .getAggregateHealthReport()
-                    .pipe(untilDestroyed(this))
-                    .subscribe(
-                        (result: any) => {
-                            this.applyService.setVisible();
-                            const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
-                            this.alerts = Object.entries(alerts || {}).map(
-                                ([cameraId, alertInfo]) =>
-                                    new Alert(cameraId, alertInfo, 'Camera')
-                            );
-                            if (!this.applyService.locked) {
-                                this.updateAlerts();
-                            }
-                        },
-                        () => {
-                            if (!this.system.id) {
-                                !this.window.parent
-                                    ? this.window.location.reload()
-                                    : this.window.parent.location.reload();
-                            }
+            this.healthReportSubscription = this.system.mediaserver
+                .getAggregateHealthReport()
+                .pipe(untilDestroyed(this))
+                .subscribe(
+                    (result: any) => {
+                        this.applyService.setVisible();
+                        const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
+                        this.alerts = Object.entries(alerts || {}).map(
+                            ([cameraId, alertInfo]) =>
+                                new Alert(cameraId, alertInfo, 'Camera')
+                        );
+                        this.updateAlerts();
+                    },
+                    () => {
+                        if (!this.system.id) {
+                            !this.window.parent
+                                ? this.window.location.reload()
+                                : this.window.parent.location.reload();
                         }
-                    );
-            } else {
-                this.updateAlerts();
-            }
+                    }
+                );
         } else {
-            this.alertsLoaded = true;
+            this.updateAlerts();
         }
     }
 

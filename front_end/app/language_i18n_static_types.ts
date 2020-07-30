@@ -42,6 +42,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    headerLabels:          HeaderLabels;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -429,6 +430,10 @@ export interface ReleasesTypes {
     releases: any;
 }
 
+export interface HeaderLabels {
+    healthReportForSystem: any;
+}
+
 export interface LanguageI18NStaticTypesIntegration {
     "Access Control":     any;
     Connector:            any;
@@ -732,8 +737,9 @@ export interface SystemStatuses {
 }
 
 export interface ToastMessage {
-    nameFail: any;
-    system:   ToastMessageSystem;
+    nameFail:      any;
+    system:        ToastMessageSystem;
+    viewingReport: any;
 }
 
 export interface ToastMessageSystem {
@@ -930,6 +936,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
@@ -1277,6 +1284,9 @@ const typeMap: any = {
         { json: "release", js: "release", typ: "any" },
         { json: "releases", js: "releases", typ: "any" },
     ], false),
+    "HeaderLabels": o([
+        { json: "healthReportForSystem", js: "healthReportForSystem", typ: "any" },
+    ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "any" },
         { json: "Connector", js: "Connector", typ: "any" },
@@ -1552,6 +1562,7 @@ const typeMap: any = {
     "ToastMessage": o([
         { json: "nameFail", js: "nameFail", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
+        { json: "viewingReport", js: "viewingReport", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },

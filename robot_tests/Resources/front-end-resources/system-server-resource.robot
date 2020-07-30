@@ -3,13 +3,17 @@ Verify on Servers Page
     Wait Until Elements are Visible
     ...    ${PORT INPUT}
     ...    ${RENAME SERVER BUTTON}
-    ...    ${RESTART SESRVER BUTTON}
+    ...    ${RESTART SERVER BUTTON}
     ...    ${SERVER DETAILED INFO BUTTON}
+    ...    ${IP}       
+    ...    ${OS}       
+    ...    ${VERSION}  
 
-Verify Enabled
+Verify Server Buttons Are Enabled
     Wait Until Element is Enabled    ${PORT INPUT}
     Wait Until Element is Enabled    ${RENAME SERVER BUTTON}
-    Wait Until Element is Enabled    ${RESTART SESRVER BUTTON}
+    Wait Until Element is Enabled    ${RESTART SERVER BUTTON}
+
 Log in to user and system
     [Arguments]    ${user}    ${system id}
     Log in    ${user}    ${password}
@@ -24,7 +28,7 @@ Verify Rename Dialog
     ...    ${RENAME SAVE BUTTON}
     ...    ${RENAME CANCEL BUTTON}
     ...    ${RENAME CLOSE BUTTON}
-    ...    ${$RENAME SERVER INPUT}
+    ...    ${RENAME SERVER INPUT}
 
 Verify Restart Dialog
     Wait Until Elements Are Visible  

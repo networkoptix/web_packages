@@ -82,6 +82,16 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
+            "order": 1,
+            "enabled": true
+          },
+          {
+            "name": "Health Report Viewer",
+            "display_name": "Health Report Viewer",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
             "order": 2,
             "enabled": true
           }

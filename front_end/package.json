@@ -3,7 +3,7 @@
   "version": "20.2.0",
   "scripts": {
     "ng": "ng",
-    "serve": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.json",
+    "serve": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.dev2.json",
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config webadmin-proxy.conf.json",
     "build": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",

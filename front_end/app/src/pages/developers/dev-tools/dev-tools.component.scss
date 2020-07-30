@@ -1,5 +1,5 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 
 .heading-link {
     @include typography.regular24;
@@ -28,7 +28,7 @@
 }
 
 .tool-card {
-    min-height: 242px;
+    height: 242px;
     flex: 1 0 20%;
     min-width: 275px;
     margin: 0 16px 16px 0;
@@ -50,5 +50,24 @@
     }
     p {
         line-height: 16px;
+    }
+}
+
+.stand-alone-blocks {
+    $cardWidth: 291px;
+    margin: 16px auto;
+    padding-left: 16px;
+    justify-content: start;
+    width: calc(100vw - 16px);
+    @for $columns from 2 through 6 {
+        @media screen and (min-width: $cardWidth * $columns + 32px) {
+            width: $cardWidth * $columns;
+            @if $columns is 2 {
+                padding-left: 0;
+                & > .tool-card {
+                    max-width: 275px;
+                }
+            }
+        }
     }
 }

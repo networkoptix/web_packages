@@ -8,13 +8,15 @@ Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      SSHLibrary
 Library      String
 Library      DateTime
 Library      Collections
+Library      OperatingSystem
 Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
-Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}    ${LM AUTH}
+Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 
 *** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
@@ -261,9 +263,9 @@ Register And Activate Account
     Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
 
 Register and activate account with random email
-    [Arguments]    ${first name}    ${last name}    ${password}
+    [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
     ${email}=    Get Random Email    ${BASE EMAIL}
-    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    act=${act}
     [Return]    ${email}
 
 # Replaced with "Restore password using API"
@@ -784,7 +786,7 @@ Move focus and check element
     Click Element    ${new focus}
     Wait Until Element is Visible    ${element}
 
-Check New Password Outline
+Check New Password Outline and Error Message
     [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
     Click Element    ${new focus} 
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
@@ -809,3 +811,8 @@ Check System Text
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
     Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    
+Get Lang List
+    ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
+    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json 
+    [Return]    ${lang dict}

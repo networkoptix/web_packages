@@ -2,9 +2,9 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { Location }                  from '@angular/common';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { of, SubscriptionLike }      from 'rxjs';
 import { delay, throttleTime }       from 'rxjs/operators';
@@ -74,24 +74,35 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
-        private configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private router: Router,
         private location: Location,
         private menuService: NxMenuService,
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.translations;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
+
         this.filterModel = {
             query: ''
         };
     }
 
     ngOnInit(): void {
+        if (this.healthService.values === undefined) {
+            const { url } = this.router;
+            if (url.includes('report_viewer')) {
+                this.router.navigate(['report_viewer']);
+            }
+
+            return;
+        }
+
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
 

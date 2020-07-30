@@ -33,6 +33,7 @@ License Management availability for offline system
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
     Start Container    ${cont 1}
+    Sleep    30    # Get the server back online
     Log Out
 
 Input validation errors
@@ -189,7 +190,7 @@ Successful scenarios
 
 # License Detail Block
 License details for purchase licenses with different types
-    [Tags]    C76557    C76560    C76563    C76564    C76565    C76566   deb
+    [Tags]    C76557    C76560    C76563    C76564    C76565    C76566
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}

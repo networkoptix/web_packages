@@ -73,6 +73,9 @@
             padding-left: 80px;
         }
     }
+    & > .left-menu-arrow {
+        left: 52px;
+    }
 }
 
 .menu-level-3 {
@@ -82,5 +85,8 @@
         &.arrow-padding {
             padding-left: 120px;
         }
+    }
+    & > .left-menu-arrow {
+        left: 92px;
     }
 }

@@ -1,9 +1,9 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/mixins/breakpoints';
 
-nx-system-health-component {
+nx-health-viewer-component {
 
   .mainGrid {
     display: grid;
@@ -140,12 +140,43 @@ nx-system-health-component {
   }
 
   .importZone {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10000;
+    position : absolute;
+    top      : 48px;
+    left     : 0;
+    width    : 100%;
+    height   : calc(100% - 48px);
+    z-index  : 10000;
+
+    .ngx-file-drop__content {
+      display : none;
+    }
+
+    &.ngx-file-drop__drop-zone--over {
+      background-color : $light16;
+      display         : flex;
+      align-items     : center;
+      justify-content : center;
+
+      .ngx-file-drop__content {
+        display: block;
+        pointer-events : none;
+        @include typography.medium24;
+        color :  $light1;
+
+        svg-icon {
+          float : left;
+          height : 32px;
+
+          svg path{
+            stroke : $light1;
+
+            &.corner {
+              fill : $light1;
+            }
+          }
+        }
+      }
+    }
   }
 
   .pointer-ignore {
@@ -171,4 +202,35 @@ nx-system-health-component {
       text-decoration: none !important;
       color: inherit !important;
   }
+}
+
+.file-placeholder {
+  width       : 100%;
+  height      : 100%;
+  display     : flex;
+  align-items : center;
+
+  &-content {
+    display         : flex;
+    flex-direction  : column;
+    justify-content : center;
+    align-items     : center;
+    text-align      : center;
+    position        : relative;
+    margin          : 0 auto;
+    width           : 600px;
+    height          : 400px;
+    font-size       : 130%;
+    font-weight     : 300;
+    line-height     : 30px;
+    background-image: url('/static/images/icons/drop_rectangle.svg');
+
+  }
+}
+
+.hiddenElm {
+  visibility: hidden;
+  height: 0 !important;
+  position: absolute;
+  top: 0;
 }

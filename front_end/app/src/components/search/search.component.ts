@@ -75,6 +75,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
     @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
 
+    public placeholderText: string;
     public numberFilters = 0;
     public filterSelected;
     public localFilter: any = {};
@@ -123,8 +124,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
+
         this.dataLoaded = this.dataLoaded === undefined ? true : this.dataLoaded;
-        this.placeholder = this.placeholder || ''; // optional param
+        this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
         this.debounceTime = (this.instant !== undefined) ? 0 : this.CONFIG.search.debounceTime; // optional param
         this.layout = (this.layout !== undefined) ? this.layout : 'full';
         this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout

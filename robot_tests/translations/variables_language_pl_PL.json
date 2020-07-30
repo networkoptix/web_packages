@@ -18,6 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Odłącz od %PRODUCT_NAME%",
     "RENAME": "Zmień nazwę",
     "RESTART": "Uruchom ponownie",
+    "RESTARTING": "restartowanie...",
     "RESET TO DEFAULTS TEXT": "Przywróć ustawienia domyślne",
     "DETAILED INFO TEXT": "Informacje szczegółowe",
     "DISCONNECT MODAL WARNING TEXT": "Nie będziesz już mógł zalogować się do tego systemu.",
@@ -278,5 +279,10 @@
     "DELETE ACCOUNT HEADER TEXT": "Usunąć konto?",
     "DELETE ACCOUNT INFO TEXT": "Twoje konto i wszystkie związane z nim dane zostaną trwale usunięte bez możliwości przywrócenia.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Wpisz hasło do swojego konta, aby kontynuować",
-    "ENCRYPTING VIDEO WARNING TEXT": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
+    "ENCRYPTING VIDEO WARNING TEXT": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora.",
+    "IP TEXT": "IP",
+    "OS TEXT": "OS",
+    "VERSION TEXT": "Wersja",
+    "PORT TOO LOW TEXT": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
+    "SERVER RESTARTED TEXT": "Serwer został uruchomiony ponownie."
 }

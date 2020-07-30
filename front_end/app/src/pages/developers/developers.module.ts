@@ -9,10 +9,12 @@ import { AngularSvgIconModule }          from 'angular-svg-icon';
 
 import { ComponentsModule }         from '../../components/components.module';
 import { DirectivesModule }         from '../../directives/directives.module';
+import { PipesModule }              from '../../pipes/pipes.module';
 import { NxAboutModule }            from './about/about.module';
 import { MenuModule }               from '../../menu';
 import { NxAboutComponent }         from './about/about.component';
 import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
 
 const appRoutes: Routes = [
     {
@@ -31,12 +33,38 @@ const appRoutes: Routes = [
                 component : NxKnowledgeBaseComponent,
                 children  : [
                     {
+                        path      : 'other-articles',
+                        component : NxKnowledgeBaseComponent,
+                        children  : [
+                            {
+                                path      : ':article',
+                                component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    },
+                    {
                         path      : ':level1',
                         component : NxKnowledgeBaseComponent,
                         children  : [
                             {
                                 path      : ':level2',
                                 component : NxKnowledgeBaseComponent
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                path      : 'dev-tools',
+                component : NxDevToolsComponent,
+                children  : [
+                    {
+                        path      : ':level1',
+                        component : NxDevToolsComponent,
+                        children  : [
+                            {
+                                path      : ':level2',
+                                component : NxDevToolsComponent
                             }
                         ]
                     }
@@ -55,6 +83,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         FormsModule,
+        PipesModule,
         NxAboutModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),

@@ -6,6 +6,12 @@ import { MenuNode }                 from '../components/dropdowns/drop-menu/navi
 import { NxConfigService, IConfig } from './nx-config';
 import { NxMenusService }           from './menus.service';
 
+enum systemRoutes {
+    SETTINGS='settings',
+    VIEW='view',
+    HEALTH='health'
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -71,6 +77,13 @@ export class NxHeaderService {
     }
 
     setLocation(url?) {
+        // Special case - we need to show item which is not part of site navigation
+        // header will use whatever was set w/ currentLocation
+        if (url.startsWith('/report_viewer')) {
+            return;
+        }
+        // ************************************************************************
+
         const bestMatch: any = {};
         // Check if system url or go through nodes
         const settingsBase = this.CONFIG.isLocal ? '/settings' : '/systems';
@@ -87,10 +100,13 @@ export class NxHeaderService {
             const viewUrl = this.CONFIG.isLocal ? '/view' : systemUrl + '/view';
             const healthUrl = this.CONFIG.isLocal ? '/health' : systemUrl + '/health';
             if (url.startsWith(viewUrl)) {
+                this.menusService.endpoint = { view: true };
                 bestMatch.path = viewUrl;
             } else if (url.startsWith(healthUrl)) {
+                this.menusService.endpoint = { information: true };
                 bestMatch.path = healthUrl;
             } else if (url.startsWith(systemUrl)) {
+                this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;
             } else {
                 bestMatch.parentNode = undefined;

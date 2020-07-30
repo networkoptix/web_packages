@@ -1,4 +1,5 @@
-export * from './health.component';
+export * from './health/health.component';
+export * from './viewer/viewer.component';
 export * from './alerts/alerts.component';
 export * from './metrics/metrics.component';
 export * from './table-components/dynamic-table/dynamic-table.component';
@@ -8,3 +9,4 @@ export * from './table-components/image/image.component';
 export * from './table-components/image-section/image-section.component';
 export * from './card/card.component';
 export * from './update-info/update-info.component';
+

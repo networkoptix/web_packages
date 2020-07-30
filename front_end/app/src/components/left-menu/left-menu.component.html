@@ -1,6 +1,11 @@
 <ng-template #recursiveNodes let-nodes="nodes" let-level="level">
     <div *ngFor="let node of nodes">
-        <div [class]="'menu-level-' + level">
+        <div *ngIf="level === 1 ||
+            openNodes.concat(activeRouteNodes)
+                .includes(
+                    node.parentNode.display_name || node.parentNode.name
+                )" 
+            [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
                 [ngClass]="node.nodes.length && 'arrow-padding'"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
@@ -22,7 +27,7 @@
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
             </div>
         </div>
-            <ng-container *ngIf="openNodes.concat(activeRouteNodes).includes(node.displayName || node.name)">
+            <ng-container *ngIf="node.nodes.length">
                 <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:node.nodes, level: level + 1}"></ng-container>
             </ng-container>
     </div>

@@ -1151,7 +1151,7 @@ Your permissions is shown for non-owners
 
 Should show (you) for owner and (owner's name & email) for non-owners
     [Tags]    C41881    Threaded    System-offline
-    Log in to AutoTests 2 System    ${EMAIL OWNER}
+    Log in to Autotests 2 System    ${EMAIL OWNER}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
     Log Out
@@ -1159,3 +1159,17 @@ Should show (you) for owner and (owner's name & email) for non-owners
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}
 
+System changes state to offline if all its Servers goes offline
+    [Tags]    C41894    System-offline
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
+    Wait Until Element Is Visible    ${current owner name}
+    Log    Step 2
+    Open Connection    10.1.5.126
+    SSHLibrary.Login    docker-server-factory    qweasd 123    
+    ${results}    Execute Command    docker container stop autotests
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    31
+    Log    Step 3
+    ${results}    Execute Command    docker container start autotests
+    Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}    65
