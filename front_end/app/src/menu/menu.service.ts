@@ -114,7 +114,7 @@ export class NxMenuService implements OnDestroy {
                                 haveNode.level3.push(this.highlighted(filteredItem));
                             }
                         } else {
-                            haveNode.level3.push(item);
+                            haveNode?.level3.push(item);
                         }
                     });
                     if (haveNode?.level3?.length) {

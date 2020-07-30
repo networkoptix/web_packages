@@ -240,10 +240,6 @@ button, .btn {
         width           : 40px;
         cursor          : pointer;
 
-        &:hover {
-
-        }
-
         .tag-close-icon {
             margin : 0 !important;
         }
@@ -260,18 +256,6 @@ button, .btn {
     padding-right : 12px !important;
     max-width     : none;
 
-    .nav-arrow {
-        height : 20px;
-        float  : left;
-        right  : auto;
-        left   : 8px;
-        bottom : 10px;
-
-        span {
-            background-color : $light16;
-        }
-    }
-
     &.has-icon {
         padding-left : 20px;
     }
@@ -283,12 +267,6 @@ button, .btn {
 
     &.selected {
         @include mixins.badge-selected($light16, $light17, $light18);
-
-        .nav-arrow {
-            span {
-                background-color : $light1;
-            }
-        }
     }
 }
 
@@ -298,17 +276,6 @@ button, .btn {
     svg-icon svg{
         width: 20px;
         height: 20px;
-    }
-
-    .nav-arrow {
-        height       : 20px;
-        float        : left;
-        right        : 0;
-        margin-right : 2px;
-
-        span {
-            background-color : $light16;
-        }
     }
 
     &.has-icon {

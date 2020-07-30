@@ -1,5 +1,5 @@
 <div class="dropdown {{ direction }}"
-     [ngClass]="{'show': show, 'short': short, 'alt-style':  altStyle}"
+     [ngClass]="{'dropdown-show': show, 'short': short, 'alt-style':  altStyle}"
      (nxClickElsewhere)="show = false">
 
     <button class="btn btn-dropdown-toggle dropdown-toggle"
@@ -8,9 +8,8 @@
 
         <span class="lang-sm" lang="{{activeLanguage.language}}"></span>
         <span *ngIf="!short">{{activeLanguage.name}}</span>
-        <div class="nav-arrow" [ngClass]="{ 'up': direction == 'dropup'}">
-            <span></span>
-            <span></span>
+        <div class="arrow-flip">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
     <ul class="dropdown-menu" *ngIf="languages.length <= 12" [nxArrowNav]="show"

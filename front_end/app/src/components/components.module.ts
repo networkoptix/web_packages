@@ -27,7 +27,6 @@ import {
 }                                             from './dropdowns/language/language.component';
 import { NxAccountSettingsDropdown }          from './dropdowns/account-settings/account-settings.component';
 import { NxActiveSystemDropdown }             from './dropdowns/active-system/active-system.component';
-import { NxSystemsDropdown }                  from './dropdowns/systems/systems.component';
 import { NxPermissionsDropdown }              from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }              from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent }          from './landing-display/landing-display.component';
@@ -76,7 +75,6 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
@@ -127,7 +125,6 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
@@ -211,7 +208,6 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
-        NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
