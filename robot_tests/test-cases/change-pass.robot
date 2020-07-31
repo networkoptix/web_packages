@@ -45,6 +45,7 @@ Clean up
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
     Restore Password using API    ${email}    ${password}
+    Close All Browsers
 
 Reset DB and Open New Browser On Failure
     Restore Password using API    ${email}    ${BASE PASSWORD}

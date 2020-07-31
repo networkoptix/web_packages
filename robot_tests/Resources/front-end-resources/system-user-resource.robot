@@ -36,6 +36,8 @@ Check Special Hint
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
+    ...    ELSE IF    "${type}"=="Client Custom"         Wait Until Element Contains
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}    ${local user}=ocal+
