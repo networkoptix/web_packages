@@ -991,7 +991,9 @@ The page is opened and shows the user list to owner
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     # Title Should Be    Systems - ${PRODUCT_NAME}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Wait Until Element Is Enabled    ${RENAME SYSTEM}
+    Wait Until Element Is Enabled    ${DISCONNECT FROM NX}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}    
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
 
@@ -1020,6 +1022,12 @@ Share button should be disabled
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
+
+Merge button is disabled
+    [Tags]    C41881    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Page Does Not Contain Element    //div[contains(@uib-modal-backdrop, "modal-backdrop")]
+    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
 
 Open in nx button should be disabled
     [Tags]    C41881    Threaded    System-offline
