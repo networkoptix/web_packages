@@ -4,7 +4,7 @@ import {
 }                                               from '@angular/core';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import {
-    distinctUntilChanged, filter, skip, map
+    distinctUntilChanged, filter, skip, map, combineLatest
 }                                               from 'rxjs/operators';
 import { NxDialogsService }                     from '../dialogs/dialogs.service';
 import { NxApplyComponent }                     from '../components/apply/apply.component';
@@ -111,6 +111,7 @@ export class NxApplyService {
     discardFunction: () => void;
     lockedSubject = new BehaviorSubject<boolean>(undefined);
     isOnline$ = new BehaviorSubject(true);
+    nonSystem$ = new BehaviorSubject(true);
     popupActive = false;
     form: NgForm;
     private lockedSubscription: Subscription;
@@ -146,7 +147,7 @@ export class NxApplyService {
     }
 
     // Resets all watchers to their first value that wasn't undefined.
-    reset() {
+    reset(nonSystem = false) {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
                 watcher.reset();
@@ -174,8 +175,10 @@ export class NxApplyService {
         saveFunction: any,
         discardFunction: () => void,
         watchers: Watcher<any>[],
-        form?: NgForm
+        form?: NgForm,
+        nonSystem = false
     ) {
+        this.nonSystem$.next(nonSystem);
         this.clearSubscriptions();
         this.component = component;
 
@@ -238,7 +241,8 @@ export class NxApplyService {
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
-        this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
+        this.nonSystem$.pipe(combineLatest(this.isOnline$, (nonSystem, isOnline) => nonSystem || isOnline)
+        ).subscribe(isOnline => {
             (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
         });
     }
