@@ -41,7 +41,6 @@ export class NxSingleEntityComponent implements OnChanges {
                         return new InfoBlockLine(
                             name || id,
                             param.text || '_',
-                            true,
                             param.class,
                             param.icon
                         );

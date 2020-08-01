@@ -48,7 +48,6 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
                         const lines = values.map(({ id, name }) => new InfoBlockLine(
                             name || id,
                             activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
-                            true,
                             activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
                             activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
                         ));

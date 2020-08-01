@@ -56,14 +56,13 @@ export class NxInfoBlockComponent implements OnInit {
     }
 }
 
-export class InfoBlockLine <Name = string, Value = string, Visibility = boolean> {
+export class InfoBlockLine <Name = string, Value = string> {
     constructor(
         public name: Name,
         public value: Value,
-        public show?: Visibility,
         public customClass?: InfoDetailClass,
         public icon?: string,
-        public overrideParamWidth?: number
+        public show: boolean = true
     ) {}
 }
 
