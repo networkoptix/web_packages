@@ -196,8 +196,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     // Update menu options after language is loaded
     updateSelects() {
-        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
-        this.auto = { name: this.LANG.common.resolution.auto, value: '' };
+        this.various = { name: this.LANG.common.resolution.various(), value: 'various' };
+        this.auto = { name: this.LANG.common.resolution.auto(), value: '' };
         this.aspectRatios = [
             this.auto,
             { name: '4:3', value: 1.33333 },
@@ -211,10 +211,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             { name: '270˚', value: 270 }
         ];
         this.streamQualities = [
-            { name: this.LANG.common.resolution.best, value: 'highest' },
-            { name: this.LANG.common.resolution.high, value: 'high' },
-            { name: this.LANG.common.resolution.medium, value: 'normal' },
-            { name: this.LANG.common.resolution.low, value: 'low' }
+            { name: this.LANG.common.resolution.best(), value: 'highest' },
+            { name: this.LANG.common.resolution.high(), value: 'high' },
+            { name: this.LANG.common.resolution.medium(), value: 'normal' },
+            { name: this.LANG.common.resolution.low(), value: 'low' }
         ];
     }
 
@@ -222,7 +222,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
-                return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning));
+                return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning()));
             }
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
@@ -698,14 +698,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.cameraDetailColumns = [
                 [
                     new InfoBlockSection([
-                        new InfoBlockLine(this.LANG.common.vendor, vendor),
-                        new InfoBlockLine(this.LANG.common.model, model)
+                        new InfoBlockLine(this.LANG.common.vendor(), vendor),
+                        new InfoBlockLine(this.LANG.common.model(), model)
                     ])
                 ],
                 [
                     new InfoBlockSection([
-                        new InfoBlockLine(this.LANG.common.ip, url),
-                        new InfoBlockLine(this.LANG.common.server, parentName)
+                        new InfoBlockLine(this.LANG.common.ip(), url),
+                        new InfoBlockLine(this.LANG.common.server(), parentName)
                     ])
                 ]
             ];
