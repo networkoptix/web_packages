@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Élő videó megtekintése és rögzített visszajátszása",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Csak élőkép megtekintése",
     "ADD USER PERMISSIONS HINT CUSTOM": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Adja meg a rendszer nevét",
     "ACCOUNT TEXT": "Fiók",
     "ACCOUNT INFORMATION": "Felhasználói fiók információ",

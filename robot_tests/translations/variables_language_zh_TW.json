@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "可以瀏覽即時影像和回放錄影資料",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "只能瀏覽即時影像",
     "ADD USER PERMISSIONS HINT CUSTOM": "請使用 %VMS_NAME% 客戶端應用程式設定自訂權限",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "必須有系統名稱",
     "ACCOUNT TEXT": "帳號",
     "ACCOUNT INFORMATION": "帳號資訊",

@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "可以查看实时视频和浏览存档",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "只可以查看视频直播",
     "ADD USER PERMISSIONS HINT CUSTOM": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "系统名称是必需的",
     "ACCOUNT TEXT": "帐户",
     "ACCOUNT INFORMATION": "帐户信息",

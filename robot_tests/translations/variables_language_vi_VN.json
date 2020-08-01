@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Chỉ có thể xem video trực tiếp",
     "ADD USER PERMISSIONS HINT CUSTOM": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Tên hệ thống là bắt buộc",
     "ACCOUNT TEXT": "Tài khoản",
     "ACCOUNT INFORMATION": "Thông tin tài khoản",

@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Can view live video and browse the archive",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Can only view live video",
     "ADD USER PERMISSIONS HINT CUSTOM": "Use the %VMS_NAME% Client application to set up custom permissions",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "System name is required",
     "ACCOUNT TEXT": "حساب",
     "ACCOUNT INFORMATION": "معلومات الحساب",

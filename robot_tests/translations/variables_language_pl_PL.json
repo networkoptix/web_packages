@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Podgląd wideo na żywo i przeglądanie archiwum",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Tylko podgląd wideo na żywo",
     "ADD USER PERMISSIONS HINT CUSTOM": "Użyj aplikacji klienckiej %VMS_NAME% , aby skonfigurować niestandardowe uprawnienia",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Nazwa systemu jest wymagana",
     "ACCOUNT TEXT": "Konto",
     "ACCOUNT INFORMATION": "Informacje o koncie",

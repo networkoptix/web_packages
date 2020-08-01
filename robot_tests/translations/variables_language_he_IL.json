@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "ניתן להציג וידאו חי ולעיין בארכיון",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "יכול לצפות רק בוידאו חי",
     "ADD USER PERMISSIONS HINT CUSTOM": "השתמש בתוכנת הקליינט של %VMS_NAME% כדי להגדיר הרשאות מותאמות אישית",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "נדרש שם מערכת",
     "ACCOUNT TEXT": "חשבון",
     "ACCOUNT INFORMATION": "פרטי חשבון",

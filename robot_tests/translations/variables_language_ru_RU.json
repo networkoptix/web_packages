@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Может смотреть живое видео и архив",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Может смотреть только живое видео",
     "ADD USER PERMISSIONS HINT CUSTOM": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Требуется имя системы",
     "ACCOUNT TEXT": "Учетная запись",
     "ACCOUNT INFORMATION": "Информация об учетной записи",

@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Puede ver video en vivo y navegar por el archivo",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Solo puedo ver video en vivo",
     "ADD USER PERMISSIONS HINT CUSTOM": "Utilice la aplicación %VMS_NAME% Client para configurar permisos personalizados",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "El nombre del sistema es requerido",
     "ACCOUNT TEXT": "Cuenta",
     "ACCOUNT INFORMATION": "Información de la Cuenta",

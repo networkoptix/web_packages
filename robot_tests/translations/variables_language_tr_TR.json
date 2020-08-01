@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Canlı vidyo görüntüleyebilir ve arşive gözatabilir",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Sadece canlı vidyo izleyebilir",
     "ADD USER PERMISSIONS HINT CUSTOM": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Sistem adı zorunludur",
     "ACCOUNT TEXT": "Hesap",
     "ACCOUNT INFORMATION": "Hesap Bilgileri",

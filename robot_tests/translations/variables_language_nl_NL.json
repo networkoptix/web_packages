@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Kan live video bekijken en zoeken in het archief",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Kan alleen live video bekijken",
     "ADD USER PERMISSIONS HINT CUSTOM": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Een systeemnaam is vereist",
     "ACCOUNT TEXT": "Account",
     "ACCOUNT INFORMATION": "Accountinformatie",

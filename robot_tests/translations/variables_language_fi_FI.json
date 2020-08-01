@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Voi katsella reaaliaikaista videota ja selata arkistoa",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Voit katsella vain reaaliaikaista videota",
     "ADD USER PERMISSIONS HINT CUSTOM": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Järjestelmän nimi on pakollinen",
     "ACCOUNT TEXT": "Tili",
     "ACCOUNT INFORMATION": "Account Information",

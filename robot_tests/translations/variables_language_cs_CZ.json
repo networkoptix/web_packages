@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Můžete zobrazit živé video a procházet archiv",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Můžete zobrazit pouze živé video",
     "ADD USER PERMISSIONS HINT CUSTOM": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Název systému je povinný",
     "ACCOUNT TEXT": "Účet",
     "ACCOUNT INFORMATION": "Informace o účtu",

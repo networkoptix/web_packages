@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "สามารถดูวิดีโอสดได้เท่านั้น",
     "ADD USER PERMISSIONS HINT CUSTOM": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "ต้องระบุชื่อ",
     "ACCOUNT TEXT": "บัญชีผู้ใช้",
     "ACCOUNT INFORMATION": "ข้อมูลบัญชีสมาชิก",

@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Можна переглядати відео в реальному часі та переглядати архів",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Можна переглядати лише відео в реальному часі",
     "ADD USER PERMISSIONS HINT CUSTOM": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Ім'я системи обов'язкове",
     "ACCOUNT TEXT": "Обліковий запис",
     "ACCOUNT INFORMATION": "Інформація про обліковий запис",

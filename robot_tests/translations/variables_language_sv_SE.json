@@ -52,6 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Kan visa live video och bläddra i arkivet",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Kan bara se live video",
     "ADD USER PERMISSIONS HINT CUSTOM": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
     "SYSTEM NAME IS REQUIRED TEXT": "Systemnamn krävs",
     "ACCOUNT TEXT": "Konto",
     "ACCOUNT INFORMATION": "Kontoinformation",
