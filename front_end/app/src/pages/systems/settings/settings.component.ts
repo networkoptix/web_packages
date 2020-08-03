@@ -336,7 +336,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode = {
                     id     : this.CONFIG.menus.systemSettings.cameras.id,
                     svg    : this.CONFIG.menus.systemSettings.cameras.icon,
-                    label  : 'Cameras',
+                    label  : this.LANG.menu.titles.cameras,
                     path   : this.CONFIG.menus.systemSettings.cameras.path,
                     level3 : []
                 };

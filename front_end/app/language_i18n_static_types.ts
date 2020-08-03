@@ -523,6 +523,7 @@ export interface Menu {
 }
 
 export interface MenuTitles {
+    cameras:              string;
     systemAdministration: string;
     general:              string;
     licenses:             string;
@@ -1350,6 +1351,7 @@ const typeMap: any = {
         { json: "titles", js: "titles", typ: r("MenuTitles") },
     ], false),
     "MenuTitles": o([
+        { json: "cameras", js: "cameras", typ: "" },
         { json: "systemAdministration", js: "systemAdministration", typ: "" },
         { json: "general", js: "general", typ: "" },
         { json: "licenses", js: "licenses", typ: "" },
