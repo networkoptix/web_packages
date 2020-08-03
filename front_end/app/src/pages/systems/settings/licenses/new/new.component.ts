@@ -189,6 +189,13 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         form.controls.licenseKey.markAsUntouched();
     }
 
+    updateCursorPosition(event) {
+        setTimeout(() => {
+            const cursorPosition = this.license.length + Math.floor(this.license.length / 4);
+            event.target.setSelectionRange(cursorPosition, cursorPosition);
+        });
+    }
+
     changeServer(server) {
         this.selectedServer = server;
     }
