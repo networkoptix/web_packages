@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "ライブ ビデオとアーカイブを参照できます",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "ライブ表示のみ可能",
     "ADD USER PERMISSIONS HINT CUSTOM": "%VMS_NAME% クライアントアプリケーションを使用してカスタム権限を設定する",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "システムで指定されたカスタムユーザーロール",
     "SYSTEM NAME IS REQUIRED TEXT": "システム名が必要です",
     "ACCOUNT TEXT": "アカウント",
     "ACCOUNT INFORMATION": "アカウント情報",
