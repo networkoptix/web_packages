@@ -25,7 +25,8 @@ Check Special Hint
     Wait Until Element is Visible    ${dropdown type}
     Sleep    1
     Click Link    ${dropdown type}/..
-    ${type}    Convert To Uppercase    ${type}
+    # Commented this out because it caused a proble but can't remember why it was here
+    # ${type}    Convert To Uppercase    ${type}
     Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
