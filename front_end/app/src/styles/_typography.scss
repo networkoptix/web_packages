@@ -5,16 +5,16 @@
 @mixin font-source($fontfamily: $font-family-regular, $size: false, $colour: false, $weight: false,  $lh: false) {
     font-family: $fontfamily;
     @if $size {
-        font-size: $size;
+        font-size: $size !important;
     }
     @if $colour {
-        color: $colour;
+        color: $colour !important;
     }
     @if $weight {
-        font-weight: $weight;
+        font-weight: $weight !important;
     }
     @if $lh {
-        line-height: $lh;
+        line-height: $lh !important;
     }
 }
 @mixin regular32 {

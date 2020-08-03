@@ -1,6 +1,6 @@
 @use '../../../styles/theme_variables' as *;
 @use '../../styles/typography';
-@use'../../styles/mixins';
+@use '../../styles/mixins';
 @use 'variables' as *;
 
 .dropdown, .dropup {
@@ -14,20 +14,20 @@ header {
     .dropdown {
         @media (max-width : $collapse-second-width) {
             position : inherit !important;
-            
+
             .dropdown-menu {
                 right : 0;
             }
         }
-        
+
         .dropdown-toggle {
             height : 47px;
             border : none;
-            
+
             @media (max-width : $collapse-first-width) {
                 padding : 5px 27px 5px 5px;
             }
-            
+
             @media (max-width : $collapse-second-width) {
                 padding : 5px 8px !important;
             }
@@ -38,31 +38,67 @@ header {
 .dropdown {
     &.short {
         width : 70px;
-        
+
         .multi-column {
             &.columns-2 {
                 width : 300px !important;
             }
         }
     }
-    
+
     &.alt-style {
         .dropdown-toggle {
-            height : 32px;
-            position: relative;
-    
+            height   : 32px;
+            position : relative;
+
             .arrow-flip svg-icon {
-                right : 6px !important;
-                bottom: 6px !important;
+                right  : 6px !important;
+                bottom : 6px !important;
             }
         }
-    
+
         .dropdown-menu {
-            left: auto;
-            right: 0;
+            left  : auto;
+            right : 0;
         }
     }
-    
+
+    &-clear-fit {
+        .btn-dropdown-toggle {
+            @include typography.regular13;
+            background-color : transparent !important;
+            box-shadow       : none;
+            border-radius    : 0;
+            width            : auto !important;
+            position         : relative;
+            padding-right    : 36px !important;
+            height           : 28px !important;
+
+            &:focus {
+                background-color : transparent !important;
+            }
+
+            &:hover {
+                background-color : transparent !important;
+                box-shadow       : none !important;
+            }
+
+            &:active {
+                background-color : transparent !important;
+                box-shadow       : none !important;
+            }
+
+            .arrow-flip svg-icon {
+                bottom : 4px;
+            }
+        }
+
+        .dropdown-menu {
+            min-width  : auto;
+            margin-top : 0 !important;
+        }
+    }
+
     .dropdown-toggle {
         display          : flex;
         justify-content  : flex-start;
@@ -73,44 +109,45 @@ header {
 
         &.btn.btn-dropdown-toggle span .text-muted {
             @include typography.regular14;
-            color: $light16 !important;
+            color : $light16 !important;
         }
-        
+
         &::after {
             display : none !important; // hide standard arrow
         }
-        
+
         .glyphicon {
             margin : 0 14px 0 4px;
         }
-        
+
         .ellipsis {
             @include mixins.ellipsis;
             // set text max-width so dropdown button will match spec width
             @media (max-width : $collapse-first-width) {
                 max-width : 150px;
             }
-            
+
             @include media-breakpoint-down(xl) {
                 max-width : 172px;
             }
-            
+
             @include media-breakpoint-up(xl) {
                 max-width : 236px;
             }
         }
+
         .ellipsis-merge {
             @include mixins.ellipsis;
-            max-width: 95%;
+            max-width : 95%;
         }
     }
-    
+
     .dropdown-menu > ul:last-of-type {
         li:last-of-type {
             margin-bottom : 4px;
         }
     }
-    
+
     .dropdown-menu {
         margin-top       : 3px;
         background-color : $additional_light1;
@@ -120,7 +157,7 @@ header {
         border-radius    : 2px;
         width            : 100%;
         padding          : 4px 0 !important;
-        
+
         &--list {
             max-height      : $dropdown-list-height;
             overflow        : auto;
@@ -128,40 +165,41 @@ header {
             list-style-type : none;
             margin-bottom   : 0;
         }
-        
+
         &--footer, &--header {
             height          : $dropdown-header-height;
             padding         : 0;
             margin          : 0;
             list-style-type : none;
         }
-    
+
         &--footer {
             li:last-of-type {
                 margin-bottom : 4px;
             }
-            margin-bottom: 4px !important;
+
+            margin-bottom : 4px !important;
         }
-        
+
         .multi-column-dropdown {
             list-style : none;
             margin     : 0;
             padding    : 0;
         }
-        
+
         .dropdown-item-container {
             position : relative;
             height   : auto;
-            
+
             .dropdown-item {
-                display     : flex;
-                align-items : center;
-                padding     : 0;
-                height      : 26px;
-                line-height : 26px;
-                font-family : $font-family-medium;
-                text-decoration: none;
-                cursor      : pointer !important;
+                @include typography.medium13;
+                display         : flex;
+                align-items     : center;
+                padding         : 0;
+                height          : 26px;
+                line-height     : 26px;
+                text-decoration : none;
+                cursor          : pointer !important;
 
                 @media (max-width : $collapse-second-width) {
                     height : 32px;
@@ -183,7 +221,7 @@ header {
 
                     .text-muted {
                         background-color : $light16 !important;
-                        color : $light1 !important;
+                        color            : $light1 !important;
                     }
 
                     &:hover {
@@ -197,12 +235,12 @@ header {
 
                 & > span:first-child {
                     @include mixins.ellipsis;
-                    padding      : 0 rem(10px);
+                    padding : 0 rem(10px);
                 }
 
                 .text-muted {
-                    font-family: $font-family-regular;
-                    color : $light16 !important;
+                    font-family : $font-family-regular;
+                    color       : $light16 !important;
                 }
             }
 
@@ -222,52 +260,52 @@ header {
                     line-height  : 26px;
                 }
             }
-            
+
             .icon-search {
                 margin : 10px 0 0 24px !important;
             }
-            
+
             .search-clear {
                 right : 24px;
             }
-            
+
             .search-input {
                 width  : calc(100% - 24px);
                 margin : 0 12px !important;
             }
         }
     }
-    
+
     .dropdown-toggle-transparent {
         background-color : transparent !important;
         box-shadow       : none;
         border-radius    : 0;
-        
+
         &:focus {
             background-color : transparent !important;
         }
-        
+
         &:hover {
             background-color : $light2 !important;
             box-shadow       : none !important;
         }
-        
+
         &:active {
             background-color : $light3 !important;
             box-shadow       : none !important;
         }
     }
-    
+
     &.show {
         .dropdown-toggle {
             background-color : $light5 !important;
         }
-        
+
         .dropdown-toggle-transparent {
             background-color : transparentize($light5, 0.75) !important;
         }
     }
-    
+
     &-divider {
         height     : auto !important;
         margin     : 4px 12px;
@@ -280,6 +318,7 @@ nx-select.ng-invalid:not(.ng-untouched) {
         border-color : #d65029;
     }
 }
+
 .btn-dropdown-toggle {
-    justify-content: unset;
+    justify-content : unset;
 }

@@ -35,7 +35,15 @@
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let store of storage">
                             <td>{{store.url}}</td>
-                            <td>{{store.storageType}}/{{store.isBackup}}/{{store.usedForWriting}}</td>
+                            <td class="px-0" [style.width.px]="ddWidth">
+                                <div class="position-absolute" [style.width.px]="ddWidth">
+                                    <nx-select [type]="'clear-fit'"
+                                        [items]="modes"
+                                        [selected]="selectMode(store)"
+                                        (onSelected)="changeMode(store, $event)">
+                                    </nx-select>
+                                </div>
+                            </td>
                             <td class="size-chart">
                                 <nx-storage-size-component [store]="store"></nx-storage-size-component>
                             </td>

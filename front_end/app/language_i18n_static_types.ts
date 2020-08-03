@@ -46,6 +46,7 @@ export interface LanguageI18NStaticTypes {
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
+    storage:               Storage;
 }
 
 export interface AccessRole {
@@ -673,6 +674,16 @@ export interface ServersStatus {
     restarting: any;
 }
 
+export interface Storage {
+    modes: Modes;
+}
+
+export interface Modes {
+    main:     any;
+    backup:   any;
+    notInUse: any;
+}
+
 export interface LanguageI18NStaticTypesSystem {
     connected:        any;
     not_connected:    any;
@@ -940,6 +951,7 @@ const typeMap: any = {
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
+        { json: "storage", js: "storage", typ: r("Storage") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },
@@ -1504,6 +1516,14 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "any" },
         { json: "resetting", js: "resetting", typ: "any" },
         { json: "restarting", js: "restarting", typ: "any" },
+    ], false),
+    "Storage": o([
+        { json: "modes", js: "modes", typ: r("Modes") },
+    ], false),
+    "Modes": o([
+        { json: "main", js: "main", typ: "any" },
+        { json: "backup", js: "backup", typ: "any" },
+        { json: "notInUse", js: "notInUse", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([
         { json: "connected", js: "connected", typ: "any" },

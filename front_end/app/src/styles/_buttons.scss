@@ -8,20 +8,22 @@
 
 @mixin button {
     @include typography.medium14;
-    height        : 2rem;
-    border-radius : $border-radius-base;
-    font-weight   : inherit;
-    padding       : 0 1rem;
-    border        : none;
-    display       : flex;
-    align-items   : center;
-    transition    : none;
-    max-width     : 278px;
-    text-overflow : ellipsis;
-    overflow      : hidden;
-    line-height   : 1rem;
-    justify-content: center;
-    text-decoration: none;
+    font-size       : 0.875rem !important;
+    height          : 2rem !important;
+    border-radius   : $border-radius-base !important;
+    font-weight     : inherit !important;
+    padding         : 0 1rem !important;
+    border          : none !important;
+    display         : flex !important;
+    align-items     : center !important;
+    transition      : none !important;
+    max-width       : 278px;
+    text-overflow   : ellipsis;
+    overflow        : hidden;
+    line-height     : 1rem !important;
+    justify-content : center;
+    text-decoration : none;
+    box-shadow      : none !important;
 
     &:hover,
     &:active,
@@ -49,20 +51,38 @@ button, .btn {
     height : 40px;
 }
 
-.btn.btn-default, .btn.btn-dropdown-toggle {
+.btn.btn-default {
     color            : $dark9 !important;
     background-color : $light4 !important;
     box-shadow       : inset 0 -1px 0 0 $light7;
     font-family      : $font-family-medium;
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color : $light5 !important;
+        background-color : $light !important;
         box-shadow       : inset 0 -1px 0 0 $light8;
     }
 
     &:active,
     &.active {
         background-color : $light6 !important;
+        box-shadow       : inset 0 1px 0 0 $light8 !important;
+    }
+}
+
+.btn.btn-dropdown-toggle {
+    color            : $dark9 !important;
+    background-color : $light4 !important;
+    box-shadow       : inset 0 -1px 0 0 $light7;
+    font-family      : $font-family-medium;
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : $light5;
+        box-shadow       : inset 0 -1px 0 0 $light8;
+    }
+
+    &:active,
+    &.active {
+        background-color : $light6;
         box-shadow       : inset 0 1px 0 0 $light8 !important;
     }
 }
@@ -152,7 +172,7 @@ button, .btn {
     }
 
     .glyphicon-close {
-        opacity: 1 !important;
+        opacity : 1 !important;
     }
 
     &:hover:not([disabled]):not(.disabled) {
@@ -225,7 +245,7 @@ button, .btn {
     }
 
     &:hover {
-        color: $light1;
+        color : $light1;
     }
 
     .close-button {
@@ -261,7 +281,7 @@ button, .btn {
     }
 
     & > span {
-        margin : 0;
+        margin  : 0;
         padding : 0 1px; // flex messes up caption width
     }
 
@@ -271,20 +291,20 @@ button, .btn {
 }
 
 .btn-text {
-    text-decoration: none;
+    text-decoration : none;
 
-    svg-icon svg{
-        width: 20px;
-        height: 20px;
+    svg-icon svg {
+        width  : 20px;
+        height : 20px;
     }
 
     &.has-icon {
         padding-left : 25px;
-        position: relative;
+        position     : relative;
 
         svg {
             path {
-                fill: $light16;
+                fill : $light16;
             }
         }
     }
@@ -294,12 +314,12 @@ button, .btn {
         color : $light16 !important;
 
         &.close {
-            left : 0;
+            left   : 0;
             width  : 16px;
             height : 16px;
 
             &:before, &:after {
-                background-color: $light16;
+                background-color : $light16;
             }
         }
     }
@@ -339,7 +359,7 @@ button, .btn {
 
     .glyphicon {
         display : block;
-        margin: 0;
+        margin  : 0;
         @include media-breakpoint-up(md) {
             display : none;
         }

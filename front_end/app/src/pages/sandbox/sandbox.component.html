@@ -3,6 +3,55 @@
         <h1>SANDBOX</h1>
 
         <ngb-tabset #tabs>
+            <ngb-tab id="Multi DD">
+                <ng-template ngbTabTitle>
+                    <span class="tab-heading">Multi DD</span>
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row">
+                        <div class="col-3 p-5">
+                            <nx-multi-select name="ddMultiSelect"
+                                             [items]="items"
+                                             [ngModel]="itemsSelected"
+                                             (ngModelChange)="modelChanged($event)"
+                                             canSelectAll>
+                            </nx-multi-select>
+                        </div>
+                        <div class="col-3 p-5">
+                            <nx-multi-select name="ddMultiSelect1"
+                                             [items]="items"
+                                             [ngModel]="itemsSelected"
+                                             (ngModelChange)="modelChanged($event)"
+                                             canSelectAll>
+                            </nx-multi-select>
+                        </div>
+                        <div class="col p-5">
+                            Labels:
+                            <br>
+                            {{items | json}}
+                            <br>
+                            <br>
+                            Selected
+                            <br>
+                            {{itemsSelected}}
+                        </div>
+                    </div>
+                    <div class="container row">
+                        <div class="row" style="width: 100%;">
+                            Dynamic size based on longer menu item: {{ddWidth}}
+                        </div>
+                        <br><br>
+                        <div class="row" [style.width.px]="ddWidth" style="border: 1px solid gold">
+                            <nx-select [type]="'clear-fit'"
+                                       name="ddGenericSelect"
+                                       [items]="mode"
+                                       [ngModel]="modeSelected">
+                            </nx-select>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+
             <ngb-tab id="Other">
                 <ng-template ngbTabTitle>
                     <span class="tab-heading">Other</span>
@@ -468,42 +517,6 @@
                         </div>
                         <div class="pt-3">
                             Search tags: {{filter.tags | json}}
-                        </div>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-
-            <ngb-tab id="Multi DD">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Multi DD</span>
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="row">
-                        <div class="col-3 p-5">
-                            <nx-multi-select name="ddMultiSelect"
-                                             [items]="items"
-                                             [ngModel]="itemsSelected"
-                                             (ngModelChange)="modelChanged($event)"
-                                             canSelectAll>
-                            </nx-multi-select>
-                        </div>
-                        <div class="col-3 p-5">
-                            <nx-multi-select name="ddMultiSelect1"
-                                             [items]="items"
-                                             [ngModel]="itemsSelected"
-                                             (ngModelChange)="modelChanged($event)"
-                                             canSelectAll>
-                            </nx-multi-select>
-                        </div>
-                        <div class="col p-5">
-                            Labels:
-                            <br>
-                            {{items | json}}
-                            <br>
-                            <br>
-                            Selected
-                            <br>
-                            {{itemsSelected}}
                         </div>
                     </div>
                 </ng-template>

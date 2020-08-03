@@ -6,7 +6,7 @@
         display               : grid;
         border-collapse       : collapse;
         min-width             : 100%;
-        grid-template-columns : 35% 20% auto;
+        grid-template-columns : 40% fit-content(100%) auto;
     }
 
     .table-row-spacer {

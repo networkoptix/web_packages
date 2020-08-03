@@ -15,13 +15,19 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { mapStorages }               from '../storage-advanced/storage.component';
 
+enum MODE {
+    MAIN = 0,
+    BACKUP = 1,
+    NOT_IN_USE = 3
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-storage-component',
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemStorageComponent implements OnChanges {
+export class NxSystemStorageComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
@@ -35,6 +41,10 @@ export class NxSystemStorageComponent implements OnChanges {
     storage = [];
     watchers: Watcher<any>[] = [];
 
+    ddWidth: number;
+    modes: any;
+    modeSelected: any;
+
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
@@ -45,6 +55,17 @@ export class NxSystemStorageComponent implements OnChanges {
 
         this.showStorage = false;
         this.loading = true;
+
+        this.modes = [
+            { name: this.LANG.storage.modes.main(), value: 'modeMain' },
+            { name: this.LANG.storage.modes.backup(), value: 'modeBackup' },
+            { name: 'horizontal', value: '' },
+            { name: this.LANG.storage.modes.notInUse(), value: 'modeNotInUse' }
+        ];
+    }
+
+    ngOnInit() {
+        this.calcDDWidth();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -89,17 +110,51 @@ export class NxSystemStorageComponent implements OnChanges {
             }
         };
 
-        this.loading = false;
-        this.showStorage = true;
-        this.storage = replyMock.reply.storages;
+        // this.loading = false;
+        // this.showStorage = true;
+        // this.storage = replyMock.reply.storages;
 
-        // if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
-        //     this.system.updateOrGetSystemStorage().toPromise()
-        //         .then(response => {
-        //             this.loading = false;
-        //             this.showStorage = (Object.keys(response.reply.storages).length > 0);
-        //             this.storage = response.reply.storages;
-        //         });
-        // }
+        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
+            this.system.updateOrGetSystemStorage().toPromise()
+                .then(response => {
+                    debugger;
+                    this.loading = false;
+                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
+                    this.storage = response.reply.storages;
+                });
+        }
+    }
+
+    selectMode(store) {
+        if (!store.isBackup) {
+            return this.modes[MODE.MAIN];
+        } else {
+            return this.modes[MODE.BACKUP];
+        }
+    }
+
+    changeMode(store, selected) {
+
+    }
+
+    calcDDWidth() {
+        const longest = this.modes.reduce((a, b) => {
+            if (b.name === 'horizontal' || a.name.length > b.name.length) {
+                return a;
+            }
+            if (a.name === 'horizontal' || a.name.length < b.name.length) {
+                return b;
+            }
+        });
+
+        // calculate dd size ... for simplicity a span is used
+        const dd = document.createElement('span');
+        dd.style.visibility = 'hidden';
+        dd.innerText = longest.name;
+        document.body.appendChild(dd);
+        // add button's left and right padding and space for info icon
+        this.ddWidth = Math.round(dd.getBoundingClientRect().width + 80);
+
+        document.body.removeChild(dd);
     }
 }

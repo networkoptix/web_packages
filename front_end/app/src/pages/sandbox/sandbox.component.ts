@@ -24,6 +24,9 @@ export class NxSandboxComponent {
     options;
     items;
     itemsSelected;
+    mode;
+    modeSelected;
+    ddWidth: number;
     filter;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
@@ -149,6 +152,22 @@ export class NxSandboxComponent {
         ];
 
         this.itemsSelected = ['qwerty2', 'qwerty3'];
+
+        this.mode = [
+            { name: 'Main', value: 'qwerty2' },
+            { name: 'Backup', value: 'qwerty3' },
+            { name: 'Not in use', value: 'qwerty4' }
+        ];
+
+        this.modeSelected = this.mode[2];
+
+        // calculate dd size
+        const btn = document.createElement('span');
+        btn.style.visibility = 'hidden';
+        btn.innerText = this.modeSelected.name;
+        document.body.appendChild(btn);
+        // add button's left and right padding and space for info icon
+        this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
     }
 
     constructor(private dialogs: NxDialogsService,

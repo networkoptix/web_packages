@@ -41,9 +41,13 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() id;
     @Input() items: DropdownItem[];
     @Input() selected;
-    @Output() onSelected = new EventEmitter<string>();
     @Input() merge: boolean;
     @Input() stillLoading: boolean;
+    @Input() type: string;
+
+    @Output() onSelected = new EventEmitter<string>();
+
+    dropdownType: string;
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
@@ -62,6 +66,8 @@ export class NxGenericDropdown extends BaseDropdown {
                 item.name += `<span class="additional-help">${item.help}</span>`;
             }
         });
+
+        this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
     }
 
     change(item) {
