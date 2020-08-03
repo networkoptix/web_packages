@@ -117,7 +117,6 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
             this.system.updateOrGetSystemStorage().toPromise()
                 .then(response => {
-                    debugger;
                     this.loading = false;
                     this.showStorage = (Object.keys(response.reply.storages).length > 0);
                     this.storage = response.reply.storages;
