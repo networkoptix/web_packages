@@ -190,7 +190,7 @@ SPACE for first name is not valid
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT LAST NAME}
+    Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
@@ -202,7 +202,7 @@ SPACE for last name is not valid
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT FIRST NAME}
+    Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
