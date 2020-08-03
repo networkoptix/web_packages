@@ -61,7 +61,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
             .subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
-                    this.rightOffset$.next(Math.max(button - dropdown + 16, 0) | 0);
+                    this.rightOffset$.next(Math.max(button - dropdown + 18, 0) | 0);
                 }
             });
     }

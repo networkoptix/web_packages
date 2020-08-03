@@ -4,6 +4,9 @@
     </div>
     <div class="system-info">
         <span class="system-name">{{system.name}}</span>
-        <span class="owner">Owner - {{system.ownerFullName}}</span>
+        <span class="owner">
+            <ng-container translate>Owner</ng-container>
+            {{' ' + '\u2014' + ' ' + system.ownerFullName}}
+        </span>
     </div>
 </div>
