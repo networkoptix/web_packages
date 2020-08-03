@@ -128,10 +128,10 @@
                         <h4 class="mb-3" translate>Mode</h4>
                             <nx-radio
                                 *ngFor="let mode of recordingModes" class="d-flex pb-2"
-                                [name]="LANG.common.recordingModes[mode.name]"
-                                [componentId]="LANG.common.recordingModes[mode.name]"
+                                [name]="LANG.common.recordingModes[mode.name]()"
+                                [componentId]="LANG.common.recordingModes[mode.name]()"
                                 [value]="mode.value"
-                                [label]="LANG.common.recordingModes[mode.name]"
+                                [label]="LANG.common.recordingModes[mode.name]()"
                                 [disabled]="!mode.enabled"
                                 [(ngModel)]="mode.value"
                                 (click)="toggleMode(mode)"
