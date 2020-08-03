@@ -36,10 +36,13 @@
     position: relative;
     svg {
         position: absolute;
-        top: 0px;
-        left: 10px;
-        height: 20px;
-        width: 20px;
+        top: -3px;
+        left: 0px;
+        height: 24px;
+        width: 24px;
+        .st0 {
+            fill: $dark9;
+        }
     }
 }
 

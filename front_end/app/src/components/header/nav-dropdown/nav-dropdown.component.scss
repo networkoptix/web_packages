@@ -43,6 +43,7 @@
         left: calc(50% - 8px) !important;
         border-bottom-color: $light6 !important;
         transform: translateY(3px);
+        z-index: 5000 !important;
         &::after {
             border-bottom-color: $additional_light1 !important;
         }

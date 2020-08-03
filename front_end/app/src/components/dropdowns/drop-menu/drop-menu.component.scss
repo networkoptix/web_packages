@@ -9,10 +9,15 @@
     padding: 0 !important;
     margin: 0px 8px;
     border-top: none !important;
-    border-radius: 10px !important;
+    border-radius: 2px !important;
     overflow: hidden;
     &--list {
         max-height: calc(100vh - 56px) !important;
+    }
+
+    @media screen  and (max-width: 992px) {
+        margin: 0 !important;
+        width: 100% !important;
     }
 }
 
@@ -77,6 +82,9 @@
     @extend .base-grid;
     background: $light1;
     padding: 24px 16px !important;
+    &:not(.top-border) {
+        background: $additional_light1;
+    }
 }
 
 .top-border {
