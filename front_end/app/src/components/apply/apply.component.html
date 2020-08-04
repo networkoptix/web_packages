@@ -12,6 +12,6 @@
             customClass="ml-2"></nx-cancel-button>
     </div>
     <ng-template #noChanges>
-        <div class="placeholder-text-no-changes" translate>No unsaved changes</div>
+        <div *ngIf="applyVisible" class="placeholder-text-no-changes" translate>No unsaved changes</div>
     </ng-template>
 </div>
