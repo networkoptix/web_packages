@@ -5,20 +5,24 @@
     margin-top: 0 !important;
     position: relative;
     &.hide-arrow {
-        &::after {
+        & > svg-icon {
             display: none;
         }
     }
-    &::after {
-        content: "";
+    & > svg-icon {
         position: absolute;
         right: -18px;
-        top: 10px;
-        bottom: 10px;
-        width: 10px;
-        background: $dark9;
-        -webkit-clip-path: polygon(0 2%, 0 0, 100% 50%, 0 100%, 0 98%, 96% 50%);
-        clip-path: polygon(0 2%, 0 0, 100% 50%, 0 100%, 0 98%, 96% 50%);
+        width: 20px;
+        top: 0;
+        bottom: 0;
+        & > svg {
+            vertical-align: top;
+            & > .st0{
+                fill-rule: evenodd;
+                clip-rule: evenodd;
+                fill: $light4;
+            }
+        }
     }
 }
 
@@ -50,7 +54,7 @@
             display: block;
         }
     }
-    &-toggle {
+    & > #systemsDropdown {
         padding-right: 16px !important;
         padding-left: 0 !important;
     }
@@ -65,7 +69,7 @@
         z-index: 9999 !important;
         border-bottom-color: $light6 !important;
         transform: translateY(3px);
-        &::after {
+        & > svg-icon {
             border-bottom-color: $additional_light1 !important;
         }
     }

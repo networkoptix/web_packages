@@ -15,7 +15,7 @@
             <li class="nav-links"
                 [style.padding-right.px]="link.new_window || link.icon ? 25 : 5" 
                 [ngClass]="{'active': headerService.currentLocation.path === link.url }"
-                (click)="handleNav(link)">
+                (click)="headerService.handleNav(link)">
                 <span>
                     {{link.name}}
                 </span>
