@@ -45,6 +45,7 @@
                                 <span class="ellipsis">{{store.url}}</span>
                             </td>
                             <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.minWidth.px]="ddWidth" [ngSwitch]="store.status">
+                                <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" translate>Reserved</div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
                                 <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"

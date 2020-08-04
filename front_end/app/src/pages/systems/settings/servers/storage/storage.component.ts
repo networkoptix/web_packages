@@ -85,27 +85,37 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.init();
-        // if (changes.system?.currentValue || changes.serverId?.currentValue) {
-        //     this.init();
-        // }
     }
 
     init() {
         const replyMock = {
             reply: {
                 'storageProtocols': ['smb'],
-                'storages'        : [{
-                    'freeSpace'       : '145296863232',
+                'storages': [{
+                    'freeSpace'       : '756123619328',
                     'isBackup'        : false,
                     'isExternal'      : false,
                     'isOnline'        : true,
                     'isUsedForWriting': true,
                     'isWritable'      : true,
-                    'reservedSpace'   : '24505933824',
-                    'storageId'       : '{7afc3fbd-5fd1-a277-c3cd-999e396fa4bb}',
+                    'reservedSpace'   : '32212254720',
+                    'storageId'       : '{52a80ce6-a2d6-b823-a326-34d9e69b2d5e}',
                     'storageStatus'   : 'used',
                     'storageType'     : 'local',
-                    'totalSpace'      : '245059338240',
+                    'totalSpace'      : '1968874332160',
+                    'url'             : '/media/tsanko/movies1/HD Witness Media'
+                }, {
+                    'freeSpace'       : '-1',
+                    'isBackup'        : false,
+                    'isExternal'      : false,
+                    'isOnline'        : false,
+                    'isUsedForWriting': true,
+                    'isWritable'      : false,
+                    'reservedSpace'   : '24505933824',
+                    'storageId'       : '{7afc3fbd-5fd1-a277-c3cd-999e396fa4bb}',
+                    'storageStatus'   : 'used|beingChecked',
+                    'storageType'     : 'local',
+                    'totalSpace'      : '-1',
                     'url'             : '/media/tsanko/BUILD/HD Witness Media'
                 }, {
                     'freeSpace'       : '-1',
@@ -121,15 +131,15 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                     'totalSpace'      : '-1',
                     'url'             : '/media/tsanko/movies/HD Witness Media'
                 }, {
-                    'freeSpace'       : '41751379968',
+                    'freeSpace'       : '41258360832',
                     'isBackup'        : false,
                     'isExternal'      : false,
                     'isOnline'        : true,
-                    'isUsedForWriting': true,
-                    'isWritable'      : true,
+                    'isUsedForWriting': false,
+                    'isWritable'      : false,
                     'reservedSpace'   : '10737418240',
                     'storageId'       : '{b9017e44-74fe-b549-bb65-2c14418ddb02}',
-                    'storageStatus'   : 'used|system',
+                    'storageStatus'   : 'used|tooSmall|system',
                     'storageType'     : 'local',
                     'totalSpace'      : '62220242944',
                     'url'             : '/opt/networkoptix/mediaserver/var/data'
@@ -146,9 +156,13 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             if (store.freeSpace) {
                 store.status = STORAGE_STATUS.IN_USE; // default
 
-                if (store.freeSpace === '-1') {
+                if (!store.isOnline) {
                     store.status = STORAGE_STATUS.INACCESSIBLE;
                     this.storage.hasAction = true;
+                } else {
+                    if (store.storageStatus.includes('used') && store.storageStatus.includes('tooSmall')) {
+                        store.status = STORAGE_STATUS.RESERVED;
+                    }
                 }
             }
         });
@@ -162,11 +176,15 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         //             this.showStorage = (Object.keys(response.reply.storages).length > 0);
         //             this.storage = response.reply.storages;
         //
+        //             this.storage.hasAction = false;
         //             this.storage.forEach(store => {
-        //                 store.status = STORAGE_STATUS.IN_USE; // default
+        //                 if (store.freeSpace) {
+        //                     store.status = STORAGE_STATUS.IN_USE; // default
         //
-        //                 if (store.freeSpace === -1) {
-        //                     store.status = STORAGE_STATUS.INACCESSIBLE;
+        //                     if (store.freeSpace === '-1') {
+        //                         store.status = STORAGE_STATUS.INACCESSIBLE;
+        //                         this.storage.hasAction = true;
+        //                     }
         //                 }
         //             });
         //         });
