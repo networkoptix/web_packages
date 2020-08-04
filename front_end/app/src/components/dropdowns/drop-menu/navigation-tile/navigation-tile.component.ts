@@ -40,11 +40,6 @@ export class NxNavigiationTileComponent {
     }
 
     ngOnDestroy() {}
-
-    handleNav(node: MenuNode) {
-        this.headerService.showSubject.next(false);
-        this.router.navigate([node.url]);
-    }
 };
 
 export class MenuNode {
