@@ -5,7 +5,7 @@
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
 </nx-section-placeholder>
 
-<nx-block type="mt-3 storage-info" *ngIf="!loading && storage.length">
+<nx-block type="my-3 storage-info" *ngIf="!loading && storage.length">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
@@ -56,5 +56,70 @@
     </nx-section>
     <nx-section>
         <button class="btn btn-default" translate>Add External Storage</button>
+    </nx-section>
+</nx-block>
+
+<nx-block *ngIf="!loading && storage.length">
+    <header>
+        <div class="header-top-bar">
+            <h4 translate>Reindex Archive</h4>
+        </div>
+    </header>
+    <nx-section>
+        <div class="reindex-container">
+            <p translate>When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)</p>
+            <button class="btn btn-default mt-3 mb-2"
+                *ngIf="!reindexingMain; else reindexMainProgress"
+                type="button"
+                [ngbTooltip]="tooltipContent"
+                (click)="reindexingMain = true; reindexStorage('main')"
+                translate>Reindex Main Storage</button>
+            <ng-template #reindexMainProgress>
+                <section class="reindex-section mt-3 mb-2">
+                    <div class="progress-bar-section mr-3">
+                        <div class="progress-bar-header mb-1">
+                            <div translate>Reindexing Main Storage...</div>
+                            <span>{{ percentMainDone | percent: '1.0-0' : LOCALE_ID }}</span>
+                        </div>
+                        <div class="progress reindex-progress-container">
+                            <div class="progress-bar reindex-progress"
+                                role="progressbar"
+                                [ngStyle]="{ 'width': (percentMainDone * 100).toFixed() + '%' }"
+                                aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-default" (click)="reindexingMain = false; cancelIndexing('main')">Cancel</button>
+                </section>
+            </ng-template>
+            <button class="btn btn-default"
+                *ngIf="!reindexingBackup; else reindexBackupProgress"
+                type="button"
+                [ngbTooltip]="tooltipContent"
+                (click)="reindexingBackup = true; reindexStorage('backup')"
+                translate>Reindex Backup Storage</button>
+            <ng-template #reindexBackupProgress>
+                <section class="reindex-section mt-3 mb-2">
+                    <div class="progress-bar-section mr-3">
+                        <div class="progress-bar-header mb-1">
+                            <div translate>Reindexing Backup Storage...</div>
+                            <span>{{ percentBackupnDone | percent: '1.0-0' : LOCALE_ID }}</span>
+                        </div>
+                        <div class="progress reindex-progress-container">
+                            <div class="progress-bar reindex-progress"
+                                role="progressbar"
+                                [ngStyle]="{ 'width': (percentBackupDone * 100).toFixed() + '%' }"
+                                aria-valuemin="0"
+                                aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-default" (click)="reindexingBackup = false; cancelIndexing('backup')">Cancel</button>
+                </section>
+            </ng-template>
+            <ng-template #tooltipContent>
+                <p class="mt-2 text-left tooltip-text" translate>Reindexing will significantly increase drives load.</p>
+                <p class="text-left tooltip-text" translate>You can cancel it anytime without data loss.</p>
+            </ng-template>
+        </div>
     </nx-section>
 </nx-block>

@@ -4,7 +4,7 @@ import {
     SimpleChanges, OnInit
 } from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+import { Subscription, interval }              from 'rxjs';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
@@ -40,10 +40,15 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     saveSettings: Process;
     storage = [];
     watchers: Watcher<any>[] = [];
+    reindexingMain = false;
+    percentMainDone = 0;
+    reindexingBackup = false;
+    percentBackupDone = 0;
 
     ddWidth: number;
     modes: any;
     modeSelected: any;
+    percentDoneSubscription: Subscription;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -155,5 +160,28 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.ddWidth = Math.round(dd.getBoundingClientRect().width + 80);
 
         document.body.removeChild(dd);
+    }
+
+    reindexStorage(type: 'main' | 'backup') {
+        if (type === 'main') {
+            this.percentDoneSubscription = interval(1000).subscribe(val => {
+                if (this.percentMainDone < 1) {
+                    this.percentMainDone += Math.random() * 0.2;
+                    if (this.percentMainDone > 1) {
+                        this.percentMainDone = 1;
+                        this.percentDoneSubscription.unsubscribe();
+                    }
+                }
+            });
+        }
+    }
+
+    cancelIndexing(type: 'main' | 'backup') {
+        if (type === 'main') {
+            this.percentMainDone = 0;
+        } else {
+            this.percentBackupDone = 0;
+        }
+        this.percentDoneSubscription.unsubscribe();
     }
 }

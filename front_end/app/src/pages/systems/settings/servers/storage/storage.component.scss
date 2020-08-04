@@ -126,3 +126,40 @@
         }
     }
 }
+
+.reindex-container {
+    p {
+        @include typography.regular13;
+    }
+
+    .tooltip-text {
+        color: white !important;
+    }
+
+    .reindex-section {
+        display: flex;
+        .progress-bar-section {
+            flex-grow: 1;
+            padding-top: 2px;
+            .progress-bar-header {
+                @include typography.medium12;
+                display: flex;
+                justify-content: space-between;
+                div {
+                    color: $brand_core;
+                }
+                span {
+                    color: $dark9;
+                }
+            }
+            .reindex-progress-container {
+                height: 4px;
+                background-color: $light3 !important;
+                border-radius: 2px;
+                .reindex-progress {
+                    background-color: $brand_core !important;
+                }
+            }
+        }
+    }
+}
