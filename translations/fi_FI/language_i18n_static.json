@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "Järjestelmän hallinta",
             "general": "Yleiset",
             "licenses": "Lisenssit",

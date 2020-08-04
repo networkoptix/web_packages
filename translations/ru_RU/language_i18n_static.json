@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "Администрирование системы",
             "general": "Общие",
             "licenses": "Лицензии",

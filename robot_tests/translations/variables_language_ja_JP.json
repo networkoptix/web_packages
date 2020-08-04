@@ -286,6 +286,6 @@
     "VERSION TEXT": "バージョン",
     "PORT TOO LOW TEXT": "1024未満のポート番号が制限されています。サーバーにアクセスできなくなる可能性があります。",
     "SERVER RESTARTED TEXT": "サーバーは正常に再起動しました。",
-    "HOURS TEXT": "時",
+    "HOURS TEXT": "時間",
     "MINUTES TEXT": "分"
 }

@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "시스템 관리",
             "general": "일반",
             "licenses": "인증키",

@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "ผู้ดูแลระบบ",
             "general": "ทั่วไป",
             "licenses": "ไลเซนส์",

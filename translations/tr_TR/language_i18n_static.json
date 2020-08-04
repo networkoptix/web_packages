@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "Sistem Yönetimi",
             "general": "Genel",
             "licenses": "Lisanslar",

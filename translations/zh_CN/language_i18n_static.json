@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "系统管理",
             "general": "一般",
             "licenses": "授权",

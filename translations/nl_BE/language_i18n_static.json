@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "Systeem Administratie",
             "general": "Algemeen",
             "licenses": "Licenties",

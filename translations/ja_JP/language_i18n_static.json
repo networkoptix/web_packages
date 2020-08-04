@@ -509,6 +509,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Cameras",
             "systemAdministration": "システムアドミニストレーション",
             "general": "一般",
             "licenses": "ライセンス",
