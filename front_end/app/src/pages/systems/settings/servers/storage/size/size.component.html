@@ -6,11 +6,11 @@
      [closeDelay]="500"
      triggers="click">
 
-    <div class="total-label">{{totalSpaceLabel}}</div>
-    <div class="bar reserved" [style.width.%]="reservedPercentage"></div>
-    <div class="bar available" [style.width.%]="availPercentage"></div>
-    <div class="bar archive" [style.width.%]="archivePercentage"></div>
-    <div class="bar used" [style.width.%]="usedPercentage"></div>
+    <div class="total-label" [innerHTML]="totalSpaceLabel"></div>
+    <div class="bar reserved" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="reservedPercentage"></div>
+    <div class="bar available" [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}" [style.width.%]="availPercentage"></div>
+    <div class="bar archive" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="archivePercentage"></div>
+    <div class="bar used" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="usedPercentage"></div>
 </div>
 
 <ng-template #popLegend>

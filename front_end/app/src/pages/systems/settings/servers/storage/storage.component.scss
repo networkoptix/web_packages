@@ -7,12 +7,20 @@
         border-collapse       : collapse;
         min-width             : 100%;
         grid-template-columns : 40% fit-content(100%) auto;
+
+        &.hasAction {
+            grid-template-columns : 40% fit-content(100%) auto fit-content(100%);
+        }
     }
 
     .table-row-spacer {
         height          : .5rem;
         grid-column-end : span 3;
         display         : grid;
+
+        &.hasAction {
+            grid-column-end : span 4;
+        }
     }
 
     thead,
@@ -30,7 +38,7 @@
 
     th {
         @include typography.medium13;
-        padding          : 5px 15px;
+        padding          : 5px 0 5px 16px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
         color            : $dark9;
@@ -42,20 +50,39 @@
 
     td {
         @include typography.regular13;
-        padding          : 5px 15px;
+        padding          : 5px 0 5px 16px;
         background-color : $light1;
         color            : $dark9;
         display          : flex;
         align-items      : center;
 
+        &:last-of-type {
+            padding-right: 16px;
+        }
+
         &.size-chart {
             padding-top    : 2px !important;
             padding-bottom : 2px !important;
         }
+
+        &.disabled-label {
+            color : $light10 !important;
+
+            svg-icon {
+                svg path {
+                    fill : $light10 !important;
+                }
+            }
+        }
+
+        .btn-text {
+            padding : 0 !important;
+            height  : 20px !important;
+        }
     }
 
     tr:hover td {
-        background : transparentize(typography.$brand_core, 0.9);
+        background : transparentize($brand_core, 0.9);
     }
 }
 

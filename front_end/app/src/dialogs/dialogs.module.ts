@@ -12,6 +12,7 @@ import { PipesModule }                 from '../pipes/pipes.module';
 import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
+import { AddStorageModalContent }      from './add-storage/add-storage.component';
 import { RemoveUserModalContent }      from './remove-user/remove-user.component';
 import { MergeModalContent }           from './merge/merge.component';
 import { MessageModalContent }         from './message/message.component';
@@ -56,6 +57,7 @@ import { NxDialogsService }               from './dialogs.service';
         LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,
+        AddStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,
@@ -80,6 +82,7 @@ import { NxDialogsService }               from './dialogs.service';
         LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,
+        AddStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,

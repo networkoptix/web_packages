@@ -712,10 +712,11 @@ export interface Debug {
 }
 
 export interface Settings {
-    notAbleToLoadSecurity: any;
-    notAbleToLoadSystem:   any;
-    sessionLimitDuration:  SessionLimitDuration;
-    warningMessages:       WarningMessages;
+    notAbleToLoadStorageInfo: any;
+    notAbleToLoadSecurity:    any;
+    notAbleToLoadSystem:      any;
+    sessionLimitDuration:     SessionLimitDuration;
+    warningMessages:          WarningMessages;
 }
 
 export interface SessionLimitDuration {
@@ -1550,6 +1551,7 @@ const typeMap: any = {
         { json: "help", js: "help", typ: "any" },
     ], false),
     "Settings": o([
+        { json: "notAbleToLoadStorageInfo", js: "notAbleToLoadStorageInfo", typ: "any" },
         { json: "notAbleToLoadSecurity", js: "notAbleToLoadSecurity", typ: "any" },
         { json: "notAbleToLoadSystem", js: "notAbleToLoadSystem", typ: "any" },
         { json: "sessionLimitDuration", js: "sessionLimitDuration", typ: r("SessionLimitDuration") },

@@ -10,6 +10,13 @@ import { NxLanguageProviderService } from '../../../../../../services/nx-languag
 import { NxUtilsService }            from '../../../../../../services/utils.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../../language_i18n_static_types';
 
+enum STORAGE_STATUS {
+    IN_USE,
+    INACCESSIBLE,
+    RESERVED,
+    DISABLED
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-storage-size-component',
@@ -34,12 +41,15 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     availPercentage: number;
     archive: string;
     archivePercentage: number;
+    STATUS: any;
 
     constructor(
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
+
+        this.STATUS = STORAGE_STATUS;
     }
 
     ngOnInit() {
@@ -52,9 +62,23 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     init() {
-        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.reservedSpace) - parseInt(this.store.freeSpace);
+        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
+            this.totalSpaceLabel = '&mdash;';
+            this.reserved = '0';
+            this.reservedPercentage = 0;
+            this.used = '0';
+            this.usedPercentage = 0;
+            this.available = '0';
+            this.availPercentage = 100;
 
-        this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace) || '-';
+            this.archive = '-';
+            this.archivePercentage = 0;
+
+            return;
+        }
+
+        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.reservedSpace) - parseInt(this.store.freeSpace);
+        this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
         this.used = this.toFriendlyBytes(usedSpace);

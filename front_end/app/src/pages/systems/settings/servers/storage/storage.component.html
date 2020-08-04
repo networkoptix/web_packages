@@ -20,23 +20,33 @@
             </div>
         </div>
     </header>
+
     <nx-section nonPadded>
         <div class="storage-container">
             <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
-                <table>
+                <table [ngClass]="{'hasAction' : storage.hasAction}">
                     <thead>
                         <tr>
                             <th>Address</th>
                             <th>Mode</th>
                             <th>Space</th>
+                            <th *ngIf="storage.hasAction">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-row-spacer"></tr>
+                        <tr class="table-row-spacer" [ngClass]="{'hasAction' : storage.hasAction}"></tr>
                         <tr *ngFor="let store of storage">
-                            <td>{{store.url}}</td>
-                            <td class="px-0" [style.width.px]="ddWidth">
-                                <div class="position-absolute" [style.width.px]="ddWidth">
+                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE}">
+                                <svg-icon
+                                        nx-add-svg-src
+                                        class="mr-1"
+                                        [src]="CONFIG.icons.dir + 'storage_' + store.storageType + '.svg'">
+                                </svg-icon>
+                                <span class="ellipsis">{{store.url}}</span>
+                            </td>
+                            <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.minWidth.px]="ddWidth" [ngSwitch]="store.status">
+                                <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
+                                <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"
                                         [items]="modes"
                                         [selected]="selectMode(store)"
@@ -47,15 +57,23 @@
                             <td class="size-chart">
                                 <nx-storage-size-component [store]="store"></nx-storage-size-component>
                             </td>
+                            <td *ngIf="storage.hasAction" [ngSwitch]="store.status" class="d-flex justify-content-end">
+                                <button class="btn btn-text has-icon" *ngSwitchCase="STATUS.INACCESSIBLE">
+                                    <svg-icon
+                                            nx-add-svg-src
+                                            [src]="CONFIG.icons.dirButtons + 'delete.svg'"></svg-icon>
+                                    <span class="ml-1" translate>Delete</span>
+                                </button>
+                            </td>
                         </tr>
-                        <tr class="table-row-spacer"></tr>
+                        <tr class="table-row-spacer" [ngClass]="{'hasAction' : storage.hasAction}"></tr>
                     </tbody>
                 </table>
             </form>
         </div>
     </nx-section>
     <nx-section>
-        <button class="btn btn-default" translate>Add External Storage</button>
+        <button class="btn btn-default" translate (click)="openAddStorage()">Add External Storage</button>
     </nx-section>
 </nx-block>
 

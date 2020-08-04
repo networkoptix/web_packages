@@ -13,12 +13,18 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 import { NxSystem }                  from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { mapStorages }               from '../storage-advanced/storage.component';
 
 enum MODE {
     MAIN = 0,
     BACKUP = 1,
     NOT_IN_USE = 3
+}
+
+enum STORAGE_STATUS {
+    IN_USE,
+    INACCESSIBLE,
+    RESERVED,
+    DISABLED
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -38,7 +44,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     showStorage: boolean;
     systemSubscription: Subscription;
     saveSettings: Process;
-    storage = [];
+    storage: any;
     watchers: Watcher<any>[] = [];
     reindexingMain = false;
     percentMainDone = 0;
@@ -48,11 +54,13 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     ddWidth: number;
     modes: any;
     modeSelected: any;
+    STATUS: any;
     percentDoneSubscription: Subscription;
 
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
+        private dialogsService: NxDialogsService,
         @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
@@ -67,6 +75,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             { name: 'horizontal', value: '' },
             { name: this.LANG.storage.modes.notInUse(), value: 'modeNotInUse' }
         ];
+
+        this.STATUS = STORAGE_STATUS;
     }
 
     ngOnInit() {
@@ -83,50 +93,84 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     init() {
         const replyMock = {
             reply: {
-                storageProtocols : ['smb'],
-                storages         : [
-                    {
-                        freeSpace        : '761341648896',
-                        isBackup         : false,
-                        isExternal       : false,
-                        isOnline         : true,
-                        isUsedForWriting : true,
-                        isWritable       : true,
-                        reservedSpace    : '32212254720',
-                        storageId        : '{6ab74f2c-09df-0807-dab4-c450d7c936c6}',
-                        storageStatus    : 'used',
-                        storageType      : 'local',
-                        totalSpace       : '1968874332160',
-                        url              : '/media/tsanko/movies/HD Witness Media'
-                    }, {
-                        freeSpace        : '41420242944',
-                        isBackup         : false,
-                        isExternal       : false,
-                        isOnline         : true,
-                        isUsedForWriting : true,
-                        isWritable       : false,
-                        reservedSpace    : '10737418240',
-                        storageId        : '{b9017e44-74fe-b549-bb65-2c14418ddb02}',
-                        storageStatus    : 'used|tooSmall|system',
-                        storageType      : 'local',
-                        totalSpace       : '62220242944',
-                        url              : '/opt/networkoptix/mediaserver/var/data'
-                    }]
+                'storageProtocols': ['smb'],
+                'storages'        : [{
+                    'freeSpace'       : '145296863232',
+                    'isBackup'        : false,
+                    'isExternal'      : false,
+                    'isOnline'        : true,
+                    'isUsedForWriting': true,
+                    'isWritable'      : true,
+                    'reservedSpace'   : '24505933824',
+                    'storageId'       : '{7afc3fbd-5fd1-a277-c3cd-999e396fa4bb}',
+                    'storageStatus'   : 'used',
+                    'storageType'     : 'local',
+                    'totalSpace'      : '245059338240',
+                    'url'             : '/media/tsanko/BUILD/HD Witness Media'
+                }, {
+                    'freeSpace'       : '-1',
+                    'isBackup'        : false,
+                    'isExternal'      : false,
+                    'isOnline'        : false,
+                    'isUsedForWriting': true,
+                    'isWritable'      : false,
+                    'reservedSpace'   : '32212254720',
+                    'storageId'       : '{6ab74f2c-09df-0807-dab4-c450d7c936c6}',
+                    'storageStatus'   : 'used|beingChecked',
+                    'storageType'     : 'local',
+                    'totalSpace'      : '-1',
+                    'url'             : '/media/tsanko/movies/HD Witness Media'
+                }, {
+                    'freeSpace'       : '41751379968',
+                    'isBackup'        : false,
+                    'isExternal'      : false,
+                    'isOnline'        : true,
+                    'isUsedForWriting': true,
+                    'isWritable'      : true,
+                    'reservedSpace'   : '10737418240',
+                    'storageId'       : '{b9017e44-74fe-b549-bb65-2c14418ddb02}',
+                    'storageStatus'   : 'used|system',
+                    'storageType'     : 'local',
+                    'totalSpace'      : '62220242944',
+                    'url'             : '/opt/networkoptix/mediaserver/var/data'
+                }]
             }
         };
 
-        // this.loading = false;
-        // this.showStorage = true;
-        // this.storage = replyMock.reply.storages;
+        this.loading = false;
+        this.showStorage = true;
+        this.storage = replyMock.reply.storages;
 
-        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
-            this.system.updateOrGetSystemStorage().toPromise()
-                .then(response => {
-                    this.loading = false;
-                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
-                    this.storage = response.reply.storages;
-                });
-        }
+        this.storage.hasAction = false;
+        this.storage.forEach(store => {
+            if (store.freeSpace) {
+                store.status = STORAGE_STATUS.IN_USE; // default
+
+                if (store.freeSpace === '-1') {
+                    store.status = STORAGE_STATUS.INACCESSIBLE;
+                    this.storage.hasAction = true;
+                }
+            }
+        });
+
+        // ***************************************
+
+        // if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
+        //     this.system.updateOrGetSystemStorage().toPromise()
+        //         .then(response => {
+        //             this.loading = false;
+        //             this.showStorage = (Object.keys(response.reply.storages).length > 0);
+        //             this.storage = response.reply.storages;
+        //
+        //             this.storage.forEach(store => {
+        //                 store.status = STORAGE_STATUS.IN_USE; // default
+        //
+        //                 if (store.freeSpace === -1) {
+        //                     store.status = STORAGE_STATUS.INACCESSIBLE;
+        //                 }
+        //             });
+        //         });
+        // }
     }
 
     selectMode(store) {
@@ -161,6 +205,10 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
         document.body.removeChild(dd);
     }
+
+    openAddStorage() {
+        this.dialogsService.addStorage(this.system, this.serverId);
+	}
 
     reindexStorage(type: 'main' | 'backup') {
         if (type === 'main') {
