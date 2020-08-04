@@ -711,7 +711,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
-            this.reload$.next(this.reload$.value + 1);
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
