@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Ngắt kết nối từ %PRODUCT_NAME%",
     "RENAME": "đổi tên",
     "RESTART": "Khởi động lại",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "đang khởi động lại...",
     "RESET TO DEFAULTS TEXT": "Đặt lại về Mặc định",
     "DETAILED INFO TEXT": "Thông tin chi tiết",
     "DISCONNECT MODAL WARNING TEXT": "Bạn sẽ không thể đăng nhập vào hệ thống này nữa.",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Chỉ có thể xem video trực tiếp",
     "ADD USER PERMISSIONS HINT CUSTOM": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Thiết lập người dùng được chỉ định trong Hệ thống",
     "SYSTEM NAME IS REQUIRED TEXT": "Tên hệ thống là bắt buộc",
     "ACCOUNT TEXT": "Tài khoản",
     "ACCOUNT INFORMATION": "Thông tin tài khoản",
@@ -281,9 +281,11 @@
     "DELETE ACCOUNT INFO TEXT": "Tài khoản của bạn và tất cả dữ liệu liên quan đến nó sẽ bị xóa vĩnh viễn mà không có khả năng khôi phục nó.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Nhập mật khẩu tài khoản của bạn để tiếp tục",
     "ENCRYPTING VIDEO WARNING TEXT": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU.",
-    "IP TEXT": "IP",
+    "IP TEXT": "IP camera",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "Phiên bản",
+    "PORT TOO LOW TEXT": "Các cổng nhỏ hơn 1024 là các cổng bị hạn chế. Máy chủ có thể không truy cập được.",
+    "SERVER RESTARTED TEXT": "Máy chủ đã khởi động lại thành công.",
+    "HOURS TEXT": "giờ",
+    "MINUTES TEXT": "phút"
 }

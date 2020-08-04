@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Déconnecter de %PRODUCT_NAME%",
     "RENAME": "Renommer",
     "RESTART": "Redémarrer",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "redémarrage...",
     "RESET TO DEFAULTS TEXT": "Réinitialiser par défaut",
     "DETAILED INFO TEXT": "Infos détaillées",
     "DISCONNECT MODAL WARNING TEXT": "Vous ne pourrez plus vous connecter à ce système.",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Peut afficher la vidéo en direct et parcourir les archives",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Peut seulement voir vidéo en direct",
     "ADD USER PERMISSIONS HINT CUSTOM": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Rôle d’usager personnalisé spécifié dans le système",
     "SYSTEM NAME IS REQUIRED TEXT": "Nom Système nécessaire",
     "ACCOUNT TEXT": "Compte",
     "ACCOUNT INFORMATION": "Compte Information",
@@ -284,6 +284,8 @@
     "IP TEXT": "IP",
     "OS TEXT": "OS",
     "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "PORT TOO LOW TEXT": "Les numéros de port inférieurs à 1024 sont restreints. Le serveur peut devenir inaccessible.",
+    "SERVER RESTARTED TEXT": "Serveur redémarré avec succès.",
+    "HOURS TEXT": "heure",
+    "MINUTES TEXT": "minute"
 }

@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "從%PRODUCT_NAME%斷線",
     "RENAME": "重新命名",
     "RESTART": "重啟",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "重啟中...",
     "RESET TO DEFAULTS TEXT": "還原預設值",
     "DETAILED INFO TEXT": "詳細資訊",
     "DISCONNECT MODAL WARNING TEXT": "您將無法再登入此系統。",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "可以瀏覽即時影像和回放錄影資料",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "只能瀏覽即時影像",
     "ADD USER PERMISSIONS HINT CUSTOM": "請使用 %VMS_NAME% 客戶端應用程式設定自訂權限",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "在系統中指定的自訂使用者角色",
     "SYSTEM NAME IS REQUIRED TEXT": "必須有系統名稱",
     "ACCOUNT TEXT": "帳號",
     "ACCOUNT INFORMATION": "帳號資訊",
@@ -282,8 +282,10 @@
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "請輸入您的帳號密碼",
     "ENCRYPTING VIDEO WARNING TEXT": "對影像串流通訊加密會大幅提高CPU使用率。",
     "IP TEXT": "IP",
-    "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "OS TEXT": "作業系統",
+    "VERSION TEXT": "版本",
+    "PORT TOO LOW TEXT": "若使用小於1024的埠號, 伺服器可能無法連接。",
+    "SERVER RESTARTED TEXT": "伺服器重啟成功。",
+    "HOURS TEXT": "小時",
+    "MINUTES TEXT": "分"
 }

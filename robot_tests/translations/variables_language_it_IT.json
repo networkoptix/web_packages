@@ -285,5 +285,7 @@
     "OS TEXT": "Sistema operativo",
     "VERSION TEXT": "Versione",
     "PORT TOO LOW TEXT": "I numeri di porta inferiori a 1024 sono riservati. Il server potrebbe diventare inaccessibile.",
-    "SERVER RESTARTED TEXT": "Il server è stato riavviato correttamente."
+    "SERVER RESTARTED TEXT": "Il server è stato riavviato correttamente.",
+    "HOURS TEXT": "ore",
+    "MINUTES TEXT": "minuti"
 }

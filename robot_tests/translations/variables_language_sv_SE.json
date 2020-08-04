@@ -285,5 +285,7 @@
     "OS TEXT": "OS",
     "VERSION TEXT": "Version",
     "PORT TOO LOW TEXT": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
-    "SERVER RESTARTED TEXT": "Servern har startat om."
+    "SERVER RESTARTED TEXT": "Servern har startat om.",
+    "HOURS TEXT": "timmar",
+    "MINUTES TEXT": "minuter"
 }

@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Отключиться от %PRODUCT_NAME%",
     "RENAME": "Переименовать",
     "RESTART": "Перезапуск",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "перезапуск...",
     "RESET TO DEFAULTS TEXT": "Сброс по умолчанию",
     "DETAILED INFO TEXT": "Подробная информация",
     "DISCONNECT MODAL WARNING TEXT": "Вы больше не сможете войти в эту систему.",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Может смотреть живое видео и архив",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Может смотреть только живое видео",
     "ADD USER PERMISSIONS HINT CUSTOM": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Особая роль, настроенная в Системе",
     "SYSTEM NAME IS REQUIRED TEXT": "Требуется имя системы",
     "ACCOUNT TEXT": "Учетная запись",
     "ACCOUNT INFORMATION": "Информация об учетной записи",
@@ -282,8 +282,10 @@
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Для продолжения введите пароль вашей учетной записи",
     "ENCRYPTING VIDEO WARNING TEXT": "Шифрование видео трафика значительно увеличит нагрузку на процессор.",
     "IP TEXT": "IP",
-    "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "OS TEXT": "ОС",
+    "VERSION TEXT": "Версия",
+    "PORT TOO LOW TEXT": "Номера портов менее 1024 ограничены. Сервер может стать недоступным.",
+    "SERVER RESTARTED TEXT": "Сервер успешно перезапущен.",
+    "HOURS TEXT": "час",
+    "MINUTES TEXT": "минута"
 }

@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Só pode visualizar o vídeo ao vivo",
     "ADD USER PERMISSIONS HINT CUSTOM": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Perfil de utilizador personalizado especificado no Sistema",
     "SYSTEM NAME IS REQUIRED TEXT": "É necessário o nome do Sistema",
     "ACCOUNT TEXT": "Conta",
     "ACCOUNT INFORMATION": "Account Information",
@@ -283,7 +283,9 @@
     "ENCRYPTING VIDEO WARNING TEXT": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
+    "VERSION TEXT": "Versão",
     "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "SERVER RESTARTED TEXT": "Server has successfully restarted.",
+    "HOURS TEXT": "hora",
+    "MINUTES TEXT": "minuto"
 }

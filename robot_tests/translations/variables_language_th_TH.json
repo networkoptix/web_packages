@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "ตัดการเชื่อมต่อจาก %PRODUCT_NAME%",
     "RENAME": "เปลี่ยนชื่อ",
     "RESTART": "รีสตาร์ท",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "กำลังรีสตาร์ท",
     "RESET TO DEFAULTS TEXT": "รีเซ็ตเป็นค่าเริ่มต้น",
     "DETAILED INFO TEXT": "รายละเอียดข้อมูล",
     "DISCONNECT MODAL WARNING TEXT": "คุณจะไม่สามารถเข้าสู่ระบบนี้ได้อีกต่อไป",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "สามารถดูวิดีโอสดได้เท่านั้น",
     "ADD USER PERMISSIONS HINT CUSTOM": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "บทบาทผู้ใช้แบบกำหนดเองที่ระบุในระบบ",
     "SYSTEM NAME IS REQUIRED TEXT": "ต้องระบุชื่อ",
     "ACCOUNT TEXT": "บัญชีผู้ใช้",
     "ACCOUNT INFORMATION": "ข้อมูลบัญชีสมาชิก",
@@ -282,8 +282,10 @@
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "ป้อนรหัสผ่านบัญชีของคุณเพื่อดำเนินการต่อ",
     "ENCRYPTING VIDEO WARNING TEXT": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น",
     "IP TEXT": "IP",
-    "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "OS TEXT": "ระบบปฏิบัติการ",
+    "VERSION TEXT": "เวอร์ชัน",
+    "PORT TOO LOW TEXT": "หมายเลขพอร์ตน้อยกว่า 1024 ถูก จำกัด เซิร์ฟเวอร์อาจไม่สามารถเข้าถึงได้",
+    "SERVER RESTARTED TEXT": "เซิร์ฟเวอร์รีสตาร์ทสำเร็จแล้ว",
+    "HOURS TEXT": "ชั่วโมง",
+    "MINUTES TEXT": "นาที"
 }

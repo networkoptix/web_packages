@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "라이브 비디오를보고 아카이브를 열람 할 수 있습니다.",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "라이브 비디오 만 볼 수 있음",
     "ADD USER PERMISSIONS HINT CUSTOM": "%VMS_NAME% 클라이언트 프로그램을 사용하여 사용자 정의 권한 설정",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "시스템에 지정된 사용자 지정 사용자 역할",
     "SYSTEM NAME IS REQUIRED TEXT": "시스템 이름이 필요합니다.",
     "ACCOUNT TEXT": "계정",
     "ACCOUNT INFORMATION": "계정 정보",
@@ -285,5 +285,7 @@
     "OS TEXT": "OS",
     "VERSION TEXT": "버전",
     "PORT TOO LOW TEXT": "1024 미만의 포트 번호는 제한되어 있습니다. 서버에 접속할 수 없게 될 수 있습니다.",
-    "SERVER RESTARTED TEXT": "서버가 성공적으로 재시작 되었습니다."
+    "SERVER RESTARTED TEXT": "서버가 성공적으로 재시작 되었습니다.",
+    "HOURS TEXT": "시간",
+    "MINUTES TEXT": "분"
 }

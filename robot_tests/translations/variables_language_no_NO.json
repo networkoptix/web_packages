@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "Koble fra %PRODUCT_NAME%",
     "RENAME": "Endre navn",
     "RESTART": "Omstart",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "restarter...",
     "RESET TO DEFAULTS TEXT": "Tilbakestill til standard",
     "DETAILED INFO TEXT": "Detaljert informasjon",
     "DISCONNECT MODAL WARNING TEXT": "Du vil ikke kunne logge deg på dette systemet lenger.",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Kan se live video og spille av opptak",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Kan bare vise live video",
     "ADD USER PERMISSIONS HINT CUSTOM": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Tilpasset brukerrolle spesifisert i System",
     "SYSTEM NAME IS REQUIRED TEXT": "Systemnavn må fylles ut",
     "ACCOUNT TEXT": "Konto",
     "ACCOUNT INFORMATION": "Kontoinformasjon",
@@ -283,7 +283,9 @@
     "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafikk vil øke CPU-bruken betydelig.",
     "IP TEXT": "IP",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "VERSION TEXT": "Versjon",
+    "PORT TOO LOW TEXT": "Portnummere mindre enn 1024 er begrenset. Serveren kan bli utilgjengelig.",
+    "SERVER RESTARTED TEXT": "Serveren har startet på nytt.",
+    "HOURS TEXT": "timer",
+    "MINUTES TEXT": "minutter"
 }

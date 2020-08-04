@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "Voi katsella reaaliaikaista videota ja selata arkistoa",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "Voit katsella vain reaaliaikaista videota",
     "ADD USER PERMISSIONS HINT CUSTOM": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Mukautettu käyttäjärooli Järjestelmässä",
     "SYSTEM NAME IS REQUIRED TEXT": "Järjestelmän nimi on pakollinen",
     "ACCOUNT TEXT": "Tili",
     "ACCOUNT INFORMATION": "Account Information",
@@ -281,9 +281,11 @@
     "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue",
     "ENCRYPTING VIDEO WARNING TEXT": "Videoliikenteen salaaminen lisää merkittävästi suorittimen käyttöä.",
-    "IP TEXT": "IP",
+    "IP TEXT": "IP-osoite",
     "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
+    "VERSION TEXT": "Versio",
     "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "SERVER RESTARTED TEXT": "Server has successfully restarted.",
+    "HOURS TEXT": "tuntia",
+    "MINUTES TEXT": "minuuttia"
 }

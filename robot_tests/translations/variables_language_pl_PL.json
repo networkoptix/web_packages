@@ -285,5 +285,7 @@
     "OS TEXT": "OS",
     "VERSION TEXT": "Wersja",
     "PORT TOO LOW TEXT": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
-    "SERVER RESTARTED TEXT": "Serwer został uruchomiony ponownie."
+    "SERVER RESTARTED TEXT": "Serwer został uruchomiony ponownie.",
+    "HOURS TEXT": "godziny",
+    "MINUTES TEXT": "minuta"
 }

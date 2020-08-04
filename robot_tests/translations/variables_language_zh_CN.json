@@ -18,7 +18,7 @@
     "DISCONNECT FROM CLOUD TEXT": "从%PRODUCT_NAME%断开连接",
     "RENAME": "重命名",
     "RESTART": "重启",
-    "RESTARTING": "restarting...",
+    "RESTARTING": "重启中……",
     "RESET TO DEFAULTS TEXT": "重置为默认值",
     "DETAILED INFO TEXT": "详细信息",
     "DISCONNECT MODAL WARNING TEXT": "您将无法再登录此系统。",
@@ -52,7 +52,7 @@
     "ADD USER PERMISSIONS HINT VIEWER": "可以查看实时视频和浏览存档",
     "ADD USER PERMISSIONS HINT LIVE VIEWER": "只可以查看视频直播",
     "ADD USER PERMISSIONS HINT CUSTOM": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
-    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "Custom user role specified in System",
+    "ADD USER PERMISSIONS HINT CLIENT CUSTOM": "在系统中指定的自定义用户角色",
     "SYSTEM NAME IS REQUIRED TEXT": "系统名称是必需的",
     "ACCOUNT TEXT": "帐户",
     "ACCOUNT INFORMATION": "帐户信息",
@@ -282,8 +282,10 @@
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "请输入您的帐户密码",
     "ENCRYPTING VIDEO WARNING TEXT": "加密视频通信量将显著增加 CPU 使用率。",
     "IP TEXT": "IP",
-    "OS TEXT": "OS",
-    "VERSION TEXT": "Version",
-    "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-    "SERVER RESTARTED TEXT": "Server has successfully restarted."
+    "OS TEXT": "操作系统",
+    "VERSION TEXT": "版本",
+    "PORT TOO LOW TEXT": "若使用小于1024的端口号, 可能无法访问服务器。",
+    "SERVER RESTARTED TEXT": "服务器已成功重启。",
+    "HOURS TEXT": "小时",
+    "MINUTES TEXT": "分"
 }

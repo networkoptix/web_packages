@@ -285,5 +285,7 @@
     "OS TEXT": "מערכת הפעלה",
     "VERSION TEXT": "גירסה",
     "PORT TOO LOW TEXT": "מספרי פורטים קטנים מ- 1024 אסורים לשימוש. השרת עלול להפוך ללא נגיש.",
-    "SERVER RESTARTED TEXT": "השרת הופעל מחדש בהצלחה."
+    "SERVER RESTARTED TEXT": "השרת הופעל מחדש בהצלחה.",
+    "HOURS TEXT": "שעות",
+    "MINUTES TEXT": "דקות"
 }
