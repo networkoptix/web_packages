@@ -137,9 +137,10 @@ export class NxSystemLicensesComponent implements OnInit {
                     item.info.type = this.LANG.license.info.videowall;
                 } else {
                     if (item.info.expiration) {
-                    item.info.type = this.LANG.license.info.time;
-                } else {
-                    item.info.type = this.classMap[item.info.class];
+                        item.info.type = this.LANG.license.info.time;
+                    } else {
+                        item.info.type = this.classMap[item.info.class];
+                    }
                 }
             }
         }
