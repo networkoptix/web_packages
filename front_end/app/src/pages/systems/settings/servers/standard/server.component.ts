@@ -99,7 +99,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);
-        this.applyService.setVisible(true);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -120,6 +119,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             const { currentValue, previousValue } = changes.selectedServer;
             if (previousValue && currentValue.id !== previousValue.id) {
                 this.serverLoaded = false;
+                this.applyService.setVisible(false);
             }
             this.setServer();
         }
@@ -135,7 +135,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
 
         this.checkIfOnline(this.selectedServer.id)
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
+            .finally(() => this.applyService.setVisible(!this.applyService.locked));
 
         this.renameDisabled = !this.system.permissions.editAdmins;
         this.restartDisabled = !this.system.permissions.isAdmin;
@@ -153,7 +154,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.applyService.hardReset();
             this.ipPortWatcher.value = +port;
             this.applyService.reset();
-            this.applyService.setVisible(true);
         }
     }
 
