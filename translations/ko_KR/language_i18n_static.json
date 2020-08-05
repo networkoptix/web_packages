@@ -81,16 +81,16 @@
         "setNewPasswordLabel": "새 패스워드"
     },
     "cameraFilters": {
-        "H265": "H.265 카메라들",
+        "H265": "H.265 카메라",
         "IO": "I / O 모듈들",
         "TwWayAudio": "양방향 오디오 기기들",
-        "aptz": "고급 PTZ가 장착 된 카메라들",
-        "audio": "오디오내장 카메라들",
+        "aptz": "고급 PTZ 카메라",
+        "audio": "오디오 내장 카메라",
         "encoder": "인코더들",
-        "fisheye": "어안렌즈 카메라들",
-        "highRes": "초고해상도 카메라들",
-        "multiSensor": "다중 센서 카메라들",
-        "ptz": "PTZ 카메라들"
+        "fisheye": "어안렌즈 카메라",
+        "highRes": "초고해상도 카메라",
+        "multiSensor": "다중 센서 카메라",
+        "ptz": "PTZ 카메라"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "common": {
@@ -466,13 +466,13 @@
     },
     "ipvd": {
         "Advanced PTZ cameras": "고급 PTZ 카메라",
-        "Cameras supporting H.265": "H.265를 지원하는 카메라들",
-        "Cameras with 2-way audio": "양방향 오디오가있는 카메라들",
-        "Extra high resolution cameras": "초고해상도 카메라들",
-        "Fisheye Cameras": "어안렌즈 카메라들",
+        "Cameras supporting H.265": "H.265 지원 카메라",
+        "Cameras with 2-way audio": "양방향 오디오 내장 카메라",
+        "Extra high resolution cameras": "초고해상도 카메라",
+        "Fisheye Cameras": "어안렌즈 카메라",
         "I / O modules": "I / O 모듈들",
-        "Multisensor Cameras": "다중 센서 카메라들",
-        "PTZ cameras": "PTZ 카메라들",
+        "Multisensor Cameras": "다중 센서 카메라",
+        "PTZ cameras": "PTZ 카메라",
         "camera": "카메라",
         "count": "개수",
         "disclaimer": "이 목록은 사용자가 {{companyName}} 에 자동보고 되도록 허용 하였을 경우 {{vmsName}} 에 있는 기기들에 제한됩니다. 개인 정보는 수집되지 않으며 각 사용자는 완전히 익명으로 처리됩니다.",
@@ -499,7 +499,7 @@
         "maxFps": "FPS (최대)",
         "maxResolution": "해상도 (최대)",
         "model": "모델",
-        "multiSensorCamera": "다중 센서 카메라들",
+        "multiSensorCamera": "다중 센서 카메라",
         "other": "기타",
         "primaryCodec": "코덱",
         "resolutionArea": "영역",
@@ -509,7 +509,7 @@
     },
     "menu": {
         "titles": {
-            "cameras": "Cameras",
+            "cameras": "카메라",
             "systemAdministration": "시스템 관리",
             "general": "일반",
             "licenses": "인증키",
