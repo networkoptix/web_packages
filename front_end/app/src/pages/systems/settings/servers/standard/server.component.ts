@@ -136,7 +136,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error))
-            .finally(() => this.applyService.setVisible(!this.applyService.locked));
+            .finally(() => this.applyService.setVisible(true));
 
         this.renameDisabled = !this.system.permissions.editAdmins;
         this.restartDisabled = !this.system.permissions.isAdmin;
