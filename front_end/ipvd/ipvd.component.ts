@@ -29,8 +29,6 @@ export class IpvdComponent {
         // @ts-ignore
         this.CONFIG.feedbackEnabled = window.SETTINGS.feedbackEnabled;
         // @ts-ignore
-        this.CONFIG.footerItems = window.SETTINGS.footerItems;
-        // @ts-ignore
         this.CONFIG.integrationFilterItems = window.SETTINGS.integrationFilterItems;
         // @ts-ignore
         this.CONFIG.integrationFilterLimitation = window.SETTINGS.integrationFilterLimitation;

@@ -892,68 +892,6 @@
         ]
       },
       {
-        "name": "Footer Menu",
-        "label": "Footer Menu",
-        "is_global": true,
-        "description": "Footer Menu",
-        "hidden": true,
-        "translatable": false,
-        "values": [
-          {
-            "label": "Footer Items",
-            "name": "%FOOTER_ITEMS%",
-            "value": [
-              {
-                "name": "About %CLOUD_NAME%",
-                "url": "/content/about",
-                "newWindow": false,
-                "enabled": true
-              },
-              {
-                "name": "Download %VMS_NAME%",
-                "url": "/download",
-                "newWindow": false,
-                "enabled": true
-              },
-              {
-                "name": "Integrations",
-                "url": "/integrations",
-                "newWindow": false,
-                "enabled": "%INTEGRATION_STORE_ENABLED%"
-              },
-              {
-                "name": "Support",
-                "url": "%SUPPORT_LINK%",
-                "newWindow": true,
-                "enabled": true
-              },
-              {
-                "name": "Terms",
-                "url": "/content/eula",
-                "newWindow": false,
-                "enabled": true
-              },
-              {
-                "name": "Privacy",
-                "url": "%PRIVACY_LINK%",
-                "newWindow": true,
-                "enabled": true
-              },
-              {
-                "name": "Supported Devices",
-                "url": "/ipvd",
-                "newWindow": false,
-                "enabled": "%IPVD_ENABLED%"
-              }
-            ],
-            "description": "Defines the elements in the menu",
-            "advanced": true,
-            "optional": false,
-            "type": "array"
-          }
-        ]
-      },
-      {
         "name": "Integrations page",
         "label": "Integrations page",
         "is_global": true,

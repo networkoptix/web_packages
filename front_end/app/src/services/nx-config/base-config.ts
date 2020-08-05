@@ -50,7 +50,6 @@ export interface BaseConfig {
     localSystemId: string;
     company: Company;
     dynamicMenus: MenuStructure;
-    footerItems: FooterItem[];
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,

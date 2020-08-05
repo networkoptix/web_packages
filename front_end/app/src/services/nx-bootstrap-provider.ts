@@ -147,7 +147,6 @@ export class NxBootstrapProvider {
             }
 
             this.CONFIG.cloudName = data.cloudName;
-            this.CONFIG.footerItems = data.footerItems;
             this.CONFIG.googleTagManagerId = data.googleTagManagerId;
             this.CONFIG.pushConfig = data.pushConfig;
             this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;

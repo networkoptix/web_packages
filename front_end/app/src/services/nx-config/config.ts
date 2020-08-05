@@ -372,7 +372,6 @@ export const nxConfig: IConfig = {
         name: ''
     },
     dynamicMenus           : {},
-    footerItems            : [],
     googleTagManagerId     : '',
     trialLicenseKey        : '',
     licenseDeactivations   : 3,

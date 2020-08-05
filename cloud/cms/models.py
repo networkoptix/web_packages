@@ -93,16 +93,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
-        footer_items = asset.read_global_value('%FOOTER_ITEMS%')
         integration_store_enabled = asset.read_global_value("%INTEGRATION_STORE_ENABLED%")
-
-        if footer_items:
-            from cms.controllers.filldata import process_global_contexts
-            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type, hidden=False)
-            # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
-            footer_items = process_global_contexts(asset, footer_items, asset.version_id(),
-                                                   False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
-                                                                            "%VMS_NAME%": "%VMS_NAME%"})
 
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
@@ -130,7 +121,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
-                'footer_items': footer_items,
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
