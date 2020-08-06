@@ -73,6 +73,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             return;
                         }
+                        const matchError = errorString => response.errorString.indexOf(errorString) !== -1;
 
                         switch (response.error) {
                             case '1':
@@ -86,19 +87,23 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             // eslint-disable-next-line no-fallthrough
                             case '3':
                                 // Network error has occurred during license activation. Error code: -1
-                                if (response.errorString.indexOf('Network error has occurred') !== -1) {
+                                if (matchError('Network error has occurred')) {
                                     this.dialogsService
                                         .notify(this.LANG.errorCodes.licenseServerError, 'danger');
                                     break;
                                 }
                                 // Can't activate license: Only one starter license is allowed per System.
-                                if (response.errorString.indexOf('Only one starter license is allowed') !== -1) {
+                                if (matchError('Only one starter license is allowed')) {
                                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
-                                } else if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
+                                } else if (matchError('License Key you have entered is invalid')) {
                                     // Can't activate license:  License Key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
-                                } else if (response.errorString.indexOf('requires higher software version') !== -1) {
+                                } else if ([
+                                    'requires higher software version', 'You are trying to activate a license incompatible with your software.'
+                                ].some(matchError)
+                                ) {
                                     // Can't activate license: This license type requires higher software version
+                                    // Can't activate license: You are trying to activate a license incompatible with your software.
                                     this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
                                 } else {
                                     // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
