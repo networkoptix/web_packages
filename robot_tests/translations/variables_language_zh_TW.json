@@ -233,7 +233,7 @@
     "INTEGRATION SUPPORT EMAIL TEXT": "技術支援Email",
     "INTEGRATION GET IN TOUCH LEGAL TEXT": "您可在此處瀏覽 {{developer}} 的隱私政策。也可瀏覽Network Optix隱私政策，包括有關撤回您的同意的說明。",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "訊息已發送",
-    "INTEGRATION BANNER MESSAGE TEXT": "此頁面可預覽最新版本的更新，但不適用於已公開可用的版本。",
+    "INTEGRATION BANNER MESSAGE TEXT": "此頁面可預覽最新版本的更新，與公開版本不相符。",
     "INTEGRATION BANNER ACTION TEXT": "返回編輯頁面",
     "REGISTER TITLE TEXT": "新增帳號",
     "DOWNLOAD TITLE TEXT": "下載 %VMS_NAME%",
