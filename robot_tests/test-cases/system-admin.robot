@@ -1117,7 +1117,7 @@ Offline system clicking save with no input in rename dialog throws error
     Click Button    ${RENAME CANCEL}
 
 Owner is able to rename offline system via Cloud
-    [Tags]    C41889    System-offline
+    [Tags]    C41899    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}
     ${current name}=   Get text    ${SYSTEM NAME}
     ${new name}=   Get random system name
