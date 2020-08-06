@@ -2,9 +2,13 @@ import {
     Component, OnInit, Inject,
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
 }                                          from '@angular/core';
-import { ActivatedRoute }                             from '@angular/router';
-import { finalize, map } from 'rxjs/operators';
-import { AutoUnsubscribe }                            from 'ngx-auto-unsubscribe';
+import { ActivatedRoute }                  from '@angular/router';
+import { finalize, map, catchError }       from 'rxjs/operators';
+import { AutoUnsubscribe }                 from 'ngx-auto-unsubscribe';
+import {
+    timer, combineLatest, SubscriptionLike, of
+}                                          from 'rxjs';
+
 import { NxConfigService, IConfig }        from '../../../../../services/nx-config';
 import { NxDialogsService }                from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService }       from '../../../../../services/nx-language-provider';
@@ -16,8 +20,7 @@ import { NxUriService }                    from '../../../../../services/uri.ser
 import { LanguageI18NStaticTypes }         from '../../../../../../language_i18n_static_types';
 import { NxSettingsService }               from '../../settings.service';
 import { NxUtilsService }                  from '../../../../../services/utils.service';
-import { InfoBlockSection, InfoBlockLine }              from '../../../../../components/info-block/info-block.component';
-import { pipe, timer, combineLatest, SubscriptionLike } from 'rxjs';
+import { InfoBlockSection, InfoBlockLine } from '../../../../../components/info-block/info-block.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -210,7 +213,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (this.serversSubscription) {
             this.serversSubscription.unsubscribe();
         }
-        this.serversSubscription = combineLatest(timer(this.CONFIG.servers.minLoaderTime), this.system.getServers())
+        this.serversSubscription = combineLatest(
+            timer(this.CONFIG.servers.minLoaderTime),
+            this.system.getServers()
+                .pipe(
+                    catchError(err => {
+                        console.error(err);
+                        return of(false);
+                    })))
             .pipe(
                 map(x => x[1]),
                 finalize(() => (this.checking = false))
