@@ -19,6 +19,10 @@ export class NxLanguageProviderService {
         private cloudApiService: NxCloudApiService
     ) {}
 
+    static translate(toTranslate: any, translateParams = {}) {
+        return toTranslate(translateParams);
+    }
+
     loadLanguage() {
         return this.cloudApiService.getLanguage().toPromise();
     }

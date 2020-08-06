@@ -242,16 +242,16 @@ export abstract class BaseAccount implements OnDestroy {
 
                     let cancelLabel = '';
                     if (isRegister) {
-                        cancelLabel = this.LANG.dialogs.buttons.createAccount;
+                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.createAccount);
                     } else if (isRestore) {
-                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
+                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.logoutAuthorised);
                     } else {
-                        cancelLabel = this.LANG.dialogs.buttons.cancel;
+                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.cancel);
                     }
                     return this.dialogs
                         .confirm('',
-                            this.LANG.dialogs.titles.changeAccount.replace('{email}', account.email),
-                            this.LANG.dialogs.buttons.stayLoggedIn,
+                            NxLanguageProviderService.translate(this.LANG.dialogs.titles.changeAccount, account),
+                            NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayLoggedIn),
                             undefined,
                             cancelLabel,
                             ''
