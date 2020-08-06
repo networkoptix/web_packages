@@ -284,7 +284,8 @@ class AssetType(models.Model):
                           (2, "integration", "Integration"),
                           (3, "other", "Other"),
                           (4, "article", "Article"),
-                          (5, "agreement", "Agreement"))
+                          (5, "agreement", "Agreement"),
+                          (6, "documentation", "Documentation Page"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -607,6 +608,32 @@ class ContextTemplate(models.Model):
 
 
 class DataStructure(models.Model):
+    """
+    META SETTINGS
+    meta_settings are additional options, usually for validation
+
+    background: Image background class in CMS (Ex: white, black, light, dark, transparent)
+    brand_vars: Show brand variables button in context edit form (true or false)
+    char_limit: Character limit
+    format: File format (ex: png)
+    height: Image height
+    height_ge: Image height, greater than or eqal to
+    height_le: Image height, less than or equal to
+    options: choices for selects, multiselects, checkboxes
+    regex: Regular expression for a text field
+    size: File size limit in MB
+
+    # Represent properties in tiny.init method, "tiny_forced_root_block" sets property "forced_root_block"
+    tiny_paste_word_valid_elements": Comma-separated list of tags that can be pasted from external word processors ("br,p,h1,h2")
+    tiny_paste_retain_style_properties": CSS styles that can be interpreted from word processors ("font-weight,text-decoration")
+    tiny_forced_root_block: Default tag to wrap text nodes or non block elements (ex: "p", "div", false)
+
+    width: Image width
+    width_ge: Image width, greater than or equal to
+    width_le: Image width, less than or equal to
+
+    """
+
     class Meta:
         permissions = (
             ("edit_advanced", "Can edit advanced DataStructures"),

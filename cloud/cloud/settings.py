@@ -228,6 +228,12 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
         "KEY_PREFIX": 'menus'
+    },
+    "documentation": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": 'documentation'
     }
 }
 
@@ -498,6 +504,9 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     'MAX_RETRIES': 3,
     'RETRY_INTERVAL': 20
 }
+
+TINYMCE_JS_URL = STATIC_URL + 'tinymce/js/tinymce/tinymce_min.js'
+TINYMCE_JS_ROOT = STATIC_ROOT + 'tinymce/js/tinymce'
 
 
 # In House Settings

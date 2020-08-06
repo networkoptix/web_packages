@@ -17,7 +17,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
-from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
+from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
 from cms.forms import *
 from cms.permissions import IsSuperuser
 
@@ -121,6 +121,11 @@ def context_editor_action(request, asset, context_id, language_code):
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
             add_upload_error_messages(request, "Asset error for {}. {}", asset_errors)
         else:
+            # To cache documentation and verify that hmtl body can be parsed correctly
+            if asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                documentation.generate_doc_json(
+                    [asset], language=language, draft=preview or save_draft, review=send_review
+                )
             if preview:
                 if asset.can_preview_on_portal:
                     if asset.is_dirty:
