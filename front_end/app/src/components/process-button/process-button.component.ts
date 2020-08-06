@@ -43,18 +43,20 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     touchForm() {
-        for (const ctrl in this.form.form.controls) {
-            if (this.form.form.controls.hasOwnProperty(ctrl)) {
-                this.form.form.get(ctrl).markAsTouched();
-                this.form.form.get(ctrl).markAsDirty();
+        const form = this.form.form || this.form;
+        for (const ctrl in form.controls) {
+            if (form.controls.hasOwnProperty(ctrl)) {
+                form.get(ctrl).markAsTouched();
+                form.get(ctrl).markAsDirty();
             }
         }
     }
 
     setFocusToInvalid() {
-        for (const ctrl in this.form.form.controls) {
-            if (this.form.form.controls.hasOwnProperty(ctrl)) {
-                if (this.form.form.get(ctrl).invalid) {
+        const form = this.form.form || this.form;
+        for (const ctrl in form.controls) {
+            if (form.controls.hasOwnProperty(ctrl)) {
+                if (form.get(ctrl).invalid) {
                     // TODO : find how to set element's focus
                     // control.focused = true;
                     return;

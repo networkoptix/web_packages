@@ -1,6 +1,8 @@
 import { NgModule }                    from '@angular/core';
 import { CommonModule }                from '@angular/common';
-import { FormsModule }                 from '@angular/forms';
+import {
+    FormsModule, ReactiveFormsModule
+}                                      from '@angular/forms';
 import { RouterModule }                from '@angular/router';
 import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';
@@ -38,12 +40,14 @@ import {
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
+import { AddStorageModalContent }         from './add-storage/add-storage.component';
 import { NxDialogsService }               from './dialogs.service';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
         ClipboardModule,
         ComponentsModule,
@@ -75,7 +79,8 @@ import { NxDialogsService }               from './dialogs.service';
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
-        UpdateCameraCredentialsModalContent
+        UpdateCameraCredentialsModalContent,
+        AddStorageModalContent
     ],
     entryComponents: [
         LoginModalContent,
@@ -100,7 +105,8 @@ import { NxDialogsService }               from './dialogs.service';
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
-        UpdateCameraCredentialsModalContent
+        UpdateCameraCredentialsModalContent,
+        AddStorageModalContent
     ],
     providers: [
         NxDialogsService,

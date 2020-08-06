@@ -1,66 +1,83 @@
-<form #addStorageForm="ngForm" name="addStorageForm" novalidate>
+<form [formGroup]="storageForm" id="addStorageForm" (ngSubmit)="onSubmit()">
     <div class="modal-header">
         <h1 class="modal-title" translate>Add External Storage</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()" *ngIf="closable">
+                (click)="close()" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-
-    <div class="modal-body">
+    <div *ngIf="!alreadyExists" class="modal-body">
         <div class="form-group">
-            <label for="addStorageUrl" translate>URL</label>
-            <input type="text" class="form-control"
-                   [placeholder]="'//<Computer Name>/<Folder>' | translate"
-                   [(ngModel)]="storage.url"
-                   name="addStorageUrl" id="addStorageUrl" #addStorageUrl="ngModel"
-                   maxlength="255"
-                   required
-                   nxFocusMe>
-
-            <ng-container *ngIf="addStorageUrl.errors && addStorageUrl.touched">
-                <span *ngIf="addStorageUrl.errors.required"
+            <label for="addUrl" translate>URL</label>
+            <div class="col-12 px-0 form-component">
+                <input class="form-control col-12"
+                    id="addUrl"
+                    formControlName="url"
+                    [ngClass]="{'notYetSubmitted': !urlChecked }"
+                    type="url"
+                    (blur)="checkUrlValidity()"
+                    [placeholder]="LANG.storage.urlPlaceholder()"
+                    nxUrlValidator/>
+            </div>
+            <div class="col-12 ml-n2 d-flex">
+                <ng-container *ngIf="urlChecked && getControls('url').errors">
+                    <span *ngIf="getControls('url').errors.alreadyExists"
+                        class="input-error" translate>Storage path is already added to this server</span>
+                    <span *ngIf="getControls('url').errors.required"
                         class="input-error" translate>URL is required</span>
-                <span *ngIf="addStorageUrl.errors.pattern"
-                      class="input-error" translate>Please enter a valid URL</span>
-            </ng-container>
+                    <span *ngIf="!getControls('url').errors.required && getControls('url').errors.forbiddenUrl"
+                        class="input-error" translate>Invalid URL</span>
+                </ng-container>
+            </div>
         </div>
-
         <div class="form-group">
-            <label for="login_username" class="control-label m-0 pb-2" translate>Login</label>
-            <input type="text" class="form-control"
-                   [(ngModel)]="storage.username"
-                   maxlength="255"
-                   name="login_username" id="login_username" #login_username="ngModel"
-                   required>
-            <ng-container *ngIf="login_username.errors && login_username.touched">
-                <span *ngIf="login_username.errors.required"
-                      class="input-error" translate>Login is required</span>
-            </ng-container>
+            <label for="addLogin" translate>Login</label>
+            <div class="col-12 px-0 form-component">
+                <input class="form-control col-12"
+                    type="text"
+                    id="addLogin"
+                    [ngClass]="{'notYetSubmitted': !loginChecked }"
+                    formControlName="login"/>
+            </div>
+            <div class="col-12 ml-n2 d-flex">
+                <ng-container *ngIf="loginChecked && getControls('login').errors">
+                    <span *ngIf="getControls('login').errors.required"
+                        class="input-error" translate>Login is required</span>
+                </ng-container>
+            </div>
         </div>
-
         <div class="form-group">
-            <label for="login_password" class="control-label m-0 pb-md-2" translate>Password</label>
-            <input type="password" class="form-control"
-                   name="login_password" id="login_password" #login_password="ngModel"
-                   [(ngModel)]="storage.password"
-                   maxlength="255"
-                   required>
-            <ng-container *ngIf="login_password.errors && login_password.touched">
-                <span *ngIf="login_password.errors.required"
-                      class="input-error" translate>Password is required</span>
-                <span *ngIf="login_password.errors.no_user"
-                      class="input-error" translate>Login or password is incorrect</span>
-            </ng-container>
+            <label for="addPassword" translate>Password</label>
+            <div class="col-12 px-0 form-component">
+                <input class="form-control col-12"
+                    type="password"
+                    id="addPassword"
+                    [ngClass]="{'notYetSubmitted': !passwordChecked }"
+                    formControlName="password"/>
+            </div>
+            <div class="col-12 ml-n2 d-flex">
+                <ng-container *ngIf="passwordChecked && getControls('password').errors">
+                    <span *ngIf="getControls('password').errors.loginPasswordWrong"
+                        class="input-error" translate>Login or password is incorrect</span>
+                    <span *ngIf="getControls('password').errors.required"
+                        class="input-error" translate>Password is required</span>
+                </ng-container>
+            </div>
         </div>
     </div>
-
+    <div *ngIf="alreadyExists" class="modal-body">
+        <p class="mb-2" translate>Storage path {{ url }} is already used by another server.</p>
+        <p class="mb-2" translate>It's not recommended to use on recording location for different servers.</p>
+        <p translate>Add this storage anyway?</p>
+    </div>
     <div class="modal-footer">
         <nx-process-button
+            [clickFn]="preSubmit.bind(this)"
             [process]="addStorage"
-            [form]="addStorageForm"
-            [buttonText]="'Add storage' | translate"></nx-process-button>
-        <nx-cancel-button [process]="addStorage" [discardFn]="activeModal.close"></nx-cancel-button>
+            [form]="storageForm"
+            [buttonText]="'Add Storage' | translate"></nx-process-button>
+        <button *ngIf="alreadyExists" class="btn btn-default" (click)="goBack()" translate>Back</button>
+        <nx-cancel-button [process]="addStorage" [discardFn]="close.bind(this)"></nx-cancel-button>
     </div>
 </form>
