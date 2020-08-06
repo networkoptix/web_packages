@@ -19,9 +19,7 @@ import { NxUriService }                   from '../../../../services/uri.service
 
 interface Settings {
     disconnectDisabled: boolean;
-    mergeDisabled: boolean;
     renameDisabled: boolean;
-    showMerge: boolean;
 }
 
 @AutoUnsubscribe()
@@ -49,6 +47,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
     currentMergeInfo: any = undefined;
+    merging: boolean;
 
     settingsForSystem: any;
 
@@ -63,13 +62,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
-        const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
-        const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
+        this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         this.settings = {
-            disconnectDisabled : merging,
-            mergeDisabled      : (merging || notAvailable) && !(this.debugMode || this.betaMode),
-            renameDisabled     : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge          : this.system && this.system.isMine
+            disconnectDisabled : this.merging,
+            renameDisabled     : this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master'
         };
     }
 
@@ -99,9 +95,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.settings = {
             disconnectDisabled : false,
-            mergeDisabled      : true,
-            renameDisabled     : false,
-            showMerge          : true
+            renameDisabled     : false
         };
 
         if (this.settingsServiceSubscription) {
