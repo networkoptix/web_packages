@@ -195,6 +195,9 @@ When user selects role - special hint appears
     Click Link    ${USERS LIST LINK}
     Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
     Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER PERMISSIONS DROPDOWN}    ${ADD USER PERMISSIONS HINT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
     FOR    ${type}    IN    @{USER TYPE LIST}
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
