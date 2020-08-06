@@ -55,12 +55,11 @@ export class AddStorageModalContent {
                                 .saveStorage({ parentId: this.serverId, url: smbShare })
                                 .toPromise()
                                 .then(response => {
-                                    debugger;
                                     if (response.id) {
                                         this.activeModal.close(this.CONFIG.responseOk);
                                     }
                                 }, (error) => {
-                                    debugger;
+
                                     // this.dialogsService
                                     //     .alert(this.LANG.dialogs.message.storageSettingsNotSaved, this.LANG.dialogs.titles.error)
                                     //     .catch(error => {
@@ -79,12 +78,11 @@ export class AddStorageModalContent {
             }, {
                 errorCodes: {
                     WrongAuth: () => {
-                        debugger;
+
                     }
                 }
             })
             .then((response) => {
-                debugger;
                 if (response) {
                     this.activeModal.close();
                 }

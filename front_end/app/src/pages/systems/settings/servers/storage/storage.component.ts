@@ -196,7 +196,6 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                     this.storage.hasAction = false;
                     this.storage.forEach(store => {
                         if (store.freeSpace) {
-                            debugger;
                             store.archiveSpace = this.getArchiveSpace(results.usage.reply, store.storageId);
 
                             store.status = STORAGE_STATUS.IN_USE; // default
@@ -292,7 +291,6 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.dialogsService
             .addStorage(this.system, this.serverId)
             .then((response) => {
-                debugger;
                 if (response === this.CONFIG.responseOk) {
                     this.init();
                 }
