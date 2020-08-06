@@ -61,8 +61,8 @@ $stripes : repeating-linear-gradient(
         }
 
         &.archive {
-            background-color : rgba($green_l2, 0.7);
-            border           : 1px solid rgba($green_l1, 0.6);
+            background-color : rgba($green_l2, 0.3);
+            border           : 1px solid rgba($green_l1, 0.4);
             margin-left      : 1px; // avoid border-radius color bleeding
         }
 

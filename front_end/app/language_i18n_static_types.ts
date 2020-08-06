@@ -675,7 +675,10 @@ export interface ServersStatus {
 }
 
 export interface Storage {
-    modes: Modes;
+    modes:                   Modes;
+    deleteExternalStorage:   any;
+    reservedTooSmallTooltip: any;
+    reservedSystemTooltip:   any;
 }
 
 export interface Modes {
@@ -1520,6 +1523,9 @@ const typeMap: any = {
     ], false),
     "Storage": o([
         { json: "modes", js: "modes", typ: r("Modes") },
+        { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
+        { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
+        { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },
     ], false),
     "Modes": o([
         { json: "main", js: "main", typ: "any" },

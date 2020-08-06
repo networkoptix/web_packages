@@ -862,6 +862,9 @@
             "main": "Main",
             "backup": "Backup",
             "notInUse": "Not in use"
-        }
+        },
+        "deleteExternalStorage" : "Delete External Storage?",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording."
     }
 }

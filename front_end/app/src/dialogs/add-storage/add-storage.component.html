@@ -1,4 +1,4 @@
-
+<form #addStorageForm="ngForm" name="addStorageForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title" translate>Add External Storage</h1>
         <button type="button" class="close"
@@ -9,90 +9,51 @@
     </div>
 
     <div class="modal-body">
-        <form #addStorageForm="ngForm" name="addStorageForm" novalidate>
+        <div class="form-group">
+            <label for="addStorageUrl" translate>URL</label>
+            <input type="text" class="form-control"
+                   [placeholder]="'//<Computer Name>/<Folder>' | translate"
+                   [(ngModel)]="storage.url"
+                   name="addStorageUrl" id="addStorageUrl" #addStorageUrl="ngModel"
+                   maxlength="255"
+                   required
+                   nxFocusMe>
 
-            <div class="inputs d-block d-md-table w-100 mw-100">
-                <div class="form-group d-block d-md-table-row mb-2">
-                    <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                        <label for="addStorageUrl" class="control-label m-0 pb-md-2" translate>URL</label>
-                    </div>
-                    <div class="d-block d-md-table-cell">
-                        <div class="row pb-md-2">
-                            <div class="col-12 pb-1">
-                                <input type="text" class="form-control"
-                                       [placeholder]="'//<Computer Name>/<Folder>' | translate"
-                                       [ngModel]="url"
-                                       name="addStorageUrl" id="addStorageUrl" #addStorageUrl="ngModel"
-                                       maxlength="255"
-                                       required
-                                       nxFocusMe>
-                            </div>
-                            <div class="col-12">
-                                <span
-                                    class="input-error"
-                                    translate>This Email has been already registered in %CLOUD_NAME%</span>
+            <ng-container *ngIf="addStorageUrl.errors && addStorageUrl.touched">
+                <span *ngIf="addStorageUrl.errors.required"
+                        class="input-error" translate>URL is required</span>
+                <span *ngIf="addStorageUrl.errors.pattern"
+                      class="input-error" translate>Please enter a valid URL</span>
+            </ng-container>
+        </div>
 
-    <!--                            <ng-container *ngIf="addStorageUrl.errors">-->
-    <!--                                <span *ngIf="addUserEmail.errors.alreadyExists"-->
-    <!--                                      class="input-error"-->
-    <!--                                      translate>This Email has been already registered in %CLOUD_NAME%</span>-->
-    <!--                                <ng-container *ngIf="addUserEmail.touched">-->
-    <!--                                    <span *ngIf="addUserEmail.errors.required"-->
-    <!--                                            class="input-error" translate>Email is required</span>-->
-    <!--                                    <span *ngIf="addUserEmail.errors.pattern"-->
-    <!--                                          class="input-error" translate>Please enter a valid Email</span>-->
-    <!--                                </ng-container>-->
-    <!--                            </ng-container>-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group d-block d-md-table-row mb-0">
-                    <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                        <label for="login_email" class="control-label m-0 pb-md-2" translate>Login</label>
-                    </div>
-                    <div class="d-block d-md-table-cell">
-                        <div class="row pb-md-2">
-                            <div class="col-12 pb-1">
-                                <input type="text" class="form-control"
-                                       [ngModel]="auth.email"
-                                       pattern="{{ CONFIG.credentialsValidation.emailRegex }}" maxlength="255"
-                                       name="login_email" id="login_email" #login_email="ngModel"
-                                       required>
-                            </div>
-                            <div class="col-12">
-                                <ng-container *ngIf="login_email.invalid">
-                                    <div *ngIf="login_email.errors.no_user" class="clearfix">
-                                        <div class="input-error float-left" translate>Account not found</div>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group d-block d-md-table-row mb-0">
-                    <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                        <label for="login_password" class="control-label m-0 pb-md-2" translate>Password</label>
-                    </div>
-                    <div class="d-block d-md-table-cell">
-                        <div class="row pb-md-2">
-                            <div class="col-12 pb-1">
-                                <input type="password" class="form-control"
-                                       name="login_password" id="login_password" #login_password="ngModel"
-                                       [(ngModel)]="auth.password"
-                                       maxlength="255"
-                                       required>
-                            </div>
-                            <div class="col-12">
-                                <ng-container *ngIf="login_password.invalid">
-                                    <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+        <div class="form-group">
+            <label for="login_username" class="control-label m-0 pb-2" translate>Login</label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="storage.username"
+                   maxlength="255"
+                   name="login_username" id="login_username" #login_username="ngModel"
+                   required>
+            <ng-container *ngIf="login_username.errors && login_username.touched">
+                <span *ngIf="login_username.errors.required"
+                      class="input-error" translate>Login is required</span>
+            </ng-container>
+        </div>
+
+        <div class="form-group">
+            <label for="login_password" class="control-label m-0 pb-md-2" translate>Password</label>
+            <input type="password" class="form-control"
+                   name="login_password" id="login_password" #login_password="ngModel"
+                   [(ngModel)]="storage.password"
+                   maxlength="255"
+                   required>
+            <ng-container *ngIf="login_password.errors && login_password.touched">
+                <span *ngIf="login_password.errors.required"
+                      class="input-error" translate>Password is required</span>
+                <span *ngIf="login_password.errors.no_user"
+                      class="input-error" translate>Login or password is incorrect</span>
+            </ng-container>
+        </div>
     </div>
 
     <div class="modal-footer">
@@ -102,4 +63,4 @@
             [buttonText]="'Add storage' | translate"></nx-process-button>
         <nx-cancel-button [process]="addStorage" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
-
+</form>

@@ -19,9 +19,9 @@ enum STORAGE_STATUS {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-storage-size-component',
-    templateUrl: 'size.component.html',
-    styleUrls  : ['size.component.scss']
+    selector    : 'nx-storage-size-component',
+    templateUrl : 'size.component.html',
+    styleUrls   : ['size.component.scss']
 })
 export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     @Input() store: any;
@@ -71,13 +71,13 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
             this.available = '0';
             this.availPercentage = 100;
 
-            this.archive = '-';
+            this.archive = '&mdash;';
             this.archivePercentage = 0;
 
             return;
         }
 
-        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.reservedSpace) - parseInt(this.store.freeSpace);
+        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.reservedSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
         this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
@@ -86,10 +86,10 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         this.available = this.toFriendlyBytes(this.store.freeSpace);
         this.availPercentage = 100 - this.reservedPercentage;
 
-        this.archive = '-';
+        this.archive = '&mdash;';
         this.archivePercentage = 0;
 
-        if (this.store.archiveSpace) { // we don't have it ... will be added in 4.2
+        if (this.store.archiveSpace) {
             this.archive = this.toFriendlyBytes(this.store.archiveSpace);
             this.archivePercentage = this.toPercentageOfTotal(this.store.archiveSpace);
         }

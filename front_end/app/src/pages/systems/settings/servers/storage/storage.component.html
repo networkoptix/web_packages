@@ -1,5 +1,5 @@
 <nx-section-placeholder
-        *ngIf="!loading && !storage.length"
+        *ngIf="!loading && !storage?.length"
         svgFileName="system_settings_placeholder"
         width="64"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
@@ -33,6 +33,7 @@
                             <th *ngIf="storage.hasAction">&nbsp;</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr class="table-row-spacer" [ngClass]="{'hasAction' : storage.hasAction}"></tr>
                         <tr *ngFor="let store of storage">
@@ -45,7 +46,18 @@
                                 <span class="ellipsis">{{store.url}}</span>
                             </td>
                             <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.minWidth.px]="ddWidth" [ngSwitch]="store.status">
-                                <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" translate>Reserved</div>
+                                <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >
+                                    <span translate>Reserved</span>
+                                    <svg-icon nx-add-svg-src
+                                              class="ml-1"
+                                              [ngbTooltip]="store.statusTooltip"
+                                              [openDelay]="300"
+                                              [closeDelay]="100"
+                                              placement="top"
+                                              triggers="hover"
+                                              [src]="CONFIG.icons.dirNonStandard + 'info.svg'">
+                                    </svg-icon>
+                                </div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
                                 <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"
@@ -59,7 +71,10 @@
                                 <nx-storage-size-component [store]="store"></nx-storage-size-component>
                             </td>
                             <td *ngIf="storage.hasAction" [ngSwitch]="store.status" class="d-flex justify-content-end">
-                                <button class="btn btn-text has-icon" *ngSwitchCase="STATUS.INACCESSIBLE">
+                                <!-- Add settings button -->
+                                <button *ngSwitchCase="STATUS.INACCESSIBLE"
+                                        class="btn btn-text has-icon"
+                                        (click)="deleteStorage(store)">
                                     <svg-icon
                                             nx-add-svg-src
                                             [src]="CONFIG.icons.dirButtons + 'delete.svg'"></svg-icon>

@@ -2,9 +2,9 @@ import {
     Component, Inject, OnDestroy,
     LOCALE_ID, Input, OnChanges,
     SimpleChanges, OnInit
-} from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription, interval }              from 'rxjs';
+}                                                from '@angular/core';
+import { UntilDestroy }                          from '@ngneat/until-destroy';
+import { Subscription, interval, combineLatest } from 'rxjs';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
@@ -13,6 +13,7 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 import { NxSystem }                  from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { map }                       from 'rxjs/operators';
 
 enum MODE {
     MAIN = 0,
@@ -43,6 +44,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     loading: boolean;
     showStorage: boolean;
     systemSubscription: Subscription;
+    storageSubscription: Subscription;
     saveSettings: Process;
     storage: any;
     watchers: Watcher<any>[] = [];
@@ -84,7 +86,9 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.init();
+        if (changes.system?.currentValue || changes.serverId?.currentValue) {
+            this.init();
+        }
     }
 
     init() {
@@ -147,48 +151,87 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             }
         };
 
-        this.loading = false;
-        this.showStorage = true;
-        this.storage = replyMock.reply.storages;
-
-        this.storage.hasAction = false;
-        this.storage.forEach(store => {
-            if (store.freeSpace) {
-                store.status = STORAGE_STATUS.IN_USE; // default
-
-                if (!store.isOnline) {
-                    store.status = STORAGE_STATUS.INACCESSIBLE;
-                    this.storage.hasAction = true;
-                } else {
-                    if (store.storageStatus.includes('used') && store.storageStatus.includes('tooSmall')) {
-                        store.status = STORAGE_STATUS.RESERVED;
-                    }
-                }
-            }
-        });
+        // this.loading = false;
+        // this.showStorage = true;
+        // this.storage = replyMock.reply.storages;
+        //
+        // this.storage.hasAction = false;
+        // this.storage.forEach(store => {
+        //     if (store.freeSpace) {
+        //         store.status = STORAGE_STATUS.IN_USE; // default
+        //         store.statusTooltip = '';
+        //
+        //         if (!store.isOnline) {
+        //             store.status = STORAGE_STATUS.INACCESSIBLE;
+        //             this.storage.hasAction = true;
+        //         } else {
+        //             if (store.storageStatus.includes('tooSmall')) {
+        //                 store.status = STORAGE_STATUS.RESERVED;
+        //                 store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
+        //             }
+        //             if (!store.storageStatus.includes('tooSmall') && store.storageStatus.includes('system')) {
+        //                 store.status = STORAGE_STATUS.RESERVED;
+        //                 store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
+        //             }
+        //         }
+        //     }
+        // });
 
         // ***************************************
 
-        // if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
-        //     this.system.updateOrGetSystemStorage().toPromise()
-        //         .then(response => {
-        //             this.loading = false;
-        //             this.showStorage = (Object.keys(response.reply.storages).length > 0);
-        //             this.storage = response.reply.storages;
-        //
-        //             this.storage.hasAction = false;
-        //             this.storage.forEach(store => {
-        //                 if (store.freeSpace) {
-        //                     store.status = STORAGE_STATUS.IN_USE; // default
-        //
-        //                     if (store.freeSpace === '-1') {
-        //                         store.status = STORAGE_STATUS.INACCESSIBLE;
-        //                         this.storage.hasAction = true;
-        //                     }
-        //                 }
-        //             });
-        //         });
-        // }
+        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
+            this.storageSubscription = combineLatest(this.system.updateOrGetSystemStorage(), this.system.getRecordStats())
+                .pipe(map(results => ({ response: results[0], usage: results[1] })))
+                .subscribe(results => {
+                    this.loading = false;
+
+                    if (results.response.name === 'TimeoutError') {
+                        console.error(results.response.message);
+                        return;
+                    }
+
+                    this.showStorage = (Object.keys(results.response.reply.storages).length > 0);
+                    this.storage = results.response.reply.storages;
+
+                    this.storage.hasAction = false;
+                    this.storage.forEach(store => {
+                        if (store.freeSpace) {
+                            debugger;
+                            store.archiveSpace = this.getArchiveSpace(results.usage.reply, store.storageId);
+
+                            store.status = STORAGE_STATUS.IN_USE; // default
+                            store.statusTooltip = '';
+
+                            if (store.isOnline) {
+                                if (store.storageStatus.includes('tooSmall')) {
+                                    store.status = STORAGE_STATUS.RESERVED;
+                                    store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
+                                }
+                                if (!store.storageStatus.includes('tooSmall') && store.storageStatus.includes('system')) {
+                                    store.status = STORAGE_STATUS.RESERVED;
+                                    store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
+                                }
+                            } else {
+                                store.status = STORAGE_STATUS.INACCESSIBLE;
+                                this.storage.hasAction = true;
+                            }
+                        }
+                    });
+                });
+        }
+    }
+
+    getArchiveSpace(usage, storageId): number {
+        let aggregateSpace = 0;
+        usage.forEach((chunk) => {
+            chunk.recordedBytesPerStorage.forEach((storage) => {
+                if (storage.key === storageId) {
+                    aggregateSpace += parseInt(storage.value);
+                }
+            });
+        });
+
+        return aggregateSpace;
     }
 
     selectMode(store) {
@@ -224,9 +267,37 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         document.body.removeChild(dd);
     }
 
+    deleteStorage(storage) {
+        this.dialogsService
+            .confirm(
+                storage.url,
+                this.LANG.storage.deleteExternalStorage(),
+                this.LANG.dialogs.buttons.delete(),
+                'btn-danger',
+                this.LANG.dialogs.buttons.cancel()
+            ).then((response) => {
+                if (response === true) {
+                    this.system
+                        .removeStorage({ id: storage.storageId }).toPromise()
+                        .then((response) => {
+                            if (response.id) {
+                                this.init();
+                            }
+                        });
+                }
+            });
+    }
+
     openAddStorage() {
-        this.dialogsService.addStorage(this.system, this.serverId);
-	}
+        this.dialogsService
+            .addStorage(this.system, this.serverId)
+            .then((response) => {
+                debugger;
+                if (response === this.CONFIG.responseOk) {
+                    this.init();
+                }
+            });
+    }
 
     reindexStorage(type: 'main' | 'backup') {
         if (type === 'main') {

@@ -1,10 +1,10 @@
 
 <div class="container"
-     [ngbPopover]="popLegend"
+     [ngbPopover]="store.status != STATUS.INACCESSIBLE ? popLegend : ''"
      placement="bottom"
      [openDelay]="300"
-     [closeDelay]="500"
-     triggers="click">
+     [closeDelay]="100"
+     triggers="hover">
 
     <div class="total-label" [innerHTML]="totalSpaceLabel"></div>
     <div class="bar reserved" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="reservedPercentage"></div>
@@ -19,43 +19,43 @@
             <tr>
                 <td>&nbsp;</td>
                 <td class="table-legend-title" translate>Size</td>
-                <td class="table-legend-size">{{totalSpaceLabel}}</td>
+                <td class="table-legend-size" [innerHTML]="totalSpaceLabel"></td>
             </tr>
             <tr>
-                <td class="table-legend-marker">
+                <td class=" table-legend-marker">
                     <svg width="16" height="16">
                         <rect class="box used" x="0" y="0" rx="4" ry="4" width="16" height="16"/>
                     </svg>
                 </td>
                 <td class="table-legend-title" translate>Other data</td>
-                <td class="table-legend-size">{{used}}</td>
+                <td class="table-legend-size" [innerHTML]="used"></td>
             </tr>
             <tr>
-                <td class="table-legend-marker">
+                <td class=" table-legend-marker">
                     <svg width="16" height="16">
                         <rect class="box archive" x="0" y="0" rx="4" ry="4" width="16" height="16"/>
                     </svg>
                 </td>
                 <td class="table-legend-title" translate>VMS</td>
-                <td class="table-legend-size">{{archive}}</td>
+                <td class="table-legend-size" [innerHTML]="archive">/td>
             </tr>
             <tr>
-                <td class="table-legend-marker">
+                <td class=" table-legend-marker">
                     <svg width="16" height="16">
                         <rect class="box reserved" x="0" y="0" rx="4" ry="4" width="16" height="16"/>
                     </svg>
                 </td>
                 <td class="table-legend-title" translate>Reserved</td>
-                <td class="table-legend-size">{{reserved}}</td>
+                <td class="table-legend-size" [innerHTML]="reserved">/td>
             </tr>
             <tr>
-                <td class="table-legend-marker">
+                <td class=" table-legend-marker">
                     <svg width="16" height="16">
                         <rect class="box available" x="0" y="0" rx="4" ry="4" width="16" height="16"/>
                     </svg>
                 </td>
                 <td class="table-legend-title" translate>Available</td>
-                <td class="table-legend-size">{{available}}</td>
+                <td class="table-legend-size" [innerHTML]="available">/td>
             </tr>
         </tbody>
     </table>
