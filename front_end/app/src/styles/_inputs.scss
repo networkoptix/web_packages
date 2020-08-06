@@ -39,7 +39,7 @@
         box-shadow   : none;
     }
 
-    &[class*="ng-invalid"]:not(.ng-untouched) {
+    &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted) {
         border-color : $error;
         color        : $error;
 

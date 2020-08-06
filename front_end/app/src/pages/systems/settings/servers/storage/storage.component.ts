@@ -62,7 +62,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        private dialogsService: NxDialogsService,
+        private dialogs: NxDialogsService,
         @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
@@ -287,13 +287,17 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             });
     }
 
-    openAddStorage() {
-        this.dialogsService
-            .addStorage(this.system, this.serverId)
-            .then((response) => {
-                if (response === this.CONFIG.responseOk) {
-                    this.init();
-                }
+    // openAddStorage() {
+    //     this.dialogsService
+    //         .addStorage(this.system, this.serverId)
+    //         .then((response) => {
+    //             if (response === this.CONFIG.responseOk) {
+    //                 this.init();
+    //             }
+    addExternalStorage() {
+        return this.dialogs.addExternalStorage()
+            .then(res => {
+                console.log('res from addExternalStorage dialog', res);
             });
     }
 
