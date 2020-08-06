@@ -1,5 +1,5 @@
 <nx-section-placeholder
-        *ngIf="!loading && !storage?.length"
+        *ngIf="!loading && !showStorage"
         svgFileName="system_settings_placeholder"
         width="64"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">

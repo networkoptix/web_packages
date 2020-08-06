@@ -68,6 +68,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
 
+        this.storage = [];
         this.showStorage = false;
         this.loading = true;
 
@@ -92,109 +93,37 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     init() {
-        const replyMock = {
-            reply: {
-                'storageProtocols': ['smb'],
-                'storages': [{
-                    'freeSpace'       : '756123619328',
-                    'isBackup'        : false,
-                    'isExternal'      : false,
-                    'isOnline'        : true,
-                    'isUsedForWriting': true,
-                    'isWritable'      : true,
-                    'reservedSpace'   : '32212254720',
-                    'storageId'       : '{52a80ce6-a2d6-b823-a326-34d9e69b2d5e}',
-                    'storageStatus'   : 'used',
-                    'storageType'     : 'local',
-                    'totalSpace'      : '1968874332160',
-                    'url'             : '/media/tsanko/movies1/HD Witness Media'
-                }, {
-                    'freeSpace'       : '-1',
-                    'isBackup'        : false,
-                    'isExternal'      : false,
-                    'isOnline'        : false,
-                    'isUsedForWriting': true,
-                    'isWritable'      : false,
-                    'reservedSpace'   : '24505933824',
-                    'storageId'       : '{7afc3fbd-5fd1-a277-c3cd-999e396fa4bb}',
-                    'storageStatus'   : 'used|beingChecked',
-                    'storageType'     : 'local',
-                    'totalSpace'      : '-1',
-                    'url'             : '/media/tsanko/BUILD/HD Witness Media'
-                }, {
-                    'freeSpace'       : '-1',
-                    'isBackup'        : false,
-                    'isExternal'      : false,
-                    'isOnline'        : false,
-                    'isUsedForWriting': true,
-                    'isWritable'      : false,
-                    'reservedSpace'   : '32212254720',
-                    'storageId'       : '{6ab74f2c-09df-0807-dab4-c450d7c936c6}',
-                    'storageStatus'   : 'used|beingChecked',
-                    'storageType'     : 'local',
-                    'totalSpace'      : '-1',
-                    'url'             : '/media/tsanko/movies/HD Witness Media'
-                }, {
-                    'freeSpace'       : '41258360832',
-                    'isBackup'        : false,
-                    'isExternal'      : false,
-                    'isOnline'        : true,
-                    'isUsedForWriting': false,
-                    'isWritable'      : false,
-                    'reservedSpace'   : '10737418240',
-                    'storageId'       : '{b9017e44-74fe-b549-bb65-2c14418ddb02}',
-                    'storageStatus'   : 'used|tooSmall|system',
-                    'storageType'     : 'local',
-                    'totalSpace'      : '62220242944',
-                    'url'             : '/opt/networkoptix/mediaserver/var/data'
-                }]
-            }
-        };
+        this.loading = true;
+        this.showStorage = false;
 
-        // this.loading = false;
-        // this.showStorage = true;
-        // this.storage = replyMock.reply.storages;
-        //
-        // this.storage.hasAction = false;
-        // this.storage.forEach(store => {
-        //     if (store.freeSpace) {
-        //         store.status = STORAGE_STATUS.IN_USE; // default
-        //         store.statusTooltip = '';
-        //
-        //         if (!store.isOnline) {
-        //             store.status = STORAGE_STATUS.INACCESSIBLE;
-        //             this.storage.hasAction = true;
-        //         } else {
-        //             if (store.storageStatus.includes('tooSmall')) {
-        //                 store.status = STORAGE_STATUS.RESERVED;
-        //                 store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
-        //             }
-        //             if (!store.storageStatus.includes('tooSmall') && store.storageStatus.includes('system')) {
-        //                 store.status = STORAGE_STATUS.RESERVED;
-        //                 store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
-        //             }
-        //         }
-        //     }
-        // });
+        if (this.system?.currentServerNotBusy && this.system?.servers?.length && this.serverId) {
+            this.storageSubscription = combineLatest(
+                this.system.getStorages({ id: this.serverId }),
+                this.system.updateOrGetSystemStorage(),
+                this.system.getRecordStats())
 
-        // ***************************************
-
-        if (this.system?.currentServerNotBusy && this.system?.servers?.length) {
-            this.storageSubscription = combineLatest(this.system.updateOrGetSystemStorage(), this.system.getRecordStats())
-                .pipe(map(results => ({ response: results[0], usage: results[1] })))
+                .pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
                 .subscribe(results => {
-                    this.loading = false;
-
-                    if (results.response.name === 'TimeoutError') {
-                        console.error(results.response.message);
+                    if (results.storage.name === 'TimeoutError') {
+                        console.error(results.storage.message);
+                        this.loading = false;
                         return;
                     }
 
-                    this.showStorage = (Object.keys(results.response.reply.storages).length > 0);
-                    this.storage = results.response.reply.storages;
+                    const storage = results.storage || [];
 
-                    this.storage.hasAction = false;
-                    this.storage.forEach(store => {
+                    storage.hasAction = false;
+                    storage.forEach((store, idx) => {
+                        const storeInfo = results.storeInfo.find((info) => {
+                            if (store.id === info.storageId) {
+                                return info;
+                            }
+                        });
+
+                        if (storeInfo) {
+                            store = { ...storeInfo };
+                        }
+
                         if (store.freeSpace) {
                             store.archiveSpace = this.getArchiveSpace(results.usage.reply, store.storageId);
 
@@ -212,10 +141,20 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                                 }
                             } else {
                                 store.status = STORAGE_STATUS.INACCESSIBLE;
-                                this.storage.hasAction = true;
+                                storage.hasAction = true;
                             }
+                        } else {
+                            store.status = STORAGE_STATUS.INACCESSIBLE;
+                            storage.hasAction = true;
                         }
+
+                        storage[idx] = { ...store };
                     });
+
+                    this.showStorage = (Object.keys(storage).length > 0);
+                    this.storage = storage;
+
+                    this.loading = false;
                 });
         }
     }

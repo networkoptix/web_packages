@@ -519,6 +519,10 @@ export class NxSystemAPI {
         return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
+    public getStoragesInfo(queryParams) {
+        return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
+    }
+
     public getStorages() {
         return this.get<Array<t.GetStorages>>('/api/storageSpace');
     }
