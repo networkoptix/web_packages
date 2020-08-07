@@ -111,6 +111,10 @@ export class NxSearchService {
             .filter((elm) => {
                 return elm !== '';
             });
+        // if match is empty (i.e query is ",") there is nothing to filter by and will show all entries
+        if (!match.length) {
+            match.push(','); // add non-searchable char so 'Nothing found' will appear
+        }
         model.queryAndMatch = match;
     }
 }
