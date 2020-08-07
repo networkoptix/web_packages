@@ -200,7 +200,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             { name: '1:1', value: 1 }
         ];
         this.rotations = [
-            this.auto,
+            { name: '0˚', value: 0 },
             { name: '90˚', value: 90 },
             { name: '180˚', value: 180 },
             { name: '270˚', value: 270 }

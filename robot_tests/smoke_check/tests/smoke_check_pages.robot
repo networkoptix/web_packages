@@ -68,7 +68,7 @@ Privacy
 
     Wait Until Element Is Visible    ${FOOTER PRIVACY LINK}
     ${privacy url}=   Get Element Attribute    ${FOOTER PRIVACY LINK}    href
-    Should Be Equal As Strings    ${privacy url}    ${ENV}/content/privacy
+    Should Be Equal As Strings    ${privacy url}    https://www.networkoptix.com/privacy-policy/
 
 Integrations
     [Tags]    C57508    pages
@@ -95,4 +95,3 @@ Supported Devices
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
-
