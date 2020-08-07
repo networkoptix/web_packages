@@ -5,7 +5,7 @@
         [style.grid-column]="gridColumnLookup[tag.label]"
         [ngClass]="{ready:gridColumnLookup[tag.label]}"
         [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
-        translate>{{tag.label}}</nx-tag>
+        >{{tag.label}}</nx-tag>
 </ng-template>
 
 <nx-pre-loader *ngIf="!list"></nx-pre-loader>
