@@ -86,4 +86,9 @@ img {
 .image-unavailable-border {
     border: 1px solid $light4;
     background: $light2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
