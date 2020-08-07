@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-    {% with version=original.version asset=original.version.asset %}
+    {% with version=original.version asset=original.version.asset show_iframe_preview=original.can_preview_customization%}
     <div id="alert" style="display:none" class="alert alert-warning"
          title="Preview being generated">Currently making the preview for you. A new tab
         will open shortly.
@@ -132,7 +132,7 @@
                             {% endfor %}
                             </div>
 
-                            {% if partial_preview %}
+                            {% if partial_preview and show_iframe_preview %}
                             <div id="right_{{ forloop.counter }}" class="split right">
                                 <iframe class="inlineFrame" src="{{ context_preview_links|dict_key:context_name }}&adminPreview=true"></iframe>
                             </div>
@@ -144,7 +144,7 @@
                 </ul>
             </div>
 
-            {% if whole_preview and context_preview_links.whole_preview %}
+            {% if whole_preview and context_preview_links.whole_preview and show_iframe_preview %}
             <div id="preview" class="split">
                 <iframe class="previewFrame" src="{{ context_preview_links.whole_preview }}&adminPreview=true" width="1000"
                     height="1000"></iframe>
