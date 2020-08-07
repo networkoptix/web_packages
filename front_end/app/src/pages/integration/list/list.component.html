@@ -4,8 +4,7 @@
         (resize)="updateTagSize(tag.label, $event)"
         [style.grid-column]="gridColumnLookup[tag.label]"
         [ngClass]="{ready:gridColumnLookup[tag.label]}"
-        [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')"
-        >{{tag.label}}</nx-tag>
+        [type]="tag.type + ' badge-integration' + (gridColumnLookup[tag.label] ? ' ready' : '')">{{tag.label}}</nx-tag>
 </ng-template>
 
 <nx-pre-loader *ngIf="!list"></nx-pre-loader>
@@ -51,9 +50,9 @@
 
                 <footer class="tags-compact" [ngStyle]="{opacity: (ready | async) ? 1 : 0}">
                     <ng-container *ngFor="let type of [
-                            {label: 'In Review', type: 'danger', hidden: !plugin.pending},
-                            {label: 'Draft', type: 'danger', hidden: !plugin.draft},
-                            {label: 'Mine', type: 'brand', hidden: !plugin.mine}
+                            {label: 'In Review' | translate, type: 'danger', hidden: !plugin.pending},
+                            {label: 'Draft' | translate, type: 'danger', hidden: !plugin.draft},
+                            {label: 'Mine' | translate, type: 'brand', hidden: !plugin.mine}
                         ].concat(plugin.information.type)">
                         <ng-container *ngTemplateOutlet="compactTags;context{tag:type}"></ng-container>
                     </ng-container>
