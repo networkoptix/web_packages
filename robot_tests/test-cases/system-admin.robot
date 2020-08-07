@@ -201,7 +201,7 @@ Should open a system page in anonymous state
     Check Log In    button=None
 
 Should show system settings and security settings and they should match settings on server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until System Settings Are Visible
     Wait Until Security Settings Are Visible
@@ -222,38 +222,38 @@ Should show system settings and security settings and they should match settings
     Settings on page should match settings on server
 
 Changing the Setting "Enable auto discovery of cameras and servers" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled
 
 Changing the Setting "Send anonymous usage and crash statistics to developers" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed
 
 Changing the Setting "Allow system to optimize camera settings" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization
 
 Changing the Setting "Enable audit trail" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled
 
 Changing the Setting "Allow only secure connections" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced
 
 Changing the Setting "Encrypt video traffic" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${selected}=   Change Setting Encrypt video traffic
     Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting "Limit session duration to" changes it on the server
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Change Setting and Save    ${LIMIT SESSION DURATION CHECKBOX REAL}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
@@ -261,7 +261,7 @@ Changing the Setting "Limit session duration to" changes it on the server
     ...    ELSE     Evaluate Session Limit
 
 Change Time Interval And Verify on Server
-    [Tags]    system settings    C65722
+    [Tags]    system settings    C65722    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until System Settings Are Visible
     Wait Until Security Settings Are Visible
@@ -277,7 +277,7 @@ Change Time Interval And Verify on Server
     Evaluate Session Limit
 
 Changing Several Random Checkboxes Works
-    [Tags]    system settings
+    [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until System Settings Are Visible
     Wait Until Security Settings Are Visible
@@ -286,7 +286,7 @@ Changing Several Random Checkboxes Works
     Changing Several Settings at Random    ${SYSTEM CANCEL}
     
 Systems Settings Block is Available for Administrator or Owner
-    [Tags]    C69736    system settings
+    [Tags]    C69736    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
@@ -322,7 +322,7 @@ System Settings block is not available for other users
     END
     
 Cancel changes in System Settings block
-    [Tags]    C69738    system settings
+    [Tags]    C69738    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
@@ -351,7 +351,7 @@ Cancel changes in System Settings block
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     
 Moving to a different page after making changes in System Settings without saving them first
-    [Tags]    C69739    system settings
+    [Tags]    C69739    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
@@ -422,7 +422,7 @@ Moving to a different page after making changes in System Settings without savin
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
 
 Changing All Checkboxes Works
-    [Tags]    system settings    C65722    C69740
+    [Tags]    system settings    C65722    C69740    threaded
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
@@ -449,7 +449,7 @@ Changing All Checkboxes Works
     Changing All Settings    ${SYSTEM SAVE}
     
 Changes made in the thick client are displayed in System Settings block in Cloud Portal
-    [Tags]    C69741    system settings
+    [Tags]    C69741    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
@@ -512,7 +512,7 @@ Changes made in the thick client are displayed in System Settings block in Cloud
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
 
 Checking the dependency of system settings checkboxes
-    [Tags]    C69742    system settings
+    [Tags]    C69742    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    autoDiscoveryEnabled    true
     Set Auto System Settings via API    statisticsAllowed    true
@@ -548,7 +548,7 @@ Checking the dependency of system settings checkboxes
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     
 Changes made in the thick client are displayed in the security block in Cloud Portal
-    [Tags]    C65723    system settings
+    [Tags]    C65723    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -606,7 +606,7 @@ Changes made in the thick client are displayed in the security block in Cloud Po
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
 
 Security block is available for administrator or owner
-    [Tags]    C65697    system settings
+    [Tags]    C65697    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -666,7 +666,7 @@ Security block is not available for other users
 	END  
 	
 Cancel changes in Security block
-    [Tags]    C65724    system settings
+    [Tags]    C65724    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -704,7 +704,7 @@ Cancel changes in Security block
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     
 Checking the dependency of security settings checkboxes
-    [Tags]    C65700    system settings
+    [Tags]    C65700    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -737,7 +737,7 @@ Checking the dependency of security settings checkboxes
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
 Check Limit session duration
-    [Tags]    C65703    system settings
+    [Tags]    C65703    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -877,7 +877,7 @@ Check Limit session duration
     Evaluate Auto System Settings via API    sessionLimitMinutes    5
 
 Check HTTPS traffic encryption
-    [Tags]    C65701    system settings
+    [Tags]    C65701    system settings    threaded
     Log    Preconditions
     Set Auto System Settings via API    trafficEncryptionForced    true
     
@@ -903,7 +903,7 @@ Check HTTPS traffic encryption
     Check Allow Only Secure Connections    ${AUTO SYS IP}    ${AUTO SYS AUTH}     
     
 Security block view for 3 dot 2 System
-    [Tags]    C65829    system settings
+    [Tags]    C65829    system settings    threaded
     Log    Preconditions
     Set 3 dot 2 System Settings via API    auditTrailEnabled    true
     Log    Step 1 covered in other testcases by default
