@@ -16,6 +16,3 @@ ${email password}    QWEasd!@#
 
 ${ENV}    https://cloud-test.hdw.mx
 ${VMS}    4.0
-
-
-
