@@ -6,7 +6,7 @@ import {
 }                                                                    from '@angular/common';
 import { RouterModule }                                              from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule }                                               from '@angular/forms';
+import { FormsModule, ReactiveFormsModule }                          from '@angular/forms';
 import { AngularFireModule, FirebaseOptionsToken }                   from '@angular/fire';
 import { AngularFireMessagingModule }                                from '@angular/fire/messaging';
 import { LayoutModule }                                              from '@angular/cdk/layout';
@@ -55,6 +55,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         LayoutModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({

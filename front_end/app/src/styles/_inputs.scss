@@ -5,19 +5,19 @@
 @use './mixins';
 
 .form-control {
-    display          : block;
-    width            : 100%;
-    height           : 32px;
-    font-size        : rem(14px);
-    line-height      : 1.428571429;
-    color            : $dark9;
-    background-color : $light1;
-    background-image : none;
-    border           : 1px solid $light6;
-    border-radius    : 2px;
-    transition       : none;
-    box-shadow       : none;
-    padding          : $padding-base-vertical $padding-input-horizontal;
+    display          : block !important;
+    width            : 100% !important;
+    height           : 32px !important;
+    font-size        : rem(14px) !important;
+    line-height      : 1.428571429 !important;
+    color            : $dark9 !important;
+    background-color : $light1 !important;
+    background-image : none !important;
+    border           : 1px solid $light6 !important;
+    border-radius    : 2px !important;
+    transition       : none !important;
+    box-shadow       : none !important;
+    padding          : $padding-base-vertical $padding-input-horizontal !important;
 
     @include mixins.placeholder ();
 
@@ -39,7 +39,7 @@
         box-shadow   : none;
     }
 
-    &[class*="ng-invalid"]:not(.ng-untouched) {
+    &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted) {
         border-color : $error;
         color        : $error;
 
@@ -90,7 +90,7 @@
 }
 
 .btn.form-control {
-    text-align : left;
+    text-align : left !important;
     .caret {
         float      : right;
         margin-top : 8px;

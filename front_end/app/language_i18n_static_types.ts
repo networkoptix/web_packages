@@ -675,7 +675,12 @@ export interface ServersStatus {
 }
 
 export interface Storage {
-    modes: Modes;
+    modes:                   Modes;
+    alreadyUsed:             any;
+    deleteExternalStorage:   any;
+    reservedTooSmallTooltip: any;
+    reservedSystemTooltip:   any;
+    urlPlaceholder: any;
 }
 
 export interface Modes {
@@ -712,10 +717,11 @@ export interface Debug {
 }
 
 export interface Settings {
-    notAbleToLoadSecurity: any;
-    notAbleToLoadSystem:   any;
-    sessionLimitDuration:  SessionLimitDuration;
-    warningMessages:       WarningMessages;
+    notAbleToLoadStorageInfo: any;
+    notAbleToLoadSecurity:    any;
+    notAbleToLoadSystem:      any;
+    sessionLimitDuration:     SessionLimitDuration;
+    warningMessages:          WarningMessages;
 }
 
 export interface SessionLimitDuration {
@@ -1519,6 +1525,11 @@ const typeMap: any = {
     ], false),
     "Storage": o([
         { json: "modes", js: "modes", typ: r("Modes") },
+        { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
+        { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
+        { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
+        { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },
+        { json: "urlPlaceholder", js: "urlPlaceholder", typ: "any" },
     ], false),
     "Modes": o([
         { json: "main", js: "main", typ: "any" },
@@ -1550,6 +1561,7 @@ const typeMap: any = {
         { json: "help", js: "help", typ: "any" },
     ], false),
     "Settings": o([
+        { json: "notAbleToLoadStorageInfo", js: "notAbleToLoadStorageInfo", typ: "any" },
         { json: "notAbleToLoadSecurity", js: "notAbleToLoadSecurity", typ: "any" },
         { json: "notAbleToLoadSystem", js: "notAbleToLoadSystem", typ: "any" },
         { json: "sessionLimitDuration", js: "sessionLimitDuration", typ: r("SessionLimitDuration") },

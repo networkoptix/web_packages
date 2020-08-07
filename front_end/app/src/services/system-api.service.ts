@@ -519,12 +519,32 @@ export class NxSystemAPI {
         return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
+    public getStoragesInfo(queryParams) {
+        return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
+    }
+
     public getStorages() {
         return this.get<Array<t.GetStorages>>('/api/storageSpace');
     }
 
+    public getStorageStatus(queryParams) {
+        return this.get<Array<t.GetStorages>>('/api/storageStatus', queryParams);
+    }
+
+    saveStorage(updateParams: IParams) {
+        return this.post<any>('/ec2/saveStorage', updateParams);
+    }
+
+    removeStorage(updateParams: IParams) {
+        return this.post<any>('/ec2/removeStorage', updateParams);
+    }
+
     updateStorages(updateParams: IParams) {
         return this.post<any>('/ec2/saveStorages', updateParams);
+    }
+
+    getRecordStats() {
+        return this.get('/api/recStats');
     }
 
     changePort(port: number) {

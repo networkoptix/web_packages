@@ -321,6 +321,7 @@ export interface Icons {
     default: string;
     platforms: Platform[];
     dir: string;
+    dirButtons: string;
     dirNonStandard: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
