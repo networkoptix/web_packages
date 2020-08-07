@@ -41,6 +41,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     save: Process;
     langCode: string;
     isSystemOwner = true;
+    hideErrors = true;
 
     watchers = {
         firstName : new Watcher<string>(),
@@ -109,7 +110,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.account.last_name = this.watchers.lastName.originalValue;
             this.langCode = this.watchers.langCode.originalValue;
             this.applyService.reset();
-        }, Object.values(this.watchers));
+        }, Object.values(this.watchers), undefined, this.displayErrors);
 
         this.accountService
             .get()
@@ -165,6 +166,10 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 return system.accessRole === 'owner';
             });
         });
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 
     deleteUser() {

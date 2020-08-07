@@ -20,6 +20,7 @@ export class ChangePasswordModalContent {
     CONFIG: IConfig;
     changePassword: Process;
     newPasswordForUser: string;
+    hideErrors = true;
 
     constructor(public activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,

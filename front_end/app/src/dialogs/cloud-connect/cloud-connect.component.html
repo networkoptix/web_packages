@@ -1,4 +1,4 @@
-<form #connectForm="ngForm" name="connectForm" novalidate>
+<form #connectForm="ngForm" name="connectForm" novalidate [ngClass]="{'hide-errors': hideErrors}">
     <div class="modal-header">
         <h1 class="modal-title" translate>Connect system to %CLOUD_NAME%</h1>
         <button type="button" class="close"
@@ -49,7 +49,7 @@
                    required>
             <ng-container *ngIf="login_password.invalid">
                 <div class="input-error" *ngIf="login_password.touched && login_password.errors.required && !wrongPassword && !accountBlocked"
-                     translate>Email is required</div>
+                     translate>Password is required</div>
                 <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
                 <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
             </ng-container>
@@ -61,6 +61,7 @@
     </div>
     <div class="modal-footer">
         <nx-process-button buttonText="{{ 'OK' | translate }}"
+                           [clickFn]="displayErrors"
                            [form]="connectForm"
                            [process]="connectProcess">
         </nx-process-button>

@@ -102,3 +102,22 @@ select.form-control {
     -moz-appearance    : none;
     background-color   : transparent;
 }
+
+
+// This is used to implement updated validation handling where errors aren't shown until submit
+// See register.component for implementation example.
+.override-error-style {
+    border-color: $light6 !important;
+    color: $dark9 !important;
+}
+input.hide-errors {
+    @extend .override-error-style;
+}
+.hide-errors {
+    & .input-error {
+        display: none;
+    }
+    & .ng-invalid , & > input {
+        @extend .override-error-style;
+    }
+}

@@ -42,6 +42,7 @@ export class CloudConnectModalContent implements OnInit {
 
     wrongPassword: boolean;
     accountBlocked: boolean;
+    hideErrors = true;
 
     @ViewChild('connectForm', { static: true }) connectForm: HTMLFormElement;
 
@@ -170,6 +171,10 @@ export class CloudConnectModalContent implements OnInit {
                 this.close();
             }
         });
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 
     close() {

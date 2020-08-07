@@ -177,7 +177,8 @@ export class NxApplyService {
         saveFunction: Process,
         discardFunction: () => void,
         watchers: Watcher<any>[],
-        form?: NgForm
+        form?: NgForm,
+        submitFn?: () => any
     ) {
         this.clearSubscriptions();
         this.component = component;
@@ -192,6 +193,7 @@ export class NxApplyService {
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent> this.applyComponentRef.instance).show = value;
         });
+        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = submitFn;
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.

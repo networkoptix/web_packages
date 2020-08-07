@@ -7,7 +7,7 @@
             </header>
 
             <nx-section>
-                <form #accountForm="ngForm" name="accountForm" class="form" novalidate>
+                <form #accountForm="ngForm" name="accountForm" class="form" novalidate [ngClass]="{'hide-errors': hideErrors}">
                     <div class="inputs d-block d-md-table w-100 mw-100">
                         <div class="form-group d-block d-md-table-row mb-2">
                             <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">

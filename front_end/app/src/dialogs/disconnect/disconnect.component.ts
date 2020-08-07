@@ -32,6 +32,7 @@ export class DisconnectModalContent {
         password : ''
     };
 
+    hideErrors = true;
     mediaServerApi: NxSystemAPI;
 
     @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
