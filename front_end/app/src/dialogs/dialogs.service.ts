@@ -39,7 +39,6 @@ import { WizardModalContent }                  from './wizard/wizard.component';
 import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
 import { AddStorageModalContent }              from './add-storage/add-storage.component';
 import './../dialogs/dialogs.scss';
-import { AddStorageModalContent }              from './add-storage/add-storage.component';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
