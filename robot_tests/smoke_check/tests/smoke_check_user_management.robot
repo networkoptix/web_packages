@@ -15,7 +15,7 @@ Startup
     Set Suite Variable    @{cloud auth}    ${email users}    ${password}
 #     Users list is loaded very slow(or never) without restarting the server and reloading the page. See CLOUD-4758
     Restart Server    ${server users}:${server users port}    ${local auth}
-    Sleep    45
+    Sleep    90
     Reload Page
     Sleep    15
 
