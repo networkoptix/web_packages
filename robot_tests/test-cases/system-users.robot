@@ -158,22 +158,26 @@ Share button - opens dialog
 #
 
 Check Cancel and 'X' buttons
-    [Tags]    C41888    Threaded    CLOUD-3733
+    [Tags]    C78228    Threaded
     Log in to Auto Tests System    ${email}
-
+    ${user}=   Get Random Email    ${BASE EMAIL}
     Log    Check Cancel Button
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
     Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
     Click Button  ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
+    Input Text    ${ADD USER EMAIL}    ${user}
     Click Button    ${ADD USER CANCEL}
     Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
     Log    Check 'X' Button
     Click Button  ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
+    Input Text    ${ADD USER EMAIL}    ${user}
     Click Button    ${ADD USER CLOSE}
     Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
 Sharing roles are ordered: more access is on top of the list with options
     [Tags]    Threaded
@@ -355,6 +359,19 @@ Share with registered user works and sends him notification
 
     ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+
+Share with registered user give user access to system
+    [Tags]    email    C41888
+    ${email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${auth}=    Create List    ${EMAIL OWNER}    ${password}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    viewer    ${email}
+    Log In    ${email}    ${password}
+
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName    
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
+    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
+    Element Should Not Be Visible    ${RENAME SYSTEM}
+    Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889

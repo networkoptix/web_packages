@@ -13,7 +13,7 @@ ${email}    ${EMAIL OWNER}
 
 *** Test Cases ***      EMAIL
 Empty Email                               ${EMPTY}
-    [tags]    C41888
+    [tags]    C78227
 Invalid Email 1 noptixqagmail.com         noptixqagmail.com
     [tags]    C41902
 Invalid Email 2 @gmail.com                @gmail.com
