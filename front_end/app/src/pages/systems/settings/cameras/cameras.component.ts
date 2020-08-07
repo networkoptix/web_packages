@@ -35,12 +35,19 @@ import {
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    viewContainerRef: ViewContainerRef;
-    system: NxSystem;
+
+    unsub$: Subject<boolean> = new Subject();
+    public reload$ = new BehaviorSubject(0);
+    width$ = new BehaviorSubject(0);
+
+    sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'> = new BehaviorSubject(false);
     settingsSubscription: Subscription;
     routeParamsSubscription: Subscription;
     healthReportSubscription: Subscription;
     cameraSubscription: Subscription;
+
+    viewContainerRef: ViewContainerRef;
+    system: NxSystem;
     cameraIdFromParams: string;
     parsedCameraId: string;
     selectedCamera: ICamera;
@@ -60,15 +67,248 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showUnauthorized = false;
     showOffline = false;
     showOverlay = false;
-    unsub$: Subject<boolean> = new Subject();
     alertsLoaded = false;
     showPreloader = true;
     availableLicenses = 0;
     noCameras = false;
     sensitivityColors = new Array(10);
     shakeHint = false;
-    motionGridChangeWatcher = new Watcher<boolean>();
     cameraDetailColumns: InfoBlockColumns;
+    canSeeInfo = false;
+    editMode = false;
+    recordingSettings: IRecordingSettings;
+
+    motionGridChangeWatcher = new Watcher<boolean>();
+    cameraNameWatcher = new Watcher();
+    selectedAspectWatcher = new Watcher();
+    selectedRotationWatcher: Watcher<any> = new Watcher();
+    audioEnabledWatcher = new Watcher();
+    recordingWatcher = new Watcher();
+    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
+    selectedFpsWatcher = new Watcher();
+    selectedQualityWatcher = new Watcher();
+    motionEnabledWatcher: Watcher<string> = new Watcher();
+    motionMaskWatcher: Watcher<string> = new Watcher();
+
+    get cameraName() {
+        return this.cameraNameWatcher.value;
+    }
+
+    set cameraName(value) {
+        this.cameraNameWatcher.value = value;
+    }
+
+    get previewWidth() {
+        const height = 120;
+        const defaultAspectRatio = 1.77778;
+        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
+        const rotated = <number> this.selectedRotation.value % 180;
+        return rotated ? height / aspect : aspect * height;
+    }
+
+    get selectedAspect() {
+        return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
+    }
+
+    set selectedAspect(value) {
+        this.showOverlay = false;
+        this.selectedAspectWatcher.value = value.value;
+        setTimeout(() => {
+            this.showOverlay = true;
+        });
+    }
+
+    get aspectClass() {
+        let aspect: ISelect;
+        if (this.selectedAspectWatcher.value) {
+            aspect = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
+        } else {
+            aspect = this.aspectRatios[1];
+        }
+        const [width, height] = (aspect.value ? aspect.name : this.selectedAspect[1].name).split(':');
+        return `${width}-${height}`;
+    }
+
+    get maxHeight() {
+        const aspect = (this.selectedAspect.value as number || this.aspectRatios[1].value as number);
+        const normalHeight = 480;
+        const narrowHeight = 384;
+        return aspect > 1.5 ? narrowHeight : normalHeight;
+    }
+
+    get height() {
+        return this.getCanvasSize().height;
+    }
+
+    get width() {
+        return this.getCanvasSize().width;
+    }
+
+    get previewWrapperWidth() {
+        return Math.ceil((this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight / 44) * 44;
+    }
+
+    get canvasWidth() {
+        return Math.floor(this.previewWrapperWidth / 44) * 44;
+    }
+
+    get canvasHeight() {
+        const aspect = <number> this.selectedAspect.value || <number> this.aspectRatios[1].value;
+        return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
+    }
+
+    public get preview() {
+        return this.system.getPreviewUrl(
+            this.selectedCamera.id,
+            null,
+            (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight * 2,
+            this.maxHeight * 2,
+            <number> this.selectedRotation.value || 0
+        );
+    }
+
+    get sensitivityButtons() {
+        return this.sensitivityButtons$.value;
+    }
+
+    set sensitivityButtons(value) {
+        this.sensitivityButtons$.next(value);
+    }
+
+    get selectedRotation() {
+        return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
+    }
+
+    set selectedRotation(value) {
+        this.selectedRotationWatcher.value = value.value;
+    }
+
+    get audioEnabled() {
+        return this.audioEnabledWatcher.value;
+    }
+
+    set audioEnabled(value) {
+        this.audioEnabledWatcher.value = value;
+    }
+
+    get recordingSettingsChanged() {
+        return this.recordingModesWatcher.changed ||
+                this.selectedFpsWatcher.changed ||
+                this.selectedQualityWatcher.changed;
+    }
+
+    get recordingSwitchedOn() {
+        return !this.recordingWatcher.originalValue && this.recordingWatcher.value;
+    }
+
+    get existingRecordingsScheduled() {
+        let type;
+        let fps;
+        let quality;
+        return !this.recordingSettingsChanged &&
+            this.selectedCamera.scheduleTasks.length &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never') &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType, fps: currentFps, streamQuality }, index) => {
+                if (index === 0) {
+                    type = recordingType;
+                    fps = currentFps;
+                    quality = streamQuality;
+                    return true;
+                }
+                return recordingType === type && fps === currentFps && quality === streamQuality;
+            });
+    }
+
+    get recording() {
+        return this.recordingWatcher.value;
+    }
+
+    set recording(value) {
+        if (value === this.recording) {
+            return;
+        }
+
+        if (this.recordingWatcher.originalValue !== undefined) {
+            if (this.motionEnabled) {
+                this.enableMotion();
+            } else {
+                this.disableMotion();
+            }
+        }
+
+        this.recordingWatcher.value = value;
+    }
+
+    get recordingModes(): IRecordingModes[] {
+        return this.recordingModesWatcher.value;
+    }
+
+    set recordingModes(value: IRecordingModes[]) {
+        if (!this.selectedFps) {
+            this.selectedFps = this.selectedCamera.maxFps;
+        }
+
+        if (this.selectedQuality.value === 'various') {
+            this.selectedQuality = this.streamQualities[1];
+        }
+        this.recordingModesWatcher.value = value;
+    }
+
+    get existingModesSelected() {
+        return this.recordingModes.some(({ value }) => value === 1);
+    }
+
+    get safeToUpdateRecordingSettings() {
+        return !this.recordingSettingsChanged ||
+        (!this.selectedCamera.scheduleTasks.length ||
+            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never')) ||
+            !this.variousQualities && !this.variousFps && !this.existingModesSelected;
+    }
+
+    get selectedFps() {
+        return this.selectedFpsWatcher.value;
+    }
+
+    set selectedFps(value) {
+        this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
+    }
+
+    get variousFps() {
+        return this.selectedFps === 'various' || !this.selectedFps;
+    }
+
+    get selectedQuality() {
+        return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
+    }
+
+    set selectedQuality(value) {
+        this.selectedQualityWatcher.value = value.value;
+    }
+
+    get variousQualities() {
+        return this.selectedQuality.value === this.various.value;
+    }
+
+    get motionEnabled() {
+        return this.motionEnabledWatcher.value !== MotionType.noMotion;
+    }
+
+    set motionEnabled(enabled) {
+        this.motionEnabledWatcher.value = !enabled ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
+            ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
+
+        this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
+            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || enabled
+        }));
+    }
+
+    get motionMask() {
+        return this.motionMaskWatcher.value;
+    }
+
+    set motionMask(value) {
+        this.motionMaskWatcher.value = value;
+    }
 
     constructor(
         configService: NxConfigService,
@@ -189,6 +429,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionGridChangeWatcher.originalValue = false;
     }
 
+    ngOnDestroy() {
+        this.unsub$.next(true);
+    }
+
     // Update menu options after language is loaded
     updateSelects() {
         this.various = { name: this.LANG.common.resolution.various, value: 'various' };
@@ -249,25 +493,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Basic Settings
-    cameraNameWatcher = new Watcher()
-    get cameraName() {
-        return this.cameraNameWatcher.value;
-    }
-
-    set cameraName(value) {
-        this.cameraNameWatcher.value = value;
-    }
-
-    get previewWidth() {
-        const height = 120;
-        const defaultAspectRatio = 1.77778;
-        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
-        const rotated = <number> this.selectedRotation.value % 180;
-        return rotated ? height / aspect : aspect * height;
-    }
-
-    editMode = false;
     handleBlur() {
         this.editMode = false;
         this.handleBlankName();
@@ -317,46 +542,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
     }
 
-    selectedAspectWatcher = new Watcher()
-    get selectedAspect() {
-        return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
-    }
-
-    set selectedAspect(value) {
-        this.showOverlay = false;
-        this.selectedAspectWatcher.value = value.value;
-        setTimeout(() => {
-            this.showOverlay = true;
-        });
-    }
-
-    get aspectClass() {
-        let aspect: ISelect;
-        if (this.selectedAspectWatcher.value) {
-            aspect = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
-        } else {
-            aspect = this.aspectRatios[1];
-        }
-        const [width, height] = (aspect.value ? aspect.name : this.selectedAspect[1].name).split(':');
-        return `${width}-${height}`;
-    }
-
-    get maxHeight() {
-        const aspect = (this.selectedAspect.value as number || this.aspectRatios[1].value as number);
-        const normalHeight = 480;
-        const narrowHeight = 384;
-        return aspect > 1.5 ? narrowHeight : normalHeight;
-    }
-
-    width$ = new BehaviorSubject(0);
-    get height() {
-        return this.getCanvasSize().height;
-    }
-
-    get width() {
-        return this.getCanvasSize().width;
-    }
-
     handleResize({ width }) {
         this.width$.next(width);
         this.toggleMotionGrid();
@@ -387,31 +572,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return { width, height };
     }
 
-    get previewWrapperWidth() {
-        return Math.ceil((this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight / 44) * 44;
-    }
-
-    get canvasWidth() {
-        return Math.floor(this.previewWrapperWidth / 44) * 44;
-    }
-
-    get canvasHeight() {
-        const aspect = <number> this.selectedAspect.value || <number> this.aspectRatios[1].value;
-        return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
-    }
-
-    public get preview() {
-        return this.system.getPreviewUrl(
-            this.selectedCamera.id,
-            null,
-            (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight * 2,
-            this.maxHeight * 2,
-            <number> this.selectedRotation.value || 0
-        );
-    }
-
-    public reload$ = new BehaviorSubject(0);
-
     toggleMotionGrid() {
         this.showOverlay = false;
         this.sensitivityButtons = false;
@@ -420,72 +580,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         });
     }
 
-    sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'> = new BehaviorSubject(false);
-    get sensitivityButtons() {
-        return this.sensitivityButtons$.value;
-    }
-
-    set sensitivityButtons(value) {
-        this.sensitivityButtons$.next(value);
-    }
-
     resetSensitivity() {
         this.sensitivityButtons = 'reset';
     }
 
     preventContext = event => event.preventDefault();
-
-    selectedRotationWatcher: Watcher<any> = new Watcher();
-    get selectedRotation() {
-        return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
-    }
-
-    set selectedRotation(value) {
-        this.selectedRotationWatcher.value = value.value;
-    }
-
-    audioEnabledWatcher = new Watcher();
-    get audioEnabled() {
-        return this.audioEnabledWatcher.value;
-    }
-
-    set audioEnabled(value) {
-        this.audioEnabledWatcher.value = value;
-    }
-
-    // Recording Settings
-    get recordingSettingsChanged() {
-        return this.recordingModesWatcher.changed ||
-                this.selectedFpsWatcher.changed ||
-                this.selectedQualityWatcher.changed;
-    }
-
-    get recordingSwitchedOn() {
-        return !this.recordingWatcher.originalValue && this.recordingWatcher.value;
-    }
-
-    get existingRecordingsScheduled() {
-        let type;
-        let fps;
-        let quality;
-        return !this.recordingSettingsChanged &&
-            this.selectedCamera.scheduleTasks.length &&
-            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never') &&
-            !this.selectedCamera.scheduleTasks.every(({ recordingType, fps: currentFps, streamQuality }, index) => {
-                if (index === 0) {
-                    type = recordingType;
-                    fps = currentFps;
-                    quality = streamQuality;
-                    return true;
-                }
-                return recordingType === type && fps === currentFps && quality === streamQuality;
-            });
-    }
-
-    recordingWatcher = new Watcher();
-    get recording() {
-        return this.recordingWatcher.value;
-    }
 
     handleRecordingToggle() {
         if (!this.recording && !this.availableLicenses) {
@@ -498,106 +597,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
-    set recording(value) {
-        if (value === this.recording) {
-            return;
-        }
-
-        if (this.recordingWatcher.originalValue !== undefined) {
-            if (this.motionEnabled) {
-                this.enableMotion();
-            } else {
-                this.disableMotion();
-            }
-        }
-
-        this.recordingWatcher.value = value;
-    }
-
-    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
-    get recordingModes(): IRecordingModes[] {
-        return this.recordingModesWatcher.value;
-    }
-
-    set recordingModes(value: IRecordingModes[]) {
-        if (!this.selectedFps) {
-            this.selectedFps = this.selectedCamera.maxFps;
-        }
-
-        if (this.selectedQuality.value === 'various') {
-            this.selectedQuality = this.streamQualities[1];
-        }
-        this.recordingModesWatcher.value = value;
-    }
-
-    get existingModesSelected() {
-        return this.recordingModes.some(({ value }) => value === 1);
-    }
-
-    get safeToUpdateRecordingSettings() {
-        return !this.recordingSettingsChanged ||
-        (!this.selectedCamera.scheduleTasks.length ||
-            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never')) ||
-            !this.variousQualities && !this.variousFps && !this.existingModesSelected;
-    }
-
     toggleMode({ name: toggledName, enabled }) {
         if (!enabled) return;
         this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
             name, id, enabled, value: name === toggledName ? 2 : 0
         }));
-    }
-
-    selectedFpsWatcher = new Watcher();
-    get selectedFps() {
-        return this.selectedFpsWatcher.value;
-    }
-
-    set selectedFps(value) {
-        this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
-    }
-
-    get variousFps() {
-        return this.selectedFps === 'various' || !this.selectedFps;
-    }
-
-    selectedQualityWatcher = new Watcher();
-    get selectedQuality() {
-        return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
-    }
-
-    set selectedQuality(value) {
-        this.selectedQualityWatcher.value = value.value;
-    }
-
-    get variousQualities() {
-        return this.selectedQuality.value === this.various.value;
-    }
-
-    recordingSettings: IRecordingSettings;
-
-    // Motion Detection
-    motionEnabledWatcher: Watcher<string> = new Watcher();
-    get motionEnabled() {
-        return this.motionEnabledWatcher.value !== MotionType.noMotion;
-    }
-
-    set motionEnabled(enabled) {
-        this.motionEnabledWatcher.value = !enabled ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
-            ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
-
-        this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || enabled
-        }));
-    }
-
-    motionMaskWatcher: Watcher<string> = new Watcher();
-    get motionMask() {
-        return this.motionMaskWatcher.value;
-    }
-
-    set motionMask(value) {
-        this.motionMaskWatcher.value = value;
     }
 
     updateMask(maskString) {
@@ -646,12 +650,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         const { selectedCamera: { parsedAddParams: { supportedMotion, motionStream } } } = this;
         return supportedMotion === hardwaregrid.value || typeof motionStream === 'undefined' ? hardwaregrid.id : softwareGrid.id;
-    }
-
-    canSeeInfo = false;
-
-    ngOnDestroy() {
-        this.unsub$.next(true);
     }
 
     setCamera = (forceUpdate = false) => {
