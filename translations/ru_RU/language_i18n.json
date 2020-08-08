@@ -174,7 +174,7 @@
     "Please activate your account by visiting this link.": "Пожалуйста, активируйте свою учетную запись, перейдя по этой ссылке.",
     "Please enter a valid Email": "Пожалуйста введите действительный адрес электронной почты",
     "Please enter a valid name": "Пожалуйста, введите правильное имя",
-    "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Вы найдете политику конфиденциальности {{Integration_COMPANY}} <a href=\"{{Integration_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>. Политика конфиденциальности %Company_NAME%, которая включает инструкцию о том, как отозвать ваше согласие, доступна <a href=\"%Privacy_LINK%\" target=\"_blank\">здесь</a>",
+    "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Пожалуйста, просмотрите и согласитесь с условиями использования и политикой конфиденциальности для того, чтобы продолжить",
     "Please select FPS.": "Пожалуйста, выберите FPS.",
     "Please select recording mode.": "Пожалуйста, выберите режим записи.",
     "Please select recording quality": "Пожалуйста, выберите качество записи",
