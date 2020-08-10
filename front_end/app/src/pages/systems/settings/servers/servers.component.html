@@ -9,6 +9,8 @@
         [serverId]="this.selectedServer?.id">
 </nx-server-storage-component>
 
+<nx-cloud-storage layout="simple"></nx-cloud-storage>
+
 <ng-container *ngIf="!isOffline && system && advanced">
         <nx-alert-block
         class="d-block mt-3"

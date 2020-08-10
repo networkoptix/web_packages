@@ -306,6 +306,11 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
     }
 
+    &.hidden-header {
+        .card--header {
+            display: none;
+        }
+    }
 
     &.extended-header {
         .card--header {
@@ -334,7 +339,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
             }
             & h3 {
                 @include typography.medium17;
-            } 
+            }
         }
         @include media-breakpoint-up(md) {
             .card--header {

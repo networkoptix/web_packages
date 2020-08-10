@@ -1,9 +1,11 @@
 <!-- Initial State -->
 <nx-pre-loader *ngIf="cloudStorageStateLoading"></nx-pre-loader>
-<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mt-3 mb-3">
+
+<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mt-3 mb-3" header-style="{{ layoutSimple ? 'hidden': '' }}">
     <header><h4 translate>Cloud Storage</h4></header>
     <div class="header-svg">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
+        <svg-icon nx-add-svg-src *ngIf="!layoutSimple" [src]="CONFIG.icons.dir + 'city.svg'"></svg-icon>
+        <svg-icon nx-add-svg-src *ngIf="layoutSimple" [src]="CONFIG.icons.dir + 'cloud_storage_simple.svg'"></svg-icon>
     </div>
     <div class="initial-state">
         <h2 translate>Enhance your data storage experience</h2>
@@ -56,8 +58,8 @@
         <div class="pt-3">
             <button class="btn btn-default" (click)="moveCloudStorage()">Move to Another System</button>
             <button class="btn btn-default" (click)="deleteCloudStorage()">
-                <svg-icon nx-add-svg-src 
-                    [src]="CONFIG.icons.dir + 'delete.svg'" 
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'delete.svg'"
                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                     class="ml-n2 mr-1"></svg-icon>
                 <span translate>Delete Cloud Storage</span>

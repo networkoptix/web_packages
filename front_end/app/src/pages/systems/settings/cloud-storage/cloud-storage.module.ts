@@ -23,7 +23,7 @@ import { NxCloudStorageComponent }  from './cloud-storage.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot()
     ],
     providers: [
     ],

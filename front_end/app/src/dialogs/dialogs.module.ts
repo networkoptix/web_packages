@@ -40,7 +40,6 @@ import {
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
-import { AddStorageModalContent }         from './add-storage/add-storage.component';
 import { NxDialogsService }               from './dialogs.service';
 
 @NgModule({
