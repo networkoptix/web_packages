@@ -208,6 +208,8 @@ else:
 CACHES = {
     "default": REDIS_CACHE,
     "customization": REDIS_CACHE,
+    "deployment": REDIS_CACHE,
+    "filters": REDIS_CACHE,
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
@@ -220,18 +222,18 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION']
     },
-    "deployment": REDIS_CACHE,
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "global"
     },
     "integrations": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
-    },
-    "filters": REDIS_CACHE
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "integrations"
+    }
 }
 
 DEPLOYMENT_READY = 'ready'

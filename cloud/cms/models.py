@@ -68,12 +68,12 @@ def get_asset_by_revision(version_id):
 
 
 def update_global_cache(customization, version_id):
-    global_cache = caches['global']
+    global_cache = caches['customization']
     global_cache.set(f'global_version_{customization}', version_id)
 
 
 def check_update_cache(customization, version_id):
-    global_cache = caches['global']
+    global_cache = caches['customization']
     global_id = global_cache.get(f'global_version_{customization}')
 
     return version_id != global_id, global_id
