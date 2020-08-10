@@ -691,6 +691,10 @@ Cloud owner can enable/disable local user (positive)
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
     ${name} =    Get Text    //h2[@class="user-email"]
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR     ${user}    IN    @{users}
@@ -969,6 +973,10 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
     Log    Step 4
     ${name} =    Get Text    //h2[@class="user-email"]
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
