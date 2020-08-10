@@ -198,6 +198,8 @@ else:
 CACHES = {
     "default": REDIS_CACHE,
     "customization": REDIS_CACHE,
+    "deployment": REDIS_CACHE,
+    "filters": REDIS_CACHE,
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
@@ -210,24 +212,24 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION']
     },
-    "deployment": REDIS_CACHE,
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "global"
     },
     "integrations": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "integrations"
     },
-    "filters": REDIS_CACHE,
     "menus": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
-        "KEY_PREFIX": 'menus'
+        "KEY_PREFIX": "menus"
     }
 }
 
@@ -518,7 +520,7 @@ SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'
 
 if LOCAL_ENVIRONMENT:
-    _HOST = 'https://dev2.cloud.hdw.mx'
+    _HOST = 'https://cloud-test.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"
