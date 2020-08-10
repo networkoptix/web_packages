@@ -1,18 +1,17 @@
-import json
-
 from django import forms
 from django.db.models import Q
-from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import When, Case
 from django.template.loader import render_to_string
+from django.urls import reverse
 from dal import autocomplete
 
 from api.models import Account
 from cms.models import *
 from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
 from cms.controllers.special_structures import SpecialStructures
+from cms.widgets import BootstrapMultiSelect
 
 BYTES_TO_MEGABYTES = 1048576.0
 
@@ -396,6 +395,18 @@ class ContributorAgreementForm(forms.ModelForm):
         }
 
 
+class MenuChangeForm(forms.ModelForm):
+    customization_view = forms.ChoiceField(required=False, help_text='Make sure to save any changes before changing the view')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        customization_choices = tuple((name, name) for name in self.user_customizations)
+        if len(self.user_customizations) > 1:
+            customization_choices = (('all', 'All'),) + customization_choices
+        self.fields['customization_view'].choices = customization_choices
+        self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
+
+
 class MenuNodeChangeForm(forms.ModelForm):
 
     class Media:
@@ -410,3 +421,58 @@ class MenuNodeChangeForm(forms.ModelForm):
             if enabled.filter(~Q(id__in=available_ids)):
                 raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
         return enabled
+
+
+class MenuNodeInlineForm(forms.ModelForm):
+    class Meta:
+        widgets = {
+            'enabled': BootstrapMultiSelect(field_name='enabled', options={
+                'includeSelectAllOption': True,
+                'maxHeight': 300,
+                'selectAllText': 'All',
+                'selectAllNumber': True,
+                'enableFiltering': True,
+                'nonSelectedText': 'Disabled',
+                'allSelectedText': 'All enabled',
+                'selectAllJustVisible': True,
+            }),
+            'asset': autocomplete.ModelSelect2(
+                url='asset_autocomplete', attrs={
+                    'data-placeholder': 'Select article',
+                    'data-minimum-input-length': 2
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['asset'].widget.can_add_related = False
+        self.fields['asset'].widget.get_related_url = lambda *_: reverse('admin:pages', kwargs={'asset_id': '__fk__'})
+        if self.current_customization == 'all':
+            self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations)
+            self.fields['enabled'].widget.can_add_related = False
+        else:
+            enabled = False
+            if self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
+                enabled = True
+            self.fields['enabled'] = forms.BooleanField(required=False)
+            self.initial['enabled'] = enabled
+
+    def clean_enabled(self):
+        if self.instance.pk:
+            old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))
+        else:
+            old_enabled = set()
+
+        if self.current_customization == 'all':
+            val = set(self.cleaned_data['enabled'].values_list('name', flat=True))
+            possible_customizations = set(self.user_customizations)
+        else:
+            val = {self.current_customization.name} if self.cleaned_data['enabled'] else set()
+            possible_customizations = {self.current_customization.name}
+
+        new_enabled = old_enabled.difference(possible_customizations)
+
+        new_enabled = new_enabled.union(set(val))
+        new_enabled = Customization.objects.filter(name__in=new_enabled)
+        return new_enabled

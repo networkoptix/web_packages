@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    window.$ = django.jQuery;
-
     const available = $('.field-available');
     const isGlobal = $('#id_is_global');
 

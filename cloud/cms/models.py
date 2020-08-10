@@ -1219,8 +1219,8 @@ class MenuNode(models.Model):
                            (1, "logged_in", "Logged In"),
                            (2, "both", "Both"))
     name = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=255)
     url = models.CharField(max_length=2048, blank=True)
+    asset = models.ForeignKey(Asset, null=True, blank=True, on_delete=models.CASCADE)
     new_window = models.BooleanField(default=False)
     icon = models.CharField(blank=True, max_length=255)
     available = models.ManyToManyField(Customization, blank=True, related_name='available_nodes')
@@ -1240,13 +1240,13 @@ class MenuNode(models.Model):
         node_structure = {
             'name': cloud_portal_asset.replace_global_values(self.name, global_contexts_dict),
             'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
+            'asset_id': self.asset.id if self.asset else None,
             'new_window': self.new_window,
             'icon': self.icon,
             'authentication': self.AUTH_CHOICES[self.authentication],
             'order': self.order
         }
-        node_structure['display_name'] = cloud_portal_asset.replace_global_values(
-            self.display_name, global_contexts_dict) if self.display_name else node_structure['name']
+        node_structure['display_name'] = node_structure['name']
 
         if depth < max_depth:
             nodes = self.nodes_list

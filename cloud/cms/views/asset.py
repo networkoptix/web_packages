@@ -3,7 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.html import format_html
 from django.contrib import admin
@@ -507,3 +507,52 @@ def get_asset_ids_by_asset_type(request):
         asset_ids = asset_ids.filter(customizations__name__in=[customization])
 
     return api_success(asset_ids)
+
+
+class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_staff:
+            return Asset.objects.none()
+
+        qs = Asset.objects.filter(
+            asset_type__type=AssetType.ASSET_TYPES.documentation
+        )
+        if not self.request.user.is_superuser:
+            editable_assets = self.request.user.assets_with_permission('cms.edit_content')
+            qs = qs.filter(id__in=editable_assets)
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        return qs
+
+    def create_object(self, text):
+        doc_type = AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation, name='').order_by('pk').first()
+        params = {
+            'asset_type': doc_type,
+            self.create_field: text
+        }
+        asset, created = self.get_queryset().get_or_create(**params)
+        if created:
+            asset.customizations.set(Customization.objects.all())
+        return asset
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_asset_state(request, asset_id):
+    require_params(request, ('customization',))
+    customization = request.GET.get('customization')
+    asset = get_object_or_404(Asset, id=asset_id, customizations__name=customization)
+    if not request.user.is_superuser or not (
+            UserGroupsToAssetPermissions.check_customization_publish(request.user) and
+            UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
+    ):
+        raise APIException('Cannot access state for this asset')
+
+    state = 'Draft'
+    latest_review = AssetCustomizationReview.objects.filter(version__asset=asset).last()
+    if latest_review:
+        state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+
+    return api_success({'state': state})
