@@ -32,7 +32,7 @@ Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    ${symbol password}
     [tags]    C41876    Password
 Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876    Password
-Trailing Space Password                               ${BASE PASSWORD}${SPACE}    
+Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876    Password
 
 Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
@@ -75,7 +75,7 @@ Test Password Invalid
     Check Password Badge    ${new pw}    //label[@for="newPassword"]
     Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
     Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    newPassword
-    
+
 Restart
     Close Browser
     Open Restore Password Dialog With Link
