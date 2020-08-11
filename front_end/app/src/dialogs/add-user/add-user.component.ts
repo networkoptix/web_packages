@@ -19,6 +19,7 @@ export class AddUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    alreadyExists: string;
     addUser: any;
     user: any;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
@@ -72,6 +73,7 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists.replace('%systemName%', this.system.info.name);
         this.user = {
             email     : '',
             isEnabled : true,
