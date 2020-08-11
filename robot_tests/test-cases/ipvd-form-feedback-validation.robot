@@ -6,6 +6,7 @@ Test Teardown     NONE
 Suite Teardown    Close All Browsers
 Force Tags        form    Threaded
 
+
 *** Variables ***
 ${url}                  ${ENV}
 ${name}                 Nx Automated QA
