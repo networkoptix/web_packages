@@ -4,7 +4,7 @@ Suite Setup       Start
 Test Template     Check Details Panel Alerts
 Test Teardown     Run Keyword If Test Failed    Start
 Suite Teardown    Close All Browsers
-Force Tags        email    form    Threaded File
+Force Tags        email    form    Threaded    hm
 
 *** Variables ***
 ${url}    ${ENV}
@@ -12,7 +12,7 @@ ${password}    ${BASE PASSWORD}
 
 *** Test Cases ***                 TYPE     HARDWARE      NAME                     CATEGORY     METRIC
 #errors
-One Error On Server                Error    Server        testserver error         Activity     Transactions per second
+One Error On Server                Error    Server        testserver error         Activity     transactions/s
 Error with Warning on server       Error    Server        testserver both          Activity     Active plugins list
 Two Errors On Server A             Error    Server        testserver 2 errors      Load         Server threads
 Two Errors On Server B             Error    Server        testserver 2 errors      Load         Decoding speed

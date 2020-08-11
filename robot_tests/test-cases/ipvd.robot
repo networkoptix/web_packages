@@ -5,7 +5,7 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        Restart
 Suite Teardown    Close All Browsers
-Force Tags        Threaded File
+Force Tags        Threaded 
 
 *** Test Cases ***
 IPVD Page loads without Login

@@ -6,7 +6,7 @@ Suite Setup       Open Browser and go to URL    ${ENV}
 Test Setup        Go To    ${ENV}
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Close All Browsers
-Force Tags        integrations    Threaded File
+Force Tags        integrations    Threaded 
 
 *** Variables ***
 ${url}        ${ENV}/integrations

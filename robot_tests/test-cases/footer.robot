@@ -4,6 +4,7 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Teardown     Restart
 Suite Teardown    Close All Browsers
+Force Tags    threaded
 
 *** Variables ***
 ${email}           ${EMAIL OWNER}
