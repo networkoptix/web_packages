@@ -77,7 +77,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.pageService.pageTitle = this.LANG.pageTitles.account;
+        this.pageService.pageTitle = this.LANG.pageTitles.account();
 
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {
@@ -95,8 +95,8 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
-            successMessage  : this.LANG.account.accountSavedSuccess,
-            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix,
+            successMessage  : this.LANG.account.accountSavedSuccess(),
+            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
             this.applyService.hardReset();
@@ -126,7 +126,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             });
 
         if (this.localStorage && this.localStorage.get('langChanged')) {
-            this.dialogs.notify(this.LANG.account.accountSavedSuccess, 'success');
+            this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.localStorage.set('langChanged', false);
         }
 

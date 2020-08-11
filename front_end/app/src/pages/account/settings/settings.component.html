@@ -60,7 +60,7 @@
             </nx-section>
             <nx-section>
                 <div class="float-right">
-                    <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount : ''">
+                    <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount() : ''">
                         <button class="btn btn-default"
                                 id="accountSettingsDeleteButton"
                                 [disabled]="isSystemOwner"
