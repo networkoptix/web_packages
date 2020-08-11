@@ -50,13 +50,13 @@ Verify Download VMS Name
     Element Text Should Be    ${DOWNLOAD LINK}      Download ${VMS_NAME}         
     Log    Step 2
     Click Link    ${DOWNLOAD LINK}
+    Log In    ${email}    ${password}    button=None
     ${os}=   Get OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Location Is    ${url}/download/${os}
     Wait Until Element is Visible    ${DOWNLOAD VMS NAME}
     ${link url} =    Get Element Attribute    ${DOWNLOAD VMS NAME}/ancestor::a    href
     ${version} =    Get Text    ${DOWNLOAD VERSION NUMBER} 
-    Should Contain    ${link url}    ${DOWNLOAD FILE URL}
     Should Contain    ${link url}    ${os}
     Should Contain    ${link url}    ${version}
     Log    Step 3

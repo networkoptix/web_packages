@@ -45,7 +45,8 @@ Changing page should change the layout to a max of four colunmns
         Element Style Should be    ${tile}    width     400px
     END
 
-    Set Window Size    1440    1080
+    Run Keyword if    "${headless}"=="false"    Set Window Size    1456    1080
+    ...    ELSE    Set Window Size    1440    1080
     FOR    ${tile}    IN    @{integration tiles}
         Element Style Should be    ${tile}    flex-basis    25%
         Element Style Should be    ${tile}    width     350px
@@ -172,6 +173,7 @@ Integration store shows nothing found when there are no published integrations
     ${loc}=   get location    
     ${dw}=   Replace String    ${loc}    https://    https://dw.
     Go To    ${dw}/integrations
+    Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
 Anonymous and basic user does not see disabled integration store
@@ -179,6 +181,7 @@ Anonymous and basic user does not see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Go To    ${hanwha}/integrations
@@ -196,6 +199,7 @@ Developer user can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL MOBILE CAMERA DEV}    ${BASE PASSWORD}
@@ -210,6 +214,7 @@ Portal manager user can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL PORTAL MANAGER}    ${BASE PASSWORD}
@@ -224,6 +229,7 @@ Superuser can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL SUPER USER}    ${BASE PASSWORD}

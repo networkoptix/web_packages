@@ -52,7 +52,7 @@ ${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class=
 ${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
 ${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
-${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[@class='active-camera-info']
+${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]
 ${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
 ${IPVD DEVICE RESOLUTION}                    ${IPVD DEVICE INFO}//nx-bool-icon[contains(@param, 'maxResolution')]/..
 ${IPVD DEVICE FIRMWARE INFO}                 ${IPVD DEVICE DETAILS}//nx-section//div[contains(@class, "firmware-info")]

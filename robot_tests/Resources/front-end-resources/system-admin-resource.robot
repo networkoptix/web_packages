@@ -44,8 +44,8 @@ Evaluate Session Limit
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Sleep    5
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${multiplier}=   Set Variable If    "${interval}"=="hours"    60
-    ...    "${interval}"=="minutes"    1
+    ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
+    ...    "${interval}"=="${MINUTES TEXT}"    1
     ${number}=   Evaluate      ${multiplier}*${value}
     Evaluate Auto System Settings via API    sessionLimitMinutes      ${number}
 

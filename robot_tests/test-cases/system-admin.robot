@@ -187,7 +187,7 @@ Should open System page by link not authorized user, and show alert if logs in a
 Should show (your system) for owner and (owner's name) for non-owners
     [Tags]    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
     FOR    ${user}    IN    @{EMAILS LIST}
         Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
@@ -221,38 +221,38 @@ Should show system settings and security settings and they should match settings
 
     Settings on page should match settings on server
 
-Changing the Setting "Enable auto discovery of cameras and servers" changes it on the server
+Changing the Setting 'Enable auto discovery of cameras and servers' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled
 
-Changing the Setting "Send anonymous usage and crash statistics to developers" changes it on the server
+Changing the Setting 'Send anonymous usage and crash statistics to developers' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed
 
-Changing the Setting "Allow system to optimize camera settings" changes it on the server
+Changing the Setting 'Allow system to optimize camera settings' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization
 
-Changing the Setting "Enable audit trail" changes it on the server
+Changing the Setting 'Enable audit trail' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled
 
-Changing the Setting "Allow only secure connections" changes it on the server
+Changing the Setting 'Allow only secure connections' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced
 
-Changing the Setting "Encrypt video traffic" changes it on the server
+Changing the Setting 'Encrypt video traffic' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${selected}=   Change Setting Encrypt video traffic
     Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
 
-Changing the Setting "Limit session duration to" changes it on the server
+Changing the Setting 'Limit session duration to' changes it on the server
     [Tags]    system settings    threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Change Setting and Save    ${LIMIT SESSION DURATION CHECKBOX REAL}
