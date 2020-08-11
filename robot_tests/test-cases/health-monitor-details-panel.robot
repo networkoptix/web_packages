@@ -4,7 +4,7 @@ Suite Setup       Start
 Test Template     Check Details Panel Alerts
 Test Teardown     Run Keyword If Test Failed    Start
 Suite Teardown    Close All Browsers
-Force Tags        email    form    Threaded File
+Force Tags        email    form    Threaded File    hm
 
 *** Variables ***
 ${url}    ${ENV}

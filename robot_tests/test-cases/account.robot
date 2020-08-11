@@ -85,7 +85,7 @@ Changing first name and saving maintains that setting
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -277,18 +277,26 @@ Language is changeable on the account page
 
 Language change affects emails
     [tags]    C41575
-    ${russian subject}    Set Variable    Восстановление пароля
-    Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Verify in Account Page
-    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element is Visible
-    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
-    Click Element
-    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
-    Click Button    ${ACCOUNT SAVE}
-    Sleep    5
-    Close Browser
+    Go to    ${url}/account
+    ${subject}=   Set Variable If   '''${LANGUAGE}'''=='''ru_RU'''    Reset your password    Восстановление пароля
+    Run Keyword If    '''${subject}'''=='''Восстановление пароля'''    Run Keywords
+    ...    Log In    ${EMAIL NOPERM}    ${password}    button=None    AND
+    ...    Verify in Account Page    AND
+    ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
+    ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
+    ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
+    ...    Click Button    ${ACCOUNT SAVE}    AND
+    ...    Sleep    5    AND
+    ...    Close Browser
+    ...    ELSE   Run Keywords
+    ...    Log In    ${EMAIL NOPERM}    ${password}    button=None    AND
+    ...    Verify in Account Page    AND
+    ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
+    ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
+    ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
+    ...    Click Button    ${ACCOUNT SAVE}    AND
+    ...    Sleep    5    AND
+    ...    Close Browser
 
     Open Browser and go to URL    ${url}
     Go To    ${url}/restore_password
@@ -305,7 +313,7 @@ Language change affects emails
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
     Check Email Subject
     ...    ${email}
-    ...    ${russian subject}
+    ...    ${subject}
     ...    ${BASE EMAIL}
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
@@ -331,14 +339,14 @@ Language change is new default
     Sleep    1    #to allow the system to change languages
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${de_DE account info} ']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info} ']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
 Should open account page in anonymous state

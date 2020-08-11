@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Common Restart Logout    ${url}
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
-Force Tags        Threaded File
+Force Tags        Threaded File    hm
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}

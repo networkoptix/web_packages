@@ -173,6 +173,7 @@ Integration store shows nothing found when there are no published integrations
     ${loc}=   get location    
     ${dw}=   Replace String    ${loc}    https://    https://dw.
     Go To    ${dw}/integrations
+    Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
 Anonymous and basic user does not see disabled integration store
@@ -180,6 +181,7 @@ Anonymous and basic user does not see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Go To    ${hanwha}/integrations
@@ -197,6 +199,7 @@ Developer user can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL MOBILE CAMERA DEV}    ${BASE PASSWORD}
@@ -211,6 +214,7 @@ Portal manager user can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL PORTAL MANAGER}    ${BASE PASSWORD}
@@ -225,6 +229,7 @@ Superuser can see disabled integration store
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
     Go To    ${hanwha}
+    Check Language Anonymous
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Log In    ${EMAIL SUPER USER}    ${BASE PASSWORD}
