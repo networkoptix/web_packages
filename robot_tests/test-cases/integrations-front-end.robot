@@ -45,7 +45,8 @@ Changing page should change the layout to a max of four colunmns
         Element Style Should be    ${tile}    width     400px
     END
 
-    Set Window Size    1440    1080
+    Run Keyword if    "${headless}"=="false"    Set Window Size    1456    1080
+    ...    ELSE    Set Window Size    1440    1080
     FOR    ${tile}    IN    @{integration tiles}
         Element Style Should be    ${tile}    flex-basis    25%
         Element Style Should be    ${tile}    width     350px
