@@ -4,7 +4,7 @@ Resource          ../resource.robot
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
-Force Tags        Threaded File    activate
+Force Tags        Threaded    activate
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
