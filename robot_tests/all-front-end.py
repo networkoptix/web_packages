@@ -61,7 +61,7 @@ def threaded_test_run(output, language):
     system(
         "rebot "
         "-o fullrun.xml "
-        "-R threaded.xml serial.xml"
+        "-R threaded1.xml threaded2.xml serial.xml"
     )
 
 if __name__ == '__main__':
