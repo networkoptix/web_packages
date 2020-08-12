@@ -30,38 +30,55 @@ def timer(func):
 @timer
 def threaded_test_run(output, language):
     system(
-            "pabot "
-            "--ordering order.txt "
-            "--loglevel trace "
-            "-i threaded "
-            "-e hm "
-            "-e merge "
-            "-e customizations "
-            f"-v ENV:{ENVIRONMENT} "
-            f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
-            f"-V getvars.py:{CUSTOMIZATION}:{language} "
-            f"--output threaded.xml "
-            "test-cases"
+        "pabot "
+        "--ordering order.txt "
+        "--testlevelsplit "
+        "--loglevel trace "
+        "-i threaded "
+        "-e hm "
+        "-e merge "
+        "-e customizations "
+        f"-v ENV:{ENVIRONMENT} "
+        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
+        f"-V getvars.py:{CUSTOMIZATION}:{language} "
+        f"--output threaded1.xml "
+        "test-cases"
+        )
+    
+    system(
+        "pabot "
+        "--ordering order.txt "
+        "--loglevel trace "
+        "-i threaded-file "
+        "-e hm "
+        "-e merge "
+        "-e customizations "
+        f"-v ENV:{ENVIRONMENT} "
+        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
+        f"-V getvars.py:{CUSTOMIZATION}:{language} "
+        f"--output threaded2.xml "
+        "test-cases"
         )
 
     system(
-            "robot "
-            "--loglevel trace "
-            f"-v ENV:{ENVIRONMENT} "
-            f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
-            f"-V getvars.py:{CUSTOMIZATION}:{language} "
-            "-e threaded "
-            "-e hm "
-            "-e merge "
-            "-e customizations "
-            f"--output serial.xml "
-            "test-cases"
+        "robot "
+        "--loglevel trace "
+        f"-v ENV:{ENVIRONMENT} "
+        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
+        f"-V getvars.py:{CUSTOMIZATION}:{language} "
+        "-e threaded "
+        "-e threaded-file "
+        "-e hm "
+        "-e merge "
+        "-e customizations "
+        f"--output serial.xml "
+        "test-cases"
         )
     
     system(
         "rebot "
         "-o fullrun.xml "
-        "-R threaded.xml serial.xml"
+        "-R threaded1.xml threaded2.xml serial.xml"
     )
 
 if __name__ == '__main__':

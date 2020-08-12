@@ -4,7 +4,7 @@ Suite Setup       Open IPVD Page
 Test Template     Test Submit Feedback Message
 Test Teardown     NONE
 Suite Teardown    Close All Browsers
-Force Tags        form    Threaded 
+Force Tags        form    Threaded-file
 
 *** Variables ***
 ${url}                  ${ENV}
