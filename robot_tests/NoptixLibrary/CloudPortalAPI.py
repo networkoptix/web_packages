@@ -50,12 +50,12 @@ class CloudPortalAPI(object):
             return r.status_code
 
     def get_language_anonymous(self, env):
-        r = requests.get(env + '/api/utils/language')
+        r = requests.get(env + '/api/utils/language', timeout=30)
         return r.json()['ajs']['language']
 
     def get_account_language(self, env, email, password):
         with self.log_in(env, email, password) as s:
-            r = s.get(f'{env}/api/utils/language')
+            r = s.get(f'{env}/api/utils/language', timeout=30)
             return r.json()['ajs']['language']
 
     def get_account_data(self, env, email, password):
