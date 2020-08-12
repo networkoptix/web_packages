@@ -15,21 +15,21 @@
                 >{{line.name}}</p>
             </div>
             <div class="block-section-values">
-                    <p *ngFor="let line of block.lines; let lineIndex=index"
-                        [ngClass]="line.customClass"
-                        [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
-                       [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
-                        title="{{line.name}}-{{line.value}}"
-                        (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)">
+                <p *ngFor="let line of block.lines; let lineIndex=index"
+                   [ngClass]="line.customClass"
+                   [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
+                   [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
+                   [title]="line.tooltip || line.name + '-' + line.value"
+                   (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)">
                     {{line.value}}
                     <svg-icon *ngIf="line.icon"
-                        nx-add-svg-src
-                        [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
-                        [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
+                              nx-add-svg-src
+                              [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
+                              [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
                               style="height: 16px"
                               class="pl-1">
                     </svg-icon>
-                    </p>
+                </p>
             </div>
         </div>
     </div>

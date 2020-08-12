@@ -49,7 +49,9 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
                             name || id,
                             activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
                             activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
-                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon,
+                            true,
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].tooltip
                         ));
                         const maxParamWidthPercentage = 58;
                         return new InfoBlockSection(lines, description || name || paramGroupId, maxParamWidthPercentage);
