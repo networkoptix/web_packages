@@ -12,21 +12,10 @@ ${password}    ${BASE PASSWORD}
 
 *** Test Cases ***                 TYPE     HARDWARE      NAME                         CATEGORY     METRIC
 #errors
-<<<<<<< HEAD
-One Error On Server                error    Server        testserver error             Activity     Transactions/s
-Error with Warning on server       error    Server        testserver both              Activity     Active plugins list
-Two Errors On Server A             error    Server        testserver 2 errors          Load         Server threads
-Two Errors On Server B             error    Server        testserver 2 errors          Load         Decoding speed
-=======
 One Error On Server                Error    Server        testserver error         Activity     transactions/s
 Error with Warning on server       Error    Server        testserver both          Activity     Active plugins list
 Two Errors On Server A             Error    Server        testserver 2 errors      Load         Server threads
 Two Errors On Server B             Error    Server        testserver 2 errors      Load         Decoding speed
-<<<<<<< HEAD
->>>>>>> Some updates related to a full test run script
-=======
->>>>>>> 07f9650eb66... Some updates related to a full test run script
->>>>>>> Some updates related to a full test run script
 
 One Error On Camera                error    Camera        test error                   Info         Server
 Error with Warning On Camera       error    Camera        test both                    Info         Firmware
