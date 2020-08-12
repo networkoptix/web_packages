@@ -31,7 +31,6 @@ def timer(func):
 def threaded_test_run(output, language):
     system(
         "pabot "
-        "--ordering order.txt "
         "--testlevelsplit "
         "--loglevel trace "
         "-i threaded "
@@ -47,7 +46,6 @@ def threaded_test_run(output, language):
     
     system(
         "pabot "
-        "--ordering order.txt "
         "--loglevel trace "
         "-i threaded-file "
         "-e hm "
