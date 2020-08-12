@@ -6,7 +6,6 @@ Test Template     Check Details Panel Alerts
 Suite Teardown    Close All Browsers
 Force Tags        email    form    Threaded    hm
 
-
 *** Variables ***
 ${url}    ${ENV}
 ${password}    ${BASE PASSWORD}
