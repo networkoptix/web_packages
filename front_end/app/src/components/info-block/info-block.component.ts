@@ -62,7 +62,8 @@ export class InfoBlockLine <Name = string, Value = string> {
         public value: Value,
         public customClass?: InfoDetailClass,
         public icon?: string,
-        public show: boolean = true
+        public show: boolean = true,
+        public tooltip?: string
     ) {}
 }
 
