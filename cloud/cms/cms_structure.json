@@ -884,7 +884,7 @@
                 "enabled": true
               },
               {
-                "name": "Integrations",
+                "name": "Integrations (β)",
                 "url": "/integrations",
                 "newWindow": false,
                 "enabled": "%INTEGRATION_STORE_ENABLED%"
