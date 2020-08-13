@@ -2,6 +2,7 @@ import json
 from django import forms
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.db.models import When, Case
 from django.template.loader import render_to_string
 from .models import *
 from api.models import Account
@@ -90,7 +91,10 @@ class CustomContextForm(forms.Form):
     def add_fields(self, asset, context, language, user):
         data_structures = context.datastructure_set.all()
         if self.order:
-            data_structures = data_structures.order_by(self.order)
+            data_structures = data_structures.order_by(Case(
+                When(**{self.order: ''}, then='name'),
+                default=self.order
+            ))
 
         if len(data_structures) < 1:
             return
