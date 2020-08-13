@@ -31,22 +31,8 @@ def timer(func):
 def threaded_test_run(output, language):
     system(
         "pabot "
-        "--testlevelsplit "
         "--loglevel trace "
         "-i threaded "
-        "-e hm "
-        "-e merge "
-        "-e customizations "
-        f"-v ENV:{ENVIRONMENT} "
-        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
-        f"-V getvars.py:{CUSTOMIZATION}:{language} "
-        f"--output threaded1.xml "
-        "test-cases"
-        )
-    
-    system(
-        "pabot "
-        "--loglevel trace "
         "-i threaded-file "
         "-e hm "
         "-e merge "
@@ -54,7 +40,7 @@ def threaded_test_run(output, language):
         f"-v ENV:{ENVIRONMENT} "
         f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
         f"-V getvars.py:{CUSTOMIZATION}:{language} "
-        f"--output threaded2.xml "
+        f"--output threaded.xml "
         "test-cases"
         )
 
@@ -76,7 +62,7 @@ def threaded_test_run(output, language):
     system(
         "rebot "
         "-o fullrun.xml "
-        "-R threaded1.xml threaded2.xml serial.xml"
+        "-R threaded.xml serial.xml"
     )
 
 if __name__ == '__main__':
