@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}/register
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        form    Threaded-file
+Force Tags        form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
