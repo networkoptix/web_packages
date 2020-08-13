@@ -4,7 +4,7 @@ Suite Setup       Open Change Password Dialog
 Test Template     Test Passwords Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Teardown
-Force Tags        form    Threaded-file
+Force Tags        form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
