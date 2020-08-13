@@ -4,7 +4,7 @@ Suite Setup       Open Restore Password Dialog
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        email    form    Threaded-file
+Force Tags        email    form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
