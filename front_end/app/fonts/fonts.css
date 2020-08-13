@@ -43,3 +43,10 @@
     font-weight : 700 !important;
     font-style  : normal;
 }
+
+@font-face {
+    font-family : 'robotomonoregular';
+    src         : url('./roboto/roboto_mono_regular/RobotoMono-Regular.ttf') format('truetype');
+    font-weight : 400 !important;
+    font-style  : normal;
+}
