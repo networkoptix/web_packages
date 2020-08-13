@@ -37,6 +37,7 @@ import { IParams }                             from '../components/search/search
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
 import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
+import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
 import { AddStorageModalContent }              from './add-storage/add-storage.component';
 import './../dialogs/dialogs.scss';
 
@@ -471,5 +472,19 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddStorageModalContent, options, params);
+    }
+
+    resetBackupToDefaultSettings(system: NxSystem) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(ResetBackupModalContent, options, params);
     }
 }

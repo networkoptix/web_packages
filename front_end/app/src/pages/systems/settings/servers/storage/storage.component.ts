@@ -53,6 +53,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     reindexingBackup = false;
     percentBackupDone = 0;
 
+    isBackupOn = false;
+
     ddWidth: number;
     modes: any;
     modeSelected: any;
@@ -62,7 +64,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        private dialogsService: NxDialogsService,
+        private dialogs: NxDialogsService,
         @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
@@ -206,7 +208,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     deleteStorage(storage) {
-        this.dialogsService
+        this.dialogs
             .confirm(
                 storage.url,
                 this.LANG.storage.deleteExternalStorage(),
@@ -226,15 +228,27 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             });
     }
 
+    updateBackupState(value) {
+        // save new backup state
+        this.isBackupOn = value;
+    }
+
+    resetBackupToDefault() {
+        return this.dialogs.resetBackupToDefaultSettings(this.system)
+            .then(res => {
+                console.log('res from resetBack', res);
+            });
+    }
+
     // openAddStorage() {
-    //     this.dialogsService
+    //     this.dialogs
     //         .addStorage(this.system, this.serverId)
     //         .then((response) => {
     //             if (response === this.CONFIG.responseOk) {
     //                 this.init();
     //             }
     addExternalStorage() {
-        return this.dialogsService.addExternalStorage()
+        return this.dialogs.addExternalStorage()
             .then(res => {
                 console.log('res from addExternalStorage dialog', res);
             });

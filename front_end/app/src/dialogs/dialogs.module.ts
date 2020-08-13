@@ -40,6 +40,7 @@ import {
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
+import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { NxDialogsService }               from './dialogs.service';
 
 @NgModule({
@@ -79,6 +80,7 @@ import { NxDialogsService }               from './dialogs.service';
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,
+        ResetBackupModalContent,
         AddStorageModalContent
     ],
     entryComponents: [
@@ -105,6 +107,7 @@ import { NxDialogsService }               from './dialogs.service';
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,
+        ResetBackupModalContent,
         AddStorageModalContent
     ],
     providers: [
