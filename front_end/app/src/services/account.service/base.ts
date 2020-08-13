@@ -305,7 +305,7 @@ export abstract class BaseAccount implements OnDestroy {
                             this.LANG.dialogs.titles.loggedFromOtherAccount,
                             this.LANG.dialogs.buttons.ok,
                             undefined,
-                            this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
+                            NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
                             'long-cancel-button');
                     if (response) {
                         return this.cloudApi

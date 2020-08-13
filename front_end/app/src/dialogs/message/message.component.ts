@@ -96,9 +96,9 @@ export class MessageModalContent implements OnInit {
 
         const title = this.LANG.dialogs.message.title[this.messageType];
         if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
-            this.title = title.replace('{{asset}}', this.data.asset);
+            this.title = NxLanguageProviderService.translate(title, { asset: this.data.asset });
         } else {
-            this.title = title.replace('{{companyName}}', this.data.to);
+            this.title = NxLanguageProviderService.translate(title, { companyName: this.data.to });
         }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {

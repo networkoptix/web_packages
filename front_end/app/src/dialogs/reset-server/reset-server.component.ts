@@ -69,7 +69,7 @@ export class ResetServerModalContent {
                                 .subscribe(() => {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
-                                    const successMessage             = this.LANG.servers.resetSuccessful.replace('{{ serverName }}', this.serverName);
+                                    const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful, { serverName: this.serverName });
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();

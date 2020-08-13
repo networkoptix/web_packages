@@ -5,6 +5,7 @@ import { BehaviorSubject }         from 'rxjs';
 
 import { NxCloudApiService }       from './nx-cloud-api';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { IParams } from '../components/search/search.component';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,32 @@ export class NxLanguageProviderService {
         private http: HttpClient,
         private cloudApiService: NxCloudApiService
     ) {}
+
+    /**
+     * Use to incrementally add params to a string to be translated.
+     *
+     * The method accepts the string to be translated as a param.
+     *
+     * Returns an translationObject with addParams and toString methods.
+     *
+     * The addParams method adds an object with params to be added and returns the translationObject
+     * so that it can be chained.
+     *
+     * The getString method returns the translated string with the params.
+     *
+     * @param toTranslate - Language string to translate
+     */
+    static incrementalTranslate(toTranslate) {
+        const params = {};
+        const translationObject = {
+            addParams: (paramsToAdd: IParams) => {
+                Object.assign(params, paramsToAdd);
+                return translationObject;
+            },
+            getString: () => toTranslate(params)
+        };
+        return translationObject;
+    }
 
     static translate(toTranslate: any, translateParams = {}) {
         return toTranslate(translateParams);

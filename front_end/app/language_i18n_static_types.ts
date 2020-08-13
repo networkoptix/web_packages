@@ -680,7 +680,7 @@ export interface Storage {
     deleteExternalStorage:   any;
     reservedTooSmallTooltip: any;
     reservedSystemTooltip:   any;
-    urlPlaceholder: any;
+    urlPlaceholder:          any;
 }
 
 export interface Modes {

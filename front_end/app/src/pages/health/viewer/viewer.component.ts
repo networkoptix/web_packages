@@ -475,7 +475,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
 
-                const systemName = this.LANG.headerLabels.healthReportForSystem().replace('%SYSTEMNAME%', data.system || '');
+                const systemName = NxLanguageProviderService.translate(
+                    this.LANG.headerLabels.healthReportForSystem,
+                    { systemName: data.system || '' }
+                );
                 this.headerService.currentLocation = {
                     isSystem   : false,
                     parentNode : {
