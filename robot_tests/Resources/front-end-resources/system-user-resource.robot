@@ -110,7 +110,7 @@ Modify Local Users via Cloud UI
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
-        Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
+        Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
