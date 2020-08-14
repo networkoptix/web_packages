@@ -475,13 +475,16 @@ class AssetAdmin(CMSAdmin):
 
         if asset_id:
             qs = context['asset'].asset_type.context_set.all()
+            exclude_hidden = qs.filter(hidden=False)
+            if qs.count() == 1 or not request.user.is_superuser and exclude_hidden.count() == 1:
+                context_id = exclude_hidden.first().id
+                return redirect(reverse('admin:change_page', args=[asset_id, context_id]))
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
-                qs = qs.filter(hidden=False)
+                qs = exclude_hidden
 
             for page in qs:
                 page.state = page.get_state(context['asset'])
             context['contexts'] = qs
-
         return render(request, 'cms/page_list_view.html', context)
 
     @staticmethod
