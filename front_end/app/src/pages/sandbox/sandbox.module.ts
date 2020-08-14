@@ -13,6 +13,7 @@ import { NxGridLayoutModule }   from '../layout/layout.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 import { AuthGuard }            from '../../routeGuards';
 import { NxSandboxComponent }   from './sandbox.component';
+import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component' 
 
 const appRoutes: Routes = [
     {
@@ -37,11 +38,13 @@ const appRoutes: Routes = [
     providers: [
     ],
     declarations: [
-        NxSandboxComponent
+        NxSandboxComponent,
+        SectionApplyExampleComponent
     ],
     bootstrap: [
     ],
     entryComponents: [
+        NxSandboxComponent,
         NxSandboxComponent
     ],
     exports: [
