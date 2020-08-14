@@ -40,6 +40,7 @@ export class NxCloudStorageComponent implements OnInit {
     parsedUsage: InfoBlockColumns;
 
     layoutSimple: boolean;
+    cloudStorageInital: string;
 
     // Constructor and class initialization methods
     private setupDefaults({ configService, languageService }) {
@@ -74,6 +75,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.cloudStorageInital = NxLanguageProviderService.translate(this.LANG.dialogs.cloudStorage.initial, { compCapacity: this.compCloudCapacity });
         this.layoutSimple = (this.layout && this.layout === 'simple');
         this.initEnableCloudStorageProcess();
     }
