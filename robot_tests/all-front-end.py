@@ -31,10 +31,10 @@ def timer(func):
 def threaded_test_run(output, language):
     system(
         "pabot "
+        "--ordering order.txt "
         "--loglevel trace "
         "-i threaded "
         "-i threaded-file "
-        "-e hm "
         "-e merge "
         "-e customizations "
         f"-v ENV:{ENVIRONMENT} "
@@ -52,7 +52,6 @@ def threaded_test_run(output, language):
         f"-V getvars.py:{CUSTOMIZATION}:{language} "
         "-e threaded "
         "-e threaded-file "
-        "-e hm "
         "-e merge "
         "-e customizations "
         f"--output serial.xml "
