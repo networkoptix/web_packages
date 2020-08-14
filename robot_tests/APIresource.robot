@@ -249,6 +249,25 @@ Activate License
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Remove License
+    [Arguments]    ${auth}    ${server url}    ${license}
+    &{data}=   Create Dictionary    key=${license}
+    Create Digest Session    Activate License session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Activate License session   /ec2/removeLicense    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Add License
+    [Documentation]    Generate activation file on license portal and activate it in client
+    [Arguments]    ${auth}    ${server url}    ${license}    ${hwid}
+    ${lic block}=   Manual Activate    ${license}    ${hwid}
+    ${act obj}=   Create Dictionary    key=${license}    licenseBlock=${lic block}
+    ${data}=   Create List    ${act obj}
+    Create Digest Session    Add License session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Add License session   /ec2/addLicenses    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Get Licenses
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Licenses session    ${server url}    auth=${auth}    disable_warnings=1
@@ -271,7 +290,12 @@ Change License Portal Host
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
-# Local user management
+Get Server HWIDs
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get Server hwids session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get Server hwids session   /api/getHardwareIds
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}[reply]
 
 Get System Settings
     [Arguments]    ${auth}    ${server url}
@@ -363,10 +387,3 @@ Change server port via API
     ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10
     Return From Keyword    ${resp}
 
-#Change server port via API
-#    [Arguments]    ${auth}    ${cloud url}    ${new port}    ${server id}
-#    &{data}=   Create Dictionary    port=${new port}
-#    &{header}=   Create Dictionary    X-Server-guid=${server id}
-#    Create Digest Session    Change Port session   ${cloud url}    auth=${auth}    headers=${header}    disable_warnings=1
-#    ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    timeout=10
-#    Return From Keyword    ${resp.json()}
