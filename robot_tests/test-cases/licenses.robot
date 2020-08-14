@@ -32,7 +32,7 @@ License Management availability for offline system
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
     Start Container    ${cont 1}
-    Sleep    30    # Get the server back online
+    Sleep    30
     Log Out
 
 License Key Input
@@ -54,7 +54,7 @@ License Key Input
     Log Out
 
 Input validation errors
-    [Tags]    C76535    C76536    C76537    C76538   C76539    C76540   C76541
+    [Tags]    C76535    C76536    C76537    C76538   C76539    C76540   C76541    input_errors
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -118,7 +118,7 @@ Input validation errors
     Log Out
 
 Server response errors
-    [Tags]    C76544    C76545    C76542
+    [Tags]    C76544    C76545    C76542    server_errors
     Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
     Log    C76544: Failed to get response from license server
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -153,7 +153,7 @@ Server response errors
     Validate Licenses Page    several servers=True    trial left=True
 
     Stop Container    ${cont 3}
-    Sleep    30
+    Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
     Activate Key    ${key}    success=False    server name=${server 3}
@@ -163,7 +163,7 @@ Server response errors
     Log Out
 
 Successful scenarios
-    [Tags]    C76548    C76549    C76554
+    [Tags]    C76548    C76549    C76554    success
     Log    Test Set Up
     Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -192,11 +192,7 @@ Successful scenarios
     ${key records}=    Get WebElements    ${LICENSES SUMMARY RECORD}
     ${num records}=   Get Length    ${key records}
     Should be Equal As Numbers    ${num records}    1
-
-    ${num channels}=   Number of Channels    Professional
-    ${num available}=   Number of Channels Available    Professional
-    Should Be Equal As Numbers    ${num channels}   20
-    Should Be Equal As Numbers    ${num available}   20
+    Validate Summary Record    ${LIC TYPES}[digital]    20    20
 
     Log    Step 4
     Validate License Info    ${key}
@@ -213,11 +209,7 @@ Successful scenarios
     ${key records}=    Get WebElements    ${LICENSES SUMMARY RECORD}
     ${num records}=   Get Length    ${key records}
     Should be Equal As Numbers    ${num records}    2
-
-    ${num channels}=   Number of Channels    Analog Encoder
-    ${num available}=   Number of Channels Available    Analog Encoder
-    Should Be Equal As Numbers    ${num channels}   16
-    Should Be Equal As Numbers    ${num available}   16
+    Validate Summary Record    ${LIC TYPES}[analogencoder]    16    16
 
     Log    Step 4
     Validate License Info    ${key}
@@ -231,11 +223,7 @@ Successful scenarios
     ${key records}=   Get WebElements    ${LICENSES SUMMARY RECORD}
     ${num records}=   Get Length    ${key records}
     Should be Equal As Numbers    ${num records}    3
-
-    ${num channels}=   Number of Channels    Trial
-    ${num available}=   Number of Channels Available    Trial
-    Should Be Equal As Numbers    ${num channels}   4
-    Should Be Equal As Numbers    ${num available}   4
+    Validate Summary Record    Trial    4    4
 
     Log    Step 4
     Validate License Info    ${TRIAL LICENSE}
@@ -243,7 +231,7 @@ Successful scenarios
     Log Out
 
 License Detail Block
-    [Tags]    C76557    C76560    C76561    C76563    C76564    C76565    C76566
+    [Tags]    C76557    C76560    C76561    C76563    C76564    C76565    C76566    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
@@ -288,7 +276,6 @@ License Detail Block
     ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
     ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}
-    Log    ${hwids[0]}
     Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}    ${hwids[1]}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
@@ -335,7 +322,7 @@ License Detail Block
         Should Be True    ${activated}
         Validate License Info    ${key}    port=${LM PORT 2}
         Deactivate Licenses    ${key}
-        Slow    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}    timeout=10
+        Slow    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}    timeout=20
         Reload Page
         Validate Licenses Page    several servers=True    trial left=True    clean=False
         Wait Until Element Is Not Visible    //header[h4="${key}"]
@@ -347,9 +334,82 @@ License Detail Block
 
     Log Out
 
+License Summary Block
+    [Tags]    C76567    C76631    C76632    summary
+    FOR    ${i}    IN RANGE    1    4
+        Remove all keys from system    ${LOCALHOST}:${LM PORT ${i}}  ${CLOUD AUTH}
+    END
+
+    Log    C76632: license key is expired
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 1}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    trial left=True
+
+    ${num good}=   Evaluate    random.randint(10, 100)
+    ${pur vw}=   Generate Licenses    license_type=videowall    n_cameras=${num good}
+    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur vw}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur vw}
+    Should Be True    ${activated}
+
+    ${num expired}=   Evaluate    random.randint(10, 100)
+    ${total}=   Evaluate    ${num good}+${num expired}
+    ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
+    ${saas vw}=   Generate Licenses    order_type=saas    license_type=videowall    n_cameras=${num expired}    fixed_expiration_ts=${exp ts}
+    ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}
+    Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas vw}    ${hwids[1]}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas vw}
+    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    Sleep    10
+
+    Reload Page
+    Validate Licenses Page    trial left=True    clean=False
+    Validate Summary Record    ${LIC TYPES}[videowall]    ${total}    ${num good}
+#    Validate License Info    ${pur vw}
+#    Validate License Info    ${saas vw}
+
+    Log    C76631: Server goes offline
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
+    ${num online}=   Evaluate    random.randint(10, 100)
+    ${num offline}=   Evaluate    random.randint(10, 100)
+    ${total}=   Evaluate    ${num online}+${num offline}
+    ${pro on}=   Generate Licenses    license_type=digital    n_cameras=${num online}
+    ${pro off}=   Generate Licenses    license_type=digital    n_cameras=${num offline}
+    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
+    Should Be True    ${activated}
+    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
+    Should Be True    ${activated}
+
+    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Restart Server    ${LOCALHOST}:${LM PORT 3}    ${CLOUD AUTH}
+    Sleep    10
+
+    Reload Page
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
+    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${total}
+    Validate License Info    ${pro on}
+    Validate License Info    ${pro off}
+
+    Stop Container    ${cont 3}
+    Sleep    10
+    Reload Page
+
+    Validate Licenses Page    trial left=True    clean=False
+    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
+
+    Start Container    ${cont 3}
+    Log Out
+
 VMS integration
     [Documentation]    Validate information on cloud for license keys activated/deactivated/removed in client
-    [Tags]    C76568    C76569    C76570
+    [Tags]    C76568    C76569    C76570    vms
     Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
@@ -437,7 +497,7 @@ VMS integration
 
     Log    C76569: License deactivation
     ${rand}=   Evaluate    random.randint(10, 100)
-    ${key}=   Generate Licenses    n_channels=${rand}
+    ${key}=   Generate Licenses    n_cameras=${rand}
     ${n}=   Evaluate    ${types counter}[digital]+${rand}
     Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
@@ -452,7 +512,7 @@ VMS integration
     Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
     Reload Page
 
-    Validate Licenses Page    trial left=True    clean=False
+    Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${types counter}[digital]    ${types counter}[digital]
     Wait Until Element Is Not Visible    //header[h4="${key}"]
 
@@ -466,11 +526,11 @@ VMS integration
     Validate Summary Record    ${LIC TYPES}[digital]    ${n}    ${n}
     Validate License Info    ${key}
 
-    Remove License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1    ${key}
+    Remove License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
     Reload Page
 
-    Validate Licenses Page    trial left=True    clean=False
+    Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${types counter}[digital]    ${types counter}[digital]
     Wait Until Element Is Not Visible    //header[h4="${key}"]
 
