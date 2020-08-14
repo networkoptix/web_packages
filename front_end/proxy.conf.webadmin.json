@@ -65,12 +65,6 @@
       "^/static/lang_en_US/views": "/views"
     }
   },
-    "/static/images/": {
-      "target": "https://dev2.cloud.hdw.mx",
-      "secure": false,
-      "logLevel": "debug",
-      "changeOrigin": true
-    },
   "/static/languages.json": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,

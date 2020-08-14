@@ -9,11 +9,28 @@
 
 #accountSettingsSelect {
     color: theme_variables.$additional_light1 !important;
-    & button > {
+}
+
+.popup {
+    &.arrow {
+        // border-bottom-color: green !important;
+
+        &.small-override {
+            left: 12px !important;
+        }
+
+        &::after {
+            border-bottom-color: theme_variables.$dark11 !important;
+        }
+    }
+}
+
+.dropdown {
+    & button {
         color: theme_variables.$additional_light1 !important;
     }
     &:not(.show) {
-        & > button {
+        & > #accountSettingsSelect {
             background: theme_variables.$dark14 !important;
             color: theme_variables.$additional_light1 !important;
             border: 1px solid transparent !important;
@@ -27,13 +44,13 @@
         }
     }
     &.show {
-        & > button {
+        & > #accountSettingsSelect {
             color: theme_variables.$additional_light1 !important;
             border: 1px solid theme_variables.$dark11 !important;
             background: theme_variables.$dark12 !important;
             border: 1px solid theme_variables.$dark11 !important;
             &:hover {
-                background: 1px theme_variables.$dark13 !important;
+                background: theme_variables.$dark13 !important;
                 border: 1px solid theme_variables.$dark12 !important;
             }
             &:active {
@@ -41,20 +58,6 @@
                 border: 1px solid theme_variables.$dark11 !important;
             }
             
-        }
-    }
-}
-
-.popup {
-    &.arrow {
-        // border-bottom-color: green !important;
-
-        &.small-override {
-            left: 12px !important;
-        }
-
-        &::after {
-            border-bottom-color: theme_variables.$dark11 !important;
         }
     }
 }

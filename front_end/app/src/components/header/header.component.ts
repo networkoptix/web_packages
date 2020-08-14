@@ -347,6 +347,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         if (this.CONFIG.isLocal) {
             this.accountService.get().then(account => {
+                if (!account?.id) {
+                    return
+                };
                 const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                 system.update().then(() => {
                     system.getInfoAndPermissions().then(() => {
