@@ -183,6 +183,7 @@ export interface VoiceCommands {
 }
 
 export interface Dialogs {
+    addUser:      AddUser;
     buttons:      Buttons;
     cloudStorage: CloudStorage;
     merge:        DialogsMerge;
@@ -190,6 +191,10 @@ export interface Dialogs {
     removeSystem: RemoveSystem;
     titles:       DialogsTitles;
     tooltips:     Tooltips;
+}
+
+export interface AddUser {
+    alreadyExists: string;
 }
 
 export interface Buttons {
@@ -1044,6 +1049,7 @@ const typeMap: any = {
         { json: "view", js: "view", typ: "" },
     ], false),
     "Dialogs": o([
+        { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
@@ -1051,6 +1057,9 @@ const typeMap: any = {
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
+    ], false),
+    "AddUser": o([
+        { json: "alreadyExists", js: "alreadyExists", typ: "" },
     ], false),
     "Buttons": o([
         { json: "cancel", js: "cancel", typ: "" },

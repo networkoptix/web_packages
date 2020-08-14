@@ -803,8 +803,8 @@ Unsaved changes are not sent to the server
     Log    Step 2
     Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
-    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="Viewer"] 
-    Click Element    //*[@id="permissionsSelect"]//a/span[text()="Viewer"]
+    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"] 
+    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"]
     Sleep    .1
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
@@ -1075,7 +1075,7 @@ Changes made in thick client appear on cloud portal
     ...    ${BASE PASSWORD}    
     ...    user id=${id}    
     ...    is cloud=${False}    
-    Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="Viewer"]    timeout=45
+    Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
     Log    Step 7
     Save User    
     ...    ${auth}    
