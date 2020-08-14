@@ -50,6 +50,13 @@ def split_blocks(html):
             block_dict['title'] = TAG_REGEX.sub('', block_dict['titleHTML'])
             block_dict['content'] = TAG_REGEX.sub('', block_dict['contentHTML'])
             blocks.append(block_dict)
+        if not block_search:
+            blocks = [{
+                'titleHTML': '',
+                'title': '',
+                'contentHTML': html,
+                'content': TAG_REGEX.sub('', html),
+            }]
     return blocks
 
 
