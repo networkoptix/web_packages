@@ -1,7 +1,7 @@
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
-        ${cont name}=   Run Container    ${IMAGE 4.0}    ${LM PORT ${i}}    network=bridge
+        ${cont name}=   Run Container    ${IMAGE 4.1}    ${LM PORT ${i}}    network=bridge
         Set Suite Variable    ${cont ${i}}    ${cont name}
         ${cont id}=   Get Container Id    ${cont ${i}}
         Set Suite Variable    ${cont id ${i}}    ${cont id}
@@ -11,8 +11,9 @@ LM Suite Set Up
         Set Suite Variable    ${sys id ${i}}    ${sys id}
         Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
     END
-    Sleep    90     # Make all systems available on cloud
+    Sleep    120
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
+    Sleep    60
 
     FOR    ${role}    IN    @{LM USERS.keys()}
         Share    ${cloud auth}    ${sys id 1}    ${role}    ${LM USERS}[${role}]
@@ -34,46 +35,69 @@ LM Test Restart
     Log Out
     FOR    ${i}    IN RANGE    1    4
         Start Container    ${cont ${i}}
+        Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
     END
 
 Remove all keys from system
-    [Arguments]    ${serevr url}    ${server auth}
-    ${licenses}=   Get Licenses    ${server auth}    ${serevr url}
+    [Arguments]    ${server url}    ${server auth}
+    ${licenses}=   Get Licenses    ${server auth}    ${server url}
     FOR    ${lic}    IN    @{licenses}
-        Disable License    ${lic['key']}
+        Remove License    ${server auth}    ${server url}    ${lic}[key]
     END
-    Restart Server    ${serevr url}    ${server auth}
-    Sleep    10
-    ${keys}=   Get Licenses    ${server auth}    ${serevr url}
-    Should be Empty    ${keys}
+    Restart Server    ${server url}    ${server auth}
 
 Open Licenses Page
     Wait Until Element Is Visible    ${LICENSES LINK}
     Click Link    ${LICENSES LINK}
 
 Validate Licenses Page
-    [Arguments]    ${several servers}=${False}    ${clean}=${False}
+    [Documentation]    trial left = activation of trial license is available, clean = no regular keys activated
+    [Arguments]    ${several servers}=${False}    ${trial left}=${False}    ${clean}=${True}
     Wait Until Elements Are Visible
     ...    ${NEW LICENSE HEADER}
     ...    ${LICENSE KEY INPUT}
     ...    ${ACTIVATE BUTTON}
+    ...    timeout=90
+
     Run Keyword If    ${several servers}    Wait Until Elements Are Visible
         ...    ${BIND TO SERVER DROPDOWN}
         ...    ${SERVER MUST BE AVAILABLE}
-    Run Keyword If    ${clean}    Wait Until Elements Are Visible
+        ...    timeout=90
+        ...    ELSE    Wait Until Elements Are Not Visible
+             ...    ${BIND TO SERVER DROPDOWN}
+             ...    ${SERVER MUST BE AVAILABLE}
+
+    Run Keyword If    ${trial left}    Wait Until Elements Are Visible
         ...    ${ACTIVATE TRIAL TEXT}
         ...    ${ACTIVATE TRIAL BUTTON}
+        ...    timeout=90
+        ...    ELSE    Wait Until Elements Are Not Visible
+             ...    ${ACTIVATE TRIAL TEXT}
+             ...    ${ACTIVATE TRIAL BUTTON}
+
+    Run Keyword If    ${clean}    Wait Until Elements Are Not Visible
+        ...    ${LICENSES SUMMARY BLOCK}
+        ...    ${LICENSES SUMMARY HEADER}
+        ...    ${LICENSES SUMMARY THEAD}
+        ...    ${LICENSES SUMMARY RECORD}
+        ...    ELSE    Wait Until Elements Are Visible
+            ...    ${LICENSES SUMMARY BLOCK}
+            ...    ${LICENSES SUMMARY HEADER}
+            ...    ${LICENSES SUMMARY THEAD}
+            ...    ${LICENSES SUMMARY RECORD}
+            ...    timeout=90
 
 Activate Key
     [Arguments]    ${key}    ${success}=${True}    ${server name}=${EMPTY}    ${error text}=${EMPTY}
     Input Text    ${LICENSE KEY INPUT}    ${key}
-    Run Keyword Unless    '${server name}' == '${EMPTY}'    Run Keywords
+    Run Keyword Unless    '${server name}'=='${EMPTY}'    Run Keywords
     ...    Click Button    ${BIND TO SERVER DROPDOWN}
+    ...    AND    Sleep    1    # Avoid too fast clicking
     ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
-    Sleep    0.5    # To avoid clicking the button before key is completely input
+    Sleep    2    # To avoid clicking the button before key is completely input
     Click Button    ${ACTIVATE BUTTON}
     Run Keyword If    ${success}     Check For Alert    ${LICENSE IS ACTIVATED TEXT}
-    ...    ELSE    Wait Until Element Is Visible    //span[contains(text(), "${error text}")]
+    Run Keyword Unless    '${error text}' == '${EMPTY}'   Wait Until Element Is Visible    //span[contains(text(), "${error text}")]
 
 Validate Input Error
     [Arguments]    ${error text}
@@ -85,6 +109,7 @@ Activate Trial
     Wait Until Elements Are Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
     Click Button    ${ACTIVATE TRIAL BUTTON}
     Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
+    Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
 
 Number of Channels
     [Arguments]      ${type}
@@ -97,6 +122,13 @@ Number of Channels Available
     ${num}=   Get Text    ${LICENSES SUMMARY RECORD}//td[contains(text(), "${type}")]/following-sibling::td[2]
     ${num}=   Convert To Integer    ${num}
     [Return]    ${num}
+
+Validate Summary Record
+    [Arguments]    ${type}    ${activated}    ${available}
+    ${act}=   Number of Channels    ${type}
+    ${av}=   Number of Channels Available    ${type}
+    Should Be Equal As Numbers    ${act}    ${activated}
+    Should Be Equal As Numbers    ${av}    ${available}
 
 Validate License Info
     [Arguments]    ${key}    ${port}=${LM PORT 1}
@@ -111,3 +143,19 @@ Validate License Info
         ${value}=   Set Variable    ${key-value}[1]
         Run Keyword Unless    $key in $supp_params   Should Be Equal As Strings    ${value}    ${key info}[${key}]
     END
+
+Get Key Server
+    [Arguments]    ${key}
+    ${key path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
+    ${server}=   Get Text    ${key path}
+    ${class}=   Get Element Attribute    ${key path}    class
+    Run Keyword If    '''${server}''' == '''Server not found'''    Should Contain    ${class}    error
+    [Return]    ${server}
+
+Get Key Status
+    [Arguments]    ${key}
+    ${key path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
+    ${status}=   Get Text    ${key path}
+    ${class}=   Get Element Attribute    ${key path}    class
+    Run Keyword If    '''${status}''' == '''Error'''    Should Contain    ${class}    error
+    [Return]    ${status}
