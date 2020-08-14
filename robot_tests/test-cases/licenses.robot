@@ -366,7 +366,8 @@ License Summary Block
     Reload Page
     Validate Licenses Page    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[videowall]    ${total}    ${num good}
-#    Validate License Info    ${pur vw}
+    Validate License Info    ${pur vw}
+    # TODO: gives an error - figure out why
 #    Validate License Info    ${saas vw}
 
     Log    C76631: Server goes offline
@@ -394,8 +395,8 @@ License Summary Block
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${total}
-    Validate License Info    ${pro on}
-    Validate License Info    ${pro off}
+    Validate License Info    ${pro on}    port=${LM PORT 2}
+    Validate License Info    ${pro off}    port=${LM PORT 3}
 
     Stop Container    ${cont 3}
     Sleep    10

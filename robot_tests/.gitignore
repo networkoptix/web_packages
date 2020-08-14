@@ -18,3 +18,4 @@ pabot_results
 /libspecs/
 *.idea
 *check.robot
+*chromedriver*
