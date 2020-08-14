@@ -26,6 +26,7 @@ import { NxSystem }                  from '../../../../services/system.service';
 })
 export class NxCloudStorageComponent implements OnInit {
     @Input() layout;
+    @Input() type: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -43,10 +44,7 @@ export class NxCloudStorageComponent implements OnInit {
     cloudStorageInital: string;
 
     // Constructor and class initialization methods
-    private setupDefaults({ configService, languageService }) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
-
+    private setupDefaults() {
         this.usageStats = emptyUsage;
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
@@ -56,8 +54,11 @@ export class NxCloudStorageComponent implements OnInit {
                 system.getInfoAndPermissions();
             }
         });
-        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-        this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
+        this.menuService.section = this.type === 'servers' ? this.CONFIG.menus.systemSettings.servers.id
+            : this.CONFIG.menus.systemSettings.admin.id;
+        if (this.type !== 'servers') {
+            this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
+        }
     }
 
     constructor(configService: NxConfigService,
@@ -71,10 +72,12 @@ export class NxCloudStorageComponent implements OnInit {
         private menuService: NxMenuService,
         private route: ActivatedRoute
     ) {
-        this.setupDefaults({ configService, languageService });
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
+        this.setupDefaults();
         this.cloudStorageInital = NxLanguageProviderService.translate(this.LANG.dialogs.cloudStorage.initial, { compCapacity: this.compCloudCapacity });
         this.layoutSimple = (this.layout && this.layout === 'simple');
         this.initEnableCloudStorageProcess();
