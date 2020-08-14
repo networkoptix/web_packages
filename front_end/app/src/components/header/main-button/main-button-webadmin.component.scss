@@ -47,7 +47,7 @@
     }
 
     & > svg-icon > svg > .st0{
-        fill: $light16;
+        fill: $light16 !important;
     }
 }
 
@@ -58,4 +58,8 @@
             border-bottom-color: $additional_light1 !important;
         }
     }
+}
+
+.icon-wrapper .st0 {
+    fill: $additional_light1 !important;
 }

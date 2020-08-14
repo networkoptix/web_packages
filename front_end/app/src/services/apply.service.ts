@@ -51,8 +51,51 @@ export class Watcher<T extends any> {
     }
 
     // Resets the value of the watcher to the first value that was not undefined.
-    reset() {
+    reset = () => {
         this.valueSubject.next(this.originalValue);
+    }
+}
+
+/**
+ * Section watcher that that is api compatible with watcher.
+ */
+export class SectionWatcher {
+    originalValue;
+    valueSubject = new BehaviorSubject(undefined);
+    constructor(public watchers: Watcher<any>[]) {
+        this.watchers.forEach(watcher => {
+            watcher.valueSubject.subscribe(_ => {
+                this.updateHash();
+            });
+        });
+    }
+
+    get value() {
+        return this.watchers.reduce((acc, cur) => acc.concat(cur.value), '');
+    }
+
+    set value(data) {
+        if (this.value === undefined) {
+            this.originalValue = data;
+        }
+        if (this.value !== data) {
+            this.valueSubject.next(data);
+        }
+        this.watchers.forEach(watcher => {
+            watcher.value = data;
+        });
+    }
+
+    get changed() {
+        return this.watchers.some(watcher => watcher.changed);
+    }
+
+    private updateHash = () => {
+        this.valueSubject.next(this.value);
+    }
+
+    reset = () => {
+        this.watchers.forEach(watcher => watcher.reset());
     }
 }
 
@@ -178,12 +221,13 @@ export class NxApplyService {
         discardFunction: () => void,
         watchers: Watcher<any>[],
         form?: NgForm,
-        submitFn?: () => any
+        submitFn?: () => any,
+        onlyShowSectionWatchers = false
     ) {
         this.clearSubscriptions();
         this.component = component;
 
-        this.createComponent();
+        this.createComponent(onlyShowSectionWatchers);
         this.setSaveFunction(saveFunction);
         this.setDiscardFunction(discardFunction);
         if (form) {
@@ -194,6 +238,52 @@ export class NxApplyService {
             (<NxApplyComponent> this.applyComponentRef.instance).show = value;
         });
         (<NxApplyComponent> this.applyComponentRef.instance).submitFn = submitFn;
+    }
+
+    /**
+     * Instantiates and returns a SectionWatcher that is API compatible with Watcher.
+     *
+     * This method accepts the same params as initPageWatcher.
+     *
+     * This SectionWatcher should be passed as a watcher to initPageWatcher.
+     *
+     * If you want to display 'Page contains unsaved changes' instead of save and discard
+     * at the bottom of page pass true to the onlyShowSectionWatchers param on initPageWatcher.
+     *
+     * If you want to have the save / discard at the bottom of the page to run all save processes
+     * or discard all changes, that code will need to be implmemented on the save and discard
+     * functions passed to initPageWatcher.
+     *
+     * TODO: We might want to add a way to run all section save processes sequentially when
+     * clicking save at the bottom of the page but it's probably too early to be able to
+     * come up with the right abstraction until we have the SectionWatchers in use.
+     */
+    createSectionWatcher = (
+        component: ViewContainerRef,
+        saveFunction: Process,
+        discardFunction: () => void,
+        watchers: Watcher<any>[],
+        form?: NgForm,
+        submitFn?: () => any
+    ) => {
+        const sectionWatcher = new SectionWatcher(watchers);
+        const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
+        component.clear();
+        const applyComponentRef = component.createComponent(compFactory);
+        if (form) {
+            applyComponentRef.instance.form = form;
+        }
+        applyComponentRef.instance.applyVisible = true;
+        applyComponentRef.instance.save = saveFunction;
+        applyComponentRef.instance.discard = discardFunction;
+        applyComponentRef.instance.submitFn = submitFn;
+        sectionWatcher.valueSubject.pipe(distinctUntilChanged()).subscribe(_ => {
+            applyComponentRef.instance.show = sectionWatcher.changed;
+        });
+        this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
+            applyComponentRef.instance.isOnline = isOnline;
+        });
+        return sectionWatcher;
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
@@ -238,10 +328,13 @@ export class NxApplyService {
         }
     }
 
-    private createComponent() {
+    private createComponent(onlyShowSectionWatchers = false) {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
+        if (onlyShowSectionWatchers) {
+            (<NxApplyComponent> this.applyComponentRef.instance).showSectionWarning = onlyShowSectionWatchers;
+        }
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
         this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
             (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
@@ -324,6 +417,14 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
             prevDiscard();
             discardFunction();
+        };
+    };
+
+    private extendSubmitFunction(submitFunction: () => void) {
+        const prevSubmitFn = (<NxApplyComponent> this.applyComponentRef.instance).submitFn;
+        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => {
+            prevSubmitFn();
+            submitFunction();
         };
     };
 }

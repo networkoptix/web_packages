@@ -93,6 +93,35 @@
     </nx-section>
 </nx-block>
 
+<nx-block *ngIf="!loading && storage.length" type="mb-3">
+    <header>
+        <div class="header-top-bar">
+            <nx-switch
+                [ngModel]="isBackupOn"
+                (ngModelChange)="updateBackupState($event)"
+                componentId="archive-backup"
+            ></nx-switch>
+            <h4 class="ml-2" translate>Archive Backup</h4>
+        </div>
+    </header>
+    <nx-section *ngIf="isBackupOn">
+        <div class="archive-backup-container">
+            <ng-container *ngIf="custom; else defaultMessage">
+                <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>
+                <p translate>You can reset backup settings to default to backup secondary streams from all cameras in real time.</p>
+                <button class="btn btn-default mt-3"
+                    type="button"
+                    (click)="resetBackupToDefault()"
+                    translate>Reset Backup Settings</button>
+            </ng-container>
+            <ng-template #defaultMessage>
+                <p translate>Secondary streams from all cameras on this server are being backed up in real time.</p>
+                <p translate>You can change the backup mode or select specific cameras in the desktop client.</p>
+            </ng-template>
+        </div>
+    </nx-section>
+</nx-block>
+
 <nx-block *ngIf="!loading && storage.length">
     <header>
         <div class="header-top-bar">
