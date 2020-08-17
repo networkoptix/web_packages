@@ -10,7 +10,7 @@ Verify on Cameras Page
     ...    ${CAMERAS DETAILED INFO BUTTON}
     ...    ${ASPECT RATIO DROPDOWN}
     ...    ${ROTATION DROPDOWN}
-    ...    ${ENABLE AUDIO CHECKBOCK}
+    ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
 
@@ -30,7 +30,7 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS CANCEL BUTTON}
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
-Enable Recording
+Toggle Recording
     Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
     Click Element    ${RECORDING CHECK BOX}
 
@@ -59,8 +59,9 @@ Rotation Should Be
 
 Audio Enabled Should Be
     [Arguments]    ${expected state}
-    ${current state}=   ${Get Checkbox Value    ${ENABLE AUDIO CHECKBOCK}
-    Should Be Equal    ${expected state}    ${current state}
+    Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}
+    ${current state}=   Get Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input
+    Should Be Equal    "${expected state}"    "${current state}"
 
 Camera Name Should Be
     [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
