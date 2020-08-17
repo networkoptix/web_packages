@@ -456,6 +456,14 @@ Change FPS
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${fps}    Get Element Attribute    ${FPS INPUT}    value
+    Should Be Equal As Numbers    ${fps}    20
+    Toggle Recording
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Change Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -464,8 +472,8 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Toggle Recording
