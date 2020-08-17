@@ -280,15 +280,7 @@ Rotation
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Rotation Should Be    0˚
     Reload Page
-    Rotation Should Be    0˚       
-
-Get the camera json
-   
-        
-
-Get the camera json
-   
-        
+    Rotation Should Be    0˚
 
 Audio enable Disabled
     [Tags]    C76378    threaded
