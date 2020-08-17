@@ -281,7 +281,7 @@ Rotation
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Rotation Should Be    0˚
     Reload Page
-    Rotation Should Be    0˚       
+    Rotation Should Be    0˚
 
 Audio enable Disabled
     [Tags]    C76378    threaded
@@ -290,7 +290,7 @@ Audio enable Disabled
     Select Camera by Name    good cam
     Verify on Cameras Page
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
-    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
@@ -303,8 +303,11 @@ Audio enable Disabled
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    False
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Audio Enabled Should Be    False
 
 Audio unavailable
     [Tags]     C76376    threaded
@@ -315,25 +318,6 @@ Audio unavailable
     Wait Until Element is Enabled    ${ENABLE AUDIO CHECKBOX}
     Select Camera by Name    no audio cam
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
-
-No iamge placeholder shows for offline and unauthorized cameras
-    [Tags]    C76275    threaded
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera by Name    unauth cam
-    Wait Until Elements are Visible    
-    ...    ${NO IMAGE PLACEHOLDER}
-    ...    ${CAMERA ERROR ICON}
-    ...    ${CAMERA ERROR TEXT}
-    Element Text Should Be    ${CAMERA ERROR TEXT}    ${CAMERA UNAUTHORIZED TEXT}
-
-    Select Camera by Name    offline cam
-    Wait Until Elements are Visible    
-    ...    ${NO IMAGE PLACEHOLDER}
-    ...    ${CAMERA ERROR ICON}
-    ...    ${CAMERA ERROR TEXT}
-    Element Text Should Be    ${CAMERA ERROR TEXT}    ${CAMERA OFFLINE TEXT}    
 
 Edit credentials form Close and Cancel buttons
     [Tags]    C78236    threaded
@@ -432,43 +416,12 @@ Recording toggle shows correct options
     ${checked}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
     Should Be Equal    ${checked}    2
 
-Recording Status
-    [Tags]    C76391    Threaded
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera By Name    no license cam
-    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    False
-    Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
-
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera By Name    good cam
-    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    False
-    Wait Until Element Is Visible    ${ONE LICENSE WILL BE USED WARNING}
-
-    Select Camera By Name    no audio cam
-    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    True
-    Verify recording controls are open
-    
 Record Always
-    [Tags]    C76408    Threaded
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
     Toggle Recording
-    ${value}    Get Checkbox Value    ${RECORD MOTION RADIO BUTTON}
-    Should Be Equal As Strings    ${value}    False
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -485,11 +438,10 @@ Record Always
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
-    [Tags]    C76408    Threaded
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
@@ -507,11 +459,10 @@ Record Motion
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
-    [Tags]    C76408    Threaded
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
@@ -603,15 +554,11 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Enable/disable motion detection
     Wait Until Element is Visible    ${CAMERAS LINK}
