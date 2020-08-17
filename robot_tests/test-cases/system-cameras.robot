@@ -79,28 +79,27 @@ Rotation
     Rotation Should Be    90˚
     Reload Page
     Rotation Should Be    90˚
-    Change Rotation    Auto
+    Change Rotation    0˚
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    Rotation Should Be    Auto
+    Rotation Should Be    0˚
     Reload Page
-    Rotation Should Be    Auto
+    Rotation Should Be    0˚
 
 Audio enable Disabled
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    good cam
     Verify on Cameras Page
-    checkbox
-    Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    True
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    False
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    False
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
@@ -111,7 +110,7 @@ Audio unavailable
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    no audio cam
-    Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOCK}//label[@disabled]
+    Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
 
 Edit credentials form Close and Cancel buttons
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -146,11 +145,11 @@ Edit credentials form Close and Cancel buttons
 
 
 Record Always
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
+    Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -161,17 +160,17 @@ Record Always
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Click Element    ${RECORDING CHECK BOX}
+    Toggle Recording
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
+    Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -182,17 +181,17 @@ Record Motion
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Click Element    ${RECORDING CHECK BOX}
+    Toggle Recording
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
+    Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -203,7 +202,7 @@ Record Motion + Low Quality
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Click Element    ${RECORDING CHECK BOX}
+    Toggle Recording
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
@@ -223,23 +222,34 @@ Change FPS
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
+    Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
     Click Element    ${FPS INPUT}
     Input Text    ${FPS INPUT}    20
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${fps}    Get Element Attribute    ${FPS INPUT}    value
+    Should Be Equal As Numbers    ${fps}    20
+    Toggle Recording
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Change Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
-    Wait Until Element is Visible    ${FPS INPUT}
-    Click Element    ${FPS INPUT}
-    Input Text    ${FPS INPUT}    20
+    Toggle Recording
+    Wait Until Element is Visible    ${QUALITY DROPDOWN} 
+    Click Element    ${QUALITY DROPDOWN} 
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+    Toggle Recording
 
 Enable/disable motion detection
     Wait Until Element is Visible    ${CAMERAS LINK}
