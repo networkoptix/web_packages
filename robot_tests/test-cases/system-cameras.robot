@@ -289,10 +289,6 @@ Get the camera json
    
         
 
-Get the camera json
-   
-        
-
 Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
