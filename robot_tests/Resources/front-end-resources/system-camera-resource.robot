@@ -40,7 +40,11 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
 Toggle Recording
+<<<<<<< HEAD
     Wait Until Element Is Enabled    ${ENABLED RECORDING SLIDER}
+=======
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+>>>>>>> 1bffe4a8e81... updates to camera settings
     Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
