@@ -1192,7 +1192,8 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     saveStorage<T>(updateParams?: T) {
-        return this.mediaserver.saveStorage(updateParams);
+        const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
+        return this.mediaserver.saveStorage({ ...updateParams, typeId });
     }
 
     removeStorage<T>(updateParams?: T) {

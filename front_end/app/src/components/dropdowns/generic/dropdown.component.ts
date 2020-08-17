@@ -110,6 +110,7 @@ export class DropdownItem {
         public name: string,
         public help?: string,
         public value?: string,
-        public state?: string
+        public state?: string,
+        public disabled?: boolean
     ) {}
 }
