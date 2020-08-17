@@ -272,10 +272,6 @@ Rotation
     Reload Page
     Rotation Should Be    0˚
 
-Get the camera json
-   
-        
-
 Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -283,7 +279,7 @@ Audio enable Disabled
     Select Camera by Name    good cam
     Verify on Cameras Page
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
-    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
@@ -296,8 +292,11 @@ Audio enable Disabled
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    False
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Audio Enabled Should Be    False
 
 Audio unavailable
     [Tags]     C76376    threaded
@@ -507,6 +506,14 @@ Change FPS
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${fps}    Get Element Attribute    ${FPS INPUT}    value
+    Should Be Equal As Numbers    ${fps}    20
+    Toggle Recording
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Change Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -515,8 +522,8 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Toggle Recording
