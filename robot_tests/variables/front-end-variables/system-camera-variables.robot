@@ -18,7 +18,7 @@ ${ENABLED RECORDING SLIDER}                  //span[contains(@class,"slider roun
 ${RECORD ALWAYS RADIO BUTTON}                //nx-radio//input[@id="Record always"]
 ${RECORD MOTION RADIO BUTTON}                //nx-radio//input[@id="Record only motion"]
 ${RECORD MOTION LOW QUALITY RADIO BUTTON}    //nx-radio//input[@id="Motion + low-res"]
-${FPS INPUT}                                 //input[@id="fps"]
+${FPS INPUT}                                 //input[@name="fps"]
 ${QUALITY DROPDOWN}                          //button[@id="recording-quality"]
 ${DOT-MENU}                                  //button[@class="dot-menu"]
 ${ENABLE MOTION DETECTION BUTTON}            //button[@id="enable-motion-detection"]
