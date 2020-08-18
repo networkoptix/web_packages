@@ -32,6 +32,9 @@ License Management availability for offline system
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
     Start Container    ${cont 1}
+    ${cont id}=   Get Container Id    ${cont 1}
+    Set Suite Variable    ${cont id 1}    ${cont id}
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 1}
     Sleep    30
     Log Out
 
@@ -166,6 +169,9 @@ Server response errors: Media server becomes offline during license activation
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
 
     Start Container    ${cont 1}
+    ${cont id}=   Get Container Id    ${cont 1}
+    Set Suite Variable    ${cont id 1}    ${cont id}
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 1}
     Log Out
 
 Server response errors: Server offline(System has two servers)
@@ -190,8 +196,11 @@ Server response errors: Server offline(System has two servers)
     Slow    Click Element    ${offline server}    timeout=2
     Click Button    ${ACTIVATE BUTTON}
     Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
-    Start Container    ${cont 3}
 
+    Start Container    ${cont 3}
+    ${cont id}=   Get Container Id    ${cont 3}
+    Set Suite Variable    ${cont id 3}    ${cont id}
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 Successful scenarios
@@ -277,7 +286,7 @@ License Details Block: Purchase permanent keys
         Activate Key    ${key}    server name=${server ${k}}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${k}}    ${key}
         Should Be True    ${activated}
-        Validate Licenses Page    trial left=True    clean=False
+        Validate Licenses Page    several servers=True    trial left=True    clean=False
         Validate License Info    ${key}    port=${LM PORT ${k}}
         ${status}=   Get Key Status    ${key}
         Should Be Equal As Strings    ${status}    OK
@@ -305,7 +314,7 @@ License Details Block: SAAS keys
         Activate Key    ${key}    server name=${server 2}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
-        Validate Licenses Page    trial left=True    clean=False
+        Validate Licenses Page    several servers=True    trial left=True    clean=False
         Validate License Info    ${key}    port=${LM PORT 2}
         ${status}=   Get Key Status    ${key}
         Should Be Equal As Strings    ${status}    OK
@@ -328,7 +337,7 @@ License Details Block: Video Wall licenses
     Activate Key    ${demo vw}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo vw}
     Should Be True    ${activated}
-    Validate Licenses Page    trial left=True    clean=False
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate License Info    ${demo vw}    port=${LM PORT 2}
     ${status}=   Get Key Status    ${demo vw}
     Should Be Equal As Strings    ${status}    OK
@@ -445,6 +454,9 @@ License Details Block: license with error status
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
+    ${cont id}=   Get Container Id    ${cont 3}
+    Set Suite Variable    ${cont id 3}    ${cont id}
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 License Summary Block: Server goes offline
@@ -481,6 +493,9 @@ License Summary Block: Server goes offline
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
 
     Start Container    ${cont 3}
+    ${cont id}=   Get Container Id    ${cont 3}
+    Set Suite Variable    ${cont id 3}    ${cont id}
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 License Summary Block: License key is expired

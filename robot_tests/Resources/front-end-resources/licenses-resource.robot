@@ -91,7 +91,7 @@ Validate Licenses Page
 Activate Key
     [Arguments]    ${key}    ${success}=${True}    ${server name}=${EMPTY}    ${error text}=${EMPTY}
     Input Text    ${LICENSE KEY INPUT}    ${key}
-    Run Keyword Unless    '${server name}'=='${EMPTY}'    Run Keywords
+    Run Keyword Unless    '${server name}' == '${EMPTY}'    Run Keywords
     ...    Click Button    ${BIND TO SERVER DROPDOWN}
     ...    AND    Sleep    1    # Avoid too fast clicking
     ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
