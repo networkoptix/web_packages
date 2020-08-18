@@ -35,7 +35,7 @@ import {
     selector     : 'nx-block',
     templateUrl  : 'content-block.component.html',
     styleUrls    : ['content-block.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NxContentBlockComponent implements OnInit, OnChanges {
     @Input('type') type: string;

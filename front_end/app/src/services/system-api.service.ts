@@ -693,6 +693,19 @@ export class NxSystemAPI {
         return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
 
+    updateSystemServersCameras() {
+        const routes = ['/api/moduleInformation', '/ec2/getMediaServersEx', 'ec2/getTimeOfServers', 'ec2/getCamerasEx'];
+        return this.getRequestAggregator<t.NormalResponse<[t.ModuleInformation, t.GetMediaServers, t.SystemTime, t.GetCameras]>>(routes)
+            .pipe(map(({ reply }) => {
+                return routes.map(route => {
+                    if (['/api/moduleInformation', 'ec2/getTimeOfServers'].includes(route)) {
+                        return reply[route].reply;
+                    }
+                    return reply[route];
+                });
+            }));
+    }
+
     /* End of Cameras and Servers */
 
     /* Formatting urls */

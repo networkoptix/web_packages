@@ -107,6 +107,34 @@ class SystemPermissions {
     editCameras = false;
 }
 
+interface ModuleInfo {
+    brand: string,
+    cloudHost: string,
+    cloudSystemId: string
+    customization: string;
+    ecDbReadOnly: boolean;
+    hwPlatform: string;
+    id: string;
+    localSystemId: string;
+    name: string;
+    osInfo: {
+        platform: string;
+        variant: string;
+        variantVersion: string;
+    };
+    port: number;
+    protoVersion: number;
+    realm?: string;
+    remoteAddresses: string[];
+    runtimeId: string;
+    serverFlags: string;
+    sslAllowed: boolean;
+    status?: string;
+    systemName: string;
+    type: string;
+    version: string;
+}
+
 // <added by @gbezyuk for watch component>
 
 export interface ServerTimeInfo {
@@ -425,6 +453,7 @@ class ServerManager {
 
     servers: NxSystemServer[];
     cameras: ICamera[];
+    moduleInfo: ModuleInfo;
 
     constructor(private mediaserver: NxSystemAPI,
                 private systemApiService: NxSystemAPIService,
@@ -455,29 +484,47 @@ class ServerManager {
         return Promise.reject();
     }
 
-    getServers() {
-        const serverSubscription = this.mediaserver.getMediaServers();
-        serverSubscription.subscribe((res: any) => {
-            if (!res) {
-                return Promise.reject(new Error(`Request to server has failed ${res}`));
-            }
-            this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
-            return this.servers;
-        });
-        return serverSubscription;
+    async updateSystemServersCameras() {
+        try {
+            const response = await this.mediaserver.updateSystemServersCameras().toPromise();
+            const [moduleInfo, servers, serverTimes, cameras] = response;
+            this.moduleInfo = moduleInfo;
+            this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+            this.getCameras(serverTimes, cameras);
+        } catch (error) {
+            return Promise.reject(Error(`Request to server has failed ${error}`));
+        }
+    }
+
+    getServers(servers?) {
+        if (!servers) {
+            const serverSubscription = this.mediaserver.getMediaServers();
+            serverSubscription.subscribe((res: any) => {
+                if (!res) {
+                    return Promise.reject(new Error(`Request to server has failed ${res}`));
+                }
+                this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+                return this.servers;
+            });
+            return serverSubscription;
+        } else {
+            this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+        }
     }
 
     getPreviewUrl(cameraId, time, width, height, rotate) {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
     }
 
-    async getCameras() {
-        const [servers, cameras] = await this.mediaserver.getCamerasWithSeverTime().toPromise();
-        if (!cameras) {
-            return Promise.reject(new Error(`Request to server has failed ${cameras}`));
+    async getCameras(serverTimes?, cameras?) {
+        if (!serverTimes || !cameras) {
+            [serverTimes, cameras] = await this.mediaserver.getCamerasWithSeverTime().toPromise();
+            if (!cameras) {
+                return Promise.reject(new Error(`Request to server has failed ${cameras}`));
+            }
         }
         const mappedCameras = await <ICamera[]> cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
-            const server = servers.find(({ serverId }) => serverId === parentId);
+            const server = serverTimes.find(({ serverId }) => serverId === parentId);
             let dayOfWeek;
             let secondsToday;
             if (server) {
@@ -625,9 +672,15 @@ class ServerManager {
 
     getModuleInfo(serverId?: string) {
         if (serverId) {
-            return this.mediaserverConnections[serverId].getModuleInfo();
+            return this.mediaserverConnections[serverId].getModuleInfo()
+                .pipe(tap(moduleInfo => {
+                    this.moduleInfo = moduleInfo.reply;
+                }));
         } else {
-            return this.mediaserver.getModuleInfo();
+            return this.mediaserver.getModuleInfo()
+                .pipe(tap(moduleInfo => {
+                    this.moduleInfo = moduleInfo.reply;
+                }));
         }
     }
 
@@ -696,7 +749,6 @@ export class NxSystem extends System implements OnDestroy {
     mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
-    moduleInfo; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -812,6 +864,10 @@ export class NxSystem extends System implements OnDestroy {
     // Start of serverManager functions
     get servers() {
         return this.serverManager.servers;
+    }
+
+    get moduleInfo() {
+        return this.serverManager.moduleInfo;
     }
 
     // End of serverManager functions
@@ -1063,16 +1119,6 @@ export class NxSystem extends System implements OnDestroy {
         return this.usersPromise;
     }
 
-    getSystem() {
-        return this.serverManager.getModuleInfo()
-            .pipe(tap(moduleInfo => {
-                this.moduleInfo = moduleInfo.reply;
-            })).toPromise()
-            .catch(err => {
-                return Promise.reject(err);
-            });
-    }
-
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         return this.userManager.saveUser(user, role);
     }
@@ -1121,16 +1167,20 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    update = () => {
+    update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
-                .then(() => this.isOnline ? this.getSystem() : Promise.reject())
-                .then(() => Promise.all([this.getServers().toPromise(), this.getCameras(), this.getUsers(true)]))
+                .then(() => this.isOnline ? this.updateSystemServersCameras() : Promise.reject())
+                .then(() => this.getUsers(true))
                 .catch((error) => {
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });
         })).toPromise();
+    }
+
+    updateSystemServersCameras() {
+        return this.serverManager.updateSystemServersCameras();
     }
 
     updateOrGetSystemSettings<T>(updateParams?: T) {
@@ -1277,7 +1327,6 @@ export class NxSystem extends System implements OnDestroy {
         }
 
         return this.auth_promise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
-            // console.log('got new', authKeys)
             if (authKeys.authGet) {
                 this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                 // console.log('new ones are good')
