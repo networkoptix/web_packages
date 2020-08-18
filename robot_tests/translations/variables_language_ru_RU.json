@@ -287,5 +287,6 @@
     "PORT TOO LOW TEXT": "Номера портов менее 1024 ограничены. Сервер может стать недоступным.",
     "SERVER RESTARTED TEXT": "Сервер успешно перезапущен.",
     "HOURS TEXT": "час",
-    "MINUTES TEXT": "минута"
+    "MINUTES TEXT": "минута",
+    "WHATS NEW TEXT": "Что нового?"
 }

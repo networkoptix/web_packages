@@ -184,9 +184,9 @@ ${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/
 ${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
-${DOWNLOAD VMS NAME}                  //h3[contains(text(),"Download ${VMS_NAME}")]
+${DOWNLOAD VMS NAME}                  //h3[contains(text(),"${DOWNLOAD TITLE TEXT}")]
 ${DOWNLOAD VERSION NUMBER}            //h2[@class="version-number d-flex"]/b
-${WHATS NEW LINK}                     //a[contains(text(),"What's New?")]
+${WHATS NEW LINK}                     //a[contains(text(),"${WHATS NEW TEXT}")]
 
 ${WINDOWS TAB}                        //a[@id="windows"]
 ${LINUX TAB}                         //a[@id="linux"]
