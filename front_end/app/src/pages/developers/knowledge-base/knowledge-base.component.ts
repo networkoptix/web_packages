@@ -1,6 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap, tap } from 'rxjs/operators';
+import { NxHeaderService } from '../../../services/nx-header.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -8,14 +12,45 @@ import { NxConfigService, IConfig } from '../../../services/nx-config';
     templateUrl : 'knowledge-base.component.html',
     styleUrls   : ['knowledge-base.component.scss']
 })
-export class NxKnowledgeBaseComponent {
-    @Input() node: KnowledgeNode = mockArticle;
+export class NxKnowledgeBaseComponent implements OnInit {
+    CONFIG: IConfig;
 
-    CONFIG: IConfig
+    loading = true;
+    node: KnowledgeNode;
 
-    constructor(configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        private cloudApi: NxCloudApiService,
+        private headerService: NxHeaderService,
+        private route: ActivatedRoute
+    ) {
         this.CONFIG = configService.config;
     }
+
+    ngOnInit() {
+        this.route.url.pipe(
+            switchMap(urlSegment => {
+                this.loading = true;
+                const assetId = urlSegment[0]?.path || this.headerService.currentLocation.assetId;
+                return this.cloudApi.getDocumentation(assetId)
+                    .pipe(
+                        tap(({ title, blocks, contentHTML }) => {
+                            this.node = KnowledgeNode.normalHeader(
+                                title,
+                                assetId,
+                                contentHTML,
+                                blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
+                                    title,
+                                    '',
+                                    contentHTML
+                                ))
+                            );
+                            this.loading = false;
+                        })
+                    );
+            })
+        ).subscribe();
+    };
 };
 
 export enum CardClasses {
@@ -74,13 +109,14 @@ export class KnowledgeNode {
         title: string,
         url: string,
         content: string,
-        showHeader = true
+        showHeader = true,
+        nodes = []
     ) {
         return new KnowledgeNode(
             showHeader ? title : '',
             url,
             content,
-            [],
+            nodes,
             CardClasses.ARTICLE,
             '',
             ''

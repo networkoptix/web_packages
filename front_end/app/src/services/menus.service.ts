@@ -113,6 +113,9 @@ export class NxMenusService implements OnDestroy {
     }
 
     updateActiveSystemMenu(activeSystem) {
+        if (!activeSystem) {
+            return;
+        }
         const { endpoint: { view = false, settings = false, information = false } } = this;
         const name = activeSystem.name || activeSystem.moduleInfo.name;
         const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';

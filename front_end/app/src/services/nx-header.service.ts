@@ -122,6 +122,7 @@ export class NxHeaderService {
                         const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
                         if (nodeUrl === url || url.startsWith(nodeUrl) && (!bestMatch.path || bestMatch.path.length < nodeUrl.length)) {
                             bestMatch.path = node.url;
+                            bestMatch.assetId = node.asset_id;
                             bestMatch.parentNode = parentNode;
                             bestMatch.childNode = node;
                             if (nodeUrl === url) {

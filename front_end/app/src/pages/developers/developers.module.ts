@@ -29,9 +29,13 @@ const appRoutes: Routes = [
                 component : NxAboutComponent
             },
             {
-                path      : 'knowledge-base',
-                component : NxKnowledgeBaseComponent,
-                children  : [
+                path     : 'knowledge-base',
+                children : [
+                    {
+                        path      : '',
+                        component : NxKnowledgeBaseComponent,
+                        pathMatch : 'full'
+                    },
                     {
                         path      : 'other-articles',
                         component : NxKnowledgeBaseComponent,

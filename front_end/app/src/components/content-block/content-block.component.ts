@@ -70,8 +70,8 @@ export class NxContentBlockComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.layout.currentValue) {
-            this.haveHeader = (changes.layout.currentValue !== '')
+        if (changes.layout?.currentValue) {
+            this.haveHeader = (changes.layout.currentValue !== '');
         }
     }
 }

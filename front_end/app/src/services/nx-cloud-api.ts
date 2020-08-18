@@ -340,4 +340,10 @@ export class NxCloudApiService {
             }
         }).toPromise();
     }
+
+    getDocumentation(assetId?) {
+        const route = `${this.CONFIG.apiBase}/documentation${assetId ? `/${assetId}` : ''}`;
+        this.cacheService.addToCache(route);
+        return this.http.get<any>(route);
+    }
 }
