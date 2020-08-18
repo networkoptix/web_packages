@@ -1,6 +1,8 @@
 import { NgModule }                    from '@angular/core';
 import { CommonModule }                from '@angular/common';
-import { FormsModule }                 from '@angular/forms';
+import {
+    FormsModule, ReactiveFormsModule
+}                                      from '@angular/forms';
 import { RouterModule }                from '@angular/router';
 import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';
@@ -12,6 +14,7 @@ import { PipesModule }                 from '../pipes/pipes.module';
 import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
+import { AddStorageModalContent }      from './add-storage/add-storage.component';
 import { RemoveUserModalContent }      from './remove-user/remove-user.component';
 import { MergeModalContent }           from './merge/merge.component';
 import { MessageModalContent }         from './message/message.component';
@@ -37,12 +40,14 @@ import {
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
+import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { NxDialogsService }               from './dialogs.service';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         TranslateModule,
         ClipboardModule,
         ComponentsModule,
@@ -56,6 +61,7 @@ import { NxDialogsService }               from './dialogs.service';
         LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,
+        AddStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,
@@ -73,13 +79,16 @@ import { NxDialogsService }               from './dialogs.service';
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
-        UpdateCameraCredentialsModalContent
+        UpdateCameraCredentialsModalContent,
+        ResetBackupModalContent,
+        AddStorageModalContent
     ],
     entryComponents: [
         LoginModalContent,
         LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,
+        AddStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,
@@ -97,7 +106,9 @@ import { NxDialogsService }               from './dialogs.service';
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
-        UpdateCameraCredentialsModalContent
+        UpdateCameraCredentialsModalContent,
+        ResetBackupModalContent,
+        AddStorageModalContent
     ],
     providers: [
         NxDialogsService,

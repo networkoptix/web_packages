@@ -7,12 +7,20 @@
         border-collapse       : collapse;
         min-width             : 100%;
         grid-template-columns : 40% fit-content(100%) auto;
+
+        &.hasAction {
+            grid-template-columns : 40% fit-content(100%) auto fit-content(100%);
+        }
     }
 
     .table-row-spacer {
         height          : .5rem;
         grid-column-end : span 3;
         display         : grid;
+
+        &.hasAction {
+            grid-column-end : span 4;
+        }
     }
 
     thead,
@@ -30,7 +38,7 @@
 
     th {
         @include typography.medium13;
-        padding          : 5px 15px;
+        padding          : 5px 0 5px 16px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
         color            : $dark9;
@@ -42,20 +50,43 @@
 
     td {
         @include typography.regular13;
-        padding          : 5px 15px;
+        padding          : 5px 0 5px 16px;
         background-color : $light1;
         color            : $dark9;
         display          : flex;
         align-items      : center;
 
+        &:last-of-type {
+            padding-right: 16px;
+        }
+
         &.size-chart {
             padding-top    : 2px !important;
             padding-bottom : 2px !important;
         }
+
+        &.disabled-label, div.disabled-label {
+            color : $light10 !important;
+
+            svg-icon {
+                svg {
+                    height: 20px;
+                    width: 20px;
+                    path {
+                        fill : $light10 !important;
+                    }
+                }
+            }
+        }
+
+        .btn-text {
+            padding : 0 !important;
+            height  : 20px !important;
+        }
     }
 
     tr:hover td {
-        background : transparentize(typography.$brand_core, 0.9);
+        background : transparentize($brand_core, 0.9);
     }
 }
 
@@ -123,6 +154,43 @@
             margin-bottom : 2px;
             border-bottom : 1px dotted $light6;
             flex-grow     : 1;
+        }
+    }
+}
+
+.reindex-container {
+    p {
+        @include typography.regular13;
+    }
+
+    .tooltip-text {
+        color: white !important;
+    }
+
+    .reindex-section {
+        display: flex;
+        .progress-bar-section {
+            flex-grow: 1;
+            padding-top: 2px;
+            .progress-bar-header {
+                @include typography.medium12;
+                display: flex;
+                justify-content: space-between;
+                div {
+                    color: $brand_core;
+                }
+                span {
+                    color: $dark9;
+                }
+            }
+            .reindex-progress-container {
+                height: 4px;
+                background-color: $light3 !important;
+                border-radius: 2px;
+                .reindex-progress {
+                    background-color: $brand_core !important;
+                }
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
 
     account: Account;
     pass: any = {};
+    hideErrors = true;
 
     changePassword: Process;
 
@@ -90,7 +91,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.applyService.initPageWatcher(this.applyContainer, this.changePassword, () => {
             this.form.reset();
             this.applyService.reset();
-        }, Object.values(this.watchers));
+        }, Object.values(this.watchers), undefined, this.displayErrors);
 
         this.accountService
             .get()
@@ -124,5 +125,9 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     setNewPassword(newPassword) {
         this.pass.newPassword = newPassword;
         this.watchers.newPassword.value = newPassword;
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 }

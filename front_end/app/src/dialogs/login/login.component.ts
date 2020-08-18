@@ -37,6 +37,7 @@ export class LoginModalContent implements OnInit {
     password: string;
     remember: boolean;
     loginProcess: any;
+    hideErrors = true;
 
     wrongPassword: boolean;
     accountBlocked: boolean;

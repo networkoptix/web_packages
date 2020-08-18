@@ -37,6 +37,8 @@ import { IParams }                             from '../components/search/search
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
 import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
+import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
+import { AddStorageModalContent }              from './add-storage/add-storage.component';
 import './../dialogs/dialogs.scss';
 
 @UntilDestroy({ checkProperties: true })
@@ -215,6 +217,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddUserModalContent, options, params);
+    }
+
+    addStorage(system: NxSystem, serverId: string) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system,
+            serverId,
+            closable: true
+        };
+
+        return this.createModal(AddStorageModalContent, options, params);
     }
 
     cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
@@ -442,5 +459,32 @@ export class NxDialogsService {
         };
 
         return this.createModal(UpdateCameraCredentialsModalContent, options, params);
+    }
+
+    addExternalStorage() {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            closable: true
+        };
+
+        return this.createModal(AddStorageModalContent, options, params);
+    }
+
+    resetBackupToDefaultSettings(system: NxSystem) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(ResetBackupModalContent, options, params);
     }
 }

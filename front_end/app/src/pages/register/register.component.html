@@ -20,8 +20,12 @@
         </div>
     </div>
 
-    <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
-          *ngIf="!registerSuccess" novalidate autocomplete="off">
+    <form id="registerForm"
+        class="form-horizontal"
+        #registerForm="ngForm"
+        (submit)="hideErrors = false"
+        [ngClass]="{'hide-errors': hideErrors}"
+        *ngIf="!registerSuccess" novalidate autocomplete="off">
 
         <h1 *ngIf="!fromClient" translate>Create account</h1>
 
@@ -72,6 +76,7 @@
                             class="form-component"
                             name="registerEmail"
                             componentId="registerEmail"
+                            [hideErrors]="hideErrors"
                             [(ngModel)]="accountInfo.email"
                             [lockEmail]="lockEmail"
                             [form]="registerForm"
@@ -106,6 +111,7 @@
                 <div class="input-group has-addon">
                     <nx-password-input
                             class="form-component"
+                            [hideErrors]="hideErrors"
                             name="registerPassword"
                             componentId="registerPassword"
                             [(ngModel)]="accountInfo.password"
@@ -118,6 +124,7 @@
 
             <div class="col-md-4">
                 <nx-password-input-validation
+                        [hideErrors]="hideErrors"
                         [forElement]="registerPassword"
                         [value]="accountInfo.password">
                 </nx-password-input-validation>
@@ -137,7 +144,7 @@
                 <label for="accept" class="m-0" [innerHTML]="'registration.agreement' | translate"></label>
             </div>
             <div class="col-md-4">
-                <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError">
+                <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError && !hideErrors">
                     <span class="help-block input-error" translate>
                         Please review and agree to the Terms and Conditions and Privacy policy in order to proceed
                     </span>

@@ -21,9 +21,7 @@
         <li *ngFor="let node of nodes | async" class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': node.url === path}"
-               [target]="node.new_window ? '_blank' : '_self'"
-               [routerLink]="node.url"
-               (click)="hide()">
+               (click)="headerService.handleNav(node);hide()">
                <span>{{node.name}}</span></a>
         </li>
     </ul>

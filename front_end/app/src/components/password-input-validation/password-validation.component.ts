@@ -16,6 +16,7 @@ export class NxPasswordValidationComponent implements OnChanges {
     @Input() forElement;
     @Input() value;
     @Input() customClass;
+    @Input() hideErrors = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

@@ -122,6 +122,7 @@ export class NxHeaderService {
                         const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
                         if (nodeUrl === url || url.startsWith(nodeUrl) && (!bestMatch.path || bestMatch.path.length < nodeUrl.length)) {
                             bestMatch.path = node.url;
+                            bestMatch.assetId = node.asset_id;
                             bestMatch.parentNode = parentNode;
                             bestMatch.childNode = node;
                             if (nodeUrl === url) {
@@ -133,5 +134,26 @@ export class NxHeaderService {
             }
         }
         this.currentLocation = bestMatch;
+    }
+
+    /**
+     * Check if url is an external link then handles navigation appropriately.
+     *
+     * @param param0 - Accepts MenuNode which contains a url property
+     */
+    handleNav({ url, new_window: newWindow }: MenuNode) {
+        this.showSubject.next(false);
+        const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
+        if (urlPattern.test(url)) {
+            if (!url.startsWith('http')) {
+                url = `http://${url}`;
+            }
+            window.open(url, newWindow ? '_blank' : '_self');
+        } else if (newWindow) {
+            const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
+            window.open(serializedUrl, '_blank');
+        } else {
+            this.router.navigate([url]);
+        }
     }
 }

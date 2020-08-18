@@ -44,17 +44,25 @@ $stripes : repeating-linear-gradient(
         height        : 100%;
         border-radius : 2px;
 
+        &.hidden {
+            display: none;
+        }
+
         &.available {
             background-color           : $additional_light1;
             border                     : 1px solid $light3;
             border-right               : none;
             border-bottom-right-radius : 0;
             border-top-right-radius    : 0;
+
+            &.full {
+                border-right : 1px solid $light3;;
+            }
         }
 
         &.archive {
-            background-color : rgba($green_l2, 0.7);
-            border           : 1px solid rgba($green_l1, 0.6);
+            background-color : rgba($green_l2, 0.3);
+            border           : 1px solid rgba($green_l1, 0.4);
             margin-left      : 1px; // avoid border-radius color bleeding
         }
 

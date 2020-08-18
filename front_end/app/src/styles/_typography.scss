@@ -101,6 +101,10 @@
     @include font-source($font-family-regular, $font-size-sm, $font-color-regular);
 }
 
+@mixin medium12 {
+    @include font-source($font-family-medium, $font-size-sm, $font-color-regular);
+}
+
 @mixin light12 {
     @include font-source($font-family-light, $font-size-sm, $font-color-light);
 }

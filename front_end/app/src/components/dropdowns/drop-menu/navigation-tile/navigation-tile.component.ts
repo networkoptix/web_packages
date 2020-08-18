@@ -40,11 +40,6 @@ export class NxNavigiationTileComponent {
     }
 
     ngOnDestroy() {}
-
-    handleNav(node: MenuNode) {
-        this.headerService.showSubject.next(false);
-        this.router.navigate([node.url]);
-    }
 };
 
 export class MenuNode {
@@ -58,7 +53,8 @@ export class MenuNode {
         public authentication: Auth = Auth.BOTH,
         public display_name = name,
         public new_window = false,
-        currentRoute = false
+        currentRoute = false,
+        public asset_id = null
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

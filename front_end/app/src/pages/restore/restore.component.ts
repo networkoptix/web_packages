@@ -33,6 +33,7 @@ export class NxRestoreComponent implements OnInit {
     changeSuccess;
     context;
     ready: boolean;
+    hideErrors = true;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();

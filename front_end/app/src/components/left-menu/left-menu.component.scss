@@ -20,11 +20,11 @@
 .base-level {
     @include typography.regular14;
     position: relative;
-    height: 32px;
     cursor: pointer;
     color: $dark10;
     user-select: none;
     & > .menu-link {
+        padding: 5px 0;
         height: 100% !important;
         width: 100% !important;
         display: flex;
@@ -36,7 +36,7 @@
 
     & >.left-menu-arrow {
             position: absolute;
-            top: 0;
+            top: calc(50% - 16px);
             left: 8px;
             height: 32px !important;
             display: flex;

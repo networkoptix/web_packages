@@ -1,10 +1,12 @@
+<ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
+
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
 <ng-template #normalCard let-node="node">
     <nx-block type="mt-3">
         <header>{{node.title}}</header>
         <nx-section>
-            <div [outerHTML]="node.content | safe:'html'"></div>
+            <div [innerHTML]="node.content | safe:'html'"></div>
         </nx-section>
     </nx-block>
 </ng-template>
@@ -22,25 +24,27 @@
             <h3>{{node.title}}</h3>
         </header>
         <nx-section>
-            <div [outerHTML]="node.content | safe:'html'"></div>
+            <div [innerHTML]="node.content | safe:'html'"></div>
         </nx-section>
     </nx-block>
 </ng-template>
 
 <ng-template #otherArticle>
     <h1>{{node.title}}</h1>
-    <div [outerHTML]="node.content | safe:'html'"></div>
+    <div [innerHTML]="node.content | safe:'html'"></div>
 </ng-template>
 
 <!-- End of Card Templates -->
 
 <div class="page-wrapper">
-    <nx-left-menu menuName="KnowledgeBase"></nx-left-menu>
+    <nx-left-menu menuName="Knowledgebase" baseRoute="/developers/knowledge-base/"></nx-left-menu>
     <div class="knowledge-base">
-        <ng-container *ngIf="node.cardClass !== 'article';else otherArticle">
-            <nx-search></nx-search>
-            <ng-container *ngFor="let node of node.nodes">
-                <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+        <ng-container *ngIf="!loading; else preloader">
+            <ng-container *ngIf="node.cardClass !== 'article';else otherArticle">
+                <nx-search></nx-search>
+                <ng-container *ngFor="let node of node.nodes">
+                    <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+                </ng-container>
             </ng-container>
         </ng-container>
     </div>

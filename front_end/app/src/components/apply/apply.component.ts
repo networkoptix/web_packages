@@ -27,6 +27,8 @@ export class NxApplyComponent {
     @Input() discard;
     @Input() warn: string;
     @Input() form: NgForm;
+    @Input() submitFn: () => any = () => null;
+    @Input() showSectionWarning = false;
 
     applyVisible: boolean;
     isOnline = true;

@@ -41,6 +41,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     save: Process;
     langCode: string;
     isSystemOwner = true;
+    hideErrors = true;
 
     watchers = {
         firstName : new Watcher<string>(),
@@ -76,7 +77,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.pageService.pageTitle = this.LANG.pageTitles.account;
+        this.pageService.pageTitle = this.LANG.pageTitles.account();
 
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {
@@ -94,8 +95,8 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
-            successMessage  : this.LANG.account.accountSavedSuccess,
-            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix,
+            successMessage  : this.LANG.account.accountSavedSuccess(),
+            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
             this.applyService.hardReset();
@@ -109,7 +110,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.account.last_name = this.watchers.lastName.originalValue;
             this.langCode = this.watchers.langCode.originalValue;
             this.applyService.reset();
-        }, Object.values(this.watchers));
+        }, Object.values(this.watchers), undefined, this.displayErrors);
 
         this.accountService
             .get()
@@ -125,7 +126,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             });
 
         if (this.localStorage && this.localStorage.get('langChanged')) {
-            this.dialogs.notify(this.LANG.account.accountSavedSuccess, 'success');
+            this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.localStorage.set('langChanged', false);
         }
 
@@ -165,6 +166,10 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 return system.accessRole === 'owner';
             });
         });
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 
     deleteUser() {

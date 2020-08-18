@@ -1,61 +1,65 @@
-@use '../../../../styles/theme_variables';
+@use "../../../../styles/theme_variables" as *;
 @import "./main-button.component.scss";
 
 .st0 {
     fill-rule: evenodd;
     clip-rule: evenodd;
-    fill: theme_variables.$additional_light1 !important;
+    fill: $additional_light1 !important;
 }
 
 .main-button {
-    background: theme_variables.$dark14 !important;
+    background: $dark14 !important;
     border: 1px solid transparent !important;
     & > .dropdown {
         & > #systemsDropdown {
-            color: theme_variables.$additional_light1 !important;
+            color: $additional_light1 !important;
         }
 
         &.show > #systemsDropdown{
-            border: 1px solid theme_variables.$dark11 !important;
-            background: theme_variables.$dark12 !important;
-            border: 1px solid theme_variables.$dark11 !important;
+            border: 1px solid $dark11 !important;
+            background: $dark12 !important;
+            border: 1px solid $dark11 !important;
             &:hover {
-                background: 1px theme_variables.$dark13 !important;
-                border: 1px solid theme_variables.$dark12 !important;
+                background: 1px $dark13 !important;
+                border: 1px solid $dark12 !important;
             }
             &:active {
-                background: theme_variables.$dark12 !important;
-                border: 1px solid theme_variables.$dark11 !important;
+                background: $dark12 !important;
+                border: 1px solid $dark11 !important;
             }
         }
 
         &:not(.show) > #systemsDropdown {
-            background: theme_variables.$dark14 !important;
-            color: theme_variables.$additional_light1 !important;
+            background: $dark14 !important;
+            color: $additional_light1 !important;
             border: 1px solid transparent !important;
             &:hover {
-                background: theme_variables.$dark15 !important;
+                background: $dark15 !important;
             }
             &:active {
-                background: theme_variables.$dark13 !important;
+                background: $dark13 !important;
             }
         }
         &::after {
             content: "";
-            background: theme_variables.$dark14 !important;
+            background: $dark14 !important;
         }
     }
 
-    &::after {
-        background: theme_variables.$light16 !important;
+    & > svg-icon > svg > .st0{
+        fill: $light16 !important;
     }
 }
 
 .popup {
     &.arrow {
-        border-bottom-color: theme_variables.$dark11 !important;
+        border-bottom-color: $dark11 !important;
         &::after {
-            border-bottom-color: theme_variables.$additional_light1 !important;
+            border-bottom-color: $additional_light1 !important;
         }
     }
+}
+
+.icon-wrapper .st0 {
+    fill: $additional_light1 !important;
 }

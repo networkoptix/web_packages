@@ -34,6 +34,7 @@ export class NxRegisterComponent implements OnInit {
     fromClient;
     location;
     CONFIG: IConfig;
+    hideErrors = true;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 
@@ -132,7 +133,6 @@ export class NxRegisterComponent implements OnInit {
 
         this.register = this.processService.createProcess(() => {
             this.accountService.email = this.accountInfo.email;
-
             return this.cloudApiService
                 .registerUser(
                     this.accountInfo.email,

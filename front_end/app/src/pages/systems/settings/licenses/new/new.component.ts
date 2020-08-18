@@ -36,6 +36,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @Input() licenses: any = [];
 
     windowSizeSubscription: SubscriptionLike;
+    hideErrors = true;
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
     @ViewChild('errorDiv') errorDiv: HTMLDivElement;
@@ -43,6 +44,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     private setupDefaults() {
         this.activateKey = this.processService.createProcess(() => {
+            this.hideErrors = false;
             if (!this.system.isOnline) {
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ offline: true });
@@ -189,6 +191,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     changeServer(server) {
         this.selectedServer = server;
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 
     ngOnDestroy(): void {

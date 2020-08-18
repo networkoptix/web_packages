@@ -15,3 +15,15 @@
         }
     }
 }
+
+.tooltip {
+    &.bs-tooltip-top {
+        & > .arrow {
+            left : calc(50% - 1rem); // move it to the center
+        }
+
+        & > .tooltip-inner {
+            text-align: left;
+        }
+    }
+}

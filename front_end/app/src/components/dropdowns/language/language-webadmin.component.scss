@@ -44,7 +44,7 @@ nx-header-language-select {
     
         button#dropdownMenuButton.btn.btn-dropdown-toggle.dropdown-toggle {
             padding: 5px 27px 5px 8px !important;
-            height: 100%;
+            height: 41px !important;
             width: auto !important;
             box-shadow: none !important;
             & > .arrow-flip {
@@ -60,6 +60,13 @@ nx-header-language-select {
     
         &.short.alt-style {
             width: auto !important;
+        }
+    }
+
+    svg-icon {
+        bottom: 10px !important;
+        #Path-2-Copy {
+            stroke: theme_variables.$additional_light1 !important;
         }
     }
 }

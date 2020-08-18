@@ -42,8 +42,8 @@
             border: 1px solid $light4;
 
                 &:hover {
-                    background: 1px $light4 !important;
-                    border: 1pxsolid $light5;
+                    background: $light4 !important;
+                    border: 1px solid $light5;
                 }
                 &:active {
                     background: $light5 !important;

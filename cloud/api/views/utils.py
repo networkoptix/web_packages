@@ -51,7 +51,6 @@ def get_settings_from_cache():
         'companyName': customization_cache.get('company_name', ''),
         'companyLink': customization_cache.get('company_link', ''),
         'feedbackEnabled': customization_cache.get('feedback_enabled', False),
-        'footerItems': customization_cache.get('footer_items', []),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
@@ -338,10 +337,6 @@ def get_settings(request):
     if not settings_object.get('integrationStoreEnabled') and \
             UserGroupsToAssetPermissions.user_has_beta_access(request.user):
         settings_object['integrationStoreEnabled'] = True
-        for item in settings_object['footerItems']:
-            if item['url'] == '/integrations':
-                item['enabled'] = True
-                break
     return Response(settings_object)
 
 

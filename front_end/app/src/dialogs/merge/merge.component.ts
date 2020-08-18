@@ -736,9 +736,11 @@ export class MergeModalContent {
             const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
                 ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
                 : error;
-            errorText[error] = this.LANG.dialogs.merge[parsedError]?.()
-                .replace(/%primarySystem%|%targetSystem%/g, (found: string) => {
-                    return found === '%primarySystem%' ? this.primaryName : this.secondaryName;
+            errorText[error] = NxLanguageProviderService.translate(
+                this.LANG.dialogs.merge[parsedError], {
+                    primarySystem   : this.primaryName,
+                    targetSystem    : this.secondaryName,
+                    secondarySystem : this.secondaryName
                 });
         }
     }

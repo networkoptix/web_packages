@@ -16,6 +16,7 @@ import { Location } from '@angular/common';
 })
 export class NxLeftMenuComponent implements OnInit {
     @Input() menuName: string;
+    @Input() baseRoute: string;
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
@@ -69,15 +70,18 @@ export class NxLeftMenuComponent implements OnInit {
         }
     }
 
-    mapParentNode(currentNode, parentNode?) {
+    mapParentNodeAndUrl(currentNode, parentNode?) {
         currentNode.parentNode = parentNode;
-        currentNode.nodes.forEach(childNode => this.mapParentNode(childNode, currentNode));
+        if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
+            currentNode.url = this.baseRoute + currentNode.asset_id;
+        }
+        currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
     }
 
     ngOnInit() {
         this.menusService.getMenu(this.menuName).subscribe(menu => {
             this.menuNodes = menu;
-            this.menuNodes.forEach(node => this.mapParentNode(node));
+            this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
         });
         this.routeSubscription = this.router.events
             .pipe(

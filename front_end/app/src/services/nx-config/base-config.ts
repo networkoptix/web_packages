@@ -50,7 +50,6 @@ export interface BaseConfig {
     localSystemId: string;
     company: Company;
     dynamicMenus: MenuStructure;
-    footerItems: FooterItem[];
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,
@@ -322,6 +321,7 @@ export interface Icons {
     default: string;
     platforms: Platform[];
     dir: string;
+    dirButtons: string;
     dirNonStandard: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
