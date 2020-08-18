@@ -13,6 +13,7 @@ LM Suite Set Up
     END
     Sleep    120
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
+#    Merge Cloud Systems    ${ENV}    ${sys id 2}    ${sys id 3}    ${LM OWNER}    ${BASE PASSWORD}
     Sleep    60
 
     FOR    ${role}    IN    @{LM USERS.keys()}
@@ -97,12 +98,12 @@ Activate Key
     Sleep    2    # To avoid clicking the button before key is completely input
     Click Button    ${ACTIVATE BUTTON}
     Run Keyword If    ${success}     Check For Alert    ${LICENSE IS ACTIVATED TEXT}
-    Run Keyword Unless    '${error text}' == '${EMPTY}'   Wait Until Element Is Visible    //span[contains(text(), "${error text}")]
+    Run Keyword Unless    '${error text}' == '${EMPTY}'   Wait Until Element Is Visible    //span[contains(text(), "${error text}")]    timeout=20
 
 Validate Input Error
     [Arguments]    ${error text}
     Wait Until Element Is Visible   ${ACTIVATE TRIAL FORM}//span[contains(text(), "${error text}")]
-    ${class}=   Get Attribute    ${LICENSE KEY INPUT}
+    ${class}=   Get Element Attribute    ${LICENSE KEY INPUT}
     Should Contain    ${class}    ng-dirty ng-touched ng-invalid
 
 Activate Trial
@@ -131,12 +132,17 @@ Validate Summary Record
     Should Be Equal As Numbers    ${av}    ${available}
 
 Validate License Info
+    [Documentation]   Verify the key's info on server and on cloud is equal
     [Arguments]    ${key}    ${port}=${LM PORT 1}
     ${key info}=   Get key info from server    ${CLOUD AUTH}    ${LOCALHOST}:${port}    ${key}
     ${key params}=   Get Child WebElements    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]
 
     @{supp_params}=   Create List    Status    Server
     FOR    ${p}    IN    @{key params}
+        ${style}=   Get Element Attribute    ${p}    style
+        ${visible}=   Run Keyword And Return Status    Should Not Contain    ${style}    display: none
+        Run Keyword Unless    ${visible}    Continue For Loop
+
         ${title}=   Get Element Attribute    ${p}    title
         @{key-value}=  Split String    ${title}    separator=-
         ${key}=   Set Variable    ${key-value}[0]
