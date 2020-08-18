@@ -181,7 +181,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Ten e-mail został już zarejestrowany w systemie %systemName%"
         },
         "buttons": {
             "cancel": "Anuluj",
