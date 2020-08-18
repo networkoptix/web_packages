@@ -10,7 +10,7 @@ ${customization}    default
 *** Keywords ***
 # Keywords which use Cloud and cloud Portal API
 Merge Systems
-    [Documentation]    Merge two cloud systems which have the same owner
+    [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
     &{data}=   Create Dictionary    systemId=${secondary id}
     Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1

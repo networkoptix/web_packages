@@ -117,10 +117,9 @@ Input validation errors
 
     Log Out
 
-Server response errors
-    [Tags]    C76544    C76545    C76542    server_errors
+Server response errors: Failed to get response from license server
+    [Tags]    C76544    server_errors
     Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
-    Log    C76544: Failed to get response from license server
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -131,22 +130,48 @@ Server response errors
     ${key}=   Generate Licenses
 
     Activate Key    ${key}    success=False
-    Check For Alert    ${LICENSE SERVER DID NOT RESPOND TEXT}
-    Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${LM HOST}
+    Check For Alert    ${LICENSE SERVER DID NOT RESPOND TEXT}    timeout=10
 
-#    Log    Not implemented - see CLOUD-5631: Failed to activate an expired license
+    Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${LM HOST}
+    Log Out
+
+Server response errors: License key is expired
+    [Tags]    server_errors
+    Log    Not implemented - see CLOUD-5631: Failed to activate an expired license
+#    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+#    Log In    ${LM OWNER}    ${BASE PASSWORD}
+#    Go To    ${ENV}/systems/${sys id 1}
+#    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+#    Open Licenses Page
+#    Validate Licenses Page    trial left=True
 #    ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
 #    ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
 #    Activate Key    success=False
-#    Check For Alert    ${LICENSE IS EXPIRED TEXT}
+#    Check For Alert    ${LICENSE IS EXPIRED TEXT}    timeout=10
 
-    Log    C76545: Media server becomes offline during license activation
+#    Log Out
+
+Server response errors: Media server becomes offline during license activation
+    [Tags]    C76545    server_errors
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 1}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    trial left=True
+
     Stop Container    ${cont 1}
+    ${key}=   Generate Licenses
     Activate Key    ${key}    success=False
-    Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}
-    Start Container    ${cont 1}
+    Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
 
-    Log    C76542: Server offline(System has two servers)
+    Start Container    ${cont 1}
+    Log Out
+
+Server response errors: Server offline(System has two servers)
+    [Tags]    C76532    C76542    server_errors
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -156,14 +181,21 @@ Server response errors
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
-    Activate Key    ${key}    success=False    server name=${server 3}
-    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}
+    ${key}=   Generate Licenses
+    Input Text    ${LICENSE KEY INPUT}    ${key}
+    Click Button    ${BIND TO SERVER DROPDOWN}
+    # Pick the server with "offline" mark
+    ${offline server}=   Set Variable   ${BIND TO SERVER DROPDOWN}/following-sibling::div//a/span[contains(text(), "${server 3}")]/span[contains(text(), "Offline")]
+    Wait Until Element Is Visible    ${offline server}
+    Slow    Click Element    ${offline server}    timeout=2
+    Click Button    ${ACTIVATE BUTTON}
+    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
     Start Container    ${cont 3}
 
     Log Out
 
 Successful scenarios
-    [Tags]    C76548    C76549    C76554    success
+    [Tags]    C76531    C76548    C76549    C76554    success
     Log    Test Set Up
     Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -183,12 +215,7 @@ Successful scenarios
     Should Be True    ${activated}
 
     Log    Step 3
-    Wait Until Elements Are Visible
-    ...    ${LICENSES SUMMARY BLOCK}
-    ...    ${LICENSES SUMMARY HEADER}
-    ...    ${LICENSES SUMMARY THEAD}
-    ...    ${LICENSES SUMMARY RECORD}
-
+    Validate Licenses Page    trial left=True    clean=False
     ${key records}=    Get WebElements    ${LICENSES SUMMARY RECORD}
     ${num records}=   Get Length    ${key records}
     Should be Equal As Numbers    ${num records}    1
@@ -206,6 +233,7 @@ Successful scenarios
     Should Be True    ${activated}
 
     Log    Step 3
+    Validate Licenses Page    trial left=True    clean=False
     ${key records}=    Get WebElements    ${LICENSES SUMMARY RECORD}
     ${num records}=   Get Length    ${key records}
     Should be Equal As Numbers    ${num records}    2
@@ -218,6 +246,7 @@ Successful scenarios
     Log    Step 2
     Activate Trial
     Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
+    Validate Licenses Page    trial left=False    clean=False
 
     Log    Step 3
     ${key records}=   Get WebElements    ${LICENSES SUMMARY RECORD}
@@ -230,8 +259,8 @@ Successful scenarios
 
     Log Out
 
-License Detail Block
-    [Tags]    C76557    C76560    C76561    C76563    C76564    C76565    C76566    details
+License Details Block: Purchase permanent keys
+    [Tags]    C76532    C76557    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
@@ -239,7 +268,6 @@ License Detail Block
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    Log    C76557: Purchase permanent keys
     @{lic types}=   Create List    digital    analogencoder    iomodule    vmax    videowall    starter
     ${n}=   Set Variable    0
     FOR     ${type}    IN    @{lic types}
@@ -249,12 +277,27 @@ License Detail Block
         Activate Key    ${key}    server name=${server ${k}}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${k}}    ${key}
         Should Be True    ${activated}
+        Validate Licenses Page    trial left=True    clean=False
         Validate License Info    ${key}    port=${LM PORT ${k}}
+        ${status}=   Get Key Status    ${key}
+        Should Be Equal As Strings    ${status}    OK
+        ${server}=   Get Key Server    ${key}
+        Should Contain    ${server}    ${server ${k}}
         ${n}=   Evaluate    ${n}+1
     END
 
-    Log    C76560: SAAS keys
-    Remove Values From List    ${lic types}    starter
+    Log Out
+
+License Details Block: SAAS keys
+    [Tags]    C76560    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
+    @{lic types}=   Create List    digital    analogencoder    iomodule    vmax    videowall
     FOR     ${type}    IN    @{lic types}
         ${rand}=   Evaluate    random.randint(31, 101)
         ${exp ts}=   Get Current Date    increment=${rand}d    result_format=datetime
@@ -262,17 +305,102 @@ License Detail Block
         Activate Key    ${key}    server name=${server 2}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
+        Validate Licenses Page    trial left=True    clean=False
         Validate License Info    ${key}    port=${LM PORT 2}
+        ${status}=   Get Key Status    ${key}
+        Should Be Equal As Strings    ${status}    OK
+        ${server}=   Get Key Server    ${key}
+        Should Contain    ${server}    ${server 2}
     END
 
-    Log    C76561: License details for Video Wall licenses
+    Log Out
+
+License Details Block: Video Wall licenses
+    [Tags]    C76561    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
     ${demo vw}=   Generate Licenses    order_type=demo    license_type=videowall    n_cameras=17    trial_days=60
     Activate Key    ${demo vw}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo vw}
     Should Be True    ${activated}
+    Validate Licenses Page    trial left=True    clean=False
     Validate License Info    ${demo vw}    port=${LM PORT 2}
+    ${status}=   Get Key Status    ${demo vw}
+    Should Be Equal As Strings    ${status}    OK
+    ${server}=   Get Key Server    ${demo vw}
+    Should Contain    ${server}    ${server 2}
 
-    Log    C76563: License details for license with expired status
+    Log Out
+
+License Details Block: license with date within 30 days
+    [Tags]    C76565    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
+    ${key}=   Generate Licenses    order_type=demo    trial_days=30
+    Activate Key    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    Should Be True    ${activated}
+    Validate License Info    ${key}    port=${LM PORT 2}
+    ${server}=   Get Key Server    ${key}
+    Should Contain    ${server}    ${server 2}
+    ${status}=   Get Key Status    ${key}
+    Should Be Equal As Strings    ${status}    OK
+
+    Log Out
+
+License Details Block: deactivated license
+    [Tags]    C765666    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
+    ${key}=   Generate Licenses
+    FOR    ${i}    IN RANGE    3
+        Activate Key    ${key}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+        Should Be True    ${activated}
+        Validate License Info    ${key}    port=${LM PORT 2}
+        ${status}=   Get Key Status    ${key}
+        Should Be Equal As Strings    ${status}    OK
+        ${server}=   Get Key Server    ${key}
+        Should Contain    ${server}    ${server 2}
+        Deactivate Licenses    ${key}
+        Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+        Sleep    10
+        Reload Page
+        Validate Licenses Page    several servers=True    trial left=True   clean=False
+        Wait Until Element Is Not Visible    //header[h4="${key}"]
+    END
+    Activate Key    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    Should Be True    ${activated}
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
+    Validate License Info    ${key}    port=${LM PORT 2}
+
+    Log Out
+
+License Details Block: license with expired status
+    [Tags]    C76563    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
     ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
     ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}
@@ -287,7 +415,17 @@ License Detail Block
     ${status}=   Get Key Status    ${key}
     Should Be Equal As Strings    ${status}    Expired
 
-    Log    C76564: License details for license with error status
+    Log Out
+
+License Details Block: license with error status
+    [Tags]    C76564    details
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
+
     ${key}=   Generate Licenses
     Activate Key    ${key}    server name=${server 3}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${key}
@@ -307,40 +445,48 @@ License Detail Block
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
-    Log    C76565: License details for license with date within 30 days
-    ${key}=   Generate Licenses    order_type=demo    trial_days=30
-    Activate Key    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
-    Should Be True    ${activated}
-    Validate License Info    ${key}    port=${LM PORT 2}
-
-    Log   C76566: License details for deactivated license
-    ${key}=   Generate Licenses
-    FOR    ${i}    IN RANGE    3
-        Activate Key    ${key}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
-        Should Be True    ${activated}
-        Validate License Info    ${key}    port=${LM PORT 2}
-        Deactivate Licenses    ${key}
-        Slow    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}    timeout=20
-        Reload Page
-        Validate Licenses Page    several servers=True    trial left=True    clean=False
-        Wait Until Element Is Not Visible    //header[h4="${key}"]
-    END
-    Activate Key    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
-    Should Be True    ${activated}
-    Validate License Info    ${key}    port=${LM PORT 2}
-
     Log Out
 
-License Summary Block
-    [Tags]    C76567    C76631    C76632    summary
-    FOR    ${i}    IN RANGE    1    4
-        Remove all keys from system    ${LOCALHOST}:${LM PORT ${i}}  ${CLOUD AUTH}
-    END
+License Summary Block: Server goes offline
+    [Tags]    C76567    C76631    summary
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}  ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 2}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    several servers=True    trial left=True
 
-    Log    C76632: license key is expired
+    ${num online}=   Evaluate    random.randint(10, 100)
+    ${num offline}=   Evaluate    random.randint(10, 100)
+    ${total}=   Evaluate    ${num online}+${num offline}
+    ${pro on}=   Generate Licenses    license_type=digital    n_cameras=${num online}
+    ${pro off}=   Generate Licenses    license_type=digital    n_cameras=${num offline}
+    Activate Key    ${pro on}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
+    Should Be True    ${activated}
+    Activate Key    ${pro off}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
+    Should Be True    ${activated}
+
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
+    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${total}
+    Validate License Info    ${pro on}    port=${LM PORT 2}
+    Validate License Info    ${pro off}    port=${LM PORT 3}
+
+    Stop Container    ${cont 3}
+    Sleep    10
+    Reload Page
+
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
+    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
+
+    Start Container    ${cont 3}
+    Log Out
+
+License Summary Block: License key is expired
+    [Tags]    C76567    C76632    summary
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}  ${CLOUD AUTH}
+
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -367,45 +513,8 @@ License Summary Block
     Validate Licenses Page    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[videowall]    ${total}    ${num good}
     Validate License Info    ${pur vw}
-    # TODO: gives an error - figure out why
-#    Validate License Info    ${saas vw}
+    Validate License Info    ${saas vw}
 
-    Log    C76631: Server goes offline
-    Go To    ${ENV}/systems/${sys id 2}
-    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-    Open Licenses Page
-    Validate Licenses Page    several servers=True    trial left=True
-
-    ${num online}=   Evaluate    random.randint(10, 100)
-    ${num offline}=   Evaluate    random.randint(10, 100)
-    ${total}=   Evaluate    ${num online}+${num offline}
-    ${pro on}=   Generate Licenses    license_type=digital    n_cameras=${num online}
-    ${pro off}=   Generate Licenses    license_type=digital    n_cameras=${num offline}
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
-    Should Be True    ${activated}
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
-    Should Be True    ${activated}
-
-    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
-    Restart Server    ${LOCALHOST}:${LM PORT 3}    ${CLOUD AUTH}
-    Sleep    10
-
-    Reload Page
-    Validate Licenses Page    several servers=True    trial left=True    clean=False
-    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${total}
-    Validate License Info    ${pro on}    port=${LM PORT 2}
-    Validate License Info    ${pro off}    port=${LM PORT 3}
-
-    Stop Container    ${cont 3}
-    Sleep    10
-    Reload Page
-
-    Validate Licenses Page    trial left=True    clean=False
-    Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
-
-    Start Container    ${cont 3}
     Log Out
 
 VMS integration
