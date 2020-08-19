@@ -31,7 +31,7 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
 Toggle Recording
-    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Wait Until Element Is Enabled    ${ENABLED RECORDING SLIDER}
     Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
@@ -79,8 +79,14 @@ Get Recording Quality
 Get Camera Id By Name
     [Arguments]    ${auth}    ${server url}    ${name}
     ${cameras json}=    Get Cameras    ${auth}    ${server url}
-    log    ${cameras json[0]}
     FOR    ${camera}  IN  @{cameras json}
-        log    ${camera}
         Run Keyword If    '''${camera['cameraName']}'''=='''${name}'''    Return From Keyword    ${camera['cameraId']}
     END
+
+Verify recording controls are open
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    ...    ${FPS INPUT}                             
+    ...    ${QUALITY DROPDOWN}
