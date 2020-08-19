@@ -32,9 +32,6 @@ License Management availability for offline system
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
     Start Container    ${cont 1}
-    ${cont id}=   Get Container Id    ${cont 1}
-    Set Suite Variable    ${cont id 1}    ${cont id}
-    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 1}
     Sleep    30
     Log Out
 
@@ -169,9 +166,6 @@ Server response errors: Media server becomes offline during license activation
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
 
     Start Container    ${cont 1}
-    ${cont id}=   Get Container Id    ${cont 1}
-    Set Suite Variable    ${cont id 1}    ${cont id}
-    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 1}
     Log Out
 
 Server response errors: Server offline(System has two servers)
@@ -198,9 +192,6 @@ Server response errors: Server offline(System has two servers)
     Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
 
     Start Container    ${cont 3}
-    ${cont id}=   Get Container Id    ${cont 3}
-    Set Suite Variable    ${cont id 3}    ${cont id}
-    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 Successful scenarios
@@ -287,11 +278,7 @@ License Details Block: Purchase permanent keys
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${k}}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
-        Validate License Info    ${key}    port=${LM PORT ${k}}
-        ${status}=   Get Key Status    ${key}
-        Should Be Equal As Strings    ${status}    OK
-        ${server}=   Get Key Server    ${key}
-        Should Contain    ${server}    ${server ${k}}
+        Validate License Info    ${key}    server num=${k}
         ${n}=   Evaluate    ${n}+1
     END
 
@@ -315,11 +302,7 @@ License Details Block: SAAS keys
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
-        Validate License Info    ${key}    port=${LM PORT 2}
-        ${status}=   Get Key Status    ${key}
-        Should Be Equal As Strings    ${status}    OK
-        ${server}=   Get Key Server    ${key}
-        Should Contain    ${server}    ${server 2}
+        Validate License Info    ${key}    server num=2
     END
 
     Log Out
@@ -338,11 +321,7 @@ License Details Block: Video Wall licenses
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo vw}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
-    Validate License Info    ${demo vw}    port=${LM PORT 2}
-    ${status}=   Get Key Status    ${demo vw}
-    Should Be Equal As Strings    ${status}    OK
-    ${server}=   Get Key Server    ${demo vw}
-    Should Contain    ${server}    ${server 2}
+    Validate License Info    ${demo vw}    server num=2
 
     Log Out
 
@@ -356,19 +335,15 @@ License Details Block: license with date within 30 days
     Validate Licenses Page    several servers=True    trial left=True
 
     ${key}=   Generate Licenses    order_type=demo    trial_days=30
-    Activate Key    ${key}
+    Activate Key    ${key}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
-    Validate License Info    ${key}    port=${LM PORT 2}
-    ${server}=   Get Key Server    ${key}
-    Should Contain    ${server}    ${server 2}
-    ${status}=   Get Key Status    ${key}
-    Should Be Equal As Strings    ${status}    OK
+    Validate License Info    ${key}    server num=2
 
     Log Out
 
 License Details Block: deactivated license
-    [Tags]    C765666    details
+    [Tags]    C76566    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
@@ -378,26 +353,22 @@ License Details Block: deactivated license
 
     ${key}=   Generate Licenses
     FOR    ${i}    IN RANGE    3
-        Activate Key    ${key}
+        Activate Key    ${key}    server name=${server 2}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
-        Validate License Info    ${key}    port=${LM PORT 2}
-        ${status}=   Get Key Status    ${key}
-        Should Be Equal As Strings    ${status}    OK
-        ${server}=   Get Key Server    ${key}
-        Should Contain    ${server}    ${server 2}
+        Validate License Info    ${key}    server num=2
         Deactivate Licenses    ${key}
         Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
         Sleep    10
         Reload Page
-        Validate Licenses Page    several servers=True    trial left=True   clean=False
+        Validate Licenses Page    several servers=True    trial left=True
         Wait Until Element Is Not Visible    //header[h4="${key}"]
     END
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
-    Validate License Info    ${key}    port=${LM PORT 2}
+    Validate License Info    ${key}    server num=2
 
     Log Out
 
@@ -420,9 +391,7 @@ License Details Block: license with expired status
     Sleep    10
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
-    Validate License Info    ${key}    port=${LM PORT 2}
-    ${status}=   Get Key Status    ${key}
-    Should Be Equal As Strings    ${status}    Expired
+    Validate License Info    ${key}    status=Expired    server num=2
 
     Log Out
 
@@ -454,9 +423,6 @@ License Details Block: license with error status
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
-    ${cont id}=   Get Container Id    ${cont 3}
-    Set Suite Variable    ${cont id 3}    ${cont id}
-    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 License Summary Block: Server goes offline
@@ -473,29 +439,26 @@ License Summary Block: Server goes offline
     ${total}=   Evaluate    ${num online}+${num offline}
     ${pro on}=   Generate Licenses    license_type=digital    n_cameras=${num online}
     ${pro off}=   Generate Licenses    license_type=digital    n_cameras=${num offline}
-    Activate Key    ${pro on}
+    Activate Key    ${pro on}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
     Should Be True    ${activated}
-    Activate Key    ${pro off}
+    Activate Key    ${pro off}    server name=${server 3}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
     Should Be True    ${activated}
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${total}
-    Validate License Info    ${pro on}    port=${LM PORT 2}
-    Validate License Info    ${pro off}    port=${LM PORT 3}
+    Validate License Info    ${pro on}    server num=2
+    Validate License Info    ${pro off}    server num=3
 
     Stop Container    ${cont 3}
-    Sleep    10
+    Sleep    30
     Reload Page
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
 
     Start Container    ${cont 3}
-    ${cont id}=   Get Container Id    ${cont 3}
-    Set Suite Variable    ${cont id 3}    ${cont id}
-    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 3}
     Log Out
 
 License Summary Block: License key is expired
@@ -528,7 +491,7 @@ License Summary Block: License key is expired
     Validate Licenses Page    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[videowall]    ${total}    ${num good}
     Validate License Info    ${pur vw}
-    Validate License Info    ${saas vw}
+    Validate License Info    ${saas vw}    status=Expired
 
     Log Out
 
