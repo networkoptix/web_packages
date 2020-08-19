@@ -324,10 +324,10 @@ Check Allow Only Secure Connections
 Set Camera Name
     [Arguments]    ${server url}    ${auth}    ${camera id}    ${name}
     &{data} =    Create Dictionary
-    ...    cameraId={${camera id}}
+    ...    cameraId=${camera id}
     ...    cameraName=${name}
     Create Digest Session    Save camera name    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributesList    json=${data}    timeout=10
+    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributes    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
@@ -371,7 +371,7 @@ Remove User
 Get Cameras
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Cameras session   ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Get Cameras session    /ec2/getCamerasEx
+    ${resp}=   Get Request    Get Cameras session    /ec2/getCameraUserAttributesList
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 

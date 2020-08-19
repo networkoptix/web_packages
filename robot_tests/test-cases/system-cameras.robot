@@ -13,6 +13,51 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Test Cases ***
+Camera settings is not available to any viewers
+    [Tags]    C76253    threaded
+    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+
+No cameras placeholder
+    [Tags]    C76257    threaded
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS 4.0 SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Wait Until Elements Are Visible    
+    ...    ${NO CAMERAS PLACEHOLDER IMAGE}
+    ...    ${NO CAMERAS TITLE}            
+    ...    ${NO CAMERAS MESSAGE}       
+
+Camera status match server
+    @{auth}=   Create List    admin    ${BASE PASS WORD}
+    Get Cameras    ${auth}      ${AUTO SYS IP} 
+
+Warning dialog appears when changes are made on navigating away and works correctly
+    [Tags]    C76416    threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Toggle Recording
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements are Visible
+    ...    ${APPLY CHANGES BUTTON}     
+    ...    ${DISCARD CHANGES BUTTON}   
+    ...    ${CANCEL CHANGES BUTTON}    
+    ...    ${APPLY CHANGES CLOSE BUTTON}
+    ...    ${APPLY CHANGES QUESTION}  
+
+
 Rename Camera
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
@@ -20,27 +65,100 @@ Rename Camera
     Select Camera by Name    good cam
 
     Click Element    ${EDITABLE TITLE}
-    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed
-    Wait Until Element is Visible    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 1
+    Wait Until Elements are Visible    
+    ...    ${SYSTEM SAVE}
+    ...    ${SYSTEM CANCEL}
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
-    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed
+    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
+        Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
+    Log Out
 
-    Click Element    ${EDITABLE TITLE}
-    Input Content Editable Text    ${EDITABLE TITLE}    good cam
-    Wait Until Element is Visible    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
-    Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-
-    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam
-
-View button
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera by Name    good cam name changed 1
+    Click Element    ${EDITABLE TITLE}
+    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 2
+    Wait Until Elements are Visible    
+    ...    ${SYSTEM SAVE}
+    ...    ${SYSTEM CANCEL}
+    Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    @{auth}=    Create List    admin    ${password}
+    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 2
+    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 2
+    Log Out
+
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    good cam name changed 2
+    Click Element    ${EDITABLE TITLE}
+    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 3
+    Wait Until Elements are Visible    
+    ...    ${SYSTEM SAVE}
+    ...    ${SYSTEM CANCEL}
+    Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    @{auth}=    Create List    admin    ${password}
+    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 3  
+    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 3
+    
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
+    Set Camera Name    ${AUTO SYS IP}    ${auth}    ${camera id}    good cam
+
+Name change in client changes in cloud
+    [Tags]    C76261    threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    good cam
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    api name
+    Reload Page
+    Wait Until Element Contains    ${EDITABLE TITLE}    api name
+
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    good cam 
+
+View button
+    [Tags]    C76262    threaded
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    good cam
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    # The above keyword returns the id with {} and we don't want those for the url
+    ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
+    
+    Go To    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    offline cam
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    offline cam
+    ${camera id}=   Remove String    ${camera id}    }     {
+    Click Button    ${CAMERAS VIEW BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
+
+    Go To    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    unauth cam
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    unauth cam
+    ${camera id}=   Remove String    ${camera id}    }     {
+    Click Button    ${CAMERAS VIEW BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
 
 Detailed Info
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -224,8 +342,9 @@ Change FPS
     Verify on Cameras Page
     Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
-    Click Element    ${FPS INPUT}
+    #Click Element    ${FPS INPUT}
     Input Text    ${FPS INPUT}    20
+    sleep    20
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
@@ -245,8 +364,8 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Toggle Recording
@@ -256,6 +375,7 @@ Enable/disable motion detection
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
     Verify on Cameras Page
+    Wait Until Element Is Visible    ${DOT-MENU}
     Click Button    ${DOT-MENU}
     Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
     Click Link    ${DISABLE MOTION DETECTION LINK}
@@ -267,6 +387,7 @@ Enable/disable motion detection
     Reload Page
     Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
     Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Wait Until Elements are Visible
@@ -287,9 +408,10 @@ Disabled Motion With Recording
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
 
-    Record motion and record motion low quality radio buttons should be disabled
+#Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
+    [Tags]    C76254    threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
@@ -297,3 +419,22 @@ Placeholder shows when system is offline
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
+    Log Out
+
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Wait Until Elements are Visible
+    ...    ${OFFLINE PLACEHOLDER IAMGE}
+    ...    ${OFFLINE TITLE}
+    ...    ${OFFLINE MESSAGE}
+    Log Out
+
+    # might not be a valid test
+    #Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    #Wait Until Element is Visible    ${CAMERAS LINK}
+    #Click Link    ${CAMERAS LINK}
+    #Wait Until Elements are Visible
+    #...    ${OFFLINE PLACEHOLDER IAMGE}
+    #...    ${OFFLINE TITLE}
+    #...    ${OFFLINE MESSAGE}
