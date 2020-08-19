@@ -145,6 +145,7 @@
                                 <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 30"
                                    [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + 'current' | translate"
                                    [(ngModel)]="selectedFps"
+                                   (blur)="selectedFps = selectedFps > 0 ? selectedFps : this.selectedFpsWatcher.originalValue || this.selectedCamera.maxFps"
                                    class="form-control input-sm col-3"/>
                                    <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
                             </div>
