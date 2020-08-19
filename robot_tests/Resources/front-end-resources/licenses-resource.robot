@@ -92,9 +92,9 @@ Activate Key
     Input Text    ${LICENSE KEY INPUT}    ${key}
     Run Keyword Unless    '${server name}' == '${EMPTY}'    Run Keywords
     ...    Click Button    ${BIND TO SERVER DROPDOWN}
-    ...    AND    Sleep    3
+    ...    AND    Sleep    2
     ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
-    Sleep    3    # To avoid clicking the button before key is completely input
+    Sleep    2    # To avoid clicking the button before key is completely input
     Click Button    ${ACTIVATE BUTTON}
     Run Keyword If    ${success}     Check For Alert    ${LICENSE IS ACTIVATED TEXT}
     Run Keyword Unless    '${error text}' == '${EMPTY}'   Wait Until Element Is Visible    //span[contains(text(), "${error text}")]    timeout=20
