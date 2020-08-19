@@ -79,14 +79,8 @@ Get Recording Quality
 Get Camera Id By Name
     [Arguments]    ${auth}    ${server url}    ${name}
     ${cameras json}=    Get Cameras    ${auth}    ${server url}
+    log    ${cameras json[0]}
     FOR    ${camera}  IN  @{cameras json}
+        log    ${camera}
         Run Keyword If    '''${camera['cameraName']}'''=='''${name}'''    Return From Keyword    ${camera['cameraId']}
     END
-
-Verify recording controls are open
-    Wait Until Elements Are Visible
-    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
-    ...    ${RECORD MOTION RADIO BUTTON}/..      
-    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
-    ...    ${FPS INPUT}                             
-    ...    ${QUALITY DROPDOWN}

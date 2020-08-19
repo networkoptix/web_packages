@@ -111,7 +111,7 @@ Rename Camera
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
+    Set Camera Name    ${AUTO SYS IP}    ${auth}    ${camera id}    good cam
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -121,11 +121,11 @@ Name change in client changes in cloud
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
-    Set Camera Atrribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    api name
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Attribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    good cam 
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    good cam 
 
 View button
     [Tags]    C76262    threaded
@@ -456,14 +456,6 @@ Change FPS
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
-    Reload Page
-    Verify on Cameras Page
-    ${fps}    Get Element Attribute    ${FPS INPUT}    value
-    Should Be Equal As Numbers    ${fps}    20
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Change Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -472,8 +464,8 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Toggle Recording
