@@ -27,3 +27,6 @@ ${CANVAS}                                    //nx-motion-detection-overlay/canva
 ${OFFLINE PLACEHOLDER IAMGE}                 //nx-page-placeholder//div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
 ${OFFLINE TITLE}                             //nx-page-placeholder//h2[contains(@class,"placeholder-title") and @name="NO_SETTINGS"]
 ${OFFLINE MESSAGE}                           //nx-page-placeholder//div[contains(@class,"placeholder-message") and @name="NO_SETTINGS"]
+${NO CAMERAS PLACEHOLDER IMAGE}              //nx-page-placeholder//div[contains(@class,"placeholder-icon") and @name="NO_CAMS"]
+${NO CAMERAS TITLE}                          //nx-page-placeholder//h2[contains(@class,"placeholder-title") and @name="NO_CAMS"]
+${NO CAMERAS MESSAGE}                        //nx-page-placeholder//div[contains(@class,"placeholder-message") and @name="NO_CAMS"]
