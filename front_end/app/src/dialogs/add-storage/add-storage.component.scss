@@ -1,0 +1,6 @@
+@use '../../../styles/theme_variables' as *;
+
+.form-control[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted) {
+    border-color : $error !important;
+    color        : $error !important;
+}

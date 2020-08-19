@@ -45,7 +45,10 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     showStorage: boolean;
     systemSubscription: Subscription;
     storageSubscription: Subscription;
+    systemStorageSubscription: Subscription;
     saveSettings: Process;
+    storage: any;
+    systemStorages: any;
     watchers: Watcher<any>[] = [];
     reindexingMain = false;
     percentMainDone = 0;
@@ -156,6 +159,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
                     this.loading = false;
                 });
+            this.getSystemStorages();
         }
     }
 
@@ -183,6 +187,18 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         });
 
         return aggregateSpace;
+    }
+
+    getSystemStorages() {
+        this.systemStorageSubscription = this.system.getStorages()
+            .subscribe(results => {
+                if (results.name === 'TimeoutError') {
+                    console.error(results.storage.message);
+                    this.loading = false;
+                    return;
+                }
+                this.systemStorages = results || [];
+            });
     }
 
     selectMode(store) {
@@ -295,18 +311,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             });
     }
 
-    // openAddStorage() {
-    //     this.dialogs
-    //         .addStorage(this.system, this.serverId)
-    //         .then((response) => {
-    //             if (response === this.CONFIG.responseOk) {
-    //                 this.init();
-    //             }
     addExternalStorage() {
-        return this.dialogs.addExternalStorage()
-            .then(res => {
-                console.log('res from addExternalStorage dialog', res);
-            });
+        return this.dialogs.addStorage(this.system, this.serverId, this.storage$.value, this.systemStorages);
     }
 
     reindexStorage(type: 'main' | 'backup') {

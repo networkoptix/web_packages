@@ -1,4 +1,4 @@
-<form [formGroup]="storageForm" id="addStorageForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="storageForm" #storageProcess="ngForm" id="addStorageForm">
     <div class="modal-header">
         <h1 class="modal-title" translate>Add External Storage</h1>
         <button type="button" class="close"
@@ -17,8 +17,7 @@
                     [ngClass]="{'notYetSubmitted': !urlChecked }"
                     type="url"
                     (blur)="checkUrlValidity()"
-                    [placeholder]="LANG.storage.urlPlaceholder()"
-                    nxUrlValidator/>
+                    [placeholder]="LANG.storage.urlPlaceholder()"/>
             </div>
             <div class="col-12 ml-n2 d-flex">
                 <ng-container *ngIf="urlChecked && getControls('url').errors">
@@ -67,19 +66,17 @@
         </div>
     </div>
     <div *ngIf="alreadyExists" class="modal-body">
-        <p class="mb-2"
-            [translate]="'storage.alreadyUsed'"
-            [translateParams]="{ url: url }"></p>
+        <p class="mb-2">{{ alreadyUsed }}</p>
         <p class="mb-2" translate>It's not recommended to use on recording location for different servers.</p>
         <p translate>Add this storage anyway?</p>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer border-top-0">
         <nx-process-button
-            [clickFn]="preSubmit.bind(this)"
+            [clickFn]="preSubmit"
             [process]="addStorage"
-            [form]="storageForm"
+            [form]="storageProcess"
             [buttonText]="'Add Storage' | translate"></nx-process-button>
         <button *ngIf="alreadyExists" class="btn btn-default" (click)="goBack()" translate>Back</button>
-        <nx-cancel-button [process]="addStorage" [discardFn]="close.bind(this)"></nx-cancel-button>
+        <nx-cancel-button [process]="addStorage" [discardFn]="close"></nx-cancel-button>
     </div>
 </form>

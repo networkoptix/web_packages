@@ -678,8 +678,11 @@ export interface Storage {
     modes:                   Modes;
     alreadyUsed:             any;
     deleteExternalStorage:   any;
+    failed:                  any;
     reservedTooSmallTooltip: any;
     reservedSystemTooltip:   any;
+    serverOffline:           any;
+    success:                 any;
     urlPlaceholder:          any;
 }
 
@@ -1527,8 +1530,11 @@ const typeMap: any = {
         { json: "modes", js: "modes", typ: r("Modes") },
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
+        { json: "failed", js: "failed", typ: "any" },
         { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
         { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },
+        { json: "serverOffline", js: "serverOffline", typ: "any" },
+        { json: "success", js: "success", typ: "any" },
         { json: "urlPlaceholder", js: "urlPlaceholder", typ: "any" },
     ], false),
     "Modes": o([
