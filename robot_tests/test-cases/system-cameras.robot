@@ -111,7 +111,7 @@ Rename Camera
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
-    Set Camera Name    ${AUTO SYS IP}    ${auth}    ${camera id}    good cam
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -121,11 +121,11 @@ Name change in client changes in cloud
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
-    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    api name
+    Set Camera Atrribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    good cam 
+    Set Camera Attribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    good cam 
 
 View button
     [Tags]    C76262    threaded
@@ -222,6 +222,10 @@ Rotation
     Reload Page
     Rotation Should Be    0˚
 
+Get the camera json
+   
+        
+
 Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -229,7 +233,7 @@ Audio enable Disabled
     Select Camera by Name    good cam
     Verify on Cameras Page
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
@@ -242,11 +246,8 @@ Audio enable Disabled
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    False
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    Audio Enabled Should Be    False
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
 
 Audio unavailable
     [Tags]     C76376    threaded
