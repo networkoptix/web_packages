@@ -325,7 +325,7 @@ License Details Block: Video Wall licenses
 
     Log Out
 
-License Details Block: license with date within 30 days
+License Details Block: License with date within 30 days
     [Tags]    C76565    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -342,7 +342,7 @@ License Details Block: license with date within 30 days
 
     Log Out
 
-License Details Block: deactivated license
+License Details Block: Deactivated license
     [Tags]    C76566    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -372,7 +372,7 @@ License Details Block: deactivated license
 
     Log Out
 
-License Details Block: license with expired status
+License Details Block: License with expired status
     [Tags]    C76563    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
@@ -388,14 +388,14 @@ License Details Block: license with expired status
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
     Reload Page
-    Sleep    10
+    Sleep    30
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
     Validate License Info    ${key}    status=Expired    server num=2
 
     Log Out
 
-License Details Block: license with error status
+License Details Block: License with error status
     [Tags]    C76564    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
