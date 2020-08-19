@@ -219,7 +219,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(system: NxSystem, serverId: string) {
+    addStorage(system: NxSystem, serverId: string, storage: any[], systemStorages: any[]) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -228,6 +228,8 @@ export class NxDialogsService {
         const params: IParams = {
             system,
             serverId,
+            storage,
+            systemStorages,
             closable: true
         };
 
@@ -459,19 +461,6 @@ export class NxDialogsService {
         };
 
         return this.createModal(UpdateCameraCredentialsModalContent, options, params);
-    }
-
-    addExternalStorage() {
-        const options: IParams = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
-        };
-
-        const params: IParams = {
-            closable: true
-        };
-
-        return this.createModal(AddStorageModalContent, options, params);
     }
 
     resetBackupToDefaultSettings(system: NxSystem) {
