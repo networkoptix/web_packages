@@ -586,7 +586,6 @@ Enable/disable motion detection
     ...    ${DOT-MENU}
     Reset Camera    good cam    ${AUTO SYS IP}
 
-
 #Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
