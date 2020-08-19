@@ -317,11 +317,11 @@ Check Allow Only Secure Connections
     ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
     Should Be Equal As Strings    ${resp.status_code}    200
     
-Set Camera Name
-    [Arguments]    ${server url}    ${auth}    ${camera id}    ${name}
+Set Camera Attribute
+    [Arguments]    ${server url}    ${auth}    ${camera id}    ${attribute}    ${value}
     &{data} =    Create Dictionary
     ...    cameraId=${camera id}
-    ...    cameraName=${name}
+    ...    ${attribute}=${value}
     Create Digest Session    Save camera name    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributes    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
