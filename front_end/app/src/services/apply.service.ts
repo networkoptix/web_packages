@@ -54,6 +54,14 @@ export class Watcher<T extends any> {
     reset = () => {
         this.valueSubject.next(this.originalValue);
     }
+
+    static extendedWatcherFactory<T extends any, Extended extends { [key: string]: any }>(
+        value: T, extendedProperties: Extended
+    ) {
+        const watcher = new Watcher(value) as Watcher<T> & Extended;
+        Object.assign(watcher, extendedProperties);
+        return watcher;
+    }
 }
 
 /**
@@ -379,7 +387,7 @@ export class NxApplyService {
      *     until the user saves or discards the changes.
      * @param watchers
      */
-    private addWatchers(watchers: Watcher<any>[]) {
+    private addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
         this.watchers = watchers;
         this.watchersSubscription = merge(...watchers.map(watcher => {
             return watcher.valueSubject.pipe(
@@ -398,10 +406,18 @@ export class NxApplyService {
         });
     }
 
-    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
+    public addWatchersAndFunctionsFromChild(
+        watchers: Watcher<any>[],
+        applyFunction: Process,
+        discardFunction,
+        submitFunction?
+    ) {
         this.addWatchers([...this.watchers, ...watchers]);
         this.extendApplyFunction(applyFunction);
         this.extendDiscardFunction(discardFunction);
+        if (submitFunction) {
+            this.extendSubmitFunction(submitFunction);
+        }
     }
 
     private extendApplyFunction(applyFunction: Process) {
