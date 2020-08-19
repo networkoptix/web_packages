@@ -364,7 +364,7 @@ License Details Block: deactivated license
         Validate Licenses Page    several servers=True    trial left=True
         Wait Until Element Is Not Visible    //header[h4="${key}"]
     END
-    Activate Key    ${key}
+    Activate Key    ${key}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
