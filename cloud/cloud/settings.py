@@ -52,6 +52,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(
 STATIC_LOCATION = os.path.join(BASE_DIR, "static")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/common/static")
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder'
+]
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
@@ -499,6 +504,15 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     'CONFIG': 'notifications.conf.PushConfig',
     'MAX_RETRIES': 3,
     'RETRY_INTERVAL': 20
+}
+
+
+NPM_ROOT_PATH = BASE_DIR
+if LOCAL_ENVIRONMENT:
+    NPM_FINDER_USE_CACHE = False
+NPM_FILE_PATTERNS = {
+    'bootstrap': ['dist/*'],
+    'split.js': ['dist/*']
 }
 
 

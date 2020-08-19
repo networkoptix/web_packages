@@ -57,6 +57,11 @@ pushd front_end
     npm install
 popd
 
+pushd cloud
+    echo "npm install cloud portal backend"
+    npm install
+popd
+
 pushd build_scripts
 
 TARGET_DIR="../cloud/static"

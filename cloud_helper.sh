@@ -95,6 +95,7 @@ function setup_env() {
     export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
+    npm install --prefix cloud
 }
 
 function start_celery() {
