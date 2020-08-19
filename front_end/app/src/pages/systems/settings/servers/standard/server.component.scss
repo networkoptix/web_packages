@@ -34,7 +34,7 @@
                 background-color: $error;
             }
             .checking {
-                background-color: $light16;
+                background-color: $light16 !important;
             }
         }
         .server-buttons {
