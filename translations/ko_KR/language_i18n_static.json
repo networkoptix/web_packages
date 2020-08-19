@@ -181,7 +181,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "이 이메일은 %systemName% 시스템에 이미 등록되었습니다."
         },
         "buttons": {
             "cancel": "취소",
@@ -800,7 +800,7 @@
         "maxP2pQueueSizeBytes": "최대 P2P 대기열 크기 (bytes)",
         "maxRecordQueueSizeBytes": "최대 기록 용량 (byte)",
         "maxRecordQueueSizeElements": "최대 기록 용량 (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "최대 원격 보관 동기화 스레드",
+        "maxRemoteArchiveSynchronizationThreads": "최대 원격 아카이브 동기화 스레드",
         "maxRtspConnectDurationSeconds": "최대 Rtsp 연결 지속 시간",
         "maxSceneItems": "최대 장면수(기본값 0)",
         "proxyConnectTimeoutSec": "프록시 연결 시간 초과 (초)",

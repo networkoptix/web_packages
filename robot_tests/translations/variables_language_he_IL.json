@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "התנתק מהחשבון שלי",
     "YOU TEXT": "אתה",
     "UNRESTRICTED ACCESS CONNECT TEXT": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "אפשר גילוי אוטומטי של מצלמות ושרתים",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "כאשר מופעל, המערכת תגלה מצלמות ושרתים חדשים. כמו כן, זה ישלח באופן אוטומטי ומתמיד בקשות גילוי למצלמות כדי לקבל עדכון סטטוס של המצלמה. Failover מופעל בכמה שרתים מתעלם מאיסור על בדיקת מצב.",
     "SEND ANONYMOUS USAGE TEXT": "שלח סטטיסטיקות אנונימיות על נתוני שימוש וקריסות למפתחי התוכנה",

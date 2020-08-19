@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Leválasztás a fiókomról",
     "YOU TEXT": "Ön",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Kamerák és szerverek automatikus felfedezésének engedélyezése",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Ha engedélyezi, a rendszer új kamerákat és szervereket derít fel a hálózaton. Ezenkívül automatikusan és állandóan felderítési kérelmeket küld a kameráknak a kamera állapotának frissítése érdekében. Ha a feladatátvétel engedélyezése néhány kiszolgálón beállításra került, az állapot ellenőrzés tilalmát figyelmen kívül hagyja.",
     "SEND ANONYMOUS USAGE TEXT": "Névtelen használati és összeomlás statisztikák küldése a szoftverfejlesztőknek",

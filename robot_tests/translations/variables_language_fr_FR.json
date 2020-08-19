@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Déconnecter de mon compte",
     "YOU TEXT": "toi",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Activer la découverte automatique des caméras et serveurs",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Une fois activé, le système découvrira de nouvelles caméras et de nouveaux serveurs. En outre, il enverra automatiquement et de manière persistante des demandes de découverte aux caméras afin d'obtenir la mise à jour de l'état de la caméra. L'interdiction de vérification de l'état peut être ignorée sur certains serveurs dont le basculement est activé.",
     "SEND ANONYMOUS USAGE TEXT": "Envoyer des statistiques d'utilisation et de plantage anonymes aux développeurs",
