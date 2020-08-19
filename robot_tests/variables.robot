@@ -27,6 +27,12 @@ ${SYMBOL TEXT}                        `~!@#$%^&*()_:";'{}[]+<>?,./\
 ${TM TEXT}                            qweasdzxc123®™
 ${KOREAN TEXT}                        계정이 이미 활성
 
+#Apply changes dialog
+${APPLY CHANGES X BUTTON}             //ngb-modal-window//button[@class="close"]
+${APPLY CHANGES APPLY BUTTON}         //ngb-modal-window//button[@type="submit"]
+${APPLY CHANGES DISCARD BUTTON}       //ngb-modal-window//button[contains(text(),"")]
+${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
+
 #Log In Elements
 ${LOG IN MODAL}                       //form[@name='loginForm']
 ${EMAIL INPUT}                        //form[@name='loginForm']//input[@id='login_email']
@@ -174,7 +180,7 @@ ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '
 ${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL CHANGES BUTTON TEXT}')]
 ${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
-${APPLY CHANGES CLOSE BUTTON}                //button[@class="close"]
+${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
