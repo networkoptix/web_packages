@@ -13,57 +13,17 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Test Cases ***
-Camera settings is available to owner admin and custom with permission
-    [Tags]    C76252    threaded
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Log Out
-    
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Log Out
-    
-    Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
     [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
-
     Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
-
     Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
-
-    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
-    Element should not be visible    ${CAMERAS LINK}
-    Log Out
-
-Camera settings is not available by direct link to any viewers
-    ${auth}=    Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    
-    Log Out
-
-    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
-    Element should not be visible    ${CAMERAS LINK}
-    Log Out
-
-    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
-    Element should not be visible    ${CAMERAS LINK}
-    Log Out
-
     Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
@@ -79,29 +39,8 @@ No cameras placeholder
     ...    ${NO CAMERAS MESSAGE}       
 
 Camera status match server
-    [Tags]    C76256    Threaded
     @{auth}=   Create List    admin    ${BASE PASS WORD}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
-
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
-    Should Be True    ${value}
-
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
-    Should Be Equal As Strings    ${value}    Offline
-    
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
-    Should Be Equal As Strings    ${value}    Unauthorized
-
-    Wait Until Elements Are Visible    
-    ...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
-
-    
+    Get Cameras    ${auth}      ${AUTO SYS IP} 
 
 Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416    threaded
@@ -171,8 +110,8 @@ Rename Camera
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 3
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
+    Set Camera Name    ${AUTO SYS IP}    ${auth}    ${camera id}    good cam
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -181,12 +120,12 @@ Name change in client changes in cloud
     Verify on Cameras Page
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    api name
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    good cam 
+    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    good cam 
 
 View button
     [Tags]    C76262    threaded
@@ -195,7 +134,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
     # The above keyword returns the id with {} and we don't want those for the url
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
@@ -206,7 +145,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    offline cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    id
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    offline cam
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
@@ -216,7 +155,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    unauth cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    id
+    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    unauth cam
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
@@ -554,8 +493,8 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibbling::div//a[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Toggle Recording
@@ -589,10 +528,6 @@ Enable/disable motion detection
     ...    ${DOT-MENU}
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 99845ef40a6e45460efd13717de08ab4913488c8
 #Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
@@ -614,3 +549,12 @@ Placeholder shows when system is offline
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
+
+    # might not be a valid test
+    #Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    #Wait Until Element is Visible    ${CAMERAS LINK}
+    #Click Link    ${CAMERAS LINK}
+    #Wait Until Elements are Visible
+    #...    ${OFFLINE PLACEHOLDER IAMGE}
+    #...    ${OFFLINE TITLE}
+    #...    ${OFFLINE MESSAGE}

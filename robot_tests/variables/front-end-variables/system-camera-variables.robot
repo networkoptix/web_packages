@@ -30,13 +30,3 @@ ${OFFLINE MESSAGE}                           //nx-page-placeholder//div[contains
 ${NO CAMERAS PLACEHOLDER IMAGE}              //nx-page-placeholder//div[contains(@class,"placeholder-icon") and @name="NO_CAMS"]
 ${NO CAMERAS TITLE}                          //nx-page-placeholder//h2[contains(@class,"placeholder-title") and @name="NO_CAMS"]
 ${NO CAMERAS MESSAGE}                        //nx-page-placeholder//div[contains(@class,"placeholder-message") and @name="NO_CAMS"]
-${RECORDING SVG}                             //svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-${OFFLINE SVG}                               //svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-${UNAUTH SVG}                                //svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
-${NO IMAGE PLACEHOLDER}                      //nx-health-image//div[contains(text(),"${NO IMAGE TEXT}" )]
-${CAMERA ERROR BAR}                          //nx-alert-block/div[@class="card simple-error"]
-${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[@data-src="/static/images/icons/error.svg"]
-${CAMERA ERROR TEXT}                         ${CAMERA ERROR BAR}//div[@class="warning-margin"]/span
-${LICENSE REQUIRED WARNING}                  //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
-${ONE LICENSE WILL BE USED WARNING}          //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
-${MOTION DETECTION DISABLED WARNING}         //nx-section//span[contains(@class,"input-error") and contains(text(),"${MOTION DETECTION DISABLED TEXT}")]
