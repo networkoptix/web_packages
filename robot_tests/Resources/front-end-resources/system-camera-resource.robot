@@ -66,8 +66,8 @@ Audio Enabled Should Be
 Camera Name Should Be
     [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
     ${cameras}=   Get Cameras    ${auth}    ${server url}
-    FOR    ${camera}  IN  ${cameras[0]}
-        Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']    ${name}
+    FOR    ${camera}  IN  ${cameras[1]}
+        Run Keyword if    '''${camera['cameraId']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']    ${name}
     END
 
 Get Recording Status
@@ -76,3 +76,11 @@ Get Recording Mode
 
 Get Recording Quality
 
+Get Camera Id By Name
+    [Arguments]    ${auth}    ${server url}    ${name}
+    ${cameras json}=    Get Cameras    ${auth}    ${server url}
+    log    ${cameras json[0]}
+    FOR    ${camera}  IN  @{cameras json}
+        log    ${camera}
+        Run Keyword If    '''${camera['cameraName']}'''=='''${name}'''    Return From Keyword    ${camera['cameraId']}
+    END
