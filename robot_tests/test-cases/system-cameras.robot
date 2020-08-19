@@ -111,7 +111,7 @@ Rename Camera
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
-    Set Camera Name    ${AUTO SYS IP}    ${auth}    ${camera id}    good cam
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -121,11 +121,11 @@ Name change in client changes in cloud
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
-    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    api name
+    Set Camera Atrribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Name    https://10.1.5.126:7008    ${auth}    ${camera id}    good cam 
+    Set Camera Attribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    good cam 
 
 View button
     [Tags]    C76262    threaded
@@ -222,6 +222,10 @@ Rotation
     Reload Page
     Rotation Should Be    0˚
 
+Get the camera json
+   
+        
+
 Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -229,24 +233,21 @@ Audio enable Disabled
     Select Camera by Name    good cam
     Verify on Cameras Page
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${cams}=   Get Cameras    ${auth}    ${AUTO SYS IP}
     FOR    ${camera}  IN  @{cams}
-        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
+        ${audio enabled}=    Set Variable If    '''${camera['cameraName']}'''=='''good cam'''    ${camera['audioEnabled']}
         Exit For Loop If    '''${audio enabled}'''=='''True'''
     END
     Should Be True    ${audio enabled}
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    False
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    Audio Enabled Should Be    False
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
 
 Audio unavailable
     [Tags]     C76376    threaded
@@ -288,36 +289,7 @@ Edit credentials form Close and Cancel buttons
 #     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 
-Changing credentials from invalid ones to valid ones makes the camera authorized
-    [Tags]    C76390    Threaded
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera By Name    unauth cam
-    Click Button    ${EDIT CREDENTIALS BUTTON}
-    Verify Authentication Form
-    Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    admin
-    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
-    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    90
-    @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${status}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
-    Should Be Equal As Strings    ${status}    Online
-    Click Button    ${EDIT CREDENTIALS BUTTON}
-    Verify Authentication Form
-    Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwe
-    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    qwe
-    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-    Open Connection    10.1.5.126
-    SSHLibrary.Login    docker-server-factory    qweasd 123    
-    ${results}    Execute Command    docker container restart autotests
-    Reload Page
-    Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}    90
-
+# Changing credentials from invalid ones to valid ones makes the camera authorized
 Recording toggle shows correct options
     [Tags]    C76401    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
