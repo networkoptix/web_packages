@@ -371,7 +371,7 @@ Remove User
 Get Cameras
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Cameras session   ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Get Cameras session    /ec2/getCamerasEx
+    ${resp}=   Get Request    Get Cameras session    /ec2/getCameraUserAttributesList
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
