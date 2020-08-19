@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Ontkoppel van mijn account",
     "YOU TEXT": "u",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Automatische detectie van camera's en servers inschakelen",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Wanneer ingeschakeld, zal het systeem nieuwe camera's en servers ontdekken. Ook zal het automatisch en aanhoudend detectie-aanvragen naar camera's sturen om de status van de camera te updaten. Deze status check kan worden overgeslagen op sommige servers die failover hebben ingeschakeld.",
     "SEND ANONYMOUS USAGE TEXT": "Stuur anonieme gebruiks- en crashstatistieken naar ontwikkelaars",

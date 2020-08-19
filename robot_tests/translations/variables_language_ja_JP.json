@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "アカウントから離れる",
     "YOU TEXT": "あなた",
     "UNRESTRICTED ACCESS CONNECT TEXT": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+    "WHATS NEW TEXT": "新着情報",
     "ENABLE AUTO DISCOVERY TEXT": "カメラとサーバーの自動検出を有効にする",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "有効にすると、システムは新しいカメラとサーバーを検出します。また、カメラのステータスの更新を取得するために、カメラに検出リクエストを自動的かつ永続的に送信します。フェイルオーバーが有効になっている一部のサーバーでは、ステータスチェックの禁止が無視される場合があります。",
     "SEND ANONYMOUS USAGE TEXT": "匿名の使用状況とクラッシュ統計を開発者に送信する",

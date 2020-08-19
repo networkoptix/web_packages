@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Odpojte se od svého účtu",
     "YOU TEXT": "vy",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Povolit automatické vyhledávání kamer a serverů",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Pokud je povoleno, systém nalezne nové kamery a servery. Automaticky a trvale bude odesílat žádosti o zobrazení do kamer, aby získal aktualizaci stavu kamery. Na některých serverech s povoleným Failover může být zákaz kontroly stavu vynechán.",
     "SEND ANONYMOUS USAGE TEXT": "Pošlete vývojářům anonymní statistiku využití a selhání",

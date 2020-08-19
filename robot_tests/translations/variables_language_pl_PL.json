@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Odłącz od mojego konta",
     "YOU TEXT": "Ty",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Nieograniczony dostęp, w tym możliwość udostępniania i łączenia systemu z chmurą",
+    "WHATS NEW TEXT": "Co nowego?",
     "ENABLE AUTO DISCOVERY TEXT": "Włącz automatyczne wykrywanie kamer i serwerów",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Po włączeniu system wykryje nowe kamery i serwery. Ponadto, automatycznie będzie ciągle wysyłał zapytania do kamer w celu uzyskania aktualizacji ich stanów. Tryb fail-over na niektórych serwerach ignoruje blokadę sprawdzania stanów.",
     "SEND ANONYMOUS USAGE TEXT": "Wysyłaj do programistów anonimowe statystyki użytkowania i awarii",

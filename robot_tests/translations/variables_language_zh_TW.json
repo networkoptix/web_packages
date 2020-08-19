@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "從我的帳號斷線",
     "YOU TEXT": "您",
     "UNRESTRICTED ACCESS CONNECT TEXT": "不受限權限包括共用及從雲端連接/中斷系統的能力",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "啟用攝影機和伺服器的自動搜尋",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "啟用後，系統將搜尋新攝影機和伺服器。同時將自動並持續地發送搜尋請求至攝影機，以更新攝影機狀態。在啟用備援的某些伺服器上，也許會忽略狀態確認功能關閉。",
     "SEND ANONYMOUS USAGE TEXT": "以匿名方式寄送使用與故障統計報告給開發人員",

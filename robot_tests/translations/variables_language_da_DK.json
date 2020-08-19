@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
     "YOU TEXT": "you",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Enable auto discovery of cameras and servers",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.",
     "SEND ANONYMOUS USAGE TEXT": "Send anonymous usage and crash statistics to developers",

@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Desconectar da minha conta",
     "YOU TEXT": "você",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Ativar a descoberta automática de câmeras e servidores",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Quando ativado, o sistema descobrirá novas câmeras e servidores. Além disso, ele envia automaticamente e persistentemente solicitações de descoberta para as câmeras para obter a atualização de status da câmera. A proibição de verificação de status pode ser ignorada em alguns servidores com o failover ativado.",
     "SEND ANONYMOUS USAGE TEXT": "Envie estatísticas de uso e falhas anônimas aos desenvolvedores",

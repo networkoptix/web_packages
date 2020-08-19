@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Von meinem Account trennen",
     "YOU TEXT": "du",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen und Systeme von der Cloud zu verbinden/trennen",
+    "WHATS NEW TEXT": "Was ist neu?",
     "ENABLE AUTO DISCOVERY TEXT": "Aktivieren Sie die automatische Erkennung von Kameras und Servern",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Wenn diese Option aktiviert ist, erkennt das System neue Kameras und Server. Außerdem werden automatisch und dauerhaft Erkennungsanforderungen an Kameras gesendet, um die Statusaktualisierung der Kamera zu erhalten. Das Verbot der Statusprüfung kann auf einigen Servern mit aktiviertem Failover übersprungen werden.",
     "SEND ANONYMOUS USAGE TEXT": "Senden von anonymen Benutzer- und Absturzstatistiken an die Softwareentwickler",

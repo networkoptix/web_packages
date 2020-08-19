@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Koble fra kontoen min",
     "YOU TEXT": "du",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "Aktiver automatisk oppdagelse av kameraer og servere",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Når det er aktivert, vil systemet oppdage nye kameraer og servere. Den vil også automatisk og vedvarende sende oppdagelsesforespørsler til kameraer for å få kameraets statusoppdatering. Forbud mot statussjekk kan hoppes over på noen servere som har failover aktivert.",
     "SEND ANONYMOUS USAGE TEXT": "Send anonym bruk og krasjstatistikk til utviklere",

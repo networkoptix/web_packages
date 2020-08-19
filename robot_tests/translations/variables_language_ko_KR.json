@@ -247,6 +247,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "내 계정에서 연결 해제",
     "YOU TEXT": "당신",
     "UNRESTRICTED ACCESS CONNECT TEXT": "클라우드에서 시스템을 공유하고 연결 / 연결 해제하는 기능을 포함한 무제한 액세스",
+    "WHATS NEW TEXT": "What's New?",
     "ENABLE AUTO DISCOVERY TEXT": "카메라 및 서버 자동 검색 사용",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "활성화되면 시스템은 새로운 카메라와 서버를 검색합니다. 또한 은 카메라의 상태 업데이트를 얻기 위해 자동으로 지속적으로 검색 요청을 대의 카메라로 보냅니다. 일부 서버에서 활성화 된 페일 오버는 상태 확인 금지를 무시합니다.",
     "SEND ANONYMOUS USAGE TEXT": "개발자에게 장애 문제 자동 보고",
