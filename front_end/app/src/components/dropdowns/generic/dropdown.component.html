@@ -22,11 +22,16 @@
             <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
                 <hr *ngIf="item.name === 'horizontal'; else systemSelect">
                 <ng-template #systemSelect>
-                    <a class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
+                    <a *ngIf="!item.disabled; else disabledItem" class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
                         [ngClass]="{ 'selected': _selected && _selected.value === item.value }"
                         (click)="show = false; change(item)">
                         <span [innerHTML]="item.name"></span>
                     </a>
+                    <ng-template #disabledItem>
+                        <a class="dropdown-item inset" (click)="show = false">
+                            <span class="text-muted" [innerHTML]="item.name"></span>
+                        </a>
+                    </ng-template>
                 </ng-template>
             </li>
         </ul>
