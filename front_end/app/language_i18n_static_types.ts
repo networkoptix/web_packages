@@ -675,6 +675,7 @@ export interface ServersStatus {
 }
 
 export interface Storage {
+    reindexingDone:          ReindexingDone;
     modes:                   Modes;
     alreadyUsed:             any;
     deleteExternalStorage:   any;
@@ -690,6 +691,13 @@ export interface Modes {
     main:     any;
     backup:   any;
     notInUse: any;
+}
+
+export interface ReindexingDone {
+    mainSuccess:   any;
+    backupSuccess: any;
+    mainFailed:    any;
+    backupFailed:  any;
 }
 
 export interface LanguageI18NStaticTypesSystem {
@@ -1527,6 +1535,7 @@ const typeMap: any = {
         { json: "restarting", js: "restarting", typ: "any" },
     ], false),
     "Storage": o([
+        { json: "reindexingDone", js: "reindexingDone", typ: r("ReindexingDone") },
         { json: "modes", js: "modes", typ: r("Modes") },
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
@@ -1541,6 +1550,12 @@ const typeMap: any = {
         { json: "main", js: "main", typ: "any" },
         { json: "backup", js: "backup", typ: "any" },
         { json: "notInUse", js: "notInUse", typ: "any" },
+    ], false),
+    "ReindexingDone": o([
+        { json: "mainSuccess", js: "mainSuccess", typ: "any" },
+        { json: "backupSuccess", js: "backupSuccess", typ: "any" },
+        { json: "mainFailed", js: "mainFailed", typ: "any" },
+        { json: "backupFailed", js: "backupFailed", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([
         { json: "connected", js: "connected", typ: "any" },

@@ -59,6 +59,7 @@
                                     </svg-icon>
                                 </div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
+                                <div *ngSwitchCase="STATUS.REINDEXING" translate>Reindexing...</div>
                                 <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"
                                         [items]="getModes(store.mainOnly)"
@@ -173,7 +174,7 @@
                     <div class="progress-bar-section mr-3">
                         <div class="progress-bar-header mb-1">
                             <div translate>Reindexing Backup Storage...</div>
-                            <span>{{ percentBackupnDone | percent: '1.0-0' : LOCALE_ID }}</span>
+                            <span>{{ percentBackupDone | percent: '1.0-0' : LOCALE_ID }}</span>
                         </div>
                         <div class="progress reindex-progress-container">
                             <div class="progress-bar reindex-progress"

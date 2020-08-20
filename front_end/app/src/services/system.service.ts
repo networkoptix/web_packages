@@ -681,6 +681,13 @@ class ServerManager {
     restoreFactorySettings(serverId: string, currentPassword: string) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
+
+    /**
+     * Storage endpoints
+     */
+    rebuildArchive(serverId: string, type: number, action?: string) {
+        return this.mediaserverConnections[serverId].rebuildArchive(type, action);
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -1423,6 +1430,13 @@ export class NxSystem extends System implements OnDestroy {
         )
     }
     // </added by @gbezyuk for watch component>
+
+    /**
+     * Storage server endpoints
+     */
+    rebuildArchive(serverId: string, type: number, action?: string) {
+        return this.serverManager.rebuildArchive(serverId, type, action);
+    }
 }
 
 @Injectable({

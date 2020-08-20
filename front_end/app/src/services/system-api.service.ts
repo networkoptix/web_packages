@@ -695,6 +695,17 @@ export class NxSystemAPI {
 
     /* End of Cameras and Servers */
 
+    /**
+     * Start of Storage
+     */
+    rebuildArchive(type: number, action?: string) {
+        let url = `/api/rebuildArchive?mainPool=${type}`;
+        if (action) {
+            url += `&action=${action}`;
+        }
+        return this.get(url);
+    }
+
     /* Formatting urls */
     previewUrl(cameraId: string, time?: number, width?: number, height?: number, rotate?: number) {
         const data: {
