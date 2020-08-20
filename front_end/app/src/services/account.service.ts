@@ -278,6 +278,7 @@ export class NxAccountService implements OnDestroy {
                 return this.router.navigate([], { queryParams , queryParamsHandling: 'merge'});
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
+                this.sessionService.email = '';
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
