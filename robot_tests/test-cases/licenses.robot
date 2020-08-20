@@ -387,8 +387,9 @@ License Details Block: License with expired status
     Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}    ${hwids[1]}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
+    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    Sleep    10
     Reload Page
-    Sleep    30
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
     Validate License Info    ${key}    status=Expired    server num=2
