@@ -127,7 +127,7 @@ export class AddStorageModalContent {
                         message = this.LANG.storage.success();
                     }
                     this.storageForm.reset();
-                    this.activeModal.close(this.CONFIG.responseOk);
+                    this.activeModal.close(res.id && this.CONFIG.responseOk);
                     this.toastService.show(message, options);
                 },
                 err => {
