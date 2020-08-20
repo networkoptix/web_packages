@@ -127,6 +127,7 @@ Register Account
     Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Register Account session    /api/account/register    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
+    Log    ${resp.json()}
     Return From Keyword    ${resp.json()}
 
 Activate Account
