@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
+from django.urls import reverse
 from dal import autocomplete
 
 from api.account_backend import AccountManager
@@ -83,6 +84,7 @@ class GroupAdminForm(forms.ModelForm):
                 .values_list('asset', flat=True).distinct()
             self.fields['asset_types'].initial = UserGroupsToAssetType.objects.filter(group=self.instance)\
                 .values_list('asset_type', flat=True).distinct()
+            self.fields['users'].help_text = f'<a href="{reverse("admin:invite")}?group_id={self.instance.id}" target="_blank" class="addLink">+ Invite to this group</a>'
             self.fields['all_assets'].initial = self.instance.options.all_assets
 
     def save_m2m(self):
@@ -125,18 +127,27 @@ class UserInviteFrom(forms.Form):
             self.fields['customization'].choices = [(customization, customization) for customization in self.user.customizations]
 
     @staticmethod
-    def add_user(request):
+    def add_user(request, group=None):
         email = request.POST['email']
         customization = request.POST['customization']
         message = request.POST['message']
-        if AccountManager.is_email_in_portal(email):
-            messages.error(request, "User already has a cloud account!")
-            return Account.objects.get(email=email).id
+        user = User.objects.filter(email=email).first()
+        if user:
+            if group is None:
+                messages.error(request, "User already has a cloud account!")
+            elif group.user_set.filter(email=user.email).exists():
+                    messages.error(request, f'User already in "{group.name}" group.')
+            else:
+                group.user_set.add(user)
+                messages.success(request, f'User successfully added to "{group.name}" group.') 
+            return user.id
 
         messages.success(request, "User has been invited to cloud.")
         language_code = Customization.objects.get(name=customization).default_language.code
         user = Account(email=email, customization=customization, language=language_code, is_active=False)
         user.save()
+        if group:
+            group.user_set.add(user)
         # Password in the encoded email doesnt matter its just a place holder.
         encode_email = base64.b64encode(f"password:{email}".encode('utf-8')).decode('utf-8')
         notifications_api.send(email, 'cloud_invite', {"message": message, "code": encode_email}, customization)
