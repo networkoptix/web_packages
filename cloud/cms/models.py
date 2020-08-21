@@ -6,6 +6,8 @@ from datetime import datetime
 from distutils.util import strtobool
 
 from django.db import models
+from django.db.models import Q
+from django.db.models.signals import m2m_changed
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -805,11 +807,14 @@ class UserGroupsToAssetPermissions(models.Model):
         if permission and not user.has_perm(permission):
             return False
 
-        groups = UserGroupsToAssetPermissions.objects.filter(asset=asset,
-                                                             group_id__in=user.groups.values_list('id', flat=True))
+        groups = Group.objects.filter(
+            Q(usergroupstoassetpermissions__asset=asset) |
+            Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type),
+            user=user
+        )
         if permission:
             codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
-            groups = groups.filter(group__permissions__codename=codename)
+            groups = groups.filter(permissions__codename=codename)
         return groups.exists()
 
     @staticmethod

@@ -70,6 +70,10 @@ dir=../skins/$SKIN
         lang_dir=${lang_dir%*/}
         LANG=${lang_dir/..\/translations\//}
 
+        if [ -n "$LOCAL_ENV_ENG_ONLY" ] && [ "$LANG" != "en_US" ]; then
+          continue
+        fi
+
         echo "$TARGET_DIR/$SKIN/templates/lang_$LANG"
 
         mkdir -p $TARGET_DIR/$SKIN/templates/lang_$LANG/src
@@ -101,6 +105,10 @@ dir=../skins/$SKIN
     do
         lang_dir=${lang_dir%*/}
         LANG=${lang_dir/..\/translations\//}
+
+        if [ -n "$LOCAL_ENV_ENG_ONLY" ] && [ "$LANG" != "en_US" ]; then
+          continue
+        fi
 
         echo "$TARGET_DIR/$SKIN/static/lang_$LANG/views/"
 

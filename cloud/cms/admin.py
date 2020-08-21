@@ -370,7 +370,8 @@ class AssetAdmin(CMSAdmin):
                                                           'id': "Not published"})
 
         extra_context['related_groups'] = Group.objects.filter(
-            usergroupstoassetpermissions__asset=asset
+            Q(usergroupstoassetpermissions__asset=asset) |
+            Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type)
         ).prefetch_related('permissions')
 
         if not asset.is_cloud_portal:
