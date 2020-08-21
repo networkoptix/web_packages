@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Järjestelmä {{system_name}} poistetaan onnistuneesti tililtäsi",
     "CANNOT SHARE SYSTEM": "Järjestelmää ei voi jakaa:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Oman käyttöoikeuden muuttaminen ei ole sallittua",
-    "EMAIL IS ALREADY REGISTERED TEXT": "This Email has been already registered in Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "New password saved",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Tilisi on onnistuneesti päivitetty",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account successfully activated",

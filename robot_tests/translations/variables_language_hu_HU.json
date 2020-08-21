@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "{{system_name}} rendszer sikeresen törölve a fiókból",
     "CANNOT SHARE SYSTEM": "A rendszer megosztása nem lehetséges:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Saját engedélyek módosítása nem engedélyezett",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Ezt az e-mailt már regisztrálták az Nx Cloud-ban",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Új jelszó mentve",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "A fiók mentése sikeres",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "A fiók aktiválása sikeres",

@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "从您的帐户成功删除系统 {{system_name}}",
     "CANNOT SHARE SYSTEM": "不能共享系统:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "不允许更改自己的权限",
-    "EMAIL IS ALREADY REGISTERED TEXT": "该电邮已在Nx Cloud注册",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "已保存新密码",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "您的帐户已成功保存",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "激活账户成功。",

@@ -73,5 +73,26 @@ $themes : (
     }
 }
 
+.grid-container {
+    display               : grid;
+    grid-column-gap       : .5rem;
+    grid-row-gap          : .5rem;
+    grid-template-columns : max-content 240px;
+
+    @include media-breakpoint-down(md) {
+        grid-template-columns : 1fr;
+    }
+
+    .grid-item {
+        display         : flex;
+        align-items     : center;
+        justify-content : flex-end;
+
+        @include media-breakpoint-down(md) {
+            justify-content : flex-start;
+        }
+    }
+}
+
 
 

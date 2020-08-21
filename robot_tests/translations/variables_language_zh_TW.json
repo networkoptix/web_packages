@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "從您的帳號成功刪除系統 {{system_name}}",
     "CANNOT SHARE SYSTEM": "無法共用系統:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "不允許變更自己的權限",
-    "EMAIL IS ALREADY REGISTERED TEXT": "此電子郵件已在Nx雲註冊",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "已儲存新密碼",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "您的帳號已成功儲存",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "帳號已成功啟用",

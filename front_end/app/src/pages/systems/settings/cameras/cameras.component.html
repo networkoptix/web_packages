@@ -71,15 +71,30 @@
                     <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="'compact'"></nx-info-block>
                 </header>
                 <nx-section>
-                        <h4 class="mb-3" translate>Image</h4>
-                        <div class="d-flex justify-content-start align-items-center mb-2 image-dropdowns">
-                            <span class="text-nowrap text-right mr-2" translate>Aspect Ratio</span>
-                            <nx-select [selected]="false" [(ngModel)]="selectedAspect" [items]="aspectRatios" id="aspect-ratios"></nx-select>
+                    <h4 class="mb-3" translate>Image</h4>
+
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <span class="text-right" translate>Aspect Ratio</span>
                         </div>
-                        <div class="d-flex justify-content-start align-items-center image-dropdowns">
-                            <span class="text-nowrap text-right mr-2" translate>Rotation</span>
-                            <nx-select [selected]="false" [(ngModel)]="selectedRotation" [items]="rotations" id="rotations"></nx-select>
+                        <div class="grid-item mb-2 mb-lg-0">
+                            <nx-select
+                                    [selected]="false"
+                                    [(ngModel)]="selectedAspect"
+                                    [items]="aspectRatios"
+                                    id="aspect-ratios"></nx-select>
                         </div>
+                        <div class="grid-item">
+                            <span class="text-right" translate>Rotation</span>
+                        </div>
+                        <div class="grid-item">
+                            <nx-select
+                                    [selected]="false"
+                                    [(ngModel)]="selectedRotation"
+                                    [items]="rotations"
+                                    id="rotations"></nx-select>
+                        </div>
+                    </div>
                 </nx-section>
                 <nx-section>
                     <h4 class="mb-3" translate>Audio</h4>

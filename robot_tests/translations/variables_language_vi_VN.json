@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Tài khoản {{system_name}} đã xóa thành công từ hệ thống của bạn",
     "CANNOT SHARE SYSTEM": "Không thể chia sẻ Hệ thống:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Không cho phép thay đổi quyền riêng tư",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Email này đã được đăng ký trong Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Đã lưu mật khẩu mới",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Tài khoản của bạn đã được lưu thành công",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Tài khoản được kích hoạt thành công",

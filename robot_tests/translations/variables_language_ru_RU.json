@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Система {{system_name}} успешно удалена из вашей учетной записи",
     "CANNOT SHARE SYSTEM": "Невозможно объединить систему:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Не допускается изменение собственных полномочий",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Этот адрес электронной почты уже зарегистрирован в Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Новый пароль сохранен",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ваша учетная запись успешно сохранена",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Учетная запись успешно активирована",
