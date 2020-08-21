@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Systém {{system_name}} byl úspěšně odstraněna z Vašeho účtu",
     "CANNOT SHARE SYSTEM": "Systém nelze sdílet:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Změna vlastních oprávnění není povolena",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Tento e-mail je již registrován v Nx Cloudu",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Nové heslo uloženo",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Váš účet byl úspěšně uložen",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Účet byl úspěšně aktivován",

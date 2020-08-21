@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "System {{system_name}} er slettet fra kontoen din",
     "CANNOT SHARE SYSTEM": "Kan ikke dele System:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Endring av egne tillatelser er ikke tillatt",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Denne e-postadressen er allerede registrert i Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Nytt passord lagret",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Din konto er lagret",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Kontoen er aktivert",

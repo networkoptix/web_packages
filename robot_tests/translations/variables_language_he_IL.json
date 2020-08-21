@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "המערכת {{system_name}} נמחקה בהצלחה מהחשבון שלך",
     "CANNOT SHARE SYSTEM": "אין אפשרות לשתף את המערכת:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "שינוי הרשאות של המשתמש אינו מאופשר",
-    "EMAIL IS ALREADY REGISTERED TEXT": "דוא\"ל זה כבר נרשם ב- Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "סיסמא חדשה נשמרה",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "החשבון שלך נשמר בהצלחה",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "החשבון הופעל בהצלחה",

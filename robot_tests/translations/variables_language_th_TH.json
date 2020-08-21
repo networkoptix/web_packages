@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "ระบบ {{system_name}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
     "CANNOT SHARE SYSTEM": "ไม่สามารถแชร์ระบบ:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "ไม่อนุญาตให้เปลี่ยนสิทธิ์ของตัวเอง",
-    "EMAIL IS ALREADY REGISTERED TEXT": "อีเมลนี้ได้ลงทะเบียนไปแล้วใน Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "บันทึกรหัสผ่านแล้ว",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "เปิดใช้งานบัญชีของคุณเรียบร้อยแล้ว",

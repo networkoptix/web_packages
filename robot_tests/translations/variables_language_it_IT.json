@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Il sistema {{system_name}} è stato eliminato correttamente dal suo account",
     "CANNOT SHARE SYSTEM": "Impossibile condividere il sistema:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "La modifica delle proprie autorizzazioni non è consentita",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Questa e-mail è già stata registrata in Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Nuova password salvata",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Il tuo account è stato aggiornato correttamente",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account creato con successo",

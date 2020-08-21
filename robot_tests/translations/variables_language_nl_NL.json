@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "Systeem {{system_name}} is succesvol verwijderd van uw account",
     "CANNOT SHARE SYSTEM": "Kan het volgende systeem niet delen:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Het wijzigen van eigen machtigingen is niet toegestaan",
-    "EMAIL IS ALREADY REGISTERED TEXT": "Dit e-mailadres is al geregistreerd in Nx Cloud",
+    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT": "Nieuw wachtwoord opgeslagen",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Uw account is succesvol opgeslagen",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account succesvol geactiveerd",
