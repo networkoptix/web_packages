@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "システム {{system_name}} はあなたのアカウントから正常に削除されました",
     "CANNOT SHARE SYSTEM": "システムを共有できません:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "自分のアクセス権限を変更することはできません",
-    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
+    "EMAIL IS ALREADY REGISTERED TEXT": "このメールアドレスは %SYSTEM% システムに既に登録されています",
     "RESET SUCCESS MESSAGE TEXT": "新しいパスワードが保存されました",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "あなたのアカウントは正常に保存されました",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "アカウントが有効になりました",

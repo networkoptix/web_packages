@@ -30,7 +30,7 @@
     "SYSYEM DELETED FROM ACCOUNT": "System {{system_name}} har tagits bort från ditt konto",
     "CANNOT SHARE SYSTEM": "Kan inte dela System:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Ändring av egna behörigheter är inte tillåtet",
-    "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
+    "EMAIL IS ALREADY REGISTERED TEXT": "Det här e-postmeddelandet har redan registrerats i %SYSTEM% systemet",
     "RESET SUCCESS MESSAGE TEXT": "Nytt lösenord sparat",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ditt konto har sparats",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Kontot har aktiverats",
