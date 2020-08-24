@@ -76,11 +76,11 @@ Get Recording Mode
 
 Get Recording Quality
 
-Get Camera Id By Name
-    [Arguments]    ${auth}    ${server url}    ${name}
+Get Camera Attribute By Camera Name
+    [Arguments]    ${auth}    ${server url}    ${name}    ${attribute}
     ${cameras json}=    Get Cameras    ${auth}    ${server url}
     FOR    ${camera}  IN  @{cameras json}
-        Run Keyword If    '''${camera['cameraName']}'''=='''${name}'''    Return From Keyword    ${camera['cameraId']}
+        Run Keyword If    '''${camera['cameraName']}'''=='''${name}'''    Return From Keyword    ${camera['attribute']}
     END
 
 Verify recording controls are open
