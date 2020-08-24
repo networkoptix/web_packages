@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Przeglądasz nieaktualny raport."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Ten e-mail został już zarejestrowany w systemie %systemName%"
+        },
         "buttons": {
             "cancel": "Anuluj",
             "createAccount": "Utwórz nowe konto",

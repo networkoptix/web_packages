@@ -33,11 +33,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     account: any;
 
     selectors = {
-        access   : false,
-        analytics: false,
-        cameras  : false,
-        home     : false,
-        psim     : false,
+        access    : false,
+        analytics : false,
+        cameras   : false,
+        home      : false,
+        psim      : false
     };
 
     private setupDefaults(configService) {
@@ -58,10 +58,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
-                private router: Router,
+                private router: Router
     ) {
         this.setupDefaults(configService);
     }
+
     ngOnDestroy() {}
 
     ngOnInit(): void {
@@ -77,35 +78,42 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.accountService.get()
-            .then(account => {
-                this.integrationSubscription = this.integrations
-                    .pluginsSubject
-                    .subscribe((result: any) => {
-                        if (result) {
-                            if (!this.CONFIG.cloudCapabilities.integrationStore && !(account && account.is_staff)) {
+        this.integrationSubscription = this.integrations
+            .pluginsSubject
+            .subscribe((result: any) => {
+                if (result) {
+                    if (!this.CONFIG.cloudCapabilities.integrationStore) {
+                        this.accountService.requireLogin()
+                            .then(() => {
+                                this.setIntegrations(result);
+                            })
+                            .catch(() => {
                                 this.router
                                     .navigate([this.CONFIG.redirect.page404])
                                     .catch(error => {
                                         console.error(error);
                                     });
-                            } else {
-                                this.allElements = result;
-                                this.setTags();
-                                this.setFilter();
-                            }
-                        } else {
-                            this.elements = undefined;
-                        }
-                    }, error => {
-                        console.error('Integration plugins error -> ', error);
-                        this.router
-                            .navigate([this.CONFIG.redirect.page404])
-                            .catch(error => {
-                                console.error(error);
                             });
+                    } else {
+                        this.setIntegrations(result);
+                    }
+                } else {
+                    this.elements = undefined;
+                }
+            }, error => {
+                console.error('Integration plugins error -> ', error);
+                this.router
+                    .navigate([this.CONFIG.redirect.page404])
+                    .catch(error => {
+                        console.error(error);
                     });
             });
+    }
+
+    setIntegrations(integrations) {
+        this.allElements = integrations;
+        this.setTags();
+        this.setFilter();
     }
 
     setTags() {
@@ -114,7 +122,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
         this.CONFIG.integration.filter.items.forEach(item => {
             if (item.enabled || (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)) {
-                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
+                this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 

@@ -221,7 +221,7 @@
                         function jumpToPosition(date) {
                             var lastMinute = scope.scaleManager.lastMinute();
                             if (date > lastMinute) {
-                                goToLive();
+                                goToLive(true);
                             } else {
                                 scope.positionHandler(date);
                             }

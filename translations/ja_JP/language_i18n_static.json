@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "古いレポートを表示しています。"
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "このメールアドレスは %systemName% システムに既に登録されています"
+        },
         "buttons": {
             "cancel": "キャンセル",
             "createAccount": "新規アカウントを作成",

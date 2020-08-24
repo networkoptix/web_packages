@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Ön elavult jelentést tekint meg."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Ezt az e-mailt már regisztrálták a %systemName% rendszerben"
+        },
         "buttons": {
             "cancel": "Mégse",
             "createAccount": "Új Fiók Létrehozása",

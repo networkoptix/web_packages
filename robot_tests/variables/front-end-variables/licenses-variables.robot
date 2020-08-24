@@ -7,11 +7,21 @@ ${LM OWNER}       licautotests+owner@gmail.com
 ${LM PASSWORD}    qweasd123
 @{LM AUTH}        ${LM OWNER}    ${LM PASSWORD}
 @{CLOUD AUTH}     ${LM OWNER}    ${BASE PASSWORD}
+
 &{LM USERS}
 ...    cloudAdmin=licautotests+admin@gmail.com
 ...    viewer=licautotests+viewer@gmail.com
 ...    advancedViewer=licautotests+adviewer@gmail.com
 ...    custom=licautotests+custom@gmail.com
+
+&{LIC TYPES}
+...    digital=Professional
+...    analogencoder=Analog Encoder
+...    iomodule=IO Module
+...    starter=Starter
+...    videowall=Video Wall
+...    vmax=VMAX
+
 ${TRIAL LICENSE}    0000-0000-0000-0005
 ${LICENSES LINK}    //a[@id="licenses"]
 

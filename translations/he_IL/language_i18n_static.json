@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "אתה צופה בדוח מיושן."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "דוא\"ל זה כבר נרשם במערכת %systemName%"
+        },
         "buttons": {
             "cancel": "ביטול",
             "createAccount": "צור חשבון חדש",

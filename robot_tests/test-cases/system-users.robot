@@ -279,7 +279,7 @@ Admin cannot invite another admin
     Click Button    ${ADD USER CANCEL}
 
 Edit permission works
-    [Tags]    C41900    C30657
+    [Tags]    C41900    C30657    C47041
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Log in to Auto Tests System    ${email}
     Share To    ${random email}    ${ADMIN TEXT}

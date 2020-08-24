@@ -270,7 +270,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set selectedFps(value) {
-        this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
+        this.selectedFpsWatcher.value = !value ? value : Math.min(value, this.selectedCamera.maxFps);
     }
 
     get variousFps() {

@@ -381,6 +381,32 @@
                                 <nx-tag class="mr-1" *ngFor="let option of options" [type]="option.type"
                                         [value]="option.selected">{{ option.name }}</nx-tag>
                             </div>
+
+                            <br>
+                            <br>
+                            <h3>Form w/ auto width for labels</h3>
+                            <div class="grid-container">
+                                <div class="grid-item">
+                                    <span class="text-right" translate>Aspect Ratio</span>
+                                </div>
+                                <div class="grid-item mb-2 mb-lg-0">
+                                    <nx-select
+                                            [selected]="false"
+                                            [(ngModel)]="selectedAspect"
+                                            [items]="aspectRatios"
+                                            id="aspect-ratios"></nx-select>
+                                </div>
+                                <div class="grid-item">
+                                    <span class="text-right" translate>Rotation</span>
+                                </div>
+                                <div class="grid-item">
+                                    <nx-select
+                                            [selected]="false"
+                                            [(ngModel)]="selectedRotation"
+                                            [items]="rotations"
+                                            id="rotations"></nx-select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </ng-template>

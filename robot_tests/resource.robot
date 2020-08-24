@@ -258,6 +258,7 @@ Register And Activate Account
     [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
     Run Keyword If    '${reg}'=='api'    Register Account    ${first name}    ${last name}    ${email}    ${password}
     Run Keyword If    '${reg}'=='ui'     Register    ${first name}    ${last name}    ${email}    ${password}
+    Sleep    1
     Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
     Run Keyword If    '${act}'=='ui'     Activate    ${email}
     Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
@@ -313,7 +314,7 @@ Go to System Administration
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
-    [arguments]    ${email}    ${permissions}    ${alert}=success
+    [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
@@ -327,11 +328,11 @@ Share To
     Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
-    Wait Until Element Is Not Visible    ${ADD USER MODAL}
-    Run Keyword if    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
-    Run Keyword if    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${EMAIL IS ALREADY REGISTERED TEXT}")]    ${selenium timeout}
-    ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
-    Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
+    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
+    ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}
+    Run Keyword If    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}
+    ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
+    Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
