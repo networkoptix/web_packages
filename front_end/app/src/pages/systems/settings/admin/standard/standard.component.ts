@@ -20,9 +20,9 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings;
     @Input() system: NxSystem;
+    @Input() viewContainerRef: ViewContainerRef;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    viewContainerRef: ViewContainerRef;
 
     selectedTimeUnit;
     sessionLimitToggle: boolean;
@@ -67,12 +67,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        @Inject(ViewContainerRef) viewContainerRef,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private menuService: NxMenuService
     ) {
-        this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }

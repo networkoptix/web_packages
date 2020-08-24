@@ -1,6 +1,6 @@
 import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
+    Component, Inject, OnDestroy, OnInit, ViewContainerRef
+} from '@angular/core';
 import {
     Params, Router, ActivatedRoute
 }                                    from '@angular/router';
@@ -101,7 +101,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        @Inject(ViewContainerRef) public viewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;

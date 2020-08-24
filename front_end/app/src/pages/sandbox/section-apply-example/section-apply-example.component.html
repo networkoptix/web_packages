@@ -6,17 +6,20 @@
             <ng-container #section1apply></ng-container>
         </div>
     </div>
-    
+
     <div>
         <h2>Section 2</h2>
         <input type="text" [(ngModel)]="section2Input">
-        <div>{{ section2InputWatcher.additionalProperty1 }}</div>
+        <div>
+            <h3>{{ section2InputWatcher.additionalProperty1 }}</h3>
+            <input type="text" [(ngModel)]="section2InputWatcher.additionalProperty1">
+        </div>
         <div>{{ section2InputWatcher.additionalProperty2 }}</div>
         <div class="section-apply-wrapper">
             <ng-container #section2apply></ng-container>
         </div>
     </div>
-    
+
     <div>
         <h2>Section 3</h2>
         <input type="text" [(ngModel)]="section3Input">

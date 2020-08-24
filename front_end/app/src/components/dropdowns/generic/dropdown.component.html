@@ -9,11 +9,12 @@
         <div class="btn loading" *ngIf="merge && stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
         </div>
-        <span *ngIf="merge && !stillLoading || !merge" [ngClass]="{ 'ellipsis-merge': merge, ellipsis: !merge }" [innerHtml]="_selected && _selected.name"></span>
+        <span *ngIf="merge && !stillLoading || !merge" [ngClass]="{ 'ellipsis-merge': merge, ellipsis: !merge }" [innerHtml]="_selectedItem && _selectedItem.name"></span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
+
     <div class="dropdown-menu" [nxArrowNav]="show"
          [style.display]="show ? 'inline-block' : 'none'"
          [attr.aria-labelledby]="id">
@@ -23,7 +24,7 @@
                 <hr *ngIf="item.name === 'horizontal'; else systemSelect">
                 <ng-template #systemSelect>
                     <a *ngIf="!item.disabled; else disabledItem" class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
-                        [ngClass]="{ 'selected': _selected && _selected.value === item.value }"
+                        [ngClass]="{ 'selected': _selectedItem && _selectedItem.value === item.value }"
                         (click)="show = false; change(item)">
                         <span [innerHTML]="item.name"></span>
                     </a>
@@ -36,4 +37,5 @@
             </li>
         </ul>
     </div>
+
 </div>

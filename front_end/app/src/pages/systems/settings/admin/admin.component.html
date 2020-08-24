@@ -123,6 +123,7 @@
         <nx-system-standard-admin-component
                 *ngIf="system.isAdmin"
                 [system]="system"
+                [viewContainerRef]="viewContainerRef"
                 [settings]="settingsForSystem">
         </nx-system-standard-admin-component>
 

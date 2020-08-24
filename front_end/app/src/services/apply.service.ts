@@ -1,16 +1,17 @@
 import {
     ComponentFactoryResolver, Injectable,
-    ViewContainerRef, ComponentRef
-}                                               from '@angular/core';
+    ViewContainerRef, ComponentRef, ViewChild
+} from '@angular/core';
 import { NgForm }                               from '@angular/forms';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import {
     distinctUntilChanged, filter, skip, map
 }                                               from 'rxjs/operators';
 
-import { NxApplyComponent }                     from '../components/apply/apply.component';
-import { NxDialogsService }                     from '../dialogs/dialogs.service';
-import { Process, NxProcessService }            from './process.service';
+import { NxApplyComponent }          from '../components/apply/apply.component';
+import { NxDialogsService }          from '../dialogs/dialogs.service';
+import { Process, NxProcessService } from './process.service';
+import { NxUtilsService }            from './utils.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -107,31 +108,21 @@ export class SectionWatcher {
     }
 }
 
-/**
- * TODO: Unused, could probably remove
- */
-// export class ObjWatcher<Object> {
-//     originalValue: unknown = {};
-//     valueSubject = new BehaviorSubject({});
+export class FormWatcher {
+    originalValue;
+    _changed: boolean;
 
-//     get value() {
-//         return this.valueSubject.getValue();
-//     }
+    constructor() {
+    }
 
-//     set value(data) {
-//         if (this.value === {}) {
-//             this.originalValue = {};
-//         }
-//         if (!NxUtilsService.isEqual(this.value, data)) {
-//             this.valueSubject.next(data);
-//         }
-//     }
+    set changed(value) {
+        this._changed = value;
+    }
 
-//     // Resets the value of the watcher to the first value that was not undefined.
-//     reset() {
-//         this.valueSubject.next(this.originalValue);
-//     }
-// }
+    get changed() {
+        return this._changed;
+    }
+}
 
 @Injectable({
     providedIn: 'root'
@@ -248,6 +239,47 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).submitFn = submitFn;
     }
 
+    // ... Breadcrumbs ... TT
+    formInit = true;
+    originalForm: any;
+
+    createFormWatcher(
+        component: ViewContainerRef | null,
+        form: any,
+        saveFunction: Process
+    ) {
+        component.clear();
+        const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
+        const applyComponentRef = component.createComponent(compFactory);
+        if (form) {
+            applyComponentRef.instance.form = form;
+        }
+        applyComponentRef.instance.applyVisible = true;
+        applyComponentRef.instance.save = saveFunction;
+        applyComponentRef.instance.discard = () => {
+            Object.keys(this.originalForm).forEach((key) => {
+                form.controls[key].setValue(this.originalForm[key]);
+            });
+        };
+
+        form.valueChanges.subscribe((change) => {
+            // Init phase ... it's called during form controls init
+            const hasChange = !NxUtilsService.isEqual(this.originalForm, change);
+            if (this.formInit) {
+                if (!this.originalForm || hasChange) {
+                    this.originalForm = { ...change };
+                    this.formInit = !Object.values(this.originalForm).every(x => x !== undefined);
+                }
+                return;
+            }
+            applyComponentRef.instance.show = hasChange;
+        });
+
+        return FormWatcher;
+    }
+
+    // ... Breadcrumbs (END) ... TT
+
     /**
      * Instantiates and returns a SectionWatcher that is API compatible with Watcher.
      *
@@ -267,7 +299,7 @@ export class NxApplyService {
      * come up with the right abstraction until we have the SectionWatchers in use.
      */
     createSectionWatcher = (
-        component: ViewContainerRef,
+        component: ViewContainerRef | null,
         saveFunction: Process,
         discardFunction: () => void,
         watchers: Watcher<any>[],
@@ -275,6 +307,9 @@ export class NxApplyService {
         submitFn?: () => any
     ) => {
         const sectionWatcher = new SectionWatcher(watchers);
+        if (!component) {
+            return sectionWatcher;
+        }
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         component.clear();
         const applyComponentRef = component.createComponent(compFactory);

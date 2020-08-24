@@ -3,6 +3,27 @@
         <h1>SANDBOX</h1>
 
         <ngb-tabset #tabs>
+            <ngb-tab id="Section Apply Example">
+                <ng-template ngbTabTitle>
+                    <span class="tab-heading">Section Apply Example</span>
+                </ng-template>
+                <ng-template ngbTabContent>
+                    <div class="row">
+                        <div class="col-6 p-5">
+                            <h1>
+                                This is an example of how to use use the apply service with separate sections.
+                            </h1>
+                            <section-apply-example></section-apply-example>
+                        </div>
+                        <div class="col-6 p-5">
+                            <h1>
+                                This is an example of how to use use the apply service with form.
+                            </h1>
+                            <form-apply-example></form-apply-example>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
             <ngb-tab id="Multi DD">
                 <ng-template ngbTabTitle>
                     <span class="tab-heading">Multi DD</span>
@@ -601,17 +622,6 @@
                             </div>
                         </div>
                     </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab id="Section Apply Example">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">Section Apply Example</span>
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <h1>
-                        This is an example of how to use use the apply service with seperate sections.
-                    </h1>
-                    <section-apply-example></section-apply-example>
                 </ng-template>
             </ngb-tab>
         </ngb-tabset>

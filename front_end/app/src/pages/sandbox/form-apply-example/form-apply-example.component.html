@@ -1,0 +1,23 @@
+<div class="mb-3">
+    <div>
+        <form class="form" role="form" name="form1" #form1="ngForm" novalidate>
+            <h2>Form 1</h2>
+            <input type="text" name="form1_Field1" [(ngModel)]="form1Field1Input">
+            <input type="text" name="form1_Field2" [(ngModel)]="form1Field2Input">
+            <div class="section-apply-wrapper">
+                <ng-container #sectionForm1Apply></ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <form class="form" role="form" name="form2" #form2="ngForm" novalidate>
+            <h2>Form 2</h2>
+            <input type="text" name="form2_Field1" [(ngModel)]="form2Field1Input">
+            <div class="section-apply-wrapper">
+                <ng-container #sectionForm2Apply></ng-container>
+            </div>
+        </form>
+    </div>
+</div>
+<ng-container #pageApply></ng-container>
