@@ -401,7 +401,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (!this.applyService.locked) this.setCamera();
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
-                        this.showPreloader = false;
+                        if (this.noCameras) {
+                            this.showPreloader = false;
+                        }
                     });
             });
         this.initUpdateProcess();
@@ -664,7 +666,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.alerts = [];
         }
 
-        if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
+        if (
+            this.system &&
+            this.system.cameras &&
+            this.system.cameras.length > 0 &&
+            this.applyService &&
+            this.applyService.applyComponentRef &&
+            this.applyService.applyComponentRef.instance &&
+            !this.applyService.locked
+        ) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
 
@@ -695,7 +705,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     ])
                 ]
             ];
-            this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
@@ -717,6 +726,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }).catch(_ => {
                 this.availableLicenses = 0;
             });
+            this.showPreloader = false;
         } else {
             this.noCameras = true;
         }
