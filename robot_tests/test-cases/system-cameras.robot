@@ -13,17 +13,56 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Test Cases ***
+Camera settings is available to owner admin and custom with permission
+    [Tags]    C76252    threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Log Out
+    
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Log Out
+    
+    Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
-    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
+
     Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
+
     Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
+
+    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+
+Camera settings is not available by direct link to any viewers
+    ${auth}=   admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO TESTS IP}    good cam
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    
+    Log Out
+
+    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+
+    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+
     Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
@@ -40,7 +79,18 @@ No cameras placeholder
 
 Camera status match server
     @{auth}=   Create List    admin    ${BASE PASS WORD}
-    Get Cameras    ${auth}      ${AUTO SYS IP} 
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+
+    Wait Until Elements Are Visible    
+    ...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
+    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
+    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+
+    
 
 Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416    threaded
@@ -477,12 +527,3 @@ Placeholder shows when system is offline
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
-
-    # might not be a valid test
-    #Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS OFFLINE SYSTEM ID}
-    #Wait Until Element is Visible    ${CAMERAS LINK}
-    #Click Link    ${CAMERAS LINK}
-    #Wait Until Elements are Visible
-    #...    ${OFFLINE PLACEHOLDER IAMGE}
-    #...    ${OFFLINE TITLE}
-    #...    ${OFFLINE MESSAGE}
