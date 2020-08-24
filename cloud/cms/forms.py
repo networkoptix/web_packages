@@ -400,11 +400,12 @@ class MenuChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        customization_choices = tuple((name, name) for name in self.user_customizations)
-        if len(self.user_customizations) > 1:
-            customization_choices = (('all', 'All'),) + customization_choices
-        self.fields['customization_view'].choices = customization_choices
-        self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
+        if self.instance.pk:
+            customization_choices = tuple((name, name) for name in self.user_customizations)
+            if len(self.user_customizations) > 1:
+                customization_choices = (('all', 'All'),) + customization_choices
+            self.fields['customization_view'].choices = customization_choices
+            self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
 
 
 class MenuNodeChangeForm(forms.ModelForm):

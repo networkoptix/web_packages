@@ -222,5 +222,10 @@
         "authentication": "both"
       }
     ]
+  },
+  {
+    "name": "Knowledgebase",
+    "depth": 2,
+    "nodes": []
   }
 ]

@@ -299,6 +299,12 @@
             {% if 'tiny_forced_root_block' in data_structure.meta_settings %}
                 forced_root_block: {% if data_structure.meta_settings.tiny_forced_root_block is False %}false{% else %}"{{ data_structure.meta_settings.tiny_forced_root_block|lower }}"{% endif %},
             {% endif %}
+            {% if data_structure.meta_settings.upload_data_images %}
+            paste_data_images: true,
+            images_dataimg_filter: function (img) {
+                return false;
+            },
+            {% endif %}
             toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
             menubar: false,
             resize: 'both',

@@ -1,5 +1,6 @@
 from datetime import datetime
 import base64
+from io import BytesIO
 import json
 import re
 import uuid
@@ -7,6 +8,7 @@ import hashlib
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
+from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.db.models import Q
 from django.utils.http import urlencode
@@ -20,6 +22,7 @@ BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
     AssetCustomizationReview.REVIEW_STATES.pending].lower()
 GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
+DATA_IMG_SRC_REGEX = re.compile(r'src="data:image/.*?;base64,(.*?)"')
 
 
 def update_draft_state(review_id, target_state, user):
@@ -275,6 +278,32 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 has_error = True
         return True
 
+    def process_html():
+        def upload_data_image_match(match_obj):
+            byte_image = base64.b64decode(match_obj[1] + '===')
+            pil_image = Image.open(BytesIO(byte_image))
+            content_file = ContentFile(
+                byte_image, name=f'body-{str(uuid.uuid4())}.' + pil_image.format.lower()
+            )
+            md5 = hashlib.md5()
+            for chunk in content_file.chunks():
+                md5.update(chunk)
+
+            ext_file = ExternalFile(data_structure=data_structure, asset=asset)
+            ext_file.save()
+
+            ext_file.file = content_file
+            ext_file.md5 = md5.hexdigest()
+            ext_file.size = content_file.size
+            ext_file.save()
+
+            return f'src="{external_file.file.url}"'
+
+        nonlocal new_record_value
+        if data_structure.meta_settings.get('upload_data_images', False):
+            new_record_value = DATA_IMG_SRC_REGEX.sub(upload_data_image_match, new_record_value)
+        return True
+
     def check_optional():
         nonlocal new_record_value
         # If the data structure is not optional and has no value use the default.
@@ -349,6 +378,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             if not process_object_or_array():
+                continue
+        elif data_structure.type == DataStructure.DATA_TYPES.html:
+            if not process_other() or not process_html():
                 continue
         elif not process_other():
             continue

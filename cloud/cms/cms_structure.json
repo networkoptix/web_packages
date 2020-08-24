@@ -2204,7 +2204,8 @@
             "meta": {
               "tiny_paste_word_valid_elements": "span,b,strong,i,u,em,br,ol,ul,li,p,h1,h2,h3,h4,h5,h6",
               "tiny_paste_retain_style_properties": "font-weight,text-decoration",
-              "tiny_forced_root_block": false
+              "tiny_forced_root_block": false,
+              "upload_data_images": true
             }
           },
           {

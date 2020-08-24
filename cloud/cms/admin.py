@@ -876,7 +876,6 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
-
         formset.form.current_customization = self.chosen_customization
         formset.form.user_customizations = self.user_customizations
         return formset
@@ -915,6 +914,12 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     class Media:
         js = ('js/menuChange.js',)
 
+    def get_fields(self, request, obj=None):
+        fields = [field for field in super().get_fields(request, obj)]
+        if not (obj and obj.pk):
+            fields.remove('customization_view')
+        return fields
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
@@ -938,8 +943,9 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
-        form.user_customizations = request.user.customizations
-        form.current_customization = self.chosen_customization
+        if obj and obj.pk:
+            form.user_customizations = request.user.customizations
+            form.current_customization = self.chosen_customization
         return form
 
     def save_model(self, request, obj, form, change):
