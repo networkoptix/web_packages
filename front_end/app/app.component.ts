@@ -64,6 +64,7 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
@@ -75,10 +76,10 @@ export class AppComponent {
             return;
         } else if (bootstrapProvider.newSystem) {
             this.newSystem = true;
+            this.CONFIG.newSystem = true;
             this.dialogsService.wizard();
             return;
         }
-        this.CONFIG = configService.getConfig();
 
         // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.

@@ -10,7 +10,7 @@ import { NxUtilsService }            from '../../../services/utils.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
-import { ILanguages }                from '../../../services/nx-cloud-api.types';
+import { ILanguage, ILanguages }     from '../../../services/nx-cloud-api.types';
 
 class BaseLanguageDropdown extends BaseDropdown {
     @Input() instantReload;
@@ -33,9 +33,9 @@ class BaseLanguageDropdown extends BaseDropdown {
     languagesCol2 = [];
 
     constructor(
-        languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
+        private languageService: NxLanguageProviderService
     ) {
         super(languageService, configService);
 
@@ -71,11 +71,16 @@ class BaseLanguageDropdown extends BaseDropdown {
                  we should use this for seamless change of language
                  // this.translate.use(lang.replace('_', '-'));
                  */
-                this.cloudApi
-                    .changeLanguage(this.langCode)
-                    .then((response) => {
-                        window.location.reload();
-                    });
+                if (this.CONFIG.isLocal) {
+                    this.languageService.currentLang = this.langCode;
+                    window.location.reload();
+                } else {
+                    this.cloudApi
+                        .changeLanguage(this.langCode)
+                        .then((response) => {
+                            window.location.reload();
+                        });
+                }
             }
         }
     }
@@ -84,22 +89,29 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
-
-        this.cloudApi
-            .getLanguages()
-            .then((data) => {
-                this.languages = data;
-                this.languages.sort(NxUtilsService.byParam((lang) => {
-                    return lang.language;
-                }, NxUtilsService.sortASC));
-
-                this.splitLanguages();
-
-                this.activeLanguage = this.languages.find(lang => {
-                    return (lang.language === this.currentLang);
-                });
-                this.onChangeCallback(this.activeLanguage.language);
+        let languagePromise;
+        if (this.CONFIG.isLocal) {
+            const languages = this.CONFIG.supportedLanguages.map((langCode) => {
+                const lang = { name: langCode, language: langCode };
+                return <ILanguage>lang;
             });
+            languagePromise = Promise.resolve(languages);
+        } else {
+            languagePromise = this.cloudApi.getLanguages();
+        }
+        languagePromise.then((data) => {
+            this.languages = data;
+            this.languages.sort(NxUtilsService.byParam((lang) => {
+                return lang.language;
+            }, NxUtilsService.sortASC));
+
+            this.splitLanguages();
+
+            this.activeLanguage = this.languages.find(lang => {
+                return (lang.language === this.currentLang);
+            });
+            this.onChangeCallback(this.activeLanguage?.language);
+        });
     }
 
     /**

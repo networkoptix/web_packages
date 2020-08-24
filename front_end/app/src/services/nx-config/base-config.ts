@@ -36,6 +36,7 @@ export interface BaseConfig {
     maxServers: number;
     meta: Meta;
     menus: Menus;
+    newSystem: boolean;
     permissions: Permissions;
     redirect: Redirect;
     showHeaderAndFooter: boolean;
@@ -70,6 +71,8 @@ export interface BaseConfig {
     updateInterval: number;
     webclient: Webclient;
     settingsConfig: SettingsConfig;
+    defaultLanguage: string;
+    supportedLanguages: string[];
     // loggersConfig: LoggersConfig;
 }
 

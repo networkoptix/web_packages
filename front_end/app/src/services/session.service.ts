@@ -40,6 +40,14 @@ export class NxSessionService {
         this.session.set('email', email);
     }
 
+    get language() {
+        return this.session.get('language');
+    }
+
+    set language(lang: string) {
+        this.session.set('language', lang);
+    }
+
     get loginState() {
         return this.session.get('loginState');
     }

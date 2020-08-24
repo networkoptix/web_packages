@@ -8,6 +8,7 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface LanguageI18NStaticTypes {
+    language:              any;
     "About %CLOUD_NAME%":  any;
     "Download %VMS_NAME%": any;
     Integrations:          any;
@@ -930,6 +931,7 @@ function r(name: string) {
 
 const typeMap: any = {
     "LanguageI18NStaticTypes": o([
+        { json: "language", js: "language", typ: "any" },
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "any" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "any" },
         { json: "Integrations", js: "Integrations", typ: "any" },

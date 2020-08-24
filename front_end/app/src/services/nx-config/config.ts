@@ -21,7 +21,7 @@ export const nxConfig: IConfig = {
         debug : false
     },
     credentialsValidation: {
-        emailRegex           : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+        emailRegex           : environment.isLocal ? '.*' : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
         passwordRequirements : {
             maxLength          : 255,
             minClassesCount    : 2,
@@ -30,6 +30,7 @@ export const nxConfig: IConfig = {
             strongClassesCount : 3
         }
     },
+    defaultLanguage : 'en_US',
     dialogs: {
         message: {
             subjects: {
@@ -210,7 +211,7 @@ export const nxConfig: IConfig = {
         vendorsShown                     : 0
     },
     isInIframe : false,
-    isLocal    : false,
+    isLocal    : environment.isLocal,
     layout     : {
         table: {
             rows: 10
@@ -290,11 +291,12 @@ export const nxConfig: IConfig = {
             }
         }
     },
+    newSystem: false,
     permissions: {
         canViewRelease: 'can_view_release'
     },
     redirect: {
-        authorised   : '/systems', // Page for redirecting all authorised users
+        authorised   : environment.isLocal ? '/settings' : '/systems', // Page for redirecting all authorised users
         unauthorised : '/', // Page for redirecting all unauthorised users by default
         page404      : '/404',
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
@@ -317,10 +319,11 @@ export const nxConfig: IConfig = {
             online     : 'online',
             offline    : 'offline',
             restarting : 'restarting',
-            resetting   : 'resetting',
+            resetting  : 'resetting',
             checking   : 'checking'
         }
     },
+    supportedLanguages : [],
     system: {
         flags: {
             newSystem: 'SF_NewSystem'

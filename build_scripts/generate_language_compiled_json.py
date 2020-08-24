@@ -1,3 +1,4 @@
+import collections.abc
 import os
 import json
 import errno
@@ -9,9 +10,18 @@ US_LANGUAGE_NAME = "English (US)"
 US_LANGUAGE_CODE = "en_US"
 
 
+def deep_update(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = deep_update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
+
 def merge_two_json(x, y):
     z = x.copy()  # start with x's keys and values
-    z.update(y)   # modifies z with y's keys and values & returns None
+    z = deep_update(z, y)
 
     return z
 
@@ -55,7 +65,7 @@ def merge_files(base_lang, lang, file_name):
                 sys.stderr.write(f"ERROR: For BORIS to fix: language.json has wrong language_name. "
                                  f"File: {lang_json_file}\n")
                 translated_json["language_name"] = lang
-            merged_lang.update(translated_json)
+            merged_lang = deep_update(merged_lang, translated_json)
     elif lang != US_LANGUAGE_CODE:
         sys.stderr.write(f"WARNING: {lang_json_file} don't exist.\n")
     else:
@@ -65,11 +75,11 @@ def merge_files(base_lang, lang, file_name):
     return merged_lang
 
 
-def generate_languages_files(languages, template_filename):
+def generate_languages_files(languages):
+    current_generate_path = os.path.dirname(os.path.realpath(__file__))
+    with codecs.open(os.path.join(current_generate_path, "..", "translations", "language_codes.json"), "r") as codes:
+        codes_to_lang = json.load(codes)
     # Localize this language
-    with codecs.open(template_filename, "r", "utf-8") as file_descriptor:
-        base_lang = json.load(file_descriptor)
-
     with codecs.open("static/language_i18n.json", "r", "utf-8") as file_descriptor:
         base_i18n = json.load(file_descriptor)
 
@@ -77,18 +87,18 @@ def generate_languages_files(languages, template_filename):
         base_i18n_static = json.load(file_descriptor)
 
     for lang in languages:
-        ajs = merge_files(base_lang, lang, "language.json")
-        ajs["language"] = lang
         i18n = merge_files(base_i18n, lang, "language_i18n.json")
         i18n_static = merge_files(base_i18n_static, lang, "language_i18n_static.json")
-        i18n = merge_two_json(i18n, i18n_static)
-        compiled = {"ajs": ajs, "i18n": i18n}
+        i18n_compiled = merge_two_json(i18n, i18n_static)
+
+        i18n_compiled["language"] = lang
+        i18n_compiled["language_name"] = codes_to_lang[lang]
 
         # replace {{XXX}} with {XXX} so pluralization plugin will not freak out
-        prep_json_for_pluralization(compiled)
+        prep_json_for_pluralization(i18n_compiled)
 
         save_content(f"static/lang_{lang}/language_compiled.json",
-                     json.dumps(compiled, indent=4, ensure_ascii=False, sort_keys=True))
+                     json.dumps(i18n_compiled, indent=4, ensure_ascii=False, sort_keys=True))
 
 
 def prep_json_for_pluralization(adict):
@@ -100,8 +110,12 @@ def prep_json_for_pluralization(adict):
                 adict[key] = adict[key].replace(match, match[1:-1])
 
 
-languages = sys.argv[1:]
-if not languages:
-    languages = ["en_US"]
+def main():
+    languages = sys.argv[1:]
+    if not languages:
+        languages = ["en_US"]
+    generate_languages_files(languages)
 
-generate_languages_files(languages, "static/language.json")
+
+if __name__ == "__main__":
+    main()

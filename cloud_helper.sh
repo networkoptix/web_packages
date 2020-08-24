@@ -128,7 +128,16 @@ function stop_docker_containers() {
 function build_mediaserver_image() {
     DEB_NAME=$1
     VERSION=$2
-    docker image build robot_tests/Docker --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME
+    COPY=$3
+    docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME --build-arg copy=$COPY
+}
+
+function list_mediaserver() {
+    docker images | grep mediaserver
+}
+
+function remove_mediaserver() {
+    docker images | grep mediaserver | awk '{print $3}' | xargs docker image rm -f
 }
 
 function run_mediaserver() {
@@ -147,6 +156,28 @@ function run_mediaserver() {
 
 function stop_mediaserver() {
     docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
+}
+
+function local_build() {
+    VERSION=$1
+    PORT=$2
+    COPY=$3
+    BUILD_DIR=~/Desktop/build
+    REPO=$PWD
+
+    [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    pushd $BUILD_DIR
+        . "$REPO/../webadmin/build.sh"
+        cp server-external/bin/external.dat $REPO/tools/docker
+    popd
+
+    echo "Stop mediaserver"
+    stop_mediaserver
+    echo "Build mediaserver"
+    build_mediaserver_image $VERSION.deb $VERSION $COPY
+    echo "Run mediaserver"
+    echo "Starting mediaserver $PORT"
+    docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
 }
 
 function start_https_tunnel() {
@@ -250,11 +281,24 @@ do
         stop_docker)
             stop_docker_containers
             ;;
+        local_build)
+            VERSION=$2
+            PORT=$3
+            COPY=$4
+            local_build $VERSION $PORT $COPY
+            break
+            ;;
         build_mediaserver)
             DEB_NAME=$2
             VERSION=$3
             build_mediaserver_image $DEB_NAME $VERSION
             break
+            ;;
+        list_mediaserver)
+            list_mediaserver
+            ;;
+        remove_mediaserver)
+            remove_mediaserver
             ;;
         run_mediaserver)
             VERSION=$2
@@ -285,9 +329,12 @@ do
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
-            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/robot_tests/Docker. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
+            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/tools. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
+            echo 'list_mediaserver - List docker images build by this script'
+            echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'local_build - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh local_build {version} {port} {copy}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
             echo ''
             ;;

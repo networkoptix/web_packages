@@ -18,36 +18,39 @@ def replace_empty(json_elem):
         return json_elem
 
 
-with open('app/language_i18n.json', 'r') as language:
-    json_data = json.load(language)
-
-parsed_menu = {}
-
-
-def parseMenus(nodes):
+def parse_menus(nodes, parsed_menu=None):
+    if not parsed_menu:
+        parsed_menu = {}
     for node in nodes:
         string = node.get('display_name', node['name'])
         parsed_menu[string] = string
         if 'nodes' in node:
-            parseMenus(node['nodes'])
+            parse_menus(node['nodes'])
+    return parsed_menu
 
 
-with open('../cloud/cms/menus.json') as cms_static_menus:
-    menus = json.load(cms_static_menus)
-    parseMenus(menus)
+def add_menu_to_i18n():
+    dynamic_i18n_path = "./app/language_i18n.json"
+    with open(dynamic_i18n_path, 'r') as language:
+        json_data = json.load(language)
 
-json_data.update(parsed_menu)
+    with open('../cloud/cms/menus.json') as cms_static_menus:
+        menus = json.load(cms_static_menus)
 
-copy = json_data.copy()
+    json_data.update(parse_menus(menus))
+    copy = json_data.copy()
 
-for item in copy.keys():
-    if filter_extracted_static(item):
-        del json_data[item]
-        continue
+    for item in copy.keys():
+        if filter_extracted_static(item):
+            del json_data[item]
+            continue
 
-    json_data[item] = replace_empty(item)
+        json_data[item] = replace_empty(item)
+
+    with open(dynamic_i18n_path, "w") as outfile:
+        json.dump(json_data, outfile, indent=4,
+                  sort_keys=True, separators=(',', ': '))
 
 
-with open("./app/language_i18n.json", "w") as outfile:
-    json.dump(json_data, outfile, indent=4,
-              sort_keys=True, separators=(',', ': '))
+if __name__ == "__main__":
+    add_menu_to_i18n()

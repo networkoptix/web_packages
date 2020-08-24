@@ -5,10 +5,11 @@
     "ng": "ng",
     "serve": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.cloud-test.json",
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.webadmin.json",
-    "build": "npm run lang && ng build --prod",
-    "build-webadmin": "npm run lang && ng build -c webadmin-prod",
+    "build": "npm run lang && ng build --prod && npm run postbuild",
+    "build-webadmin": "npm run lang && ng build -c webadmin-prod && npm run postbuild webadmin",
     "bundle-report": "npm run lang && ng build --stats-json && webpack-bundle-analyzer dist/stats.json",
     "postbuild": "./cloud-portal-postbuild.sh",
+    "postinstall": "node setSkin.js --skin blue",
     "test": "ng test",
     "test:watch": "ng test --watch",
     "e2e": "ng e2e",
@@ -18,8 +19,7 @@
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
     "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
-    "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts",
-    "postinstall": "node setSkin.js --skin blue"
+    "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts"
   },
   "private": true,
   "dependencies": {
