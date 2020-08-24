@@ -129,7 +129,6 @@
     "ONCE ACTIVATED TEXT": "Once activated, it will allow you to record up to 4 cameras for 30 days",
     "LICENSE IS ACTIVATED TEXT": "License key activated",
     "TRIAL LICENSE ACTIVATED TEXT": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days.",
-<<<<<<< HEAD
     "ENTER LICENSE KEY TEXT": "Enter license key",
     "INVALID LICENSE KEY TEXT": "Invalid license key",
     "LICENSE IS EXPIRED TEXT": "Failed to activate license: License is expired",
@@ -140,8 +139,6 @@
     "LICENSE SERVER DID NOT RESPOND TEXT": "Failed to activate license. License server did not respond. Please try again or contact support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Failed to activate license. Please try again or contact support",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again",
-=======
->>>>>>> 31b1ffd5e08... Updated translations (committed by Jenkins)
     "SEARCH PLACEHOLDER TEXT": "Pesquisar",
     "IPVD FILTERS APPLIED TEXT": "filters applied",
     "IPVD FILTERS ANALYTICS TEXT": "evento de Analytics",
