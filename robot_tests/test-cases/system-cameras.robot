@@ -78,12 +78,22 @@ No cameras placeholder
     ...    ${NO CAMERAS MESSAGE}       
 
 Camera status match server
+    [Tags]    C76256    Threaded
     @{auth}=   Create List    admin    ${BASE PASS WORD}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
+    Should Be True    ${value}
+
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
+    Should Be Equal As Strings    ${value}    Offline
+    
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
+    Should Be Equal As Strings    ${value}    Unauthorized
 
     Wait Until Elements Are Visible    
     ...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
