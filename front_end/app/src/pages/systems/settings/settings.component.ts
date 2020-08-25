@@ -509,6 +509,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
+        this.mergeTargetSystem = undefined;
+        this.systemsService.getSystem(this.systemId, false)
+                .subscribe((system: NxSystem) => {
+                    this.systemNoAccess = system === undefined;
+                    if (this.systemNoAccess) {
+                        this.system.stopPoll();
+                    }
+                });
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

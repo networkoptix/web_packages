@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { AngularSvgIconModule }       from 'angular-svg-icon';
+
 import { NxIntegrationDetailsComponent } from './details.component';
 
 import { TranslateModule }      from '@ngx-translate/core';
@@ -32,6 +34,7 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        AngularSvgIconModule,
 
         RouterModule.forChild(appRoutes)
     ],

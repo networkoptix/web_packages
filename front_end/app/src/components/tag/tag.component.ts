@@ -13,6 +13,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
      static?       -> if true the tag is not selectable
      [value]?="tag.selected"
      (click)?="onClick($event)">
+     [clickable]="boolean" | defaults to true
      [TEXT]
  </nx-checkbox>
  */
@@ -31,6 +32,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
     @Input() size: string;
+    @Input() clickable: boolean = true;
     @Input() static: any;
 
     @Input('value') selected: boolean;

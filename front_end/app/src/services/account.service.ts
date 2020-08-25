@@ -315,6 +315,7 @@ export class NxAccountService implements OnDestroy {
                 return this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
+                this.sessionService.email = '';
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
@@ -387,10 +388,15 @@ export class NxAccountService implements OnDestroy {
         this.get()
             .then((account: Account) => {
                 if (!account) {
-                    return this.loginWithAuthKey(auth).then(() => {
-                        return this.document.location.reload();
-                    }).catch(() => {
-                        this.appStateService.ready = true;
+                    return this.cloudApi.checkCode(auth).then((res: any) => {
+                        if (res.emailExists) {
+                            return this.loginWithAuthKey(auth)
+                                .then(() => this.document.location.reload());
+                        } else {
+                            this.appStateService.ready = true;
+                            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+                            return this.requireLogin();
+                        }
                     });
                 }
 
