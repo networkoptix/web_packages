@@ -64,7 +64,7 @@ h1 > .label {
     vertical-align : 33%;
 }
 
-#regular32 {
+@mixin regular32 {
     @include font-source($font-family-regular, $font-size-xxlg, $font-color-regular);
 }
 
