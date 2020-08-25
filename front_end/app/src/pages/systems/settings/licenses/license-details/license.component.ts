@@ -85,34 +85,37 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
         const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
+        const deactivationsRemaining = this.CONFIG.licenseDeactivations - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [
-                {
-                    name  : this.LANG.license.info.type,
-                    value : info.type
-                }, {
-                    name  : this.LANG.license.info.channels,
-                    value : info.count
-                }, {
-                    name        : this.LANG.license.info.server,
-                    value       : info.serverName || this.LANG.common.unknown,
-                    customClass : !info.serverStatus ? InfoDetailClass.ERROR : undefined
-                }, {
-                    name  : this.LANG.license.info.hwid,
-                    value : info.hwid
-                }, {
-                    name        : this.LANG.license.info.status,
-                    value       : info.status,
-                    customClass : info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
-                }, {
-                    name        : this.LANG.license.info.expires,
-                    value       : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
-                    customClass : warning ? InfoDetailClass.ERROR : undefined
-                }, {
-                    name  : this.LANG.license.info.deactivations,
-                    show  : !info.expiration && !info.expired && info.status !== this.LANG.license.info.error,
-                    value : (this.CONFIG.licenseDeactivations - info.deactivations) + '' // convert to string
-                }]
+                new InfoBlockLine(this.LANG.license.info.type, info.type),
+                new InfoBlockLine(this.LANG.license.info.channels, info.count),
+                new InfoBlockLine(
+                    this.LANG.license.info.server,
+                    info.serverName || this.LANG.common.unknown,
+                    !info.serverStatus
+                        ? InfoDetailClass.ERROR
+                        : undefined
+                ),
+                new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
+                new InfoBlockLine(
+                    this.LANG.license.info.status,
+                    info.status,
+                    info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
+                ),
+                new InfoBlockLine(
+                    this.LANG.license.info.expires,
+                    info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
+                    warning ? InfoDetailClass.ERROR : undefined
+                ),
+                new InfoBlockLine(
+                    this.LANG.license.info.deactivations,
+                    deactivationsRemaining,
+                    deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
+                    null,
+                    !info.expiration && !info.expired
+                )
+            ]
         );
 
         this.orderedLicense[info.serial] = [block];

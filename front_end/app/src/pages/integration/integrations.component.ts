@@ -81,35 +81,42 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.accountService.get()
-            .then(account => {
-                this.integrationSubscription = this.integrations
-                    .pluginsSubject
-                    .subscribe((result: any) => {
-                        if (result) {
-                            if (!this.CONFIG.cloudCapabilities.integrationStore && !(account && account.is_staff)) {
+        this.integrationSubscription = this.integrations
+            .pluginsSubject
+            .subscribe((result: any) => {
+                if (result) {
+                    if (!this.CONFIG.cloudCapabilities.integrationStore) {
+                        this.accountService.requireLogin()
+                            .then(() => {
+                                this.setIntegrations(result);
+                            })
+                            .catch(() => {
                                 this.router
                                     .navigate([this.CONFIG.redirect.page404])
                                     .catch(error => {
                                         console.error(error);
                                     });
-                            } else {
-                                this.allElements = result;
-                                this.setTags();
-                                this.setFilter();
-                            }
-                        } else {
-                            this.elements = undefined;
-                        }
-                    }, error => {
-                        console.error('Integration plugins error -> ', error);
-                        this.router
-                            .navigate([this.CONFIG.redirect.page404])
-                            .catch(error => {
-                                console.error(error);
                             });
+                    } else {
+                        this.setIntegrations(result);
+                    }
+                } else {
+                    this.elements = undefined;
+                }
+            }, error => {
+                console.error('Integration plugins error -> ', error);
+                this.router
+                    .navigate([this.CONFIG.redirect.page404])
+                    .catch(error => {
+                        console.error(error);
                     });
             });
+    }
+
+    setIntegrations(integrations) {
+        this.allElements = integrations;
+        this.setTags();
+        this.setFilter();
     }
 
     setTags() {

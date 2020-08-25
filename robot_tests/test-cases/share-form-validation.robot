@@ -13,7 +13,7 @@ ${email}    ${EMAIL OWNER}
 
 *** Test Cases ***      EMAIL
 Empty Email                               ${EMPTY}
-    [tags]    C41888
+    [tags]    C78227
 Invalid Email 1 noptixqagmail.com         noptixqagmail.com
     [tags]    C41902
 Invalid Email 2 @gmail.com                @gmail.com
@@ -75,5 +75,8 @@ Test Email Invalid
     Input Text    ${ADD USER EMAIL}    ${email}
     Click Element    ${ADD USER MODAL}
     Run Keyword If    '${email}' == '${EMPTY}'    Click Button    ${ADD USER BUTTON MODAL}
-    Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'     Wait Until Element Is Visible    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]
+    Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'    Wait Until Element Has Style    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]/input    border-bottom-color    ${ERROR COLOR WITH OPACITY}
+    Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'    Wait Until Element Has Style    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]/input    border-top-color       ${ERROR COLOR WITH OPACITY}
+    Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'    Wait Until Element Has Style    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]/input    border-left-color      ${ERROR COLOR WITH OPACITY}
+    Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'    Wait Until Element Has Style    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]/input    border-right-color     ${ERROR COLOR WITH OPACITY}
     Run Keyword If    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'     Wait Until Element Is Visible    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-valid")]

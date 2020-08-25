@@ -144,7 +144,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
 
         this.checkIfOnline(this.selectedServer.id)
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
+            .finally(() => this.applyService.setVisible(true));
 
         this.renameDisabled = !this.system.permissions.editAdmins;
         this.restartDisabled = !this.system.permissions.isAdmin;
@@ -162,7 +163,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.applyService.hardReset();
             this.ipPortWatcher.value = +port;
             this.applyService.reset();
-            this.applyService.setVisible(true);
         }
     }
 
@@ -190,8 +190,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
-
-        this.checking = false;
     }
 
     checkIfOnline(serverId) {
@@ -215,14 +213,20 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
 
-        // add time to avoid server status flashing "Checking..." if system is offline
         if (this.serversSubscription) {
             this.serversSubscription.unsubscribe();
         }
-        this.serversSubscription = combineLatest(timer(this.CONFIG.servers.minLoaderTime), this.system.getServers())
+        // adding time to avoid server status flashing "Checking..." if system is offline
+        this.serversSubscription = combineLatest(
+            timer(this.CONFIG.servers.minLoaderTime),
+            this.system.getServers()
+                .pipe(
+                    catchError(err => {
+                        console.error(err);
+                        return of(false);
+                    })))
             .pipe(
-                map(x => x[1]),
-                finalize(() => (this.checking = false))
+                map(x => x[1])
             )
             .subscribe(result => {
                 if (result) {
@@ -232,6 +236,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 } else {
                     this.setStatus(this.CONFIG.servers.status.offline);
                 }
+                this.checking = false;
             });
     }
 

@@ -5,7 +5,7 @@ import {
 import { NgForm }                               from '@angular/forms';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import {
-    distinctUntilChanged, filter, skip, map
+    distinctUntilChanged, filter, skip, map, combineLatest
 }                                               from 'rxjs/operators';
 
 import { NxApplyComponent }          from '../components/apply/apply.component';
@@ -155,12 +155,13 @@ export class NxApplyService {
     private component: ViewContainerRef;
     private discardFunction: () => void;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
+    private isOnline$ = new BehaviorSubject(true);
+    private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
-    isOnline$ = new BehaviorSubject(true);
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
@@ -191,7 +192,7 @@ export class NxApplyService {
     }
 
     // Resets all watchers to their first value that wasn't undefined.
-    reset() {
+    reset(nonSystem = false) {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
                 watcher.reset();
@@ -221,8 +222,10 @@ export class NxApplyService {
         watchers: Watcher<any>[],
         form?: NgForm,
         submitFn?: () => any,
+        nonSystem = false,
         onlyShowSectionWatchers = false
     ) {
+        this.nonSystem$.next(nonSystem);
         this.clearSubscriptions();
         this.component = component;
 
@@ -352,7 +355,7 @@ export class NxApplyService {
 
     canMove() {
         return new Promise<boolean>((resolve) => {
-            if (this.locked && this.isOnline$.value) {
+            if (this.locked) {
                 this.showDialog().then((state) => {
                     resolve(state);
                 });
@@ -379,7 +382,8 @@ export class NxApplyService {
             (<NxApplyComponent> this.applyComponentRef.instance).showSectionWarning = onlyShowSectionWatchers;
         }
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
-        this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
+        this.nonSystem$.pipe(combineLatest(this.isOnline$, (nonSystem, isOnline) => nonSystem || isOnline)
+        ).subscribe(isOnline => {
             (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
         });
     }

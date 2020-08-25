@@ -122,18 +122,19 @@ header {
 
         .ellipsis {
             @include mixins.ellipsis;
+            // Most likely we don't need this anymore
             // set text max-width so dropdown button will match spec width
-            @media (max-width : $collapse-first-width) {
-                max-width : 150px;
-            }
-
-            @include media-breakpoint-down(xl) {
-                max-width : 172px;
-            }
-
-            @include media-breakpoint-up(xl) {
-                max-width : 236px;
-            }
+            //@media (max-width : $collapse-first-width) {
+            //    max-width : 150px;
+            //}
+            //
+            //@include media-breakpoint-down(xl) {
+            //    max-width : 172px;
+            //}
+            //
+            //@include media-breakpoint-up(xl) {
+            //    max-width : 236px;
+            //}
         }
 
         .ellipsis-merge {

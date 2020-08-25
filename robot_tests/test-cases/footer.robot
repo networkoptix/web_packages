@@ -75,7 +75,7 @@ Privacy leads to the proper page
     Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
     Select Window    ${tabs}[1]
-    Wait Until Location Is    ${ENV}${PRIVACY POLICY URL HREF}
+    Wait Until Location Is    ${PRIVACY POLICY URL HREF}
 
 Copyright leads to the proper site
     [tags]    C41547    Threaded

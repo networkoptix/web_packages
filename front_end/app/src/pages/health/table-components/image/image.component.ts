@@ -29,19 +29,14 @@ export class NxImageComponent implements OnChanges, OnDestroy {
                 'motion-preview' : true,
                 'd-none'         : !this.show
             } : {
-                mini                       : !this.isPrimary,
-                'd-none'                   : !this.show,
-                'light-thumbnail-preview'  : this.lightBackground,
-                'thumbnail-preview'        : !this.lightBackground,
-                'image-unavailable-border' : this.state !== 'Online' &&
-                                        this.state !== 'Recording' &&
-                                        this.state !== 'Scheduled' &&
-                                        !this.url,
-                wide: this.aspect === '16:9' ||
-                    this.aspect === 'Auto',
-                normal : this.aspect === '4:3',
-                square : this.aspect === '1:1',
-                fill   : this.aspect === 'override'
+                mini                      : !this.isPrimary,
+                'd-none'                  : !this.show,
+                'light-thumbnail-preview' : this.lightBackground,
+                'thumbnail-preview'       : !this.lightBackground,
+                wide                      : this.aspect === '16:9' || this.aspect === 'Auto',
+                normal                    : this.aspect === '4:3',
+                square                    : this.aspect === '1:1',
+                fill                      : this.aspect === 'override'
             };
     }
 

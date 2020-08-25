@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Ви переглядаєте застарілий звіт."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "This email has already been registered in the %systemName% system"
+        },
         "buttons": {
             "cancel": "Скасувати",
             "createAccount": "Створити новий обліковий запис",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Камери",
             "systemAdministration": "Адміністрування системи",
             "general": "Загальні",
             "licenses": "Ліцензії",

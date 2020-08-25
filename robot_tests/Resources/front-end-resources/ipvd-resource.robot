@@ -268,6 +268,7 @@ Open New Browser on Failure
 
 Restart
     Common Restart Logout    ${ENV}
+    Set Window Size    1920    1080
     # Go To    ${url}/ipvd
 
 Validate Request Form Initial State

@@ -158,22 +158,26 @@ Share button - opens dialog
 #
 
 Check Cancel and 'X' buttons
-    [Tags]    C41888    Threaded    CLOUD-3733
+    [Tags]    C78228    Threaded
     Log in to Auto Tests System    ${email}
-
+    ${user}=   Get Random Email    ${BASE EMAIL}
     Log    Check Cancel Button
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
     Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
     Click Button  ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
+    Input Text    ${ADD USER EMAIL}    ${user}
     Click Button    ${ADD USER CANCEL}
     Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
     Log    Check 'X' Button
     Click Button  ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
+    Input Text    ${ADD USER EMAIL}    ${user}
     Click Button    ${ADD USER CLOSE}
     Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
 Sharing roles are ordered: more access is on top of the list with options
     [Tags]    Threaded
@@ -195,6 +199,9 @@ When user selects role - special hint appears
     Click Link    ${USERS LIST LINK}
     Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
     Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER PERMISSIONS DROPDOWN}    ${ADD USER PERMISSIONS HINT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
     FOR    ${type}    IN    @{USER TYPE LIST}
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
@@ -272,7 +279,7 @@ Admin cannot invite another admin
     Click Button    ${ADD USER CANCEL}
 
 Edit permission works
-    [Tags]    C41900    C30657
+    [Tags]    C41900    C30657    C47041
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Log in to Auto Tests System    ${email}
     Share To    ${random email}    ${ADMIN TEXT}
@@ -352,6 +359,19 @@ Share with registered user works and sends him notification
 
     ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+
+Share with registered user give user access to system
+    [Tags]    email    C41888
+    ${email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${auth}=    Create List    ${EMAIL OWNER}    ${password}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    viewer    ${email}
+    Log In    ${email}    ${password}
+
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName    
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
+    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
+    Element Should Not Be Visible    ${RENAME SYSTEM}
+    Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
@@ -550,7 +570,7 @@ Administrator can add, disable and enable Viewer
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
 
 Cloud Owner Can Change Local User Login
-    [Tags]    local_user    C76244
+    [Tags]    local_user    C76244    threaded
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -571,7 +591,7 @@ Cloud Owner Can Change Local User Login
     Verify Changed Info Via API    ${new locals}
 
 Cloud Owner Can Change Local User Full Name
-    [Tags]    local_user    C76244
+    [Tags]    local_user    C76244    threaded
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -591,7 +611,7 @@ Cloud Owner Can Change Local User Full Name
     Verify Changed Info Via API    ${new locals}
 
 Cloud Owner Can Change Local User Email
-    [Tags]    local_user    C76244
+    [Tags]    local_user    C76244    threaded
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -610,7 +630,7 @@ Cloud Owner Can Change Local User Email
     Verify Changed Info Via API    ${new locals}
 
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local_user    C76243
+    [Tags]    local_user    C76243    threaded
     Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
@@ -634,7 +654,7 @@ Cloud Owner Can Change Local User Permissions
     Verify Changed Info Via API    ${new locals}
 
 Cloud Owner Can Change Local User Password
-    [Tags]    local_user    C76246
+    [Tags]    local_user    C76246    threaded
     Log    Same test as testrail "Cloud owner can change local user password (positive)"
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
@@ -656,13 +676,13 @@ Cloud Owner Can Change Local User Password
     END
 
 Cloud owner can change local users' information
-    [Tags]    local_user    C76239    C76244
+    [Tags]    local_user    C76239    threaded
     @{local users} =    Local User Start   ${email}
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}
     Verify Changed Info Via API    ${new locals}
 
 Cloud owner can enable/disable local user (positive)
-    [Tags]    C76245    local_user    
+    [Tags]    C76245    local_user    threaded
     @{local users} =    Local User Start   ${email}
     Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
@@ -671,6 +691,10 @@ Cloud owner can enable/disable local user (positive)
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
     ${name} =    Get Text    //h2[@class="user-email"]
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR     ${user}    IN    @{users}
@@ -692,7 +716,7 @@ Cloud owner can enable/disable local user (positive)
     Should Be True    ${state} == ${True}
 
 Cloud administrator cannot change local administrator's or owner's information
-    [Tags]    local_user    C76240
+    [Tags]    local_user    C76240    threaded
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
@@ -715,7 +739,7 @@ Cloud administrator cannot change local administrator's or owner's information
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
 
 Local User Removed on Server is Removed From UI
-    [Tags]    local_user
+    [Tags]    local_user    threaded
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
@@ -730,7 +754,7 @@ Local User Removed on Server is Removed From UI
     Page Should Not Contain    //span[text()="${user to delete}"]
     
 Verify Local Users Deleted On Server
-    [Tags]    local_user    C76242
+    [Tags]    local_user    C76242    threaded
     Log    This case performs the same test known in testrail as "Cloud owner can delete any local user (positive)."
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
@@ -742,7 +766,7 @@ Verify Local Users Deleted On Server
     END
     
 Adding New Local User Appears on Cloud Portal
-    [Tags]    C76237    local_user
+    [Tags]    C76237    local_user    threaded
     Log    Preconditions
     @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
@@ -756,7 +780,7 @@ Adding New Local User Appears on Cloud Portal
     Verify In Local Users UI    ${local users}    ${email}
     
 Cloud owner cannot change local owner's information
-    [Tags]    C76238    local_user
+    [Tags]    C76238    local_user    threaded
     Log    Step 1
     Log in to Auto Tests System    ${email}
     Go To Users List
@@ -767,7 +791,7 @@ Cloud owner cannot change local owner's information
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
 
 Unsaved changes are not sent to the server
-    [Tags]    C76241    local_user
+    [Tags]    C76241    local_user    threaded
     Log    Preconditions
     @{local users} =    Local User Start   ${email}
     @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
@@ -779,8 +803,8 @@ Unsaved changes are not sent to the server
     Log    Step 2
     Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
-    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="Viewer"] 
-    Click Element    //*[@id="permissionsSelect"]//a/span[text()="Viewer"]
+    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"] 
+    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"]
     Sleep    .1
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
@@ -808,7 +832,7 @@ Unsaved changes are not sent to the server
     Lists Should Be Equal     ${check info}    ${locals}
     
 Local User Login Field Cannot Be Left Blank
-    [Tags]    C76248    local_user
+    [Tags]    C76248    local_user    threaded
     @{local users} =    Local User Start   ${email}
     @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
             
@@ -839,7 +863,7 @@ Local User Login Field Cannot Be Left Blank
     Lists Should Be Equal     ${check info}    ${locals} 
     
 Local User name field can be left blank
-    [Tags]    C76249    local_user
+    [Tags]    C76249    local_user    threaded
     @{local users} =    Local User Start   ${email}
     
     Log    Step 1
@@ -861,7 +885,7 @@ Local User name field can be left blank
     Should Be Equal    ${full name}    ${EMPTY}   
      
 Local User email field can be left blank
-    [Tags]    C76250    local_user
+    [Tags]    C76250    local_user    threaded
     @{local users} =    Local User Start   ${email}
     
     Log    Step 1
@@ -883,7 +907,7 @@ Local User email field can be left blank
     Should Be Equal    ${email field}    ${EMPTY}
     
 User list is available for owner and administrator
-    [Tags]    C76233    local_user
+    [Tags]    C76233    local_user    threaded
     @{local users} =    Local User Start   ${EMAIL OWNER}
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${EMAIL OWNER}
@@ -894,7 +918,7 @@ User list is available for owner and administrator
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
     
 User list is not available for advanced viewer & lower
-    [Tags]    C76462
+    [Tags]    C76462    threaded
     Log    Step 1
     Log in to Auto Tests System    ${EMAIL CUSTOM}
     Element Should Not Be visible    ${USERS LIST LINK}
@@ -904,7 +928,7 @@ User list is not available for advanced viewer & lower
     Element Should Not Be visible    ${USERS LIST LINK} 
     
 Cloud Administrator Can Delete Local User(positive)
-    [Tags]    C76524    local_user
+    [Tags]    C76524    local_user    threaded
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
@@ -924,7 +948,7 @@ Cloud Administrator Can Delete Local User(positive)
     END
     
 Cloud administrator can change local user's login permissions, name and email (positive)
-    [Tags]    C76526    C76525    local_user
+    [Tags]    C76526    C76525    local_user    threaded
     @{new locals} =    Create List
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1
@@ -937,7 +961,7 @@ Cloud administrator can change local user's login permissions, name and email (p
     Verify Changed Info Via API    ${new locals}    local user=ocal+advancedviewer    
     
 Cloud administrator can enable/disable any viewer local user (positive)
-    [Tags]    C76527    local_user
+    [Tags]    C76527    local_user    threaded
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
@@ -949,6 +973,10 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
     Log    Step 4
     ${name} =    Get Text    //h2[@class="user-email"]
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
@@ -973,7 +1001,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Should Be True    ${state} == ${True}
     
 Cloud administrator can change local user password (positive)
-    [Tags]    C76530    local_user
+    [Tags]    C76530    local_user    threaded
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
 
@@ -1001,7 +1029,7 @@ Cloud administrator can change local user password (positive)
     ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
     
 Changes made in thick client appear on cloud portal
-    [Tags]    C76251    local_user
+    [Tags]    C76251    local_user    threaded
     @{local users} =    Local User Start   ${email}
     @{users} =    Get Users     ${auth}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
@@ -1047,7 +1075,7 @@ Changes made in thick client appear on cloud portal
     ...    ${BASE PASSWORD}    
     ...    user id=${id}    
     ...    is cloud=${False}    
-    Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="Viewer"]    timeout=45
+    Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
     Log    Step 7
     Save User    
     ...    ${auth}    

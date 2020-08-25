@@ -38,7 +38,7 @@ System tiles represent actual information
 
 Should show the no systems connected message when you have no systems
     [Tags]    C41866    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}    validate=False
+    Log In    ${EMAIL NOPERM}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 Should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
@@ -47,7 +47,7 @@ Should show system name in header dropdown with "Open in Nx Witness" button if u
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
 
-    Log In    ${random email}    ${password}    validate=False
+    Log In    ${random email}    ${password}
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
@@ -137,12 +137,12 @@ Should show the system page instead of all systems when user only has one
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
 
-    Log In    ${random email}    ${password}    validate=False
+    Log In    ${random email}    ${password}
     Wait Until Element Is Visible    ${SYSTEM NAME}
 
 Should open system page when clicked on system
     [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}    validate=False
+    Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     # Sometimes the name fields refill if you empty them too fast
     sleep    2
@@ -152,7 +152,7 @@ Should open system page when clicked on system
 
 Should show your system for owner and owner name for non-owners
     [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}    validate=False
+    Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Element Text Should Be    ${AUTO TESTS USER}    ${YOUR SYSTEM TEXT}
     FOR    ${user}    IN    @{EMAILS LIST}
@@ -166,21 +166,21 @@ Should not show systems dropdown with no systems
 
 Search should highlight system name
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}    validate=False
+    Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${AUTO TESTS}"]
 
 Search should highlight owner name
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}    validate=False
+    Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${TEST FIRST NAME}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${TEST FIRST NAME}"]
 
 Search can be cleared by x button
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}    validate=False
+    Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     ${tiles}    Get WebElements    //div[contains(@class,"card ")]
     ${len}    Get Length    ${tiles}
@@ -198,14 +198,14 @@ Search can be cleared by x button
 
 Searching for owner email should only show systems with that owner
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL OWNER}    ${password}    validate=False
+    Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
     Wait Until Element Is Not Visible    ${DIFFERENT OWNER TITLE}
 
 Search should only be visible with 9 or more systems
     [Tags]    C41890
-    Log In    ${EMAIL VIEWER}    ${password}    validate=False
+    Log In    ${EMAIL VIEWER}    ${password}
     Go To    ${url}/systems
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
 

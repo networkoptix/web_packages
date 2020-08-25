@@ -25,7 +25,8 @@ Check Special Hint
     Wait Until Element is Visible    ${dropdown type}
     Sleep    1
     Click Link    ${dropdown type}/..
-    ${type}    Convert To Uppercase    ${type}
+    # Commented this out because it caused a proble but can't remember why it was here
+    # ${type}    Convert To Uppercase    ${type}
     Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
@@ -36,6 +37,9 @@ Check Special Hint
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
+    ...    ELSE IF    "${type}"=="Client Custom"          Wait Until Element Contains
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
+    ...    ELSE    Fail    msg=User type did not match any expected types
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}    ${local user}=ocal+
@@ -106,7 +110,7 @@ Modify Local Users via Cloud UI
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
-        Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
+        Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}

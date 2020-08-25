@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Deze e-mail is al geregistreerd in het %systemName% systeem"
+        },
         "buttons": {
             "cancel": "Annuleren",
             "createAccount": "Creëer een nieuw account",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Camera's",
             "systemAdministration": "Systeem Administratie",
             "general": "Algemeen",
             "licenses": "Licenties",

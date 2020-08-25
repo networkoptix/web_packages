@@ -34,6 +34,8 @@ export class NxInfoBlockComponent implements OnInit {
     @Input() infoLineStyle: InfoLineStyle = InfoLineStyle.WIDE;
     @Input() removeTopMargin = false;
 
+    heightCache = {}
+
     CONFIG: IConfig;
     singleColumn: boolean;
 
@@ -45,24 +47,24 @@ export class NxInfoBlockComponent implements OnInit {
         this.singleColumn = this.sectionsOrColumns[0] && !this.sectionsOrColumns[0][0];
     }
 
-    updateHeight = (columnIndex: number, blockIndex: number, lineIndex: number, { height }: { height: number }) => {
-        const line = (this.singleColumn
-            ? this.sectionsOrColumns
-            : this.sectionsOrColumns[columnIndex]
-        )[blockIndex].lines[lineIndex];
+    getLookup(columnIndex: number, blockIndex: number, lineIndex: number) {
+        return `${columnIndex}-${blockIndex}-${lineIndex}`
+    }
 
-        line.overrideHeightPx = Math.max(line.overrideHeightPx || 0, height, 16);
+    updateHeight = (columnIndex: number, blockIndex: number, lineIndex: number, { height }: { height: number }) => {
+        const lookup = this.getLookup(columnIndex, blockIndex, lineIndex);
+        this.heightCache[lookup] = Math.max(this.heightCache[lookup] || 0, height, 16);
     }
 }
 
-export class InfoBlockLine <Name = string, Value = string, Visibility = boolean> {
+export class InfoBlockLine <Name = string, Value = string> {
     constructor(
         public name: Name,
         public value: Value,
-        public show?: Visibility,
         public customClass?: InfoDetailClass,
         public icon?: string,
-        public overrideParamWidth?: number
+        public show: boolean = true,
+        public tooltip?: string
     ) {}
 }
 

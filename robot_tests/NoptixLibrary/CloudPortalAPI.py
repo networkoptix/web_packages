@@ -27,6 +27,13 @@ class CloudPortalAPI(object):
             assert 200 == r.status_code, 'Log out failed.'
             return r.status_code
 
+    def merge_cloud_systems(self, env, master_id, slave_id, email, password):
+        with self.log_in(env, email, password) as s:
+            data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/systems/merge', data)
+            return r.status_code
+
     def change_password(self, env, email, old_password, new_password):
         with self.log_in(env, email, old_password) as s:
             data = {'old_password': old_password, 'new_password': new_password}

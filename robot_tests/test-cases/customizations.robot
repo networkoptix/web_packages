@@ -28,7 +28,7 @@ Verify List of Available Languages
     
 Verify Default language for Cloud Portal
     [Tags]    C43009
-    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
+    Run Keyword Unless     '${LANGUAGE}' != 'en_US'    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
     
 Verify About Product Name
     [Tags]    C43010
@@ -36,7 +36,7 @@ Verify About Product Name
     Wait Until Element is Visible    ${WELCOME CAPTION}
     Element Text Should Be    ${WELCOME CAPTION}    ${PRODUCT NAME}
     Wait Until Element is Visible    ${FOOTER ABOUT LINK}
-    Element Text Should Be    ${FOOTER ABOUT LINK}    About ${PRODUCT NAME}
+    Element Text Should Be    ${FOOTER ABOUT LINK}    ${ABOUT}
     Log    Step 2
     Click Link    ${FOOTER ABOUT LINK}
     Wait Until Location Is    ${ENV}${ABOUT URL}
@@ -47,16 +47,16 @@ Verify Download VMS Name
     Wait Until Element is Visible    ${WELCOME CAPTION}
     Element Text Should Be    ${WELCOME CAPTION}    ${PRODUCT NAME}
     Wait Until Element is Visible    ${FOOTER ABOUT LINK}
-    Element Text Should Be    ${DOWNLOAD LINK}      Download ${VMS_NAME}         
+    Element Text Should Be    ${DOWNLOAD LINK}      ${DOWNLOAD TITLE TEXT}         
     Log    Step 2
     Click Link    ${DOWNLOAD LINK}
+    Run Keyword And Ignore Error    Log In    ${email}    ${password}    button=None
     ${os}=   Get OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Location Is    ${url}/download/${os}
     Wait Until Element is Visible    ${DOWNLOAD VMS NAME}
     ${link url} =    Get Element Attribute    ${DOWNLOAD VMS NAME}/ancestor::a    href
     ${version} =    Get Text    ${DOWNLOAD VERSION NUMBER} 
-    Should Contain    ${link url}    ${DOWNLOAD FILE URL}
     Should Contain    ${link url}    ${os}
     Should Contain    ${link url}    ${version}
     Log    Step 3

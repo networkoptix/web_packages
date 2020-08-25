@@ -1,17 +1,19 @@
+from django.conf import settings
 from django.core.cache import caches
 from django.db import transaction
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException
+    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException, clean_passwords
 from api.models import Account
 from cms.models import Asset, AssetType, Customization
 from notifications.tasks import send_push_notification
@@ -20,7 +22,10 @@ from notifications.serializers import NotificationSerializer, SubscriptionSerial
     DeviceSubscriptionsSerializer, UnregisterDeviceSerializer
 
 import json
-from django.conf import settings
+import logging
+import traceback
+
+logger = logging.getLogger(__name__)
 
 
 def get_mobile_compatible_customization():
@@ -36,35 +41,39 @@ def get_mobile_compatible_customization():
     return Customization.objects.get(name=mobile_customizations[current_customization])
 
 
+class IsAuthenticatedUserOrSystem(BasePermission):
+    def has_permission(self, request, view):
+        return request.user == 'system' or request.user.is_authenticated
+
+
 class CloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
-        if request.data.get('pre-authenticate'):
-            authentication_cache = caches['push_authentication']
-            system = authentication_cache.get(f'{user}:{password}')
-            if system:
-                request.data['system'] = system
-            else:
+        authentication_cache = caches['push_authentication']
+        system = authentication_cache.get(f'{user}:{password}')
+        if system:
+            request.data['system'] = system
+        else:
+            try:
+                ip = get_client_ip(request)
+                # System credentials should fail account.get and raise an exception
+                Clouddb_Account.get(user, password, ip)
+                raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+            except (APINotAuthorisedException, APILogicException):
                 try:
-                    ip = get_client_ip(request)
-                    # System credentials should fail account.get and raise an exception
-                    Clouddb_Account.get(user, password, ip)
-                    raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
-                except (APINotAuthorisedException, APILogicException):
-                    try:
-                        system_response = Clouddb_System.get(user, password, user)
-                        if 'systems' in system_response and system_response['systems'][0]:
-                            request.data['system'] = system_response['systems'][0]
-                            authentication_cache.set(f'{user}:{password}', request.data['system'])
-                        else:
-                            raise exceptions.AuthenticationFailed('Invalid system credentials')
-                    except APINotAuthorisedException:
+                    system_response = Clouddb_System.get(user, password, user)
+                    if 'systems' in system_response and system_response['systems'][0]:
+                        request.data['system'] = system_response['systems'][0]
+                        authentication_cache.set(f'{user}:{password}', request.data['system'])
+                    else:
                         raise exceptions.AuthenticationFailed('Invalid system credentials')
+                except APINotAuthorisedException:
+                    raise exceptions.AuthenticationFailed('Invalid system credentials')
 
         request.data['username'] = user
         request.data['password'] = password
         request.data['systemId'] = request.data.get('systemId', user)
 
-        return None, None
+        return 'system', None
 
 
 class CloudAccountBasicAuthentication(BasicAuthentication):
@@ -88,7 +97,10 @@ class CloudSessionAuthentication(SessionAuthentication):
         try:
             ip = get_client_ip(request)
             account = getattr(request._request, 'user', None)
-            clouddb_account = Clouddb_Account.get(request.session['login'], request.session['password'], ip)
+            if request.session and 'login' in request.session and 'password' in request.session:
+                clouddb_account = Clouddb_Account.get(request.session['login'], request.session['password'], ip)
+            else:
+                return None
         except APINotAuthorisedException:
             raise exceptions.AuthenticationFailed('Invalid email/password for cloud_db.')
 
@@ -99,34 +111,43 @@ class CloudSessionAuthentication(SessionAuthentication):
         request.data['username'] = request.session['login']
         request.data['password'] = request.session['password']
 
-        return (account, None)
+        return account, None
 
 
 @api_view(['POST'])
-@permission_classes((AllowAny,))
+@permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
-    serializer = NotificationSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
+    # Try/except is a temporary solution for logging DRF handled exceptions
+    # TODO: CLOUD-5625: Subclass DRF exception handler and combine it with handle_exceptions decorator
+    try:
+        serializer = NotificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
 
-    payload = data['notification'].get('payload', None)
-    payload_str = json.dumps(payload) if payload else ''
-    options = data['notification'].get('options', None)
-    options_str = json.dumps(options) if options else ''
+        payload = data['notification'].get('payload', None)
+        payload_str = json.dumps(payload) if payload else ''
+        options = data['notification'].get('options', None)
+        options_str = json.dumps(options) if options else ''
 
-    notification_object = PushNotification.objects.create(
-        title=data['notification']['title'], body=data['notification']['body'],
-        payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
-        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
-    )
+        notification_object = PushNotification.objects.create(
+            title=data['notification']['title'], body=data['notification']['body'],
+            payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
+            raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
+        )
 
-    transaction.on_commit(lambda: send_push_notification.apply_async(
-        args=[notification_object.id], kwargs={'request_data': request.data},
-        queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-    ))
+        transaction.on_commit(lambda: send_push_notification.apply_async(
+            args=[notification_object.id], kwargs={'request_data': request.data},
+            queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
+        ))
 
-    return api_success({'notificationId': notification_object.id})
+        return api_success({'notificationId': notification_object.id})
+    except (exceptions.APIException, Http404, PermissionDenied) as e:
+        request_data = request.data.copy()
+        clean_passwords(request_data)
+        logger.info(f'Request data: {request_data}')
+        logger.info(f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}')
+        raise e
 
 
 class DeviceSubscriptionListView(RetrieveAPIView):

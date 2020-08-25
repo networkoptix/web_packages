@@ -235,7 +235,7 @@ Admin cannot change port via API
     Should Be Equal As Strings    ${resp.status_code}    403
 
 Check status
-    [Tags]    C70956
+    [Tags]    C70957
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page

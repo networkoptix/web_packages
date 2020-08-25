@@ -76,7 +76,7 @@ Change Password
     Log    Step 3: Try to login with new password
     Input Text   ${PASSWORD INPUT}    ${new password}
     Click Button    ${LOG IN BUTTON}
-    Validate Log In
+    Validate Log In    ${email acc}    ${new password}
     Log Out
 
 Restore Password

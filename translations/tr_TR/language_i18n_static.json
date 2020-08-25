@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Güncel olmayan bir tarayıcı kullanıyorsunuz."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Bu e-posta zaten sistemde kayıtlı%systemName%"
+        },
         "buttons": {
             "cancel": "İptal",
             "createAccount": "Yeni Hesap Oluştur",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Kameralar",
             "systemAdministration": "Sistem Yönetimi",
             "general": "Genel",
             "licenses": "Lisanslar",

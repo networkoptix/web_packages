@@ -129,7 +129,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.localStorage.set('langChanged', false);
         }
-
+        this.applyService.hardReset();
         this.applyService.setVisible();
     }
 

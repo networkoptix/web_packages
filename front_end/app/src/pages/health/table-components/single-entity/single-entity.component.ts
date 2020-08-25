@@ -20,10 +20,12 @@ export class NxSingleEntityComponent implements OnChanges {
     CONFIG: IConfig;
     copyParams;
     entityName: string;
+    sections: SectionLookup;
 
-    constructor(private configService: NxConfigService,
-                private healthService: NxHealthService,
-                private utilsService: NxUtilsService) {
+    constructor(
+        private configService: NxConfigService,
+            private healthService: NxHealthService
+    ) {
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -33,5 +35,27 @@ export class NxSingleEntityComponent implements OnChanges {
             this.copyParams.values.shift();
         }
         this.entityName = this.healthService.findEntityName(this.entity);
+        if (this.copyParams) {
+            const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');
+            this.sections = paramGroups
+                .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
+                    const lines = values.map(({ id, name }) => {
+                        const param = this.entity[paramGroupId][id] && this.entity[paramGroupId][id] || {};
+                        return new InfoBlockLine(
+                            name || id,
+                            param.text || '_',
+                            param.class,
+                            param.icon
+                        );
+                    });
+                    const maxParamWidthPercentage = 42;
+                    reduced[paramGroupId] = [new InfoBlockSection(lines, undefined, maxParamWidthPercentage)];
+                    return reduced;
+                }, {});
+        }
     }
+}
+
+export type SectionLookup = {
+    [key: string]: [InfoBlockSection]
 }
