@@ -33,6 +33,7 @@ Camera settings is available to owner admin and custom with permission
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
+    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
@@ -49,8 +50,8 @@ Camera settings is not available to any viewers
     Log Out
 
 Camera settings is not available by direct link to any viewers
-    ${auth}=   admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO TESTS IP}    good cam
+    ${auth}=    Create List    admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
     
     Log Out
@@ -170,7 +171,7 @@ Rename Camera
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 3
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3    id
     Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
 
 Name change in client changes in cloud
@@ -180,12 +181,12 @@ Name change in client changes in cloud
     Verify on Cameras Page
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
-    Set Camera Atrribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    api name
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Attribute    https://10.1.5.126:7008    ${auth}    ${camera id}    cameraName    good cam 
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    good cam 
 
 View button
     [Tags]    C76262    threaded
@@ -194,7 +195,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam
-    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
     # The above keyword returns the id with {} and we don't want those for the url
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
@@ -205,7 +206,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    offline cam
-    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    offline cam
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    id
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
@@ -215,7 +216,7 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    unauth cam
-    ${camera id}=   Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    unauth cam
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    id
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
@@ -226,6 +227,23 @@ Detailed Info
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
+    Log Out
+
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Click Button    ${CAMERAS DETAILED INFO BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
+    Log Out
+
+    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Click Button    ${CAMERAS DETAILED INFO BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
+    Log Out
 
 Aspect Ratio
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -263,11 +281,7 @@ Rotation
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Rotation Should Be    0˚
     Reload Page
-    Rotation Should Be    0˚
-
-Get the camera json
-   
-        
+    Rotation Should Be    0˚       
 
 Audio enable Disabled
     [Tags]    C76378    threaded
@@ -282,14 +296,14 @@ Audio enable Disabled
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${cams}=   Get Cameras    ${auth}    ${AUTO SYS IP}
     FOR    ${camera}  IN  @{cams}
-        ${audio enabled}=    Set Variable If    '''${camera['cameraName']}'''=='''good cam'''    ${camera['audioEnabled']}
+        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
         Exit For Loop If    '''${audio enabled}'''=='''True'''
     END
     Should Be True    ${audio enabled}
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    ${camera id}    Get Camera Id By Name    ${auth}    ${AUTO SYS IP}    good cam
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
     Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
 
 Audio unavailable
@@ -301,6 +315,25 @@ Audio unavailable
     Wait Until Element is Enabled    ${ENABLE AUDIO CHECKBOX}
     Select Camera by Name    no audio cam
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
+
+No iamge placeholder shows for offline and unauthorized cameras
+    [Tags]    C76275    threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera by Name    unauth cam
+    Wait Until Elements are Visible    
+    ...    ${NO IMAGE PLACEHOLDER}
+    ...    ${CAMERA ERROR ICON}
+    ...    ${CAMERA ERROR TEXT}
+    Element Text Should Be    ${CAMERA ERROR TEXT}    ${CAMERA UNAUTHORIZED TEXT}
+
+    Select Camera by Name    offline cam
+    Wait Until Elements are Visible    
+    ...    ${NO IMAGE PLACEHOLDER}
+    ...    ${CAMERA ERROR ICON}
+    ...    ${CAMERA ERROR TEXT}
+    Element Text Should Be    ${CAMERA ERROR TEXT}    ${CAMERA OFFLINE TEXT}    
 
 Edit credentials form Close and Cancel buttons
     [Tags]    C78236    threaded
