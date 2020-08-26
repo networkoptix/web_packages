@@ -92,15 +92,18 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                         .notify(this.LANG.errorCodes.licenseServerError, 'danger');
                                     break;
                                 }
-                                // Can't activate license: Only one starter license is allowed per System.
-                                if (matchError('Only one starter license is allowed')) {
+                                if (matchError('License is expired')) {
+                                    // Can't activate license: License is expired.
+                                    this.licenseForm.controls.licenseKey.setErrors({ expired: true });
+                                } else if (matchError('Only one starter license is allowed')) {
+                                    // Can't activate license: Only one starter license is allowed per System.
                                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
                                 } else if (matchError('License Key you have entered is invalid')) {
                                     // Can't activate license:  License Key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 } else if ([
-                                    'requires higher software version', 'You are trying to activate a license incompatible with your software.'
-                                ].some(matchError)
+                                        'requires higher software version', 'You are trying to activate a license incompatible with your software.'
+                                    ].some(matchError)
                                 ) {
                                     // Can't activate license: This license type requires higher software version
                                     // Can't activate license: You are trying to activate a license incompatible with your software.
