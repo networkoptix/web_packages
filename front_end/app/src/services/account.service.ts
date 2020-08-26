@@ -362,46 +362,58 @@ export class NxAccountService implements OnDestroy {
     }
 
 
-    private async handleAuthKeyLogin(auth) {
-        const account = await this.get();
-        try {
-            const result: any = await this.cloudApi.checkAuthCode(auth);
-            if (!account) {
-                return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
-            }
-            this.appStateService.ready = true;
-            if (result.email === account.email) {
-                return;
-            }
-            const response = await this.dialogs
-                .confirm('',
-                        this.LANG.dialogs.loggedFromOther,
-                        this.LANG.dialogs.okButton,
-                        undefined,
-                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                        'long-cancel-button');
 
-            if (response === true) {
-                return this.cloudApi.logout().finally(() => {
-                    if (this.account && this.account.timer) {
-                        this.account.timer.unsubscribe();
-                    }
-                    this.account = undefined;
-                    this.localStorageService.clear('all'); // Clear session
-                    return this.loginWithAuthKey(auth).then(() => {
-                        return this.document.location.reload();
+    private handleAuthKeyLogin(auth) {
+        this.get()
+            .then((account) => {
+                if (!account) {
+                    return this.cloudApi.checkCode(auth).then((res: any) => {
+                        if (res.emailExists) {
+                            return this.loginWithAuthKey(auth)
+                                .then(() => this.document.location.reload());
+                        } else {
+                            this.appStateService.ready = true;
+                            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+                            return this.requireLogin();
+                        }
                     });
+                }
+
+                this.appStateService.ready = true;
+
+                this.cloudApi.checkAuthCode(auth).then(async (result: any) => {
+                    if (result.email === account.email) {
+                        return;
+                    }
+
+                    const response = await this.dialogs
+                                               .confirm('',
+                                                       this.LANG.dialogs.loggedFromOther,
+                                                       this.LANG.dialogs.okButton,
+                                                       undefined,
+                                                       this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                                                       'long-cancel-button');
+                    if (response === true) {
+                        return this.cloudApi
+                                   .logout()
+                                   .finally(() => {
+                                       if (this.account && this.account.timer) {
+                                           this.account.timer.unsubscribe();
+                                       }
+                                       this.account = undefined;
+                                       this.localStorageService.clear('all'); // Clear session
+                                       // this.sessionService.invalidateSession(); // Clear session
+                                       return this.loginWithAuthKey(auth).then(() => {
+                                           return this.document.location.reload();
+                                       });
+                                   });
+                    } else {
+                        const queryParams = { auth: undefined, from: undefined };
+                        return this.router
+                                   .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                                   .then(() => this.document.location.reload());
+                    }
                 });
-            } else {
-                const queryParams = { auth: undefined, from: undefined };
-                return this.router
-                    .navigate([], { queryParams, queryParamsHandling: 'merge' })
-                    .then(() => this.document.location.reload());
-            }
-        } catch (e) {
-            this.appStateService.ready = true;
-            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
-            return this.requireLogin();
-        }
+            });
     }
 }

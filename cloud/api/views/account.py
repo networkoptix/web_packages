@@ -263,7 +263,7 @@ def check_code_in_portal(request):
 
 
 @api_view(['POST'])
-@permission_classes((AllowAny,))
+@permission_classes((IsAuthenticated,))
 @handle_exceptions
 def check_auth_code(request):
     require_params(request, ('code',))
@@ -272,10 +272,7 @@ def check_auth_code(request):
     user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
     if user is None:
         raise APINotAuthorisedException("Auth code has expired.", ErrorCodes.not_authorized)
-    email = user.email
-    if request.user.is_anonymous:
-        email = ""
-    return api_success({"email": email})
+    return api_success({'email': user.email})
 
 
 class AccountAutocomplete(autocomplete.Select2QuerySetView):
