@@ -145,7 +145,7 @@
     "Message": "Message",
     "Mine": "Mine",
     "Mode": "Mode",
-    "Motion Sensitivity": "Motion Sensitivity",
+    "Motion Detection Sensitivity": "Motion Detection Sensitivity",
     "Motion detection for this camera is turned off.": "Motion detection for this camera is turned off.",
     "Motion detection is disabled": "Motion detection is disabled",
     "Move Cloud Storage": "Move Cloud Storage",
