@@ -40,6 +40,7 @@ Camera settings is available to owner admin and custom with permission
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
+    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
