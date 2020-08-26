@@ -77,7 +77,7 @@
                     <span>
                         <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
                         <span *ngIf="!system.isMine">
-                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                            <span class="system-header-bold">{{system.info.name}}</span>
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </span>
                     </span>
@@ -87,9 +87,9 @@
             <nx-section *ngIf="system.isAdmin">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
-                        <div class="float-left mr-2" *ngIf="settings.showMerge">
+                        <div class="float-left mr-2" *ngIf="system && system.isMine">
                             <button class="btn btn-default"
-                                    [disabled]="settings.mergeDisabled"
+                                    [disabled]="(merging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
                                     (click)="mergeSystems()">
                                 <span class="ellipsis" translate>Merge with Another System</span>
                             </button>

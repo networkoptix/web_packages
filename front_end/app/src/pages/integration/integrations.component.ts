@@ -154,7 +154,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
             });
         }
 
-        if (this.filterModel.tags.length) {
+        if (this.filterModel.tags?.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {

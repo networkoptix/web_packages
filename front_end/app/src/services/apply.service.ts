@@ -155,13 +155,13 @@ export class NxApplyService {
     private component: ViewContainerRef;
     private discardFunction: () => void;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
-    private isOnline$ = new BehaviorSubject(true);
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
+    isOnline$ = new BehaviorSubject(true);
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,

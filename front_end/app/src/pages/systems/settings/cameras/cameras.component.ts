@@ -5,7 +5,7 @@ import {
 import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    Subscription, BehaviorSubject, from, throwError, of
+    Subject, Subscription, BehaviorSubject, from, throwError, of
 } from 'rxjs';
 import {
     filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
@@ -313,6 +313,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionMaskWatcher.value = value;
     }
 
+    set motionType(value: MotionType) {
+        this.motionEnabledWatcher.value = value;
+    }
+
+    get motionType(): MotionType {
+        return this.motionEnabledWatcher.value as MotionType;
+    }
+
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
@@ -614,14 +622,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     updateMask(maskString) {
         this.motionMask = maskString;
-    }
-
-    set motionType(value: MotionType) {
-        this.motionEnabledWatcher.value = value;
-    }
-
-    get motionType(): MotionType {
-        return this.motionEnabledWatcher.value;
     }
 
     toggleMotionEnabled = () => {

@@ -30,7 +30,7 @@ export class NxSystemLicensesComponent implements OnInit {
     // Constructor and class initialization methods
     private setupDefaults() {
         this.classMap = {
-            digital       : this.LANG.license.info.digital,
+            digital       : this.LANG.license.info.digital(),
             analog        : 'Analog',
             edge          : 'Edge',
             vmax          : 'VMAX',
@@ -121,20 +121,20 @@ export class NxSystemLicensesComponent implements OnInit {
             });
 
         item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
-        item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
+        item.info.status = item.info.expired ? this.LANG.license.info.expired() : this.LANG.license.info.ok();
         // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
-            item.info.type = this.LANG.license.info.trial;
+            item.info.type = this.LANG.license.info.trial();
         } else {
             if (item.info.ordertype && item.info.ordertype === 'saas') {
                 item.info.type = this.classMap[item.info.class];
             } else {
                 // this is complicated as for now it matches desktop client. It will change in 4.2
                 if (item.info.class === 'videowall') {
-                    item.info.type = this.LANG.license.info.videowall;
+                    item.info.type = this.LANG.license.info.videowall();
                 } else {
                     if (item.info.expiration) {
-                        item.info.type = this.LANG.license.info.time;
+                        item.info.type = this.LANG.license.info.time();
                     } else {
                         item.info.type = this.classMap[item.info.class];
                     }
@@ -153,7 +153,7 @@ export class NxSystemLicensesComponent implements OnInit {
         const license = this.licenseSummaries.find(ls => ls.type === item.info.type);
 
         let avail = parseInt(item.info.count) || 0;
-        if (item.info.serverStatus !== this.LANG.license.info.online || item.info.expired) {
+        if (item.info.serverStatus !== this.LANG.license.info.online() || item.info.expired) {
             avail = 0;
         }
 
@@ -206,11 +206,11 @@ export class NxSystemLicensesComponent implements OnInit {
                                                     if (Object.keys(server).length) {
                                                         item.info.serverName = server.name;
                                                         item.info.serverStatus = server.status;
-                                                        item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                        item.info.status = server.status === this.LANG.license.info.online() ? item.info.status : this.LANG.license.info.error();
                                                     } else {
                                                         item.info.serverName = 'Server not found';
                                                         item.info.serverStatus = server.status;
-                                                        item.info.status = this.LANG.license.info.error;
+                                                        item.info.status = this.LANG.license.info.error();
                                                     }
 
                                                     this.addLicenseSummary(item);

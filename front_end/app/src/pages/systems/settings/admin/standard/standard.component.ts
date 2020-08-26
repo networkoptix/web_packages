@@ -79,14 +79,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.limitSessionTimeUnits = {
             hours: {
                 value   : this.hours,
-                name    : this.LANG.system.settings.sessionLimitDuration.hours,
+                name    : this.LANG.system.settings.sessionLimitDuration.hours(),
                 id      : 1,
                 max     : 600,
                 default : 24
             },
             minutes: {
                 value : this.minutes,
-                name  : this.LANG.system.settings.sessionLimitDuration.minutes,
+                name  : this.LANG.system.settings.sessionLimitDuration.minutes(),
                 id    : 2,
                 max   : 600
             }

@@ -4,9 +4,9 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-import { finalize, map }             from 'rxjs/operators';
+import { catchError, map }             from 'rxjs/operators';
 import {
-    timer, combineLatest, SubscriptionLike
+    of, timer, combineLatest, SubscriptionLike
 }                                    from 'rxjs';
 
 import {

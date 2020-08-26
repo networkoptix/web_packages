@@ -75,11 +75,11 @@
 .download-button {
     max-width        : fit-content;
     margin           : 0 0 8px 0;
-    padding          : 0 12px 0 0;
-    height           : auto;
-    box-shadow       : none;
+    padding          : 0 12px 0 0 !important;
+    height           : auto !important;
+    box-shadow       : none !important;
     background-color : transparent !important;
-    border           : 1px solid $light5;
+    border           : 1px solid $light5 !important;
 
     &:hover {
         border-color     : $light8 !important;

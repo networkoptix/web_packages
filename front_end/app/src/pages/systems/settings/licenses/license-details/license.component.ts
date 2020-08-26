@@ -10,7 +10,7 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxSystem }                  from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import {
-    InfoBlockSection, InfoBlockStyle,
+    InfoBlockLine, InfoBlockSection, InfoBlockStyle,
     InfoDetailClass, InfoLineStyle
 } from '../../../../../components/info-block/info-block.component';
 
@@ -88,28 +88,28 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const deactivationsRemaining = this.CONFIG.licenseDeactivations - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [
-                new InfoBlockLine(this.LANG.license.info.type, info.type),
-                new InfoBlockLine(this.LANG.license.info.channels, info.count),
+                new InfoBlockLine(this.LANG.license.info.type(), info.type),
+                new InfoBlockLine(this.LANG.license.info.channels(), info.count),
                 new InfoBlockLine(
-                    this.LANG.license.info.server,
-                    info.serverName || this.LANG.common.unknown,
+                    this.LANG.license.info.server(),
+                    info.serverName || this.LANG.common.unknown(),
                     !info.serverStatus
                         ? InfoDetailClass.ERROR
                         : undefined
                 ),
-                new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
+                new InfoBlockLine(this.LANG.license.info.hwid(), info.hwid),
                 new InfoBlockLine(
-                    this.LANG.license.info.status,
+                    this.LANG.license.info.status(),
                     info.status,
                     info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.expires,
+                    this.LANG.license.info.expires(),
                     info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
                     warning ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.deactivations,
+                    this.LANG.license.info.deactivations(),
                     deactivationsRemaining,
                     deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
                     null,

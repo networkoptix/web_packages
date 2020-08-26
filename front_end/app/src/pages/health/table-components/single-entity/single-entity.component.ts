@@ -5,7 +5,7 @@ import {
 
 import { NxHealthService }          from '../../health.service';
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxUtilsService }           from '../../../../services/utils.service';
+import { InfoBlockLine, InfoBlockSection } from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector      : 'nx-single-entity',
