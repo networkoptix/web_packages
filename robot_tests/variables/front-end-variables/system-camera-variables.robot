@@ -33,3 +33,7 @@ ${NO CAMERAS MESSAGE}                        //nx-page-placeholder//div[contains
 ${RECORDING SVG}                             //svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
 ${OFFLINE SVG}                               //svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
 ${UNAUTH SVG}                                //svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+${NO IMAGE PLACEHOLDER}                      //nx-health-image//div[contains(text(),"${NO IMAGE TEXT}" )]
+${CAMERA ERROR BAR}                          //nx-alert-block/div[@class="card simple-error"]
+${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[@data-src="/static/images/icons/error.svg"]
+${CAMERA ERROR TEXT}                         ${CAMERA ERROR BAR}//div[@class="warning-margin"]/span
