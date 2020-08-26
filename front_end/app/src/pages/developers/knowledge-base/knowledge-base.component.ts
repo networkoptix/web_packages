@@ -20,11 +20,22 @@ export class NxKnowledgeBaseComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        private cloudApi: NxCloudApiService,
+        public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute
     ) {
         this.CONFIG = configService.config;
+    }
+
+    prefetchDocument(assetId) {
+        console.info(`%cPrefetching document ${assetId}`, 'color:blue;font-size:1.5rem;padding: .75rem 4rem; background-color:gray');
+        this.cloudApi.getDocumentation(assetId).subscribe(document => {
+            console.info(
+                `%cSuccessfully prefetched document: \n%c${document.title}`,
+                'color:green;font-size:1.25rem',
+                'color:white;font-size:.75rem;padding:0.5rem 0'
+            );
+        });
     }
 
     ngOnInit() {
@@ -123,46 +134,3 @@ export class KnowledgeNode {
         );
     }
 }
-
-export const mockDocker = KnowledgeNode.normalHeader(
-    'Docker',
-    'developers/knowledge-base/docker',
-    '<div><h1>Content Here</h1><p>More content</p></div>',
-    [
-        KnowledgeNode.normalHeader(
-            'Information',
-            '',
-            '<div><h2 class="mb-3">Information Heading</h2><p>Docker Content</p></div>'
-        ),
-        KnowledgeNode.sideHeader(
-            'Side Heading',
-            '',
-            '<div><h2 class="mb-3">Side Content Heading</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>',
-            [],
-            'systems.svg',
-            'using'
-        ),
-        KnowledgeNode.sideHeader(
-            'Side Heading',
-            '',
-            '<div><h2 class="mb-3">Side Content Heading</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>',
-            [],
-            '',
-            'using'
-        ),
-        KnowledgeNode.sideHeader(
-            'Side Heading 2',
-            '',
-            '<div><h2 class="mb-3">Side Content Heading</h2><p>Side content body</p></div>',
-            [],
-            'systems.svg',
-            'using'
-        )
-    ]
-);
-
-export const mockArticle = KnowledgeNode.article(
-    'Mock Article',
-    '',
-    '<div><h2 class="mb-3">Side Content Heading</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><img style="width: 75%; margin: 0 auto; display: block" class="mt-3 mb-3" src="https://www.networkoptix.com/wp-content/uploads/2018/10/World-MAP.png"></img><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>'
-);

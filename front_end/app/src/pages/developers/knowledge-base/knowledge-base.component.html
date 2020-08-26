@@ -1,11 +1,23 @@
-<ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
+<ng-template #preloader>
+    <div class="wide-section">
+        <nx-pre-loader></nx-pre-loader>
+    </div>
+</ng-template>
 
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
 <ng-template #normalCard let-node="node">
+    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
+        <h2 class="section-title">{{node.title}}</h2>
+        <div [innerHTML]="node.content | safe:'html'"></div>
+    </div>
+</ng-template>
+
+<ng-template #outlinedCard let-node="node">
     <nx-block type="mt-3">
         <header>{{node.title}}</header>
         <nx-section>
+            <h2>{{node.title}}</h2>
             <div [innerHTML]="node.content | safe:'html'"></div>
         </nx-section>
     </nx-block>
@@ -29,7 +41,7 @@
     </nx-block>
 </ng-template>
 
-<ng-template #otherArticle>
+<ng-template #articleBlock>
     <h1>{{node.title}}</h1>
     <div [innerHTML]="node.content | safe:'html'"></div>
 </ng-template>
@@ -37,15 +49,16 @@
 <!-- End of Card Templates -->
 
 <div class="page-wrapper">
-    <nx-left-menu menuName="Knowledgebase" baseRoute="/developers/knowledge-base/"></nx-left-menu>
+    <nx-left-menu menuName="Knowledgebase" 
+        baseRoute="/developers/knowledge-base/"
+        (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
+        <nx-search></nx-search>
         <ng-container *ngIf="!loading; else preloader">
-            <ng-container *ngIf="node.cardClass !== 'article';else otherArticle">
-                <nx-search></nx-search>
+            <ng-container *ngIf="node.cardClass !== 'article';else articleBlock">
                 <ng-container *ngFor="let node of node.nodes">
                     <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
                 </ng-container>
             </ng-container>
         </ng-container>
-    </div>
 </div>

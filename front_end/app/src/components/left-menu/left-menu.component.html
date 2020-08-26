@@ -7,6 +7,8 @@
                 )" 
             [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
+                (mouseover)="prefetchAsset(node.asset_id)"
+                (mouseleave)="mouseLeave$.next(node.asset_id)"
                 [ngClass]="node.nodes.length && 'arrow-padding'"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
                 routerLinkActive="activated-highlight"

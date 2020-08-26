@@ -1,12 +1,13 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxMenusService } from '../../services/menus.service';
 import { MenuNode } from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { IConfig, NxConfigService } from '../../services/nx-config';
 import { Location } from '@angular/common';
+import { timer, Subject } from 'rxjs';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -17,11 +18,14 @@ import { Location } from '@angular/common';
 export class NxLeftMenuComponent implements OnInit {
     @Input() menuName: string;
     @Input() baseRoute: string;
+    @Output() handlePrefetch = new EventEmitter<number>();
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
     activeRouteNodes: string[] = [];
     openNodes: string[] = [];
+    mouseLeave$ = new Subject();
+    prefetchedDocuments = [];
 
     routeSubscription;
 
@@ -32,6 +36,12 @@ export class NxLeftMenuComponent implements OnInit {
         public location: Location
     ) {
         this.CONFIG = configService.config;
+        this.mouseLeave$.subscribe(assetId => {
+            console.info(
+                `%cSkipped prefetching document ${assetId}`,
+                'color:white;font-size:1.5rem;padding: .75rem 4rem;background-color:navy'
+            );
+        });
     }
 
     updateActive = (url: string) => {
@@ -67,6 +77,21 @@ export class NxLeftMenuComponent implements OnInit {
             this.openNodes.push(name);
         } else {
             this.openNodes.splice(nodeIndex);
+        }
+    }
+
+    prefetchAsset(assetId) {
+        if (assetId) {
+            if (this.prefetchedDocuments.includes(assetId)) {
+                return console.info(
+                    `%cLink already prefetched for ${assetId}`,
+                    'color:gray;font-size:1.25rem;padding: .5rem 4rem;background-color:green'
+                );
+            }
+            timer(250).pipe(takeUntil(this.mouseLeave$)).subscribe(() => {
+                this.prefetchedDocuments.push(assetId);
+                this.handlePrefetch.emit(assetId);
+            });
         }
     }
 
