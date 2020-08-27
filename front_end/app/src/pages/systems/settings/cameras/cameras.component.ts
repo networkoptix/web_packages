@@ -15,7 +15,7 @@ import {
 import {
     filter, map, retryWhen, delay, distinctUntilChanged, takeUntil, retry, tap, catchError, mergeMap, switchMap
 }                                    from 'rxjs/operators';
-import { ActivatedRoute }            from '@angular/router';
+import { ActivatedRoute, Router }    from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
 
 import { NxHealthService }           from '../../../health/health.service';
@@ -313,6 +313,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private router: Router,
         private menuService: NxMenuService,
         private settingsService: NxSettingsService,
         private route: ActivatedRoute,
@@ -346,7 +347,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    if (!this.applyService.locked) this.setCamera();
+                    if (!this.applyService.locked) {
+                        this.setCamera();
+                    }
                 }
             });
 
@@ -393,6 +396,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
+                        if (!this.system.permissions.editCameras) {
+                            return this.router.navigate(['systems', this.system.id])
+                                .catch(error => console.error(error));
+                        }
                         this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
