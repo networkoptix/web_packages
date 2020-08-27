@@ -1,6 +1,7 @@
 from django.contrib.admin import AdminSite, site
 from cms.models import ContributorAgreement
 from django.shortcuts import redirect
+from django.utils.http import urlencode
 from django.views.decorators.csrf import csrf_protect
 from functools import update_wrapper
 
@@ -19,7 +20,8 @@ class CMSAdminSite(AdminSite):
                         not ContributorAgreement.objects.filter(
                             user=request.user, accepted_agreement=agreement
                         ).exists():
-                    return redirect('/agreement')
+                    redirect_query_params = {'next': request.get_full_path()}
+                    return redirect(f'/agreement?{urlencode(redirect_query_params)}')
             return wrapped_view(request, *args, **kwargs)
 
         force_agreement = csrf_protect(force_agreement)
