@@ -27,6 +27,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     serverOptions: any = [];
     activateKey: any;
 
+    formattedKey: string;
     license: string;
     selectedServer: any = {};
     keyUsedIn: string;
@@ -194,6 +195,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     setLicenseKey(key, form) {
         this.license = key;
+        this.formattedKey = this.formatLicenseKey(this.license);
         form.controls.licenseKey.markAsUntouched();
     }
 
