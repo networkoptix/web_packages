@@ -449,9 +449,9 @@
         "wrongCode": "계정이 이미 활성화되었거나 확인 코드가 잘못되었습니다.",
         "wrongCodeRestore": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
         "wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다.",
-        "licenseFail": "라이센스를 활성화하지 못했습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
-        "licenseTimeout": "연결 시간이 초과되어 라이센스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
-        "licenseServerError": "라이센스를 활성화하지 못했습니다. 라이센스 서버가 응답하지 않았습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
+        "licenseFail": "라이선스를 활성화하지 못 했습니다. 다시 시도하시거나 지원 부서에 문의하십시오.",
+        "licenseTimeout": "연결 시간이 초과되어 라이선스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
+        "licenseServerError": "라이선스를 활성화하지 못 했습니다. 라이선스 서버가 응답하지 않았습니다. 다시 시도하시거나 지원 부서에 문의하십시오.",
         "networkConnection": "{{cloudName}} 에 연결할 수 없습니다. 네트워크 연결을 확인하십시오."
     },
     "integration": {
@@ -515,7 +515,7 @@
             "cameras": "카메라",
             "systemAdministration": "시스템 관리",
             "general": "일반",
-            "licenses": "인증키",
+            "licenses": "라이선스",
             "users": "사용자"
         }
     },
@@ -727,7 +727,7 @@
             "trial": "체험용",
             "online": "온라인",
             "error": "오류",
-            "expired": "만료됨",
+            "expired": "만료",
             "ok": "확인",
             "digital": "정식",
             "analog": "아날로그",
@@ -741,8 +741,8 @@
         },
         "messages": {
             "required": "{{number}} 더 필요",
-            "activated": "라이센스 비활성화 됨",
-            "inuse": "라이센스 키가 이미 활성화되어 다른 시스템에서 하드웨어 ID가 {{hwid}} 서버에 바인딩되었습니다.",
+            "activated": "라이선스 키 활성화 되었습니다.",
+            "inuse": "라이선스 키가 이미 활성화되어, 다른 시스템 서버에 하드웨어 ID가 {{hwid}} 귀속되었습니다.",
             "trialActivated": "체험용 라이선스가 활성화 되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
         }
     },
@@ -756,7 +756,7 @@
         "lastMergeMasterId": "마지막 병합 마스터",
         "lastMergeSlaveId": "마지막 병합 마스터",
         "ldapSearchTimeoutS": "LDAP 검색 시간 초과 (초)",
-        "licenseServer": "라이센스 서버",
+        "licenseServer": "라이선스 서버",
         "lowQualityScreenVideoCodec": "저품질 스크린 비디오 코덱",
         "maxP2pAllClientsSizeBytes": "최대 P2P 모든 클라이언트 크기 바이트",
         "maxRtpRetryCount": "최대 RTP 재시도 횟수",
