@@ -69,6 +69,7 @@
                        [multiple]="false"
                        [showBrowseBtn]="false"
                        [ngClass]="!importShow ? 'pointer-ignore' : ''"
+                       (onFileLeave)="fileLeave()"
                        (onFileDrop)="fileDropped($event)">
             <ng-template ngx-file-drop-content-tmp>
                 <svg-icon class="circular"

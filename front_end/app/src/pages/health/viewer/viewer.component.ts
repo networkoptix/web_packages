@@ -453,6 +453,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.loadReportMain.nativeElement.click();
     }
 
+    fileLeave() {
+        this.importShow = false;
+    }
+
     fileDropped(files: NgxFileDropEntry[] | File) {
         let file;
         this.healthService.importedData = true;
