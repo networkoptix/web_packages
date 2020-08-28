@@ -358,7 +358,7 @@
 	"systemStatuses": {
 		"activated": "활성화 됨",
 		"incompatible": "호환 되지 않음",
-		"merging": "합치기",
+		"merging": "병합",
 		"notActivated": "활성화되지 않음",
 		"online": "온라인",
 		"offline": "오프라인",
