@@ -7,7 +7,6 @@ from api.models import AccountManager
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data

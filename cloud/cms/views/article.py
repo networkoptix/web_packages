@@ -10,7 +10,6 @@ from util.helpers import get_language_object_from_request
 
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_article(request, url_param, **kwargs):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'pending'

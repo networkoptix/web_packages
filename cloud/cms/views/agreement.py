@@ -11,7 +11,6 @@ from util.helpers import get_language_object_from_request
 
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_agreement(request):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'pending'
@@ -86,7 +85,6 @@ def get_agreement(request):
 
 @api_view(("POST", ))
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:

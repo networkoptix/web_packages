@@ -296,6 +296,8 @@ def clean_passwords(dictionary):
             dictionary['new_password'] = '****'
         if 'old_password' in dictionary:
             dictionary['old_password'] = '***'
+        if 'system' in dictionary and 'authKey' in dictionary['system']:
+            dictionary['system']['authKey'] = '**'
 
 
 def log_error(request, error, log_level):
@@ -377,6 +379,33 @@ def kill_session(request):
     django.contrib.auth.logout(request)
 
 
+def handler(request, exception):
+    if isinstance(exception, APINotAuthorisedException):
+        log_error(request, exception, exception.log_level())
+        # check if user session exist
+        # and kill it if user is not authorized
+        if 'login' in request.session:
+            kill_session(request)
+
+        return exception.response()
+
+    elif isinstance(exception, APIException):
+        # Do not log not_authorized errors
+        log_error(request, exception, exception.log_level())
+
+        return exception.response()
+    else:
+        detailed_error = log_error(request, exception, logging.ERROR)
+
+        if not settings.DEBUG:
+            detailed_error = 'Unexpected error somewhere inside'
+
+        return Response({
+            'resultCode': status.HTTP_500_INTERNAL_SERVER_ERROR,
+            'errorText': detailed_error
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 def handle_exceptions(func):
     """
     Decorator for api_methods to handle all unhandled exception and return some reasonable response for a client
@@ -384,36 +413,14 @@ def handle_exceptions(func):
     :return:
     """
 
-    def handler(*args, **kwargs):
+    def caller(*args, **kwargs):
         # noinspection PyBroadException
         try:
             data = func(*args, **kwargs)
             if not isinstance(data, Response):
                 return Response(data, status=status.HTTP_200_OK)
             return data
+        except Exception as exception:
+            return handler(args[0], exception)
 
-        except APINotAuthorisedException as error:
-            log_error(args[0], error, error.log_level())
-            # check if user session exist
-            # and kill it if user is not authorized
-            if 'login' in args[0].session:
-                kill_session(args[0])
-
-            return error.response()
-
-        except APIException as error:
-            # Do not log not_authorized errors
-            log_error(args[0], error, error.log_level())
-
-            return error.response()
-        except Exception as error:
-            detailed_error = log_error(args[0], error, logging.ERROR)
-
-            if not settings.DEBUG:
-                detailed_error = 'Unexpected error somewhere inside'
-
-            return Response({
-                'resultCode': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                'errorText': detailed_error
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    return handler
+    return caller

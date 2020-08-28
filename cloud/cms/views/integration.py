@@ -142,7 +142,6 @@ def check_integration_store_enabled():
 
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET

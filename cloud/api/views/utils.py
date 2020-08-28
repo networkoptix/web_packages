@@ -66,7 +66,6 @@ def get_settings_from_cache():
 
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def visited_key(request):
     global_cache = caches['global']
     if request.method == 'GET':
@@ -124,7 +123,6 @@ def language(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions
     can_view_releases = UserGroupsToAssetPermissions.\
@@ -151,7 +149,6 @@ def downloads_history(request):
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-@handle_exceptions
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
@@ -195,7 +192,6 @@ def download_build(request, build):
 
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def downloads(request):
     global_cache = caches['global']
     customization = settings.CUSTOMIZATION
@@ -277,7 +273,6 @@ def downloads(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
@@ -299,7 +294,6 @@ def get_settings(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
-@handle_exceptions
 def get_ipvd(request):
     url = settings.IPVD_CONNECT
 
@@ -421,7 +415,6 @@ def get_ipvd(request):
 
 
 @api_view(['GET'])
-@handle_exceptions
 def cloud_capabilities(request):
     capabilities = get_cloud_capabilities_from_cache()
 

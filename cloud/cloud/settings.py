@@ -379,7 +379,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'cloud.drf_utils.cloud_exception_handler'
 }
 
 if DEBUG:
