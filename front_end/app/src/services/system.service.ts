@@ -614,7 +614,14 @@ class ServerManager {
     };
 
     activateLicense(serverId, key) {
-        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+        if (!this.mediaserverConnections) {
+            return this.initSystemMediaServers()
+                .then(() => {
+                    return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+                })
+        } else {
+            return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+        }
     }
 
     renameServer(serverId, serverName) {
