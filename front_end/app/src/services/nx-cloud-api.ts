@@ -341,8 +341,14 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetId?) {
-        const route = `${this.CONFIG.apiBase}/documentation${assetId ? `/${assetId}` : ''}`;
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number}) {
+        let endpoint = '';
+        if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
+            endpoint = `/${assetIdOrSearchObject}`;
+        } else if (assetIdOrSearchObject.query) {
+            endpoint = `?filter=${assetIdOrSearchObject.query}`;
+        }
+        const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route);
     }

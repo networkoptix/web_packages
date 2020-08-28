@@ -3,8 +3,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, delay } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
+import { BehaviorSubject } from 'rxjs';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -16,7 +17,22 @@ export class NxKnowledgeBaseComponent implements OnInit {
     CONFIG: IConfig;
 
     loading = true;
+    searchMode = false;
+    searchLoading = false;
     node: KnowledgeNode;
+    search = { query: '' };
+    searchResults$ = new BehaviorSubject([]);
+    searchQuery$ = new BehaviorSubject('');
+
+    updateSearchQuery({ query }) {
+        this.searchQuery$.next(query);
+    }
+
+    clearSearch = () => {
+        this.searchLoading = false;
+        this.searchResults$.next([]);
+        this.searchMode = false;
+    }
 
     constructor(
         configService: NxConfigService,
@@ -42,7 +58,9 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.route.url.pipe(
             switchMap(urlSegment => {
                 this.loading = true;
+                this.clearSearch();
                 const assetId = urlSegment[0]?.path || this.headerService.currentLocation.assetId;
+                this.searchQuery$.next(this.route.snapshot.queryParams.search);
                 return this.cloudApi.getDocumentation(assetId)
                     .pipe(
                         tap(({ title, blocks, contentHTML }) => {
@@ -61,6 +79,16 @@ export class NxKnowledgeBaseComponent implements OnInit {
                     );
             })
         ).subscribe();
+
+        this.searchQuery$.pipe(
+            switchMap((query) => {
+                this.searchMode = !!query;
+                this.searchLoading = this.searchMode;
+                return this.cloudApi.getDocumentation({ query }).pipe(delay(this.CONFIG.search.debounceTime));
+            })).subscribe((results) => {
+            this.searchLoading = false;
+            this.searchResults$.next(results);
+        });
     };
 };
 

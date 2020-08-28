@@ -48,17 +48,46 @@
 
 <!-- End of Card Templates -->
 
+<!-- Search Results Templates, Need to update once spec is updated -->
+
+<ng-template #resultBlock let-result="result">
+    <h1>{{result.title}}</h1>
+    <ng-container *ngFor="let node of result.blocks">
+        <ng-container *ngTemplateOutlet="normalCard;context{node:node}"></ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #searchResultsTemplate let-results="results">
+    Search Results: {{results.length}}
+    <ng-container *ngFor="let result of results">
+        <ng-container *ngTemplateOutlet="resultBlock;context{result:result}"></ng-container>
+    </ng-container>
+</ng-template>
+<!-- End of Search Results Templates -->
+
 <div class="page-wrapper">
     <nx-left-menu menuName="Knowledgebase" 
         baseRoute="/developers/knowledge-base/"
+        (onClick)="clearSearch()"
+        [ignoreQuery]="true"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
-        <nx-search></nx-search>
+        <nx-search [(ngModel)]="search"
+            (ngModelChange)="updateSearchQuery($event)"
+            [placeholder]="'Knowledge Base Search' | translate"
+            layout="compact"></nx-search>
         <ng-container *ngIf="!loading; else preloader">
             <ng-container *ngIf="node.cardClass !== 'article';else articleBlock">
-                <ng-container *ngFor="let node of node.nodes">
-                    <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+                <ng-container *ngIf="searchMode; else displayContent">
+                    <ng-container *ngIf="!searchLoading; else preloader">
+                        <ng-container *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}"></ng-container>
+                    </ng-container>
                 </ng-container>
+                <ng-template #displayContent>
+                    <ng-container *ngFor="let node of node.nodes">
+                        <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+                    </ng-container>
+                </ng-template>
             </ng-container>
         </ng-container>
 </div>

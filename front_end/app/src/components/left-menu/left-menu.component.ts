@@ -18,6 +18,8 @@ import { timer, Subject } from 'rxjs';
 export class NxLeftMenuComponent implements OnInit {
     @Input() menuName: string;
     @Input() baseRoute: string;
+    @Input() ignoreQuery = false;
+    @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
 
     CONFIG: IConfig;
@@ -103,6 +105,10 @@ export class NxLeftMenuComponent implements OnInit {
         currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
     }
 
+    handleClick(event) {
+        this.onClick.emit(event);
+    }
+
     ngOnInit() {
         this.menusService.getMenu(this.menuName).subscribe(menu => {
             this.menuNodes = menu;
@@ -114,7 +120,7 @@ export class NxLeftMenuComponent implements OnInit {
                 map((event: NavigationEnd) => event.url),
                 startWith(this.location.path())
             )
-            .subscribe(url => this.updateActive(this.location.path()));
+            .subscribe(url => this.updateActive(this.location.path().split(this.ignoreQuery ? '?' : null)[0]));
     }
 };
 

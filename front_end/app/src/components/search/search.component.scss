@@ -40,6 +40,21 @@
             background    : transparent;
             outline       : none !important;
             box-shadow    : none !important;
+            &::placeholder {
+                padding-left: 20px !important;
+            }
+            & ~ .web-icon-search {
+                top: 0;
+                left: 0;
+                margin: 6px 0 0 8px;
+            }
+            &:focus ~ .web-icon-search {
+                display: none !important;
+            }
+
+            &:focus::placeholder {
+                color: transparent !important;
+            }
 
             &:placeholder-shown {
                 @include mixins.placeholder();
