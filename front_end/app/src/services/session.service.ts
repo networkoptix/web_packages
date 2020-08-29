@@ -1,5 +1,5 @@
 import { Inject, Injectable }  from '@angular/core';
-import { LocalStorageService } from 'ngx-store';
+import { LocalStorageService } from 'ngx-webstorage';
 import { ReplaySubject }       from 'rxjs';
 
 import { WINDOW }              from './window-provider';
@@ -27,33 +27,33 @@ export class NxSessionService {
     }
 
     invalidateSession() {
-        this.session.set('loginState', undefined);
-        this.session.set('loginRegister', false);
+        this.session.store('loginState', undefined);
+        this.session.store('loginRegister', false);
         this.loginStateSubject.next(this.loginState);
     }
 
     get email() {
-        return this.session.get('email') || '';
+        return this.session.retrieve('email') || '';
     }
 
     set email(email: string) {
-        this.session.set('email', email);
+        this.session.store('email', email);
     }
 
     get language() {
-        return this.session.get('language');
+        return this.session.retrieve('language');
     }
 
     set language(lang: string) {
-        this.session.set('language', lang);
+        this.session.store('language', lang);
     }
 
     get loginState() {
-        return this.session.get('loginState');
+        return this.session.retrieve('loginState');
     }
 
     set loginState(email: string) {
-        this.session.set('loginState', email);
+        this.session.store('loginState', email);
         this.loginStateSubject.next(email);
     }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
+import { LocalStorageService }       from 'ngx-webstorage';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -64,7 +64,7 @@ export class NxRestoreComponent implements OnInit {
         this.ready = false;
         // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
         // updateURI causes component to be re-created
-        this.context.process = this.localStorage.get('restoreProcess');
+        this.context.process = this.localStorage.retrieve('restoreProcess');
 
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
@@ -77,7 +77,7 @@ export class NxRestoreComponent implements OnInit {
 
         this.data = {
             newPassword : '',
-            email       : this.localStorage.get('email') || '',
+            email       : this.localStorage.retrieve('email') || '',
             restoreCode : this.uriParamCode
         };
 
@@ -168,11 +168,11 @@ export class NxRestoreComponent implements OnInit {
 
     setContext(name) {
         this.context.process = name;
-        this.localStorage.set('restoreProcess', name);
+        this.localStorage.store('restoreProcess', name);
     }
 
     setEmail(email) {
-        this.localStorage.set('email', email);
+        this.localStorage.store('email', email);
     }
 
     private checkContexts(arr) {

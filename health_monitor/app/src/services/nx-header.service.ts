@@ -2,7 +2,7 @@ import { Injectable }             from '@angular/core';
 import { NxConfigService }        from './nx-config';
 import { Title, Meta }            from '@angular/platform-browser';
 import { BehaviorSubject, timer } from 'rxjs';
-import { LocalStorageService }    from 'ngx-store';
+import { LocalStorageService }    from 'ngx-webstorage';
 import { NxSystemsService }       from './systems.service';
 
 @Injectable({

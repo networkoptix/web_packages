@@ -1,6 +1,6 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { SessionStorageService }     from 'ngx-store';
+import { SessionStorageService }     from 'ngx-webstorage';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -53,19 +53,19 @@ export class NxActivateComponent implements OnInit {
         }, {
             errorCodes: {
                 notFound: () => {
-                    this.sessionStorage.set('activationSuccess', '');
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
                 notAuthorized: () => {
-                    this.sessionStorage.set('activationSuccess', '');
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
                 accountActivated: () => {
-                    this.sessionStorage.set('activationSuccess', '');
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
@@ -74,7 +74,7 @@ export class NxActivateComponent implements OnInit {
             errorPrefix: this.LANG.errorCodes.cantActivatePrefix
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess;
-            this.sessionStorage.set('activationSuccess', true);
+            this.sessionStorage.store('activationSuccess', true);
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -131,13 +131,13 @@ export class NxActivateComponent implements OnInit {
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        if (this.uriParam !== 'activating' && !this.sessionStorage.get(this.uriParam)) {
+        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
             this.activationSuccess = false;
             this.accountService.redirectToHome();
 
             return;
         } else {
-            this.sessionStorage.set('activationSuccess', '');
+            this.sessionStorage.store('activationSuccess', '');
         }
 
         this.loading = true;

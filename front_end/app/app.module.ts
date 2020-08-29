@@ -21,7 +21,7 @@ import {
     TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG
 }                                             from 'ngx-translate-messageformat-compiler';
 import { CookieService }                      from 'ngx-cookie-service';
-import { WebStorageModule }                   from 'ngx-store';
+import { NgxWebstorageModule }                from 'ngx-webstorage';
 
 import { environment }                        from './environments/environment';
 import { AppComponent }                       from './app.component';
@@ -62,7 +62,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
             cookieName : 'csrftoken',
             headerName : 'X-CSRFToken'
         }),
-        WebStorageModule,
         OrderModule,
         InputTrimModule,
         ComponentsModule,
@@ -88,7 +87,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
             anchorScrolling          : 'enabled',
             enableTracing            : false
         }),
-        NgxMaskModule.forRoot(options)
+        NgxMaskModule.forRoot(options),
+        NgxWebstorageModule.forRoot()
     ],
     entryComponents : [],
     providers       : [

@@ -6,7 +6,7 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NgForm }                    from '@angular/forms';
-import { LocalStorageService }       from 'ngx-store';
+import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 import { first }                     from 'rxjs/operators';
@@ -85,7 +85,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                     return this.cloudApiService
                         .changeLanguage(this.langCode)
                         .then(() => {
-                            this.localStorage.set('langChanged', true);
+                            this.localStorage.store('langChanged', true);
                             setTimeout(() => window.location.reload()); // reload window to catch new language
                             return false;
                         });
@@ -125,9 +125,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 }
             });
 
-        if (this.localStorage && this.localStorage.get('langChanged')) {
+        if (this.localStorage && this.localStorage.retrieve('langChanged')) {
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
-            this.localStorage.set('langChanged', false);
+            this.localStorage.store('langChanged', false);
         }
         this.applyService.hardReset();
         this.applyService.setVisible();

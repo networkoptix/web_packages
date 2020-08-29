@@ -13,7 +13,7 @@ import { NxDialogsService }       from '../../dialogs/dialogs.service';
 import { NxSessionService }       from '../../services/session.service';
 import { NxSystemsService }       from '../../services/systems.service';
 import { WINDOW }                 from '../../services/window-provider';
-import { LocalStorageService }    from 'ngx-store';
+import { LocalStorageService }    from 'ngx-webstorage';
 import { Subscription, timer }    from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';

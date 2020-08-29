@@ -1,6 +1,6 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT, Location }           from '@angular/common';
-import { LocalStorageService }          from 'ngx-store';
+import { LocalStorageService }          from 'ngx-webstorage';
 import { Router }                       from '@angular/router';
 
 import { BaseAccount }                  from './base';
@@ -177,7 +177,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     this.loginDialogActive = true;
                     return this.dialogs
                         .login(true, true).then((result) => {
-                            this.localStorageService.set('loginRegister', true);
+                            this.localStorageService.store('loginRegister', true);
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);
                             }

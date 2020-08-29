@@ -12,7 +12,7 @@ import { OrderModule }                      from 'ngx-order-pipe';
 import { DeviceDetectorModule }             from 'ngx-device-detector';
 import { TranslateModule }                  from '@ngx-translate/core';
 import { CookieService }                    from 'ngx-cookie-service';
-import { WebStorageModule }                 from 'ngx-store';
+import { WebStorageModule }                 from 'ngx-webstorage';
 
 import { AppComponent }      from './app.component';
 import { ComponentsModule }  from './src/components/components.module';

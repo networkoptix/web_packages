@@ -3,7 +3,7 @@ import {
 }                                     from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
-import { LocalStorageService }        from 'ngx-store';
+import { LocalStorageService }        from 'ngx-webstorage';
 import { tap, catchError }            from 'rxjs/operators';
 
 import { Exactly }                    from '../utils.service';

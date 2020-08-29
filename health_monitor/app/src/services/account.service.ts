@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
-import { LocalStorageService }       from 'ngx-store';
+import { LocalStorageService }       from 'ngx-webstorage';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxConfigService }           from './nx-config';

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
-import { LocalStorageService }          from 'ngx-store';
+import { LocalStorageService }          from 'ngx-webstorage';
 
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../services/nx-config';
@@ -75,7 +75,7 @@ export class NxRegisterComponent implements OnInit {
 
     ngOnInit(): void {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
-        this.context.process = this.localStorage.get('regProcess');
+        this.context.process = this.localStorage.retrieve('regProcess');
         this.uriParam = this.route.snapshot.data.uriParam;
 
         if (this.route.snapshot.params.code) {
@@ -108,7 +108,7 @@ export class NxRegisterComponent implements OnInit {
             } catch (ex) {}
         }
 
-        const loginRegister = this.localStorage.get('loginRegister');
+        const loginRegister = this.localStorage.retrieve('loginRegister');
         if (loginRegister) {
             this.lockEmail = !!loginRegister;
         }
@@ -129,7 +129,7 @@ export class NxRegisterComponent implements OnInit {
 
         this.fromClient = this.urlProtocol.getSource().isApp;
 
-        this.localStorage.set('regProcess', undefined);
+        this.localStorage.store('regProcess', undefined);
 
         this.register = this.processService.createProcess(() => {
             this.accountService.email = this.accountInfo.email;
@@ -171,11 +171,11 @@ export class NxRegisterComponent implements OnInit {
                         .then(() => {
                             this.registerSuccess = true;
                             this.activated = true;
-                            this.localStorage.set('regProcess', 'registerSuccess');
-                            this.localStorage.set('regActivated', 'activated');
+                            this.localStorage.store('regProcess', 'registerSuccess');
+                            this.localStorage.store('regActivated', 'activated');
                         });
                 } else {
-                    this.localStorage.remove('loginRegister');
+                    this.localStorage.clear('loginRegister');
                     this.uriService
                         .updateURI('/register/success', {}, true)
                         .catch(error => {
@@ -185,7 +185,7 @@ export class NxRegisterComponent implements OnInit {
                     this.accountService.email = this.accountInfo.email;
                     this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess;
                     this.registerSuccess = true;
-                    this.localStorage.set('regProcess', 'registerSuccess');
+                    this.localStorage.store('regProcess', 'registerSuccess');
                 }
             });
     }
