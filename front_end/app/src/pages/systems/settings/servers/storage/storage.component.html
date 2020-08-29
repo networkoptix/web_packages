@@ -101,7 +101,7 @@
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="!loading && (storage$ | async).length" type="mb-3">
+<nx-block *ngIf="!loading && (storage$ | async) && doesBackupExist" type="mb-3">
     <header>
         <div class="header-top-bar">
             <nx-switch
@@ -114,7 +114,7 @@
     </header>
     <nx-section *ngIf="isBackupOn">
         <div class="archive-backup-container">
-            <ng-container *ngIf="custom; else defaultMessage">
+            <ng-container *ngIf="customSettings; else defaultMessage">
                 <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>
                 <p translate>You can reset backup settings to default to backup secondary streams from all cameras in real time.</p>
                 <button class="btn btn-default mt-3"

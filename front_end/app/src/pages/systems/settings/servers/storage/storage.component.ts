@@ -59,7 +59,9 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     percentBackupDone = 0;
     storage$ = new BehaviorSubject<any[] | any>([]);
 
+    doesBackupExist = false;
     isBackupOn = false;
+    customSettings = false;
 
     ddWidth: number;
     modes: any;
@@ -160,7 +162,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                         }
 
                         if (store.status === STORAGE_STATUS.IN_USE && store.isUsedForWriting) {
-                            store.isBackup ? this.backupStorageIds.push(store.storageId) : this.mainStorageIds.push(store.storageId);
+                            store.isBackup ? this.backupStorageIds.push(store.storageId)
+                                : this.mainStorageIds.push(store.storageId);
                         }
 
                         storage[idx] = { ...store };
@@ -175,12 +178,64 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         }
     }
 
+    checkIfBackupEnabled(server: any) {
+        return !(
+            server.backupType === 'BackupManual' ||
+            server.backupType === 'BackupSchedule' && server.backupDuration <= 0
+        );
+    }
+
+    // will finish in CLOUD-5589
+    checkArchiveState() {
+        let isBackupForCurrentServerEnabled = false;
+        // let doesCurrentServerHaveDefaultSettings = false;
+        let isBackupForAnyServersEnabled = false;
+        this.system.servers.forEach(server => {
+            if (server.id === this.serverId) {
+                isBackupForCurrentServerEnabled = this.checkIfBackupEnabled(server);
+                // need to figure out how to check for default settings
+                // if (isBackupForCurrentServerEnabled) {
+                //     doesCurrentServerHaveDefaultSettings = ?
+                // }
+            } else if (!isBackupForAnyServersEnabled) {
+                isBackupForAnyServersEnabled = this.checkIfBackupEnabled(server);
+            }
+        });
+
+        if (isBackupForCurrentServerEnabled) {
+            this.isBackupOn = true;
+            this.customSettings = true;
+            // this.customSettings = !doesCurrentServerHaveDefaultSettings;
+        } else {
+            this.customSettings = false;
+            this.isBackupOn = !isBackupForAnyServersEnabled;
+            // if no server in system has backup settings on, should automatically save default settings and turn backup on?
+            // if (this.isBackupOn) {
+            //     // save default settings
+            // }
+        }
+    }
+
     updateStorage(storage) {
-        const numberOfMainStorages = storage.filter(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting).length;
-        if (numberOfMainStorages === 1) {
+        this.checkArchiveState();
+
+        let numOfBackups = 0;
+        let numOfMains = 0;
+        let isUpdating = false;
+        storage.forEach(({ isBackup, isUsedForWriting, status, updating }) => {
+            if (isUsedForWriting) {
+                isBackup ? status === 0 && numOfBackups++ : numOfMains++;
+            }
+            if (updating) isUpdating = true;
+        });
+
+        if (numOfMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
             store.mainOnly = true;
         }
+        // gets rid of backup archive section if changing from backup to main
+        // waits until finished changing modes when changing from main to backup
+        this.doesBackupExist = Boolean(numOfBackups) && !isUpdating;
         this.storage$.next(storage);
     }
 
