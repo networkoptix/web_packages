@@ -8,6 +8,7 @@ import queue
 from threading import Thread
 from os import system, path
 from get_names import get_threaded_names
+from pabot.pabot import main as pabot
 
 
 ENVIRONMENT = "https://cloud-test.hdw.mx"
@@ -29,20 +30,20 @@ def timer(func):
 
 @timer
 def threaded_test_run(output, language):
-    system(
-        "pabot "
-        "--ordering order.txt "
-        "--loglevel trace "
-        "-i threaded "
-        "-i threaded-file "
-        "-e merge "
-        "-e customizations "
-        f"-v ENV:{ENVIRONMENT} "
-        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
-        f"-V getvars.py:{CUSTOMIZATION}:{language} "
-        f"--output threaded.xml "
+    pabot([
+        "--pabotlib",
+        "--ordering", "order.txt",
+        "--loglevel", "trace",
+        "-i", "threaded",
+        "-i", "threaded-file",
+        "-e", "merge",
+        "-e", "customizations",
+        "-v", f"ENV:{ENVIRONMENT}",
+        "-v", f"SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')}",
+        "-V", f"getvars.py:{CUSTOMIZATION}:{language}",
+        "--output", "threaded.xml",
         "test-cases"
-        )
+        ])
 
     system(
         "robot "
