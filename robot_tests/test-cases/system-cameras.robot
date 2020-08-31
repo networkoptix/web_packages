@@ -168,6 +168,29 @@ Recording toggle status
     Wait Until Element is Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
     Verify Recording Options are Visible
 
+Recording toggle status
+    [Tags]    C76391    Threaded
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera by Name    no license cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
+
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera by Name    good cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Wait Until Element Is Visible    ${ONE LICENSE WILL BE USED WARNING}
+
+    Select Camera By Name    no audio cam
+    Verify on Cameras Page
+    Wait Until Element is Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Verify Recording Options are Visible
+
 Record Always
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
