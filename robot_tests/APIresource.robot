@@ -194,6 +194,8 @@ Setup Local System
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+    ${auth}=   Create List    admin    ${new password}
+    Disable Stat Reports    ${auth}    ${server url}
     [Return]    ${resp.json()}
 
 Setup Cloud System
@@ -202,6 +204,8 @@ Setup Cloud System
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+    ${cloud auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+    Disable Stat Reports    ${cloud auth}    ${server url}
     [Return]    ${resp.json()}
 
 Save Cloud System Credentials
@@ -387,3 +391,9 @@ Change server port via API
     ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10
     Return From Keyword    ${resp}
 
+Disable Stat Reports
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Disable Statistics   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Disable Statistics    /api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
