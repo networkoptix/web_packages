@@ -421,6 +421,7 @@ Recording Status
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Select Camera by Name    no license cam
     Verify on Cameras Page
     Select Camera By Name    no license cam
     Wait Until Element Is Visible    ${RECORDING CHECK BOX}
