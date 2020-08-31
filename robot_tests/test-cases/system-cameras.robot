@@ -145,12 +145,40 @@ Edit credentials form Close and Cancel buttons
 # Changing credentials from invalid ones to valid ones makes the camera authorized
 
 
-Record Always
+Recording toggle status
+    [Tags]    C76391    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Select Camera by Name    no license cam
     Verify on Cameras Page
-    Enable Recording
+    Element Should Not Be Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
+
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera by Name    good cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Wait Until Element Is Visible    ${ONE LICENSE WILL BE USED WARNING}
+
+    Select Camera By Name    no audio cam
+    Verify on Cameras Page
+    Wait Until Element is Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Verify Recording Options are Visible
+
+Record Always
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera By Name    good cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${ENABLED RECORDING SLIDER}/preceding-sibling::input[@class="selected"]/..
+    Toggle Recording
+    Verify Recording Options are Visible
+    Sleep    1
+    ${value}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
+    Should Be Equal As Integers    ${value}    2
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}

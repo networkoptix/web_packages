@@ -16,9 +16,9 @@ Verify on Cameras Page
 
 Verify Recording Options are Visible
     Wait Until Elements are Visible
-    ...    ${RECORD ALWAYS RADIO BUTTON}
-    ...    ${RECORD MOTION RADIO BUTTON}
-    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..
+    ...    ${RECORD MOTION RADIO BUTTON}/..
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
     ...    ${FPS INPUT}
     ...    ${QUALITY DROPDOWN}
 
