@@ -17,6 +17,53 @@
         line-height: $lh !important;
     }
 }
+
+h1, h2 {
+    @include font-source($font-family-medium, $h1-font-size, $font-color-medium);
+    margin-top    : $line-height-computed;
+    margin-bottom : $line-height-computed;
+    padding       : 0;
+    display       : flex;
+    align-items   : center;
+}
+
+.old-h12 {
+    @include font-source($font-family-light, rem(22px), $font-color-medium);
+}
+
+h2 {
+    @include font-source($font-family-medium, $h2-font-size, $font-color-medium);
+    margin      : 0;
+    padding     : 0;
+}
+
+h3 {
+    @include font-source($font-family-regular, $h3-font-size, $font-color-regular);
+    margin-top    : ($line-height-computed / 2);
+    margin-bottom : ($line-height-computed / 4);
+}
+
+h4 {
+    @include font-source($font-family-medium, $h4-font-size, $font-color-medium);
+}
+
+h5 {
+    @include font-source($font-family-medium, $h5-font-size, $font-color-medium);
+}
+
+h6 {
+    @include font-source($font-family-medium, $h6-font-size, $font-color-medium);
+}
+
+.h7 {
+    @include font-source($font-family-regular, $h6-font-size, $font-color-regular);
+}
+
+h1 > .label {
+    font-size      : 60%;
+    vertical-align : 33%;
+}
+
 @mixin regular32 {
     @include font-source($font-family-regular, $font-size-xxlg, $font-color-regular);
 }

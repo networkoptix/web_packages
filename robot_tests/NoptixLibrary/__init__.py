@@ -452,11 +452,12 @@ class NoptixLibrary(object):
                 container.remove()
 
     def get_container_id(self, name):
+        """ First 12 symbols of the container id """
         client = docker.from_env()
         container = client.containers.get(name)
         all_containers = client.containers.list(all=True)
         if container in all_containers:
-            return container.short_id
+            return container.id[:12]
         else:
             return 'Container not found'
 

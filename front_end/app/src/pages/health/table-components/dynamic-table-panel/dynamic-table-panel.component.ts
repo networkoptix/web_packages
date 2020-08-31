@@ -49,19 +49,16 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
             if (this.panelParams) {
                 const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
                 this.sections = paramGroups
-                    .map(({
-                        description, name, id: paramGroupId, values
-                    }) => {
-                        const lines = values.map(({ id, name }) => {
-                            return new InfoBlockLine(
-                                name || id,
-                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
-                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
-                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
-                            );
-                        });
+                    .map(({ description, name, id: paramGroupId, values }) => {
+                        const lines = values.map(({ id, name }) => new InfoBlockLine(
+                            name || id,
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon,
+                            true,
+                            activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].tooltip
+                        ));
                         const maxParamWidthPercentage = 58;
-
                         return new InfoBlockSection(lines, description || name || paramGroupId, maxParamWidthPercentage);
                     });
             }

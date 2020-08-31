@@ -4,21 +4,30 @@ import { TranslateService }        from '@ngx-translate/core';
 import { BehaviorSubject }         from 'rxjs';
 
 import { NxCloudApiService }       from './nx-cloud-api';
+import { IConfig, NxConfigService }  from './nx-config';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { IParams } from '../components/search/search.component';
+import { NxSessionService } from './session.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
+    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     translateSubject = new BehaviorSubject({});
 
-    constructor(
+    constructor(config: NxConfigService,
         private translate: TranslateService,
         private http: HttpClient,
-        private cloudApiService: NxCloudApiService
-    ) {}
+        private cloudApiService: NxCloudApiService,
+        private sessionService: NxSessionService
+    ) {
+        this.CONFIG = config.getConfig();
+        if (this.CONFIG.isLocal) {
+            this.currentLang = this.sessionService.language;
+        }
+    }
 
     /**
      * Use to incrementally add params to a string to be translated.
@@ -51,7 +60,10 @@ export class NxLanguageProviderService {
     }
 
     loadLanguage() {
-        return this.cloudApiService.getLanguage().toPromise();
+        const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
+        return (this.CONFIG.isLocal
+            ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
+            : this.cloudApiService.getLanguage()).toPromise();
     }
 
     setTranslations(lang: string, json: JSON): void {
@@ -78,5 +90,10 @@ export class NxLanguageProviderService {
 
     public set defaultLanguage(language: string) {
         this.translate.setDefaultLang(language);
+    }
+
+    public set currentLang(language: string) {
+        this.translate.currentLang = language;
+        this.sessionService.language = language;
     }
 }

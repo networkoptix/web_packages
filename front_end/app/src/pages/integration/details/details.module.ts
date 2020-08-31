@@ -5,6 +5,7 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
 
 import { ComponentsModule }              from '../../../components/components.module';
 import { MenuModule }                    from '../../../menu/menu.module';
@@ -32,8 +33,10 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        RouterModule.forChild(appRoutes),
-        MenuModule
+        MenuModule,
+        AngularSvgIconModule,
+
+        RouterModule.forChild(appRoutes)
     ],
     providers : [],
     declarations : [

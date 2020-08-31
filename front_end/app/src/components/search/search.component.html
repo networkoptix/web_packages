@@ -5,8 +5,6 @@
                 <div class="search-group"
                      [class]="layout"
                      [ngClass]="{'mr-3' : layout == 'full'}">
-
-                    <span class="glyphicon web-icon-search icon-search"></span>
                     <input [ngModel]="localFilter.query"
                            (ngModelChange)="onSearchType($event)"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
@@ -20,8 +18,8 @@
                            class="form-control search-input"
                            name="query"
                            autocomplete="off"
-                           [placeholder]="placeholderText"/>
-
+                           [placeholder]="placeholder | translate"/>
+                    <span *ngIf="!localFilter.query" class="glyphicon web-icon-search icon-search"></span>
                     <button class="inset search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
                         <svg-icon [src]="CONFIG.icons.dir + 'close.svg'"
                                   [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
@@ -37,7 +35,7 @@
                 </div>
 
                 <div class="btn btn-arrow btn-big btn-tag float-left mt-3 mt-md-0"
-                        [ngClass]="{'selected' : showAdvancedOptions}"
+                        [ngClass]="{'cam-table-show selected' : showAdvancedOptions}"
                         (click)="toggleOptions()"
                         *ngIf="layout == 'full'">
                     <div class="arrow-flip">

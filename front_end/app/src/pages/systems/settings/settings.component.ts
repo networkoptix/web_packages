@@ -354,7 +354,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode = {
                     id     : this.CONFIG.menus.systemSettings.cameras.id,
                     svg    : this.CONFIG.menus.systemSettings.cameras.icon,
-                    label  : 'Cameras',
+                    label  : this.LANG.menu.titles.cameras(),
                     path   : this.CONFIG.menus.systemSettings.cameras.path,
                     level3 : []
                 };
@@ -530,6 +530,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection({ systemName: this.system.info.systemName || this.LANG.errorCodes.thisSystem() }), 'warning');
 
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
+        this.mergeTargetSystem = undefined;
+        this.systemsService.getSystem(this.systemId, false)
+                .subscribe((system: NxSystem) => {
+                    this.systemNoAccess = system === undefined;
+                    if (this.systemNoAccess) {
+                        this.system.stopPoll();
+                    }
+                });
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

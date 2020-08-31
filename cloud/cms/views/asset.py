@@ -19,6 +19,7 @@ from api.helpers.exceptions import APINotFoundException, api_success, require_pa
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
 from cms.forms import *
+from cms.models import UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 
 from .integration import INTEGRATION_CACHE
@@ -80,7 +81,7 @@ def context_editor_action(request, asset, context_id, language_code):
     request_data = request.POST
     request_files = request.FILES
 
-    if not (request.user.is_superuser or request.user.has_perm('cms.edit_advanced'))\
+    if not UserGroupsToAssetPermissions.check_edit_advanced(request.user, asset)\
             and advanced_touched_without_permission(request_data, context.datastructure_set.all(), asset):
         raise PermissionDenied
 
@@ -465,7 +466,7 @@ def download_package(request, asset_id):
         else:
             return HttpResponseBadRequest("There are no published versions for this asset.")
 
-    if not asset.is_cloud_portal and len(modify_db.asset_has_required_data(asset, version_id)) > 0:
+    if not preview and len(modify_db.asset_has_required_data(asset, version_id)) > 0:
         error_message = "Asset requires all fields to be filled."
         if version_id:
             error_message = f"Asset does not have all required fields filled for version: {version_id}"

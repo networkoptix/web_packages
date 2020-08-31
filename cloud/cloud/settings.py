@@ -52,6 +52,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(
 STATIC_LOCATION = os.path.join(BASE_DIR, "static")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/common/static")
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder'
+]
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
@@ -512,6 +517,15 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 
 TINYMCE_JS_URL = STATIC_URL + 'tinymce/js/tinymce/tinymce_min.js'
 TINYMCE_JS_ROOT = STATIC_ROOT + 'tinymce/js/tinymce'
+
+
+NPM_ROOT_PATH = BASE_DIR
+if LOCAL_ENVIRONMENT:
+    NPM_FINDER_USE_CACHE = False
+NPM_FILE_PATTERNS = {
+    'bootstrap': ['dist/*'],
+    'split.js': ['dist/*']
+}
 
 
 # In House Settings

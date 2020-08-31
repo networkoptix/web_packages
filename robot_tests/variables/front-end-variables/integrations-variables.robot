@@ -2,7 +2,7 @@
 #Integration Landing Page
 ${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
 ${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]
-${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and contains(@placeholder, "Search")]
+${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and contains(@placeholder, "${SEARCH PLACEHOLDER TEXT}")]
 ${INTEGRATIONS SEARCH CLOSE BUTTON}   ${INTEGRATIONS SEARCH}//button[contains(@class, "search-clear")]
 ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@class, "icon-search")]
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
@@ -94,8 +94,9 @@ ${INTEGRATION GET IN TOUCH LEGAL}               ${INTEGRATION GET IN TOUCH FORM}
 ...    ${INTEGRATION DEVELOPER COMPANY LINK}
 ...    ${INTEGRATION DEVELOPER TERMS OF USE LINK}
 ...    ${INTEGRATION SUPPORT LABEL}
-...    ${INTEGRATION SUPPORT LINK}
-...    ${INTEGRATION SUPPORT EMAIL}
+# Removed temporarily as there isn't a good way to target it
+#...    ${INTEGRATION SUPPORT LINK}
+#...    ${INTEGRATION SUPPORT EMAIL}
 ...    ${INTEGRATION HOW IT WORKS VIDEO}
 ...    ${INTEGRATION HOW IT WORKS CAROUSEL}
 ...    ${INTEGRATION CAROUSEL RIGHT BUTTON}

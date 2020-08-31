@@ -22,7 +22,7 @@
             <div class="col-12 ml-n2 d-flex">
                 <ng-container *ngIf="addUserEmail.errors">
                     <span *ngIf="addUserEmail.errors.alreadyExists"
-                        class="input-error" translate>This Email has been already registered in %CLOUD_NAME%</span>
+                        class="input-error">{{ alreadyExists }}</span>
                     <ng-container *ngIf="addUserEmail.touched">
                         <span *ngIf="addUserEmail.errors.required"
                             class="input-error" translate>Email is required</span>

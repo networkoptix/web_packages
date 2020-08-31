@@ -8,6 +8,7 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface LanguageI18NStaticTypes {
+    language:              any;
     "About %CLOUD_NAME%":  any;
     "Download %VMS_NAME%": any;
     Integrations:          any;
@@ -191,6 +192,7 @@ export interface VoiceCommands {
 }
 
 export interface Dialogs {
+    addUser:      AddUser;
     buttons:      Buttons;
     cloudStorage: CloudStorage;
     merge:        DialogsMerge;
@@ -198,6 +200,10 @@ export interface Dialogs {
     removeSystem: RemoveSystem;
     titles:       DialogsTitles;
     tooltips:     Tooltips;
+}
+
+export interface AddUser {
+    alreadyExists: any;
 }
 
 export interface Buttons {
@@ -535,6 +541,7 @@ export interface Menu {
 }
 
 export interface MenuTitles {
+    cameras:              any;
     systemAdministration: any;
     general:              any;
     licenses:             any;
@@ -675,11 +682,15 @@ export interface ServersStatus {
 }
 
 export interface Storage {
+    reindexingDone:          ReindexingDone;
     modes:                   Modes;
     alreadyUsed:             any;
     deleteExternalStorage:   any;
+    failed:                  any;
     reservedTooSmallTooltip: any;
     reservedSystemTooltip:   any;
+    serverOffline:           any;
+    success:                 any;
     urlPlaceholder:          any;
 }
 
@@ -687,6 +698,13 @@ export interface Modes {
     main:     any;
     backup:   any;
     notInUse: any;
+}
+
+export interface ReindexingDone {
+    mainSuccess:   any;
+    backupSuccess: any;
+    mainFailed:    any;
+    backupFailed:  any;
 }
 
 export interface LanguageI18NStaticTypesSystem {
@@ -919,6 +937,7 @@ function r(name: string) {
 
 const typeMap: any = {
     "LanguageI18NStaticTypes": o([
+        { json: "language", js: "language", typ: "any" },
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "any" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "any" },
         { json: "Integrations", js: "Integrations", typ: "any" },
@@ -1088,6 +1107,7 @@ const typeMap: any = {
         { json: "view", js: "view", typ: "any" },
     ], false),
     "Dialogs": o([
+        { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
@@ -1095,6 +1115,9 @@ const typeMap: any = {
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
+    ], false),
+    "AddUser": o([
+        { json: "alreadyExists", js: "alreadyExists", typ: "any" },
     ], false),
     "Buttons": o([
         { json: "cancel", js: "cancel", typ: "any" },
@@ -1398,6 +1421,7 @@ const typeMap: any = {
         { json: "titles", js: "titles", typ: r("MenuTitles") },
     ], false),
     "MenuTitles": o([
+        { json: "cameras", js: "cameras", typ: "any" },
         { json: "systemAdministration", js: "systemAdministration", typ: "any" },
         { json: "general", js: "general", typ: "any" },
         { json: "licenses", js: "licenses", typ: "any" },
@@ -1524,17 +1548,27 @@ const typeMap: any = {
         { json: "restarting", js: "restarting", typ: "any" },
     ], false),
     "Storage": o([
+        { json: "reindexingDone", js: "reindexingDone", typ: r("ReindexingDone") },
         { json: "modes", js: "modes", typ: r("Modes") },
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
+        { json: "failed", js: "failed", typ: "any" },
         { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
         { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },
+        { json: "serverOffline", js: "serverOffline", typ: "any" },
+        { json: "success", js: "success", typ: "any" },
         { json: "urlPlaceholder", js: "urlPlaceholder", typ: "any" },
     ], false),
     "Modes": o([
         { json: "main", js: "main", typ: "any" },
         { json: "backup", js: "backup", typ: "any" },
         { json: "notInUse", js: "notInUse", typ: "any" },
+    ], false),
+    "ReindexingDone": o([
+        { json: "mainSuccess", js: "mainSuccess", typ: "any" },
+        { json: "backupSuccess", js: "backupSuccess", typ: "any" },
+        { json: "mainFailed", js: "mainFailed", typ: "any" },
+        { json: "backupFailed", js: "backupFailed", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([
         { json: "connected", js: "connected", typ: "any" },

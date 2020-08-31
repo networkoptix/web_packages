@@ -19,8 +19,8 @@ FCM_ERRORS = {
 
 class NotificationSerializer(serializers.Serializer):
     class NotificationDataSerializer(serializers.Serializer):
-        title = serializers.CharField(required=False, max_length=255, default='')
-        body = serializers.CharField(required=False, default='')
+        title = serializers.CharField(required=False, allow_blank=True, max_length=255, default='')
+        body = serializers.CharField(required=False, allow_blank=True, default='')
         payload = serializers.DictField(required=False, default={})
         options = serializers.DictField(required=False, default={})
 

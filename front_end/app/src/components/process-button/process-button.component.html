@@ -7,6 +7,7 @@
 
     <button class="btn {{buttonClass}} {{customButtonClass}}"
             [ngClass]="{'processing' : process && process.processing}"
+            [ngStyle]="{'cursor': buttonDisabled ? 'not-allowed' : 'pointer'}"
             [disabled]="buttonDisabled"
             type="submit"
             (click)="clickFn(); checkForm(); $event.stopPropagation();">

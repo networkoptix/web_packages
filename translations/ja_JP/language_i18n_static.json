@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "古いレポートを表示しています。"
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "このメールアドレスは %systemName% システムに既に登録されています"
+        },
         "buttons": {
             "cancel": "キャンセル",
             "createAccount": "新規アカウントを作成",
@@ -254,7 +257,7 @@
             "otherSystem": "その他のシステム...",
             "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
             "passwordRequired": "パスワードが必要",
-            "passwordWrong": "パスワードが間違っています",
+            "passwordWrong": "間違ったパスワード",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
             "primarySystemOffline": "システム {{primarySystem}} はオフラインであり、システム {{targetSystem}} と統合することはできません",
             "primarySystemUnavailable": "システム {{primarySystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "カメラ",
             "systemAdministration": "システムアドミニストレーション",
             "general": "一般",
             "licenses": "ライセンス",

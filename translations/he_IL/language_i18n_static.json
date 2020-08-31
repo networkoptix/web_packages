@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "אתה צופה בדוח מיושן."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "דוא\"ל זה כבר נרשם במערכת %systemName%"
+        },
         "buttons": {
             "cancel": "ביטול",
             "createAccount": "צור חשבון חדש",
@@ -270,7 +273,7 @@
             "serverNotYours": "מערכת זו מחוברת ל- %CLOUD_NAME%, אך משוייכים לבעלים אחרים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
             "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית",
             "systemOfflineUrl": "{{targetSystem}} אינו נגיש.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\" target=\"_blank\" translate>גרסא האחרונה</a>.",
             "systemVersionsNotMatch": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\" target=\"_blank\" translate>גרסא האחרונה</a>.",
             "urlEmpty": "הזן כתובת שרת",
             "urlNotValid": "הזן כתובת URL חוקית",
@@ -305,7 +308,7 @@
         "removeSystem": {
             "action": "נתק",
             "message": "לא תוכל להתחבר למערכת זו יותר.",
-            "title": "Disconnect System from your Account?"
+            "title": "לנתק את המערכת מהחשבון שלך?"
         },
         "titles": {
             "error": "שגיאה",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "מצלמות",
             "systemAdministration": "ניהול המערכת",
             "general": "כללי",
             "licenses": "רשיונות",

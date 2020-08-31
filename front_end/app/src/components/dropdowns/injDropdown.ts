@@ -19,7 +19,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     show: boolean;
 
     // internal value
-    _selected;
+    _selectedItem;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -59,8 +59,8 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
             _value = value.value;
         }
 
-        if (_value !== null && _value !== undefined) {
-            this._selected = _value;
+        if (_value !== null && _value !== undefined && !(value instanceof Watcher)) {
+            this._selectedItem = _value;
         }
     }
 

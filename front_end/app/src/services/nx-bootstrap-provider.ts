@@ -1,6 +1,5 @@
 import { Injectable }                from '@angular/core';
 import { HttpClient }                from '@angular/common/http';
-import { Location }                  from '@angular/common';
 
 import { IConfig, NxConfigService }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -22,8 +21,7 @@ export class NxBootstrapProvider {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
-        private http: HttpClient,
-        private location: Location
+        private http: HttpClient
     ) {
         this.CONFIG = this.configService.getConfig();
         this.isLoaded = false;
@@ -44,16 +42,26 @@ export class NxBootstrapProvider {
             : Promise.resolve({});
     }
 
+    private getWebadminConfig() {
+        return this.http.get('/static/customization/config.json');
+    }
+
     load(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            return Promise.all([
-                this.configService.getSettings(),
-                this.languageService.loadLanguage(),
-                this.checkLocalIfNew()
-            ]).then((result: any) => {
+            return this.getCustomization().then(() => {
+                this.CONFIG = this.configService.getConfig();
+                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
+                return Promise.resolve();
+            }).then(() => {
+                return Promise.all([
+                    this.configService.getSettings(),
+                    this.languageService.loadLanguage(),
+                    this.checkLocalIfNew()
+                ]);
+            }).then((result: any) => {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
-                this.languageService.defaultLanguage = 'en_US';
+                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
                 this.setLanguage(result[1]);
                 this.setSettings(result[0]);
 
@@ -67,10 +75,23 @@ export class NxBootstrapProvider {
             }).catch(err => {
                 console.error(err);
                 // handle fail in app component
-                this.languageService.defaultLanguage = 'en_US';
+                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
                 resolve(true);
             });
         });
+    }
+
+    getCustomization() {
+        if (this.CONFIG.isLocal) {
+            return this.getWebadminConfig().toPromise()
+                .then((data: any) => {
+                    this.configService.updateConfig(data);
+                    return Promise.resolve();
+                }).catch(() => {
+                    return Promise.resolve();
+                });
+        }
+        return Promise.resolve();
     }
 
     setLocalInfo(data) {
@@ -82,12 +103,12 @@ export class NxBootstrapProvider {
 
     setLanguage(data) {
         // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };
-        this.languageService.setTranslations(data.ajs.language, data.i18n);
+        this.languageService.setTranslations(data.language, data);
         this.LANG = this.languageService.translations;
         this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
         this.pageService.pageTitle = this.LANG.pageTitles.default;
 
-        this.CONFIG.viewsDir = 'static/lang_' + data.ajs.language + '/views/';
+        this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
     }
 
     setSettings(data) {
@@ -159,15 +180,6 @@ export class NxBootstrapProvider {
                 this.CONFIG.previewPath = 'preview';
                 this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
             }
-        } else {
-            // Todo: Clean up once there's a way to determine cloud portal vs webadmin.
-            this.CONFIG.isLocal = true;
-            this.CONFIG.menus.systemSettings.baseUrl = '/settings';
-            this.CONFIG.redirect.authorised = '/settings';
-            this.CONFIG.credentialsValidation.emailRegex = '.*';
-            this.CONFIG.viewsDir = 'static/views/';
-            // @ts-ignore
-            this.CONFIG.commonViewsDir = 'web_common/views/';
         }
     }
 }

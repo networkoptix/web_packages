@@ -27,8 +27,12 @@ export class SectionApplyExampleComponent {
         this.section1InputWatcher.value = value;
     }
 
-    // section 2
-    section2InputWatcher = new Watcher<string>();
+    // section 2 - Watcher with additional properties
+    section2InputWatcher = Watcher.extendedWatcherFactory(null, {
+        additionalProperty1 : 'additionalProperty1',
+        additionalProperty2 : 2
+    });
+
     section2Watcher: SectionWatcher
     saveSection2: Process;
 
@@ -82,7 +86,21 @@ export class SectionApplyExampleComponent {
             [this.section2InputWatcher]
         );
 
-        // setup section 2
+        const availableSectionWatchers = [this.section1Watcher, this.section2Watcher];
+        this.saveAll = this.processService.createProcess(() => Promise.resolve()).then(() => {
+            availableSectionWatchers.forEach((watcher: Watcher<any> | SectionWatcher) => {
+                watcher.reset();
+            });
+        });
+        // Init page watcher with sectionWatchers
+        this.applyService.initPageWatcher(
+            this.pageApply,
+            this.saveAll,
+            () => availableSectionWatchers.forEach(watcher => watcher.reset()),
+            availableSectionWatchers
+        );
+
+        // setup section 3 - Added using addWatchersAndFunctionsFromChild after page watcher already initialized
         this.section3Input = 'section3';
         this.saveSection3 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section3InputWatcher.reset());
         this.section3Watcher = this.applyService.createSectionWatcher(
@@ -92,21 +110,11 @@ export class SectionApplyExampleComponent {
             [this.section3InputWatcher]
         );
 
-        const sectionWatchers = [this.section1Watcher, this.section2Watcher, this.section3Watcher];
-        this.saveAll = this.processService.createProcess(() => Promise.resolve()).then(() => {
-            sectionWatchers.forEach((watcher: Watcher<any> | SectionWatcher) => {
-                watcher.reset();
-            });
-        });
-
-        // Init page watcher with sectionWatchers
-        this.applyService.initPageWatcher(
-            this.pageApply,
-            this.saveAll,
-            () => sectionWatchers.forEach(watcher => watcher.reset()),
-            sectionWatchers
+        // This is how you would add watchers when the page watcher has already been instantiated earlier.
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.section3Watcher], this.saveSection3, () => this.section3InputWatcher.reset()
         );
+
         this.applyService.setVisible();
     }
-
 }

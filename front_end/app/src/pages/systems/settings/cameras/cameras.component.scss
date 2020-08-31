@@ -1,10 +1,35 @@
 @use "../../../../styles/typography";
 @use '../../../../../styles/theme_variables' as *;
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .camera-settings-info {
     font-family: typography.$font-family-regular;
     font-size: typography.$font-size-base;
     color: $dark9;
+
+    .grid-container {
+        display               : grid;
+        grid-column-gap       : .5rem;
+        grid-row-gap          : .5rem;
+        grid-template-columns : max-content 240px;
+
+        @include media-breakpoint-down(md) {
+            grid-template-columns : 1fr;
+        }
+
+        .grid-item {
+            display         : flex;
+            align-items     : center;
+            justify-content : flex-end;
+
+            @include media-breakpoint-down(md) {
+                justify-content : flex-start;
+            }
+        }
+    }
+
     .header-top-bar {
         width: 100%;
         display: flex;
@@ -321,15 +346,6 @@
     }
 }
 
-.image-dropdowns {
-    & > span {
-        width: 80px;
-    }
-    & > nx-select {
-        width: 240px;
-    }
-}
-
 .recording-hint {
     @include typography.regular13;
     margin: -8px 0 16px 64px;
@@ -372,4 +388,3 @@
       transform: translate3d(5px, 0, 0);
     }
 }
-

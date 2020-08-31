@@ -1,8 +1,8 @@
 import {
     Component,
     OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewEncapsulation
-}                                    from '@angular/core';
+    SimpleChanges, ViewEncapsulation, ViewChild, ViewContainerRef
+} from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { SubscriptionLike }          from 'rxjs';
 
@@ -11,7 +11,8 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }                 from '../../../../../../language_i18n_static_types';
+import { NxApplyService, SectionWatcher, Watcher } from '../../../../../services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,15 +26,46 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    loading: boolean;
     showLoggers: boolean;
-    saveLoggers: Process;
     lockedSubscription: SubscriptionLike;
 
     @Input() system: NxSystem;
     @Input() serverId;
 
-    systemLoggers: any = {};
+    systemLoggers: {[key: string]: Watcher<any> & { key: string, name: string, help: string, selected: string }} = {};
     readonly loggerOptions: any = [];
+
+    @ViewChild('sectionLoggersApply', { read: ViewContainerRef, static: true }) sectionLoggersApply;
+
+    sectionWatcher: SectionWatcher
+    saveLoggers: Process;
+    resetLoggers = () => {
+        Object.values(this.systemLoggers).forEach((watcher: any) => {
+            watcher.reset();
+            // Update object to trigger dropdown update
+            watcher.selected = watcher.value;
+            const { value, key, name, help } = watcher;
+            this.systemLoggers[key] = Watcher.extendedWatcherFactory(value, {
+                key,
+                name,
+                help,
+                selected: value
+            });
+            this.systemLoggers[watcher.key].value = value;
+        });
+
+        if (this.sectionWatcher) {
+            this.sectionWatcher = undefined;
+        }
+        // re-create section watcher
+        this.sectionWatcher = this.applyService.createSectionWatcher(
+            this.sectionLoggersApply,
+            this.saveLoggers,
+            this.resetLoggers,
+            Object.values(this.systemLoggers)
+        );
+    };
 
     private setupDefaults() {
         this.showLoggers = false;
@@ -69,6 +101,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
@@ -113,11 +146,21 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.serverId?.currentValue) {
+            this.loading = true;
+            this.systemLoggers = {};
+
             this.system
                 .logLevel(changes.serverId.currentValue)
                 .then(response => {
-                    this.settingsToBeDisplayedOrUpdated(response.reply);
+                    if (response.name !== 'TimeoutError') {
+                        this.settingsToBeDisplayedOrUpdated(response.reply);
+                    }
+
                     this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error);
                 });
         }
     }
@@ -127,8 +170,15 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
 
     changeLog(selected, key) {
         this.systemLoggers[key].value = selected.value;
-        this.systemLoggers[key].selected = selected;
+        this.systemLoggers[key].selected = selected.value;
     }
+
+    // ... Breadcrumbs ... TT
+    // @ViewChild('logLevelsForm') logLevelsForm;
+
+    // ngAfterViewInit() {
+        // debugger;
+    // }
 
     settingsToBeDisplayedOrUpdated(loggers) {
         Object.keys(loggers).forEach((key) => {
@@ -137,13 +187,25 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
                 return level.value === value;
             })[0];
 
-            this.systemLoggers[key] = {};
-            this.systemLoggers[key].key = key;
-            this.systemLoggers[key].name = name;
-            this.systemLoggers[key].help = help;
+            this.systemLoggers[key] = Watcher.extendedWatcherFactory(value, { key, name, help, selected: value });
             this.systemLoggers[key].value = value;
             this.systemLoggers[key].originalValue = value;
         });
+
+        // ... Breadcrumbs ... TT
+        // this.applyService.createFormWatcher(
+        //     this.sectionLoggersApply,
+        //     this.logLevelsForm,
+        //     this.saveLoggers);
+
+        this.sectionWatcher = this.applyService.createSectionWatcher(
+            this.sectionLoggersApply,
+            this.saveLoggers,
+            this.resetLoggers,
+            Object.values(this.systemLoggers)
+        );
+
+        this.applyService.addWatchersAndFunctionsFromChild([this.sectionWatcher], this.saveLoggers, this.resetLoggers);
     }
 
     loggersToBeSaved() {

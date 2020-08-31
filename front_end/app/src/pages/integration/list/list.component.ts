@@ -2,6 +2,7 @@ import {
     Component, OnDestroy,
     Input, SimpleChanges, OnChanges
 }                                    from '@angular/core';
+import { BehaviorSubject }           from 'rxjs';
 
 import { NxRibbonService }           from '../../../components/ribbon';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
@@ -19,6 +20,9 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    gridColumnLookup: {[key: string]: string} = {};
+    ready = new BehaviorSubject(false);
 
     constructor(
         configService: NxConfigService,
@@ -43,7 +47,15 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
             } else {
                 this.ribbonService.hide();
             }
+            setTimeout(() => this.ready.next(true));
         }
+    }
+
+    updateTagSize(tagName: string, { width }) {
+        if (this.gridColumnLookup[tagName]) return;
+        const gridGap = 5;
+        const columns = Math.round(width / gridGap);
+        this.gridColumnLookup[tagName] = `span ${columns}`;
     }
 
     private showRibbon(): void {

@@ -40,6 +40,20 @@ class LicenseManagement(object):
         assert '<title>Login</title>' not in r.text, "Invalid credentials"
         assert r.status_code == 200, "Can't log in to licensing server"
 
+    def manual_activate(self, key, hwid):
+        data = {
+            'license_key': key,
+            'oldhwid[]': 'The license is activated by hand',
+            'hwid[]': hwid
+        }
+        response = self.session.post(f'{self.base_url}/activate.php', data=data)
+        assert response.status_code == 200, "Can't activate license"
+
+        if not response.text:
+            raise GenerationError({'error': 'Validation failed'})
+
+        return response.text
+
     def deactivate_licenses(self, license_keys, autodeact_reason='1', new_hwid='',
                             integrator='AutoTest Integrator', end_user='AutoTest End User', mode='deactivate',
                             os_version=None, vms_version=None):
@@ -217,9 +231,9 @@ class LicenseManagement(object):
                     elif key == 'CLASS':
                         key_info.update({'Type': type_map[value]})
                     elif key == 'EXPIRATION' and value:
-                        if 'ORDERTYPE' not in lic['licenseBlock'] and lic['key'] != '0000-0000-0000-0005':
+                        if ('ORDERTYPE' not in lic['licenseBlock']) and ('0000-0000-0000' not in lic['key']) and (key_info['Type'] != 'Video Wall'):
                             key_info['Type'] = 'Time'
-                        elif lic['key'] == '0000-0000-0000-0005':
+                        elif '0000-0000-0000' in lic['key']:
                             key_info['Type'] = 'Trial'
                         value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
                         value = datetime.strftime(value, '%d %b %Y, %I:%M %p')
@@ -230,4 +244,4 @@ class LicenseManagement(object):
                         key_info.update({'Deactivation left': 3 - int(value)})
                 return key_info
         else:
-            return 'Error: the key is not activated on the server'
+            return None

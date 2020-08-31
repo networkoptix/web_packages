@@ -1,7 +1,7 @@
 import {
     Component, SimpleChanges,
-    OnDestroy, Input, OnChanges
-}                                    from '@angular/core';
+    OnDestroy, Input, OnChanges, ViewChild, ViewContainerRef
+} from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
     map, delay, retryWhen, take
@@ -14,13 +14,14 @@ import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }                 from '../../../../../../language_i18n_static_types';
+import { NxApplyService, SectionWatcher, Watcher } from '../../../../../services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-system-advanced-admin-component',
+    selector    : 'nx-system-advanced-admin-component',
     templateUrl : 'advanced.component.html',
-    styleUrls : ['advanced.component.scss']
+    styleUrls   : ['advanced.component.scss']
 })
 
 export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
@@ -30,14 +31,18 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
 
     haveAdvSettings: boolean;
-    saveSettings: Process;
     private serverSubscription: Subscription;
 
     systemSettings: any = {};
 
+    sectionWatcher: SectionWatcher
+    saveSettings: Process;
+    resetSettings = () => Object.values(this.systemSettings).forEach((watcher: any) => watcher.reset());
+
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private applyService: NxApplyService,
         private settingsService: NxSettingsService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
@@ -135,7 +140,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                 this.CONFIG.settingsConfig[key] = { label: key, type: type };
             }
 
-            this.systemSettings[key] = {};
+            this.systemSettings[key] = Watcher.extendedWatcherFactory(value, {});
 
             switch (this.CONFIG.settingsConfig[key].type) {
                 case 'number':
@@ -148,6 +153,15 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                     this.systemSettings[key].value = this.systemSettings[key].originalValue = value;
             }
         });
+
+        this.sectionWatcher = this.applyService.createSectionWatcher(
+            null,
+            this.saveSettings,
+            this.resetSettings,
+            Object.values(this.systemSettings)
+        );
+
+        this.applyService.addWatchersAndFunctionsFromChild([this.sectionWatcher], this.saveSettings, this.resetSettings);
     }
 
     settingsToBeSaved() {

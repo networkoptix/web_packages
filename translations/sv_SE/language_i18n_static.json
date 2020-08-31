@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Denna e-post har redan registrerats i %systemName% -systemet"
+        },
         "buttons": {
             "cancel": "Avbryt",
             "createAccount": "Skapa nytt konto",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Kameror",
             "systemAdministration": "Systemadministration",
             "general": "Allmänt",
             "licenses": "Licenser",

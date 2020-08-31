@@ -185,11 +185,12 @@ interface ModuleInformationReply {
     },
     port: number,
     protoVersion: number,
-    realm: string,
+    realm?: string,
     remoteAddresses: string[],
     runtimeId: string,
     serverFlags: string,
     sslAllowed: true,
+    status?: string,
     systemName: string,
     type: string,
     version: string

@@ -6,6 +6,8 @@ from datetime import datetime
 from distutils.util import strtobool
 
 from django.db import models
+from django.db.models import Q
+from django.db.models.signals import m2m_changed
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -832,16 +834,23 @@ class UserGroupsToAssetPermissions(models.Model):
         if permission and not user.has_perm(permission):
             return False
 
-        groups = UserGroupsToAssetPermissions.objects.filter(asset=asset,
-                                                             group_id__in=user.groups.values_list('id', flat=True))
+        groups = Group.objects.filter(
+            Q(usergroupstoassetpermissions__asset=asset) |
+            Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type),
+            user=user
+        )
         if permission:
             codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
-            groups = groups.filter(group__permissions__codename=codename)
+            groups = groups.filter(permissions__codename=codename)
         return groups.exists()
 
     @staticmethod
+    def check_edit_advanced(user, asset):
+        return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_advanced")
+
+    @staticmethod
     def check_asset_edit_content(user, asset):
-        return UserGroupsToAssetPermissions.check_permission(user, asset, 'cms.edit_content')
+        return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
     def check_customization_permission(user, customization=None, permission=None):
@@ -851,12 +860,12 @@ class UserGroupsToAssetPermissions(models.Model):
     @staticmethod
     def check_customization_access(user, customization=None):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, 'cms.access_customization')
+            check_customization_permission(user, customization, "cms.access_customization")
 
     @staticmethod
     def check_customization_change_account(user, customization=None):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, 'api.change_account')
+            check_customization_permission(user, customization, "api.change_account")
 
     @staticmethod
     def check_customization_publish(user, customization=None):

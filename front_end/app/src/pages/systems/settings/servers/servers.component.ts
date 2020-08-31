@@ -37,9 +37,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     private routeParamsSubscription: Subscription;
 
     private setupDefaults() {
-        this.params = this.route.snapshot.queryParams;
-        this.advanced = (this.params.advanced !== undefined);
-
         this.menuService.section = 'servers';
     }
 
@@ -64,6 +61,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .subscribe(routeParams => {
                 if (routeParams.serverId) {
                     this.params = this.route.snapshot.queryParams;
+                    this.advanced = (this.params.advanced !== undefined);
 
                     this.serverIdFromParams = routeParams.serverId
                         .replace('%7B', '{')

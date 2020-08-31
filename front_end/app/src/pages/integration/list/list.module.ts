@@ -7,6 +7,7 @@ import { NgbModule }       from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule }            from '../../../components/components.module';
+import { DirectivesModule } from '../../../directives/directives.module';
 import { NxIntegrationsListComponent } from './list.component';
 
 @NgModule({
@@ -15,6 +16,7 @@ import { NxIntegrationsListComponent } from './list.component';
         BrowserModule,
         UpgradeModule,
         RouterModule,
+        DirectivesModule,
         NgbModule,
         TranslateModule,
         ComponentsModule

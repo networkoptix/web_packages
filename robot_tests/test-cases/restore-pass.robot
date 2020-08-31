@@ -166,7 +166,8 @@ Should handle click I forgot my password link at restore password page
 Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260    Threaded
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${user}=   Register Random User
+    ${user}=   Get Random Email    ${BASE EMAIL}
+    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
     ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     delete email    ${email}

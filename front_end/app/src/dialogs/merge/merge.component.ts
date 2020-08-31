@@ -362,12 +362,6 @@ export class MergeModalContent {
             if (this.targetSystem.value === this.otherSystem) {
                 this.serverUrlInput.control.markAsTouched();
                 this.serverUrlChange(this.serverUrlInput);
-            } else if (this.targetSystem.localSystemId && this.systemMergeable && !this.dryRunAvailable) {
-                this.serverUrlInput.control.setErrors({ invalid: true });
-                setTimeout(() => {
-                    this.serverUrlInput.control.setErrors({ invalid: false });
-                    this.serverUrlInput.control.updateValueAndValidity();
-                });
             }
         };
 
@@ -610,16 +604,23 @@ export class MergeModalContent {
         if (!this.serverUrlInputExists) {
             this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
         }
+        // for VMS <= 4.0 systems
         if (!this.dryRunAvailable) {
             this.systemUpdating = true;
             await this.system.update().toPromise();
+            this.systemsLoaded = false;
+            this.processedSystems = [];
+            await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
+            // means dryRun is not available
             if (this.system.info.capabilities.merge_systems >= 1) {
-                this.systemsLoaded = false;
-                this.processedSystems = [];
-                await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
                 const res = await this.precheckSystemMerge();
                 return res;
             }
+            // '' means systems are mergeable
+            if (this.systemMergeable === '') {
+                this.machine.transition('adminPassword');
+            }
+            return 'canceled';
         }
         /**
          * targetSystem
@@ -639,32 +640,22 @@ export class MergeModalContent {
 
             this.nonCloudMerge = true;
             this.getSecondaryName();
-            if (!this.dryRunAvailable) {
-                return timer(1000).toPromise()
-                    .then(() => {
-                        this.checkMergeabilityProcess.processing = false;
-                        this.checkMergeabilityProcess.finished = true;
-                        this.checking = false;
-                        this.machine.transition('adminPassword');
-                    });
-            } else {
-                return this.system.mergeSystems(this.serverUrl, true).toPromise()
-                    .then(res => {
-                        if (res.error !== '0') {
-                            switch (res.errorString) {
-                                case 'FAIL':
-                                    throw Error(this.noServerFound);
-                                case 'INCOMPATIBLE':
-                                    throw Error('systemsIncompatible');
-                                case 'DUPLICATE_MEDIASERVER_FOUND':
-                                    throw Error(this.duplicateServers);
-                                default:
-                                    throw Error(this.unknownError);
-                            }
+            return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                .then(res => {
+                    if (res.error !== '0') {
+                        switch (res.errorString) {
+                            case 'FAIL':
+                                throw Error(this.noServerFound);
+                            case 'INCOMPATIBLE':
+                                throw Error('systemsIncompatible');
+                            case 'DUPLICATE_MEDIASERVER_FOUND':
+                                throw Error(this.duplicateServers);
+                            default:
+                                throw Error(this.unknownError);
                         }
-                        return this.targetSystem.isNew ? isNew : res;
-                    });
-            }
+                    }
+                    return this.targetSystem.isNew ? isNew : res;
+                });
         } else {
             this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);

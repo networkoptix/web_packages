@@ -131,8 +131,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[mobile].os === this.activeOs) {
-                    if (this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link !== 'disabled') {
-                        document.location.href = this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link;
+                    if (this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link() !== 'disabled') {
+                        document.location.href = this.LANG.downloads.mobile[this.downloads.mobile[mobile].name].link();
                         return;
                     }
                     break;
@@ -155,14 +155,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
                             return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                         }).map((installer) => {
                             if (!installer.niceName) {
-                                const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
-                                const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
+                                const translatedPlatform = this.LANG.downloads.platforms[installer.platform]();
+                                const translatedAppType = this.LANG.downloads.appTypes[installer.appType]();
                                 if (platform.name === 'sdk' && translatedAppType) {
                                     installer.niceName = translatedAppType;
                                 } else if (translatedPlatform && translatedAppType) {
                                     installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
                                 } else {
-                                    installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
+                                    installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package()}`;
                                 }
                             }
                             installer.url = `${this.downloadsData.releaseUrl}${installer.path}`;
@@ -197,9 +197,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
     setTitle(platform) {
         let title;
         if (platform) {
-            title = this.LANG.pageTitles.downloadPlatform + platform;
+            title = this.LANG.pageTitles.downloadPlatform() + platform;
         } else {
-            title = this.LANG.pageTitles.download;
+            title = this.LANG.pageTitles.download();
         }
         this.pageService.pageTitle = title;
     }

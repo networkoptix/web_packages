@@ -28,6 +28,7 @@
                            name="licenseKey"
                            [ngModel]="license"
                            (ngModelChange)="setLicenseKey($event, newLicenseForm)"
+                           (paste)="updateCursorPosition($event)"
                            required
                            #licenseKey="ngModel"/>
                 </div>

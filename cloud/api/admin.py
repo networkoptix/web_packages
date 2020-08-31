@@ -148,17 +148,21 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         return my_urls + urls
 
     def invite(self, request):
+        group_id = request.GET.get('group_id')
+        group = Group.objects.filter(id=group_id).first() if group_id.isnumeric() else None
+        group_name = group.name if group else None
         context = {
-            'title': 'Invite User',
+            'title': 'Invite User' + (f' to Group "{group_name}"' if group_name else ""),
             'app_label': self.model._meta.app_label,
             'opts': self.model._meta,
-            'has_change_permission': self.has_change_permission(request)
+            'has_change_permission': self.has_change_permission(request),
+            'group': group
         }
 
         if request.method == 'POST':
             form = UserInviteFrom(request.POST, user=request.user)
             if form.is_valid():
-                user_id = form.add_user(request)
+                user_id = form.add_user(request, group=group)
                 return redirect(reverse('admin:api_account_change', args=[user_id]))
         else:
             form = UserInviteFrom(user=request.user)

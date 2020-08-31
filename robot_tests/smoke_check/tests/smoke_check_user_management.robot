@@ -15,7 +15,7 @@ Startup
     Set Suite Variable    @{cloud auth}    ${email users}    ${password}
 #     Users list is loaded very slow(or never) without restarting the server and reloading the page. See CLOUD-4758
     Restart Server    ${server users}:${server users port}    ${local auth}
-    Sleep    45
+    Sleep    90
     Reload Page
     Sleep    15
 
@@ -175,9 +175,9 @@ Client - Share to not existing cloud user
     Input Text    ${REGISTER FIRST NAME INPUT}    SmokeCheck
     Input Text    ${REGISTER LAST NAME INPUT}    NewClientCloudUser
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
-    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick unchecked    ${EMPTY}
+    Run keyword and ignore error    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick unchecked    ${EMPTY}
     Click Element     ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
-    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick checked    ${EMPTY}
+    Run keyword and ignore error    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick checked    ${EMPTY}
     Click Button    ${CREATE ACCOUNT BUTTON}
 
     Log   Step 5: Validate the System page and verify the user information and rights are as expected
@@ -266,8 +266,3 @@ Client - Share to existing cloud user
 #Client - Delete Local User
 
 #Portal - Delete Local User
-
-
-
-
-

@@ -180,6 +180,9 @@
         "viewingOutdatedReport": "Stai visualizzando un rapporto obsoleto."
     },
     "dialogs": {
+        "addUser": {
+            "alreadyExists": "Questa email è già stata registrata nel sistema %systemName%"
+        },
         "buttons": {
             "cancel": "Annulla",
             "createAccount": "Crea nuovo account",
@@ -509,6 +512,7 @@
     },
     "menu": {
         "titles": {
+            "cameras": "Telecamere",
             "systemAdministration": "Amministratore di sistema",
             "general": "Generale",
             "licenses": "Licenze",

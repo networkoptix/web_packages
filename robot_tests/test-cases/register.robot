@@ -245,7 +245,8 @@ Cannot register email that is already activated
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211    C43021    Customizations
     ${email}    Get Random Email    ${BASE EMAIL}
-    Register Account    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
+    Check Language Anonymous
+    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
@@ -271,17 +272,17 @@ Check automatic loggout when registering new account while logged in
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Wait Until Location Is    ${ENV}/register
     Wait Until Elements Are Visible    ${REGISTER FORM}

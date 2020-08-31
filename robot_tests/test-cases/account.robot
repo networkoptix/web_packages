@@ -59,7 +59,7 @@ Accessing the account page from a direct link while logged out asks for login, c
 Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
     [tags]    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Go To    ${url}/account
     Verify in account page
 
@@ -76,44 +76,48 @@ Admin and Owner can access account settings by selecting themselves in users Lis
 Changing first name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 Changing last name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 First name is required
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
     Delete All Text    ${locator}
@@ -131,7 +135,7 @@ First name is required
 Last name is required
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
     Delete All Text    ${locator}
@@ -149,7 +153,7 @@ Last name is required
 Change first and last name shows in system
     [Tags]    C41573    C30655    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
@@ -157,13 +161,13 @@ Change first and last name shows in system
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
+    Log In    ${EMAIL OWNER}    ${password}    button=None
     Go To Users List
     Select User in Users List    ${EMAIL LIVE VIEWER}
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'nameChanged nameChanged')]
     Log Out
     Go To    ${url}/account
-    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -187,10 +191,10 @@ Change first and last name shows in system
 SPACE for first name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT LAST NAME}
+    Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
@@ -198,11 +202,11 @@ SPACE for first name is not valid
 SPACE for last name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
-    Click Element    ${ACCOUNT FIRST NAME}
+    Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
@@ -210,7 +214,7 @@ SPACE for last name is not valid
 Email field is un-editable
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
@@ -218,7 +222,7 @@ Email field is un-editable
 Should respond to tab and go in the correct order
     [tags]    C41838
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
     Press Keys    None    TAB
@@ -239,7 +243,7 @@ Should respond to tab and go in the correct order
 Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     ${lang dict} =    Get Lang List
     @{LANGUAGES LIST} =    Get Dictionary Keys    ${lang dict}
     FOR    ${lang}    IN    @{LANGUAGES LIST}
@@ -273,18 +277,26 @@ Language is changeable on the account page
 
 Language change affects emails
     [tags]    C41575
-    ${russian subject}    Set Variable    Восстановление пароля
-    Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-    Verify in Account Page
-    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element is Visible
-    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
-    Click Element
-    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
-    Click Button    ${ACCOUNT SAVE}
-    Sleep    5
-    Close Browser
+    Go to    ${url}/account
+    ${subject}=   Set Variable If   '''${LANGUAGE}'''=='''ru_RU'''    Reset your password    Восстановление пароля
+    Run Keyword If    '''${subject}'''=='''Восстановление пароля'''    Run Keywords
+    ...    Log In    ${EMAIL NOPERM}    ${password}    button=None    AND
+    ...    Verify in Account Page    AND
+    ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
+    ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
+    ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
+    ...    Click Button    ${ACCOUNT SAVE}    AND
+    ...    Sleep    5    AND
+    ...    Close Browser
+    ...    ELSE   Run Keywords
+    ...    Log In    ${EMAIL NOPERM}    ${password}    button=None    AND
+    ...    Verify in Account Page    AND
+    ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
+    ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
+    ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
+    ...    Click Button    ${ACCOUNT SAVE}    AND
+    ...    Sleep    5    AND
+    ...    Close Browser
 
     Open Browser and go to URL    ${url}
     Go To    ${url}/restore_password
@@ -301,7 +313,7 @@ Language change affects emails
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
     Check Email Subject
     ...    ${email}
-    ...    ${russian subject}
+    ...    ${subject}
     ...    ${BASE EMAIL}
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
@@ -316,7 +328,7 @@ Language change is new default
     ${ja_JP account info} =    Get From Dictionary    ${lang dict}[ja_JP]    ACCOUNT INFORMATION
     ${de_DE account info} =    Get From Dictionary    ${lang dict}[de_DE]    ACCOUNT INFORMATION
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
@@ -327,14 +339,14 @@ Language change is new default
     Sleep    1    #to allow the system to change languages
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${de_DE account info} ']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
-    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info} ']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
 Should open account page in anonymous state

@@ -18,8 +18,8 @@ ${TIME NUMBER INPUT}                       //*[@type='number']
 ${TIME DURATION INTERVAL BUTTON}           //*[@id="genericSelect"]
 ${TIME DURATION INTERVAL TEXT}            ${TIME DURATION INTERVAL BUTTON}/span
 ${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']//a[contains(@class,"dropdown-item inset")]
-${TIME DURATION SELECTION HOURS}           //*[@aria-labelledby='genericSelect']//a/span[text()="hours"]
-${TIME DURATION SELECTION MINUTES}         //*[@aria-labelledby='genericSelect']//a/span[text()="minutes"]
+${TIME DURATION SELECTION HOURS}           //*[@aria-labelledby='genericSelect']//a/span[text()="${HOURS TEXT}"]
+${TIME DURATION SELECTION MINUTES}         //*[@aria-labelledby='genericSelect']//a/span[text()="${MINUTES TEXT}"]
 
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 

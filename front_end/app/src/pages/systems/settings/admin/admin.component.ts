@@ -1,6 +1,6 @@
 import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
+    Component, Inject, OnDestroy, OnInit, ViewContainerRef
+} from '@angular/core';
 import {
     Params, Router, ActivatedRoute
 }                                    from '@angular/router';
@@ -26,9 +26,7 @@ import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_t
 
 interface Settings {
     disconnectDisabled: boolean;
-    mergeDisabled: boolean;
     renameDisabled: boolean;
-    showMerge: boolean;
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -62,6 +60,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
     currentMergeInfo: any = undefined;
+    merging: boolean;
 
     settingsForSystem;
 
@@ -76,13 +75,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
-        const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
-        const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
+        this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         this.settings = {
-            disconnectDisabled : merging,
-            mergeDisabled      : (merging || notAvailable) && !(this.debugMode || this.betaMode),
-            renameDisabled     : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge          : this.system && this.system.isMine
+            disconnectDisabled : this.merging,
+            renameDisabled     : this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master'
         };
     }
 
@@ -101,7 +97,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        @Inject(ViewContainerRef) public viewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -119,9 +116,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.settings = {
             disconnectDisabled : false,
-            mergeDisabled      : true,
-            renameDisabled     : false,
-            showMerge          : true
+            renameDisabled     : false
         };
 
         if (this.settingsServiceSubscription) {

@@ -6,13 +6,13 @@
             (click)="show = !show"
             type="button" id="dropdownMenuButton" data-toggle="dropdown">
 
-        <span class="lang-sm" lang="{{activeLanguage.language}}"></span>
-        <span *ngIf="!short">{{activeLanguage.name}}</span>
+        <span class="lang-sm" lang="{{activeLanguage?.language}}"></span>
+        <span *ngIf="!short">{{activeLanguage?.name}}</span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
-    <ul class="dropdown-menu" *ngIf="languages.length <= 12" [nxArrowNav]="show"
+    <ul class="dropdown-menu" *ngIf="languages?.length <= 12" [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
         aria-labelledby="dropdownMenuButton">
 
@@ -30,7 +30,7 @@
         </li>
     </ul>
 
-    <ul class="dropdown-menu multi-column columns-2" *ngIf="languages.length > 12" [nxArrowNav]="show"
+    <ul class="dropdown-menu multi-column columns-2" *ngIf="languages?.length > 12" [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
         aria-labelledby="dropdownMenuButton">
         <div class="row m-0">

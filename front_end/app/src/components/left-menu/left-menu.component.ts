@@ -1,12 +1,13 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxMenusService } from '../../services/menus.service';
 import { MenuNode } from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { IConfig, NxConfigService } from '../../services/nx-config';
 import { Location } from '@angular/common';
+import { timer, Subject } from 'rxjs';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -17,11 +18,16 @@ import { Location } from '@angular/common';
 export class NxLeftMenuComponent implements OnInit {
     @Input() menuName: string;
     @Input() baseRoute: string;
+    @Input() ignoreQuery = false;
+    @Output() onClick = new EventEmitter();
+    @Output() handlePrefetch = new EventEmitter<number>();
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
     activeRouteNodes: string[] = [];
     openNodes: string[] = [];
+    mouseLeave$ = new Subject();
+    prefetchedDocuments = [];
 
     routeSubscription;
 
@@ -32,6 +38,12 @@ export class NxLeftMenuComponent implements OnInit {
         public location: Location
     ) {
         this.CONFIG = configService.config;
+        this.mouseLeave$.subscribe(assetId => {
+            console.info(
+                `%cSkipped prefetching document ${assetId}`,
+                'color:white;font-size:1.5rem;padding: .75rem 4rem;background-color:navy'
+            );
+        });
     }
 
     updateActive = (url: string) => {
@@ -70,12 +82,31 @@ export class NxLeftMenuComponent implements OnInit {
         }
     }
 
+    prefetchAsset(assetId) {
+        if (assetId) {
+            if (this.prefetchedDocuments.includes(assetId)) {
+                return console.info(
+                    `%cLink already prefetched for ${assetId}`,
+                    'color:gray;font-size:1.25rem;padding: .5rem 4rem;background-color:green'
+                );
+            }
+            timer(250).pipe(takeUntil(this.mouseLeave$)).subscribe(() => {
+                this.prefetchedDocuments.push(assetId);
+                this.handlePrefetch.emit(assetId);
+            });
+        }
+    }
+
     mapParentNodeAndUrl(currentNode, parentNode?) {
         currentNode.parentNode = parentNode;
         if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
             currentNode.url = this.baseRoute + currentNode.asset_id;
         }
         currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
+    }
+
+    handleClick(event) {
+        this.onClick.emit(event);
     }
 
     ngOnInit() {
@@ -89,7 +120,7 @@ export class NxLeftMenuComponent implements OnInit {
                 map((event: NavigationEnd) => event.url),
                 startWith(this.location.path())
             )
-            .subscribe(url => this.updateActive(this.location.path()));
+            .subscribe(url => this.updateActive(this.location.path().split(this.ignoreQuery ? '?' : null)[0]));
     }
 };
 

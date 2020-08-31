@@ -1,16 +1,4 @@
 {
-  "/api/utils/*": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
-  "/admin/": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
   "/api/*": {
     "target": "https://10.1.5.210:7001",
     "secure": false,
@@ -25,12 +13,6 @@
   },
   "/ec2/*": {
     "target": "https://10.1.5.210:7001",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
-  "/static/503.html": {
-    "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -50,12 +32,6 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/static/lang_en_US/views/static/*": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
   "/static/lang_en_US/*": {
     "target": "https://localhost:9000",
     "secure": false,
@@ -64,12 +40,6 @@
     "pathRewrite": {
       "^/static/lang_en_US/views": "/views"
     }
-  },
-  "/static/languages.json": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
   },
   "/static/*": {
     "target": "https://localhost:9000",
