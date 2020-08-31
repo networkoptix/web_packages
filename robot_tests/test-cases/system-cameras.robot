@@ -432,15 +432,46 @@ Recording toggle shows correct options
     ${checked}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
     Should Be Equal    ${checked}    2
 
-Record Always
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+Recording Status
+    [Tags]    C76391    Threaded
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    no license cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    False
+    Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
+
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    False
+    Wait Until Element Is Visible    ${ONE LICENSE WILL BE USED WARNING}
+
+    Select Camera By Name    no audio cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Verify recording controls are open
+    
+Record Always
+    [Tags]    C76408    Threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
+    ${value}    Get Checkbox Value    ${RECORD MOTION RADIO BUTTON}
+    Should Be Equal As Strings    ${value}    False
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
@@ -454,10 +485,11 @@ Record Always
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    [Tags]    C76408    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
@@ -475,10 +507,11 @@ Record Motion
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    [Tags]    C76408    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
@@ -496,6 +529,7 @@ Record Motion + Low Quality
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Check recording triple state
+    [Tags]    C76408    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
@@ -506,7 +540,42 @@ Check recording triple state
     ...    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
     ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
 
+Disabled Motion With Recording
+    [Tags]    C76408    Threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Reload page
+    Toggle Recording
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Element Should Be Enabled    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Elements are Visible    ${RECORD MOTION RADIO BUTTON}/..    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Element Should Be Disabled    ${RECORD MOTION LOW QUALITY RADIO BUTTON}
+    Element Should Be Disabled    ${RECORD MOTION RADIO BUTTON}
+    Wait Until Element Is Visible    ${MOTION DETECTION DISABLED WARNING}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Toggle Recording
+    Click Button    ${ENABLE MOTION DETECTION BUTTON} 
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    
+
 Change FPS
+    [Tags]    C76409    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -568,15 +637,7 @@ Enable/disable motion detection
     ...    ${CANVAS}
     ...    ${DOT-MENU}
 
-Disabled Motion With Recording
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Click Button    ${DOT-MENU}
-    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
-    Click Link    ${DISABLE MOTION DETECTION LINK}
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
+
 
 #Record motion and record motion low quality radio buttons should be disabled
 
