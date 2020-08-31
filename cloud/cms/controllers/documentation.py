@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+from bs4.element import Tag
 from django.conf import settings
 from django.core.cache import caches
 from inlinestyler.utils import inline_css
@@ -23,9 +25,6 @@ class DocumentationCache:
 
 DOC_CACHE = DocumentationCache()
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
-BLOCKS_REGEX = re.compile(r'(<h1(?:(?!<h1).)*)', re.S)
-BLOCK_REGEX = re.compile(r'(<h1.*?>(.*?)</h1>)\n*(.*?)(\n|<br/?>)*$', re.S)
-TAG_REGEX = re.compile(r'<.*?>', re.S)
 
 
 def inline_styles(body, css):
@@ -40,23 +39,33 @@ def inline_styles(body, css):
 def split_blocks(html):
     blocks = []
     if html:
-        block_search = BLOCKS_REGEX.findall(html)
-        for block in block_search:
-            block_match = BLOCK_REGEX.match(block)
-            block_dict = {
-                'titleHTML': block_match.group(1),
-                'contentHTML': block_match.group(3) or ''
-            }
-            block_dict['title'] = TAG_REGEX.sub('', block_dict['titleHTML'])
-            block_dict['content'] = TAG_REGEX.sub('', block_dict['contentHTML'])
-            blocks.append(block_dict)
-        if not block_search:
-            blocks = [{
-                'titleHTML': '',
-                'title': '',
-                'contentHTML': html,
-                'content': TAG_REGEX.sub('', html),
-            }]
+        soup = BeautifulSoup(html, features="html.parser")
+        current_block = {}
+        for node in soup.children:
+            node_content = node.getText() if type(node) == Tag else str(node)
+            node_content = node_content.replace('\n', '')
+            node_contentHTML = str(node).replace('\n', '')
+            if type(node) == Tag and 'content-block' in node.get('class', []):
+                node_type = 'content'
+            else:
+                node_type = 'text'
+
+            if current_block and node_type != current_block['type']:
+                blocks.append(current_block.copy())
+                current_block = {}
+
+            if current_block:
+                current_block['content'] += f'{" " if current_block["content"] else ""}{node_content}'
+                current_block['contentHTML'] += node_contentHTML
+            else:
+                current_block = {
+                    "type": node_type,
+                    "contentHTML": node_contentHTML,
+                    "content": node_content
+                }
+        else:
+            if current_block:
+                blocks.append(current_block)
     return blocks
 
 
@@ -124,6 +133,8 @@ def generate_doc_json(docs, language, draft=False, review=False):
             doc_dict['version'] = version
 
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
+
+            doc_dict['id'] = doc.id
 
             if not draft:
                 DOC_CACHE[cache_key] = doc_dict
