@@ -432,12 +432,43 @@ Recording toggle shows correct options
     ${checked}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
     Should Be Equal    ${checked}    2
 
-Record Always
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+Recording Status
+    [Tags]    C76391    Threaded
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    no license cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    False
+    Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
+
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    False
+    Wait Until Element Is Visible    ${ONE LICENSE WILL BE USED WARNING}
+
+    Select Camera By Name    no audio cam
+    Wait Until Element Is Visible    ${RECORDING CHECK BOX}
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Verify recording controls are open
+    
+Record Always
+    [Tags]    C76408    Threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
+    ${value}    Get Checkbox Value    ${RECORD MOTION RADIO BUTTON}
+    Should Be Equal As Strings    ${value}    False
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -454,10 +485,11 @@ Record Always
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    [Tags]    C76408    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
@@ -475,10 +507,11 @@ Record Motion
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
-    #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    [Tags]    C76408    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
@@ -603,6 +636,7 @@ Enable/disable motion detection
     Wait Until Elements are Visible
     ...    ${CANVAS}
     ...    ${DOT-MENU}
+
 
 
 #Record motion and record motion low quality radio buttons should be disabled
