@@ -2,6 +2,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 import re
 import socket
+import urllib3
 
 
 def get_variables(cloud_url, test_email):
@@ -10,10 +11,13 @@ def get_variables(cloud_url, test_email):
     else:
         relay = 'relay.vmsproxy.hdw.mx'
     vars = {}
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     # the post request gets upset about ssl if you put the s so we remove it
     if cloud_url == "https://vm201.la.hdw.mx":
         p = re.compile("https")
         cloud_url = p.sub("http", cloud_url)
+
     # get the system id for the system with the autotestsanchor email and add it to the dictionary
     r = requests.post(f"{cloud_url}/cdb/system/get",
                       auth=HTTPDigestAuth(f"{test_email}+autotestsanchor@gmail.com", "qweasd 123"),

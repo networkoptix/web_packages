@@ -416,10 +416,13 @@ class NoptixLibrary(object):
         return image.id
 
     def run_container(self, image_name, port, network='host'):
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
         if network == 'host':
             cmd = f'docker run -d --name {image_name}_{port} --restart=always -e PORT={port} --network={network} -t {image_name}'
         elif network == 'bridge':
-            cmd = f'docker run -d --name {image_name}_{port} --restart=always -p {port}:7001 --network={network} -t {image_name}'
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always --mac-address={random_mac} -p {port}:7001 --network={network} -t {image_name}'
         else:
             return 'Not supported'
         subprocess.run(cmd, shell=True)

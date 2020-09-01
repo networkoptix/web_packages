@@ -7,14 +7,38 @@ Suite Teardown    LM Suite Teardown
 *** Test Cases ***
 License Management availability for different users
     [Tags]    C76523
-    FOR    ${user}    IN    ${LM OWNER}    ${LM USERS}[cloudAdmin]
-        Log In    ${user}    ${BASE PASSWORD}
-        Go To    ${ENV}/systems/${sys id 1}
-        Open Licenses Page
-        Validate Licenses Page    trial left=True
-        Log Out
+
+    # System Owner
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 1}
+    Wait Until Elements Are Visible
+    ...    ${SYSTEM ADMINISTRATION LINK}
+    ...    ${LICENSES LINK}
+    ...    ${SYSTEM STORAGE LINK}
+
+    # Check the Licnses menu link position
+    ${menu links}=   Get WebElements    ${MENU LEVEL 3 LINK}
+    ${links text}=   Create List
+    ${exp links text}=   Create List    General    Licenses    Cloud Storage
+
+    FOR    ${link}    IN    @{menu links}
+        ${text}=   Get Text    ${link}
+        Append To List    ${links text}    ${text}
     END
-    FOR    ${user}    IN    ${LM USERS}[viewer]    ${LM USERS}[advancedViewer]    ${LM USERS}[custom]
+    Lists Should Be Equal    ${links text}    ${exp links text}
+
+    Open Licenses Page
+    Validate Licenses Page    trial left=True
+    Log Out
+
+    # System Admin
+    Log In    ${LM USERS}[cloudAdmin]    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 1}
+    Open Licenses Page
+    Validate Licenses Page    trial left=True
+    Log Out
+
+    FOR    ${user}    IN    ${LM USERS}[viewer]    ${LM USERS}[liveViewer]    ${LM USERS}[advancedViewer]    ${LM USERS}[custom]
         Log In    ${user}    ${BASE PASSWORD}
         Go To    ${ENV}/systems/${sys id 1}
         Wait Until Element Is Not Visible    ${LICENSES LINK}
@@ -36,7 +60,6 @@ License Management availability for offline system
     Log Out
 
 License Key Input
-    [Documentation]    Checks "mask", "pattern" and "type" attributes of the input. Visual check is not possible.
     [Tags]    C76534
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
@@ -51,6 +74,28 @@ License Key Input
     ${type}=   Get Element Attribute    ${LICENSE KEY INPUT}    type
     Should Be Equal As Strings    text    ${type}
 
+    Log     Step 2
+    Input Text    ${LICENSE KEY INPUT}    qwe123
+    ${formatted key}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${formatted key}    QWE1-23
+
+    Log     Step 3
+    Input Text    ${LICENSE KEY INPUT}    QWE!@#456
+    ${formatted key}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${formatted key}    QWE4-56
+
+    Log     Step 4
+    Input Text    ${LICENSE KEY INPUT}    1234567890qwertyuiopasdfg
+    ${formatted key}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${formatted key}    1234-5678-90QW-ERTY
+
+    Log     Step 5
+    Input Text    ${LICENSE KEY INPUT}    1234-5678-90QW-ERTY
+    ${formatted key}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${formatted key}    1234-5678-90QW-ERTY
+
+    Log    Step 6: Not implemented
+
     Log Out
 
 Input validation errors
@@ -63,20 +108,26 @@ Input validation errors
 
     Log    C76535: License key input is empty
     Activate Key    ${EMPTY}    success=False    error text=${ENTER LICENSE KEY TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${ENTER LICENSE KEY TEXT}")]
+
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${ENTER LICENSE KEY TEXT}")]
+    Validate Input Normal State
 
     Log    C76536: License key input is not valid
     Activate Key    qwer1234    success=False    error text=${INVALID LICENSE KEY TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${INVALID LICENSE KEY TEXT}")]
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${INVALID LICENSE KEY TEXT}")]
+    Validate Input Normal State
+    Click Button    ${ACTIVATE BUTTON}
+    Validate Input Error     ${INVALID LICENSE KEY TEXT}
+    Activate Key    !@#$1234QWERasdf    success=False    error text=${INVALID LICENSE KEY TEXT}
 
-# Commented out due to CLOUD-5482
-#    Log    C76537: License key has incompatible type
+    Log    C76537: License key has incompatible type - Commented out due to CLOUD-5482
 #    ${key}=   Generate Licenses    brand=dwspectrum
 #    Activate Key    ${key}    success=False    error text=${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}
-#    Input Text    ${LICENSE KEY INPUT}    I love my wife
+#    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
 #    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}")]
+#    Validate Input Normal State
 
     Log    C76538: License already activated in this system
     ${key}=   Generate Licenses
@@ -84,8 +135,9 @@ Input validation errors
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
     Activate Key    ${key}    success=False    error text=${LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT}")]
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT}")]
+    Validate Input Normal State
 
     Log   C76539: License is disabled
     ${key}=   Generate Licenses
@@ -93,17 +145,19 @@ Input validation errors
     ${disabled}=   Is Enabled    ${key}
     Should Not Be True    ${disabled}
     Activate Key    ${key}    success=False    error text=${INVALID LICENSE KEY TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${INVALID LICENSE KEY TEXT}")]
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${INVALID LICENSE KEY TEXT}")]
+    Validate Input Normal State
 
     Log    C76540: License is already activated in another system
     ${key}=   Generate Licenses
-    Activate License    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${key}
-    ${activated}=   License Is Activated    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${key}
-    Should Be True    ${activated}
-    Activate Key    ${key}    success=False    error text=${LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT}")]
+    Activate License     ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    ${hwid}=   Get HWID    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    ${error text}=   Replace String    ${LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT}    %HWID%    ${hwid}
+    Activate Key    ${key}    success=False    error text=${error text}
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]
+    Validate Input Normal State
 
     Log    C76541: Only one starter license is allowed per system
     ${starter 1}=   Generate Licenses    license_type=starter
@@ -112,8 +166,9 @@ Input validation errors
     Should Be True    ${activated}
     ${starter 2}=   Generate Licenses    license_type=starter
     Activate Key    ${starter 2}    success=False    error text=${ONLY ONE STARTER LICENSE ALLOWED TEXT}
-    Input Text    ${LICENSE KEY INPUT}    hello world
-    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${ONLY ONE STARTER LICENSE ALLOWED TEXT}")]
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(text(), "${ONLY ONE STARTER LICENSE ALLOWED TEXT}")]
+    Validate Input Normal State
 
     Log Out
 
@@ -131,25 +186,26 @@ Server response errors: Failed to get response from license server
 
     Activate Key    ${key}    success=False
     Check For Alert    ${LICENSE SERVER DID NOT RESPOND TEXT}    timeout=10
+#    Commented out due to a bug
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${key}
 
     Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${LM HOST}
     Log Out
 
 Server response errors: License key is expired
     [Tags]    server_errors
-    Log    Not implemented - see CLOUD-5631: Failed to activate an expired license
-#    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
-#    Log In    ${LM OWNER}    ${BASE PASSWORD}
-#    Go To    ${ENV}/systems/${sys id 1}
-#    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-#    Open Licenses Page
-#    Validate Licenses Page    trial left=True
-#    ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
-#    ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
-#    Activate Key    success=False
-#    Check For Alert    ${LICENSE IS EXPIRED TEXT}    timeout=10
+    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    Log In    ${LM OWNER}    ${BASE PASSWORD}
+    Go To    ${ENV}/systems/${sys id 1}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Open Licenses Page
+    Validate Licenses Page    trial left=True
+    ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
+    ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
+    Activate Key    ${key}    success=False    error text=${LICENSE IS EXPIRED TEXT}
 
-#    Log Out
+    Log Out
 
 Server response errors: Media server becomes offline during license activation
     [Tags]    C76545    server_errors
@@ -181,6 +237,8 @@ Server response errors: Server offline(System has two servers)
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
+    ${pre selected}=   Get Text    ${BIND TO SERVER DROPDOWN}
+    Should Be Equal As Strings    ${pre selected}    ${server 2}
     ${key}=   Generate Licenses
     Input Text    ${LICENSE KEY INPUT}    ${key}
     Click Button    ${BIND TO SERVER DROPDOWN}
@@ -213,6 +271,9 @@ Successful scenarios
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
+#    Commented out due to a bug
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
     Log    Step 3
     Validate Licenses Page    trial left=True    clean=False
@@ -226,11 +287,14 @@ Successful scenarios
 
     Log    C76549: Successful not first license activation
     Log    Step 2
-    ${exp ts}=   Get Current Date    increment=365d    result_format=datetime
+    ${exp ts}=   Get Current Date    time_zone=UTC    increment=365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    license_type=analogencoder     n_cameras=16    fixed_expiration_ts=${exp ts}
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
+#    Commented out due to a bug
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
     Log    Step 3
     Validate Licenses Page    trial left=True    clean=False
@@ -245,7 +309,6 @@ Successful scenarios
     Log    C76554: Successful trial license activation
     Log    Step 2
     Activate Trial
-    Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
     Validate Licenses Page    trial left=False    clean=False
 
     Log    Step 3
@@ -260,7 +323,7 @@ Successful scenarios
     Log Out
 
 License Details Block: Purchase permanent keys
-    [Tags]    C76532    C76557    details
+    [Tags]    C76532    C76550    C76557    C76561    C76562    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
@@ -268,16 +331,18 @@ License Details Block: Purchase permanent keys
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    @{lic types}=   Create List    digital    analogencoder    iomodule    vmax    videowall    starter
+    @{types}=   Create List    digital    analogencoder    iomodule    vmax    videowall    starter    bridge
     ${n}=   Set Variable    0
-    FOR     ${type}    IN    @{lic types}
+    FOR     ${type}    IN    @{types}
         ${rand}=   Evaluate    random.randint(10, 100)
+        ${rand}=   Set Variable If    '''${type}''' == '''starter'''    4    ${rand}
         ${key}=   Generate Licenses    license_type=${type}    n_cameras=${rand}
         ${k}=   Evaluate    ${n}%2+2
         Activate Key    ${key}    server name=${server ${k}}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${k}}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
+        Validate Summary Record    ${LIC TYPES}[${type}]    ${rand}    ${rand}
         Validate License Info    ${key}    server num=${k}
         ${n}=   Evaluate    ${n}+1
     END
@@ -285,7 +350,7 @@ License Details Block: Purchase permanent keys
     Log Out
 
 License Details Block: SAAS keys
-    [Tags]    C76560    details
+    [Tags]    C76560    C76561    details
     Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
@@ -293,15 +358,16 @@ License Details Block: SAAS keys
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    @{lic types}=   Create List    digital    analogencoder    iomodule    vmax    videowall
-    FOR     ${type}    IN    @{lic types}
+    @{types}=   Create List    digital    analogencoder    iomodule    vmax    videowall    bridge
+    FOR     ${type}    IN    @{types}
         ${rand}=   Evaluate    random.randint(31, 101)
-        ${exp ts}=   Get Current Date    increment=${rand}d    result_format=datetime
+        ${exp ts}=   Get Current Date    time_zone=UTC    increment=${rand}d    result_format=datetime
         ${key}=   Generate Licenses    order_type=saas    license_type=${type}    n_cameras=${rand}    fixed_expiration_ts=${exp ts}
         Activate Key    ${key}    server name=${server 2}
         ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
+        Validate Summary Record    ${LIC TYPES}[${type}]    ${rand}    ${rand}
         Validate License Info    ${key}    server num=2
     END
 
@@ -321,6 +387,7 @@ License Details Block: Video Wall licenses
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo vw}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
+    Validate Summary Record    Video Wall    17    17
     Validate License Info    ${demo vw}    server num=2
 
     Log Out
@@ -334,11 +401,23 @@ License Details Block: License with date within 30 days
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    ${key}=   Generate Licenses    order_type=demo    trial_days=30
-    Activate Key    ${key}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    # Such key is not red-colored in current implementation(due to local - UTC time difference)
+    ${exp ts}=   Get Current Date    time_zone=UTC    increment=30d    result_format=%Y-%m-%d
+    ${exp ts}=   Add Time To Date    ${exp ts}    23:59:59    result_format=datetime
+    ${saas}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
+    Activate Key    ${saas}    server name=${server 2}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${saas}
     Should Be True    ${activated}
-    Validate License Info    ${key}    server num=2
+    Validate License Info    ${saas}    server num=2
+    Wait Until Element Has Style    //header[h4="${saas}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    rgba(43, 56, 63, 1)
+
+    # Will fail if local time is less than UTC time(e.g. in Burbank)
+    ${demo}=   Generate Licenses    order_type=demo    trial_days=30
+    Activate Key    ${demo}    server name=${server 2}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo}
+    Should Be True    ${activated}
+    Validate License Info    ${demo}    server num=2
+    Run keyword and ignore error    Wait Until Element Has Style    //header[h4="${demo}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    ${ERROR COLOR WITH OPACITY}
 
     Log Out
 
@@ -360,6 +439,8 @@ License Details Block: Deactivated license
         Deactivate Licenses    ${key}
         Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
         Sleep    10
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+        Should Not Be True    ${activated}
         Reload Page
         Validate Licenses Page    several servers=True    trial left=True
         Wait Until Element Is Not Visible    //header[h4="${key}"]
@@ -369,6 +450,7 @@ License Details Block: Deactivated license
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate License Info    ${key}    server num=2
+    Wait Until Element Has Style    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Deactivation left")]    color    ${ERROR COLOR WITH OPACITY}
 
     Log Out
 
@@ -381,7 +463,7 @@ License Details Block: License with expired status
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
+    ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
     ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}
     Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}    ${hwids[1]}
@@ -393,7 +475,6 @@ License Details Block: License with expired status
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
     Validate License Info    ${key}    status=Expired    server num=2
-
     Log Out
 
 License Details Block: License with error status
@@ -480,7 +561,7 @@ License Summary Block: License key is expired
 
     ${num expired}=   Evaluate    random.randint(10, 100)
     ${total}=   Evaluate    ${num good}+${num expired}
-    ${exp ts}=   Get Current Date    increment=-365d    result_format=datetime
+    ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
     ${saas vw}=   Generate Licenses    order_type=saas    license_type=videowall    n_cameras=${num expired}    fixed_expiration_ts=${exp ts}
     ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}
     Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas vw}    ${hwids[1]}
@@ -537,7 +618,7 @@ VMS integration
         ${n}=   Evaluate    ${types counter}[${type}]+${rand}
         Set To Dictionary    ${types counter}    ${type}=${n}
         ${t}=   Evaluate    ${t}+${rand}
-        ${exp ts}=   Get Current Date    increment=${rand}d    result_format=datetime
+        ${exp ts}=   Get Current Date    time_zone=UTC    increment=${rand}d    result_format=datetime
         ${saas}=   Generate Licenses    order_type=saas    license_type=${type}    n_cameras=${rand}    fixed_expiration_ts=${exp ts}
         ${demo}=   Generate Licenses    order_type=demo    license_type=${type}    n_cameras=${rand}    trial_days=${rand}
         Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas}
