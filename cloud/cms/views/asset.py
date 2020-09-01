@@ -23,6 +23,7 @@ from cms.models import UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 
 from .integration import INTEGRATION_CACHE
+from ..controllers.documentation import DOC_CACHE
 
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
@@ -245,11 +246,14 @@ def review(request):
                 else:
                     messages.success(request, f"Version {publishing_errors} has been published")
                 INTEGRATION_CACHE.clear_cache()
+                DOC_CACHE.clear_cache()
             else:
                 messages.error(request, f"Cannot publish on this portal")
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
+            if asset.is_documentation:
+                DOC_CACHE.clear_cache()
 
     elif revoke and can_publish:
         if asset.is_cloud_portal and not asset.can_preview_on_portal:

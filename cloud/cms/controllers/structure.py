@@ -113,7 +113,13 @@ def process_node(node_obj, node_struct):
         node_obj.condition = node_struct.get('condition', '')
         node_obj.authentication = MenuNode.AUTH_CHOICES.__getattr__(node_struct.get('authentication', 'both'))
         node_obj.icon = node_struct.get('icon', '')
-        node_obj.order = node_struct.get('order', 0)
+        if node_struct.get('asset', False) and not node_obj.asset:
+            asset_type = AssetType.objects.filter(
+                type=AssetType.ASSET_TYPES.__getattr__(node_struct.get('asset_type', 'documentation')), name=''
+            ).order_by('pk').first()
+            asset = Asset.objects.create(name=node_obj.name, asset_type=asset_type)
+            asset.customizations.set(Customization.objects.all())
+            node_obj.asset = asset
         node_obj.save(touched=False)
 
         enabled = node_struct.get('enabled', False)
@@ -125,7 +131,8 @@ def process_node(node_obj, node_struct):
     for inner_node_structure in node_struct.get('nodes', []):
         inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
         if not inner_node_obj:
-            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True)
+            last_node = node_obj.nodes.order_by('id').last()
+            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
         process_node(inner_node_obj, inner_node_structure)
 
 
@@ -143,7 +150,8 @@ def read_menu_structure(filename):
             for node_structure in menu.get('nodes', []):
                 node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
                 if not node_obj:
-                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True)
+                    last_node = menu_obj.nodes.order_by('id').last()
+                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
                 process_node(node_obj, node_structure)
     Menu.cache_all_customizations()
 

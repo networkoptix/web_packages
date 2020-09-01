@@ -3,11 +3,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from django.conf import settings
 
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
-from cms.controllers.documentation import generate_doc_json
-from cms.models import Asset, AssetType
+from cms.controllers.documentation import generate_doc_json, DOC_CACHE
+from cms.models import Asset, AssetType, get_cached_menu
 from util.helpers import get_language_object_from_request
 import re
 
@@ -122,3 +123,29 @@ def get_pages(request):
         'docs': page_obj.object_list, 'page': page_obj.number, 'pageSize': paginator.per_page,
         'totalPages': paginator.num_pages, 'totalResults': paginator.count,
     })
+
+
+def modify_about_dict(parent, language):
+    for node in parent:
+        asset_id = node.get('asset_id', None)
+        if asset_id and node.get('asset_type', 'documentation'):
+            asset = Asset.objects.filter(id=asset_id).first()
+            if asset:
+                docs = generate_doc_json([asset], language=language)
+                if docs:
+                    node['asset'] = docs[0]
+        if node.get('nodes', None):
+            modify_about_dict(node['nodes'], language)
+
+
+@api_view(("GET",))
+@permission_classes((AllowAny,))
+def about_page(request):
+    language = get_language_object_from_request(request)
+    cache_id = f'{settings.CUSTOMIZATION}-{language.code}--about_page'
+    about_menu = DOC_CACHE[cache_id]
+    if not about_menu:
+        about_menu = get_cached_menu(settings.CUSTOMIZATION, 'Developers About Page')
+        modify_about_dict(about_menu, language=language)
+        DOC_CACHE[cache_id] = about_menu
+    return api_success(about_menu)

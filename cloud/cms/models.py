@@ -22,6 +22,27 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
+class MenuCache:
+    def __init__(self):
+        self.cache = caches['menus']
+
+    def __getitem__(self, key):
+        return self.cache.get(key, None)
+
+    def __setitem__(self, key, doc):
+        from cms.controllers.documentation import DOC_CACHE
+        self.cache.set(key, doc)
+        DOC_CACHE.clear_cache()
+
+    def clear_cache(self):
+        from cms.controllers.documentation import DOC_CACHE
+        self.cache.clear()
+        DOC_CACHE.clear_cache()
+
+
+MENU_CACHE = MenuCache()
+
+
 def create_default_permission_group(asset):
     if not (asset.is_cloud_portal or asset.is_integration):
         return None
@@ -160,12 +181,13 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def get_cached_menu(customization_name):
-    menu_cache = caches['menus']
-    menu_customization = menu_cache.get(customization_name, None)
+def get_cached_menu(customization_name, name=None):
+    menu_customization = MENU_CACHE[customization_name]
     if menu_customization is None:
         menu_customization = Menu.generate_menus(customization_name)
-        menu_cache.set(customization_name, menu_customization)
+        MENU_CACHE[customization_name] = menu_customization
+    if name:
+        return menu_customization[name]
     return menu_customization
 
 
@@ -363,6 +385,10 @@ class Asset(models.Model):
     @property
     def is_article(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.article)
+
+    @property
+    def is_documentation(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.documentation)
 
     @property
     def is_cloud_portal(self):
@@ -1207,10 +1233,9 @@ class Menu(models.Model):
 
     @classmethod
     def cache_all_customizations(cls, **kwargs):
-        menus_cache = caches['menus']
         structures = cls.generate_menus()
         for customization, structure in structures.items():
-            menus_cache.set(customization, structure)
+            MENU_CACHE[customization] = structure
 
 
 class MenuNode(models.Model):
@@ -1240,6 +1265,7 @@ class MenuNode(models.Model):
             'name': cloud_portal_asset.replace_global_values(self.name, global_contexts_dict),
             'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
             'asset_id': self.asset.id if self.asset else None,
+            'asset_type': AssetType.ASSET_TYPES[self.asset.asset_type.type] if self.asset else None,
             'new_window': self.new_window,
             'icon': self.icon,
             'authentication': self.AUTH_CHOICES[self.authentication],

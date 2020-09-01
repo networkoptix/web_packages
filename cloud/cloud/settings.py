@@ -241,6 +241,7 @@ CACHES = {
     },
     "documentation": {
         "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 24 * 60 * 60,  # 1 day
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
         "KEY_PREFIX": 'documentation'

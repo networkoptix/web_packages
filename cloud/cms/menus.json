@@ -10,7 +10,6 @@
         "new_window": false,
         "icon": "",
         "authentication": "both",
-        "order": 0,
         "enabled": true,
         "nodes": [
           {
@@ -20,7 +19,6 @@
             "new_window": true,
             "icon": "",
             "authentication": "both",
-            "order": 0,
             "enabled": true
           },
           {
@@ -30,7 +28,6 @@
             "new_window": true,
             "icon": "",
             "authentication": "both",
-            "order": 1,
             "enabled": true
           },
           {
@@ -40,7 +37,6 @@
             "new_window": true,
             "icon": "",
             "authentication": "both",
-            "order": 2,
             "enabled": true
           },
           {
@@ -50,7 +46,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 3,
             "enabled": false
           }
         ]
@@ -62,7 +57,6 @@
         "new_window": false,
         "icon": "",
         "authentication": "both",
-        "order": 1,
         "enabled": true,
         "nodes": [
           {
@@ -72,7 +66,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 0,
             "enabled": true
           },
           {
@@ -82,7 +75,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 1,
             "enabled": true
           },
           {
@@ -92,7 +84,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 2,
             "enabled": true
           }
         ]
@@ -104,7 +95,6 @@
         "new_window": false,
         "icon": "",
         "authentication": "both",
-        "order": 2,
         "enabled": true,
         "nodes": [
           {
@@ -114,7 +104,6 @@
             "new_window": true,
             "icon": "",
             "authentication": "both",
-            "order": 0,
             "enabled": false
           },
           {
@@ -124,7 +113,6 @@
             "new_window": true,
             "icon": "",
             "authentication": "both",
-            "order": 1,
             "enabled": true
           },
           {
@@ -134,7 +122,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 2,
             "enabled": false
           },
           {
@@ -144,7 +131,6 @@
             "new_window": false,
             "icon": "",
             "authentication": "both",
-            "order": 3,
             "enabled": true
           }
         ]
@@ -160,7 +146,6 @@
         "url": "/content/about",
         "new_window": false,
         "enabled": true,
-        "order": 1,
         "authentication": "both"
       },
       {
@@ -168,7 +153,6 @@
         "url": "/download",
         "new_window": false,
         "enabled": true,
-        "order": 2,
         "authentication": "both"
       },
       {
@@ -177,7 +161,6 @@
         "new_window": false,
         "enabled": true,
         "condition": "%INTEGRATION_STORE_ENABLED%",
-        "order": 3,
         "authentication": "both"
       },
       {
@@ -185,7 +168,6 @@
         "url": "https://support.networkoptix.com/hc/en-us/categories/360000737654-Develop-with-Nx-Meta",
         "new_window": true,
         "enabled": false,
-        "order": 4,
         "authentication": "both"
       },
       {
@@ -193,7 +175,6 @@
         "url": "%SUPPORT_LINK%",
         "new_window": true,
         "enabled": true,
-        "order": 5,
         "authentication": "both"
       },
       {
@@ -201,7 +182,6 @@
         "url": "/content/eula",
         "new_window": false,
         "enabled": true,
-        "order": 6,
         "authentication": "both"
       },
       {
@@ -209,7 +189,6 @@
         "url": "%PRIVACY_LINK%",
         "new_window": true,
         "enabled": true,
-        "order": 7,
         "authentication": "both"
       },
       {
@@ -218,7 +197,6 @@
         "new_window": false,
         "condition": "%IPVD_ENABLED%",
         "enabled": true,
-        "order": 8,
         "authentication": "both"
       }
     ]
@@ -227,5 +205,73 @@
     "name": "Knowledgebase",
     "depth": 2,
     "nodes": []
+  },
+  {
+    "name": "Developers About Page",
+    "depth": 3,
+    "nodes": [
+      {
+        "name": "Intro Text",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      },
+      {
+        "name": "What is Possible",
+        "enabled": true
+      },
+      {
+        "name": "Supported Tech",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Icon Links",
+            "asset": true,
+            "asset_type": "documentation",
+            "enabled": true,
+            "nodes": []
+          },
+          {
+            "name": "Text Links",
+            "url": "",
+            "asset": true,
+            "asset_type": "documentation",
+            "enabled": true,
+            "nodes": []
+          }
+        ]
+      },
+      {
+        "name": "Get Started",
+        "enabled": true,
+        "nodes": []
+      },
+      {
+        "name": "Developer Tools",
+        "enabled": true
+      },
+      {
+        "name": "Integrations Store",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Information",
+            "enabled": true,
+            "nodes": []
+          },
+          {
+            "name": "Examples of Plugins",
+            "enabled": true,
+            "nodes": []
+          }
+        ]
+      },
+      {
+        "name": "Special Support",
+        "asset":  true,
+        "asset_type": "documentation",
+        "enabled": true
+      }
+    ]
   }
 ]

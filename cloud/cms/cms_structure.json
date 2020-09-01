@@ -2157,7 +2157,7 @@
             "value": "",
             "description": "URL to access the page",
             "type": "text",
-            "optional": false,
+            "optional": true,
             "advanced": true,
             "unique": true,
             "translatable": false,
