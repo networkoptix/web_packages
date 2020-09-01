@@ -341,12 +341,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number}) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number}) {
         let endpoint = '';
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
         } else if (assetIdOrSearchObject.query) {
-            endpoint = `?filter=${assetIdOrSearchObject.query}`;
+            endpoint = `?filter=${assetIdOrSearchObject.query}&page=${assetIdOrSearchObject.page || 1}`;
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
         this.cacheService.addToCache(route);

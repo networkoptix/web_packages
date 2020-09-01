@@ -7,8 +7,7 @@
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
 <ng-template #normalCard let-node="node">
-    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
-        <h2 class="section-title">{{node.title}}</h2>
+    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}" class="my-2">
         <div [innerHTML]="node.content | safe:'html'"></div>
     </div>
 </ng-template>
@@ -49,19 +48,36 @@
 <!-- End of Card Templates -->
 
 <!-- Search Results Templates, Need to update once spec is updated -->
-
-<ng-template #resultBlock let-result="result">
-    <h1>{{result.title}}</h1>
-    <ng-container *ngFor="let node of result.blocks">
-        <ng-container *ngTemplateOutlet="normalCard;context{node:node}"></ng-container>
+<ng-template #moreLoading>
+    <ng-container *ngIf="loadingNext">
+        <nx-pre-loader type="results-pre-loader"></nx-pre-loader>
     </ng-container>
 </ng-template>
 
+<ng-template #resultSnippet let-snippet="snippet">
+    <p [innerHTML]="snippet.content | safe:'html'"></p>
+</ng-template>
+
+<ng-template #resultBlock let-doc="doc">
+    <div class=" narrow-section my-2">
+        <h3 (click)="navigateSearch(doc)" [innerHTML]="doc.title" class="doc-link"></h3>
+        <ng-container *ngFor="let snippet of doc.snippets">
+            <ng-container *ngTemplateOutlet="resultSnippet;context{snippet:snippet}"></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+
 <ng-template #searchResultsTemplate let-results="results">
-    Search Results: {{results.length}}
-    <ng-container *ngFor="let result of results">
-        <ng-container *ngTemplateOutlet="resultBlock;context{result:result}"></ng-container>
+    <h2 class="results-heading">{{results.length ? ('Search Results:' | translate) : ('No Matching Search Results' | translate)}}</h2>
+    <ng-container *ngFor="let doc of results">
+        <ng-container *ngTemplateOutlet="resultBlock;context{doc:doc}"></ng-container>
     </ng-container>
+    <div *ngIf="currentSearchResultPage < totalSearchResultPages" class="more-results">
+        <div *ngIf="!loadingNext;else moreLoading"
+            (click)="fetchNext()"
+            (nxOnIntersect)="fetchNext()"
+            [intersectionDebounce]="CONFIG.search.debounceTime"></div>
+    </div>
 </ng-template>
 <!-- End of Search Results Templates -->
 
@@ -72,7 +88,7 @@
         [ignoreQuery]="true"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
-        <nx-search [(ngModel)]="search"
+        <nx-search [ngModel]="search"
             (ngModelChange)="updateSearchQuery($event)"
             [placeholder]="'Knowledge Base Search' | translate"
             layout="compact"></nx-search>
