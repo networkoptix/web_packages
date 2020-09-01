@@ -642,6 +642,10 @@ Enable/disable motion detection
     ...    ${DOT-MENU}
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 99845ef40a6e45460efd13717de08ab4913488c8
 #Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
