@@ -25,6 +25,7 @@
             "aot": true,
             "buildOptimizer": true,
             "assets": [
+              "app/customization",
               "app/images",
               "app/fonts",
               "app/views",

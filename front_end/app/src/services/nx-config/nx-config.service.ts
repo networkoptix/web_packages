@@ -4,7 +4,7 @@ import { HttpClient }        from '@angular/common/http';
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
 import { environment }       from '../../../environments/environment';
-import webAdminMenus         from '../../../customization/menu.json';
+import webAdminMenus         from '../../../customization/menus.json';
 
 @Injectable({
     providedIn: 'root'

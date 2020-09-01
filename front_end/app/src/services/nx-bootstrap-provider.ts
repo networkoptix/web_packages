@@ -43,7 +43,7 @@ export class NxBootstrapProvider {
     }
 
     private getWebadminConfig() {
-        return this.http.get('/static/customization/config.json');
+        return this.http.get('/static/customization/webadmin_config.json');
     }
 
     load(): Promise<boolean> {
