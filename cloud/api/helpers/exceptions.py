@@ -22,6 +22,7 @@ class ErrorCodes(Enum):
 
     # Cloud DB errors:
     cloud_invalid_response = 'cloudInvalidResponse'
+    vms_request_failure = 'vmsRequestFailure'
 
     # Portal critical errors (unexpected)
     portal_critical_error = 'portalError'
@@ -366,6 +367,10 @@ def log_error(request, error, log_level):
     # Explicit check so that it will not affect superusers.
     if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO
+
+    # Lower log level of merge errors
+    elif error.error_text in ["DUPLICATE_MEDIASERVER_FOUND", "FAIL", "INCOMPATIBLE"]:
+        log_level = logging.WARNING
 
     logger.log(log_level, error_formatted)
     return error_formatted

@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.controllers import cloud_api, cloud_gateway
 
-from api.helpers.exceptions import handle_exceptions, api_success, require_params, \
-    APINotAuthorisedException, APIRequestException, ErrorCodes
+from api.helpers.exceptions import api_success, require_params, \
+    APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
 
 from cloud import settings
 import hashlib
@@ -88,6 +88,8 @@ def merge(request):
     except APINotAuthorisedException:
         raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                   error_data={'password': ['Not recognized']})
+    except APIInternalException as e:
+        raise APIRequestException(e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
     return api_success(data)
 
 
