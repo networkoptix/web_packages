@@ -122,12 +122,12 @@ Input validation errors
     Validate Input Error     ${INVALID LICENSE KEY TEXT}
     Activate Key    !@#$1234QWERasdf    success=False    error text=${INVALID LICENSE KEY TEXT}
 
-    Log    C76537: License key has incompatible type - Commented out due to CLOUD-5482
-#    ${key}=   Generate Licenses    brand=dwspectrum
-#    Activate Key    ${key}    success=False    error text=${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}
-#    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
-#    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}")]
-#    Validate Input Normal State
+    Log    C76537: License key has incompatible type
+    ${key}=   Generate Licenses    brand=dwspectrum
+    Activate Key    ${key}    success=False    error text=${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}
+    Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
+    Wait Until Element Is Not Visible    ${ACTIVATE TRIAL FORM}//span[contains(text(), "${LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT}")]
+    Validate Input Normal State
 
     Log    C76538: License already activated in this system
     ${key}=   Generate Licenses
@@ -186,7 +186,7 @@ Server response errors: Failed to get response from license server
 
     Activate Key    ${key}    success=False
     Check For Alert    ${LICENSE SERVER DID NOT RESPOND TEXT}    timeout=10
-#    Commented out due to a bug
+#    Commented out due to CLOUD-5714
 #    ${input val}=   Get Formatted Key Input
 #    Should Be Equal As Strings    ${input val}    ${key}
 
@@ -271,7 +271,7 @@ Successful scenarios
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-#    Commented out due to a bug
+#    Commented out due to CLOUD-5714
 #    ${input val}=   Get Formatted Key Input
 #    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
@@ -292,7 +292,7 @@ Successful scenarios
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-#    Commented out due to a bug
+#    Commented out due to CLOUD-5714
 #    ${input val}=   Get Formatted Key Input
 #    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
@@ -411,8 +411,7 @@ License Details Block: License with date within 30 days
     Validate License Info    ${saas}    server num=2
     Wait Until Element Has Style    //header[h4="${saas}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    rgba(43, 56, 63, 1)
 
-    # Will fail if local time is less than UTC time(e.g. in Burbank)
-    ${demo}=   Generate Licenses    order_type=demo    trial_days=30
+    ${demo}=   Generate Licenses    order_type=demo    trial_days=29
     Activate Key    ${demo}    server name=${server 2}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo}
     Should Be True    ${activated}

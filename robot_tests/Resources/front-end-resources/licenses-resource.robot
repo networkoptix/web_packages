@@ -107,12 +107,11 @@ Activate Trial
     Click Button    ${ACTIVATE TRIAL BUTTON}
     Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
     Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
-#    Commented out due to a bug
-#    ${input val}=   Get Formatted Key Input
-#    Should Be Equal As Strings    ${input val}    ${EMPTY}
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
 Get Formatted Key Input
-    ${formatted key}=   Get Text   ${FORMATTED KEY}
+    ${formatted key}=   Get Text    ${FORMATTED KEY}
     [Return]    ${formatted key}
 
 Validate Input Error
