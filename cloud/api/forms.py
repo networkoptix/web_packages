@@ -136,7 +136,7 @@ class UserInviteFrom(forms.Form):
             if group is None:
                 messages.error(request, "User already has a cloud account!")
             elif group.user_set.filter(email=user.email).exists():
-                    messages.error(request, f'User already in "{group.name}" group.')
+                messages.error(request, f'User already in "{group.name}" group.')
             else:
                 group.user_set.add(user)
                 messages.success(request, f'User successfully added to "{group.name}" group.') 

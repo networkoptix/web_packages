@@ -7,7 +7,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0013_remove_group_all_assets'),
         ('api', '0024_auto_20190930_1831'),
     ]
 

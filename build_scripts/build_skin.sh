@@ -27,6 +27,7 @@ dir=../skins/$SKIN
         npm run setSkin $SKIN
         npm run build
         rm -rf dist/src
+        rm -rf dist/customization
         # Save the repository info.
         echo "Create version.txt"
         if [ -d "$2/.hg" ]; then
