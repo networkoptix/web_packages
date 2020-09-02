@@ -383,6 +383,8 @@ EMAIL_HOST_PASSWORD = conf['smtp']['password']
 EMAIL_PORT = conf['smtp']['port']
 EMAIL_USE_TLS = conf['smtp']['tls']
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
 
 # Package Settings
 

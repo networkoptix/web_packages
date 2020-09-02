@@ -61,7 +61,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 this.clearSearch();
                 const assetId = urlSegment[0]?.path || this.headerService.currentLocation.assetId;
                 this.searchQuery$.next(this.route.snapshot.queryParams.search);
-                return this.cloudApi.getDocumentation(assetId)
+                const state = this.route.snapshot.queryParamMap.get('state');
+                return this.cloudApi.getDocumentation(assetId, state)
                     .pipe(
                         tap(({ title, blocks, contentHTML }) => {
                             this.node = KnowledgeNode.normalHeader(

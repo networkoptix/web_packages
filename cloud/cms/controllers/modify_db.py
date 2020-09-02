@@ -477,15 +477,18 @@ def remove_unused_records(asset):
 
 
 def generate_preview_link(context=None, asset=None, state=""):
+    params = urlencode({'state': state, 'id': asset.id})
     if asset:
         if asset.is_integration:
             return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
         elif asset.is_article:
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
             article_url = article_url.value if article_url else "tmp_url"
-            return f'/content/{article_url}?' + urlencode({'state': state, 'id': asset.id})
+            return f'/content/{article_url}?{params}'
         elif asset.is_agreement:
-            return '/agreement?' + urlencode({'state': state, 'id': asset.id})
+            return f'/agreement?{params}'
+        elif asset.is_documentation:
+            return f'/developers/knowledge-base/{asset.id}?{params}'
 
     return f"{context.url}?preview=true" if context and context.url else None
 
@@ -576,7 +579,7 @@ def get_records_for_version(asset, version, customization):
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}
     context_preview_links = {'whole_preview': generate_preview_link(
-        None, asset, 'review'
+        None, asset, 'pending'
     )}
     used_data_structures = set()
 
@@ -593,7 +596,7 @@ def get_records_for_version(asset, version, customization):
             contexts[context_name] = [record]
             if asset.asset_type.type != AssetType.ASSET_TYPES.integration:
                 context_preview_links[context_name] = generate_preview_link(
-                    record.data_structure.context, asset, 'review'
+                    record.data_structure.context, asset, 'pending'
                 )
     return contexts, context_preview_links
 

@@ -1,5 +1,5 @@
 import { Injectable }               from '@angular/core';
-import { HttpClient, HttpHeaders }  from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -341,14 +341,18 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number}) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number}, state?: string) {
         let endpoint = '';
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
         } else if (assetIdOrSearchObject.query) {
             endpoint = `?filter=${assetIdOrSearchObject.query}`;
         }
-        const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
+        let route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
+        if (state) {
+            const params = new HttpParams().set('state', state);
+            route += `?${params.toString()}`;
+        }
         this.cacheService.addToCache(route);
         return this.http.get<any>(route);
     }
