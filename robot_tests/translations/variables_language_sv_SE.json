@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar.",
     "ENTER LICENSE KEY TEXT": "Ange licensnyckel",
     "INVALID LICENSE KEY TEXT": "Ogiltig licensnyckel",
+    "LICENSE IS EXPIRED TEXT": "Failed to activate license: License is expired",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "Licenstypen är inte kompatibel med ditt system",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "Licensnyckeln har redan aktiverats i detta system",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "Licensnyckeln har redan aktiverats och är bunden till servern med hårdvaru-ID",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID %HWID% in another system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Endast en startlicens är tillåten per system",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport",
     "FAILED TO ACTIVATE LICENSE TEXT": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
     "SERVER RESTARTED TEXT": "Servern har startat om.",
     "HOURS TEXT": "timmar",
-    "MINUTES TEXT": "minuter"
+    "MINUTES TEXT": "minuter",
+    "NO IMAGE TEXT": "NO IMAGE",
+    "CAMERA UNAUTHORIZED TEXT": "Camera is unauthorized",
+    "CAMERA OFFLINE TEXT": "Camera is offline",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Professional license is required",
+    "ONE LICENSE WILL BE USED TEXT": "1 professional license channel will be used",
+    "MOTION DETECTION DISABLED TEXT": "Motion detection is disabled",
+    "FOUND TEXT": "found"
 }

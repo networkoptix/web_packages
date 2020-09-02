@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "Testlizenz aktiviert. Ab heute können Sie 30 Tage lang mit bis zu 4 Kameras aufnehmen.",
     "ENTER LICENSE KEY TEXT": "Lizenzschlüssel eingeben",
     "INVALID LICENSE KEY TEXT": "Ungültiger Lizenzschlüssel",
+    "LICENSE IS EXPIRED TEXT": "Failed to activate license: License is expired",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "Der Lizenztyp ist nicht mit Ihrem System kompatibel",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "Der Lizenzschlüssel wurde in diesem System bereits aktiviert",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "Der Lizenzschlüssel wurde bereits aktiviert und mit der Hardware-ID an den Server gebunden",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID %HWID% in another system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Pro System ist nur eine Starterlizenz erlaubt",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Fehler beim Aktivieren der Lizenz. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "Portnummern kleiner als 1024 sind beschränkt. Der Server kann unzugänglich werden.",
     "SERVER RESTARTED TEXT": "Server wurde erfolgreich neu gestartet.",
     "HOURS TEXT": "stunden",
-    "MINUTES TEXT": "minuten"
+    "MINUTES TEXT": "minuten",
+    "NO IMAGE TEXT": "NO IMAGE",
+    "CAMERA UNAUTHORIZED TEXT": "Camera is unauthorized",
+    "CAMERA OFFLINE TEXT": "Camera is offline",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Professional license is required",
+    "ONE LICENSE WILL BE USED TEXT": "1 professional license channel will be used",
+    "MOTION DETECTION DISABLED TEXT": "Motion detection is disabled",
+    "FOUND TEXT": "found"
 }
