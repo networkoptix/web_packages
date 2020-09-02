@@ -473,6 +473,9 @@ class ServerManager {
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
+            if (camera.name === 'update name') {
+                console.dir(camera);
+            }
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
@@ -527,7 +530,7 @@ class ServerManager {
     }
 
     private parseFps(schedule: ITask[], max: number): number | 'various' {
-        const schedulesWithFps = schedule.filter(({ fps, bitrateKbps }) => fps !== 0 && bitrateKbps).map(({ fps }) => fps);
+        const schedulesWithFps = schedule.filter(({ fps, recordingType }) => fps !== 0 && recordingType !== 'RT_Never').map(({ fps }) => fps);
         const uniqueFps = new Set(schedulesWithFps);
         const currentFps = Array.from(uniqueFps);
         return schedulesWithFps.length === 0 ? max : currentFps.length === 1 ? currentFps[0] : 'various';
