@@ -473,9 +473,6 @@ class ServerManager {
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
-            if (camera.name === 'update name') {
-                console.dir(camera);
-            }
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
