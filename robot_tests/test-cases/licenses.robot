@@ -574,6 +574,11 @@ License Summary Block: License key is expired
     Validate License Info    ${pur vw}
     Validate License Info    ${saas vw}    status=Expired
 
+    ${expires path}=   Set Variable    //header[h4="${saas vw}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]
+    ${class}=   Get Element Attribute    ${expires path}    class
+    Should Contain    ${class}    error
+    Wait Until Element Has Style    ${expires path}    color    ${ERROR COLOR WITH OPACITY}
+
     Log Out
 
 VMS integration
