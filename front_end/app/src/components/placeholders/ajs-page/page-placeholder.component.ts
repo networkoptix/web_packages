@@ -25,7 +25,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 @Component({
     selector      : 'nx-ajs-page-placeholder',
     templateUrl   : 'page-placeholder.component.html',
-    styleUrls     : ['page-placeholder.component.scss'],
+    styleUrls     : ['page-placeholder.component.scss', '../page/page-placeholder.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 export class NxAjsPagePlaceholderComponent implements OnInit, OnDestroy {
