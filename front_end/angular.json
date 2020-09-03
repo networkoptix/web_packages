@@ -25,6 +25,7 @@
             "aot": true,
             "buildOptimizer": true,
             "assets": [
+              "app/customization",
               "app/images",
               "app/fonts",
               "app/views",
@@ -51,6 +52,7 @@
                   "with": "app/environments/environment.prod.ts"
                 }
               ],
+              "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,

@@ -127,7 +127,7 @@ def find_or_add_language(language_code):
 
         with codecs.open(language_json_path, 'r', 'utf-8') as file_descriptor:
             language_content = json.load(file_descriptor)
-        language_name = language_content["ajs"]["language_name"]
+        language_name = language_content["language_name"]
         language.name = language_name
         language.save()
 

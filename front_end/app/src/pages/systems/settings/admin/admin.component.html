@@ -10,7 +10,7 @@
                     <nx-tag static *ngIf="!CONFIG.cloudSystemId">{{LANG.system.not_connected() | uppercase}}</nx-tag>
                 </div>
                 <div class="float-left">
-                    <h2 class="system-name mb-2">%CLOUD_NAME%</h2>
+                    <h2 class="system-name mb-2" translate>%CLOUD_NAME%</h2>
                     <span class="system-owner">
                         <a [href]="CONFIG.cloudHost" target="_blank">{{CONFIG.cloudHost}}</a>
                     </span>

@@ -4,7 +4,7 @@ import {
 import { ActivatedRoute, Router }    from '@angular/router';
 import { HttpClient, HttpParams }    from '@angular/common/http';
 import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
-import { SessionStorageService }     from 'ngx-store';
+import { SessionStorageService }     from 'ngx-webstorage';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -70,11 +70,11 @@ export class NxContentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.staticContent = JSON.parse(this.sessionStorage.get('staticContent')) || {};
+        this.staticContent = JSON.parse(this.sessionStorage.retrieve('staticContent')) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
         window.onbeforeunload = (event) => {
-            this.sessionStorage.remove('staticContent');
+            this.sessionStorage.clear('staticContent');
         };
 
         this.agreeProcess = this.processService.createProcess(() => {
@@ -169,7 +169,7 @@ export class NxContentComponent implements OnInit {
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;
-                this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
+                this.sessionStorage.store('staticContent', JSON.stringify(this.staticContent));
             }).catch((ex) => { console.error(ex); });
     }
 }

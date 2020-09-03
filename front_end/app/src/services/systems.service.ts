@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy }                       from '@angular/core';
-import { LocalStorageService }                         from 'ngx-store';
+import { LocalStorageService }                         from 'ngx-webstorage';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
 
@@ -185,7 +185,7 @@ export class NxSystemsService implements OnDestroy {
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                const currentSystemId = this.localStorage.get('systemId');
+                const currentSystemId = this.localStorage.retrieve('systemId');
                 if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
                     this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
                 }

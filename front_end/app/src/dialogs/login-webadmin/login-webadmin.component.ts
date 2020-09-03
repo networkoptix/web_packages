@@ -5,7 +5,7 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { LocalStorageService }       from 'ngx-store';
+import { LocalStorageService }       from 'ngx-webstorage';
 
 import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -41,7 +41,7 @@ export class LoginWebadminModalContent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.localStorage.get('email') };
+        this.auth = { email: this.localStorage.retrieve('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
@@ -97,7 +97,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     setEmail(email) {
         this.auth.email = email;
-        this.localStorage.set('email', this.auth.email);
+        this.localStorage.store('email', this.auth.email);
     }
 
     ngOnInit() {

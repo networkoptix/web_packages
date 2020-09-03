@@ -11,6 +11,7 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
 import { NxEditableDirective }        from './nx-editable.directive';
 import { NxResizeObserver }           from './nx-resize.directive';
 import { NxAddSvgSrc }                from './add-data.directive';
+import { NxIntersectionObserver }     from './nx-intersection.directive';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { NxAddSvgSrc }                from './add-data.directive';
         NxUrlValidatorDirective,
         NxEditableDirective,
         NxResizeObserver,
-        NxAddSvgSrc
+        NxAddSvgSrc,
+        NxIntersectionObserver
     ],
     entryComponents : [],
     exports         : [
@@ -39,7 +41,8 @@ import { NxAddSvgSrc }                from './add-data.directive';
         NxUrlValidatorDirective,
         NxEditableDirective,
         NxResizeObserver,
-        NxAddSvgSrc
+        NxAddSvgSrc,
+        NxIntersectionObserver
     ]
 })
 export class DirectivesModule {

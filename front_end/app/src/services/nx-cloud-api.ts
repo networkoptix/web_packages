@@ -341,18 +341,20 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number}, state?: string) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
         let endpoint = '';
+        const params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
+            if (state) {
+                params.set('state', state);
+            }
         } else if (assetIdOrSearchObject.query) {
-            endpoint = `?filter=${assetIdOrSearchObject.query}`;
+            endpoint = `?filter=${assetIdOrSearchObject.query}&page=${assetIdOrSearchObject.page || 1}`;
+            params.set('filter', `${assetIdOrSearchObject.query}`);
+            params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }
-        let route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
-        if (state) {
-            const params = new HttpParams().set('state', state);
-            route += `?${params.toString()}`;
-        }
+        const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route);
     }

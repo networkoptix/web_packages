@@ -6,7 +6,7 @@ import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
 }                                    from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
+import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
     Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
@@ -204,7 +204,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             //     showSmallRightNav = false;
             // }
 
-            // Updates view states to be used by tempate
+            // Updates view states to be used by template
             this.showIcon$.next(showIcon);
             this.showSmallRightNav$.next(showSmallRightNav);
             this.showTabs$.next(showTabs);
@@ -218,7 +218,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     private systemIdUpdate(id) {
         this.systemId = id;
-        this.localStorage.set('systemId', this.systemId);
+        this.localStorage.store('systemId', this.systemId);
 
         if (this.systemId && !this.systems) {
             this.systemsService
@@ -295,7 +295,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe((event: Event) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
-                    this.localStorage.set('systemId', this.systemId);
+                    this.localStorage.store('systemId', this.systemId);
                     this.updateActiveSystem();
                     this.updateActive();
                 }
@@ -368,7 +368,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.systemId = this.localStorage.get('systemId');
+                this.systemId = this.localStorage.retrieve('systemId');
 
                 if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
                     this.systemId = this.route.firstChild.snapshot.params.systemId;

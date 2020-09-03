@@ -34,7 +34,7 @@ def add_menu_to_i18n():
     with open(dynamic_i18n_path, 'r') as language:
         json_data = json.load(language)
 
-    with open('../cloud/cms/menus.json') as cms_static_menus:
+    with open('./app/customization/menus.json') as cms_static_menus:
         menus = json.load(cms_static_menus)
 
     json_data.update(parse_menus(menus))

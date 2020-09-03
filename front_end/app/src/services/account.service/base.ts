@@ -1,6 +1,6 @@
 import { Inject, OnDestroy, Injector }                    from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
-import { LocalStorageService }                            from 'ngx-store';
+import { LocalStorageService }                            from 'ngx-webstorage';
 import { Router }                                         from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
@@ -271,7 +271,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.loginDialogActive = true;
         return this.dialogs
             .login(true, true).then((result) => {
-                this.localStorageService.set('loginRegister', true);
+                this.localStorageService.store('loginRegister', true);
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);
                 }
@@ -318,7 +318,7 @@ export abstract class BaseAccount implements OnDestroy {
                             .logout()
                             .finally(() => {
                                 this.stopAccountPoll();
-                                this.localStorageService.clear('all'); // Clear session
+                                this.localStorageService.clear(); // Clear session
                                 // this.sessionService.invalidateSession(); // Clear session
                                 return this.loginWithAuthKey(auth).then(() => {
                                     return this.document.location.reload();

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, tap, delay } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -15,7 +15,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NxKnowledgeBaseComponent implements OnInit {
     CONFIG: IConfig;
-
+    currentSearchResultPage = 0;
+    totalSearchResultPages = 0;
+    loadingNext = false;
     loading = true;
     searchMode = false;
     searchLoading = false;
@@ -25,6 +27,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     searchQuery$ = new BehaviorSubject('');
 
     updateSearchQuery({ query }) {
+        this.search = { query };
         this.searchQuery$.next(query);
     }
 
@@ -34,11 +37,31 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.searchMode = false;
     }
 
+    navigateSearch(doc) {
+        this.router.navigate([doc.docId], { relativeTo: this.route.parent });
+    }
+
+    fetchNext = () => {
+        this.loadingNext = true;
+        this.currentSearchResultPage += 1;
+        this.fetchSearchHandler(
+            { query: this.searchQuery$.value, page: this.currentSearchResultPage }
+        ).subscribe((results) => {
+            this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
+            this.loadingNext = false;
+        });
+    }
+
+    fetchSearchHandler({ query, page }) {
+        return this.cloudApi.getDocumentation({ query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+    }
+
     constructor(
         configService: NxConfigService,
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         this.CONFIG = configService.config;
     }
@@ -51,6 +74,27 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 'color:green;font-size:1.25rem',
                 'color:white;font-size:.75rem;padding:0.5rem 0'
             );
+        });
+    }
+
+    parseResults({ docs }) {
+        const highlight = (
+            text: string, start, end
+        ) => [0, start || 0, end || 0].map((
+            splitAt, curInd, fullText
+        ) => text.slice(
+            splitAt, fullText[curInd + 1]
+        )).reduce((
+            result, section, curInd
+        ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
+
+        return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId }) => {
+            return {
+                docId,
+                snippets: (snippets || []).map(({ content, matchStart, matchEnd }) => (
+                    { content: highlight(content, matchStart, matchEnd) })),
+                title: highlight(title, titleMatchStart, titleMatchEnd)
+            };
         });
     }
 
@@ -85,10 +129,12 @@ export class NxKnowledgeBaseComponent implements OnInit {
             switchMap((query) => {
                 this.searchMode = !!query;
                 this.searchLoading = this.searchMode;
-                return this.cloudApi.getDocumentation({ query }).pipe(delay(this.CONFIG.search.debounceTime));
+                this.currentSearchResultPage = 1;
+                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
             })).subscribe((results) => {
+            this.totalSearchResultPages = results.totalPages;
             this.searchLoading = false;
-            this.searchResults$.next(results);
+            this.searchResults$.next(this.parseResults(results));
         });
     };
 };
