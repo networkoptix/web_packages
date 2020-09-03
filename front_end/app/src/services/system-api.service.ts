@@ -130,7 +130,7 @@ export class NxSystemAPI {
 
         Object.entries(customHeaders).forEach(([header, value]: [string, string]) => {
             headers = headers.set(header, value);
-        })
+        });
 
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get(fullUrl, { headers, params }).pipe(
@@ -320,7 +320,13 @@ export class NxSystemAPI {
     }
 
     getLicenses() {
-        return this.get('/ec2/getLicenses');
+        return this.getRequestAggregator(['ec2/getLicenses', 'ec2/getHardwareIdsOfServers'])
+            .pipe(map(({ reply }: any) => {
+                return ({
+                    licenses : reply['ec2/getLicenses'],
+                    hwids    : reply['ec2/getHardwareIdsOfServers'].reply[0].hardwareIds
+                });
+            }));
     }
 
     activateLicense(key) {
