@@ -375,13 +375,39 @@ Share with registered user give user access to system
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
+    Log    Step 1
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-
+    
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
+    
+    Log    Step 2
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email text}    Get Email Body    ${email}
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
+
+    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
+    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
+    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
+    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
+   
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
+    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Log    Step 3-4
+    ${links}    Get Links From Email    ${email}
+    @{expected links}    Set Variable    mailto:noptixautoqa+owner@gmail.com    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate   
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
+    Delete Email    ${email}
+    Close Mailbox
+
+    Log    Step 5-6
     Go To    ${url}/register/${code}
     Wait Until Elements Are Visible
     ...    ${REGISTER FIRST NAME INPUT}
@@ -398,7 +424,13 @@ Share with unregistered user - brings them to registration page with code with c
     Click Button    ${CREATE ACCOUNT BUTTON}
     # New user gets logged in right away
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-
+    Log    Step 7 skipped thick client login
+    Log    Step 8
+    Log Out
+    Log In    ${random email}    ${BASE PASSWORD}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
+    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    
 Check share email for registered user
     [Tags]    C47297
     ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
