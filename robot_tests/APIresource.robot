@@ -245,6 +245,30 @@ Detach Server From Cloud
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+Get Server Id
+    [Arguments]    ${system url}    ${system auth}    ${server name}
+    Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    FOR    ${server}    IN    @{resp.json()}
+        ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
+        Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
+    END
+
+Remove Resource From System
+    [Arguments]    ${system url}    ${system auth}    ${resource id}
+    &{data}=   Create Dictionary    id=${resource id}
+    Create Digest Session    Remove Resourcesession    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Post Request    Remove Resource session     /ec2/removeResource    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Remove Server From System
+    [Arguments]    ${system url}    ${system auth}    ${server url}    ${server auth}    ${server name}
+    Detach Server From System    ${server url}    ${server auth}
+    ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
+    Remove Resource From System    ${system url}    ${system auth}    ${id}
+
 Activate License
     [Arguments]    ${auth}    ${server url}    ${license}
     &{data}=   Create Dictionary    licenseKey=${license}
