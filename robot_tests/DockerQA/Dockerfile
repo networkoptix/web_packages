@@ -21,7 +21,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Remove root tool as we aren't running server as a service
-RUN rm /opt/networkoptix/mediaserver/bin/root-tool-bin
+# RUN rm /opt/networkoptix/mediaserver/bin/root-tool-bin
 
 # Copy files for container's and server's configs
 COPY entrypoint.sh config_helper.sh /opt/networkoptix/mediaserver/bin/

@@ -107,8 +107,9 @@ Activate Trial
     Click Button    ${ACTIVATE TRIAL BUTTON}
     Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
     Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
-    ${input val}=   Get Formatted Key Input
-    Should Be Equal As Strings    ${input val}    ${EMPTY}
+#    Commented out due to CLOUD-5714
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
 Get Formatted Key Input
     ${formatted key}=   Get Hidden Inner HTML    ${FORMATTED KEY}

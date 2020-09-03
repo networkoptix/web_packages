@@ -1,6 +1,8 @@
-"""'Creates images for 4.0 and 4.1 servers for all cloud hosts using the deb files from current folder'"""
+"""'Creates images for 4.0, 4.1 and 4.2 servers for all cloud hosts using the deb files from current folder'"""
 import os
 import subprocess
+
+vms_4_0 = vms_4_1 = vms_4_2 = None
 
 for root, dirs, files in os.walk("."):
     for file in files:
@@ -19,7 +21,10 @@ cloud_hosts = {
 }
 
 for key, val in cloud_hosts.items():
-    subprocess.run(f'docker build -t 4.0_{key} --build-arg mediaserver_deb={vms_4_0} --build-arg cloud_host={val} .', shell=True)
-    subprocess.run(f'docker build -t 4.1_{key} --build-arg mediaserver_deb={vms_4_1} --build-arg cloud_host={val} .', shell=True)
-    subprocess.run(f'docker build -t 4.2_{key} --build-arg mediaserver_deb={vms_4_2} --build-arg cloud_host={val} .', shell=True)
+    if vms_4_0:
+        subprocess.run(f'docker build -t 4.0_{key} --build-arg mediaserver_deb={vms_4_0} --build-arg cloud_host={val} .', shell=True)
+    if vms_4_1:
+        subprocess.run(f'docker build -t 4.1_{key} --build-arg mediaserver_deb={vms_4_1} --build-arg cloud_host={val} .', shell=True)
+    if vms_4_2:
+        subprocess.run(f'docker build -t 4.2_{key} --build-arg mediaserver_deb={vms_4_2} --build-arg cloud_host={val} .', shell=True)
 
