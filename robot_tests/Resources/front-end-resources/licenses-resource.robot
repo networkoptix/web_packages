@@ -111,7 +111,7 @@ Activate Trial
     Should Be Equal As Strings    ${input val}    ${EMPTY}
 
 Get Formatted Key Input
-    ${formatted key}=   Get Text    ${FORMATTED KEY}
+    ${formatted key}=   Get Hidden Inner HTML    ${FORMATTED KEY}
     [Return]    ${formatted key}
 
 Validate Input Error

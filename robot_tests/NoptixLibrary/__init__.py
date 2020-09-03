@@ -52,6 +52,12 @@ class NoptixLibrary(object):
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
 
+    def get_hidden_inner_html(self, locator):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        element = seleniumlib.driver.find_element_by_xpath(locator)
+        text = element.get_attribute('innerHTML')
+        return text
+
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
         if self.get_os() == "MacOS":
