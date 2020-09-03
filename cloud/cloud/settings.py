@@ -65,6 +65,7 @@ if not CUSTOMIZATION:
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (
+        os.path.join(STATIC_LOCATION, 'common/static'),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
     )
@@ -212,13 +213,15 @@ CACHES = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
-        "TIMEOUT": 60 * 60 * 24  # 1 day
+        "TIMEOUT": 60 * 60 * 24,  # 1 day
+        "KEY_PREFIX": "push_authentication"
     },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "push_config"
     },
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],

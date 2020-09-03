@@ -524,8 +524,7 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
             asset_type__type=AssetType.ASSET_TYPES.documentation
         )
         if not self.request.user.is_superuser:
-            editable_assets = self.request.user.assets_with_permission('cms.edit_content')
-            qs = qs.filter(id__in=editable_assets)
+            qs = qs.filter(customization__name__in=self.request.user.customizations_with_permission('cms.publish_version'))
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
@@ -549,7 +548,7 @@ def get_asset_state(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
     asset = get_object_or_404(Asset, id=asset_id, customizations__name=customization)
-    if not request.user.is_superuser or not (
+    if not request.user.is_superuser and not (
             UserGroupsToAssetPermissions.check_customization_publish(request.user) and
             UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
     ):

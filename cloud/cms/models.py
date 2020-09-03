@@ -29,10 +29,10 @@ class MenuCache:
     def __getitem__(self, key):
         return self.cache.get(key, None)
 
-    def __setitem__(self, key, doc):
+    def __setitem__(self, key, menu):
         from cms.controllers.documentation import DOC_CACHE
-        self.cache.set(key, doc)
         DOC_CACHE.clear_cache()
+        self.cache.set(key, menu)
 
     def clear_cache(self):
         from cms.controllers.documentation import DOC_CACHE
@@ -1279,7 +1279,8 @@ class MenuNode(models.Model):
                 node_list = []
                 for node in nodes:
                     if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
-                            (not node.condition or global_contexts_dict.get(node.condition, False)):
+                            (not node.condition or global_contexts_dict.get(node.condition, False)) and \
+                            (not node.asset or node.asset.version_id(customization.name) != 0):
                         node_list.append(node.process_node(
                             cloud_portal_asset, customization, global_contexts_dict, depth + 1, max_depth
                         ))
