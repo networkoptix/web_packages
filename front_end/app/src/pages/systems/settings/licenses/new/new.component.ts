@@ -67,6 +67,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         if (response.reply) {
                             this.system.licensesModified = this.license;
                             this.license = '';
+                            this.formattedKey = '';
                             this.licenseForm.controls.licenseKey.markAsUntouched();
 
                             this.dialogsService
