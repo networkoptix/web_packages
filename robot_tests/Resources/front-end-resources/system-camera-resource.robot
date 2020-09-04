@@ -1,4 +1,9 @@
 *** Keywords ***
+Start up
+    [Arguments]    ${url}
+    Reset All Cameras
+    Open Browser and go to URL    ${url}
+
 Go To Cameras
     ${location}=   Get Location
     Go To    ${location}/cameras
@@ -16,9 +21,9 @@ Verify on Cameras Page
 
 Verify Recording Options are Visible
     Wait Until Elements are Visible
-    ...    ${RECORD ALWAYS RADIO BUTTON}
-    ...    ${RECORD MOTION RADIO BUTTON}
-    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..
+    ...    ${RECORD MOTION RADIO BUTTON}/..
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
     ...    ${FPS INPUT}
     ...    ${QUALITY DROPDOWN}
 
@@ -71,12 +76,6 @@ Camera Name Should Be
         Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']}    ${name}
     END
 
-Get Recording Status
-
-Get Recording Mode
-
-Get Recording Quality
-
 Get Camera Attribute By Camera Name
     [Arguments]    ${auth}    ${server url}    ${name}    ${attribute}
     ${cameras}=    Get Cameras    ${auth}    ${server url}
@@ -91,3 +90,20 @@ Verify recording controls are open
     ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
     ...    ${FPS INPUT}                             
     ...    ${QUALITY DROPDOWN}
+
+Reset Camera
+    [Arguments]    ${camera name}    ${server ip}
+    ${auth}=    Create List    admin    ${BASE PASSWORD}
+    ${data}=   evaluate    json.loads('''${${camera name} JSON 1}''')
+    Set All Camera Attributes    ${server ip}    ${auth}    ${data}
+    
+    ${data2}=   evaluate    json.loads('''${${camera name} JSON 2}''')
+    Set All Camera Add Params    ${server ip}    ${auth}    ${data2}
+
+Reset All cameras
+    Reset Camera    good cam    ${AUTO SYS IP}
+    Reset Camera    unauth cam    ${AUTO SYS IP}
+    Reset Camera    offline cam    ${AUTO SYS IP}
+    Reset Camera    no license cam    https://10.1.5.126:7005
+    Reset Camera    no audio cam    ${AUTO SYS IP}
+    Reset Camera    triple state cam    https://10.1.5.126:7005
