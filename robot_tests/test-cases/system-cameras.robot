@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Start up    ${url}
 Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
@@ -29,7 +29,14 @@ Camera settings is available to owner admin and custom with permission
     Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
+    Wait Until Elements are Visible
+    ...    ${CAMERAS VIEW BUTTON}
+    ...    ${EDITABLE TITLE}
+    ...    ${ASPECT RATIO DROPDOWN}
+    ...    ${ROTATION DROPDOWN}
+    ...    ${ENABLE AUDIO CHECKBOX}
+    ...    ${EDIT CREDENTIALS BUTTON}
+    ...    ${RECORDING CHECK BOX}
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
@@ -88,7 +95,7 @@ Camera status match server
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
-    Should Be True    ${value}
+    Should Not Be True    ${value}
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
     Should Be Equal As Strings    ${value}    Offline
@@ -101,8 +108,6 @@ Camera status match server
     ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
     ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
-    
-
 Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -114,7 +119,7 @@ Warning dialog appears when changes are made on navigating away and works correc
     Wait Until Elements are Visible
     ...    ${APPLY CHANGES BUTTON}     
     ...    ${DISCARD CHANGES BUTTON}   
-    ...    ${CANCEL CHANGES BUTTON}    
+    ...    ${CANCEL CHANGES BUTTON}
     ...    ${APPLY CHANGES CLOSE BUTTON}
     ...    ${APPLY CHANGES QUESTION}  
 
@@ -126,6 +131,7 @@ Rename Camera
     Select Camera by Name    good cam
 
     Click Element    ${EDITABLE TITLE}
+    Sleep    1
     Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
@@ -172,7 +178,7 @@ Rename Camera
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName     good cam
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -186,7 +192,7 @@ Name change in client changes in cloud
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
 
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    good cam 
+   Reset Camera    good cam    ${AUTO SYS IP}
 
 View button
     [Tags]    C76262    threaded
@@ -256,12 +262,7 @@ Aspect Ratio
     Aspect Ratio Should Be    1:1
     Reload Page
     Aspect Ratio Should Be    1:1
-    Change Aspect Ratio    Auto
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    Aspect Ratio Should Be    Auto
-    Reload Page
-    Aspect Ratio Should Be    Auto
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Rotation
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -275,13 +276,7 @@ Rotation
     Rotation Should Be    90˚
     Reload Page
     Rotation Should Be    90˚
-    Change Rotation    0˚
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    Rotation Should Be    0˚
-    Reload Page
-    Rotation Should Be    0˚       
+    Reset Camera    good cam    ${AUTO SYS IP}  
 
 Audio enable Disabled
     [Tags]    C76378    threaded
@@ -303,8 +298,7 @@ Audio enable Disabled
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    audioEnabled    ${False}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Audio unavailable
     [Tags]     C76376    threaded
@@ -316,7 +310,7 @@ Audio unavailable
     Select Camera by Name    no audio cam
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
 
-No iamge placeholder shows for offline and unauthorized cameras
+No image placeholder shows for offline and unauthorized cameras
     [Tags]    C76275    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
@@ -374,11 +368,11 @@ Changing credentials from invalid ones to valid ones makes the camera authorized
     Click Button    ${EDIT CREDENTIALS BUTTON}
     Verify Authentication Form
     Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    admin
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    root
     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    90
+    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${status}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
     Should Be Equal As Strings    ${status}    Online
@@ -479,10 +473,7 @@ Record Always
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Record Motion
     [Tags]    C76408    Threaded
@@ -501,10 +492,7 @@ Record Motion
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Record Motion + Low Quality
     [Tags]    C76408    Threaded
@@ -523,10 +511,7 @@ Record Motion + Low Quality
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Check recording triple state
     [Tags]    C76408    Threaded
@@ -567,21 +552,16 @@ Disabled Motion With Recording
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Toggle Recording
-    Click Button    ${ENABLE MOTION DETECTION BUTTON} 
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
     
-
 Change FPS
     [Tags]    C76409    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
-    #Click Element    ${FPS INPUT}
     Input Text    ${FPS INPUT}    20
     sleep    20
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -591,27 +571,22 @@ Change FPS
     Verify on Cameras Page
     ${fps}    Get Element Attribute    ${FPS INPUT}    value
     Should Be Equal As Numbers    ${fps}    20
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Change Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"Low")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${LOW TEXT}")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${LOW TEXT}")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
-    Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 Enable/disable motion detection
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -640,7 +615,7 @@ Enable/disable motion detection
     Wait Until Elements are Visible
     ...    ${CANVAS}
     ...    ${DOT-MENU}
-
+    Reset Camera    good cam    ${AUTO SYS IP}
 
 
 #Record motion and record motion low quality radio buttons should be disabled
@@ -664,3 +639,48 @@ Placeholder shows when system is offline
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
+
+Motion sensitivity block for cameras with different statuses
+    [Tags]    C76418    Threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    offline cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${MOTION SENSITIVITY IMAGE}
+
+    Select Camera By Name    good cam
+    Verify on Cameras Page
+    Wait Until Element Is Visible    ${MOTION SENSITIVITY IMAGE}
+
+    Select Camera By Name    unauth cam
+    Verify on Cameras Page
+    Element Should Not Be Visible    ${MOTION SENSITIVITY IMAGE}
+
+Recording Quality dropdown menu functionality for camera with schedule
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    triple state cam
+    Verify Recording Options are Visible
+    Wait Until Elements Are Visible   
+    ...    ${RECORDING MODE ERROR}
+    ...    ${FPS ERROR}           
+    ...    ${QUALITY ERROR}        
+    Element Should Contain    ${QUALITY DROPDOWN}/span    ${DIFFERENT VALUES TEXT}
+    Click Button    ${QUALITY DROPDOWN}
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${HIGH TEXT}")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${HIGH TEXT}")]
+    Wait Until Elements Are Visible    
+    ...    ${SYSTEM SAVE}
+    ...    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Visible    ${SAVE ERROR}
+
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reset Camera    triple state cam    https://10.1.5.126:7005
