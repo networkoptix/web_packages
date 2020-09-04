@@ -95,7 +95,7 @@ Camera status match server
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
-    Should Be True    ${value}
+    Should Not Be True    ${value}
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
     Should Be Equal As Strings    ${value}    Offline
