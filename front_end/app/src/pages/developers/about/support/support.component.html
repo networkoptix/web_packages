@@ -1,10 +1,10 @@
 <div class="support-footer">
-    <h2>{{supportHeading}}</h2>
-    <div class="support-wrapper" [ngStyle]="{backgroundColor: backgroundColor, backgroundImage: 'url(' + backgroundImage + ')'}">
+    <h2 class="support-link"[routerLink]="supportNode.url">{{supportNode.title}}</h2>
+    <div class="support-wrapper" [ngStyle]="{backgroundImage: 'url(' + CONFIG.icons.dir + supportNode.icon + ')'}">
         <div class="support-block">
-            <p class="support-body">{{supportBody}}</p>
-            <button [routerLink]="forumLink">{{forumText}}</button>
-            <p>{{forumLead}}</p>
+            <div *ngFor="let block of supportNode.asset.blocks"
+                class="support-body"
+                [innerHTML]="block.contentHTML"></div>
         </div>
     </div>
 </div>

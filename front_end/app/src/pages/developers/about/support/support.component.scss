@@ -16,6 +16,13 @@
     }
 }
 
+.support-link {
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .support-wrapper {
     display: flex;
     flex-direction: row;
@@ -23,6 +30,7 @@
     flex-wrap: nowrap;
     width: 100%;
     margin: 16px 0;
+    background-color: $brand_core;
     background-size: cover !important;
     background-position: center !important;
     @include bootstrap.media-breakpoint-down(sm) {

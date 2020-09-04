@@ -1,26 +1,28 @@
 <!-- Templates -->
 <ng-template #toolBlock let-tool="tool">
-    <div class="card hoverable tool-card" [routerLink]="tool.link">
+    <div class="card hoverable tool-card" [routerLink]="tool.url">
         <header>
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tool.icon"></svg-icon>
         </header>
         <div class="tool-detail">
-            <h3>{{tool.name}}</h3>
-            <p>{{tool.body}}</p>
+            <h3>{{tool.title}}</h3>
+            <p>{{tool.asset.shortDescription}}</p>
         </div>
     </div>
 </ng-template>
 
 <ng-template #blocks let-noMargin="noMargin">
     <div class="detail-blocks" [ngClass]="noMargin ? '' : 'stand-alone-blocks'">
-        <ng-container *ngFor="let tool of devTools">
+        <ng-container *ngFor="let tool of devToolsNode.nodes">
             <ng-container *ngTemplateOutlet="toolBlock;context{tool:tool}"></ng-container>
         </ng-container>
     </div>
 </ng-template>
 <!-- End of Templates -->
 
-<section *ngIf="devToolsHeading;else blocks" class="dev-tools">
-    <h2 [routerLink]="devToolsLink" class="heading-link">{{devToolsHeading}}</h2>
-    <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
-</section>
+<ng-container *ngIf="devToolsNode.nodes">
+    <section *ngIf="devToolsNode.title;else blocks" class="dev-tools">
+        <h2 class="heading-link" [routerLink]="devToolsNode.url">{{devToolsNode.title}}</h2>
+        <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
+    </section>
+</ng-container>

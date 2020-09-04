@@ -18,16 +18,9 @@ import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
 
 const appRoutes: Routes = [
     {
-        path     : 'developers',
-        children : [
-            {
-                path      : '',
-                component : NxAboutComponent
-            },
-            {
-                path      : 'about',
-                component : NxAboutComponent
-            },
+        path      : 'developers',
+        component : NxAboutComponent,
+        children  : [
             {
                 path     : 'knowledge-base',
                 children : [
@@ -35,16 +28,6 @@ const appRoutes: Routes = [
                         path      : '',
                         component : NxKnowledgeBaseComponent,
                         pathMatch : 'full'
-                    },
-                    {
-                        path      : 'other-articles',
-                        component : NxKnowledgeBaseComponent,
-                        children  : [
-                            {
-                                path      : ':article',
-                                component : NxKnowledgeBaseComponent
-                            }
-                        ]
                     },
                     {
                         path      : ':level1',

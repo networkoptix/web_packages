@@ -1,5 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
+import { AboutNode } from '../about.component';
+import { IConfig, NxConfigService } from '../../../../services/nx-config';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -8,11 +12,13 @@ import { UntilDestroy }     from '@ngneat/until-destroy';
     styleUrls   : ['support.component.scss']
 })
 export class NxSupportComponent {
-    @Input() supportHeading: string = 'Special Support';
-    @Input() supportBody: string = 'Take advantage of our tools. They can help you create code faster and easier. Take advantage of our tools. They can help you create code faster and easier. Take advantage of our tools. They can help you create code faster and easier.';
-    @Input() forumText: string = 'Support Page & Dev Forum';
-    @Input() forumLink: string = '/developers/';
-    @Input() forumLead: string = 'There are over 1000 topics on the forum';
-    @Input() backgroundColor: string = 'blue';
-    @Input() backgroundImage: string = 'https://www.networkoptix.com/wp-content/uploads/2018/10/World-MAP.png'
+    @Input() supportNode: AboutNode;
+
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
+    constructor(configService: NxConfigService, languageService: NxLanguageProviderService) {
+        this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
+    }
 };
