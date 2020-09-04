@@ -6,7 +6,7 @@ from inlinestyler.utils import inline_css
 import re
 
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset
+from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
 
 
 class DocumentationCache:
@@ -69,7 +69,7 @@ def split_blocks(html):
     return blocks
 
 
-def generate_doc_json(docs, language, draft=False, review=False):
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False):
     doc_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation)
     if review:
         state = 'review'
@@ -86,9 +86,20 @@ def generate_doc_json(docs, language, draft=False, review=False):
     global_contexts_dict = None
 
     for doc in docs:
-        version = doc.version_id()
-        cache_key = f'{settings.CUSTOMIZATION}-{language.code}-{doc.id}-{state}'
+        version = None
+        doc_id = doc if type(doc) is int else doc.id
+        cache_key = f'{settings.CUSTOMIZATION}-{language.code}-{doc_id}-{state}'
         doc_dict = DOC_CACHE[cache_key]
+
+        # Check if we need to query for the asset and version
+        if not doc_dict or not trust_cache or review or draft:
+            if type(doc) is int:
+                doc = Asset.objects.filter(id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
+            if doc:
+                version = doc.version_id()
+            else:
+                continue
+
         if review:
             pending_review = AssetCustomizationReview.objects.filter(
                 version__id__gt=version, version__asset=doc, customization__name=settings.CUSTOMIZATION,
@@ -104,7 +115,7 @@ def generate_doc_json(docs, language, draft=False, review=False):
             # Requested state is published, but no published version exists
             continue
 
-        if not doc_dict or doc_dict.get('version', None) != version or draft:
+        if not doc_dict or (not trust_cache and (doc_dict.get('version', None) != version or draft)):
             if global_contexts_dict is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()

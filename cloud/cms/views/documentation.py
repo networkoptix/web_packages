@@ -99,9 +99,26 @@ def simple_filter(docs, filter_query):
     return matched_docs
 
 
+def populate_docs_from_knowledgebase(nodes, docs):
+    for node in nodes:
+        asset_id = node.get('asset_id', None)
+        if asset_id and node.get('asset_type', AssetType.ASSET_TYPES[AssetType.ASSET_TYPES.documentation]):
+            docs.append(asset_id)
+        if node.get('nodes', None):
+            populate_docs_from_knowledgebase(node['nodes'], docs)
+
+
+page__query_param = openapi.Parameter("page", openapi.IN_QUERY,
+                                      description="Which page of results to return",
+                                      type=openapi.TYPE_STRING)
+page_size__query_param = openapi.Parameter("pageSize", openapi.IN_QUERY,
+                                           description="Max number of results per page",
+                                           type=openapi.TYPE_STRING)
+
+
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an array of all documentation pages. Can be filtered",
-                     manual_parameters=[filter__query_param])
+                     manual_parameters=[filter__query_param, page__query_param, page_size__query_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -109,10 +126,17 @@ def get_pages(request):
     filter_query = request.query_params.get('filter')
     page = request.query_params.get('page', 1)
     page_size = request.query_params.get('pageSize', 5)
-
-    docs = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation)
     language = get_language_object_from_request(request)
-    docs_json = generate_doc_json(list(docs), language=language)
+
+    docs = DOC_CACHE[f'!!{settings.CUSTOMIZATION}-docs']
+    if not docs:
+        knowledgebase = get_cached_menu(settings.CUSTOMIZATION, 'Knowledgebase')
+        docs = []
+        populate_docs_from_knowledgebase(knowledgebase, docs)
+        DOC_CACHE[f'!!{settings.CUSTOMIZATION}-docs'] = docs
+        docs_json = generate_doc_json(docs, language=language, trust_cache=False)
+    else:
+        docs_json = generate_doc_json(docs, language=language, trust_cache=True)
     if filter_query:
         docs_json = simple_filter(docs_json, filter_query)
 
@@ -128,7 +152,7 @@ def get_pages(request):
 def modify_about_dict(parent, language):
     for node in parent:
         asset_id = node.get('asset_id', None)
-        if asset_id and node.get('asset_type', 'documentation'):
+        if asset_id and node.get('asset_type', AssetType.ASSET_TYPES[AssetType.ASSET_TYPES.documentation]):
             asset = Asset.objects.filter(id=asset_id).first()
             if asset:
                 docs = generate_doc_json([asset], language=language)
@@ -142,7 +166,7 @@ def modify_about_dict(parent, language):
 @permission_classes((AllowAny,))
 def about_page(request):
     language = get_language_object_from_request(request)
-    cache_id = f'{settings.CUSTOMIZATION}-{language.code}--about_page'
+    cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--about_page'
     about_menu = DOC_CACHE[cache_id]
     if not about_menu:
         about_menu = get_cached_menu(settings.CUSTOMIZATION, 'Developers About Page')
