@@ -329,5 +329,14 @@
     "CAMERA OFFLINE TEXT"                  :    "Camera is offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT"    :    "Professional license is required",
     "ONE LICENSE WILL BE USED TEXT"        :    "1 professional license channel will be used",
-    "MOTION DETECTION DISABLED TEXT"       :    "Motion detection is disabled"
+    "MOTION DETECTION DISABLED TEXT"       :    "Motion detection is disabled",
+    "DIFFERENT VALUES TEXT"                :    "– Different Values –",
+    "BEST TEXT"                            :    "Best",
+    "HIGH TEXT"                            :    "High",
+    "MEDIUM TEXT"                          :    "Medium",
+    "LOW TEXT"                             :    "Low",
+    "SELECT RECORDING MODE TEXT"           :    "Please select recording mode.",
+    "SELECT FPS TEXT"                      :    "Please select FPS.",
+    "SELCT QUALITY TEXT"                   :    "Please select recording quality",
+    "MISSING SETTINGS TEXT"                :    "Please update missing recording settings."
 }
