@@ -30,10 +30,12 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     classes: string[] = [];
     private footerSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                private sanitizer: DomSanitizer,
-                private appState: NxAppStateService,
-                private menusService: NxMenusService) {
+    constructor(
+        configService: NxConfigService,
+        private sanitizer: DomSanitizer,
+        private appState: NxAppStateService,
+        private menusService: NxMenusService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

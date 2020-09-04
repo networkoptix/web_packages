@@ -3,6 +3,8 @@ import {
     Input, OnInit, Output, SimpleChanges
 }                                                  from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NavigationEnd, Router }                   from '@angular/router';
+import { Subscription }                            from 'rxjs';
 
 /* Usage
  <nx-tag
@@ -34,13 +36,17 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() size: string;
     @Input() clickable: boolean = true;
     @Input() static;
+    @Input() link;
+    @Input() linkParam;
 
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
     public badgeType: string;
 
-    constructor() {}
+    constructor() {
+        this.linkParam = {};
+    }
 
     ngOnInit() {
         this.static = (this.static !== undefined);

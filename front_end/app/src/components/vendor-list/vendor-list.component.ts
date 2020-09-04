@@ -2,11 +2,12 @@ import {
     Component, forwardRef, Input,
     OnChanges, OnDestroy, OnInit, Renderer2,
     SimpleChanges, ViewEncapsulation
-}                                    from '@angular/core';
-import { NG_VALUE_ACCESSOR }         from '@angular/forms';
-import { ActivatedRoute }            from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+}                                                from '@angular/core';
+import { NG_VALUE_ACCESSOR }                     from '@angular/forms';
+import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
+import { UntilDestroy }                          from '@ngneat/until-destroy';
+import { Subscription }                          from 'rxjs';
+import { filter }                                from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -52,11 +53,13 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     private ASC = true;
     private DESC = false;
     private uriSubscription: Subscription;
+    private routerSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private uri: NxUriService,
+        private router: Router,
         private _route: ActivatedRoute,
         private renderer: Renderer2
     ) {
@@ -129,6 +132,34 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                 if (params.debug !== undefined) {
                     this.debug = true;
                 }
+            });
+
+        this.routerSubscription = this.router.events
+            .pipe(
+                filter(event => event instanceof ActivationEnd)
+            )
+            .subscribe((event: ActivationEnd) => {
+                interface Params {
+                    [key: string]: string;
+                }
+                const queryParams: Params = {};
+
+                this.filter.multiselects.find((select) => {
+                    if (select.id === 'vendors') {
+                        select.selected.push(event.snapshot.queryParams.vendors);
+
+                        queryParams[select.id] = select.selected;
+
+                        this.uri
+                            .updateURI(this.uriPath, queryParams)
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+                });
+
+                // Propagate component's value attribute (model)
+                this.propagateChange({ ...this.filter });
             });
     }
 
@@ -236,33 +267,6 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             .catch(error => {
                 console.error(error);
             });
-
-        // Propagate component's value attribute (model)
-        this.propagateChange({ ...this.filter });
-
-        return false;
-    }
-
-    setVendor(vendor) {
-        interface Params {
-            [key: string]: string;
-        }
-
-        const queryParams: Params = {};
-
-        this.filter.multiselects.find((select) => {
-            if (select.id === 'vendors') {
-                select.selected.push(vendor.name);
-
-                queryParams[select.id] = select.selected;
-
-                this.uri
-                    .updateURI(this.uriPath, queryParams)
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
-        });
 
         // Propagate component's value attribute (model)
         this.propagateChange({ ...this.filter });
