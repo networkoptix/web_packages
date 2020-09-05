@@ -4,12 +4,15 @@ Start up
     Reset All Cameras
     Open Browser and go to URL    ${url}
 
+Reset cameras and log out
+    Common Restart Logout    ${url}
+    Reset All cameras
 Go To Cameras
     ${location}=   Get Location
     Go To    ${location}/cameras
 
 Verify on Cameras Page
-    Wait Until Elements are Visible
+    Wait Until Elements are Visible    
     ...    ${CAMERAS VIEW BUTTON}
     ...    ${EDITABLE TITLE}
     ...    ${CAMERAS DETAILED INFO BUTTON}
@@ -18,6 +21,7 @@ Verify on Cameras Page
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
+    ...    timeout=40
 
 Verify Recording Options are Visible
     Wait Until Elements are Visible
