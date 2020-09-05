@@ -93,8 +93,15 @@ License Key Input
     Input Text    ${LICENSE KEY INPUT}    1234-5678-90QW-ERTY
     ${formatted key}=   Get Formatted Key Input
     Should Be Equal As Strings    ${formatted key}    1234-5678-90QW-ERTY
+    Click Button    ${ACTIVATE BUTTON}    # To clear #formattedKey
+    Validate Input Error     ${INVALID LICENSE KEY TEXT}
 
-    Log    Step 6: Not implemented
+    Log    Step 6
+    Copy To Clipboard    OPXR-4M7A-99P1-92KA
+    Clear Element Text    ${LICENSE KEY INPUT}
+    Slow    Paste Text    ${LICENSE KEY INPUT}    timeout=1
+    ${formatted key}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${formatted key}    OPXR-4M7A-99P1-92KA
 
     Log Out
 
@@ -186,9 +193,8 @@ Server response errors: Failed to get response from license server
 
     Activate Key    ${key}    success=False
     Check For Alert    ${LICENSE SERVER DID NOT RESPOND TEXT}    timeout=10
-#    Commented out due to CLOUD-5714
-#    ${input val}=   Get Formatted Key Input
-#    Should Be Equal As Strings    ${input val}    ${key}
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${key}
 
     Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${LM HOST}
     Log Out
@@ -220,6 +226,8 @@ Server response errors: Media server becomes offline during license activation
     ${key}=   Generate Licenses
     Activate Key    ${key}    success=False
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${key}
 
     Start Container    ${cont 1}
     Log Out
@@ -248,6 +256,8 @@ Server response errors: Server offline(System has two servers)
     Slow    Click Element    ${offline server}    timeout=2
     Click Button    ${ACTIVATE BUTTON}
     Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${key}
 
     Start Container    ${cont 3}
     Log Out
@@ -271,9 +281,8 @@ Successful scenarios
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-#    Commented out due to CLOUD-5714
-#    ${input val}=   Get Formatted Key Input
-#    Should Be Equal As Strings    ${input val}    ${EMPTY}
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
     Log    Step 3
     Validate Licenses Page    trial left=True    clean=False
@@ -292,9 +301,8 @@ Successful scenarios
     Activate Key    ${key}
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-#    Commented out due to CLOUD-5714
-#    ${input val}=   Get Formatted Key Input
-#    Should Be Equal As Strings    ${input val}    ${EMPTY}
+    ${input val}=   Get Formatted Key Input
+    Should Be Equal As Strings    ${input val}    ${EMPTY}
 
     Log    Step 3
     Validate Licenses Page    trial left=True    clean=False
@@ -416,7 +424,7 @@ License Details Block: License with date within 30 days
     ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo}
     Should Be True    ${activated}
     Validate License Info    ${demo}    server num=2
-    Run keyword and ignore error    Wait Until Element Has Style    //header[h4="${demo}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    //header[h4="${demo}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    ${ERROR COLOR WITH OPACITY}
 
     Log Out
 
