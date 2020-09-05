@@ -4,12 +4,11 @@ Start up
     Reset All Cameras
     Open Browser and go to URL    ${url}
 
-<<<<<<< HEAD
+
 Reset cameras and log out
     Common Restart Logout    ${url}
     Reset All cameras
-=======
->>>>>>> 9db5054df3c... Adding a reset camera keyword, and several new cases
+
 Go To Cameras
     ${location}=   Get Location
     Go To    ${location}/cameras
