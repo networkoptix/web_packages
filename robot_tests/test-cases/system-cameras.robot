@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Start up    ${url}
 Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-Test Teardown     Common Restart Logout    ${url}
+Test Teardown     Reset cameras and log out
 Suite Teardown    Close All Browsers
 Force Tags        system
 
@@ -95,7 +95,7 @@ Camera status match server
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
-    Should Not Be True    ${value}
+    Should Be True    ${value}
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
     Should Be Equal As Strings    ${value}    Offline
@@ -357,37 +357,6 @@ Edit credentials form Close and Cancel buttons
 #     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
 #     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
 #     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-
-
-Changing credentials from invalid ones to valid ones makes the camera authorized
-    [Tags]    C76390    Threaded
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera By Name    unauth cam
-    Click Button    ${EDIT CREDENTIALS BUTTON}
-    Verify Authentication Form
-    Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    root
-    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
-    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
-    @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${status}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
-    Should Be Equal As Strings    ${status}    Online
-    Click Button    ${EDIT CREDENTIALS BUTTON}
-    Verify Authentication Form
-    Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwe
-    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    qwe
-    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
-    Open Connection    10.1.5.126
-    SSHLibrary.Login    docker-server-factory    qweasd 123    
-    ${results}    Execute Command    docker container restart autotests
-    Reload Page
-    Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}    90
 
 Recording toggle shows correct options
     [Tags]    C76401    threaded
@@ -684,3 +653,33 @@ Recording Quality dropdown menu functionality for camera with schedule
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reset Camera    triple state cam    https://10.1.5.126:7005
+
+Changing credentials from invalid ones to valid ones makes the camera authorized
+    [Tags]    C76390
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    unauth cam
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Sleep    1
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    root
+    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
+    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    ${status}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
+    Should Be Equal As Strings    ${status}    Online
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Sleep    1
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwe
+    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    qwe
+    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+    Open Connection    10.1.5.126
+    SSHLibrary.Login    docker-server-factory    qweasd 123    
+    ${results}    Execute Command    docker container restart autotests
+    Reload Page
+    Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}    90
