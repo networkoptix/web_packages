@@ -55,7 +55,7 @@ ${UNAUTH CAM JSON 2}                         [{"name":"overrideAr","value":"","r
 ${OFFLINE CAM JSON 1}                        {"cameraName":"offline cam","cameraId":"{f8ad7b53-e604-4444-7481-64c1ce8cd742}","audioEnabled":false,"scheduleEnabled":false,"motionType":"0","motionMask":"5,0,0,44,32"}
 ${OFFLINE CAM JSON 2}                        [{"name":"overrideAr","value":"","resourceId":"{f8ad7b53-e604-4444-7481-64c1ce8cd742}"},{"name":"rotation","value":"0","resourceId":"{f8ad7b53-e604-4444-7481-64c1ce8cd742}"}]
 
-${NO AUDIO CAM JSON 1}                       {"cameraName":"no audio cam","cameraId":"{785d421b-62a6-47fc-7fe8-9df96682284c}","audioEnabled":false,"scheduleEnabled":false,"motionType":"2","motionMask":"5,0,0,44,32"}
+${NO AUDIO CAM JSON 1}                       {"cameraName":"no audio cam","cameraId":"{785d421b-62a6-47fc-7fe8-9df96682284c}","audioEnabled":false,"scheduleEnabled":true,"motionType":"2","motionMask":"5,0,0,44,32"}
 ${NO AUDIO CAM JSON 2}                       [{"name":"overrideAr","value":"","resourceId":"{785d421b-62a6-47fc-7fe8-9df96682284c}"},{"name":"rotation","value":"0","resourceId":"{785d421b-62a6-47fc-7fe8-9df96682284c}"}]
 
 ${NO LICENSE CAM JSON 1}                     {"cameraName":"no license cam","cameraId":"{1de10ba8-3ed7-5ee1-f3d6-8e0d1b9d0036}","audioEnabled":false,"scheduleEnabled":false,"motionType":"0","motionMask":"5,0,0,44,32"}
