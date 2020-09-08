@@ -35,11 +35,11 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
+    @Input() applyRef: ViewContainerRef;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    viewContainerRef: ViewContainerRef;
     serverIdFromParams;
 
     serverName: string;
@@ -84,7 +84,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        @Inject(ViewContainerRef) viewContainerRef,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private route: ActivatedRoute,
@@ -93,7 +92,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         private uriService: NxUriService,
         private toastService: NxToastService
     ) {
-        this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
@@ -104,7 +102,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.initForApplyService();
 
         this.applyService.initPageWatcher(
-            this.viewContainerRef,
+            this.applyRef,
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);

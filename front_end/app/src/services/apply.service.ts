@@ -110,17 +110,32 @@ export class SectionWatcher {
 
 export class FormWatcher {
     originalValue;
-    _changed: boolean;
+    valueSubject = new BehaviorSubject(false);
+    changed: boolean;
 
-    constructor() {
+    get value() {
+        return this.valueSubject.value;
     }
 
-    set changed(value) {
-        this._changed = value;
+    constructor(private form: NgForm) {
+        form.valueChanges.subscribe((change) => {
+            if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
+                this.originalValue = change;
+            } else {
+                this.changed = !NxUtilsService.isEqual(this.originalValue, change);
+                this.valueSubject.next(change);
+            }
+        });
     }
 
-    get changed() {
-        return this._changed;
+    reset = () => {
+        this.form.reset(this.originalValue);
+    }
+
+    saved = () => {
+        this.originalValue = this.value;
+        this.changed = false;
+        this.reset();
     }
 }
 
@@ -159,7 +174,7 @@ export class NxApplyService {
     private popupActive = false;
     private form: NgForm;
     private lockedSubscription: Subscription;
-    private watchers: Watcher<any>[];
+    public watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
     isOnline$ = new BehaviorSubject(true);
 
@@ -462,8 +477,7 @@ export class NxApplyService {
     private extendApplyFunction(applyFunction: Process) {
         const prevApply: any = this.applyFunction;
         this.setSaveFunction(this.processService.createProcess(() => {
-            applyFunction.run();
-            return prevApply.run();
+            return prevApply.run().caller$.toPromise().finally(applyFunction.run);
         }));
     }
 

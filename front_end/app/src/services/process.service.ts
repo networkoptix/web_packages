@@ -34,7 +34,7 @@ export class Process {
     public errorData;
     public canceled = false;
     private canceled$ = new Subject();
-    private caller$: Observable<any>;
+    public caller$: Observable<any>;
 
     constructor(
         configService: NxConfigService,

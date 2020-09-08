@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit }  from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy }                  from '@ngneat/until-destroy';
@@ -47,7 +47,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private uriService: NxUriService,
-        private location: Location
+        private location: Location,
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
