@@ -19,6 +19,7 @@ export class NxLeftMenuComponent implements OnInit {
     @Input() ignoreQuery = false;
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
+    @Output() relatedLinks = new EventEmitter<MenuNodeWithParent[]>()
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
@@ -61,6 +62,7 @@ export class NxLeftMenuComponent implements OnInit {
             const checkNode = (node: MenuNodeWithParent) => {
                 if (node.url === url) {
                     updateActiveRoutes(node);
+                    this.relatedLinks.emit(node.parentNode?.nodes || []);
                 } else if (node.nodes?.length) {
                     findActiveNode(node.nodes);
                 }

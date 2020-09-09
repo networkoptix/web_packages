@@ -98,3 +98,16 @@
 .results-preloader {
     height: 80px;
 }
+
+.related-section {
+    @extend .narrow-section;
+    margin: 1rem;
+    padding: 2rem 0 1rem 0;
+    border-top: 2px solid $additional_light2;
+    & > h4 {
+    @include typography.medium15; 
+    }
+    & > a {
+        text-decoration: underline;
+    }
+}

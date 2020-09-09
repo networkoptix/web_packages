@@ -3,9 +3,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, tap, delay } from 'rxjs/operators';
+import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, timer, combineLatest } from 'rxjs';
+import { MenuNodeWithParent } from '../../../components/left-menu/left-menu.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,10 +22,24 @@ export class NxKnowledgeBaseComponent implements OnInit {
     loading = true;
     searchMode = false;
     searchLoading = false;
-    node: KnowledgeNode;
+    pageNode: KnowledgeNode;
     search = { query: '' };
     searchResults$ = new BehaviorSubject([]);
     searchQuery$ = new BehaviorSubject('');
+    assetId$ = new BehaviorSubject('');
+    relatedLinks$ = new BehaviorSubject<MenuNodeWithParent[]>([])
+    relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
+        map(this.filterRelatedLinks)
+    )
+
+    filterRelatedLinks([assetId, nodes]: [string, MenuNodeWithParent[]]) {
+        const currentIndex = nodes.findIndex(({ asset_id: id }) => `${id}` === assetId);
+        if (currentIndex === (nodes.length - 1)) {
+            return [];
+        } else {
+            return [nodes[currentIndex + 1]];
+        }
+    }
 
     updateSearchQuery({ query }) {
         this.search = { query };
@@ -103,14 +118,14 @@ export class NxKnowledgeBaseComponent implements OnInit {
             switchMap(urlSegment => {
                 this.loading = true;
                 this.clearSearch();
-                const assetId = urlSegment[0]?.path || this.headerService.currentLocation.assetId;
+                this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId);
                 this.searchQuery$.next(this.route.snapshot.queryParams.search);
-                return this.cloudApi.getDocumentation(assetId)
+                return this.cloudApi.getDocumentation(this.assetId$.value)
                     .pipe(
                         tap(({ title, blocks, contentHTML }) => {
-                            this.node = KnowledgeNode.normalHeader(
+                            this.pageNode = KnowledgeNode.normalHeader(
                                 title,
-                                assetId,
+                                this.assetId$.value,
                                 contentHTML,
                                 blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
                                     title,
@@ -152,7 +167,7 @@ export class KnowledgeNode {
         public nodes: KnowledgeNode[],
         public cardClass: CardClasses,
         public cardIcon?: string,
-        public cardLead?: string
+        public cardLead?: string,
     ) {}
 
     // Factory methods
