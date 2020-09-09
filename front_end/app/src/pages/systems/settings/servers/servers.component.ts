@@ -83,23 +83,21 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.isOffline = !system.isOnline;
                 this.settingsService.footerSubject.next(true);
-
-                if (!system.permissions?.editUsers) {
-                    this.uriService
-                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
-                        .catch(error => {
-                            console.error(error);
-                        });
-
-                    return;
-                }
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
                     (
                         this.CONFIG.isLocal
                             ? this.system.update()
                             : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {}));
+                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).finally(() => {
+                        if (this.system && !this.system.permissions?.editUsers) {
+                            this.uriService
+                                .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        }
+                    });
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
