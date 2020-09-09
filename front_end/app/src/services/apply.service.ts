@@ -9,9 +9,14 @@ import {
 }                                               from 'rxjs/operators';
 
 import { NxApplyComponent }          from '../components/apply/apply.component';
-import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { Process, NxProcessService } from './process.service';
 import { NxUtilsService }            from './utils.service';
+import { ApplyModalContent }         from '../dialogs/apply/apply.component';
+import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -176,11 +181,13 @@ export class NxApplyService {
     private lockedSubscription: Subscription;
     public watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
+
     isOnline$ = new BehaviorSubject(true);
 
-    constructor(private factoryResolver: ComponentFactoryResolver,
-                private dialogsService: NxDialogsService,
-                private processService: NxProcessService
+    constructor(
+        private factoryResolver: ComponentFactoryResolver,
+        private processService: NxProcessService,
+        private modalService: NgbModal,
     ) {}
 
     get locked() {
@@ -347,6 +354,28 @@ export class NxApplyService {
         return sectionWatcher;
     }
 
+    createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any>(
+        modal: Modal, options: Options, inputs: Inputs
+    ): Promise<Result> {
+        const modalRef = this.modalService.open(modal, options);
+        Object.assign(modalRef.componentInstance, inputs);
+        return modalRef.result;
+    }
+
+    applyDialog(applyFunc: Process, discardFunc: () => void, form: NgForm) {
+        // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
+    }
+
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
     showDialog() {
         // If the apply dialog is active block all other attempts to open it.
@@ -354,7 +383,11 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
-        return this.dialogsService.apply(this.applyFunction, this.discardFunction, this.form)
+
+
+
+
+        return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
                 status => {
                     if (status !== 'applied' && status !== 'discarded') {

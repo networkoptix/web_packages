@@ -176,7 +176,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(true, true).then((result) => {
+                        .login(this, true, true).then((result) => {
                             this.localStorageService.store('loginRegister', true);
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);

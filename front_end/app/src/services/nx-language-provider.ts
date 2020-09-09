@@ -6,8 +6,11 @@ import { BehaviorSubject }         from 'rxjs';
 import { NxCloudApiService }       from './nx-cloud-api';
 import { IConfig, NxConfigService }  from './nx-config';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
-import { IParams } from '../components/search/search.component';
 import { NxSessionService } from './session.service';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 @Injectable({
     providedIn: 'root'

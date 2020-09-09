@@ -55,7 +55,7 @@ export class NxLandingComponent implements OnInit {
                         this.userEmail = this.accountService.email;
                     } else {
                         if (this.router.url.includes('/login')) {
-                            this.login = this.dialogs.login(false, false);
+                            this.login = this.dialogs.login(this.accountService, false, false);
                             this.pageService.pageTitle = this.LANG.pageTitles.login;
                         } else {
                             this.loaded = true;

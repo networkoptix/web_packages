@@ -6,11 +6,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of }             from 'rxjs';
 
 import { NxLanguageProviderService }       from '../../services/nx-language-provider';
-import { NxProcessService, Process }       from '../../services/process.service';
-import { NxCloudApiService }               from '../../services/nx-cloud-api';
+import { NxProcessService }                from '../../services/process.service';
 import { IConfig, NxConfigService }        from '../../services/nx-config';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
-import { NxAccountService }                from '../../services/account.service';
 import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 
 @Component({
@@ -19,8 +17,9 @@ import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_t
     styleUrls : []
 })
 export class DisconnectModalContent {
+    @Input() account;
     @Input() system;
-    @Input() disconnect: Process;
+    @Input() disconnect;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
@@ -42,10 +41,8 @@ export class DisconnectModalContent {
         configService: NxConfigService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
         private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
-        private accountService: NxAccountService
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -53,7 +50,7 @@ export class DisconnectModalContent {
 
     ngOnInit() {
         this.auth.password = '';
-        this.accountService
+        this.account
             .get()
             .then((account) => {
                 if (account) {
@@ -68,7 +65,7 @@ export class DisconnectModalContent {
             if (this.CONFIG.isLocal) {
                 return this.disconnectLocal(this.auth.password);
             }
-            return this.cloudApiService.disconnect(this.system.id, this.auth.password).toPromise();
+            return this.account.disconnect(this.system.id, this.auth.password);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {

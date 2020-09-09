@@ -5,7 +5,6 @@ import { Router }                                         from '@angular/router'
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 
-import { IParams }                                        from '../../components/search/search.component';
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
@@ -21,9 +20,13 @@ import { NxSystemAPIService, NxSystemAPI }                from '../system-api.se
 import { Account }                                        from './account';
 import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
 
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
+
 /**
  * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.
- * CloudAccount and LocalAccount overrides should maintiain same interface
+ * CloudAccount and LocalAccount overrides should maintain same interface
  * as BaseAccount.
  */
 export abstract class BaseAccount implements OnDestroy {
@@ -200,6 +203,22 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
+    reactivate(email) {
+        return this.cloudApi.reactivate(email);
+    }
+
+    disconnect(systemId, userPassword) {
+        return this.cloudApi.disconnect(systemId, userPassword).toPromise();
+    }
+
+    connect(systemName, userEmail, userPassword) {
+        return this.cloudApi.connect(systemName, userEmail, userPassword);
+    }
+
+    sendMessage(subject, asset, message, userName, userEmail) {
+        return this.cloudApi.sendMessage(subject, asset, message, userName, userEmail).toPromise();
+    }
+
     // Temporary aid for AJS
     getCredentialsFromAuth(authKey: string) {
         return atob(authKey).split(':');
@@ -220,7 +239,7 @@ export abstract class BaseAccount implements OnDestroy {
                 this.sessionService.email = '';
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
-                    .login(true, true)
+                    .login(this, true, true)
                     .catch(() => {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
@@ -270,7 +289,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected showLogin() {
         this.loginDialogActive = true;
         return this.dialogs
-            .login(true, true).then((result) => {
+            .login(this, true, true).then((result) => {
                 this.localStorageService.store('loginRegister', true);
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);

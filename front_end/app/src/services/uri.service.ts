@@ -2,10 +2,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Location }                        from '@angular/common';
 import { ActivatedRoute, Router, Params }  from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
-
 import { NxConfigService, IConfig }        from './nx-config';
-import { localSettingsRoutes }             from '../pages/systems/webadmin-system.module';
-import { cloudSettingsRoutes }             from '../pages/systems/settings/settings.module';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -139,9 +136,18 @@ export class NxUriService {
     getSystemSettingsRoute(params: RouteResolverParams = {}) {
         const { systemId = '', ..._otherParams } = params;
         const otherParams = Object.entries(_otherParams);
-        const routesConfig = NxConfigService.resolveLocalOrCloud(localSettingsRoutes, cloudSettingsRoutes);
+
+        const routesConfig = this.router.config.filter(route => {
+            if (NxConfigService.isLocal) {
+                return route.path === 'settings';
+            } else {
+                return route.path === 'systems/:systemId';
+            }
+        });
+
         let base = this.CONFIG.menus.systemSettings.baseUrl;
         let childRoute = '';
+
         if (!this.CONFIG.isLocal) {
             base += params.systemId;
         }

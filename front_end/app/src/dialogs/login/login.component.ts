@@ -11,9 +11,7 @@ import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUtilsService }            from '../../services/utils.service';
-import { NxAccountService }          from '../../services/account.service';
 import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -22,8 +20,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class LoginModalContent implements OnInit {
-    @Input() account: NxAccountService;
-    @Input() login: Process;
+    @Input() account;
+    @Input() login;
     @Input() cancellable;
     @Input() closable;
     @Input() keepPage;
@@ -57,7 +55,6 @@ export class LoginModalContent implements OnInit {
         languageService: NxLanguageProviderService,
         locationService: Location,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
@@ -76,7 +73,7 @@ export class LoginModalContent implements OnInit {
         this.activeModal.close();
 
         this.processService.createProcess(() => {
-            return this.cloudApiService.reactivate(email);
+            return this.account.reactivate(email);
         }, {
             errorCodes: {
                 forbidden : this.LANG.errorCodes.accountAlreadyActivated,

@@ -42,7 +42,7 @@ export class SystemGuard implements CanActivate {
                 licenses        : system.isAdmin || system.isOwner
             };
             return canViewChecks[currentRoute] || this.router.navigate(
-                [NxConfigService.resolveLocalOrCloud('/settings/', `/systems/${systemId}`)]
+                [NxConfigService.isLocal ? '/settings/' : `/systems/${systemId}`]
             );
         };
 

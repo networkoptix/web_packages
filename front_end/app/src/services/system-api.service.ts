@@ -15,7 +15,10 @@ import { NxUriCacheService }                   from './uri-cache.service';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
-import { IParams }                             from '../components/search/search.component';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 export interface User {
     canBeEdited: boolean;

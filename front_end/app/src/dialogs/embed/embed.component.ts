@@ -8,8 +8,11 @@ import { Subscription }              from 'rxjs';
 
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { IParams }                   from '../../components/search/search.component';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({

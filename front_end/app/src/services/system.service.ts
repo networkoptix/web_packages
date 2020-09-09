@@ -18,9 +18,12 @@ import { NxUtilsService }                  from './utils.service';
 import { NxAppStateService }               from './nx-app-state.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { SystemConfigSettings }            from './system-api.types';
-import { IParams }                         from '../components/search/search.component';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { trim_ids } from '../utils/api_response_cleaners';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;

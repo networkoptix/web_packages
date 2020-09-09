@@ -1,13 +1,11 @@
-
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxMenusService } from '../../services/menus.service';
-import { MenuNode } from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter, map, startWith, takeUntil } from 'rxjs/operators';
-import { IConfig, NxConfigService } from '../../services/nx-config';
-import { Location } from '@angular/common';
-import { timer, Subject } from 'rxjs';
+import { Router, NavigationEnd }                          from '@angular/router';
+import { Location }                                       from '@angular/common';
+import { filter, map, startWith, takeUntil }              from 'rxjs/operators';
+import { timer, Subject }                                 from 'rxjs';
+import { UntilDestroy }                                   from '@ngneat/until-destroy';
+import { NxMenusService, MenuNode }                       from '../../services/menus.service';
+import { IConfig, NxConfigService }                       from '../../services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

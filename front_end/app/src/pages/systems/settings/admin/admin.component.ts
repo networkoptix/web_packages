@@ -227,7 +227,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     connectLocalToCloud() {
         this.dialogs
-            .connectLocalToCloud(this.system)
+            .connectLocalToCloud(this.accountService, this.system)
             .then((result) => {
                 if (result) {
                     // give the user chance to read the toaster
@@ -237,7 +237,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     disconnectFromCloud() {
-        const handleDisconnect = () => this.dialogs.disconnect(this.system)
+        const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
             .then((result) => {
                 if (result) {
                     this.updateAndGoToSystems();
@@ -256,7 +256,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts
                 // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
                 this.dialogs
-                    .disconnect(this.system)
+                    .disconnect(this.accountService, this.system)
                     .then((result) => {
                         if (result) {
                             if (NxConfigService.isLocal && this.system.currentUser.isCloud) {
@@ -313,7 +313,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         return this.dialogs
-            .merge(this.system, this.systems)
+            .merge(this.accountService, this.system, this.systems)
             .then((mergeInfo: any) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { environment }     from '../../../../environments/environment';
-import { MenuNode }        from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { MenuNode }        from '../../../services/menus.service';
 import { NxHeaderService } from '../../../services/nx-header.service';
 
 @Component({

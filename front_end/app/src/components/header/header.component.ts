@@ -404,7 +404,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
         // Handling promise to satisfy the linter.
         this.dialogs
-            .login(!redirect)
+            .login(this.accountService, !redirect)
             .then(() => {});
 
         return false;

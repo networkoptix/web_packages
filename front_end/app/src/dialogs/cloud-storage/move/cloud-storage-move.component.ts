@@ -10,10 +10,10 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxProcessService, Process } from '../../../services/process.service';
-import { NxDialogsService }          from '../../dialogs.service';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxSystem }                  from '../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxModalGenericComponent }   from '../../generic/generic.component';
 
 @Component({
     selector    : 'nx-cloud-storage-move-content',
@@ -39,14 +39,15 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         public renderer: Renderer2,
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private injector: Injector
+        private genericModal: NxModalGenericComponent,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -74,8 +75,8 @@ export class CloudStorageMoveModalContent implements OnInit {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
-                    this.injector.get(NxDialogsService).confirm(message, title, ok);
-                };
+                    this.genericModal.openConfirm(message, title, ok);
+                }
             });
         });
 

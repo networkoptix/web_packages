@@ -12,8 +12,11 @@ import { NxUtilsService }                              from './utils.service';
 import { NxUriService }                                from './uri.service';
 import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
 import { NxSystem }                                    from './system.service';
-import { IParams }                                     from '../components/search/search.component';
 import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 @Injectable({
     providedIn: 'root'
