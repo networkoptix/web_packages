@@ -170,7 +170,7 @@ export class FormWatcher {
  * @class
  */
 export class NxApplyService {
-    private applyComponentRef: ComponentRef<NxApplyComponent>;
+    public applyComponentRef: ComponentRef<NxApplyComponent>;
     private applyFunction: Process;
     private component: ViewContainerRef;
     private discardFunction: () => void;

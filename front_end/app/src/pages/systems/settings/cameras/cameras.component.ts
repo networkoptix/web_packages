@@ -2,7 +2,7 @@ import {
     Component, OnDestroy, OnInit,
     Inject, ViewContainerRef
 }                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
+import { ActivatedRoute, Router }            from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subject, Subscription, BehaviorSubject, from, throwError, of
