@@ -188,7 +188,7 @@ export class LoginModalContent implements OnInit {
                 }
             } else if (this.next) {
                 // sanitize this.next
-                this.next = NxUtilsService.getRelativeLocation(this.next);
+                this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
                 if (this.next.indexOf('/admin/') !== -1) {
                     // *** admin section is not a part of Angular project
                     window.location.href = this.next;

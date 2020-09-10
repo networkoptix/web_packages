@@ -26,6 +26,7 @@ ${EMAIL OWNER}                        ${TEST EMAIL}+owner${BASE EMAIL DOMAIN}
 ${EMAIL NOT OWNER}                    ${TEST EMAIL}+notowner${BASE EMAIL DOMAIN}
 ${EMAIL ADMIN}                        ${TEST EMAIL}+admin${BASE EMAIL DOMAIN}
 ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
+${EMAIL CUSTOM CAMERAS}               ${TEST EMAIL}+customcameras${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
@@ -107,3 +108,6 @@ ${AUTO TESTS 2}                       Auto Tests 2
 ${AUTO TESTS OFFLINE TITLE}           ${SYSTEMS TILE}//h2[text()='${AUTO TESTS 2}']
 ${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibling::nx-tag/div[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
 ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button
+
+#Cameras
+${NOAUTH CAMERA PASSWORD}             Gb%80Hfw$1@

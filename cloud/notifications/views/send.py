@@ -114,7 +114,6 @@ def update_or_create_notification(data, customizations=None):
                      ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def send_event(request):
     feedback_enabled = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config').get('feedback_enabled', False)
     if not feedback_enabled:
@@ -191,7 +190,6 @@ def send_event(request):
                      ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def send_notification(request):
     try:
         validation_error = False
@@ -311,7 +309,6 @@ def cloud_notification_action(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def test(request):
     from notifications import tasks
     from random import seed, randint

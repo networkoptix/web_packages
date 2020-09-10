@@ -600,35 +600,9 @@ export class MergeModalContent {
 
     async precheckSystemMerge() {
         const isNew = { isNew: true };
+        this.getSecondaryName();
         this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
-        if (!this.serverUrlInputExists) {
-            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
-        }
-        // for VMS <= 4.0 systems
-        if (!this.dryRunAvailable) {
-            this.systemUpdating = true;
-            await this.system.update().toPromise();
-            this.systemsLoaded = false;
-            this.processedSystems = [];
-            await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
-            // means dryRun is not available
-            if (this.system.info.capabilities.merge_systems >= 1) {
-                const res = await this.precheckSystemMerge();
-                return res;
-            }
-            // '' means systems are mergeable
-            if (this.systemMergeable === '') {
-                this.machine.transition('adminPassword');
-            }
-            return 'canceled';
-        }
-        /**
-         * targetSystem
-         * no id = Other System
-         * localSystemId = auto-discovered system
-         * else = cloud-connected merge check
-         */
-        if (!this.targetSystem.id || this.targetSystem.localSystemId) {
+        if (this.serverUrlInputExists) {
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!(/^https?:\/\//).test(this.serverUrl)) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
@@ -637,9 +611,31 @@ export class MergeModalContent {
                 this.serverUrl += ':7001';
             }
             this.cleanUrl = this.serverUrl;
-
             this.nonCloudMerge = true;
-            this.getSecondaryName();
+        } else {
+            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+        }
+
+        if (!this.dryRunAvailable) {
+            this.systemUpdating = true;
+            await this.system.update().toPromise();
+            this.systemsLoaded = false;
+            this.processedSystems = [];
+            await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
+            // means dryRun is still not available after primary system update
+            if (this.system.info.capabilities.merge_systems >= 1) {
+                const res = await this.precheckSystemMerge();
+                return res;
+            }
+            return { error: '0' };
+        }
+        /**
+         * targetSystem
+         * no id = Other System
+         * localSystemId = auto-discovered system
+         * else = cloud-connected merge check
+         */
+        if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             return this.system.mergeSystems(this.serverUrl, true).toPromise()
                 .then(res => {
                     if (res.error !== '0') {
@@ -657,7 +653,6 @@ export class MergeModalContent {
                     return this.targetSystem.isNew ? isNew : res;
                 });
         } else {
-            this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
             let targetSystem;
             try {

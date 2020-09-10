@@ -17,7 +17,6 @@ type__body = openapi.Schema(type=openapi.TYPE_STRING,
                                            "to wait on emails to appear in the inbox.")
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data

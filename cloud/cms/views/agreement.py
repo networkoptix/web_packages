@@ -24,7 +24,6 @@ id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_ST
                      manual_parameters=[state__query_param, id__query_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_agreement(request):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'pending'
@@ -110,7 +109,6 @@ review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
                      ))
 @api_view(("POST", ))
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:

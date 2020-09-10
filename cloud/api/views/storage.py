@@ -33,7 +33,6 @@ systemId__body = openapi.Schema(type=openapi.TYPE_STRING)
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def create(request):
     require_params(request, ['systemId'])
     storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
@@ -61,7 +60,6 @@ def create(request):
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def delete(request):
     require_params(request, ['systemId', 'password'])
     cloud_api.Storage.delete_from_system(request.user.email,
@@ -82,7 +80,6 @@ def delete(request):
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def move(request):
     require_params(request, ["destinationSystemId", "sourceSystemId"])
     cloud_api.Storage.move(request.session["login"],
@@ -97,7 +94,6 @@ def move(request):
                      manual_parameters=[systemId__query_params])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def usage_stats(request):
     require_params(request, ['systemId'])
     storages = cloud_api.Storage.list_system_storages(request.session['login'],

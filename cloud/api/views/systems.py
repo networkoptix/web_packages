@@ -7,9 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from api.controllers import cloud_api, cloud_gateway
-from api.helpers.exceptions import handle_exceptions, api_success, require_params, \
-    APINotAuthorisedException, APIRequestException, ErrorCodes
+from api.helpers.exceptions import api_success, require_params, \
+    APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
 
 
 # Swagger parameters
@@ -36,7 +35,6 @@ user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def system(request, system_id):
     data = cloud_api.System.get(request.session['login'], request.session['password'], system_id)
     return api_success(data['systems'])
@@ -46,7 +44,6 @@ def system(request, system_id):
                      operation_description="Returns a list of systems that the user has access to.")
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def list_systems(request):
     data = cloud_api.System.list(request.session['login'], request.session['password'])
     return api_success(data['systems'])
@@ -69,7 +66,6 @@ def list_systems(request):
                      ))
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def sharing(request, system_id):
     if request.method == 'GET':
         # get authorized user here
@@ -106,7 +102,6 @@ def digest(login, password, realm, nonce, method):
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def get_auth(request, system_id):
     data = cloud_api.System.get_nonce(request.session['login'], request.session['password'], system_id)
     nonce = data["nonce"]
@@ -128,7 +123,6 @@ def get_auth(request, system_id):
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def rename(request, system_id):
     require_params(request, ('name',))
     data = cloud_api.System.rename(request.session['login'], request.session['password'], system_id,
@@ -148,7 +142,6 @@ def rename(request, system_id):
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def merge(request):
     require_params(request, ('master_system_id', 'slave_system_id', 'password'))
     try:
@@ -157,6 +150,8 @@ def merge(request):
     except APINotAuthorisedException:
         raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                   error_data={'password': ['Not recognized']})
+    except APIInternalException as e:
+        raise APIRequestException(e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
     return api_success(data)
 
 
@@ -165,7 +160,6 @@ def merge(request):
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def access_roles(request, system_id):
     data = cloud_api.System.access_roles(request.session['login'], request.session['password'], system_id)
     return api_success(data['accessRoles'])
@@ -184,7 +178,6 @@ def access_roles(request, system_id):
                      ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def disconnect(request):
     require_params(request, ('system_id', 'password'))
 
@@ -219,7 +212,6 @@ def disconnect(request):
                      ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
@@ -240,7 +232,6 @@ def connect(request):
                      operation_description="Old way of sending POST request to systems.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def proxy(request, system_id, system_url):
     email = None
     password = None

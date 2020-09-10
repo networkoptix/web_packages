@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "A próba licenc aktiválva. Ma kezdve akár 4 kamerát is felvehet 30 napig.",
     "ENTER LICENSE KEY TEXT": "Enter license key",
     "INVALID LICENSE KEY TEXT": "Invalid license key",
+    "LICENSE IS EXPIRED TEXT": "A licenc aktiválása nem sikerült: A licenc lejárt",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "License type is incompatible with your system",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "License key has already been activated in this system",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "A licenckulcsot már aktiválták és egy másik rendszer %HWID% -os hardverazonosítójú szerveréhez regisztrálták",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Only one starter license is allowed per system",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Failed to activate license. License server did not respond. Please try again or contact support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Failed to activate license. Please try again or contact support",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "Az 1024-nél kevesebb portszám korlátozott. A szerver elérhetetlenné válhat.",
     "SERVER RESTARTED TEXT": "A szerver sikeresen újraindult.",
     "HOURS TEXT": "órák",
-    "MINUTES TEXT": "percek"
+    "MINUTES TEXT": "percek",
+    "NO IMAGE TEXT": "NINCS KÉP",
+    "CAMERA UNAUTHORIZED TEXT": "A kamerához a hozzáférés nem engedélyezett",
+    "CAMERA OFFLINE TEXT": "A kamera offline állapotban van",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Licenc szükséges",
+    "ONE LICENSE WILL BE USED TEXT": "1 professzionális licenc kerül felhasználásra",
+    "MOTION DETECTION DISABLED TEXT": "Mozgásérzékelés kikaplcsolva",
+    "FOUND TEXT": "found"
 }

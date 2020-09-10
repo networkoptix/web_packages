@@ -128,17 +128,20 @@
                                 [value]="recording"
                                 [label]="'Recording' | translate"
                                 componentId="recording"
-                                [disabled]="availableLicenses === 0"
+                                [disabled]="!recording && recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0"
                                 (click)="handleRecordingToggle()"></nx-switch>
-                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses, 'shake-hint': shakeHint}">{{
-                                availableLicenses > 0 ?
+                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{
+                                'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
+                                'shake-hint': shakeHint
+                            }">{{
+                                availableLicenses > 0 ||  recordingWatcher.originalValue && availableLicenses === 0 ?
                                 ('1 professional license channel will be used' | translate)  :
                                 ('Professional license is required' | translate)
                             }}</div>
                         </div>
                     </div>
                 </header>
-                <ng-container *ngIf="recording && availableLicenses">
+                <ng-container *ngIf="recording">
                     <nx-section>
                         <h4 class="mb-3" translate>Mode</h4>
                             <nx-radio
@@ -158,8 +161,8 @@
                             <h4 class="mb-3" translate>Quality</h4>
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
-                                <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 30"
-                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + 'current' | translate"
+                                <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 15"
+                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
                                    [(ngModel)]="selectedFps"
                                    (blur)="selectedFps = selectedFps > 0 ? selectedFps : this.selectedFpsWatcher.originalValue || this.selectedCamera.maxFps"
                                    class="form-control input-sm col-3"/>
@@ -190,7 +193,7 @@
                 <header>
                     <div class="d-flex justify-content-between">
                         <div class="d-flex flex-column">
-                            <span translate>Motion Sensitivity</span>
+                            <span translate>Motion Detection Sensitivity</span>
                         </div>
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>

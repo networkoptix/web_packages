@@ -17,6 +17,7 @@
                        translate>License key</label>
 
                 <div class="position-relative pl-2">
+                    <span id="formattedKey" style="height: 0; width: 0; visibility: hidden">{{formattedKey}}</span>
                     <input type="text"
                            class="form-control input-sm license-key"
                            [specialCharacters]="[ '&mdash;' ]"
@@ -42,6 +43,8 @@
                         translate>Enter license key</span>
                     <span class="input-error" *ngIf="licenseKey.errors.mask"
                           translate>Invalid license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.expired"
+                          translate>Failed to activate license: License is expired</span>
                     <span class="input-error" *ngIf="licenseKey.errors.starter"
                           translate>Only one starter license is allowed per system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.compatibility"

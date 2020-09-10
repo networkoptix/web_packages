@@ -84,7 +84,7 @@ export class NxContentComponent implements OnInit {
         }).then(() => {
             this.showAgree = false;
             if (this.account.is_staff) {
-                window.location.href = '/admin/';
+                window.location.href = decodeURIComponent(this.route.snapshot.queryParams.next ? this.route.snapshot.queryParams.next : '/admin/');
             }
         });
     }

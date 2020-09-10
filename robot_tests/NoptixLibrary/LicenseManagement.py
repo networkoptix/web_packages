@@ -14,6 +14,14 @@ class GenerationError(Exception):
         return str(self.msg)
 
 
+class ActivationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return str(self.msg)
+
+
 class LicenseManagement(object):
     def __init__(self, base_url, auth, login=True):
         self.base_url = base_url
@@ -200,8 +208,12 @@ class LicenseManagement(object):
         else:
             return 'Error: the key is not activated on the server'
 
-    @staticmethod
-    def get_key_info_from_server(server_auth, server_url, key):
+    def get_key_info_from_server(self, server_auth, server_url, key):
+        if '0000-0000-0000' not in key:
+            from_license_portal = self.get_license_info(key)
+        else:
+            from_license_portal = {'count': 4, 'license_type': 'Professional'}
+
         r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]))
         assert 200 == r.status_code
         licenses = r.json()
@@ -213,6 +225,7 @@ class LicenseManagement(object):
             'vmax': 'VMAX',
             'videowall': 'Video Wall',
             'starter': 'Starter',
+            'bridge': 'Bridge'
         }
 
         key_info = {}
@@ -228,8 +241,12 @@ class LicenseManagement(object):
                         key_info.update({'Hardware ID': value})
                     elif key == 'COUNT':
                         key_info.update({'Channels': value})
+                        if int(key_info['Channels']) != int(from_license_portal['count']):
+                            raise ActivationError(f"{key_info['Channels']} != {from_license_portal['count']}")
                     elif key == 'CLASS':
                         key_info.update({'Type': type_map[value]})
+                        if key_info['Type'] != from_license_portal['license_type']:
+                            raise ActivationError(f"{key_info['Type']} != {from_license_portal['license_type']}")
                     elif key == 'EXPIRATION' and value:
                         if ('ORDERTYPE' not in lic['licenseBlock']) and ('0000-0000-0000' not in lic['key']) and (key_info['Type'] != 'Video Wall'):
                             key_info['Type'] = 'Time'
