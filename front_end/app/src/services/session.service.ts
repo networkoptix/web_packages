@@ -20,14 +20,14 @@ export class NxSessionService {
 
         // Listens to changes from other browser tabs.
         this.window.addEventListener('storage', (event) => {
-            if (event.key === 'ngx_loginState') {
+            if (event.key === 'ngx-webstorage|loginstate') {
                 this.window.location.reload();
             }
         });
     }
 
     invalidateSession() {
-        this.session.store('loginState', undefined);
+        this.session.store('loginState', null);
         this.session.store('loginRegister', false);
         this.loginStateSubject.next(this.loginState);
     }
