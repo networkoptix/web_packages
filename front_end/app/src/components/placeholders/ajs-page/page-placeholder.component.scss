@@ -1,4 +1,6 @@
-.page-placeholder {
-    position : absolute;
-    height: calc(100vh - 48px) !important;
+nx-ajs-page-placeholder {
+    & > .page-placeholder {
+        position : absolute;
+        height: calc(100vh - 48px) !important;
+    }
 }
