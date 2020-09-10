@@ -156,7 +156,7 @@
                         <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
                         <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
-                    <nx-section>
+                    <nx-section *ngIf="!selectedCamera.isStream">
                             <h4 class="mb-3" translate>Quality</h4>
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
