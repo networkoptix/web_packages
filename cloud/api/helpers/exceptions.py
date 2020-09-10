@@ -9,7 +9,7 @@ from rest_framework.request import Request
 from rest_framework import status
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.http import QueryDict
+from django.http import QueryDict, HttpResponseRedirect
 from enum import Enum
 
 logger = logging.getLogger(__name__)
@@ -388,7 +388,7 @@ def handle_exceptions(func):
         # noinspection PyBroadException
         try:
             data = func(*args, **kwargs)
-            if not isinstance(data, Response):
+            if not isinstance(data, Response) and not isinstance(data, HttpResponseRedirect):
                 return Response(data, status=status.HTTP_200_OK)
             return data
 
