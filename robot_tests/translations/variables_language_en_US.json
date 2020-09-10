@@ -338,5 +338,7 @@
     "SELECT RECORDING MODE TEXT"           :    "Please select recording mode.",
     "SELECT FPS TEXT"                      :    "Please select FPS.",
     "SELCT QUALITY TEXT"                   :    "Please select recording quality",
-    "MISSING SETTINGS TEXT"                :    "Please update missing recording settings."
+    "MISSING SETTINGS TEXT"                :    "Please update missing recording settings.",
+    "CURRENT TEXT"                         :    "current",
+    "AUTO TEXT"                            :    "Auto"
 }

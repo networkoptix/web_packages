@@ -27,6 +27,7 @@ ${EMAIL NOT OWNER}                    ${TEST EMAIL}+notowner${BASE EMAIL DOMAIN}
 ${EMAIL ADMIN}                        ${TEST EMAIL}+admin${BASE EMAIL DOMAIN}
 ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
 ${EMAIL CUSTOM CAMERAS}               ${TEST EMAIL}+customcameras${BASE EMAIL DOMAIN}
+${EMAIL CUSTOM CAMERAS LIMITED}       ${TEST EMAIL}+customcameraslimited${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}

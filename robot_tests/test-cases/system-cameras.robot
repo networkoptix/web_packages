@@ -37,6 +37,19 @@ Camera settings is available to owner admin and custom with permission
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
+    Log Out
+
+    Log in to user and system    ${EMAIL CUSTOM CAMERAS LIMITED}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Wait Until Elements are Visible
+    ...    ${CAMERAS VIEW BUTTON}
+    ...    ${EDITABLE TITLE}
+    ...    ${ASPECT RATIO DROPDOWN}
+    ...    ${ROTATION DROPDOWN}
+    ...    ${ENABLE AUDIO CHECKBOX}
+    ...    ${EDIT CREDENTIALS BUTTON}
+    ...    ${RECORDING CHECK BOX}
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
@@ -57,21 +70,31 @@ Camera settings is not available to any viewers
     Log Out
 
 Camera settings is not available by direct link to any viewers
+    [Tags]    C76255    threaded
+    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     ${auth}=    Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Element should not be visible    ${CAMERAS LINK}
+
     Log Out
 
     Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
     Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
     Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
@@ -257,6 +280,7 @@ Aspect Ratio
     Verify on Cameras Page
     Select Camera By Name    good cam
     Change Aspect Ratio    1:1
+    Wait Until Element Is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Aspect Ratio Should Be    1:1
@@ -345,18 +369,20 @@ Edit credentials form Close and Cancel buttons
     Click Button    ${EDIT CREDENTIALS CANCEL BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
-# Changing credentials from valid to invalid ones makes the camera unauthorized
-#     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-#     Wait Until Element is Visible    ${CAMERAS LINK}
-#     Click Link    ${CAMERAS LINK}
-#     Verify on Cameras Page
-#     Select Camera By Name    good cam
-#     Click Button    ${EDIT CREDENTIALS BUTTON}
-#     Verify Authentication Form
-#     Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwer
-#     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
-#     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-#     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+Changes made in Image settings in thick client appear correctly on cloud portal
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera by Name    good cam
+    Verify on Cameras Page
+    Element Should Contain    ${ASPECT RATIO DROPDOWN}    ${AUTO TEXT}
+    Element Should Contain    ${ROTATION DROPDOWN}    0˚
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    ${data}=   evaluate    json.loads('''[{"name":"overrideAr","value":"1","resourceId":"{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"},{"name":"rotation","value":"90","resourceId":"{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"}]''')
+    Set All Camera Add Params    ${AUTO SYS IP}    ${auth}    ${data}
+    Reload Page
+    Verify on Cameras Page
+    Element Should Contain    ${ASPECT RATIO DROPDOWN}    1:1
+    Element Should Contain    ${ROTATION DROPDOWN}    90˚
 
 Recording toggle shows correct options
     [Tags]    C76401    threaded
@@ -430,6 +456,7 @@ Record Always
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
+    Verify recording controls are open
     ${value}    Get Checkbox Value    ${RECORD MOTION RADIO BUTTON}
     Should Be Equal As Strings    ${value}    False
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
@@ -451,6 +478,7 @@ Record Motion
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
+    Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -470,6 +498,7 @@ Record Motion + Low Quality
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
+    Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -495,17 +524,15 @@ Check recording triple state
     ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
 
 Disabled Motion With Recording
-    [Tags]    C76408    Threaded
+    [Tags]    C78983    Threaded
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
+    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    motionType    8
+    Reload Page
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera By Name    good cam
-    Click Button    ${DOT-MENU}
-    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
-    Click Link    ${DISABLE MOTION DETECTION LINK}
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Reload page
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Element Should Be Enabled    ${RECORD ALWAYS RADIO BUTTON}
@@ -524,15 +551,14 @@ Disabled Motion With Recording
     Reset Camera    good cam    ${AUTO SYS IP}
     
 Change FPS
-    [Tags]    C76409    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
+    Delete All Text    ${FPS INPUT}
     Input Text    ${FPS INPUT}    20
-    sleep    20
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
@@ -542,7 +568,24 @@ Change FPS
     Should Be Equal As Numbers    ${fps}    20
     Reset Camera    good cam    ${AUTO SYS IP}
 
+Erasing current FPS has placeholder
+    [Tags]    C76409    Threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Toggle Recording
+    Wait Until Element is Visible    ${FPS INPUT}
+    Delete All Text    ${FPS INPUT}
+    Input Text    ${FPS INPUT}    27
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Delete All Text    ${FPS INPUT}
+    Element Attribute Value Should Be    ${FPS INPUT}    placeholder    30 - ${CURRENT TEXT}
+    Click Button    ${SYSTEM CANCEL}
+
+
 Change Quality
+    [Tags]    C76410    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -550,14 +593,17 @@ Change Quality
     Toggle Recording
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
-    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${LOW TEXT}")]
-    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${LOW TEXT}")]
+    Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${BEST TEXT}")]
+    Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${BEST TEXT}")]
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Wait Until Element Contains    ${QUALITY DROPDOWN}    ${BEST TEXT}
     Reset Camera    good cam    ${AUTO SYS IP}
 
 Enable/disable motion detection
+    [Tags]    C76398
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
@@ -573,8 +619,9 @@ Enable/disable motion detection
     Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
     Reload Page
     Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Not Visible    ${MOTION SENSITIVITY IMAGE}
     Click Button    ${ENABLE MOTION DETECTION BUTTON}
-    Wait Until Element Is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Wait Until Elements are Visible
@@ -585,9 +632,6 @@ Enable/disable motion detection
     ...    ${CANVAS}
     ...    ${DOT-MENU}
     Reset Camera    good cam    ${AUTO SYS IP}
-
-
-#Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
     [Tags]    C76254    threaded
@@ -627,12 +671,13 @@ Motion sensitivity block for cameras with different statuses
     Element Should Not Be Visible    ${MOTION SENSITIVITY IMAGE}
 
 Recording Quality dropdown menu functionality for camera with schedule
+    [Tags]    C76417    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera By Name    triple state cam
-    Verify Recording Options are Visible
+    Verify Recording Controls are Open
     Wait Until Elements Are Visible   
     ...    ${RECORDING MODE ERROR}
     ...    ${FPS ERROR}           

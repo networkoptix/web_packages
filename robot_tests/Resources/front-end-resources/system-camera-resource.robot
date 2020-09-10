@@ -23,14 +23,6 @@ Verify on Cameras Page
     ...    ${RECORDING CHECK BOX}
     ...    timeout=40
 
-Verify Recording Options are Visible
-    Wait Until Elements are Visible
-    ...    ${RECORD ALWAYS RADIO BUTTON}/..
-    ...    ${RECORD MOTION RADIO BUTTON}/..
-    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
-    ...    ${FPS INPUT}
-    ...    ${QUALITY DROPDOWN}
-
 Verify Authentication Form
     Wait Until Elements are Visible
     ...    ${EDIT CREDENTIALS LOGIN INPUT}
@@ -41,6 +33,7 @@ Verify Authentication Form
 
 Toggle Recording
     Wait Until Element Is Enabled    ${ENABLED RECORDING SLIDER}
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
     Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
@@ -87,7 +80,7 @@ Get Camera Attribute By Camera Name
         Run Keyword If    '''${camera['name']}'''=='''${name}'''    Return From Keyword    ${camera['${attribute}']}
     END
 
-Verify recording controls are open
+Verify Recording Controls Are Open
     Wait Until Elements Are Visible
     ...    ${RECORD ALWAYS RADIO BUTTON}/..           
     ...    ${RECORD MOTION RADIO BUTTON}/..      
