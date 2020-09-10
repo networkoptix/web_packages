@@ -466,8 +466,8 @@ class ServerManager {
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
-            const _maxFps = primary && primary.value && primary.value.maxFps;
-            const maxFps = _maxFps || 30;
+            const _maxFps = primary && primary.value && (primary.value.maxFps || primary.value.MaxFps);
+            const maxFps = _maxFps || 15;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });

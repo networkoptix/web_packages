@@ -60,7 +60,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     aspectRatios: ISelect[];
     rotations: ISelect[];
     streamQualities: ISelect[];
-    maxFps: number = 30;
+    maxFps: number = 15;
     fps: number = this.maxFps;
     warnings: string[] = [];
     errors: string[] = [];
