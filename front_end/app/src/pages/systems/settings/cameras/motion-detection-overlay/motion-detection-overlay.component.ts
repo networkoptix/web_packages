@@ -73,7 +73,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
     private initRenderer() {
-        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.config.cameraSettings.sensitivityColors, this.unsub$);
+        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.config.cameraSettings.sensitivityColors, this.unsub$, this.sensitivityButtons$);
         this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
     }
 }
