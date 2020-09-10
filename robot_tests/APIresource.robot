@@ -194,6 +194,8 @@ Setup Local System
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+    ${auth}=   Create List    admin    ${new password}
+    Disable Stat Reports    ${auth}    ${server url}
     [Return]    ${resp.json()}
 
 Setup Cloud System
@@ -202,6 +204,8 @@ Setup Cloud System
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+    ${cloud auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+    Disable Stat Reports    ${cloud auth}    ${server url}
     [Return]    ${resp.json()}
 
 Save Cloud System Credentials
@@ -240,6 +244,30 @@ Detach Server From Cloud
     ${resp}=   Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
+
+Get Server Id
+    [Arguments]    ${system url}    ${system auth}    ${server name}
+    Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    FOR    ${server}    IN    @{resp.json()}
+        ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
+        Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
+    END
+
+Remove Resource From System
+    [Arguments]    ${system url}    ${system auth}    ${resource id}
+    &{data}=   Create Dictionary    id=${resource id}
+    Create Digest Session    Remove Resourcesession    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Post Request    Remove Resource session     /ec2/removeResource    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Remove Server From System
+    [Arguments]    ${system url}    ${system auth}    ${server url}    ${server auth}    ${server name}
+    Detach Server From System    ${server url}    ${server auth}
+    ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
+    Remove Resource From System    ${system url}    ${system auth}    ${id}
 
 Activate License
     [Arguments]    ${auth}    ${server url}    ${license}
@@ -317,13 +345,13 @@ Check Allow Only Secure Connections
     ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
     Should Be Equal As Strings    ${resp.status_code}    200
     
-Set Camera Name
-    [Arguments]    ${server url}    ${auth}    ${camera id}    ${name}
+Set Camera Attribute
+    [Arguments]    ${server url}    ${auth}    ${camera id}    ${attribute}    ${value}
     &{data} =    Create Dictionary
-    ...    cameraId={${camera id}}
-    ...    cameraName=${name}
+    ...    cameraId=${camera id}
+    ...    ${attribute}=${value}
     Create Digest Session    Save camera name    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributesList    json=${data}    timeout=10
+    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributes    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
@@ -387,3 +415,9 @@ Change server port via API
     ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10
     Return From Keyword    ${resp}
 
+Disable Stat Reports
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Disable Statistics   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Disable Statistics    /api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}

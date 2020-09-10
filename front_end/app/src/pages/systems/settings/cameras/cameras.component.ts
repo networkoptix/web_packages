@@ -15,7 +15,7 @@ import {
 import {
     filter, map, retryWhen, delay, distinctUntilChanged, takeUntil, retry, tap, catchError, mergeMap, switchMap
 }                                    from 'rxjs/operators';
-import { ActivatedRoute }            from '@angular/router';
+import { ActivatedRoute, Router }    from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
 
 import { NxHealthService }           from '../../../health/health.service';
@@ -313,6 +313,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private router: Router,
         private menuService: NxMenuService,
         private settingsService: NxSettingsService,
         private route: ActivatedRoute,
@@ -346,7 +347,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    if (!this.applyService.locked) this.setCamera();
+                    if (!this.applyService.locked) {
+                        this.setCamera();
+                    }
                 }
             });
 
@@ -393,6 +396,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
+                        if (!this.system.permissions.editCameras) {
+                            return this.router.navigate(['systems', this.system.id])
+                                .catch(error => console.error(error));
+                        }
                         this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
@@ -401,7 +408,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (!this.applyService.locked) this.setCamera();
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
-                        this.showPreloader = false;
+                        if (this.noCameras) {
+                            this.showPreloader = false;
+                        }
                     });
             });
         this.initUpdateProcess();
@@ -587,7 +596,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     preventContext = event => event.preventDefault();
 
     handleRecordingToggle() {
-        if (!this.recording && !this.availableLicenses) {
+        if (this.recordingWatcher.originalValue ? this.availableLicenses < 0 : this.availableLicenses <= 0) {
             this.shakeHint = true;
             setTimeout(() => {
                 this.shakeHint = false;
@@ -627,15 +636,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const value =  enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
+        this.updateMotionWarning();
     }
 
     enableMotion = () => {
         this.motionEnabled = true;
-        this.recordingModes = this.recordingModes.map(({ name, id }) => {
-            const enabled = id === 'RT_Always' || this.motionEnabled;
-            const value =  id === 'RT_MotionOnly' ? 2 : 0;
-            return { name, id, enabled, value };
-        });
+        this.updateMotionWarning();
+    }
+
+    updateMotionWarning() {
+        const [always, motion, lowMotion] = this.recordingModesWatcher.originalValue;
+        const show = this.motionEnabledWatcher.value && this.motionEnabledWatcher.changed && (motion.value + lowMotion.value);
+        this.applyService.setWarn(show ? this.LANG.common.disableMotionWarning : '');
     }
 
     getSupportedMotion() {
@@ -664,7 +676,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.alerts = [];
         }
 
-        if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
+        if (
+            this.system &&
+            this.system.cameras &&
+            this.system.cameras.length > 0 &&
+            this.applyService &&
+            this.applyService.applyComponentRef &&
+            this.applyService.applyComponentRef.instance &&
+            !this.applyService.locked
+        ) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
 
@@ -695,7 +715,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     ])
                 ]
             ];
-            this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
@@ -717,6 +736,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }).catch(_ => {
                 this.availableLicenses = 0;
             });
+            this.showPreloader = false;
         } else {
             this.noCameras = true;
         }

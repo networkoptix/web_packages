@@ -10,7 +10,7 @@ Verify on Cameras Page
     ...    ${CAMERAS DETAILED INFO BUTTON}
     ...    ${ASPECT RATIO DROPDOWN}
     ...    ${ROTATION DROPDOWN}
-    ...    ${ENABLE AUDIO CHECKBOCK}
+    ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
 
@@ -30,8 +30,8 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS CANCEL BUTTON}
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
-Enable Recording
-    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+Toggle Recording
+    Wait Until Element Is Enabled    ${ENABLED RECORDING SLIDER}
     Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
@@ -59,14 +59,16 @@ Rotation Should Be
 
 Audio Enabled Should Be
     [Arguments]    ${expected state}
-    ${current state}=   ${Get Checkbox Value    ${ENABLE AUDIO CHECKBOCK}
-    Should Be Equal    ${expected state}    ${current state}
+    Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}
+    ${current state}=   Get Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input
+    Should Be Equal    "${expected state}"    "${current state}"
 
 Camera Name Should Be
     [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
     ${cameras}=   Get Cameras    ${auth}    ${server url}
-    FOR    ${camera}  IN  ${cameras[0]}
-        Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']    ${name}
+    FOR    ${camera}  IN  @{cameras}
+        log   ${camera}
+        Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']}    ${name}
     END
 
 Get Recording Status
@@ -75,3 +77,17 @@ Get Recording Mode
 
 Get Recording Quality
 
+Get Camera Attribute By Camera Name
+    [Arguments]    ${auth}    ${server url}    ${name}    ${attribute}
+    ${cameras}=    Get Cameras    ${auth}    ${server url}
+    FOR    ${camera}  IN  @{cameras}
+        Run Keyword If    '''${camera['name']}'''=='''${name}'''    Return From Keyword    ${camera['${attribute}']}
+    END
+
+Verify recording controls are open
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    ...    ${FPS INPUT}                             
+    ...    ${QUALITY DROPDOWN}

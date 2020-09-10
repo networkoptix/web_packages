@@ -127,17 +127,20 @@
                                 [value]="recording"
                                 [label]="'Recording' | translate"
                                 componentId="recording"
-                                [disabled]="availableLicenses === 0"
+                                [disabled]="!recording && recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0"
                                 (click)="handleRecordingToggle()"></nx-switch>
-                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses, 'shake-hint': shakeHint}">{{
-                                availableLicenses > 0 ?
+                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{
+                                'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
+                                'shake-hint': shakeHint
+                            }">{{
+                                availableLicenses > 0 ||  recordingWatcher.originalValue && availableLicenses === 0 ?
                                 ('1 professional license channel will be used' | translate)  :
                                 ('Professional license is required' | translate)
                             }}</div>
                         </div>
                     </div>
                 </header>
-                <ng-container *ngIf="recording && availableLicenses">
+                <ng-container *ngIf="recording">
                     <nx-section>
                         <h4 class="mb-3" translate>Mode</h4>
                             <nx-radio

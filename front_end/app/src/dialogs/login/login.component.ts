@@ -185,7 +185,7 @@ export class LoginModalContent implements OnInit {
                 }
             } else if (this.next) {
                 // sanitize this.next
-                this.next = NxUtilsService.getRelativeLocation(this.next);
+                this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
                 this.router
                     .navigate([this.next])
                     .then(() => {

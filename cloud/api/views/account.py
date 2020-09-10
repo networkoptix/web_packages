@@ -40,7 +40,6 @@ def set_session_credentials(request, email, password):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def register(request):
     from util.helpers import detect_language_by_request
     logger.debug('/api/account/register called')
@@ -69,7 +68,6 @@ def register(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def login(request):
     user = None
     if 'login' in request.session and 'password' in request.session:
@@ -115,7 +113,6 @@ def login(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def logout(request):
     kill_session(request)
     return api_success()
@@ -123,7 +120,6 @@ def logout(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def index(request):
     if request.method == 'GET':
         # validate credentials in cloud_db
@@ -151,7 +147,6 @@ def index(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-@handle_exceptions
 def auth_key(request):
     data = Account.create_temporary_credentials(request.session['login'], request.session['password'], 'short')
 
@@ -161,7 +156,6 @@ def auth_key(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-@handle_exceptions
 def delete_user(request):
     require_params(request, ('password',))
     user = request.user
@@ -179,7 +173,6 @@ def delete_user(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-@handle_exceptions
 def change_password(request):
     require_params(request, ('old_password', 'new_password'))
     old_password = request.data['old_password']
@@ -204,7 +197,6 @@ def change_password(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def activate(request):
     if 'code' in request.data:
         code = request.data['code']
@@ -240,7 +232,6 @@ def activate(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def restore_password(request):
     if 'code' in request.data:
         code = request.data['code']
@@ -271,7 +262,6 @@ def restore_password(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def check_code_in_portal(request):
     require_params(request, ('code',))
     code = request.data['code']
@@ -282,7 +272,6 @@ def check_code_in_portal(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-@handle_exceptions
 def check_auth_code(request):
     require_params(request, ('code',))
     code = request.data['code']

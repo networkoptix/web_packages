@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。",
     "ENTER LICENSE KEY TEXT": "ライセンスキーを入力してください",
     "INVALID LICENSE KEY TEXT": "無効なライセンスキーです。",
+    "LICENSE IS EXPIRED TEXT": "ライセンスの有効化に失敗しました: ライセンスの有効期限が切れています",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "ライセンスタイプはシステムと互換性がありません",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "ライセンスキーはすでにこのシステムでアクティベートされています",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "ライセンスキーはすでに有効化されており、ハードウェアIDでサーバーにバインドされています",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID %HWID% を持つサーバーに登録されています",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "システムごとに許可されるスターターライセンスは1つだけです",
     "LICENSE SERVER DID NOT RESPOND TEXT": "ライセンスのアクティベートに失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
     "FAILED TO ACTIVATE LICENSE TEXT": "ライセンスのアクティベートに失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "1024未満のポート番号が制限されています。サーバーにアクセスできなくなる可能性があります。",
     "SERVER RESTARTED TEXT": "サーバーは正常に再起動しました。",
     "HOURS TEXT": "時間",
-    "MINUTES TEXT": "分"
+    "MINUTES TEXT": "分",
+    "NO IMAGE TEXT": "画像なし",
+    "CAMERA UNAUTHORIZED TEXT": "カメラにアクセスする権限がありません",
+    "CAMERA OFFLINE TEXT": "カメラはオフラインです",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "プロフェッショナルライセンスが必要です",
+    "ONE LICENSE WILL BE USED TEXT": "プロフェッショナルライセンスチャンネルを1つ使用します",
+    "MOTION DETECTION DISABLED TEXT": "モーション検知が無効になっています",
+    "FOUND TEXT": "検出されました"
 }

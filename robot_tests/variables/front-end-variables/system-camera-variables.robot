@@ -5,7 +5,7 @@ ${CAMERAS VIEW BUTTON}                       //h4//button[@id="view-camera"]
 ${CAMERAS DETAILED INFO BUTTON}              //h4//button[@id="detailed-info"]
 ${ASPECT RATIO DROPDOWN}                     //button[@id="aspect-ratios"]
 ${ROTATION DROPDOWN}                         //button[@id="rotations"]
-${ENABLE AUDIO CHECKBOCK}                    //nx-section//nx-checkbox[@name="audioEnabled"]
+${ENABLE AUDIO CHECKBOX}                    //nx-section//nx-checkbox[@name="audioEnabled"]
 ${EDIT CREDENTIALS BUTTON}                   //nx-section//button[@id="update-credentials"]
 ${EDIT CREDENTIALS FORM}                     //form[@name="updateForm"]
 ${EDIT CREDENTIALS LOGIN INPUT}              ${EDIT CREDENTIALS FORM}//input[@id="cameraLoginCredentials"]
@@ -39,3 +39,4 @@ ${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[@data
 ${CAMERA ERROR TEXT}                         ${CAMERA ERROR BAR}//div[@class="warning-margin"]/span
 ${LICENSE REQUIRED WARNING}                  //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
 ${ONE LICENSE WILL BE USED WARNING}          //nx-switch[@componentid="recording"]/following-sibling::div[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
+${MOTION DETECTION DISABLED WARNING}         //nx-section//span[contains(@class,"input-error") and contains(text(),"${MOTION DETECTION DISABLED TEXT}")]

@@ -96,20 +96,39 @@ Activate Key
     ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
     Sleep    2    # To avoid clicking the button before key is completely input
     Click Button    ${ACTIVATE BUTTON}
-    Run Keyword If    ${success}     Check For Alert    ${LICENSE IS ACTIVATED TEXT}
-    Run Keyword Unless    '${error text}' == '${EMPTY}'   Wait Until Element Is Visible    //span[contains(text(), "${error text}")]    timeout=20
+    Run Keyword If    ${success}    Run Keywords
+        ...    Check For Alert    ${LICENSE IS ACTIVATED TEXT}
+        ...    AND    Verify license is listed first    ${key}
+        ...    AND    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(@class, "input-error")]
+    Run Keyword Unless    '${error text}' == '${EMPTY}'   Validate Input Error     ${error text}
 
 Activate Trial
     Wait Until Elements Are Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
     Click Button    ${ACTIVATE TRIAL BUTTON}
     Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
     Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
+#    Commented out due to CLOUD-5714
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${EMPTY}
+
+Get Formatted Key Input
+    ${formatted key}=   Get Hidden Inner HTML    ${FORMATTED KEY}
+    [Return]    ${formatted key}
 
 Validate Input Error
     [Arguments]    ${error text}
-    Wait Until Element Is Visible   ${ACTIVATE TRIAL FORM}//span[contains(text(), "${error text}")]
-    ${class}=   Get Element Attribute    ${LICENSE KEY INPUT}
-    Should Contain    ${class}    ng-dirty ng-touched ng-invalid
+    Wait Until Element Is Visible   ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]
+    ${class}=   Get Element Attribute    ${LICENSE KEY INPUT}    class
+    FOR    ${val}    IN    ng-dirty    ng-touched    ng-invalid
+        Should Contain    ${class}    ${val}
+    END
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
+
+Validate Input Normal State
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    rgba(18, 21, 23, 1)
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    rgb(47, 162, 219)
 
 # Licenses Summary
 Number of Channels
@@ -132,20 +151,29 @@ Validate Summary Record
     Should Be Equal As Numbers    ${av}    ${available}
 
 # Licenses Details
+Verify license is listed first
+    [Arguments]    ${key}
+    ${first license}=   Get Text    ${FIRST LICENSE}
+    Should Be Equal As Strings    ${first license}    ${key}
+
 Get Key Server
     [Arguments]    ${key}
-    ${key path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
-    ${server}=   Get Text    ${key path}
-    ${class}=   Get Element Attribute    ${key path}    class
-    Run Keyword If    '''${server}''' == '''Server not found'''    Should Contain    ${class}    error
+    ${server path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
+    ${server}=   Get Text    ${server path}
+    ${class}=   Get Element Attribute    ${server path}    class
+    Run Keyword If    '''${server}''' == '''Server not found'''    Run Keywords
+        ...    Should Contain    ${class}    error
+        ...    AND    Wait Until Element Has Style    ${server path}    color    ${ERROR COLOR WITH OPACITY}
     [Return]    ${server}
 
 Get Key Status
     [Arguments]    ${key}
-    ${key path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
-    ${status}=   Get Text    ${key path}
-    ${class}=   Get Element Attribute    ${key path}    class
-    Run Keyword If    '''${status}''' == '''Error'''    Should Contain    ${class}    error
+    ${status path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
+    ${status}=   Get Text    ${status path}
+    ${class}=   Get Element Attribute    ${status path}    class
+    Run Keyword If    '${status}' in ['Error', 'Expired']    Run Keywords
+        ...    Should Contain    ${class}    error
+        ...    AND    Wait Until Element Has Style    ${status path}    color    ${ERROR COLOR WITH OPACITY}
     [Return]    ${status}
 
 Validate License Info
@@ -165,9 +193,9 @@ Validate License Info
         ${k}=   Set Variable    ${kv}[0]
         ${v}=   Set Variable    ${kv}[1]
         Run Keyword Unless    $k in $supp_params   Should Be Equal As Strings    ${v}    ${key info}[${k}]
-
-        ${key status}=   Get Key Status    ${key}
-        ${key server}=   Get Key Server    ${key}
-        Should Be Equal As Strings    ${key status}    ${status}
-        Should Be Equal As Strings    ${key server}    ${server ${server num}}
     END
+
+    ${key status}=   Get Key Status    ${key}
+    ${key server}=   Get Key Server    ${key}
+    Should Be Equal As Strings    ${key status}    ${status}
+    Should Be Equal As Strings    ${key server}    ${server ${server num}}

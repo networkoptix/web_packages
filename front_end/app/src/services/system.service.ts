@@ -527,7 +527,7 @@ class ServerManager {
     }
 
     private parseFps(schedule: ITask[], max: number): number | 'various' {
-        const schedulesWithFps = schedule.filter(({ fps, bitrateKbps }) => fps !== 0 && bitrateKbps).map(({ fps }) => fps);
+        const schedulesWithFps = schedule.filter(({ fps, recordingType }) => fps !== 0 && recordingType !== 'RT_Never').map(({ fps }) => fps);
         const uniqueFps = new Set(schedulesWithFps);
         const currentFps = Array.from(uniqueFps);
         return schedulesWithFps.length === 0 ? max : currentFps.length === 1 ? currentFps[0] : 'various';
@@ -614,7 +614,14 @@ class ServerManager {
     };
 
     activateLicense(serverId, key) {
-        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+        if (!this.mediaserverConnections) {
+            return this.initSystemMediaServers()
+                .then(() => {
+                    return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+                })
+        } else {
+            return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+        }
     }
 
     renameServer(serverId, serverName) {
@@ -748,10 +755,10 @@ export class NxSystem extends System implements OnDestroy {
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
     getLicenseChannels(): Promise<{total: number, used: number, available: number}> {
-        return this.serverManager.getLicenses().then((licenses: any[]) => {
+        return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
             const parsedLicenses = licenses.map(this.parseLicense);
-            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
-                const activeLicense = !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
+            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
+                const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;

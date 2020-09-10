@@ -96,6 +96,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${symbol password}
+    Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out

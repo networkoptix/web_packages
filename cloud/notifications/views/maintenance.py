@@ -94,7 +94,6 @@ def check_queue(queue, age_threshold, number_visible_threshold):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def health_email(request):
     return check_queue(
         'celery', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD, APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
@@ -103,7 +102,6 @@ def health_email(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def health_push(request):
     return check_queue(
         'push-notification', PUSH_APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD,

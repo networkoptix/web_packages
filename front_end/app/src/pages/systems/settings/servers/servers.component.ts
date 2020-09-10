@@ -82,7 +82,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
                 if (!system.permissions || !system.permissions.editUsers) {
                     this.uriService
-                        .updateURI('systems/' + this.system.id, {})
+                        .updateURI('systems/' + system.id, {})
                         .catch(error => {
                             console.error(error);
                         });
