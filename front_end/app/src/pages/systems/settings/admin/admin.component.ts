@@ -111,6 +111,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.accountService.get()
             .then((account) => {
+                // @ts-ignore
                 this.user = account;
             });
 

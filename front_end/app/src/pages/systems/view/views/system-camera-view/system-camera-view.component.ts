@@ -30,6 +30,7 @@ export class NxSystemCameraViewComponent implements OnInit {
   public ngOnInit () {
     this.route.params.subscribe(params => {
       return this.accountService.get().then(account => {
+        // @ts-ignore -- TODO: Need to handle account not being available
         this.system = this.systemService.createSystem(account.email, this.route.snapshot.parent.params.systemId)
         this.pollSystemForMediaServers()
       })

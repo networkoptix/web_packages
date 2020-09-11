@@ -198,7 +198,8 @@ export class NxProcessService {
      * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
      */
     createProcess(
-        caller: (() => Promise<any>) | Observable<any>,
+        caller: any,
+        // caller: (() => Promise<any>) | Observable<any>,
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},
         errorHandler: Handler = logError,

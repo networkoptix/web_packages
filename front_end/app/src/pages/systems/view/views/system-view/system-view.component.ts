@@ -51,6 +51,7 @@ export class NxSystemViewComponent implements OnInit, OnDestroy {
 
   private initSystem (): Promise<any> {
     return this.accountService.get().then(account => {
+      // @ts-ignore -- TODO: Need to handle account not being available
         this.system = this.systemService.createSystem(account.email, this.systemId)
         return this.system.getMediaServersAndCameras().then(mediaServers => {
           this.mediaServers = mediaServers

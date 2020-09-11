@@ -65,7 +65,7 @@ export class NxOverlayModalComponent implements OnInit {
 
     ngOnInit() {
         this.accountService.get().then(account => {
-            if (!account?.id) {
+            if (!account) {
                 return;
             }
             const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);

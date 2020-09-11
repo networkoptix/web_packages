@@ -12,8 +12,6 @@ import { NxUrlProtocolService }      from './url-protocol.service';
 import { NxApplyService }            from './apply.service';
 import { NxHeaderService }           from './nx-header.service';
 import { NxScrollMechanicsService }  from './scroll-mechanics.service';
-import { CloudAccount }              from './account.service/cloud';
-import { LocalAccount }              from './account.service/local';
 import { NxSearchService }           from './search.service';
 import { NxAppSourceService }        from './nx-app-source.service';
 
@@ -34,10 +32,7 @@ import { NxAppSourceService }        from './nx-app-source.service';
         NxUtilsService,
         NxPageService,
         NxSystemsService,
-        {
-            provide  : NxAccountService,
-            useClass : NxConfigService.resolveLocalOrCloud(LocalAccount, CloudAccount)
-        },
+        NxAccountService,
         NxSearchService,
         NxUrlProtocolService,
         NxHeaderService,
