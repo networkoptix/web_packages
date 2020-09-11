@@ -101,11 +101,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnInit(): void {
         this.initForApplyService();
 
-        this.applyService.initPageWatcher(
-            this.applyRef,
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.ipPortWatcher],
             this.saveSettings,
-            () => this.applyService.reset(),
-            [this.ipPortWatcher]);
+            () => {
+                this.ipPortWatcher.reset();
+            }
+        );
 
         this.applyService.setVisible(false);
     }
@@ -178,6 +180,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                         this.applyService.reset();
                     });
             }
+            return Promise.resolve();
         });
     }
 

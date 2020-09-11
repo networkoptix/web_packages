@@ -1,5 +1,5 @@
 import {
-    Component, Inject,
+    Component, Inject, ViewContainerRef,
     LOCALE_ID, Input, OnChanges,
     SimpleChanges, OnInit
 }                                                from '@angular/core';
@@ -11,7 +11,7 @@ import {
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
-import { Watcher }                   from '../../../../../services/apply.service';
+import { Watcher, NxApplyService }   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
 import { NxSystem }                  from '../../../../../services/system.service';
@@ -44,24 +44,26 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    viewContainerRef: ViewContainerRef;
 
     loading: boolean;
     showStorage: boolean;
     systemSubscription: Subscription;
     storageSubscription: Subscription;
     systemStorageSubscription: Subscription;
-    saveSettings: Process;
     systemStorages: any;
-    watchers: Watcher<any>[] = [];
     reindexingMain = false;
     percentMainDone = 0;
     reindexingBackup = false;
     percentBackupDone = 0;
     storage$ = new BehaviorSubject<any[] | any>([]);
+    refreshStorages$ = new Subject<any>();
 
     doesBackupExist = false;
-    isBackupOn = false;
     customSettings = false;
+    shouldSaveDefaultSettings = false;
+    isBackupOn: Watcher<boolean> = new Watcher();
+    watchers: Watcher<any>[] = [this.isBackupOn];
 
     ddWidth: number;
     modes: any;
@@ -76,12 +78,16 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
+        @Inject(ViewContainerRef) viewContainerRef,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
+        private processService: NxProcessService,
+        private applyService: NxApplyService,
         @Inject(LOCALE_ID) private locale: string
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+        this.viewContainerRef = viewContainerRef;
         this.showStorage = false;
         this.loading = true;
 
@@ -111,7 +117,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
         if (this.system?.currentServerNotBusy && this.system?.servers?.length && this.serverId) {
             this.storageSubscription = combineLatest(
-                this.system.getStorages({ id: this.serverId }),
+                this.refreshStorages$,
                 this.system.updateOrGetSystemStorage(),
                 this.system.getRecordStats())
 
@@ -170,12 +176,97 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                     });
 
                     this.showStorage = (Object.keys(storage).length > 0);
+                    this.setupWatchers();
                     this.updateStorage(storage);
 
                     this.loading = false;
                 });
+            this.system.getStorages({ id: this.serverId }).toPromise()
+                .then(storages => {
+                    this.refreshStorages$.next(storages);
+                });
             this.getSystemStorages();
         }
+    }
+
+    setupWatchers() {
+        const resetWatchers = () => {
+            this.shouldSaveDefaultSettings = false;
+            this.watchers.forEach(watcher => watcher.reset());
+        };
+
+        const saveSettings: Process = this.processService.createProcess(() => {
+            if (this.isBackupOn.value) {
+                if (this.shouldSaveDefaultSettings) {
+                    return this.setDefaultBackupSettings();
+                }
+            } else {
+                return this.turnOffBackup();
+            }
+        });
+
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.isBackupOn],
+            saveSettings,
+            resetWatchers
+        );
+    }
+
+    async doesCurrentServerHaveDefaultSettings() {
+        try {
+            // check if backupNewCamerasBeDefault in system settings is true
+            const res: any = await this.system.updateOrGetSystemSettings().toPromise();
+            if (res) {
+                const { settings } = res.reply;
+                if (!settings.backupNewCamerasByDefault) return false;
+            }
+
+            // check if server.backupType === 'BackupRealTime'
+            const server = this.system.servers.find(({ id }) => this.serverId === id);
+            if (server && server.backupType !== 'BackupRealTime') return false;
+
+            // check all cameras to see if backupType === 'CameraBackupDefault' || 'CameraBackupLowQuality'
+            return this.system.cameras.every(camera => {
+                return ['CameraBackupDefault', 'CameraBackupLowQuality'].includes(camera.backupType);
+            });
+        } catch (error) {
+            console.error('error while retrieving data checking server for default backup settings', error);
+        }
+    }
+
+    setDefaultBackupSettings = async () => {
+        try {
+            await this.system.updateOrGetBackupControl(this.serverId, 'start');
+            await this.system.updateOrGetSystemSettings({
+                backupNewCamerasByDefault: true, backupQualities: 'CameraBackupDefault'
+            }).toPromise();
+            await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
+            await this.system.initSystemMediaServers();
+            const cameraSettingsToSave = [];
+            this.system.cameras.forEach(camera => {
+                if (camera.backupType !== 'CameraBackupDefault') {
+                    cameraSettingsToSave.push(
+                        this.system.setCameraUserSettings(this.serverId, camera.id, { backupType: 'CameraBackupDefault' })
+                    );
+                }
+            });
+            await Promise.all(cameraSettingsToSave);
+            await this.system.update();
+            const updatedStorages = await this.system.getStorages({ id: this.serverId }).toPromise();
+            this.refreshStorages$.next(updatedStorages);
+            return Promise.resolve();
+        } catch (error) {
+            console.error('error while setting backup to default settings', error);
+        }
+    }
+
+    turnOffBackup = async () => {
+        await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
+        const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
+        if (backupControlRes?.reply.state !== 'BackupState_None') {
+            await this.system.updateOrGetBackupControl(this.serverId, 'stop');
+        }
+        return Promise.resolve();
     }
 
     checkIfBackupEnabled(server: any) {
@@ -185,40 +276,35 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         );
     }
 
-    // will finish in CLOUD-5589
     checkArchiveState() {
         let isBackupForCurrentServerEnabled = false;
-        // let doesCurrentServerHaveDefaultSettings = false;
         let isBackupForAnyServersEnabled = false;
         this.system.servers.forEach(server => {
             if (server.id === this.serverId) {
                 isBackupForCurrentServerEnabled = this.checkIfBackupEnabled(server);
-                // need to figure out how to check for default settings
-                // if (isBackupForCurrentServerEnabled) {
-                //     doesCurrentServerHaveDefaultSettings = ?
-                // }
+                if (isBackupForCurrentServerEnabled) {
+                    isBackupForAnyServersEnabled = true;
+                }
             } else if (!isBackupForAnyServersEnabled) {
                 isBackupForAnyServersEnabled = this.checkIfBackupEnabled(server);
             }
         });
 
         if (isBackupForCurrentServerEnabled) {
-            this.isBackupOn = true;
-            this.customSettings = true;
-            // this.customSettings = !doesCurrentServerHaveDefaultSettings;
+            this.isBackupOn.value = true;
+            this.customSettings = !this.doesCurrentServerHaveDefaultSettings();
         } else {
+            this.isBackupOn.value = false;
             this.customSettings = false;
-            this.isBackupOn = !isBackupForAnyServersEnabled;
-            // if no server in system has backup settings on, should automatically save default settings and turn backup on?
-            // if (this.isBackupOn) {
-            //     // save default settings
-            // }
+            if (!isBackupForAnyServersEnabled) this.isBackupOn.value = true;
+            // if no server in system has backup settings on, should trigger apply service
+            if (this.isBackupOn.value) {
+                this.shouldSaveDefaultSettings = true;
+            }
         }
     }
 
     updateStorage(storage) {
-        this.checkArchiveState();
-
         let numOfBackups = 0;
         let numOfMains = 0;
         let isUpdating = false;
@@ -236,6 +322,11 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         // gets rid of backup archive section if changing from backup to main
         // waits until finished changing modes when changing from main to backup
         this.doesBackupExist = Boolean(numOfBackups) && !isUpdating;
+        if (this.doesBackupExist) {
+            this.checkArchiveState();
+        } else {
+            this.isBackupOn.value = false;
+        }
         this.storage$.next(storage);
     }
 
@@ -367,15 +458,16 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     updateBackupState(value) {
-        // save new backup state
-        this.isBackupOn = value;
+        this.isBackupOn.value = value;
+        if (value) {
+            this.checkArchiveState();
+        } else {
+            this.shouldSaveDefaultSettings = false;
+        }
     }
 
     resetBackupToDefault() {
-        return this.dialogs.resetBackupToDefaultSettings(this.system)
-            .then(res => {
-                console.log('res from resetBack', res);
-            });
+        return this.dialogs.resetBackupToDefaultSettings(this.system, this.setDefaultBackupSettings);
     }
 
     addExternalStorage() {

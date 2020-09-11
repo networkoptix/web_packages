@@ -466,7 +466,7 @@ export class NxDialogsService {
         return this.createModal(UpdateCameraCredentialsModalContent, options, params);
     }
 
-    resetBackupToDefaultSettings(system: NxSystem) {
+    resetBackupToDefaultSettings(system: NxSystem, setDefaultBackupSettings: () => {}) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -474,6 +474,7 @@ export class NxDialogsService {
 
         const params: IParams = {
             system,
+            setDefaultBackupSettings,
             closable: true
         };
 

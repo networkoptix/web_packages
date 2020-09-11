@@ -3,7 +3,7 @@ import {
     ViewContainerRef, ComponentRef, ViewChild
 } from '@angular/core';
 import { NgForm }                               from '@angular/forms';
-import { BehaviorSubject, merge, Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Subscription, Observable, from } from 'rxjs';
 import {
     distinctUntilChanged, filter, skip, map, combineLatest
 }                                               from 'rxjs/operators';
@@ -170,16 +170,20 @@ export class FormWatcher {
  * @class
  */
 export class NxApplyService {
-    public applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
-    private discardFunction: () => void;
+    private submitFunctions = [];
+    private discardFunctions = [];
+    private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
     private lockedSubscription: Subscription;
-    public watchers: Watcher<any>[];
+    private watchers: Watcher<any>[];
+
     private watchersSubscription: Subscription;
 
     isOnline$ = new BehaviorSubject(true);
@@ -229,6 +233,28 @@ export class NxApplyService {
     }
 
     /**
+     * This iterates through the applyFunctions which is an Process[], it calls them in series until one fails.
+     *
+     * The this.applyFunctions.reduce starts with a resolved promise, calls .then on the promise then returns the next promise.
+     *
+     * If a process along the chain gets rejected, subsequent promises reject until it gets returned.
+     *
+     * When a process fails that rejected promise gets returned and is handled by the process that this.runProcesses was passed to.
+     *
+     * Two things to consider. The Process.then(successCB, errorCB) callbacks need to return something else the chain will end.
+     * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
+     */
+    runProcesses = () => this.applyFunctions.reduce(
+        async(prevPromise, process, index) => {
+            return prevPromise.then(prevRes => {
+                return new Promise((resolve, reject) => {
+                    process.run().then((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                }).catch(res => Promise.reject(res));
+            }).catch(res => Promise.reject(res));
+        }, Promise.resolve()
+    );
+
+    /**
      * Creates the NxApplyComponent for the current page and sets the watchers.
      * @param component The target component where the NxApplyComponent is to be created.
      * @param saveFunction The process that is suppose to run when save is pressed.
@@ -252,8 +278,23 @@ export class NxApplyService {
         this.component = component;
 
         this.createComponent(onlyShowSectionWatchers);
-        this.setSaveFunction(saveFunction);
-        this.setDiscardFunction(discardFunction);
+        this.applyFunctions = [saveFunction];
+        this.applyFunction = this.processService.createProcess(
+            this.runProcesses,
+            {}).then(
+            (res) => {
+                this.reset();
+                return res;
+            },
+            (res) => {
+                // need to figure out how to reset
+                this.reset();
+                return res;
+            }
+        );
+        if (discardFunction) {
+            this.discardFunctions = [discardFunction];
+        }
         if (form) {
             this.setForm(form);
         }
@@ -261,7 +302,12 @@ export class NxApplyService {
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent> this.applyComponentRef.instance).show = value;
         });
-        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = submitFn;
+        if (submitFn) {
+            this.submitFunctions = [submitFn];
+        }
+        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => this.submitFunctions.forEach(submitFn => submitFn());
+        (<NxApplyComponent> this.applyComponentRef.instance).discard = this.discardFunction;
+        (<NxApplyComponent> this.applyComponentRef.instance).save = this.applyFunction;
     }
 
     // ... Breadcrumbs ... TT
@@ -383,10 +429,6 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
-
-
-
-
         return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
                 status => {
@@ -434,16 +476,6 @@ export class NxApplyService {
         ).subscribe(isOnline => {
             (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
         });
-    }
-
-    private setDiscardFunction(func: () => void) {
-        this.discardFunction = func;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
-    }
-
-    private setSaveFunction(func: Process) {
-        this.applyFunction = func;
-        (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
 
     public setForm(form: NgForm) {
@@ -508,25 +540,14 @@ export class NxApplyService {
     }
 
     private extendApplyFunction(applyFunction: Process) {
-        const prevApply: any = this.applyFunction;
-        this.setSaveFunction(this.processService.createProcess(() => {
-            return prevApply.run().caller$.toPromise().finally(applyFunction.run);
-        }));
+        this.applyFunctions.push(applyFunction);
     }
 
     private extendDiscardFunction(discardFunction: () => void) {
-        const prevDiscard = this.discardFunction;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
-            prevDiscard();
-            discardFunction();
-        };
+        this.discardFunctions.push(discardFunction);
     };
 
     private extendSubmitFunction(submitFunction: () => void) {
-        const prevSubmitFn = (<NxApplyComponent> this.applyComponentRef.instance).submitFn;
-        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => {
-            prevSubmitFn();
-            submitFunction();
-        };
-    };
+        this.submitFunctions.push(submitFunction);
+    }
 }

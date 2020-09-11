@@ -1,6 +1,6 @@
 import { Injectable }                 from '@angular/core';
 import { Observable, Subject, defer } from 'rxjs';
-import { takeUntil }                  from 'rxjs/operators';
+import { takeUntil, tap }                  from 'rxjs/operators';
 
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService }            from '../dialogs/toast.service';
@@ -198,8 +198,7 @@ export class NxProcessService {
      * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
      */
     createProcess(
-        caller: any,
-        // caller: (() => Promise<any>) | Observable<any>,
+        caller: (() => PromiseLike<any>) | Observable<any>,
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},
         errorHandler: Handler = logError,

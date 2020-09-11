@@ -105,14 +105,14 @@
     <header>
         <div class="header-top-bar">
             <nx-switch
-                [ngModel]="isBackupOn"
+                [ngModel]="isBackupOn.value"
                 (ngModelChange)="updateBackupState($event)"
                 componentId="archive-backup"
             ></nx-switch>
             <h4 class="ml-2" translate>Archive Backup</h4>
         </div>
     </header>
-    <nx-section *ngIf="isBackupOn">
+    <nx-section *ngIf="isBackupOn.value">
         <div class="archive-backup-container">
             <ng-container *ngIf="customSettings; else defaultMessage">
                 <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>

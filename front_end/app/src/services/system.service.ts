@@ -494,6 +494,7 @@ class ServerManager {
             this.moduleInfo = moduleInfo;
             this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
             this.getCameras(serverTimes, cameras);
+            return Promise.resolve();
         } catch (error) {
             return Promise.reject(Error(`Request to server has failed ${error}`));
         }
@@ -588,9 +589,21 @@ class ServerManager {
         return mappedCameras;
     }
 
-    updateCameraSettings(resourceId: string, params: IParams) {
+    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string }) {
+        this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
+    }
+
+    setServerUserSettings(serverId: string, params: { [key: string]: string }) {
+        this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
+    }
+
+    updateSettings(resourceId: string, params: IParams) {
         const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
+    }
+
+    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
+        return this.mediaserverConnections[serverId].backupControl(action);
     }
 
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
@@ -725,7 +738,7 @@ class ServerManager {
 
     renameServer(serverId: string, serverName: string) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
-        return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
+        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, { name: 'serverName', value: serverName });
     }
 
     restartServer(serverId: string) {
@@ -1245,11 +1258,23 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     updateCameraSettings(id: string, params: IParams) {
-        return this.serverManager.updateCameraSettings(id, params);
+        return this.serverManager.updateSettings(id, params);
+    }
+
+    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string }) {
+        return this.serverManager.setCameraUserSettings(serverId, id, params);
     }
 
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         return this.serverManager.updateRecordingSettings(updatedTask, cameraSettings);
+    }
+
+    setServerUserSettings(id: string, params: { [key: string]: string }) {
+        return this.serverManager.setServerUserSettings(id, params);
+    }
+
+    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
+        return this.serverManager.updateOrGetBackupControl(serverId, action);
     }
 
     getServers() {
