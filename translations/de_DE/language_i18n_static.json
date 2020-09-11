@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
         "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Immer aufnehmen",
             "motion": "Nur Bewegung aufzeichnen",

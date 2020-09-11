@@ -60,7 +60,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     aspectRatios: ISelect[];
     rotations: ISelect[];
     streamQualities: ISelect[];
-    maxFps: number = 30;
+    maxFps: number = 15;
     fps: number = this.maxFps;
     warnings: string[] = [];
     errors: string[] = [];
@@ -641,7 +641,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     enableMotion = () => {
         this.motionEnabled = true;
-        this.updateMotionWarning();
+        if (this.motionEnabledWatcher.originalValue) {
+            this.recordingModesWatcher.reset();
+        } else {
+            this.updateMotionWarning();
+        }
     }
 
     updateMotionWarning() {
@@ -701,20 +705,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
             const { vendor, model, url, parentName } = this.selectedCamera;
-            this.cameraDetailColumns = [
-                [
-                    new InfoBlockSection([
-                        new InfoBlockLine(this.LANG.common.vendor, vendor),
-                        new InfoBlockLine(this.LANG.common.model, model)
-                    ])
-                ],
-                [
-                    new InfoBlockSection([
-                        new InfoBlockLine(this.LANG.common.ip, url),
-                        new InfoBlockLine(this.LANG.common.server, parentName)
-                    ])
-                ]
+            const deviceColumn = [
+                new InfoBlockSection([
+                    new InfoBlockLine(this.LANG.common.vendor, vendor),
+                    new InfoBlockLine(this.LANG.common.model, model)
+                ])
             ];
+            const otherInfoColumn = [
+                new InfoBlockSection([
+                    new InfoBlockLine(this.LANG.common.ip, url),
+                    new InfoBlockLine(this.LANG.common.server, parentName)
+                ])
+            ];
+            this.cameraDetailColumns = this.selectedCamera.isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];

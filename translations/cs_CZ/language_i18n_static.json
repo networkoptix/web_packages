@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
         "recordingSettingsWarning": "Aktualizujte chybějící nastavení nahrávání.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Zaznamenat vždy",
             "motion": "Zaznamenat pouze pohyb",

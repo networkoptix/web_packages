@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast הוא משאב אינטנסיבי ועשוי לגרום לבעיות בשרת שלך.",
         "recordingSettingsWarning": "אנא עדכן את הגדרות ההקלטה החסרות.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "הקלט תמיד",
             "motion": "הקלט תנועה בלבד",

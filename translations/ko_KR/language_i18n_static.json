@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
         "recordingSettingsWarning": "누락 된 녹화 설정을 업데이트하십시오.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "상시 녹화",
             "motion": "움직임 만 기록",

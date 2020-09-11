@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
         "recordingSettingsWarning": "請更新遺失的錄影設定。",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "全時錄影",
             "motion": "位移錄影",
