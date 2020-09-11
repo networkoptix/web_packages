@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
         "recordingSettingsWarning": "Vui lòng cập nhật cài đặt ghi âm bị thiếu.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Video ghi liên tục",
             "motion": "Chỉ ghi lại chuyển động",

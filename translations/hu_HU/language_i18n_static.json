@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
         "recordingSettingsWarning": "Kérjük, frissítse a hiányzó felvételi beállításokat.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Folyamatos rögzítés",
             "motion": "Csak a mozgást rögzítse",

@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
         "recordingSettingsWarning": "请更新遗失的录像设置。",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "连续录像",
             "motion": "移动录像",
