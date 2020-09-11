@@ -489,6 +489,7 @@
 	"testedVersionsLabel": "Vom Entwickler getestet mit {{vmsName}} Versionen:",
 	"About %CLOUD_NAME%": "Über %CLOUD_NAME%",
 	"Download %VMS_NAME%": "%VMS_NAME% herunterladen",
+	"For developers": "For developers",
 	"Integrations (β)": "Integrationen (β)",
 	"Privacy": "Datenschutz",
 	"Support": "Support",

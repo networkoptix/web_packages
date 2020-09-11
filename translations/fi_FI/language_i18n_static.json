@@ -489,6 +489,7 @@
 	"testedVersionsLabel": "Tested by developer with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Lataa %VMS_NAME%",
+	"For developers": "For developers",
 	"Integrations (β)": "Integrations (β)",
 	"Privacy": "Tietosuoja",
 	"Support": "Tuki",

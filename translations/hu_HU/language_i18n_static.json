@@ -489,6 +489,7 @@
 	"testedVersionsLabel": "Fejlesztő tesztelte {{vmsName}} verzióval:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
 	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
+	"For developers": "For developers",
 	"Integrations (β)": "Integrációk (béta)",
 	"Privacy": "Biztonság",
 	"Support": "Támogatás",

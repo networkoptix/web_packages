@@ -489,6 +489,7 @@
 	"testedVersionsLabel": "נבדק על ידי מפתח עם {{vmsName}} גרסאות:",
 	"About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
 	"Download %VMS_NAME%": "הורד %VMS_NAME%",
+	"For developers": "For developers",
 	"Integrations (β)": "אינטגרציות (בטא)",
 	"Privacy": "פרטיות",
 	"Support": "תמיכה",
