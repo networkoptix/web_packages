@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Record always",
             "motion": "Record only motion",

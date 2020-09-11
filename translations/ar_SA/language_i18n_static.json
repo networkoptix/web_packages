@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "يستهلك Chromecast الموارد وقد يتسبب في حدوث مشكلات على الخادم لديك.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Record always",
             "motion": "Record only motion",
