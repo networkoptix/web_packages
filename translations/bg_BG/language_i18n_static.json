@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Record always",
             "motion": "Record only motion",

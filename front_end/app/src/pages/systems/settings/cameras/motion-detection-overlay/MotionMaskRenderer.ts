@@ -4,7 +4,7 @@ import {
 }                           from 'rxjs';
 import {
     switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
-    startWith, tap, buffer, withLatestFrom, takeUntil, delay
+    startWith, tap, buffer, withLatestFrom, takeUntil, delay, merge as mergeOperator
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
 import { Mask, Area }       from './motion-detection-types';
@@ -33,7 +33,8 @@ export class MotionMaskRenderer {
     constructor(
         private motionMask: MotionMaskState,
         private sensitivityColors: string[],
-        private unsub$: Subject<boolean>
+        private unsub$: Subject<boolean>,
+        private sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>
     ) {
         this.matrixSubscription = this.motionMask.maskMatrix.pipe(takeUntil(this.unsub$)).subscribe(matrix => {
             const columns = matrix[0].length;
@@ -150,6 +151,10 @@ export class MotionMaskRenderer {
             distinctUntilChanged(
                 ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
             ),
+            mergeOperator(this.sensitivityButtons$.pipe(
+                filter(value => value === 'reset'),
+                map(() => ({ x: 0, y: 0 }))
+            )),
             takeUntil(this.unsub$)
         ).subscribe(mouseState$);
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);

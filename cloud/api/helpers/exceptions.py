@@ -369,7 +369,7 @@ def log_error(request, error, log_level):
         log_level = logging.INFO
 
     # Lower log level of merge errors
-    elif error.error_text in ["DUPLICATE_MEDIASERVER_FOUND", "FAIL", "INCOMPATIBLE"]:
+    elif hasattr(error, "error_text") and error.error_text in ["DUPLICATE_MEDIASERVER_FOUND", "FAIL", "INCOMPATIBLE"]:
         log_level = logging.WARNING
 
     logger.log(log_level, error_formatted)
