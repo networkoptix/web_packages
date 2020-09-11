@@ -3,7 +3,7 @@
 <div *ngIf="system" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
 
-        <nx-block header-style="extended" type="mb-3">
+        <nx-block header-style="extended" type="mb-3" *ngIf="CONFIG.isLocal">
             <header>
                 <div class="system-cloud-tag float-right">
                     <nx-tag static type="success" *ngIf="CONFIG.cloudSystemId">{{LANG.system.connected() | uppercase}}</nx-tag>
@@ -17,17 +17,17 @@
                 </div>
             </header>
 
-            <nx-section *ngIf="system.permissions.isAdmin">
+            <nx-section *ngIf="system.permissions.isAdmin && ((system.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)">
                 <div class="row m-0">
                     <div class="col-12 pl-0">
-                        <div class="" *ngIf="system.isMine && !CONFIG.cloudSystemId">
+                        <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
                             <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
                                     (click)="connectLocalToCloud()">
                                 <span class="ellipsis" translate>Connect to %CLOUD_NAME%</span>
                             </button>
                         </div>
-                        <div class="" *ngIf="CONFIG.cloudSystemId">
+                        <div *ngIf="CONFIG.cloudSystemId">
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                             <span>
                                 <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
@@ -48,7 +48,6 @@
                 </div>
             </nx-section>
         </nx-block>
-
 
         <nx-block header-style="extended">
             <header>
@@ -84,10 +83,10 @@
                 </span>
             </header>
 
-            <nx-section *ngIf="system.isAdmin">
+            <nx-section *ngIf="system.isMine; else notOwner">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
-                        <div class="float-left mr-2" *ngIf="system && system.isMine">
+                        <div class="float-left mr-2">
                             <button class="btn btn-default"
                                     [disabled]="(merging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
                                     (click)="mergeSystems()">
@@ -95,7 +94,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="system.isMine && !CONFIG.isLocal && !CONFIG.cloudSystemId">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!CONFIG.isLocal && !CONFIG.cloudSystemId">
                         <div class="float-xl-right">
                             <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
@@ -106,18 +105,18 @@
                     </div>
                 </div>
             </nx-section>
-        </nx-block>
-        <nx-block type="mt-3" *ngIf="!system.isMine">
-            <nx-section>
-                <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
-                    <span class="name" [innerHTML]="updateUserRole()"></span>
-                </span>
-                <div class="mt-2">
-                    <button [disabled]="settings.disconnectDisabled"
-                            class="btn btn-default"
-                            (click)="delete()" translate>Disconnect from My Account</button>
-                </div>
-            </nx-section>
+            <ng-template #notOwner>
+                <nx-section>
+                    <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
+                        <span class="name" [innerHTML]="updateUserRole()"></span>
+                    </span>
+                    <div class="mt-2">
+                        <button [disabled]="settings.disconnectDisabled"
+                                class="btn btn-default"
+                                (click)="delete()" translate>Disconnect from My Account</button>
+                    </div>
+                </nx-section>
+            </ng-template>
         </nx-block>
 
         <nx-system-standard-admin-component
