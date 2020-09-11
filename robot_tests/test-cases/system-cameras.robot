@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Start up    ${url}
 Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-Test Teardown     Reset cameras and log out
+Test Teardown     reset cameras and log out
 Suite Teardown    Close All Browsers
 Force Tags        system
 
@@ -137,7 +137,7 @@ Warning dialog appears when changes are made on navigating away and works correc
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Toggle Recording
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Link    ${SERVERS LINK}
     Wait Until Elements are Visible
     ...    ${APPLY CHANGES BUTTON}     
@@ -201,7 +201,6 @@ Rename Camera
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3    id
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
@@ -214,8 +213,6 @@ Name change in client changes in cloud
     Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    api name
     Reload Page
     Wait Until Element Contains    ${EDITABLE TITLE}    api name
-
-   Reset Camera    good cam    ${AUTO SYS IP}
 
 View button
     [Tags]    C76262    threaded
@@ -280,13 +277,12 @@ Aspect Ratio
     Verify on Cameras Page
     Select Camera By Name    good cam
     Change Aspect Ratio    1:1
-    Wait Until Element Is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Aspect Ratio Should Be    1:1
     Reload Page
     Aspect Ratio Should Be    1:1
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Rotation
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -294,13 +290,12 @@ Rotation
     Select Camera By Name    good cam
     Verify on Cameras Page
     Change Rotation    90˚
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Rotation Should Be    90˚
     Reload Page
     Rotation Should Be    90˚
-    Reset Camera    good cam    ${AUTO SYS IP}  
 
 Audio enable Disabled
     [Tags]    C76378    threaded
@@ -322,7 +317,6 @@ Audio enable Disabled
     Audio Enabled Should Be    True
     Reload Page
     Audio Enabled Should Be    True
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Audio unavailable
     [Tags]     C76376    threaded
@@ -389,6 +383,7 @@ Recording toggle shows correct options
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    offline cam
+    Verify on Cameras Page
     Toggle Recording
     Verify recording controls are open
     Wait Until Elements Are Visible
@@ -469,7 +464,6 @@ Record Always
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Record Motion
     [Tags]    C76408    Threaded
@@ -481,7 +475,7 @@ Record Motion
     Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
@@ -489,7 +483,6 @@ Record Motion
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Record Motion + Low Quality
     [Tags]    C76408    Threaded
@@ -501,7 +494,7 @@ Record Motion + Low Quality
     Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
@@ -509,7 +502,6 @@ Record Motion + Low Quality
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Check recording triple state
     [Tags]    C76408    Threaded
@@ -540,7 +532,7 @@ Disabled Motion With Recording
     Element Should Be Disabled    ${RECORD MOTION LOW QUALITY RADIO BUTTON}
     Element Should Be Disabled    ${RECORD MOTION RADIO BUTTON}
     Wait Until Element Is Visible    ${MOTION DETECTION DISABLED WARNING}
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
@@ -548,7 +540,6 @@ Disabled Motion With Recording
     ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
-    Reset Camera    good cam    ${AUTO SYS IP}
     
 Change FPS
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -559,14 +550,13 @@ Change FPS
     Wait Until Element is Visible    ${FPS INPUT}
     Delete All Text    ${FPS INPUT}
     Input Text    ${FPS INPUT}    20
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
     Verify on Cameras Page
     ${fps}    Get Element Attribute    ${FPS INPUT}    value
     Should Be Equal As Numbers    ${fps}    20
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Erasing current FPS has placeholder
     [Tags]    C76409    Threaded
@@ -595,12 +585,11 @@ Change Quality
     Click Element    ${QUALITY DROPDOWN} 
     Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${BEST TEXT}")]
     Click Element    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${BEST TEXT}")]
-    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
     Wait Until Element Contains    ${QUALITY DROPDOWN}    ${BEST TEXT}
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 Enable/disable motion detection
     [Tags]    C76398
@@ -631,7 +620,6 @@ Enable/disable motion detection
     Wait Until Elements are Visible
     ...    ${CANVAS}
     ...    ${DOT-MENU}
-    Reset Camera    good cam    ${AUTO SYS IP}
 
 #Record motion and record motion low quality radio buttons should be disabled
 
@@ -699,7 +687,6 @@ Recording Quality dropdown menu functionality for camera with schedule
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
-    Reset Camera    triple state cam    https://10.1.5.126:7005
 
 Changing credentials from invalid ones to valid ones makes the camera authorized
     [Tags]    C76390
