@@ -489,7 +489,7 @@
 	"testedVersionsLabel": "{{vmsName}} バージョンの開発者によってテストされました:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME%について",
 	"Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
-	"For developers": "For developers",
+	"For developers": "開発者向け",
 	"Integrations (β)": "統合 (β)",
 	"Privacy": "プライバシー",
 	"Support": "サポート",
