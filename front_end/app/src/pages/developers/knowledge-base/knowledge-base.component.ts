@@ -54,6 +54,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
 
     navigateSearch(doc) {
         this.router.navigate([doc.docId], { relativeTo: this.route.parent });
+        this.searchMode = false;
     }
 
     fetchNext = () => {
