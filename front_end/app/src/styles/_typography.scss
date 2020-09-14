@@ -80,6 +80,10 @@ h1 > .label {
     @include font-source($font-family-medium, $font-size-xlg, $font-color-medium);
 }
 
+@mixin medium24nocolor {
+    @include font-source($font-family-medium, $font-size-xlg);
+}
+
 @mixin medium20 {
     @include font-source($font-family-medium, $font-size-20, $font-color-medium);
 }
