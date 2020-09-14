@@ -36,10 +36,8 @@ ${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAI
 ${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
 ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
-${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
 
 ${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
-${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
 ${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
 ${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}

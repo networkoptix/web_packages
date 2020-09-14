@@ -318,4 +318,3 @@ Remember Me Checkbox
     Validate Log In    ${email}
     Persist Current Login State    ${url}
     Validate Log Out
-
