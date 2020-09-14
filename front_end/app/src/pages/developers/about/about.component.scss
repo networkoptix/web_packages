@@ -8,8 +8,8 @@
     flex-direction: column;
     color: $dark10;
     & > h1 {
-        font-size: 64px;
-        font-weight: 200;
+        font-family: $font-family-light;
+        font-size: 64px !important;
         text-align: center;
     }
     & > p {

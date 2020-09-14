@@ -27,6 +27,9 @@
             top: 0;
             margin: -1rem 0 -1rem -1rem;
             grid-column: span 4;
+            &::-webkit-scrollbar {
+                display: none;
+            }
         }
         @include bootstrap.media-breakpoint-up(lg) {
             grid-column: span 3;
