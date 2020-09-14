@@ -329,6 +329,7 @@
     "CAMERA OFFLINE TEXT"                  :    "Camera is offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT"    :    "Professional license is required",
     "ONE LICENSE WILL BE USED TEXT"        :    "1 professional license channel will be used",
+    "FOUND TEXT"				  		   :	"found",
     "MOTION DETECTION DISABLED TEXT"       :    "Motion detection is disabled",
     "DIFFERENT VALUES TEXT"                :    "– Different Values –",
     "BEST TEXT"                            :    "Best",
