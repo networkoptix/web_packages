@@ -9,6 +9,7 @@ from threading import Thread
 from os import system, path
 from get_names import get_threaded_names
 from pabot.pabot import main as pabot
+from robot import run_cli
 
 
 ENVIRONMENT = "https://cloud-test.hdw.mx"
@@ -30,35 +31,36 @@ def timer(func):
 
 @timer
 def threaded_test_run(output, language):
-    pabot([
-        "--pabotlib",
-        "--ordering", "order.txt",
-        "--loglevel", "trace",
-        "-i", "threaded",
-        "-i", "threaded-file",
-        "-e", "merge",
-        "-e", "customizations",
+    system(
+        "pabot "
+        "--pabotlib "
+        "--ordering " "order.txt "
+        #"--loglevel", "trace",
+        "-i " "threaded "
+        "-i " "threaded-file "
+        "-e " "merge "
+        "-e " "customizations "
+        "-v " f"ENV:{ENVIRONMENT} "
+        "-v " f"SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
+        "-V " f"getvars.py:{CUSTOMIZATION}:{language} "
+        "--output " "threaded.xml "
+        "test-cases"
+    )
+
+    run_cli([
+        #"--loglevel", "trace",
         "-v", f"ENV:{ENVIRONMENT}",
         "-v", f"SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')}",
         "-V", f"getvars.py:{CUSTOMIZATION}:{language}",
-        "--output", "threaded.xml",
+        "-e", "threaded",
+        "-e", "threaded-file",
+        "-e", "merge",
+        "-e", "customizations",
+        "--output", "serial.xml",
         "test-cases"
-        ])
+        ],
+    exit=False)
 
-    system(
-        "robot "
-        "--loglevel trace "
-        f"-v ENV:{ENVIRONMENT} "
-        f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
-        f"-V getvars.py:{CUSTOMIZATION}:{language} "
-        "-e threaded "
-        "-e threaded-file "
-        "-e merge "
-        "-e customizations "
-        f"--output serial.xml "
-        "test-cases"
-        )
-    
     system(
         "rebot "
         "-o fullrun.xml "

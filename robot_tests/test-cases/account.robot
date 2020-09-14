@@ -336,14 +336,15 @@ Language change is new default
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']
     Click Element    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']/..
     Click Button    ${ACCOUNT SAVE}
-    Sleep    1    #to allow the system to change languages
+    Wait Until Element Is Not Visible    ${ACCOUNT CANCEL}
+    sleep    5
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None    validate=${False}
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
@@ -423,10 +424,10 @@ Password is required to delete account
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
-
+    Sleep    1    # Clicking the delete button too fast causes there to not be a message
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
-    Element Text Should Be    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
+    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
 
@@ -442,6 +443,7 @@ Correct password is required to delete account
 
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element Is Visible    ${DELETE ACCOUNT PASSWORD ERROR}
     Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${WRONG PASSWORD}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
