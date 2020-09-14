@@ -5,7 +5,6 @@ import { BehaviorSubject, Subject, from } from 'rxjs';
 import { takeUntil, map }                 from 'rxjs/operators';
 
 import { WINDOW }                    from './window-provider';
-import { MenuNode }                  from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { IConfig, NxConfigService }  from './nx-config';
 import { MenuStructure }             from './nx-config/base-config';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
@@ -16,6 +15,26 @@ export enum Auth {
     BOTH='Both',
     LOGGED_IN='Logged In',
     LOGGED_OUT='Logged Out'
+}
+
+export class MenuNode {
+    public icon?: string;
+    public currentRoute?: boolean;
+
+    constructor(
+        public name = '',
+        public url: string,
+        icon = '',
+        public nodes?: MenuNode[],
+        public authentication: Auth = Auth.BOTH,
+        public display_name = name,
+        public new_window = false,
+        currentRoute = false,
+        public asset_id = null
+    ) {
+        this.icon = icon;
+        this.currentRoute = currentRoute;
+    }
 }
 
 @Injectable({

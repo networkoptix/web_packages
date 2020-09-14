@@ -48,9 +48,9 @@ import { NxLeftMenuComponent }                from './left-menu/left-menu.compon
 import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
 import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
 import { NxHeaderMainButtonComponent }        from './header/main-button/main-button.component';
-import { NxSystemTileComponent }              from './dropdowns/drop-menu/system-tile/system-tile.component';
-import { NxNavigiationTileComponent }         from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxAdditionalSystemsTileComponent }   from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxSystemTileComponent }            from './dropdowns/drop-menu/system-tile/system-tile.component';
+import { NxNavigationTileComponent }        from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
 import { NxTabsComponent }                    from './header/tabs/tabs.component';
 import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
@@ -110,7 +110,7 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxInfoBlockComponent,
         ToastsContainer,
         NxSystemTileComponent,
-        NxNavigiationTileComponent,
+        NxNavigationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxTabsComponent,
         NxNavDropdownComponent,
@@ -158,7 +158,7 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxSectionPlaceholderComponent,
         ToastsContainer,
         NxSystemTileComponent,
-        NxNavigiationTileComponent,
+        NxNavigationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
@@ -243,7 +243,7 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         ToastsContainer,
         NxInfoBlockComponent,
         NxSystemTileComponent,
-        NxNavigiationTileComponent,
+        NxNavigationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxNavDropdownComponent,
         NxOverlayModalComponent,

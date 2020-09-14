@@ -7,7 +7,6 @@ import { NgForm }                    from '@angular/forms';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
 import { WINDOW }                    from '../../services/window-provider';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
@@ -32,7 +31,7 @@ interface Subject {
     styleUrls   : []
 })
 export class MessageModalContent implements OnInit {
-    @Input() account: NxAccountService;
+    @Input() account;
     @Input() messageType;
     @Input() data;
     @Input() closable;
@@ -76,7 +75,7 @@ export class MessageModalContent implements OnInit {
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
 
-            return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
+            return this.account.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail);
         }, {
             successMessage: this.LANG.dialogs.message.sent
         }).then(() => {

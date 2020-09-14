@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 adede kadar kamera kaydedebilirsiniz.",
     "ENTER LICENSE KEY TEXT": "Lisans Anahtarını Girin",
     "INVALID LICENSE KEY TEXT": "Geçersiz lisans anahtarı",
+    "LICENSE IS EXPIRED TEXT": "Failed to activate license: License is expired",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "Lisans türü sisteminizle uyumlu değil",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "Bu sistemde lisans anahtarı zaten etkinleştirildi",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "Lisans anahtarı zaten etkinleştirildi ve başka bir sistemde donanım kimliği {} olan sunucuya bağlı",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID %HWID% in another system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Sistem başına yalnızca bir başlangıç lisansına izin verilir",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun",
     "FAILED TO ACTIVATE LICENSE TEXT": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "1024'ten küçük bağlantı noktası numaraları kısıtlanır. Sunucuya erişilemez hale gelebilir.",
     "SERVER RESTARTED TEXT": "Sunucu başarıyla yeniden başlatıldı.",
     "HOURS TEXT": "saat",
-    "MINUTES TEXT": "dakika"
+    "MINUTES TEXT": "dakika",
+    "NO IMAGE TEXT": "NO IMAGE",
+    "CAMERA UNAUTHORIZED TEXT": "Camera is unauthorized",
+    "CAMERA OFFLINE TEXT": "Camera is offline",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Professional license is required",
+    "ONE LICENSE WILL BE USED TEXT": "1 professional license channel will be used",
+    "MOTION DETECTION DISABLED TEXT": "Motion detection is disabled",
+    "FOUND TEXT": "found"
 }

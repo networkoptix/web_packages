@@ -168,8 +168,10 @@ Search should highlight system name
     [Tags]    C41891    Threaded
     Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
+    Page Should Not Contain    ${FOUND TEXT}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${AUTO TESTS}"]
+    Page Should Contain    ${FOUND TEXT}
 
 Search should highlight owner name
     [Tags]    C41891    Threaded

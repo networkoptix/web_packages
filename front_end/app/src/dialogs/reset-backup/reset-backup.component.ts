@@ -17,6 +17,7 @@ import { NxSystem }                  from '../../services/system.service';
 export class ResetBackupModalContent {
     @Input() system: NxSystem;
     @Input() closable: boolean;
+    @Input() setDefaultBackupSettings: () => Promise<any>;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -35,10 +36,7 @@ export class ResetBackupModalContent {
 
     ngOnInit() {
         this.resetBackupProcess = this.processService.createProcess(() => {
-            return Promise.resolve();
-            // return this.system.(this.user).then(() => {
-            //     return 
-            // });
+            return this.setDefaultBackupSettings();
         }, { ignoreError: true }).then(() => {
             this.activeModal.close();
         });

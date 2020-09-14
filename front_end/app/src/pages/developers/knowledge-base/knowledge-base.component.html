@@ -41,8 +41,8 @@
 </ng-template>
 
 <ng-template #articleBlock>
-    <h1>{{node.title}}</h1>
-    <div [innerHTML]="node.content | safe:'html'"></div>
+    <h1>{{pageNode.title}}</h1>
+    <div [innerHTML]="pageNode.content | safe:'html'"></div>
 </ng-template>
 
 <!-- End of Card Templates -->
@@ -86,6 +86,7 @@
         baseRoute="/developers/knowledge-base/"
         (onClick)="clearSearch()"
         [ignoreQuery]="true"
+        (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
         <nx-search [ngModel]="search"
@@ -93,16 +94,22 @@
             [placeholder]="'Knowledge Base Search' | translate"
             layout="compact"></nx-search>
         <ng-container *ngIf="!loading; else preloader">
-            <ng-container *ngIf="node.cardClass !== 'article';else articleBlock">
+            <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">
                         <ng-container *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}"></ng-container>
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
-                    <ng-container *ngFor="let node of node.nodes">
+                    <ng-container *ngFor="let node of pageNode.nodes">
                         <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
                     </ng-container>
+                    <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
+                        <h4>Related Topics</h4>
+                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url">
+                            {{link.display_name || link.name}}
+                        </a>
+                    </div>
                 </ng-template>
             </ng-container>
         </ng-container>

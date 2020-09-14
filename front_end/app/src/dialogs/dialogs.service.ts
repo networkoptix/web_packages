@@ -10,7 +10,6 @@ import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '../services/nx-language-provider';
 import { NxConfigService, IConfig }            from '../services/nx-config';
-import { NxAccountService }                    from '../services/account.service';
 import { NxSystem, ICamera, NxSystemUser }     from '../services/system.service';
 import { Process }                             from '../services/process.service';
 import { NxCloudApiService }                   from '../services/nx-cloud-api';
@@ -31,15 +30,22 @@ import { ResetServerModalContent }             from './reset-server/reset-server
 import { DeleteCloudUserModalContent }         from './delete-cloud-user/delete-cloud-user.component';
 import { ChangePasswordModalContent }          from './change-password/change-password.component';
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
-import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/cloud-storage-delete.component';
-import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
-import { IParams }                             from '../components/search/search.component';
-import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
-import { WizardModalContent }                  from './wizard/wizard.component';
-import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
-import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
-import { AddStorageModalContent }              from './add-storage/add-storage.component';
+import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
+import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
+import { WizardModalContent }             from './wizard/wizard.component';
+import { CloudConnectModalContent }       from './cloud-connect/cloud-connect.component';
+import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
+import { AddStorageModalContent }         from './add-storage/add-storage.component';
+import { NxAccountService }               from '../services/account.service';
+import { BaseAccount }                    from '../services/account.service/base';
+import { CloudAccount }                   from '../services/account.service/cloud';
+
 import './../dialogs/dialogs.scss';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
@@ -48,7 +54,6 @@ export class NxDialogsService {
     CONFIG: IConfig;
     location: Location;
     closeResult: string;
-    account: NxAccountService;
 
     languageSubscription: SubscriptionLike;
 
@@ -61,13 +66,9 @@ export class NxDialogsService {
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
         private router: Router,
-        private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.location = location;
-        setTimeout(() => {
-            this.account = this.injector.get(NxAccountService);
-        }, 0);
 
         this.languageSubscription = languageService.translateSubject
             .subscribe(() => {
@@ -162,7 +163,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(keepPage?: boolean, redirectClose?: boolean) {
+    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -170,7 +171,7 @@ export class NxDialogsService {
         };
 
         const params: IParams = {
-            account       : this.account,
+            account       : account,
             login         : this.login,
             cancellable   : !keepPage || false,
             closable      : true,
@@ -187,9 +188,9 @@ export class NxDialogsService {
             });
         }
 
-        return this.createModal(NxConfigService.resolveLocalOrCloud(
-            LoginWebadminModalContent, LoginModalContent
-        ), options, params)
+        return this.createModal(NxConfigService.isLocal ?
+            LoginWebadminModalContent: LoginModalContent
+        , options, params)
             // handle how the dialog was closed
             // required if we need to have dismissible dialog otherwise
             // will raise a JS error ( Uncaught [in promise] )
@@ -268,13 +269,14 @@ export class NxDialogsService {
         return this.createModal(CloudStorageMoveModalContent, options, params);
     }
 
-    connectLocalToCloud(system: NxSystem) {
+    connectLocalToCloud(account: NxAccountService, system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
+            account,
             system,
             closable: true
         };
@@ -282,13 +284,14 @@ export class NxDialogsService {
         return this.createModal(CloudConnectModalContent, options, params);
     }
 
-    disconnect(system: NxSystem) {
+    disconnect(account: NxAccountService, system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
+            account,
             system,
             closable: true
         };
@@ -388,14 +391,14 @@ export class NxDialogsService {
         return this.createModal(WizardModalContent, options, params);
     }
 
-    merge(system: NxSystem, systems: NxSystem[]) {
+    merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            user     : this.account,
+            user     : account,
             system,
             systems,
             closable : true
@@ -404,14 +407,14 @@ export class NxDialogsService {
         return this.createModal(MergeModalContent, options, params);
     }
 
-    message(type: string, data: IParams): Promise<any> {
+    message(account: NxAccountService, type: string, data: IParams): Promise<any> {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            account     : this.account,
+            account     : account,
             messageType : type,
             data,
             closable    : true
@@ -463,7 +466,7 @@ export class NxDialogsService {
         return this.createModal(UpdateCameraCredentialsModalContent, options, params);
     }
 
-    resetBackupToDefaultSettings(system: NxSystem) {
+    resetBackupToDefaultSettings(system: NxSystem, setDefaultBackupSettings: () => {}) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -471,6 +474,7 @@ export class NxDialogsService {
 
         const params: IParams = {
             system,
+            setDefaultBackupSettings,
             closable: true
         };
 

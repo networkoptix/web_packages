@@ -9,7 +9,6 @@ from api.controllers import cloud_api
 @swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def ping(request):
     data = cloud_api.ping()
     return api_success(data)
@@ -18,6 +17,5 @@ def ping(request):
 @swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def maintenance_health(request):
     return api_success({})

@@ -16,12 +16,15 @@
     nx-left-menu {
         background: $additional_light2;
         margin: -1rem -1rem 1rem -1rem;
-        
         padding: 1rem;
         grid-column: span 12;
         grid-row: 1 / -1;
 
         @include bootstrap.media-breakpoint-up(md) {
+            position: sticky;
+            overflow-y: scroll;
+            max-height: calc(100vh - 3rem);
+            top: 0;
             margin: -1rem 0 -1rem -1rem;
             grid-column: span 4;
         }
@@ -94,4 +97,17 @@
 
 .results-preloader {
     height: 80px;
+}
+
+.related-section {
+    @extend .narrow-section;
+    margin: 1rem;
+    padding: 2rem 0 1rem 0;
+    border-top: 2px solid $additional_light2;
+    & > h4 {
+    @include typography.medium15; 
+    }
+    & > a {
+        text-decoration: underline;
+    }
 }

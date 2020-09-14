@@ -8,17 +8,12 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService }       from 'ngx-webstorage';
 import { of }                        from 'rxjs';
 
-import { NxModalGenericComponent }   from '../generic/generic.component';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxSystem }                  from '../../services/system.service';
-import {
-    NxSystemAPI, NxSystemAPIService
-}                                    from '../../services/system-api.service';
-import { NxDialogsService }          from '../dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }       from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }        from '../../services/nx-config';
+import { NxProcessService, Process }       from '../../services/process.service';
+import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { NxToastService }                  from '../toast.service';
 
 @Component({
     selector    : 'cloud-connect-modal-content',
@@ -26,7 +21,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class CloudConnectModalContent implements OnInit {
-    @Input() system: NxSystem;
+    @Input() account;
+    @Input() system;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
@@ -60,13 +56,11 @@ export class CloudConnectModalContent implements OnInit {
         locationService: Location,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private localStorage: LocalStorageService,
-        private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
-        private dialogs: NxDialogsService,
+        private toast: NxToastService,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
@@ -114,7 +108,7 @@ export class CloudConnectModalContent implements OnInit {
                 return Promise.reject();
             }
 
-            return this.cloudApiService.connect(this.system.info.systemName, this.auth.email, this.password);
+            return this.account.connect(this.system.info.systemName, this.auth.email, this.password);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
@@ -154,15 +148,15 @@ export class CloudConnectModalContent implements OnInit {
                     .createConnection(undefined, undefined, undefined, () => of(''));
                 this.mediaServerApi.saveCloudSystemCredentials(result.id, result.authKey, result.ownerAccountEmail)
                     .then((result) => {
-                        this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.success(), 'success');
+                        this.toast.notify(this.LANG.toastMessage.system.cloudConnect.success(), 'success');
                         this.activeModal.close(result);
                     })
                     .catch((error) => {
-                        this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
+                        this.toast.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
                         console.error(error);
                     });
             } else {
-                this.dialogs.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
+                this.toast.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
                 console.error('Invalid response while connecting system to cloud.', result);
             }
         }, (error) => {

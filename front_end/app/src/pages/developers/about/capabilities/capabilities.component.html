@@ -1,46 +1,45 @@
 <ng-template #capabilityBlock let-capability="capability">
-    <div class="card hoverable capability-card" [routerLink]="capability.link">
-        <header [ngStyle]="{backgroundColor: capability.headerColor, backgroundImage: 'url(' + capability.headerImage + ')'}">
+    <div class="card hoverable capability-card" [routerLink]="capability.url">
+        <header [ngStyle]="{backgroundColor: capability.headerColor || 'gray', backgroundImage: 'url(' + capability.headerImage + ')'}">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon"></svg-icon>
-            <div class="intro-line">{{capability.introLine}}</div>
-            <h3>{{capability.heading}}</h3>
+            <div class="intro-line">{{capability.display_name}}</div>
+            <h3>{{capability.asset.title}}</h3>
         </header>
-        <div class="capability-detail">
-            {{capability.body}}
+        <div class="capability-detail" [innerHTML]="capability.asset.shortDescription">
         </div>
     </div>
 </ng-template>
 
 <ng-template #techBlock let-tech="tech">
-    <div class="tech-block" [routerLink]="tech.link" [title]="tech.name">
+    <div class="tech-block" [title]="tech.title" [routerLink]="tech.url">
         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tech.icon"></svg-icon>
     </div>
 </ng-template>
 
 <ng-template #languageBlock let-language="language">
-    <div class="language-block" [routerLink]="language.link" [title]="language.name">
-        {{language.name}}
+    <div class="language-block" [title]="language.title" [routerLink]="language.url">
+        {{language.title}}
     </div>
 </ng-template>
 
-<section class="capabilities">
-    <h2 [routerLink]="capabilitiesLink" class="heading-link">{{capabilitiesHeading}}</h2>
+<section *ngIf="capabilitiesNode.nodes" class="capabilities">
+    <h2 class="heading-link">{{capabilitiesNode.title}}</h2>
     <div class="detail-blocks">
-        <ng-container *ngFor="let capability of capabilities">
+        <ng-container *ngFor="let capability of capabilitiesNode.nodes">
             <ng-container *ngTemplateOutlet="capabilityBlock;context{capability:capability}"></ng-container>
         </ng-container>
     </div>
 </section>
 
-<section class="supported-tech">
-    <h2 [routerLink]="supportedTechLink" class="heading-link">{{supportedTechHeading}}</h2>
-    <div class="tech-wrapper">
-        <ng-container *ngFor="let tech of supportedTech">
+<section *ngIf="supportedTechNode.nodes" class="supported-tech">
+    <h2 class="heading-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
+    <div *ngIf="supportedTechNode.nodes[0].nodes.length" class="tech-wrapper">
+        <ng-container *ngFor="let tech of supportedTechNode.nodes[0].nodes">
             <ng-container *ngTemplateOutlet="techBlock;context{tech:tech}"></ng-container>
         </ng-container>
     </div>
-    <div class="language-wrapper">
-        <ng-container *ngFor="let language of supportedLanguages">
+    <div *ngIf="supportedTechNode.nodes[1].nodes.length" class="language-wrapper">
+        <ng-container *ngFor="let language of supportedTechNode.nodes[1].nodes">
             <ng-container *ngTemplateOutlet="languageBlock;context{language:language}"></ng-container>
         </ng-container>
     </div>

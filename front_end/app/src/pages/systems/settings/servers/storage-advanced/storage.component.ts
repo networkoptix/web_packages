@@ -1,18 +1,20 @@
 import {
     Component, Inject, OnDestroy,
     LOCALE_ID, Input, OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    ViewChild
 }                                    from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
-import { Watcher }                   from '../../../../../services/apply.service';
+import { Watcher, FormWatcher, NxApplyService }                   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NgForm } from '@angular/forms';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -23,6 +25,9 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
+
+    @ViewChild('storageForm') storageForm: NgForm;
+    formWatcher: FormWatcher;
 
     LANG: LanguageI18NStaticTypes;
 
@@ -37,7 +42,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
+        private applyService: NxApplyService
     ) {
         this.LANG = languageService.translations;
 
@@ -119,6 +125,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
                     Promise.resolve(res);
                 });
         });
+        this.formWatcher = new FormWatcher(this.storageForm);
+        this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, this.resetWatchers);
     }
 
     buildUpdateParams() {

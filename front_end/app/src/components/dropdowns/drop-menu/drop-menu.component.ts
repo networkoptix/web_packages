@@ -5,13 +5,12 @@ import {
 import { UntilDestroy }    from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { MenuNode }                  from './navigation-tile/navigation-tile.component';
 import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxHeaderService }           from '../../../services/nx-header.service';
-import { NxMenusService }            from '../../../services/menus.service';
+import { NxMenusService, MenuNode }  from '../../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

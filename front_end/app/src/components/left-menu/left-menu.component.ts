@@ -1,13 +1,11 @@
-
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxMenusService } from '../../services/menus.service';
-import { MenuNode } from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter, map, startWith, takeUntil } from 'rxjs/operators';
-import { IConfig, NxConfigService } from '../../services/nx-config';
-import { Location } from '@angular/common';
-import { timer, Subject } from 'rxjs';
+import { Router, NavigationEnd }                          from '@angular/router';
+import { Location }                                       from '@angular/common';
+import { filter, map, startWith, takeUntil }              from 'rxjs/operators';
+import { timer, Subject }                                 from 'rxjs';
+import { UntilDestroy }                                   from '@ngneat/until-destroy';
+import { NxMenusService, MenuNode }                       from '../../services/menus.service';
+import { IConfig, NxConfigService }                       from '../../services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,6 +19,7 @@ export class NxLeftMenuComponent implements OnInit {
     @Input() ignoreQuery = false;
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
+    @Output() relatedLinks = new EventEmitter<MenuNodeWithParent[]>()
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
@@ -63,6 +62,7 @@ export class NxLeftMenuComponent implements OnInit {
             const checkNode = (node: MenuNodeWithParent) => {
                 if (node.url === url) {
                     updateActiveRoutes(node);
+                    this.relatedLinks.emit(node.parentNode?.nodes || []);
                 } else if (node.nodes?.length) {
                     findActiveNode(node.nodes);
                 }

@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen.",
     "ENTER LICENSE KEY TEXT": "Enter license key",
     "INVALID LICENSE KEY TEXT": "Invalid license key",
+    "LICENSE IS EXPIRED TEXT": "Failed to activate license: License is expired",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "License type is incompatible with your system",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "License key has already been activated in this system",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID %HWID% in another system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Only one starter license is allowed per system",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Failed to activate license. License server did not respond. Please try again or contact support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Failed to activate license. Please try again or contact support",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "Poortnummers lager dan 1024 zijn beperkt. De server kan ontoegankelijk worden.",
     "SERVER RESTARTED TEXT": "Server is succesvol opnieuw gestart.",
     "HOURS TEXT": "uur",
-    "MINUTES TEXT": "minuut"
+    "MINUTES TEXT": "minuut",
+    "NO IMAGE TEXT": "NO IMAGE",
+    "CAMERA UNAUTHORIZED TEXT": "Camera is unauthorized",
+    "CAMERA OFFLINE TEXT": "Camera is offline",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Professional license is required",
+    "ONE LICENSE WILL BE USED TEXT": "1 professional license channel will be used",
+    "MOTION DETECTION DISABLED TEXT": "Motion detection is disabled",
+    "FOUND TEXT": "found"
 }

@@ -15,7 +15,10 @@ import { NxUriCacheService }                   from './uri-cache.service';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
-import { IParams }                             from '../components/search/search.component';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 export interface User {
     canBeEdited: boolean;
@@ -555,6 +558,16 @@ export class NxSystemAPI {
         return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
+    saveServerUserSettings(serverId: string, param: { [key: string]: string }) {
+        const [key, value] = Object.entries(param)[0];
+        return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', { serverId, [key]: value }).toPromise();
+    }
+
+    saveCameraUserSettings(cameraId: string, param: { [key: string]: string }) {
+        const [key, value] = Object.entries(param)[0];
+        return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraId, [key]: value }).toPromise();
+    }
+
     restartServer() {
         return this.post<t.RestartServer>('/api/restart').toPromise()
             .catch(err => Promise.reject(err));
@@ -582,7 +595,13 @@ export class NxSystemAPI {
     }
 
     getLicenses() {
-        return this.get('/ec2/getLicenses');
+        return this.getRequestAggregator(['ec2/getLicenses', 'ec2/getHardwareIdsOfServers'])
+            .pipe(map(({ reply }: any) => {
+                return ({
+                    licenses : reply['ec2/getLicenses'],
+                    hwids    : reply['ec2/getHardwareIdsOfServers'].reply[0].hardwareIds
+                });
+            }));
     }
 
     activateLicense(key) {

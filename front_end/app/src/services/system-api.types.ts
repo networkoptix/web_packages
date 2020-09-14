@@ -1,5 +1,6 @@
-/* eslint-disable camelcase */
-import { IParams } from '../components/search/search.component';
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
@@ -11,7 +12,7 @@ export interface NormalResponse<Reply = {}> {
     error: string,
     errorString: string,
     reply: Reply
-};
+}
 
 interface Permissions {
     none: boolean,

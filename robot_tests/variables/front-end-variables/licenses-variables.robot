@@ -13,6 +13,7 @@ ${LM PASSWORD}    qweasd123
 ...    viewer=licautotests+viewer@gmail.com
 ...    advancedViewer=licautotests+adviewer@gmail.com
 ...    custom=licautotests+custom@gmail.com
+...    liveViewer=licautotests+liveviewer@gmail.com
 
 &{LIC TYPES}
 ...    digital=Professional
@@ -21,6 +22,7 @@ ${LM PASSWORD}    qweasd123
 ...    starter=Starter
 ...    videowall=Video Wall
 ...    vmax=VMAX
+...    bridge=Bridge
 
 ${TRIAL LICENSE}    0000-0000-0000-0005
 ${LICENSES LINK}    //a[@id="licenses"]
@@ -33,6 +35,7 @@ ${MAKE SURE SERVERS ARE ONLINE}    //div[@name="NO_SETTINGS" and contains(text()
 ${NEW LICENSE HEADER}         //h4[contains(text(), "${NEW LICENSE TEXT}")]
 ${NEW LICENSE FORM}           //form[@id="newLicenseForm"]
 ${LICENSE KEY INPUT}          ${NEW LICENSE FORM}//label[contains(text(), "${LICENSE KEY TEXT}")]/following-sibling::div//input[@id="licenseKey"]
+${FORMATTED KEY}              ${NEW LICENSE FORM}//span[@id="formattedKey"]
 ${BIND TO SERVER DROPDOWN}    ${NEW LICENSE FORM}//label[contains(text(), "${BIND TO SERVER TEXT}")]/following-sibling::div//button[@id="bindToServer"]
 ${SERVER MUST BE AVAILABLE}   ${NEW LICENSE FORM}//div[contains(text(), "${SERVER MUST BE AVAILABLE TEXT}")]
 ${ACTIVATE BUTTON}            //button[contains(text(), "Activate")]
@@ -50,7 +53,8 @@ ${LICENSES SUMMARY TBODY}      ${LICENSES SUMMARY BLOCK}//table/tbody
 ${LICENSES SUMMARY RECORD}     ${LICENSES SUMMARY TBODY}/tr[contains(@class, "inserted")]
 
 # License Detail block
-${LICENSE DETAIL BLOCK}       //nx-license-detail-component/nx-block
+${LICENSE DETAIL BLOCK}        //nx-license-detail-component/nx-block
+${FIRST LICENSE}               ${LICENSE DETAIL BLOCK}//header/h4[1]
 #${LICENSE TYPE}               ${LICENSE INFO}/p[contains(@title, "Type")]
 #${LICENSE CHANNELS}           ${LICENSE INFO}/p[contains(@title, "Channels")]
 #${LICENSE SERVER}             ${LICENSE INFO}/p[contains(@title, "Server")]

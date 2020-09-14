@@ -131,9 +131,10 @@
     "TRIAL LICENSE ACTIVATED TEXT": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen.",
     "ENTER LICENSE KEY TEXT": "Geef de licentiesleutel in",
     "INVALID LICENSE KEY TEXT": "Ongeldige licentiesleutel",
+    "LICENSE IS EXPIRED TEXT": "Kan licentie niet activeren: licentie is verlopen",
     "LICENSE KEY IS INCOMPATIBLE WITH YOUR SYSTEM TEXT": "Licentietype is niet compatibel met uw systeem",
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "De licentiesleutel is al geactiveerd in dit systeem",
-    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "De licentiesleutel is al geactiveerd en gebonden aan de server met hardware-ID",
+    "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "De licentiesleutel is al geactiveerd en gekoppeld aan de server met hardware-ID %HWID% in een ander systeem",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Per systeem is slechts één startlicentie toegestaan",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support",
@@ -297,5 +298,12 @@
     "PORT TOO LOW TEXT": "Poortnummers lager dan 1024 zijn beperkt. De server kan ontoegankelijk worden.",
     "SERVER RESTARTED TEXT": "Server is succesvol opnieuw gestart.",
     "HOURS TEXT": "uren",
-    "MINUTES TEXT": "minuten"
+    "MINUTES TEXT": "minuten",
+    "NO IMAGE TEXT": "GEEN BEELD",
+    "CAMERA UNAUTHORIZED TEXT": "Camera niet geautoriseerd",
+    "CAMERA OFFLINE TEXT": "Camera is offline",
+    "PROFESSIONAL LICENSE REQUIRED TEXT": "Professionele licentie is vereist",
+    "ONE LICENSE WILL BE USED TEXT": "Er wordt 1 professioneel licentiekanaal gebruikt",
+    "MOTION DETECTION DISABLED TEXT": "Bewegingsdetectie is uitgeschakeld",
+    "FOUND TEXT": "gevonden"
 }

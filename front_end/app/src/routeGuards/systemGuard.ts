@@ -9,6 +9,7 @@ import { Observable }                from 'rxjs';
 import { NxAccountService }          from '../services/account.service';
 import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
+import { NxSettingsService }         from '../pages/systems/settings/settings.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -19,7 +20,8 @@ export class SystemGuard implements CanActivate {
         configService: NxConfigService,
         private router: Router,
         private accountService: NxAccountService,
-        private systemService: NxSystemService
+        private systemService: NxSystemService,
+        private settingsService: NxSettingsService
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -42,7 +44,7 @@ export class SystemGuard implements CanActivate {
                 licenses        : system.isAdmin || system.isOwner
             };
             return canViewChecks[currentRoute] || this.router.navigate(
-                [NxConfigService.resolveLocalOrCloud('/settings/', `/systems/${systemId}`)]
+                [NxConfigService.isLocal ? '/settings/' : `/systems/${systemId}`]
             );
         };
 
@@ -51,11 +53,22 @@ export class SystemGuard implements CanActivate {
             .then(account => {
                 if (account) {
                     if (this.CONFIG.isLocal) {
-                        this.system = this.systemService.createLocalSystem(
-                            this.accountService.mediaServerApi, account.id, account.email
-                        );
-
-                        return checkPermissions();
+                        this.system = this.settingsService.system;
+                        return new Promise((resolve) => {
+                            if (this.system) {
+                                resolve(checkPermissions());
+                            } else {
+                                this.settingsService.system = this.systemService.createLocalSystem(
+                                    this.accountService.mediaServerApi, account.id, account.email
+                                );
+                                (<NxSystem> this.settingsService.system).update().then(_ => {
+                                    (<NxSystem> this.settingsService.system).getInfoAndPermissions().then(_ => {
+                                        this.system = this.settingsService.system;
+                                        resolve(checkPermissions());
+                                    });
+                                });
+                            }
+                        });
                     } else {
                         this.system = this.systemService.createSystem(account.email, systemId, undefined, true);
                         return this.system.getInfoAndPermissions()

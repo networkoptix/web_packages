@@ -48,7 +48,7 @@ import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_
 
  */
 
-export interface IParams<Value = any> {
+interface IParams<Value = any> {
     [key: string]: Value;
 }
 

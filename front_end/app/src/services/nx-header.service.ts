@@ -2,9 +2,8 @@ import { Injectable }               from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Router, NavigationStart }  from '@angular/router';
 
-import { MenuNode }                 from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxConfigService, IConfig } from './nx-config';
-import { NxMenusService }           from './menus.service';
+import { NxMenusService, MenuNode } from './menus.service';
 
 enum systemRoutes {
     SETTINGS='settings',

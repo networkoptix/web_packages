@@ -70,7 +70,7 @@ export class NxRegisterComponent implements OnInit {
             return path === '/' ? url === '/' : url.includes(path);
         });
         // Handling promise to satisfy the linter.
-        this.dialogs.login(!redirect).then(() => {});
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
     ngOnInit(): void {
@@ -168,6 +168,7 @@ export class NxRegisterComponent implements OnInit {
 
                     this.accountService
                         .login(this.accountInfo.email, this.accountInfo.password, true)
+                        // @ts-ignore -- TODO: Need to exclude this from webadmin routes
                         .then(() => {
                             this.registerSuccess = true;
                             this.activated = true;

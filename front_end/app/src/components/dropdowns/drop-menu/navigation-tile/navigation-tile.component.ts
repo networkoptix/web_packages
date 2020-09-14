@@ -7,7 +7,7 @@ import { SubscriptionLike } from 'rxjs';
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { NxSessionService }         from '../../../../services/session.service';
 import { NxHeaderService }          from '../../../../services/nx-header.service';
-import { Auth }                     from '../../../../services/menus.service';
+import { Auth, MenuNode }           from '../../../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -15,7 +15,7 @@ import { Auth }                     from '../../../../services/menus.service';
     templateUrl : 'navigation-tile.component.html',
     styleUrls   : ['navigation-tile.component.scss']
 })
-export class NxNavigiationTileComponent {
+export class NxNavigationTileComponent {
     @Input() node: MenuNode;
     @Input() width = 240;
     CONFIG: IConfig;
@@ -40,23 +40,4 @@ export class NxNavigiationTileComponent {
     }
 
     ngOnDestroy() {}
-};
-
-export class MenuNode {
-    public icon?: string;
-    public currentRoute?: boolean;
-    constructor(
-        public name = '',
-        public url: string,
-        icon = '',
-        public nodes?: MenuNode[],
-        public authentication: Auth = Auth.BOTH,
-        public display_name = name,
-        public new_window = false,
-        currentRoute = false,
-        public asset_id = null
-    ) {
-        this.icon = icon;
-        this.currentRoute = currentRoute;
-    }
-};
+}

@@ -162,7 +162,6 @@ pending__query_param = openapi.Parameter("pending", openapi.IN_QUERY,
                      manual_parameters=[asset_id__route_param, draft__query_param, pending__query_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET

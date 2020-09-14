@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit }  from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy }                  from '@ngneat/until-destroy';
@@ -8,11 +8,13 @@ import { delay, filter, map, retryWhen } from 'rxjs/operators';
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
 import { NxSettingsService }             from '../settings.service';
+import { NxApplyService }                from '../../../../services/apply.service';
 import { NxMenuService }                 from '../../../../menu';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';
 import { NxUriService }                  from '../../../../services/uri.service';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
+import { Process, NxProcessService }     from '../../../../services/process.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,6 +26,7 @@ import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_stat
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    viewContainerRef: ViewContainerRef;
     system: NxSystem;
     serverIdFromParams;
     selectedServer;
@@ -43,14 +46,19 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        @Inject(ViewContainerRef) viewContainerRef,
         private route: ActivatedRoute,
+        private applyService: NxApplyService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
+        private processService: NxProcessService,
         private uriService: NxUriService,
-        private location: Location
+        private location: Location,
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+        this.viewContainerRef = viewContainerRef;
 
         this.setupDefaults();
     }
@@ -77,28 +85,33 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.processService.createProcess(() => Promise.resolve()),
+            () => {},
+            []
+        );
+
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.isOffline = !system.isOnline;
                 this.settingsService.footerSubject.next(true);
-
-                if (!system.permissions?.editUsers) {
-                    this.uriService
-                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
-                        .catch(error => {
-                            console.error(error);
-                        });
-
-                    return;
-                }
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
                     (
                         this.CONFIG.isLocal
                             ? this.system.update()
                             : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {}));
+                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).finally(() => {
+                        if (this.system && !this.system.permissions?.editUsers) {
+                            this.uriService
+                                .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        }
+                    });
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();

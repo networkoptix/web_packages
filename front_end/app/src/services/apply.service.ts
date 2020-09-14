@@ -3,15 +3,20 @@ import {
     ViewContainerRef, ComponentRef, ViewChild
 } from '@angular/core';
 import { NgForm }                               from '@angular/forms';
-import { BehaviorSubject, merge, Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Subscription, Observable, from } from 'rxjs';
 import {
     distinctUntilChanged, filter, skip, map, combineLatest
 }                                               from 'rxjs/operators';
 
 import { NxApplyComponent }          from '../components/apply/apply.component';
-import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { Process, NxProcessService } from './process.service';
 import { NxUtilsService }            from './utils.service';
+import { ApplyModalContent }         from '../dialogs/apply/apply.component';
+import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -110,17 +115,32 @@ export class SectionWatcher {
 
 export class FormWatcher {
     originalValue;
-    _changed: boolean;
+    valueSubject = new BehaviorSubject(false);
+    changed: boolean;
 
-    constructor() {
+    get value() {
+        return this.valueSubject.value;
     }
 
-    set changed(value) {
-        this._changed = value;
+    constructor(private form: NgForm) {
+        form.valueChanges.subscribe((change) => {
+            if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
+                this.originalValue = change;
+            } else {
+                this.changed = !NxUtilsService.isEqual(this.originalValue, change);
+                this.valueSubject.next(change);
+            }
+        });
     }
 
-    get changed() {
-        return this._changed;
+    reset = () => {
+        this.form.reset(this.originalValue);
+    }
+
+    saved = () => {
+        this.originalValue = this.value;
+        this.changed = false;
+        this.reset();
     }
 }
 
@@ -150,22 +170,28 @@ export class FormWatcher {
  * @class
  */
 export class NxApplyService {
-    private applyComponentRef: ComponentRef<NxApplyComponent>;
+    public applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
-    private discardFunction: () => void;
+    private submitFunctions = [];
+    private discardFunctions = [];
+    private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
+
     private watchersSubscription: Subscription;
+
     isOnline$ = new BehaviorSubject(true);
 
-    constructor(private factoryResolver: ComponentFactoryResolver,
-                private dialogsService: NxDialogsService,
-                private processService: NxProcessService
+    constructor(
+        private factoryResolver: ComponentFactoryResolver,
+        private processService: NxProcessService,
+        private modalService: NgbModal,
     ) {}
 
     get locked() {
@@ -207,6 +233,28 @@ export class NxApplyService {
     }
 
     /**
+     * This iterates through the applyFunctions which is an Process[], it calls them in series until one fails.
+     *
+     * The this.applyFunctions.reduce starts with a resolved promise, calls .then on the promise then returns the next promise.
+     *
+     * If a process along the chain gets rejected, subsequent promises reject until it gets returned.
+     *
+     * When a process fails that rejected promise gets returned and is handled by the process that this.runProcesses was passed to.
+     *
+     * Two things to consider. The Process.then(successCB, errorCB) callbacks need to return something else the chain will end.
+     * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
+     */
+    runProcesses = () => this.applyFunctions.reduce(
+        async(prevPromise, process, index) => {
+            return prevPromise.then(prevRes => {
+                return new Promise((resolve, reject) => {
+                    process.run().then((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                }).catch(res => Promise.reject(res));
+            }).catch(res => Promise.reject(res));
+        }, Promise.resolve()
+    );
+
+    /**
      * Creates the NxApplyComponent for the current page and sets the watchers.
      * @param component The target component where the NxApplyComponent is to be created.
      * @param saveFunction The process that is suppose to run when save is pressed.
@@ -230,8 +278,23 @@ export class NxApplyService {
         this.component = component;
 
         this.createComponent(onlyShowSectionWatchers);
-        this.setSaveFunction(saveFunction);
-        this.setDiscardFunction(discardFunction);
+        this.applyFunctions = [saveFunction];
+        this.applyFunction = this.processService.createProcess(
+            this.runProcesses,
+            {}).then(
+            (res) => {
+                this.reset();
+                return res;
+            },
+            (res) => {
+                // need to figure out how to reset
+                this.reset();
+                return res;
+            }
+        );
+        if (discardFunction) {
+            this.discardFunctions = [discardFunction];
+        }
         if (form) {
             this.setForm(form);
         }
@@ -239,7 +302,12 @@ export class NxApplyService {
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent> this.applyComponentRef.instance).show = value;
         });
-        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = submitFn;
+        if (submitFn) {
+            this.submitFunctions = [submitFn];
+        }
+        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => this.submitFunctions.forEach(submitFn => submitFn());
+        (<NxApplyComponent> this.applyComponentRef.instance).discard = this.discardFunction;
+        (<NxApplyComponent> this.applyComponentRef.instance).save = this.applyFunction;
     }
 
     // ... Breadcrumbs ... TT
@@ -332,6 +400,28 @@ export class NxApplyService {
         return sectionWatcher;
     }
 
+    createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any>(
+        modal: Modal, options: Options, inputs: Inputs
+    ): Promise<Result> {
+        const modalRef = this.modalService.open(modal, options);
+        Object.assign(modalRef.componentInstance, inputs);
+        return modalRef.result;
+    }
+
+    applyDialog(applyFunc: Process, discardFunc: () => void, form: NgForm) {
+        // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
+    }
+
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
     showDialog() {
         // If the apply dialog is active block all other attempts to open it.
@@ -339,7 +429,7 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
-        return this.dialogsService.apply(this.applyFunction, this.discardFunction, this.form)
+        return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
                 status => {
                     if (status !== 'applied' && status !== 'discarded') {
@@ -386,16 +476,6 @@ export class NxApplyService {
         ).subscribe(isOnline => {
             (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
         });
-    }
-
-    private setDiscardFunction(func: () => void) {
-        this.discardFunction = func;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
-    }
-
-    private setSaveFunction(func: Process) {
-        this.applyFunction = func;
-        (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
 
     public setForm(form: NgForm) {
@@ -460,26 +540,14 @@ export class NxApplyService {
     }
 
     private extendApplyFunction(applyFunction: Process) {
-        const prevApply: any = this.applyFunction;
-        this.setSaveFunction(this.processService.createProcess(() => {
-            applyFunction.run();
-            return prevApply.run();
-        }));
+        this.applyFunctions.push(applyFunction);
     }
 
     private extendDiscardFunction(discardFunction: () => void) {
-        const prevDiscard = this.discardFunction;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
-            prevDiscard();
-            discardFunction();
-        };
+        this.discardFunctions.push(discardFunction);
     };
 
     private extendSubmitFunction(submitFunction: () => void) {
-        const prevSubmitFn = (<NxApplyComponent> this.applyComponentRef.instance).submitFn;
-        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => {
-            prevSubmitFn();
-            submitFunction();
-        };
-    };
+        this.submitFunctions.push(submitFunction);
+    }
 }

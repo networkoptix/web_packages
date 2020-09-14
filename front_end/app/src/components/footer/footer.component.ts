@@ -6,10 +6,9 @@ import { DomSanitizer }             from '@angular/platform-browser';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 import { Subscription }             from 'rxjs';
 
-import { MenuNode }                 from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxAppStateService }        from '../../services/nx-app-state.service';
-import { NxMenusService }           from '../../services/menus.service';
+import { NxMenusService, MenuNode } from '../../services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,10 +29,12 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     classes: string[] = [];
     private footerSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                private sanitizer: DomSanitizer,
-                private appState: NxAppStateService,
-                private menusService: NxMenusService) {
+    constructor(
+        configService: NxConfigService,
+        private sanitizer: DomSanitizer,
+        private appState: NxAppStateService,
+        private menusService: NxMenusService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

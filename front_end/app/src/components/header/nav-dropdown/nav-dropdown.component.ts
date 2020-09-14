@@ -3,7 +3,7 @@ import { BehaviorSubject }           from 'rxjs';
 
 import { BaseDropdown }              from '../../dropdowns/injDropdown';
 import { environment }               from '../../../../environments/environment';
-import { MenuNode }                  from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { MenuNode }                  from '../../../services/menus.service';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxHeaderService }           from '../../../services/nx-header.service';

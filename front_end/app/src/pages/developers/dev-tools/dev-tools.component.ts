@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { AboutNode } from '../about/about.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -9,9 +10,7 @@ import { NxConfigService, IConfig } from '../../../services/nx-config';
     styleUrls   : ['dev-tools.component.scss']
 })
 export class NxDevToolsComponent {
-    @Input() devToolsLink: string = '/developers/dev-tools';
-    @Input() devToolsHeading: string;
-    @Input() devTools: DevToolBlock[] = mockTools;
+    @Input() devToolsNode: AboutNode;
 
     CONFIG: IConfig;
     constructor(configService: NxConfigService) {
@@ -27,16 +26,3 @@ export class DevToolBlock {
         public icon: string
     ) {}
 }
-export const mockTools = [
-    new DevToolBlock('Server Plugin SDK (C++)', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Cloud API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server Plugin SDK (C++)', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Cloud API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server Plugin SDK (C++)', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server Plugin SDK (C++)', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Server HTTP REST API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg'),
-    new DevToolBlock('Cloud API', 'User-friendly and flexible networked access control system, designed to make the management of any building incredibly simple.', '/developers/', 'servers.svg')
-];

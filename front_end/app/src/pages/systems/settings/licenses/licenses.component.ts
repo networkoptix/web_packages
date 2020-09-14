@@ -173,7 +173,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private getLicenses() {
         this.system.getLicenses()
-            .then((result: any) => {
+            .then(({ licenses: result }) => {
                 if (result.length) {
                     if (this.serverSubscription) {
                         this.serverSubscription.unsubscribe();

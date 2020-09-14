@@ -1,24 +1,25 @@
-<ng-template #stepBlock let-block="block">
+<ng-template #stepBlock let-block="block" let-step="step">
     <div class="detail-wrapper">
         <div class="detail-block">
-            <div class="step">{{block.step}}</div>
-            <div class="step-image" [id]="'step-image-' + block.step">
+            <div class="step">{{step}}</div>
+            <div class="step-image" [id]="'step-image-' + step">
                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + block.icon"></svg-icon>
             </div>
             <div class="step-text">
-                <h3 [routerLink]="block.link" 
-                    (mouseover)="slideUp('step-image-' + block.step)"
-                    (mouseleave)="slideBack('step-image-' + block.step)"
-                >{{block.lead}}</h3>
-                <span>{{block.description}}</span>
+                <h3 (mouseover)="slideUp('step-image-' + step)"
+                    (mouseleave)="slideBack('step-image-' + step)"
+                    [routerLink]="block.url"
+                >{{block.title}}</h3>
+                <span>{{block.asset.title}}</span>
             </div>
         </div>
     </div>
 </ng-template>
-
-<h2 class="get-started-heading">{{heading}}</h2>
-<section class="get-started-blocks">
-    <ng-container *ngFor="let block of blocks">
-        <ng-container *ngTemplateOutlet="stepBlock;context{block:block}"></ng-container>
-    </ng-container>
-</section>
+<ng-container *ngIf="getStartedNode.nodes">
+    <h2 class="get-started-heading" [routerLink]="getStartedNode.url">{{getStartedNode.title}}</h2>
+    <section class="get-started-blocks">
+        <ng-container *ngFor="let block of getStartedNode.nodes;let index=index">
+            <ng-container *ngTemplateOutlet="stepBlock;context{block:block, step:index + 1}"></ng-container>
+        </ng-container>
+    </section>
+</ng-container>

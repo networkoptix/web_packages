@@ -1,32 +1,34 @@
 <ng-template #integrationBlock let-integration="integration">
-    <div class="integration-block" [routerLink]="integration.link">
+    <div class="integration-block" [routerLink]="integration.url">
         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + integration.icon"></svg-icon>
-        <p>{{integration.name}}</p>
+        <p>{{integration.title}}</p>
     </div>
 </ng-template>
 
 <ng-template #integrationsBlocks>
     <div class="card integrations-block">
-        <h3>{{integrationBlocksIntro}}</h3>
+        <h3>{{integrationsNode.nodes[1].title}}</h3>
         <div class="integrations-blocks-wrapper">
-            <ng-container *ngFor="let integration of integrations">
-                <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
+            <ng-container *ngFor="let integration of integrationsNode.nodes[1].nodes; let more=last">
+                <ng-template #block>
+                    <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
+                </ng-template>
+                <div *ngIf="more; else block" class="more-integrations" [routerLink]="integration.url">
+                    <p>and <b>{{integration.title}}</b> more</p>
+                </div>
             </ng-container>
-            <div class="more-integrations">
-                <p>and <b>{{moreIntegrations}}</b> more</p>
-            </div>
         </div>
-        <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationStoreLink">{{integrationStoreText}}</button>
+        <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationsNode.nodes[1].url">{{integrationsNode.nodes[1].asset.title}}</button>
     </div>
 </ng-template>
 
 <section class="integrations">
-    <h2 [routerLink]="integrationsLink" class="heading-link">{{integrationsHeading}}</h2>
+    <h2 class="heading-link" [routerLink]="integrationsNode.url">{{integrationsNode.title}}</h2>
     <div class="integrations-wrapper">
         <div class="card info-block">
-            <h3>{{integrationInfoHeading}}</h3>
-            <p>{{integrationInfoBody}}</p>
-            <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationInfoLink">{{integrationInfoLinkText}}</button>
+            <h3>{{integrationsNode.nodes[0].title}}</h3>
+            <p *ngFor="let block of integrationsNode.nodes[0].asset.blocks" [innerHTML]="block.contentHTML"></p>
+            <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationsNode.nodes[0].url">{{integrationsNode.nodes[0].asset.title}}</button>
         </div>
         <ng-container *ngIf="currentWindowWidth > 600">
             <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>

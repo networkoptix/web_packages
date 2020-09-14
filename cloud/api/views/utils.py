@@ -89,7 +89,6 @@ def get_settings_from_cache():
                      ))
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def visited_key(request):
     global_cache = caches['global']
     if request.method == 'GET':
@@ -160,7 +159,6 @@ def language(request):
                      operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions
     can_view_releases = UserGroupsToAssetPermissions.\
@@ -191,7 +189,6 @@ def downloads_history(request):
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-@handle_exceptions
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
@@ -240,7 +237,6 @@ def download_build(request, build):
                                            "new download information.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def downloads(request):
     global_cache = caches['global']
     customization = settings.CUSTOMIZATION
@@ -324,7 +320,6 @@ def downloads(request):
                      operation_description="Returns cloud config information to the web client.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
@@ -346,7 +341,6 @@ def get_settings(request):
                      operation_description="Clear's the supported devices cache.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
-@handle_exceptions
 def get_ipvd(request):
     url = settings.IPVD_CONNECT
 
@@ -471,7 +465,6 @@ def get_ipvd(request):
                      operation_description="Returns what capabilities cloud portal supports. This is used "
                                            "mainly for vms.")
 @api_view(['GET'])
-@handle_exceptions
 def cloud_capabilities(request):
     capabilities = get_cloud_capabilities_from_cache()
 

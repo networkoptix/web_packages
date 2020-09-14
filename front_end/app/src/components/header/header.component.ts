@@ -347,8 +347,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         if (this.CONFIG.isLocal) {
             this.accountService.get().then(account => {
-                if (!account?.id) {
-                    return
+                if (!account) {
+                    return;
                 };
                 const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                 system.update().then(() => {
@@ -404,7 +404,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
         // Handling promise to satisfy the linter.
         this.dialogs
-            .login(!redirect)
+            .login(this.accountService, !redirect)
             .then(() => {});
 
         return false;

@@ -7,7 +7,7 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import { MenuNode } from '../../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { MenuNode } from '../menus.service';
 
 export interface BaseConfig {
     commonPasswordsList?: string[];

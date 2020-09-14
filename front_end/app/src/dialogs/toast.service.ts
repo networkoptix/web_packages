@@ -1,8 +1,18 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef }  from '@angular/core';
+import { IConfig, NxConfigService } from '../services/nx-config';
+
+
 
 @Injectable({ providedIn: 'root' })
 export class NxToastService {
+    CONFIG: IConfig;
     toasts: any[] = [];
+
+    constructor(
+        configService: NxConfigService,
+    ){
+        this.CONFIG = configService.getConfig();
+    }
 
     show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
         const toast = this.toasts.find(obj => obj.textOrTpl === textOrTpl);
@@ -17,5 +27,18 @@ export class NxToastService {
         } else {
             this.toasts = [];
         }
+    }
+
+    notify(message: string, type: string, hold?: boolean) {
+        type = type || this.CONFIG.toast.info;
+        hold = hold || false;
+
+        const options = {
+            autohide : !hold,
+            classname: type,
+            delay    : this.CONFIG.alertTimeout
+        };
+
+        return this.show(message, options);
     }
 }

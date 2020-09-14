@@ -12,8 +12,7 @@
                     <nx-select [id]="log.key"
                                [name]="log.key"
                                [items]="loggerOptions"
-                               [ngModel]="systemLoggers[log.key]"
-                               (ngModelChange)="changeLog($event, log.key)"
+                               [(ngModel)]="systemLoggers[log.key]"
                                [selected]="systemLoggers[log.key]">
                     </nx-select>
                 </div>
@@ -21,6 +20,3 @@
         </form>
     </nx-section>
 </nx-block>
-<div class="section-apply-wrapper">
-    <ng-container #sectionLoggersApply></ng-container>
-</div>

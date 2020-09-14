@@ -1,10 +1,11 @@
-from django.conf import settings
+from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.admin import helpers, SimpleListFilter
-from django.contrib.auth.models import Permission
-from django.conf.urls import url
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.sessions.models import Session
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import path
 from django_csv_exports.admin import CSVExportAdmin
 
 from api.forms import *
@@ -92,6 +93,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
                   'is_staff', 'language', 'customization')
 
     change_list_template = "api/account_changelist.html"
+    change_form_template = "api/account_change_form.html"
     form = AccountAdminForm
 
     def save_model(self, request, obj, form, change):
@@ -143,9 +145,22 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
     def get_urls(self):
         urls = super(AccountAdmin, self).get_urls()
         my_urls = [
-            url(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite')
+            url(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite'),
+            path('force_logout/<slug:user_id>/', self.force_logout, name='force_logout')
         ]
         return my_urls + urls
+
+    @staticmethod
+    @user_passes_test(lambda user: user.is_superuser)
+    def force_logout(request, user_id):
+        session_count = 0
+        for session in Session.objects.all():
+            decoded_session = session.get_decoded()
+            if decoded_session.get('_auth_user_id', None) == user_id:
+                session.delete()
+                session_count += 1
+        messages.success(request, f'Deleted {session_count} sessions')
+        return redirect('admin:api_account_change', user_id)
 
     def invite(self, request):
         group_id = request.GET.get('group_id')

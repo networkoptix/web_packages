@@ -25,6 +25,8 @@ ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 ${SYSTEM GENERAL LINK}                //a[@id="general"]
+${SYSTEM STORAGE LINK}                //a[@id='cloudStorage']
+${MENU LEVEL 3 LINK}                  //a[contains(@class, "menu-level-3")]
 
 ${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
 ${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
