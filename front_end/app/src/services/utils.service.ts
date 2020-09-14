@@ -16,7 +16,7 @@ export class NxUtilsService {
 
     public static sortASC = true;
     public static sortDESC = false;
-    public momentWithLocale = moment
+    public momentWithLocale;
 
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
@@ -24,7 +24,7 @@ export class NxUtilsService {
                 @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
-        this.momentWithLocale(locale);
+        this.momentWithLocale = moment().locale(locale);
     }
 
     static cleanId(id) {
