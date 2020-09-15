@@ -116,27 +116,26 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     setFilter() {
-        function searchBy(item, query) {
-            return (item.information.name && item.information.name.toLowerCase().indexOf(query) > -1 ||
-                    item.information.companyName && item.information.companyName.toLowerCase().indexOf(query) > -1 ||
-                    item.information.shortDescription && item.information.shortDescription.toLowerCase().indexOf(query) > -1 ||
-                    item.overview && item.overview.description && item.overview.description.toLowerCase().indexOf(query) > -1);
-        }
+        const IGNORE_KEYS = ['downloadFilesOrder', 'id', 'lastModified', 'link', 'mine'];
+        const searchBy = (item, query) => {
+            return Object.keys(item).find((key) => {
+                // Ignore values that are undefined or that dont help the search.
+                if (!item[key] || IGNORE_KEYS.indexOf(key) > -1) {
+                    return false;
+                }
+                return JSON.stringify(Object.values(item[key])).toLowerCase().indexOf(query) > -1;
+            });
+        };
 
         this.elements = this.allElements.map(obj => ({ ...obj }));
 
         if (this.filterModel.query !== '') {
             const query = this.filterModel.query.toLowerCase();
 
-            this.elements = this.elements.filter(item => {
-                if (searchBy(item, query)) {
-                    // this.markMatch(item, text);
-                    return item;
-                }
-            });
+            this.elements = this.elements.filter(item => searchBy(item, query));
         }
 
-        if (this.filterModel.tags.length) {
+        if (this.filterModel.tags && this.filterModel.tags.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
