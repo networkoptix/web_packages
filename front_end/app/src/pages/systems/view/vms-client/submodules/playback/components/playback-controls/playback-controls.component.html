@@ -1,0 +1,3 @@
+<div class="button playLive" [ngClass]="{ 'enabled': canPlayLive }" (click)="playLive()">Play Live</div>
+<div class="button pause_toggle" [ngClass]="{ 'enabled': canPause || canUnpause }" (click)="togglePause()">{{ canPause ? 'Pause' : canUnpause ? 'UnPause' : 'Pause/Unpause' }}</div>
+<div class="button stop" [ngClass]="{ 'enabled': canStop }" (click)="stop()">Stop</div>

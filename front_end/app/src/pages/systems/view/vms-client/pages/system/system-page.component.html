@@ -1,0 +1,9 @@
+<aside>
+  <nav>
+    <a *ngFor="let c of cameras" [routerLink]="'./' + c.id">{{ c.name }}</a>
+  </nav>
+</aside>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

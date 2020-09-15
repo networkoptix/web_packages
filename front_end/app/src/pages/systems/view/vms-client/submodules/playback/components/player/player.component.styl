@@ -1,0 +1,22 @@
+:host
+  display block
+  position relative
+  > video
+    height 100%
+    width 100%
+    object-fit contain
+  > .overlay
+    &.buffering
+      position absolute
+      left 0
+      top 0
+      bottom 0
+      right 0
+      background #000a
+      color white
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
+      &:after
+        content 'buffering'

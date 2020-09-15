@@ -1,0 +1,8 @@
+<!-- Player ({{ mode }}) {{ isBuffering && 'buffering' }} -->
+<video #video [muted]="true"
+  (play)="videoPlayHandler($event)"
+  (click)="videoClickHandler($event)"
+>
+  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+</video>
+<div class="overlay" [ngClass]="{ 'buffering': isBuffering }"></div>

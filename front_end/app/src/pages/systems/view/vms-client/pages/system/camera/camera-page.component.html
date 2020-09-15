@@ -1,0 +1,17 @@
+<header>
+  <span class="name">{{ camera.name }}</span>
+  <span class="indicator" *ngIf="!camera.isOnline">OFFLINE</span>
+  <span class="indicator" *ngIf="camera.isOnline">ONLINE</span>
+  <span class="indicator" *ngIf="camera.isLive">LIVE</span>
+  <span class="indicator" *ngIf="camera.isRecording">REC</span>
+  <span class="indicator" *ngIf="camera.hasArchive">ARCH</span>
+</header>
+
+<player *ngIf="showPlayer"></player>
+
+<div class="controls">
+  <playback-controls *ngIf="showPlaybackControls"></playback-controls>
+  <timeline *ngIf="showTimeline"></timeline>
+  <playback-state-indicator></playback-state-indicator>
+</div>
+

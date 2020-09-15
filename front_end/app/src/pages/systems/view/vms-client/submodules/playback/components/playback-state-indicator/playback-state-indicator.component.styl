@@ -1,0 +1,25 @@
+:host
+  display flex
+  height 100%
+  width 100%
+  justify-content center
+  align-items center
+
+  > .is-live
+    opacity 0.0
+    transition all 0.2s ease-in-out
+    width 20px
+    height 20px
+    border-radius 10px
+    border 1px solid green
+
+    &.playing
+      background-color green
+
+    &.recording
+      border-color red
+      &.playing
+        background-color red
+
+    &.active
+      opacity 1.0

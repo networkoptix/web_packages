@@ -1,0 +1,19 @@
+:host
+  display flex
+  flex-direction row
+  flex-wrap nowrap
+  min-height calc(100vh - 50px)
+
+  > aside
+    width 300px
+    flex-shrink 0
+    flex-grow 0
+
+    > nav
+      > a
+        display block
+        border 1px solid black
+        padding 1em 0
+
+  > main
+    flex-grow 1
