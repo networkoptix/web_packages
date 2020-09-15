@@ -1,12 +1,16 @@
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild
-} from '@angular/core';
-
-import { NxConfigService, IConfig }                             from '../../../../services/nx-config';
-import { NxHealthService }                                      from '../../health.service';
-import { NxScrollMechanicsService }                             from '../../../../services/scroll-mechanics.service';
-import { NxHealthLayoutService }                                from '../../health-layout.service';
-import { InfoBlockSection, InfoBlockSections, InfoBlockLine }   from '../../../../components/info-block/info-block.component';
+    AfterViewInit, Component, ElementRef,
+    EventEmitter, Input, Output, ViewChild
+}                                   from '@angular/core';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxHealthService }          from '../../health.service';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import {
+    InfoBlockSection,
+    InfoBlockSections,
+    InfoBlockLine
+}                                   from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector    : 'nx-dynamic-table-panel-component',
@@ -38,10 +42,10 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.scrollMechanicsService.panelVisible = true;
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
+            this.scrollMechanicsService.panelVisible = true;
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
-            if (this.panelParams) {
+            if (this.panelParams && activeEntity) {
                 const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
                 this.sections = paramGroups
                     .map(({ description, name, id: paramGroupId, values }) => {

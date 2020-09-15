@@ -129,7 +129,7 @@
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Inspelningsläget ändras till \"Spela alltid in\"",
         "recordingModes": {
             "always": "Spela alltid in",
             "motion": "Spela endast in rörelse",

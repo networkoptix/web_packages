@@ -129,7 +129,7 @@
         },
         "chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
         "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "De opnamemodus wordt gewijzigd in 'Altijd opnemen'",
         "recordingModes": {
             "always": "Altijd opnemen",
             "motion": "Neem alleen beweging op",
