@@ -76,6 +76,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraDetailColumns: InfoBlockColumns;
     canSeeInfo = false;
     editMode = false;
+    show404 = false;
     recordingSettings: IRecordingSettings;
 
     motionGridChangeWatcher = new Watcher<boolean>();
@@ -230,7 +231,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         if (this.recordingWatcher.originalValue !== undefined) {
             if (this.motionEnabled) {
-                this.enableMotion();
+                this.enableMotion(true);
             } else {
                 this.disableMotion();
             }
@@ -396,10 +397,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
-                        if (!this.system.permissions.editCameras) {
-                            return this.router.navigate(['systems', this.system.id])
-                                .catch(error => console.error(error));
-                        }
                         this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
@@ -639,10 +636,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.updateMotionWarning();
     }
 
-    enableMotion = () => {
+    enableMotion = (updateModes = false) => {
         this.motionEnabled = true;
-        if (this.motionEnabledWatcher.originalValue) {
-            this.recordingModesWatcher.reset();
+        if (updateModes) {
+            this.recordingModes = this.recordingModes.map(({ name, id }) => {
+                const enabled = id === 'RT_Always' || this.motionEnabled;
+                const value =  id === 'RT_MotionOnly' ? 2 : 0;
+                return { name, id, enabled, value };
+            });
         } else {
             this.updateMotionWarning();
         }
@@ -691,6 +692,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         ) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+            this.show404 = cameraIndex === -1 && (!this.system.permissions.editCameras || !!this.parsedCameraId);
+            if (this.show404) {
+                return;
+            }
 
             if (cameraIndex === -1) {
                 cameraIndex = 0;
