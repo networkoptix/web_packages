@@ -408,11 +408,7 @@ Recording toggle shows correct options
     Wait Until Element is Visible    ${DISCARD CHANGES BUTTON}
     Click Button     ${DISCARD CHANGES BUTTON}
     Verify on Cameras Page
-    Toggle Recording
     Verify recording controls are open
-    Wait Until Elements Are Visible
-    ...    ${SYSTEM SAVE}
-    ...    ${SYSTEM CANCEL}
     ${checked}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
     Should Be Equal    ${checked}    2
 
