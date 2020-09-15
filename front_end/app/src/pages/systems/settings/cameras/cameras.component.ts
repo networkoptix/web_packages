@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit, Inject, ViewContainerRef
+    Component, OnDestroy, OnInit, Inject, ViewContainerRef, ViewChild, ElementRef
 }                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
@@ -35,6 +35,8 @@ import {
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    @ViewChild('fpsInput') fpsInput: ElementRef;
 
     unsub$: Subject<boolean> = new Subject();
     public reload$ = new BehaviorSubject(0);
@@ -272,6 +274,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     set selectedFps(value) {
         this.selectedFpsWatcher.value = !value ? value : Math.min(value, this.selectedCamera.maxFps);
+        if (this.fpsInput && this.fpsInput.nativeElement.value !== this.selectedFpsWatcher.value) {
+            this.fpsInput.nativeElement.value = this.selectedFpsWatcher.value;
+        }
     }
 
     get variousFps() {
