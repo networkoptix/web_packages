@@ -145,8 +145,8 @@ def push_notification(request):
     except (exceptions.APIException, Http404, PermissionDenied) as e:
         request_data = request.data.copy()
         clean_passwords(request_data)
-        logger.info(f'Request data: {request_data}')
-        logger.info(f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}')
+        logger.warning(f'Request data: {request_data}')
+        logger.warning(f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}')
         raise e
 
 
