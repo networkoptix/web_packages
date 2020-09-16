@@ -248,6 +248,7 @@ View button
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
 
 Detailed Info
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -272,6 +273,7 @@ Detailed Info
     Log Out
 
 Aspect Ratio
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -285,6 +287,7 @@ Aspect Ratio
     Aspect Ratio Should Be    1:1
 
 Rotation
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
@@ -364,6 +367,7 @@ Edit credentials form Close and Cancel buttons
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 Changes made in Image settings in thick client appear correctly on cloud portal
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    good cam
@@ -543,6 +547,7 @@ Disabled Motion With Recording
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
     
 Change FPS
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -593,7 +598,7 @@ Change Quality
     Wait Until Element Contains    ${QUALITY DROPDOWN}    ${BEST TEXT}
 
 Enable/disable motion detection
-    [Tags]    C76398
+    [Tags]    C76398    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam

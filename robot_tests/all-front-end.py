@@ -38,7 +38,7 @@ def threaded_test_run(output, language):
         #"--loglevel", "trace",
         "-i " "threaded "
         "-i " "threaded-file "
-        "-e " "merge "
+        "-e " "licenses "
         "-e " "customizations "
         "-v " f"ENV:{ENVIRONMENT} "
         "-v " f"SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
@@ -54,7 +54,7 @@ def threaded_test_run(output, language):
         "-V", f"getvars.py:{CUSTOMIZATION}:{language}",
         "-e", "threaded",
         "-e", "threaded-file",
-        "-e", "merge",
+        "-e", "licenses",
         "-e", "customizations",
         "--output", "serial.xml",
         "test-cases"
