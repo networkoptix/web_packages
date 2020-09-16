@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "카메라 오프라인",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "Professional 라이선스가 필요합니다.",
     "ONE LICENSE WILL BE USED TEXT": "1개의 professional 라이선스 채널이 사용 됩니다.",
+    "FOUND TEXT": "발견",
     "MOTION DETECTION DISABLED TEXT": "모션 감지가 비활성화되었습니다.",
-    "FOUND TEXT": "발견"
+    "DIFFERENT VALUES TEXT": "– Different Values –",
+    "BEST TEXT": "Best",
+    "HIGH TEXT": "High",
+    "MEDIUM TEXT": "Medium",
+    "LOW TEXT": "Low",
+    "SELECT RECORDING MODE TEXT": "Please select recording mode.",
+    "SELECT FPS TEXT": "Please select FPS.",
+    "SELCT QUALITY TEXT": "Please select recording quality",
+    "MISSING SETTINGS TEXT": "Please update missing recording settings.",
+    "CURRENT TEXT": "current",
+    "AUTO TEXT": "Auto"
 }
