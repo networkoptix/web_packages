@@ -7,7 +7,7 @@ from enum import Enum
 import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.http import QueryDict
+from django.http import QueryDict, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
@@ -397,7 +397,7 @@ def handle_exceptions(func):
         # noinspection PyBroadException
         try:
             data = func(*args, **kwargs)
-            if not isinstance(data, Response):
+            if not isinstance(data, Response) and not isinstance(data, HttpResponseRedirect):
                 return Response(data, status=status.HTTP_200_OK)
             return data
         except Exception as exception:

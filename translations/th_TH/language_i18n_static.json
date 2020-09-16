@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
         "recordingSettingsWarning": "โปรดอัปเดตการตั้งค่าการบันทึกที่หายไป",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "บันทึกตลาดเวลา",
             "motion": "บันทึกการเคลื่อนไหวเท่านั้น",

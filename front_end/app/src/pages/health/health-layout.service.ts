@@ -41,6 +41,7 @@ export class NxHealthLayoutService {
     }
 
     set activeEntity(entity: any) {
+        this.layoutReady = false;
         this.previousActiveEntity = this.activeEntity;
         this.activeEntitySubject.next(entity);
     }
@@ -215,8 +216,8 @@ export class NxHealthLayoutService {
         //
         if (!table || table.offsetLeft === 0 && tableHeader?.innerText.length && !tableHeader.offsetHeight) {
             if (this.metricsValuesCount > 1) { // short circuit single entity - this was going until metric w/ page is loaded -- TT
-                setTimeout(() => this.setTableDimensions());
                 this.healthService.tableReady = false;
+                setTimeout(() => this.setTableDimensions());
             }
             return;
         }

@@ -133,9 +133,6 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
-    }
-
     changeLog(selected, key) {
         this.systemLoggers[key].value = selected.value;
         this.systemLoggers[key].selected = selected;
