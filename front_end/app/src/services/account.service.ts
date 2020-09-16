@@ -8,7 +8,7 @@ import { NxLanguageProviderService }                      from './nx-language-pr
 import { NxDialogsService }                               from '../dialogs/dialogs.service';
 import { NxSessionService }                               from './session.service';
 import { NxApplyService }                                 from './apply.service';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, debounceTime, distinct, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { WINDOW }                                         from './window-provider';
 import { NxAppStateService }                              from './nx-app-state.service';
@@ -97,6 +97,7 @@ export class NxAccountService implements OnDestroy {
 
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.uriService.queryParamsSubject
+            .pipe(distinct())
             .subscribe((params: any) => {
                 if (params.auth) {
                     this.handleAuthKeyLogin(params.auth);
@@ -197,7 +198,7 @@ export class NxAccountService implements OnDestroy {
                 if (!account && !this.loginDialogActive && !this.loginWithAuthKeyInProgress) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(this, true, true).then((result) => {
+                        .login(this, true, true).then((result: any) => {
                             this.localStorageService.set('loginRegister', true);
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);
@@ -392,7 +393,6 @@ export class NxAccountService implements OnDestroy {
         return true;
     }
 
-
     private async handleAuthKeyLogin(auth: string) {
         const account: Account = await this.get();
         try {
@@ -406,11 +406,11 @@ export class NxAccountService implements OnDestroy {
             }
             const response = await this.dialogs
                 .confirm('',
-                        this.LANG.dialogs.loggedFromOther,
-                        this.LANG.dialogs.okButton,
-                        undefined,
-                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                        'long-cancel-button');
+                    this.LANG.dialogs.titles.loggedFromOtherAccount,
+                    this.LANG.dialogs.buttons.ok,
+                    undefined,
+                    this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
+                    'long-cancel-button');
 
             if (response === true) {
                 return this.cloudApi.logout().finally(() => {
