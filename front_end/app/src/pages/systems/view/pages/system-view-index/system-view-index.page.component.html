@@ -1,0 +1,13 @@
+<div class="nx-view-sidebar">
+    <nx-system-media-server-list
+        [systemId]="systemId"
+        [system]="system"
+        [mediaServers]="mediaServers"
+    ></nx-system-media-server-list>
+</div>
+
+<router-outlet></router-outlet>
+
+<div *ngIf="mediaServers && noCameras" class="no-cameras-message">
+    There are no cameras in this system
+</div>

@@ -24,7 +24,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     private vms: VideoManagementSystemService,
     private playback: PlaybackService,
     public timeline: TimelineService,
-    public timelineExtendToNow: TimelineExtendToNowService
+    public timelineExtendToNow: TimelineExtendToNowService,
   ) {
   }
 

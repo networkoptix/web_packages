@@ -1,0 +1,101 @@
+.search-box {
+  height: 44px;
+  width: 100%;
+  border-bottom: 1px solid #cfd7dc;
+  position: relative;
+  background-color: #f0f3F4;  
+
+  transition: background-color .2s ease-in-out;
+
+  &:hover {
+    background-color: #f5f7f8;
+  }
+
+  &:focus-within {
+    background-color: #fff;
+  }
+
+  > .search-icon {
+    // TODO: replace with SVG icon
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+    &:after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      right: 12px;
+      bottom: 12px;
+      background-image: url('../../../../../../../images/web_interface_sprite@2x.png');
+      background-size: 192px 408px;
+      background-position: -50px -26px;
+    }
+  }
+
+  > input {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    border: none;
+    padding: 0 44px;
+    font-size: 13px;
+
+    &::placeholder {
+      color: #698796;
+    }
+  }
+
+  > .details-toggler {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+    cursor: pointer;
+    background-color: #e6ebed;
+
+    > svg {
+      > * {
+        transition: fill .2s ease-in-out;
+      }
+      > .outer-circle {
+        stroke: #698796;
+        stroke-width: 2;
+        fill: transparent;
+      }
+      > .i-body {
+        stroke: #698796;
+        stroke-width: 2;
+      }
+      > .point-over-i {
+        stroke-width: 0;
+        fill: #698796;
+      }
+    }    
+
+    &.active {
+      > svg {
+        > .outer-circle {
+          stroke: #2fa2db;
+        }
+        > .i-body {
+          stroke: #2fa2db;
+        }
+        > .point-over-i {
+          fill: #2fa2db;
+        }
+      }
+    }
+  }
+}
