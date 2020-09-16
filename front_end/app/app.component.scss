@@ -30,6 +30,10 @@ nx-app {
         padding-top : theme_variables.$navbar-height + 32px;
     }
 
+    .mainContainer {
+        background-color: theme_variables.$additional_light2;
+    }
+
     .placeholder {
         background-color : transparent;
 

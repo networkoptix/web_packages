@@ -395,7 +395,6 @@ def check_code_in_portal(request):
                      responses={"200": "User's email related to the auth code."})
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-@handle_exceptions
 def check_auth_code(request):
     require_params(request, ('code',))
     code = request.data['code']

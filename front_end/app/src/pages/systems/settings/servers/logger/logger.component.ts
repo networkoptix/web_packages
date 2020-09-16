@@ -1,6 +1,5 @@
 import {
-    Component,
-    OnDestroy, Input, OnChanges,
+    Component, Input, OnChanges,
     SimpleChanges, ViewEncapsulation, ViewChild
 }                                    from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
@@ -23,7 +22,7 @@ import { NgForm } from '@angular/forms';
     encapsulation : ViewEncapsulation.None
 })
 
-export class NxServerLoggerComponent implements OnChanges, OnDestroy {
+export class NxServerLoggerComponent implements OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 

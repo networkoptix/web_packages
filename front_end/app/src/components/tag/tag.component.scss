@@ -2,6 +2,10 @@
 @use '../../../styles/theme_variables';
 @use '../../styles/mixins';
 
+a {
+    text-decoration: none !important;
+}
+
 .close-button {
     border-radius: 2px;
     display: flex;
