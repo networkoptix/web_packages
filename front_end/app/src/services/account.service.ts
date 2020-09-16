@@ -384,55 +384,54 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    private handleAuthKeyLogin(auth: string) {
-        this.get()
-            .then((account: Account) => {
-                if (!account) {
-                    return this.cloudApi.checkCode(auth).then((res: any) => {
-                        if (res.emailExists) {
-                            return this.loginWithAuthKey(auth)
-                                .then(() => this.document.location.reload());
-                        } else {
-                            this.appStateService.ready = true;
-                            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
-                            return this.requireLogin();
-                        }
+    checkUnauthorized(data: any) {
+        if (data && data.resultCode === 'notAuthorized') {
+            this.logout(true);
+            return false;
+        }
+        return true;
+    }
+
+
+    private async handleAuthKeyLogin(auth: string) {
+        const account: Account = await this.get();
+        try {
+            const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
+            if (!account) {
+                return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
+            }
+            this.appStateService.ready = true;
+            if (result.email === account.email) {
+                return;
+            }
+            const response = await this.dialogs
+                .confirm('',
+                        this.LANG.dialogs.loggedFromOther,
+                        this.LANG.dialogs.okButton,
+                        undefined,
+                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                        'long-cancel-button');
+
+            if (response === true) {
+                return this.cloudApi.logout().finally(() => {
+                    this.stopAccountPoll();
+                    this.account = undefined;
+                    this.localStorageService.clear('all'); // Clear session
+                    return this.loginWithAuthKey(auth).then(() => {
+                        return this.document.location.reload();
                     });
-                }
-
-                this.appStateService.ready = true;
-
-                this.cloudApi.checkAuthCode(decodeURIComponent(auth)).then(async(result: any) => {
-                    if (result.email === account.email) {
-                        return;
-                    }
-
-                    const response = await this.dialogs
-                        .confirm('',
-                            this.LANG.dialogs.titles.loggedFromOtherAccount,
-                            this.LANG.dialogs.buttons.ok,
-                            undefined,
-                            this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
-                            'long-cancel-button');
-                    if (response) {
-                        return this.cloudApi
-                            .logout()
-                            .finally(() => {
-                                this.stopAccountPoll();
-                                this.localStorageService.clear('all'); // Clear session
-                                // this.sessionService.invalidateSession(); // Clear session
-                                return this.loginWithAuthKey(auth).then(() => {
-                                    return this.document.location.reload();
-                                });
-                            });
-                    } else {
-                        const queryParams = { auth: undefined, from: undefined };
-                        return this.router
-                            .navigate([], { queryParams, queryParamsHandling: 'merge' })
-                            .then(() => this.document.location.reload());
-                    }
                 });
-            });
+            } else {
+                const queryParams = { auth: undefined, from: undefined };
+                return this.router
+                    .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                    .then(() => this.document.location.reload());
+            }
+        } catch (e) {
+            this.appStateService.ready = true;
+            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+            return this.requireLogin();
+        }
     }
 
     private logoutHelper(doNotRedirect: boolean) {
