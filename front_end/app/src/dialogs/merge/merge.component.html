@@ -102,7 +102,7 @@
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="checkPasswordProcess"
@@ -118,7 +118,7 @@
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="checkPasswordProcess"
@@ -147,12 +147,12 @@
     </div>
     <div class="modal-footer d-flex justify-content-between">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
         </button>
         <button class="btn btn-primary svg-icon next-button" type="button" (click)="machine.transition('confirmMerge')">
             <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"
-                class="white-svg ml-2" [applyCss]="true"></svg-icon>
+                class="white-svg ml-2" [applyClass]="true"></svg-icon>
         </button>
     </div>
 </form>
@@ -193,7 +193,7 @@
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="mergingProcess"

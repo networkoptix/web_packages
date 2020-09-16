@@ -20,7 +20,6 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings;
     @Input() system: NxSystem;
-    @Input() viewContainerRef: ViewContainerRef;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -190,8 +189,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             return this.system.updateOrGetSystemSettings(changes).toPromise();
         }).then(() => this.applyService.reset());
 
-        this.applyService.initPageWatcher(
-            this.viewContainerRef,
+        this.applyService.addWatchersAndFunctionsFromChild(
+            Object.values(this.settingsWatchers),
             this.saveSettings,
             // handles the cancel button
             () => {
@@ -208,8 +207,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
                     this.sessionLimitToggle = false;
                 }
-            },
-            Object.values(this.settingsWatchers));
+            });
 
         this.applyService.setVisible(false);
     }

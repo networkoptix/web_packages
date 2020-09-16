@@ -14,7 +14,7 @@ import { NxSystem }                      from '../../../../services/system.servi
 import { NxUtilsService }                from '../../../../services/utils.service';
 import { NxUriService }                  from '../../../../services/uri.service';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
-import { Process, NxProcessService }     from '../../../../services/process.service';
+import { NxProcessService }              from '../../../../services/process.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,7 +26,6 @@ import { Process, NxProcessService }     from '../../../../services/process.serv
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    viewContainerRef: ViewContainerRef;
     system: NxSystem;
     serverIdFromParams;
     selectedServer;
@@ -46,7 +45,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        @Inject(ViewContainerRef) viewContainerRef,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
         private settingsService: NxSettingsService,
@@ -58,9 +56,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
-        this.viewContainerRef = viewContainerRef;
-
         this.setupDefaults();
+        this.applyService.initPageWatcher(this.applyContainerRef);
     }
 
     ngOnInit(): void {
@@ -85,12 +82,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.applyService.initPageWatcher(
-            this.viewContainerRef,
-            this.processService.createProcess(() => Promise.resolve()),
-            () => {},
-            []
-        );
+        this.applyService.initPageWatcher(this.applyContainerRef);
 
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))

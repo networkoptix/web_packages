@@ -1,4 +1,4 @@
-<div *ngIf="isOnline" class="pt-3 placeholder-text" [ngClass]="{'unsaved-changes': show}">
+<div *ngIf="ready && isOnline" class="pt-3 placeholder-text" [ngClass]="{'unsaved-changes': show}">
     <div *ngIf="show && warn" class="warning-text pb-3">{{ warn }}</div>
     <div *ngIf="show; else noChanges" class="d-flex">
         <ng-container *ngIf="showSectionWarning; else applyButtons">

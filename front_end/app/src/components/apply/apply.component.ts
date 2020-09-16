@@ -21,8 +21,6 @@ import { NxProcessButtonComponent }  from '../process-button/process-button.comp
 })
 export class NxApplyComponent {
     @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;
-
-    @Input() show: boolean;
     @Input() save;
     @Input() discard;
     @Input() warn: string;
@@ -30,8 +28,10 @@ export class NxApplyComponent {
     @Input() submitFn: () => any = () => null;
     @Input() showSectionWarning = false;
 
-    applyVisible: boolean;
-    isOnline = true;
+    show = false;
+    applyVisible = false;
+    isOnline = false;
+    ready = false
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
