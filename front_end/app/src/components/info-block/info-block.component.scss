@@ -56,10 +56,13 @@
             }
         }
         &-values {
-            flex: 0 1 auto;
-            overflow      : hidden;
+            flex          : 0 1 auto;
             max-width     : 100%;
             line-height   : 16px;
+            overflow-wrap : break-word;
+            word-wrap     : break-word;
+            word-break    : break-word;
+            hyphens       : auto;
             p {
                 @include typography.medium13;
                 display: flex;
