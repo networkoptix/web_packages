@@ -14,7 +14,7 @@
                     (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)"
                 >{{line.name}}</p>
             </div>
-            <div class="block-section-values">
+            <div class="block-section-values" [style.max-width.%]="100 - block.maxParamWidth || 100">
                 <p *ngFor="let line of block.lines; let lineIndex=index"
                    [ngClass]="line.customClass"
                    [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"

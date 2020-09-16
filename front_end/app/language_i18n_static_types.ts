@@ -10,7 +10,8 @@
 export interface LanguageI18NStaticTypes {
     "About %CLOUD_NAME%":  string;
     "Download %VMS_NAME%": string;
-    Integrations:          string;
+    "For developers":      string;
+    "Integrations (β)":    string;
     Privacy:               string;
     Support:               string;
     "Supported Devices":   string;
@@ -891,7 +892,8 @@ const typeMap: any = {
     "LanguageI18NStaticTypes": o([
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "" },
-        { json: "Integrations", js: "Integrations", typ: "" },
+        { json: "For developers", js: "For developers", typ: "" },
+        { json: "Integrations (β)", js: "Integrations (β)", typ: "" },
         { json: "Privacy", js: "Privacy", typ: "" },
         { json: "Support", js: "Support", typ: "" },
         { json: "Supported Devices", js: "Supported Devices", typ: "" },
