@@ -1,7 +1,8 @@
 {
     "About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
     "Download %VMS_NAME%": "%VMS_NAME% 다운로드",
-    "Integrations": "연동",
+    "For developers": "For developers",
+    "Integrations (β)": "통합 (베타)",
     "Privacy": "개인 정보 보호 정책",
     "Support": "지원",
     "Supported Devices": "지원되는 기기들",
