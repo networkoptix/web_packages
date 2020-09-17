@@ -162,11 +162,11 @@
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
                                 <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 15"
-                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
-                                   [(ngModel)]="selectedFps"
-                                   (blur)="selectedFps = selectedFps > 0 ? selectedFps : this.selectedFpsWatcher.originalValue || this.selectedCamera.maxFps"
-                                   class="form-control input-sm col-3"/>
-                                   <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
+                                    #fpsInput
+                                    [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
+                                    [(ngModel)]="selectedFps"
+                                    class="form-control input-sm col-3"/>
+                                <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
                             </div>
                             <div class="d-flex justify-content-start col-12 align-items-center">
                                 <span class="col-1 text-nowrap text-right" translate>Quality</span>

@@ -92,6 +92,7 @@ def visited_key(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
+@handle_exceptions
 def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
