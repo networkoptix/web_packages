@@ -15,6 +15,7 @@ export class SystemPageComponent implements OnInit {
   constructor (
     private vms: VideoManagementSystemService
   ) {
+    this.vms.setFakeData()
     this.cameras = this.vms.cameras
   }
 

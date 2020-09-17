@@ -1,13 +1,28 @@
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline'
+import { ICamera, CAMERA_STATUS } from './ICamera'
 
-export interface Camera {
-  id: number,
-  name: string,
-  status: CAMERA_STATUS,
-  isOnline: boolean,
-  isRecording: boolean,
-  isLive: boolean,
-  hasArchive: boolean,
+
+export class Camera implements ICamera {
+  constructor (
+    public readonly id: string,
+    public readonly preferredServerId: string,
+    public readonly name: string,
+    public readonly url: string,
+    public readonly status: CAMERA_STATUS,
+    public readonly hasArchive: boolean,
+  ) {
+  }
+
+  public get isLive () {
+    return this.status === 'Live' || this.status === 'Recording'
+  }
+
+  public get isOnline () {
+    return this.status !== 'Offline'
+  }
+
+  public get isRecording () {
+    return this.status === 'Recording'
+  }
 }
 
 export default Camera

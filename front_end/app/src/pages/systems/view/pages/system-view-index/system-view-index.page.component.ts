@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import { INxViewMediaServer } from '../../view.types'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subscription } from 'rxjs'
-import { ServerTimeInfo, NxSystemService, NxMediaServer, NxSystem } from '../../../../../services/system.service'
+import { ServerTimeInfo, NxSystemService, NxMediaServer, NxCamera, NxSystem } from '../../../../../services/system.service'
 import { NxAccountService } from '../../../../../services/account.service'
 import { CookieService } from 'ngx-cookie-service'
+import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
+import { CAMERA_STATUS } from '../../vms-client/submodules/vms/datatypes/ICamera'
+import Camera from '../../vms-client/submodules/vms/datatypes/Camera'
 
 
 @Component({
@@ -24,6 +26,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected accountService: NxAccountService,
     protected systemService: NxSystemService,
     protected cookieService: CookieService,
+
+    protected vms: VideoManagementSystemService,
   ) {
   }
 
@@ -50,26 +54,43 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   private initSystem (): Promise<any> {
+    this.vms.cleanMediaServers()
     return this.accountService.get().then(account => {
       // @ts-ignore -- TODO: Need to handle account not being available
         this.system = this.systemService.createSystem(account.email, this.systemId)
         return this.system.getMediaServersAndCameras().then(mediaServers => {
-          this.mediaServers = mediaServers
+          this._setMediaServers(mediaServers)
           return this.system.getServerTimes().then(
               (serverTimeInfos:Array<ServerTimeInfo>) => {
                   serverTimeInfos.map(sti => {
                       mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti
                   })
-                  this.mediaServers = mediaServers
+                  this._setMediaServers(mediaServers)
                   this.updateNoCamerasFlag()
                   if (!this.route.snapshot.children.length) {
                     this.redirectToCameraIfPossible()
                   }
+                  console.log('MSs', this.mediaServers)
                   return this.mediaServers
               }
           )
         })
     })
+  }
+
+  protected _setMediaServers (mediaServers) {
+    this.mediaServers = mediaServers
+    this.vms.setMediaServers(mediaServers.map(ms => ({
+      ...ms,
+      cameras: ms.cameras.map((c: NxCamera) => new Camera(
+        c.id,
+        c.preferredServerId,
+        c.name,
+        c.url,
+        c.status as CAMERA_STATUS,
+        true,
+      ))
+    })))
   }
 
   noCameras: boolean = false

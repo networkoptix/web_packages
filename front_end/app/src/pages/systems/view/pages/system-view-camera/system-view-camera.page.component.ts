@@ -45,22 +45,24 @@ export class NxSystemViewCameraPageComponent implements OnInit {
   public ngOnInit () {
     this.route.params.subscribe(params => {
       return this.accountService.get().then(account => {
-        // @ts-ignore -- TODO: Need to handle account not being available
-        this.system = this.systemService.createSystem(account.email, this.route.snapshot.parent.params.systemId)
-        this.pollSystemForMediaServers()
+
+        this.playback.stop()
+
+        const now = Date.now()
+        this.timeline.reset(now, now)
+
+        this.camera = undefined
+        this.fake_camera = undefined
+        this.vms.resetCameraSelection()
+        this.system = null
+
+        setTimeout(() => {
+          // @ts-ignore -- TODO: Need to handle account not being available
+          this.system = this.systemService.createSystem(account.email, this.route.snapshot.parent.params.systemId)
+          this.pollSystemForMediaServers()
+        }, 200)
       })
     });
-
-    if (!this.timeline.fullRange.duration) {
-      const now = Date.now()
-      const DURATION = 12 * 31 * 24 * 60 * 60 * 1000
-      this.timeline.reset(now - DURATION, now)
-    }
-
-    this.fake_camera = this.vms.selectCamera(1)
-    if (this.fake_camera.isLive) {
-      this.playback.playLive()
-    }
 
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
@@ -69,8 +71,11 @@ export class NxSystemViewCameraPageComponent implements OnInit {
   protected _animationFrameRequestHandler: number
 
   public onAnimationFrame (): void {
-    if (this.fake_camera?.isLive) {
-      this.timelineExtendToNow.extendToNow()
+    if (this.camera) {
+
+      if (this.fake_camera?.isLive) {
+        this.timelineExtendToNow.extendToNow()
+      }
     }
 
     this._animationFrameRequestHandler =
@@ -92,6 +97,22 @@ export class NxSystemViewCameraPageComponent implements OnInit {
         },
         {}
       )[this.route.snapshot.params.cameraId]
+
+      const result = this.vms.selectCamera(this.camera.id)
+      if (result) {
+        console.log('fake camera selected')
+        this.fake_camera = result
+        const now = Date.now()
+        const DURATION = 12 * 31 * 24 * 60 * 60 * 1000
+        this.timeline.reset(now - DURATION, now)
+      } else {
+        console.log('fake selection failed')
+      }
+      // TODO: set playback source
+      // TODO: provide archive range
+      if (this.fake_camera.isLive) {
+        this.playback.playLive()
+      }
 
       // redirect if cameraId in the url does not match any camera of the system
       if (!this.camera) {

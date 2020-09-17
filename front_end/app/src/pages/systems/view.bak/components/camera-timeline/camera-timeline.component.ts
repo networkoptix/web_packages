@@ -59,8 +59,8 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   constructor (
   ) {
   }
-    
-  ngOnInit () { 
+
+  ngOnInit () {
     const keepRendering = () => {
       if (this.timelineController) {
         this.updatePlaybackPosition()
@@ -75,7 +75,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
           }
           if (this.mouseIsOverCanvas) {
             this.mouseIsOverCanvasAtTime = Math.round(
-              this.timelineController.visibleRange.startTime + 
+              this.timelineController.visibleRange.startTime +
               this.timelineController.visibleRange.duration * this.mouseIsOverCanvasAt
             )
             // console.log('mouseIsOverCanvasAt', this.mouseIsOverCanvasAt, dateformat(this.mouseIsOverCanvasAtTime))
@@ -87,7 +87,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     requestAnimationFrame(keepRendering)
     installFpsMeter()
   }
-  
+
   ngOnChanges (changes: SimpleChanges) {
     if (changes.camera) {
       this.resetArchiveRange()
@@ -105,7 +105,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnDestroy () {        
+  ngOnDestroy () {
   }
 
   protected archiveRange: TimeRange
@@ -113,7 +113,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   protected archiveDetailiedBirdView: IEventBirdView
   protected eventBirdViewProvider: ProxyEventBirdViewProvider
 
-  protected resetArchiveRange () {    
+  protected resetArchiveRange () {
     this.archiveRange = null
     this.archiveRequestFailed = false
     if (this.timelineController) {
@@ -126,7 +126,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
         console.error('faulty bird view', ebv)
         return Promise.reject()
         // this.archiveRange = new TimeRange(0, Date.now()) // allows some limited debug even without recording cameras
-      } else {        
+      } else {
         this.archiveRange = TimeRange.fromRange(ebv.events[0] as ITimeRange)
         // console.debug('B', this.archiveRange)
       }
@@ -139,7 +139,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
       setTimeout(() => {
         this.eventBirdViewProvider = new ProxyEventBirdViewProvider(this.archiveDetailiedBirdView)
         // console.debug('E', this.eventBirdViewProvider)
-        this.initTimeline()        
+        this.initTimeline()
       }, 500)
     }, () => {
       console.error('failed archive range request')
@@ -167,7 +167,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
       true, // embed
       true, // animate
     )
-  }    
+  }
 
   public zoomInDisabled: boolean = false
   public zoomOutDisabled: boolean = false
@@ -195,7 +195,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     }
   }
 
-  public onCanvasMouseEnter (e: MouseEvent) {    
+  public onCanvasMouseEnter (e: MouseEvent) {
   }
 
   public onCanvasMouseMove (e: MouseEvent) {
@@ -227,7 +227,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     this.archivePlayRequest.emit(nearestArchiveTime)
     this.playbackPositionAbsolute = nearestArchiveTime
   }
-  
+
   protected updatePlaybackPosition () {
     if (!this.isPlayingArchive) {
       // console.log('guard: not playing')

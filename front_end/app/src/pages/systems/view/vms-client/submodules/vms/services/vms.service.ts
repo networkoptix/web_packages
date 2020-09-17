@@ -1,77 +1,71 @@
 import { Injectable } from '@angular/core'
-import { Camera } from '../datatypes/Camera'
+import MediaServer from '../datatypes/MediaServer'
+import Camera from '../datatypes/Camera'
+import fakeData from '../fakeData'
 
 @Injectable({
   providedIn: 'root',
  })
 export class VideoManagementSystemService {
 
-  protected _cameras = {
-    1: {
-      id: 1,
-      name: 'Full-featured test camera',
-      status: 'Recording',
-      isOnline: true,
-      isRecording: true,
-      isLive: true,
-      hasArchive: true,
-    },
-    2: {
-      id: 2,
-      name: 'Live Recording test camera with no archive',
-      status: 'Live',
-      isOnline: true,
-      isRecording: false,
-      isLive: true,
-      hasArchive: false,
-    },
-    3: {
-      id: 3,
-      name: 'Not Live, not recording test camera with archive',
-      status: 'Archive',
-      isOnline: true,
-      isRecording: false,
-      isLive: false,
-      hasArchive: true,
-    },
-    4: {
-      id: 4,
-      name: 'Offline test camera',
-      status: 'Offline',
-      isOnline: false,
-      isRecording: false,
-      isLive: false,
-      hasArchive: false,
-    },
-    5: {
-      id: 5,
-      name: 'Live, not recording test camera with no archive',
-      status: 'Live',
-      isOnline: true,
-      isRecording: false,
-      isLive: true,
-      hasArchive: false,
-    }
-  }
+  protected _mediaServers: Array<MediaServer> = []
 
   protected _selectedCamera: Camera = null
 
-  public selectCamera (id: number): Camera {
-    if (id in this._cameras) {
-      this._selectedCamera = this._cameras[id]
+  public cleanMediaServers () {
+    this._mediaServers = []
+  }
+
+  public setFakeMediaServers () {
+    this._mediaServers = fakeData
+  }
+
+  public setMediaServers (mediaServers: Array<MediaServer>) {
+    this._mediaServers = mediaServers
+    console.log('media servers set', mediaServers)
+  }
+
+  protected get _camerasAsFlatArray (): Array<Camera> {
+    const result = []
+    this._mediaServers.map(ms => ms.cameras.map(c => result.push(c)))
+    return result
+  }
+
+  protected get _camerasAsDict (): Object {
+    return this._camerasAsFlatArray.reduce(
+      (acc, c) => {
+        acc[c.id] = c
+        return acc
+      },
+      {}
+    )
+  }
+
+  public resetCameraSelection () {
+    this._selectedCamera = null
+  }
+
+  public selectCamera (id: string): Camera | false {
+    if (id in this._camerasAsDict) {
+      this._selectedCamera = this._camerasAsDict[id]
     }
     else {
       this._selectedCamera = null
     }
-    return this.selectedCamera
+    return this.selectedCamera || false
   }
 
-  public get selectedCamera (): Camera {
-    return { ...this._selectedCamera }
+
+  public get mediaServers () {
+    return this.mediaServers
   }
 
   public get cameras () {
-    return Object.keys(this._cameras).map(k => ({ ...this._cameras[k] }))
+    return this._camerasAsFlatArray
+  }
+
+  public get selectedCamera (): Camera {
+    return this._selectedCamera
   }
 }
 
