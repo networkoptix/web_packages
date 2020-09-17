@@ -1,8 +1,9 @@
 import {
+    AfterContentInit,
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
-}                                   from '@angular/core';
+} from '@angular/core';
 
 import {
     InfoBlockSection, InfoBlockSections, InfoBlockLine
@@ -17,7 +18,7 @@ import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.
     templateUrl : './dynamic-table-panel.component.html',
     styleUrls   : ['./dynamic-table-panel.component.scss']
 })
-export class NxDynamicTablePanelComponent implements AfterViewInit {
+export class NxDynamicTablePanelComponent implements AfterContentInit {
 
     @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
@@ -40,13 +41,14 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
+        this.name = '';
     }
 
-    ngAfterViewInit() {
-        this.scrollMechanicsService.panelVisible = true;
+    ngAfterContentInit() { // AfterViewInit causes detection change error
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
+            this.scrollMechanicsService.panelVisible = true;
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
-            if (this.panelParams) {
+            if (this.panelParams && activeEntity) {
                 const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
                 this.sections = paramGroups
                     .map(({ description, name, id: paramGroupId, values }) => {

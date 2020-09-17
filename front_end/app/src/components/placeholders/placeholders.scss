@@ -101,6 +101,10 @@ $preloader_small_circle_distance : 8px;
             height    : 86px;
             transform : translateY(+20%);
         }
+
+        &.hm-camera-preview {
+            transform : none;
+        }
     }
 
     &.small {

@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "カメラはオフラインです",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "プロフェッショナルライセンスが必要です",
     "ONE LICENSE WILL BE USED TEXT": "プロフェッショナルライセンスチャンネルを1つ使用します",
+    "FOUND TEXT": "検出されました",
     "MOTION DETECTION DISABLED TEXT": "モーション検知が無効になっています",
-    "FOUND TEXT": "検出されました"
+    "DIFFERENT VALUES TEXT": "– Different Values –",
+    "BEST TEXT": "Best",
+    "HIGH TEXT": "High",
+    "MEDIUM TEXT": "Medium",
+    "LOW TEXT": "Low",
+    "SELECT RECORDING MODE TEXT": "Please select recording mode.",
+    "SELECT FPS TEXT": "Please select FPS.",
+    "SELCT QUALITY TEXT": "Please select recording quality",
+    "MISSING SETTINGS TEXT": "Please update missing recording settings.",
+    "CURRENT TEXT": "current",
+    "AUTO TEXT": "Auto"
 }

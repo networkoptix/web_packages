@@ -1,16 +1,14 @@
 import { Injectable, TemplateRef }  from '@angular/core';
 import { IConfig, NxConfigService } from '../services/nx-config';
 
-
-
 @Injectable({ providedIn: 'root' })
 export class NxToastService {
     CONFIG: IConfig;
     toasts: any[] = [];
 
     constructor(
-        configService: NxConfigService,
-    ){
+        configService: NxConfigService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

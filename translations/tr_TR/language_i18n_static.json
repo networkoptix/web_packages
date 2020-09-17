@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
         "recordingSettingsWarning": "Lütfen eksik kayıt ayarlarını güncelleyin.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Her zaman kaydet",
             "motion": "Yalnızca hareketi kaydet",

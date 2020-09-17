@@ -527,7 +527,7 @@ class ServerManager {
                 return Promise.reject(new Error(`Request to server has failed ${cameras}`));
             }
         }
-        const mappedCameras = await <ICamera[]> cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
+        const mappedCameras = await <ICamera[]> cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, ...camera }: ICamera) => {
             const server = serverTimes.find(({ serverId }) => serverId === parentId);
             let dayOfWeek;
             let secondsToday;
@@ -565,6 +565,7 @@ class ServerManager {
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+            const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
             const recordingSettings: IRecordingSettings = {
@@ -583,7 +584,7 @@ class ServerManager {
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream };
         });
         this.cameras = mappedCameras;
         return mappedCameras;
@@ -730,7 +731,7 @@ class ServerManager {
             return this.initSystemMediaServers()
                 .then(() => {
                     return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
-                })
+                });
         } else {
             return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
         }
@@ -1636,6 +1637,7 @@ export interface ICamera {
     vendor: string;
     previewUrl: string;
     recordingSettings: IRecordingSettings;
+    isStream: boolean,
 }
 
 export enum MotionType {

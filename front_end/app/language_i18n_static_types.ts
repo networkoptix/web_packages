@@ -11,7 +11,8 @@ export interface LanguageI18NStaticTypes {
     language:              any;
     "About %CLOUD_NAME%":  any;
     "Download %VMS_NAME%": any;
-    Integrations:          any;
+    "For developers":      any;
+    "Integrations (β)":    any;
     Privacy:               any;
     Support:               any;
     Terms:                 any;
@@ -941,7 +942,8 @@ const typeMap: any = {
         { json: "language", js: "language", typ: "any" },
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "any" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "any" },
-        { json: "Integrations", js: "Integrations", typ: "any" },
+        { json: "For developers", js: "For developers", typ: "any" },
+        { json: "Integrations (β)", js: "Integrations (β)", typ: "any" },
         { json: "Privacy", js: "Privacy", typ: "any" },
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },

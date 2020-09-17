@@ -265,9 +265,9 @@ export class NxApplyService {
      */
     initPageWatcher(
         component: ViewContainerRef,
-        saveFunction: Process,
-        discardFunction: () => void,
-        watchers: Watcher<any>[],
+        saveFunction: Process = this.processService.createProcess(() => Promise.resolve()),
+        discardFunction: () => void = () => null,
+        watchers: Watcher<any>[] = [],
         form?: NgForm,
         submitFn?: () => any,
         nonSystem = false,
@@ -300,8 +300,11 @@ export class NxApplyService {
         }
         this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
-            (<NxApplyComponent> this.applyComponentRef.instance).show = value;
+            (<NxApplyComponent> this.applyComponentRef.instance).show = !!value;
         });
+        setTimeout(() => {
+            (<NxApplyComponent> this.applyComponentRef.instance).ready = true;
+        }, 0);
         if (submitFn) {
             this.submitFunctions = [submitFn];
         }
@@ -486,7 +489,9 @@ export class NxApplyService {
     public setVisible(state?: boolean) {
         state = (state === undefined) ? true : state;
         if (this.applyComponentRef) {
-            (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
+            setTimeout(() => {
+                (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
+            }, 0);
         }
     }
 

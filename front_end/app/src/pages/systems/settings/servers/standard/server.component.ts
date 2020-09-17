@@ -35,7 +35,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
-    @Input() applyRef: ViewContainerRef;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -104,9 +103,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.ipPortWatcher],
             this.saveSettings,
-            () => {
-                this.ipPortWatcher.reset();
-            }
+            () => this.applyService.reset()
         );
 
         this.applyService.setVisible(false);

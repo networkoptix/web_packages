@@ -129,7 +129,20 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     }
 
     settingsToBeDisplayedOrUpdated(settings) {
+        const standardSettingsToExclude = [
+            'autoDiscoveryEnabled',
+            'statisticsAllowed',
+            'cameraSettingsOptimization',
+            'auditTrailEnabled',
+            'trafficEncryptionForced',
+            'videoTrafficEncryptionForced',
+            'sessionLimitMinutes'
+        ];
+
         Object.keys(settings).forEach((key) => {
+            if (standardSettingsToExclude.includes(key)) {
+                return;
+            }
             const value = settings[key];
             if (!this.CONFIG.settingsConfig[key]) {
                 let type = 'text';

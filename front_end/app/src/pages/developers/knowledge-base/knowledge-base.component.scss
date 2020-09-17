@@ -22,7 +22,7 @@
 
         @include bootstrap.media-breakpoint-up(md) {
             position: sticky;
-            overflow-y: scroll;
+            overflow-y: auto;
             max-height: calc(100vh - 3rem);
             top: 0;
             margin: -1rem 0 -1rem -1rem;

@@ -65,7 +65,7 @@ export class NxDialogsService {
         private modalService: NgbModal,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        private router: Router,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
         this.location = location;
@@ -188,9 +188,8 @@ export class NxDialogsService {
             });
         }
 
-        return this.createModal(NxConfigService.isLocal ?
-            LoginWebadminModalContent: LoginModalContent
-        , options, params)
+        return this.createModal(NxConfigService.isLocal ? LoginWebadminModalContent : LoginModalContent
+            , options, params)
             // handle how the dialog was closed
             // required if we need to have dismissible dialog otherwise
             // will raise a JS error ( Uncaught [in promise] )

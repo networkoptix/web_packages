@@ -23,6 +23,7 @@ import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
 import { NxUriService }              from '../../../../services/uri.service';
 import { NxToastService }            from '../../../../dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxApplyService } from '../../../../services/apply.service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -98,12 +99,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
-        @Inject(ViewContainerRef) public viewContainerRef
+        @Inject(ViewContainerRef) public viewContainerRef,
+        private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         this.setupDefaults();
+        this.applyService.initPageWatcher(this.viewContainerRef);
     }
 
     ngOnDestroy() {}

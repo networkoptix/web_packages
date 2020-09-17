@@ -112,7 +112,7 @@
                             [disabled]="!systemAvailable"
                             (click)="removeUser()">
                         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
-                            [applyCss]="true"
+                            [applyClass]="true"
                             [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                             class="ml-n2 mr-1"></svg-icon>
                         <ng-container>{{deleteMessage}}</ng-container>

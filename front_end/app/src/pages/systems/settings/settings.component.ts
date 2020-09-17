@@ -253,7 +253,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.systemSubscription = this.system.infoSubject
                         .pipe(
                             filter((system: any) => system !== undefined),
-                            tap(({ isOnline }) => this.applyService.isOnline$.next(isOnline))
+                            tap(({ isOnline }) => this.applyService.isOnline$.next(!!isOnline))
                         )
                         .subscribe(() => {
                             // if system is removed while on page, redirects to systems page

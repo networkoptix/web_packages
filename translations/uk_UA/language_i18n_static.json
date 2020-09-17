@@ -129,6 +129,7 @@
         },
         "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
         "recordingSettingsWarning": "Оновіть відсутні налаштування запису.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
             "always": "Завжди записувати",
             "motion": "Запис тільки руху",

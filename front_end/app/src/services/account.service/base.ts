@@ -302,55 +302,45 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    protected handleAuthKeyLogin(auth: string) {
-        this.get()
-            .then((account: Account) => {
-                if (!account) {
-                    return this.cloudApi.checkCode(auth).then((res: any) => {
-                        if (res.emailExists) {
-                            return this.loginWithAuthKey(auth)
-                                .then(() => this.document.location.reload());
-                        } else {
-                            this.appStateService.ready = true;
-                            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
-                            return this.requireLogin();
-                        }
+    protected async handleAuthKeyLogin(auth: string) {
+        const account: Account|boolean = await this.get();
+        try {
+            const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
+            if (!account) {
+                return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
+            }
+            this.appStateService.ready = true;
+            if (result.email === account.email) {
+                return;
+            }
+            const response = await this.dialogs
+                .confirm('',
+                    this.LANG.dialogs.titles.loggedFromOtherAccount(),
+                    this.LANG.dialogs.buttons.ok(),
+                    undefined,
+                    NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
+                    'long-cancel-button');
+
+            if (response === true) {
+                return this.cloudApi.logout().finally(() => {
+                    this.stopAccountPoll();
+                    this.account = undefined;
+                    this.localStorageService.clear('all'); // Clear session
+                    return this.loginWithAuthKey(auth).then(() => {
+                        return this.document.location.reload();
                     });
-                }
-
-                this.appStateService.ready = true;
-
-                this.cloudApi.checkAuthCode(decodeURIComponent(auth)).then(async(result: any) => {
-                    if (result.email === account.email) {
-                        return;
-                    }
-
-                    const response = await this.dialogs
-                        .confirm('',
-                            this.LANG.dialogs.titles.loggedFromOtherAccount,
-                            this.LANG.dialogs.buttons.ok,
-                            undefined,
-                            NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
-                            'long-cancel-button');
-                    if (response) {
-                        return this.cloudApi
-                            .logout()
-                            .finally(() => {
-                                this.stopAccountPoll();
-                                this.localStorageService.clear(); // Clear session
-                                // this.sessionService.invalidateSession(); // Clear session
-                                return this.loginWithAuthKey(auth).then(() => {
-                                    return this.document.location.reload();
-                                });
-                            });
-                    } else {
-                        const queryParams = { auth: undefined, from: undefined };
-                        return this.router
-                            .navigate([], { queryParams, queryParamsHandling: 'merge' })
-                            .then(() => this.document.location.reload());
-                    }
                 });
-            });
+            } else {
+                const queryParams = { auth: undefined, from: undefined };
+                return this.router
+                    .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                    .then(() => this.document.location.reload());
+            }
+        } catch (e) {
+            this.appStateService.ready = true;
+            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+            return this.requireLogin();
+        }
     }
 
     // TODO: Need to refine return value
