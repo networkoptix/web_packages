@@ -20,7 +20,7 @@ import { WINDOW }                                from '../../services/window-pro
 import { DOCUMENT }                              from '@angular/common';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
-import { flatMap } from 'rxjs/operators';
+import { filter, flatMap } from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -141,6 +141,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     this.system = this.systemService.createSystem(account.email, systemId);
                     this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
                     infoPromise = this.system.getInfo();
+                    this.system.connectionSubject
+                        .pipe(filter((status: boolean) => status))
+                        .subscribe(() => this.stopSystemPoll());
                 } else {
                     // Create a mock system. All we need is the mediaserver.
                     this.system = {
