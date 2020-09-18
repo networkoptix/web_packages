@@ -15,5 +15,6 @@ app/images/logo.png
 app/images/logo_small.png
 app/styles/custom
 **/*.js.map
+inline-wizard/customization/custom/_custom_palette.scss
 
 .DS_Store

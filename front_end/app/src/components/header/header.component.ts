@@ -26,6 +26,7 @@ import { NxMenusService }            from '../../services/menus.service';
 import { WINDOW }                    from '../../services/window-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { environment }               from '../../../environments/environment';
+import { NxBootstrapProvider }       from '../../services/nx-bootstrap-provider';
 
 class CombinedWidths {
     constructor(
@@ -75,6 +76,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     viewHeader: boolean;
     systemCounter: number;
     loginState;
+    hideWebAdmin = false;
 
     // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
@@ -120,7 +122,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private router: Router,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
-        @Inject(WINDOW) window: Window
+        @Inject(WINDOW) window: Window,
+        private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -288,7 +291,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active = {};
 
         this.headerSubscription = this.appState.headerVisibleSubject.subscribe((visible) => {
-            this.viewHeader = visible;
+            this.viewHeader = visible || this.bootstrapProvider.newSystem;
         });
 
         this.routerSubscription = this.router.events
@@ -346,11 +349,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             });
 
         if (this.CONFIG.isLocal) {
+            this.hideWebAdmin = true;
             this.accountService.get().then(account => {
-                if (!account) {
+                this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
+                if (!account || this.bootstrapProvider.newSystem) {
                     return;
                 };
-                const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
                 system.update().then(() => {
                     system.getInfoAndPermissions().then(() => {
                         this.systems = [system];

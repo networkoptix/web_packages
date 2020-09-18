@@ -40,6 +40,7 @@ import { AddStorageModalContent }         from './add-storage/add-storage.compon
 import { NxAccountService }               from '../services/account.service';
 import { BaseAccount }                    from '../services/account.service/base';
 import { CloudAccount }                   from '../services/account.service/cloud';
+import { NxBootstrapProvider }            from '../services/nx-bootstrap-provider';
 
 import './../dialogs/dialogs.scss';
 
@@ -65,7 +66,8 @@ export class NxDialogsService {
         private modalService: NgbModal,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        private router: Router
+        private router: Router,
+        private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
         this.location = location;
@@ -181,6 +183,9 @@ export class NxDialogsService {
         };
 
         if (this.CONFIG.isLocal) {
+            if (this.bootstrapProvider.newSystem) {
+                return;
+            }
             Object.assign(options, {
                 centered      : true,
                 backdropClass : 'webadmin-backdrop',
