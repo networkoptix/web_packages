@@ -98,10 +98,10 @@ Test Passwords Invalid
     Input Text    ${LOCAL USER PASSWORD INPUT}    ${new pw}
     Run Keyword If    '''${new pw}'''!='''${EMPTY}'''     Check Password Badge    ${new pw}    //label[@for="newPassword"]  
     Check New Password Outline and Error Message    ${new pw}    //label[@for="newPassword"]    ${LOCAL USER PASSWORD INPUT}    newPassword
-    Click Button    //form[@name="changePasswordForm"]//button[text()="${CANCEL TEXT}"]
+    Click Button    //form[@name="changePasswordForm"]//button[text()="${CANCEL BUTTON TEXT}"]
     
 Restart
-    Click Button    //form[@name="changePasswordForm"]//button[text()="${CANCEL TEXT}"]
+    Click Button    //form[@name="changePasswordForm"]//button[text()="${CANCEL BUTTON TEXT}"]
     Common Restart Logout    ${url}
     Setup
     
