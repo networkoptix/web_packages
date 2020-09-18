@@ -7,6 +7,7 @@ import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { BehaviorSubject, timer, combineLatest } from 'rxjs';
 import { MenuNodeWithParent } from '../../../components/left-menu/left-menu.component';
+import { NxMenusService, MenuNode } from '../../../services/menus.service';
 import { SearchFilter, SearchTag } from '../../../components/search/search.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -89,7 +90,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private menusService: NxMenusService
     ) {
         this.CONFIG = configService.config;
     }
@@ -131,33 +133,43 @@ export class NxKnowledgeBaseComponent implements OnInit {
             switchMap(urlSegment => {
                 this.loading = true;
                 this.clearSearch();
-                this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId);
-                this.searchQuery$.next({
-                    query: this.route.snapshot.queryParams.search,
-                    tags: ''
-                    // tags: this.route.snapshot.queryParams.tags 
-                });
-                return this.cloudApi.getDocumentation(this.assetId$.value)
-                    .pipe(
-                        tap(({ title, blocks, contentHTML, tags }) => {
-                            this.search = {
-                                ...this.search,
-                                tags: []
-                                // tags: tags.map(tag => (this.search.tags || []).find(({id}) => id === tag.id) || {...tag, value: true}),
-                            };
-                            this.pageNode = KnowledgeNode.normalHeader(
-                                title,
-                                this.assetId$.value,
-                                contentHTML,
-                                blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
-                                    title,
-                                    '',
-                                    contentHTML
-                                ))
-                            );
-                            this.loading = false;
-                        })
+                const getFirstDoc = () => {
+                    const traverseToFirst = (nodes: MenuNode[]): string => nodes[0].asset_id || traverseToFirst(nodes[0].nodes);
+                    return this.menusService.getMenu('Knowledgebase').pipe(
+                        map(menu => traverseToFirst(menu))
                     );
+                };
+                return getFirstDoc().pipe(
+                    switchMap(firstAsset => {
+                        this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId || firstAsset);
+                        this.searchQuery$.next({
+                            query: this.route.snapshot.queryParams.search,
+                            tags: ''
+                            // tags: this.route.snapshot.queryParams.tags 
+                        });
+                        return this.cloudApi.getDocumentation(this.assetId$.value)
+                            .pipe(
+                                tap(({ title, blocks, contentHTML }) => {
+                                    this.search = {
+                                        ...this.search,
+                                        tags: []
+                                        // tags: tags.map(tag => (this.search.tags || []).find(({id}) => id === tag.id) || {...tag, value: true}),
+                                    };
+                                    this.pageNode = KnowledgeNode.normalHeader(
+                                        title,
+                                        this.assetId$.value,
+                                        contentHTML,
+                                        blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
+                                            title,
+                                            '',
+                                            contentHTML
+                                        ))
+                                    );
+                                    this.loading = false;
+                                })
+                            );
+                    })
+                );
             })
         ).subscribe();
 
@@ -189,7 +201,7 @@ export class KnowledgeNode {
         public nodes: KnowledgeNode[],
         public cardClass: CardClasses,
         public cardIcon?: string,
-        public cardLead?: string,
+        public cardLead?: string
     ) {}
 
     // Factory methods

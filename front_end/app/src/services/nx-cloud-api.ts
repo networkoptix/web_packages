@@ -345,7 +345,7 @@ export class NxCloudApiService {
         let endpoint = '';
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
-        } else if (assetIdOrSearchObject.query || assetIdOrSearchObject.tags) {
+        } else if (assetIdOrSearchObject?.query || assetIdOrSearchObject?.tags) {
             endpoint = `?filter=${assetIdOrSearchObject.query}&tags=${assetIdOrSearchObject.tags}&page=${assetIdOrSearchObject.page || 1}`;
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
