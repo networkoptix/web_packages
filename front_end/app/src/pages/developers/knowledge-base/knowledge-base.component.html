@@ -7,8 +7,8 @@
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
 <ng-template #normalCard let-node="node">
-    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}" class="my-2">
-        <div [innerHTML]="node.content | safe:'html'"></div>
+    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
+        <div [innerHTML]="node.content | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
@@ -54,16 +54,10 @@
     </ng-container>
 </ng-template>
 
-<ng-template #resultSnippet let-snippet="snippet">
-    <p [innerHTML]="snippet.content | safe:'html'"></p>
-</ng-template>
-
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
         <h3 (click)="navigateSearch(doc)" [innerHTML]="doc.title" class="doc-link"></h3>
-        <ng-container *ngFor="let snippet of doc.snippets">
-            <ng-container *ngTemplateOutlet="resultSnippet;context{snippet:snippet}"></ng-container>
-        </ng-container>
+        <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
 

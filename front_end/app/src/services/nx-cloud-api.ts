@@ -341,12 +341,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number}) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number, tags?: string | number}) {
         let endpoint = '';
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
-        } else if (assetIdOrSearchObject.query) {
-            endpoint = `?filter=${assetIdOrSearchObject.query}&page=${assetIdOrSearchObject.page || 1}`;
+        } else if (assetIdOrSearchObject.query || assetIdOrSearchObject.tags) {
+            endpoint = `?filter=${assetIdOrSearchObject.query}&tags=${assetIdOrSearchObject.tags}&page=${assetIdOrSearchObject.page || 1}`;
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
         this.cacheService.addToCache(route);

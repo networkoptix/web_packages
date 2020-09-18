@@ -52,6 +52,20 @@ interface IParams<Value = any> {
     [key: string]: Value;
 }
 
+export interface SearchTag {
+    id: string,
+    label: string,
+    value: boolean,
+}
+
+export interface SearchFilter {
+    query?: string,
+    tags?: SearchTag[],
+    selects?: any,
+    multiselects?: any,
+    search?: any
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-search',
@@ -78,7 +92,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public placeholderText: string;
     public numberFilters = 0;
     public filterSelected;
-    public localFilter: any = {};
+    public localFilter: SearchFilter = {};
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -141,7 +155,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         this.searchSubscription = this.searchUpdated
             .pipe(debounceTime(this.debounceTime))
-            .subscribe(data => {
+            .subscribe((data: string) => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
@@ -243,7 +257,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (value &&
             ((value.tags?.length) ||
                 (value.selects?.length) ||
-                (value.multiselects?.length))) {
+                    (value.multiselects?.length) ||
+                    (value.tags?.length !== this.localFilter.tags?.length))
+        ) {
             if (NxUtilsService.isEqual(this.localFilter, value)) {
                 return;
             }
