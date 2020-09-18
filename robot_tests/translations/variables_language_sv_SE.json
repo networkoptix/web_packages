@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "Kameran är offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "Professionell licens krävs",
     "ONE LICENSE WILL BE USED TEXT": "En professionell licenskanal kommer att användas",
+    "FOUND TEXT": "hittades",
     "MOTION DETECTION DISABLED TEXT": "Rörelsedetektering är inaktiverad",
-    "FOUND TEXT": "hittades"
+    "DIFFERENT VALUES TEXT": "– Olika värden –",
+    "BEST TEXT": "Bästa",
+    "HIGH TEXT": "Hög",
+    "MEDIUM TEXT": "Medel",
+    "LOW TEXT": "Låg",
+    "SELECT RECORDING MODE TEXT": "Välj inspelningsläge.",
+    "SELECT FPS TEXT": "Välj FPS.",
+    "SELCT QUALITY TEXT": "Välj inspelningskvalitet",
+    "MISSING SETTINGS TEXT": "Vänligen uppdatera saknade inspelningsinställningar.",
+    "CURRENT TEXT": "aktuell",
+    "AUTO TEXT": "Auto"
 }

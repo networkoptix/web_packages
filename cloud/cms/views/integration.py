@@ -249,4 +249,7 @@ def get_integrations(request):
     else:
         integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user))
 
+    # Sort integrations by name. Ignore case.
+    integration_list.sort(key=lambda x: x["information"]["name"].lower())
+
     return api_success({'data': integration_list})

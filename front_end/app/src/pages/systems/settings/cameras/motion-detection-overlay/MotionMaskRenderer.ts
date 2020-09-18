@@ -54,7 +54,7 @@ export class MotionMaskRenderer {
         this.cellWidth = canvasWidth / this.columns;
         this.cellHeight = canvasHeight / this.rows;
         this.width = canvasWidth;
-        this.height = canvasWidth;
+        this.height = canvasHeight;
         this.ctx = canvas.nativeElement.getContext('2d');
         this.selectionCtx = selectionCanvas.nativeElement.getContext('2d');
         this.ctx.scale(2, 2);

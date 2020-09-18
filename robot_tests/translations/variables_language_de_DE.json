@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "Kamera ist offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "Eine Professional-Lizenz ist erforderlich",
     "ONE LICENSE WILL BE USED TEXT": "Es wird 1 professioneller Lizenzkanal verwendet",
+    "FOUND TEXT": "gefunden",
     "MOTION DETECTION DISABLED TEXT": "Bewegungserkennung ist deaktiviert",
-    "FOUND TEXT": "gefunden"
+    "DIFFERENT VALUES TEXT": "– Verschiedene Werte –",
+    "BEST TEXT": "Beste",
+    "HIGH TEXT": "Hoch",
+    "MEDIUM TEXT": "Mittel",
+    "LOW TEXT": "Niedrig",
+    "SELECT RECORDING MODE TEXT": "Bitte wählen Sie den Aufnahmemodus.",
+    "SELECT FPS TEXT": "Bitte wählen Sie FPS.",
+    "SELCT QUALITY TEXT": "Bitte wählen Sie die Aufnahmequalität",
+    "MISSING SETTINGS TEXT": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
+    "CURRENT TEXT": "aktuell",
+    "AUTO TEXT": "Auto"
 }

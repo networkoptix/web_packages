@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "Camera is offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "Professionele licentie is vereist",
     "ONE LICENSE WILL BE USED TEXT": "Er wordt 1 professioneel licentiekanaal gebruikt",
+    "FOUND TEXT": "gevonden",
     "MOTION DETECTION DISABLED TEXT": "Bewegingsdetectie is uitgeschakeld",
-    "FOUND TEXT": "gevonden"
+    "DIFFERENT VALUES TEXT": "- Verschillende waarden -",
+    "BEST TEXT": "Beste",
+    "HIGH TEXT": "Hoog",
+    "MEDIUM TEXT": "Gemiddeld",
+    "LOW TEXT": "Laag",
+    "SELECT RECORDING MODE TEXT": "Selecteer de opnamemodus.",
+    "SELECT FPS TEXT": "Selecteer FPS.",
+    "SELCT QUALITY TEXT": "Selecteer de opnamekwaliteit",
+    "MISSING SETTINGS TEXT": "Werk ontbrekende opname-instellingen bij.",
+    "CURRENT TEXT": "huidige",
+    "AUTO TEXT": "Automatisch"
 }

@@ -304,6 +304,17 @@
     "CAMERA OFFLINE TEXT": "Telecamera offline",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "È richiesta la licenza professionale",
     "ONE LICENSE WILL BE USED TEXT": "Verrà utilizzato 1 canale di licenza professionale",
+    "FOUND TEXT": "trovato",
     "MOTION DETECTION DISABLED TEXT": "Il motion detector è disabilitato",
-    "FOUND TEXT": "trovato"
+    "DIFFERENT VALUES TEXT": "- Valori diversi -",
+    "BEST TEXT": "Migliore",
+    "HIGH TEXT": "Alta",
+    "MEDIUM TEXT": "Media",
+    "LOW TEXT": "Bassa",
+    "SELECT RECORDING MODE TEXT": "Si prega di seleziona la modalità di registrazione.",
+    "SELECT FPS TEXT": "Prego selezionare FPS.",
+    "SELCT QUALITY TEXT": "Si prega di selezionare la qualità di registrazione",
+    "MISSING SETTINGS TEXT": "Aggiorna le impostazioni di registrazione mancanti.",
+    "CURRENT TEXT": "attuale",
+    "AUTO TEXT": "Automatico"
 }
