@@ -196,44 +196,64 @@ REDIS_CACHE = {
 
 if not LOCAL_ENVIRONMENT:
     redis_host = os.getenv('REDIS_HOST', 'redis')
-    REDIS_CACHE['LOCATION'] = f'redis://{redis_host}:6379/1'
+    REDIS_CACHE['LOCATION'] = f'redis://{redis_host}:6379'
 else:
-    REDIS_CACHE['LOCATION'] = 'redis://localhost:6379/1'
+    REDIS_CACHE['LOCATION'] = 'redis://localhost:6379'
 
 CACHES = {
-    "default": REDIS_CACHE,
-    "customization": REDIS_CACHE,
-    "deployment": REDIS_CACHE,
-    "filters": REDIS_CACHE,
+    "default": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/0',
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
+    },
+    "customization": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
+    },
+    "deployment": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/2',
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
+    },
+    "filters": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/3',
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
+    },
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/4',
         "TIMEOUT": 60 * 60 * 24  # 1 day
     },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION']
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/5'
     },
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
         "KEY_PREFIX": "global"
     },
     "integrations": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/7',
         "KEY_PREFIX": "integrations"
     },
     "menus": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": None,
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/8',
         "KEY_PREFIX": "menus"
     }
 }
