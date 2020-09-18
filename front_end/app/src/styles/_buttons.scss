@@ -9,7 +9,7 @@
 @mixin button {
     @include typography.medium14;
     height        : 2rem;
-    border-radius : $border-radius-base;
+    border-radius : $border-radius-base !important;
     font-weight   : inherit;
     padding       : 0 1rem;
     border        : none;
@@ -168,7 +168,7 @@ button, .btn {
 // (END) Overwrite Boostrap section ******
 
 .btn-back {
-    padding-left : 0;
+    padding-left : 0 !important;
 
     .back-arrow {
         width               : 20px;

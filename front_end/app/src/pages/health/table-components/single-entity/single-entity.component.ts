@@ -36,6 +36,10 @@ export class NxSingleEntityComponent implements OnChanges {
             const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');
             this.sections = paramGroups
                 .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
+                    if (!this.entity[paramGroupId]) {
+                        this.copyParams.values = this.copyParams.values.filter(params => params.id !== paramGroupId);
+                        return reduced;
+                    }
                     const lines = values.map(({ id, name }) => {
                         const param = this.entity[paramGroupId][id] && this.entity[paramGroupId][id] || {};
                         return new InfoBlockLine(
