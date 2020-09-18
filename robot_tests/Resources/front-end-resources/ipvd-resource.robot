@@ -200,7 +200,7 @@ Validate Camera Info Panel
     ...    ${IPVD DEVICE LAST UPDATED INFO}
 
     ${number of parameters}=   Get Element Count    ${IPVD DEVICE INFO PARAMETER}
-    Should be equal as numbers  ${number of parameters}   13
+    Should be equal as numbers  ${number of parameters}   14
 
 Verify IPVD Advanced Search is Closed
     Wait until Elements are Visible    ${IPVD ADV SEARCH BUTTON}
@@ -288,7 +288,6 @@ Validate Privacy Policy
     Select Window    ${windows}[1]
     Location should be    ${url}    # TODO: CLOUD-2949
     # Location should be    ${PRIVACY POLICY URL FULL}
-    Wait until Element is Visible    ${PRIVACY POLICY HEADER}
     Close Window
     Select Window    ${windows}[0]
 
