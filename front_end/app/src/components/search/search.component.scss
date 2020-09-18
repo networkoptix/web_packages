@@ -7,15 +7,19 @@
 .nx-search {
     .btn-arrow {
         .arrow-flip svg-icon {
-            bottom: 7px;
+            bottom: 11px;
             left: 12px;
             width: 20px;
             svg g polyline {
                 stroke: $light16;
             }
         }
-        &.selected .arrow-flip svg-icon svg g polyline {
-            stroke: white;
+        &.selected .arrow-flip svg-icon {
+            bottom : 9px;
+
+            svg g polyline {
+                stroke: white;
+            }
         }
     }
 
@@ -26,31 +30,21 @@
 
         .icon-search {
             position : absolute;
-            margin   : 10px 0 0 14px;
+            top  : 10px;
+            left : 16px;
         }
 
         .search-input {
-            @include typography.regular15;
+            @include typography.regular15nocolor;
             color         : $light16;
-            height        : 40px;
-            padding-left  : 48px;
+            height        : 40px !important;
+            padding-left  : 48px !important;
             padding-right : 40px;
             border-radius : 2px;
             border        : 1px solid $light6;
-            background    : transparent;
+            background    : transparent !important;
             outline       : none !important;
             box-shadow    : none !important;
-            &::placeholder {
-                padding-left: 20px !important;
-            }
-            & ~ .web-icon-search {
-                top: 0;
-                left: 0;
-                margin: 6px 0 0 8px;
-            }
-            &:focus ~ .web-icon-search {
-                display: none !important;
-            }
 
             &:focus::placeholder {
                 color: transparent !important;
@@ -61,9 +55,9 @@
             }
 
             &:active, &:focus, &.non-empty {
-                background-color : $light1;
-                color            : $dark9;
-                border           : 1px solid $brand_core;
+                background-color : $light1 !important;
+                color            : $dark9 !important;
+                border           : 1px solid $brand_core !important;
             }
 
             &:hover:not(:active):not(:focus) {
@@ -84,14 +78,14 @@
         // overwrite input style by layout
         &.search {
             .icon-search {
-                margin-top  : 7px;
-                margin-left : 10px;
+                top  : 6px;
+                left : 12px;
             }
 
             .search-input {
                 @include typography.regular14;
-                height : 32px;
-                padding-left: 40px;
+                height : 32px !important;
+                padding-left: 40px !important;
             }
 
             .search-clear {
@@ -109,7 +103,7 @@
             margin      : auto;
             cursor      : pointer;
             width       : 40px;
-            height      : 40px;
+            height      : 40px !important;
             padding     : 0;
         }
     }

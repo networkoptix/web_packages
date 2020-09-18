@@ -100,10 +100,11 @@ header {
     }
 
     .dropdown-toggle {
-        display          : flex;
+        display          : flex !important;
         justify-content  : flex-start;
-        padding          : 5px 32px 5px 10px;
+        padding          : 5px 32px 5px 10px !important;
         background-color : $light4;
+        box-shadow       : inset 0 -1px 0 0 $light7 !important;
         width            : 100%;
         max-width        : 100%;
 
@@ -122,19 +123,6 @@ header {
 
         .ellipsis {
             @include mixins.ellipsis;
-            // Most likely we don't need this anymore
-            // set text max-width so dropdown button will match spec width
-            //@media (max-width : $collapse-first-width) {
-            //    max-width : 150px;
-            //}
-            //
-            //@include media-breakpoint-down(xl) {
-            //    max-width : 172px;
-            //}
-            //
-            //@include media-breakpoint-up(xl) {
-            //    max-width : 236px;
-            //}
         }
 
         .ellipsis-merge {
@@ -279,7 +267,7 @@ header {
 
     .dropdown-toggle-transparent {
         background-color : transparent !important;
-        box-shadow       : none;
+        box-shadow       : none !important;
         border-radius    : 0;
 
         &:focus {
