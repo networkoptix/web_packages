@@ -3,8 +3,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-import { IConfig, NxConfigService } from '../../../services/nx-config';
-
 /* Usage
  <nx-alert-block
     [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
@@ -23,7 +21,6 @@ import { IConfig, NxConfigService } from '../../../services/nx-config';
     encapsulation : ViewEncapsulation.None
 })
 export class NxAlertBlockComponent implements OnInit {
-    CONFIG: IConfig;
 
     @Input() iconSrc: string;
     @Input() line1: string;
@@ -37,11 +34,7 @@ export class NxAlertBlockComponent implements OnInit {
 
     isNotDefaultType = false;
 
-    constructor(
-        configService: NxConfigService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor() {}
 
     ngOnInit() {
         this.isNotDefaultType = ['error', 'warning', 'info'].includes(this.type);

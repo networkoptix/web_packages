@@ -6,25 +6,21 @@ import {
 import { Injectable }                from '@angular/core';
 import { Observable }                from 'rxjs';
 
+import { environment }              from '../../environments/environment';
 import { NxAccountService }          from '../services/account.service';
-import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
 import { NxSettingsService }         from '../pages/systems/settings/settings.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
-    CONFIG: IConfig;
     system: NxSystem;
 
     constructor(
-        configService: NxConfigService,
         private router: Router,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private settingsService: NxSettingsService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
@@ -32,7 +28,7 @@ export class SystemGuard implements CanActivate {
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const routesChecked = ['users', 'cloud-storage', 'health', 'licenses'];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
-        const systemId = this.CONFIG.isLocal || route.pathFromRoot.find((snapshot: any) => {
+        const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
         }).params.systemId;
 
@@ -44,7 +40,7 @@ export class SystemGuard implements CanActivate {
                 licenses        : system.isAdmin || system.isOwner
             };
             return canViewChecks[currentRoute] || this.router.navigate(
-                [NxConfigService.isLocal ? '/settings/' : `/systems/${systemId}`]
+                [environment.isLocal ? '/settings/' : `/systems/${systemId}`]
             );
         };
 
@@ -52,7 +48,7 @@ export class SystemGuard implements CanActivate {
             .get()
             .then(account => {
                 if (account) {
-                    if (this.CONFIG.isLocal) {
+                    if (environment.isLocal) {
                         this.system = this.settingsService.system;
                         return new Promise((resolve) => {
                             if (this.system) {
