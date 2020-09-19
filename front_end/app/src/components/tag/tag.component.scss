@@ -1,5 +1,5 @@
 @use '../../styles/typography';
-@use '../../../styles/theme_variables';
+@use '../../../styles/theme_variables' as *;
 @use '../../styles/mixins';
 
 a {
@@ -21,47 +21,58 @@ a {
 }
 
 .badge {
-    @include typography.regular12;
-    color            : theme_variables.$light16;
+    @include typography.regular12nocolor;
+    color            : $light16 !important;
     font-weight      : 400;
-    background-color : theme_variables.$light4;
+    background-color : $light4;
     line-height      : 18px;
     height           : 20px;
     padding          : 0 8px;
     border-radius    : 2px;
+    position         : relative;
 
     &.large {
-        @include typography.regular13;
-        color       : theme_variables.$light16;
+        @include typography.regular13nocolor;
+        color       : $light16;
         height      : 2rem !important;
         line-height : 2rem !important;
         padding     : 0 12px;
+        position    : relative;
     }
 }
 
 .badge {
+    position: relative;
+
     &.btn {
         cursor : pointer !important;
 
         &:hover {
-            background-color : theme_variables.$light5;
+            background-color : $light5;
         }
 
         &:active {
-            background-color : theme_variables.$light6;
+            background-color : $light6;
         }
     }
 }
 
 .badge-selected {
     @include typography.regular13;
-    @include mixins.badge-selected(theme_variables.$light16, theme_variables.$light17, theme_variables.$light18);
-    cursor : default !important;
+    @include mixins.badge-selected($light16, $light17, $light18);
+    cursor        : default !important;
+    padding-right : 32px !important;
+    position      : relative;
+
+    .close-button {
+        position : absolute;
+        right    : 0;
+    }
 }
 
 .badge-brand-selected {
     @include typography.regular13;
-    @include mixins.badge-selected(theme_variables.$brand_core, theme_variables.$brand_d1, theme_variables.$brand_d2);
+    @include mixins.badge-selected($brand_core, $brand_d1, $brand_d2);
     cursor : default !important;
 }
 
@@ -77,16 +88,16 @@ a {
 }
 
 $nx-theme-colors :
-    "brand" theme_variables.$brand_core theme_variables.$light1,
-    "default" theme_variables.$light8 theme_variables.$light1,
-    "default-inverted" theme_variables.$light4 theme_variables.$light16,
-    "success" theme_variables.$brand-success theme_variables.$light1,
-    "success-bright" theme_variables.$brand-success-bright theme_variables.$light1,
-    "info" theme_variables.$brand-info theme_variables.$light1,
-    "warning" theme_variables.$brand-warning theme_variables.$light1,
-    "warning-bright" theme_variables.$brand-warning-bright theme_variables.$light1,
-    "danger" theme_variables.$brand-danger theme_variables.$light1,
-    "danger-bright" theme_variables.$brand-danger-bright theme_variables.$light1;
+    "brand" $brand_core $light1,
+    "default" $light8 $light1,
+    "default-inverted" $light4 $light16,
+    "success" $brand-success $light1,
+    "success-bright" $brand-success-bright $light1,
+    "info" $brand-info $light1,
+    "warning" $brand-warning $light1,
+    "warning-bright" $brand-warning-bright $light1,
+    "danger" $brand-danger $light1,
+    "danger-bright" $brand-danger-bright $light1;
 
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {
@@ -95,7 +106,7 @@ $nx-theme-colors :
         color: $fg-color !important;
     }
     .badge-#{$name}-selected {
-        color: theme_variables.$light1 !important;
+        color: $light1 !important;
         @include mixins.badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
     }
 }

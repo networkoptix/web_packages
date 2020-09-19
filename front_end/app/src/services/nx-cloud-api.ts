@@ -341,7 +341,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number, tags?: string | number}, state?: string) {
         let endpoint = '';
         const params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -349,8 +349,8 @@ export class NxCloudApiService {
             if (state) {
                 params.set('state', state);
             }
-        } else if (assetIdOrSearchObject.query) {
-            endpoint = `?filter=${assetIdOrSearchObject.query}&page=${assetIdOrSearchObject.page || 1}`;
+        } else if (assetIdOrSearchObject?.query || assetIdOrSearchObject?.tags) {
+            endpoint = `?filter=${assetIdOrSearchObject.query}&tags=${assetIdOrSearchObject.tags}&page=${assetIdOrSearchObject.page || 1}`;
             params.set('filter', `${assetIdOrSearchObject.query}`);
             params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }

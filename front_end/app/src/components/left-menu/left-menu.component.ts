@@ -17,6 +17,7 @@ export class NxLeftMenuComponent implements OnInit {
     @Input() menuName: string;
     @Input() baseRoute: string;
     @Input() ignoreQuery = false;
+    @Input() showDefault = true;
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
     @Output() relatedLinks = new EventEmitter<MenuNodeWithParent[]>()
@@ -27,6 +28,7 @@ export class NxLeftMenuComponent implements OnInit {
     openNodes: string[] = [];
     mouseLeave$ = new Subject();
     prefetchedDocuments = [];
+    firstUrl = ''
 
     routeSubscription;
 
@@ -70,6 +72,11 @@ export class NxLeftMenuComponent implements OnInit {
             nodes.forEach(checkNode);
         };
         findActiveNode(this.menuNodes);
+        if (this.showDefault && !this.activeRouteNodes.length) {
+            const getFirstUrl = (nodes: MenuNodeWithParent[]): string => nodes[0].url || getFirstUrl(nodes[0].nodes);
+            this.firstUrl = getFirstUrl(this.menuNodes);
+            this.updateActive(this.firstUrl);
+        }
     }
 
     toggleOpen(node: MenuNode) {

@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
     <% } %>
 
-    <link rel="stylesheet" href="skin/styles-native.css">
 </head>
 <body class="inline-webadmin">
 
@@ -29,6 +28,6 @@
 <% for (key in htmlWebpackPlugin.files.chunks) { %>
 <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>
 <% } %>
-<script src="customization/config.js"></script>
+<script src="customization/webadmin_config.js"></script>
 </body>
 </html>

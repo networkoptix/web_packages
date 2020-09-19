@@ -111,3 +111,29 @@
         text-decoration: underline;
     }
 }
+
+.article-content {
+    font-size: 1rem;
+    p, ul, ol {
+        margin-block-end: 16px;
+    }
+    p, li {
+        font-size: 0.8125rem !important;
+    }
+    h1, h2, h3 {
+        margin-block-start: 32px;
+        margin-block-end: 24px
+    }
+
+    h1 {
+        font-size: 1.5em !important;
+    }
+
+    h2 {
+        font-size: 1.375em !important;
+    }
+
+    h3 {
+        font-size: 0.9375em !important;
+    }
+}

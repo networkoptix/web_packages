@@ -1,12 +1,13 @@
 $font-family-base:        "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 @import '_theme_palette';
+@import '../../../customization//custom/custom_palette';
 
 // Brand colors
 // -------------------------
 
-$brand-primary:         $blue10;
-$brand-info:            $blue8;
+$brand-primary:         $brand_core;
+$brand-info:            $brand_l2;
 $brand-success:         $green_main;
 $brand-warning:         $yellow_main;
 $brand-danger:          $red_main;

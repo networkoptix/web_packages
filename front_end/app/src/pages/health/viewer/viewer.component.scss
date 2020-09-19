@@ -160,8 +160,11 @@ nx-health-viewer-component {
       .ngx-file-drop__content {
         display: block;
         pointer-events : none;
-        @include typography.medium24;
-        color :  $light1;
+
+        span {
+          @include typography.medium24nocolor;
+          color : $light1;
+        }
 
         svg-icon {
           float : left;

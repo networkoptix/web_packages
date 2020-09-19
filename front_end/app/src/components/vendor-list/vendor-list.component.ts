@@ -139,22 +139,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                 filter(event => event instanceof ActivationEnd)
             )
             .subscribe((event: ActivationEnd) => {
-                interface Params {
-                    [key: string]: string;
-                }
-                const queryParams: Params = {};
-
                 this.filter.multiselects.find((select) => {
                     if (select.id === 'vendors') {
                         select.selected.push(event.snapshot.queryParams.vendors);
-
-                        queryParams[select.id] = select.selected;
-
-                        this.uri
-                            .updateURI(this.uriPath, queryParams)
-                            .catch(error => {
-                                console.error(error);
-                            });
                     }
                 });
 

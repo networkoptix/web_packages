@@ -48,13 +48,13 @@ button, .btn {
 }
 
 .btn.btn-big {
-    height : 40px;
+    height : 40px !important;
 }
 
 .btn.btn-default {
     color            : $dark9 !important;
     background-color : $light4 !important;
-    box-shadow       : inset 0 -1px 0 0 $light7;
+    box-shadow       : inset 0 -1px 0 0 $light7 !important;
     font-family      : $font-family-medium;
 
     &:hover:not([disabled]):not(.disabled) {
@@ -91,7 +91,7 @@ button, .btn {
     color            : $light1 !important;
     background-color : $brand_core !important;
     border-color     : transparent !important;
-    box-shadow       : inset 0 -1px 0 0 $brand_d2;
+    box-shadow       : inset 0 -1px 0 0 $brand_d2 !important;
 
     &:hover:not([disabled]):not(.disabled) {
         background-color : $brand_d1 !important;

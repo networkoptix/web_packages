@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
@@ -7,12 +7,15 @@ import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { BehaviorSubject, timer, combineLatest } from 'rxjs';
 import { MenuNodeWithParent } from '../../../components/left-menu/left-menu.component';
+import { NxMenusService, MenuNode } from '../../../services/menus.service';
+import { SearchFilter, SearchTag } from '../../../components/search/search.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-knowledge-base',
-    templateUrl : 'knowledge-base.component.html',
-    styleUrls   : ['knowledge-base.component.scss']
+    selector      : 'nx-knowledge-base',
+    templateUrl   : 'knowledge-base.component.html',
+    styleUrls     : ['knowledge-base.component.scss'],
+    encapsulation : ViewEncapsulation.ShadowDom
 })
 export class NxKnowledgeBaseComponent implements OnInit {
     CONFIG: IConfig;
@@ -23,9 +26,9 @@ export class NxKnowledgeBaseComponent implements OnInit {
     searchMode = false;
     searchLoading = false;
     pageNode: KnowledgeNode;
-    search = { query: '' };
+    search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
-    searchQuery$ = new BehaviorSubject('');
+    searchQuery$ = new BehaviorSubject({ query: '', tags: ' '});
     assetId$ = new BehaviorSubject('');
     relatedLinks$ = new BehaviorSubject<MenuNodeWithParent[]>([])
     relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
@@ -41,9 +44,19 @@ export class NxKnowledgeBaseComponent implements OnInit {
         }
     }
 
-    updateSearchQuery({ query }) {
-        this.search = { query };
-        this.searchQuery$.next(query);
+    updateSearchQuery({ query, tags }) {
+        const filteredTags = (tags || []).reduce(
+            (joined, tag) => tag.value ? joined + `${tag.id},` : joined, ''
+        )
+        if (this.searchQuery$.value.query === query && this.searchQuery$.value.tags === filteredTags) {
+            return;
+        };
+
+        this.search = {query, ...this.search}
+        this.searchQuery$.next({
+            query: query || '',
+            tags: filteredTags
+        });
     }
 
     clearSearch = () => {
@@ -61,15 +74,15 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.loadingNext = true;
         this.currentSearchResultPage += 1;
         this.fetchSearchHandler(
-            { query: this.searchQuery$.value, page: this.currentSearchResultPage }
+            { ...this.searchQuery$.value, page: this.currentSearchResultPage }
         ).subscribe((results) => {
             this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
             this.loadingNext = false;
         });
     }
 
-    fetchSearchHandler({ query, page }) {
-        return this.cloudApi.getDocumentation({ query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+    fetchSearchHandler({ query, page, tags }) {
+        return this.cloudApi.getDocumentation({ query, page, tags }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -77,7 +90,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private menusService: NxMenusService
     ) {
         this.CONFIG = configService.config;
     }
@@ -104,11 +118,11 @@ export class NxKnowledgeBaseComponent implements OnInit {
             result, section, curInd
         ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
 
-        return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId }) => {
+        return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
+            const {content = '', matchStart = 0, matchEnd = 0} = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippets: (snippets || []).map(({ content, matchStart, matchEnd }) => (
-                    { content: highlight(content, matchStart, matchEnd) })),
+                snippet: content ? highlight(content, matchStart, matchEnd) : shortDescription,
                 title: highlight(title, titleMatchStart, titleMatchEnd)
             };
         });
@@ -119,34 +133,53 @@ export class NxKnowledgeBaseComponent implements OnInit {
             switchMap(urlSegment => {
                 this.loading = true;
                 this.clearSearch();
-                this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId);
-                this.searchQuery$.next(this.route.snapshot.queryParams.search);
-                const state = this.route.snapshot.queryParamMap.get('state');
-                return this.cloudApi.getDocumentation(this.assetId$.value, state)
-                    .pipe(
-                        tap(({ title, blocks, contentHTML }) => {
-                            this.pageNode = KnowledgeNode.normalHeader(
-                                title,
-                                this.assetId$.value,
-                                contentHTML,
-                                blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
-                                    title,
-                                    '',
-                                    contentHTML
-                                ))
-                            );
-                            this.loading = false;
-                        })
+                const getFirstDoc = () => {
+                    const traverseToFirst = (nodes: MenuNode[]): string => nodes[0].asset_id || traverseToFirst(nodes[0].nodes);
+                    return this.menusService.getMenu('Knowledgebase').pipe(
+                        map(menu => traverseToFirst(menu))
                     );
+                };
+                return getFirstDoc().pipe(
+                    switchMap(firstAsset => {
+                        this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId || firstAsset);
+                        this.searchQuery$.next({
+                            query: this.route.snapshot.queryParams.search,
+                            tags: ''
+                            // tags: this.route.snapshot.queryParams.tags 
+                        });
+                        const state = this.route.snapshot.queryParamMap.get('state');
+                        return this.cloudApi.getDocumentation(this.assetId$.value, state)
+                            .pipe(
+                                tap(({ title, blocks, contentHTML }) => {
+                                    this.search = {
+                                        ...this.search,
+                                        tags: []
+                                        // tags: tags.map(tag => (this.search.tags || []).find(({id}) => id === tag.id) || {...tag, value: true}),
+                                    };
+                                    this.pageNode = KnowledgeNode.normalHeader(
+                                        title,
+                                        this.assetId$.value,
+                                        contentHTML,
+                                        blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
+                                            title,
+                                            '',
+                                            contentHTML
+                                        ))
+                                    );
+                                    this.loading = false;
+                                })
+                            );
+                    })
+                );
             })
         ).subscribe();
 
         this.searchQuery$.pipe(
-            switchMap((query) => {
-                this.searchMode = !!query;
+            switchMap(({query, tags}) => {
+                this.searchMode = !!query || !!tags;
                 this.searchLoading = this.searchMode;
                 this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
+                return this.fetchSearchHandler({ query, tags, page: this.currentSearchResultPage });
             })).subscribe((results) => {
             this.totalSearchResultPages = results.totalPages;
             this.searchLoading = false;
@@ -169,7 +202,7 @@ export class KnowledgeNode {
         public nodes: KnowledgeNode[],
         public cardClass: CardClasses,
         public cardIcon?: string,
-        public cardLead?: string,
+        public cardLead?: string
     ) {}
 
     // Factory methods

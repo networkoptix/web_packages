@@ -82,8 +82,8 @@
                 <ng-container *ngIf="showIcon$ | async">
                     <ng-container *ngTemplateOutlet="navIcon"></ng-container>
                 </ng-container>
-                <ul class="nav navbar-nav d-flex">
-                    <div (resize)="mainButtonWidth$.next($event.width)">
+                <ul class="nav navbar-nav d-flex" [ngClass]="{'invisible': hideWebAdmin}">
+                    <div (resize)="mainButtonWidth$.next($event.width)" >
                         <nx-header-main-button
                                 *ngIf="systems?.length || headerService?.nodes?.length"
                                 [endpoint]="active"
@@ -100,7 +100,7 @@
                 </ul>
             </div>
 
-            <div class="app-header-right">
+            <div class="app-header-right" [ngClass]="{'invisible': hideWebAdmin}">
                 <ng-container *ngTemplateOutlet="rightNav;context:{showSmall: showSmallRightNav$ | async}"></ng-container>
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
                     <li>

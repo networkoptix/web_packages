@@ -95,24 +95,17 @@ nx-cam-table {
               right    : auto;
               position : relative;
               bottom   : 0;
-
-              &:after {
-                content : ' ';
-              }
-
-              &.asc {
-                &:after {
-                  content : '+';
-                }
-              }
             }
           }
+
           .arrow-flip {
-            height: 20px;
+            height : 20px !important;
+            width  : 20px !important;
+
             svg-icon {
-              height: 20px;
-              left: 8px;
-              top: 0;
+              height : 20px;
+              left   : 0;
+              top    : 2px;
             }
           }
         }

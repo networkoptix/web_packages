@@ -23,12 +23,11 @@ require('./scripts/vendor/protocolcheck');
 @Component({
     selector : 'nx-app',
     template : `
+        <div class="headerContainer">
+            <nx-header *ngIf="appStateService.ready || CONFIG.isLocal"></nx-header>
+            <nx-ribbon></nx-ribbon>
+        </div>
         <div class="outerContainer" *ngIf="appStateService.ready">
-            <div class="headerContainer">
-                <nx-header></nx-header>
-                <nx-ribbon></nx-ribbon>
-            </div>
-
             <div class="mainContainer" nxScrollHelper>
                 <router-outlet></router-outlet>
             </div>

@@ -19,8 +19,8 @@
                            name="query"
                            autocomplete="off"
                            [placeholder]="placeholder | translate"/>
-                    <span *ngIf="!localFilter.query" class="glyphicon web-icon-search icon-search"></span>
-                    <button class="inset search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
+                    <span class="glyphicon web-icon-search icon-search"></span>
+                    <button class="inset search-clear btn btn-clear" *ngIf="localFilter.query" (click)="resetQuery()">
                         <svg-icon [src]="CONFIG.icons.dir + 'close.svg'"
                                   [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                     </button>

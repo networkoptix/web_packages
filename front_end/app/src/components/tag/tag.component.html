@@ -1,6 +1,5 @@
 <a class="{{element}} {{size}} {{ badgeType }}"
-   [routerLink]="link"
-   [queryParams]="linkParam"
+   [attr.href]="tagHref"
    (click)="clickable && selectTag()">
 
     <ng-content></ng-content>

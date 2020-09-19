@@ -1,7 +1,7 @@
 import {
-    Component, EventEmitter, forwardRef,
-    Input, OnInit, Output, SimpleChanges
-}                                                  from '@angular/core';
+    Component, ElementRef, EventEmitter, forwardRef,
+    Input, OnInit, Output, Renderer2, SimpleChanges
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NavigationEnd, Router }                   from '@angular/router';
 import { Subscription }                            from 'rxjs';
@@ -43,8 +43,11 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Output() onClick = new EventEmitter<boolean>();
 
     public badgeType: string;
+    public tagHref: string;
 
-    constructor() {
+    constructor(
+        private renderer: Renderer2,
+    ) {
         this.linkParam = {};
     }
 
@@ -54,6 +57,12 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         this.badgeType = this.type !== undefined ? `badge-${this.type}` : 'badge';
         if (this.selected) {
             this.badgeType = `badge-${this.badgeType}-selected`;
+        }
+
+        const params = Object.keys(this.linkParam);
+        if (this.link && params.length) {
+            const queryParams = params.map(key => key + '=' + this.linkParam[key]).join('&');
+            this.tagHref = `${this.link}?${queryParams}`;
         }
     }
 

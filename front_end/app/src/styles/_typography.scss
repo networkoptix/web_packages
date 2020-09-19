@@ -80,6 +80,10 @@ h1 > .label {
     @include font-source($font-family-medium, $font-size-xlg, $font-color-medium);
 }
 
+@mixin medium24nocolor {
+    @include font-source($font-family-medium, $font-size-xlg);
+}
+
 @mixin medium20 {
     @include font-source($font-family-medium, $font-size-20, $font-color-medium);
 }
@@ -112,6 +116,10 @@ h1 > .label {
     @include font-source($font-family-regular, $h4-font-size, $font-color-regular);
 }
 
+@mixin regular15nocolor {
+    @include font-source($font-family-regular, $h4-font-size);
+}
+
 @mixin medium15 {
     @include font-source($font-family-medium, $h4-font-size, $font-color-medium);
 }
@@ -136,6 +144,10 @@ h1 > .label {
     @include font-source($font-family-regular, $font-size-base, $font-color-regular);
 }
 
+@mixin regular13nocolor {
+    @include font-source($font-family-regular, $font-size-base);
+}
+
 @mixin medium13 {
     @include font-source($font-family-medium, $font-size-base, $font-color-medium);
 }
@@ -146,6 +158,10 @@ h1 > .label {
 
 @mixin regular12 {
     @include font-source($font-family-regular, $font-size-sm, $font-color-regular);
+}
+
+@mixin regular12nocolor {
+    @include font-source($font-family-regular, $font-size-sm);
 }
 
 @mixin medium12 {
