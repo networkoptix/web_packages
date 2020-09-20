@@ -30,7 +30,9 @@ import { DialogsModule }                      from './src/dialogs/dialogs.module
 import { DirectivesModule }                   from './src/directives/directives.module';
 import { PipesModule }                        from './src/pipes/pipes.module';
 import { initializeApp }                      from './src/pages/push-notifications/push-notifications.module';
-import { AuthGuard, SystemGuard }             from './src/routeGuards';
+import {
+    AuthGuard, SystemGuard, DevelopersGuard
+}                                             from './src/routeGuards';
 import { NxConfigService }                    from './src/services/nx-config';
 import { ServiceModule }                      from './src/services/services.module';
 import { WINDOWS_PROVIDERS }                  from './src/services/window-provider';
@@ -117,6 +119,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
             useFactory : initializeApp
         },
         AuthGuard,
+        DevelopersGuard,
         SystemGuard,
         DatePipe,
         NxBootstrapProvider,

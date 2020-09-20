@@ -637,6 +637,16 @@
             "fieldset": "Features"
           },
           {
+            "label": "Enable developers pages",
+            "name": "%DEVELOPERS_ENABLED%",
+            "description": "Enable For Developers pages. If disabled, it will only be shown to users with permission to see it",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
             "label": "Health Monitor Cache Timeout",
             "name": "%HM_CACHE_TIMEOUT%",
             "description": "Time in seconds to cache HM data on front end before making new request for fresh data.",

@@ -437,6 +437,12 @@ class MenuNodeInlineForm(forms.ModelForm):
                 'allSelectedText': 'All enabled',
                 'selectAllJustVisible': True,
             }),
+            'permissions': autocomplete.ModelSelect2Multiple(
+                url='permission-autocomplete', attrs={
+                    'data-placeholder': 'None required',
+                    'data-minimum-input-length': 2
+                }
+            ),
             'asset': autocomplete.ModelSelect2(
                 url='asset_autocomplete', attrs={
                     'data-placeholder': 'Select article',
@@ -449,6 +455,7 @@ class MenuNodeInlineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['asset'].widget.can_add_related = False
         self.fields['asset'].widget.get_related_url = lambda *_: reverse('admin:pages', kwargs={'asset_id': '__fk__'})
+        self.fields['permissions'].label_from_instance = lambda obj: obj.name
         if self.current_customization == 'all':
             self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations)
             self.fields['enabled'].widget.can_add_related = False

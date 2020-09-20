@@ -865,7 +865,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
     extra = 0
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
-    fields = ('name', 'asset', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'enabled', 'is_global', 'preview')
+    fields = ('name', 'asset', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'permissions', 'enabled', 'is_global', 'preview')
     readonly_fields = ('is_global', 'preview')
 
     def __init__(self, *args, **kwargs):
@@ -954,7 +954,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        transaction.on_commit(Menu.cache_all_customizations)
+        transaction.on_commit(MENU_CACHE.clear_cache)
 
     def response_change(self, request, obj):
         response = super().response_change(request, obj)
@@ -974,7 +974,7 @@ class MenuNodeAdmin(CMSAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        transaction.on_commit(Menu.cache_all_customizations)
+        transaction.on_commit(MENU_CACHE.clear_cache)
 
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()

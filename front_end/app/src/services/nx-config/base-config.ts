@@ -142,6 +142,7 @@ export interface ClientMode {
 }
 
 export interface CloudCapabilities {
+    developersEnabled: string,
     feedbackEnabled: string;
     healthMonitor?: string;
     healthMonitorCacheTimeout?: number;

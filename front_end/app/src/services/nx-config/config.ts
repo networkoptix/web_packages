@@ -353,6 +353,7 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
+        developersEnabled         : '',
         feedbackEnabled           : '',
         healthMonitor             : '',
         integrationStore          : '',

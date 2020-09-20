@@ -7,7 +7,6 @@ from distutils.util import strtobool
 
 from django.db import models
 from django.db.models import Q
-from django.db.models.signals import m2m_changed
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -143,6 +142,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
+                'developers_enabled': asset.read_global_value("%DEVELOPERS_ENABLED%"),
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
@@ -181,11 +181,26 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def get_cached_menu(customization_name, name=None):
+def check_user_menu_permissions(nodes, user):
+    for i in reversed(range(len(nodes))):
+        node = nodes[i]
+        permissions = node.get('permissions', [])
+        for permission_codename in permissions:
+            if not (user and UserGroupsToAssetPermissions.check_customization_permission(user, settings.CUSTOMIZATION, permission_codename)):
+                del nodes[i]
+                break
+        else:
+            node.pop('permissions', None)
+            check_user_menu_permissions(node.get('nodes', []), user)
+
+
+def get_cached_menu(customization_name, name=None, user=None):
     menu_customization = MENU_CACHE[customization_name]
     if menu_customization is None:
         menu_customization = Menu.generate_menus(customization_name)
         MENU_CACHE[customization_name] = menu_customization
+    for menu_name, menu in menu_customization.items():
+        check_user_menu_permissions(menu, user)
     if name:
         return menu_customization[name]
     return menu_customization
@@ -238,7 +253,8 @@ class Customization(models.Model):
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
-            ('access_integration_store', 'Can access the integration store')
+            ('access_integration_store', 'Can access the integration store'),
+            ('access_developers', 'Can see Developers pages')
         )
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
@@ -1251,6 +1267,7 @@ class MenuNode(models.Model):
     enabled = models.ManyToManyField(Customization, blank=True, related_name='enabled_nodes')
     authentication = models.IntegerField(choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
     condition = models.CharField(blank=True, max_length=255)
+    permissions = models.ManyToManyField(Permission, default=None, blank=True)
     order = models.IntegerField(default=0)
     is_global = models.BooleanField(default=True, verbose_name='Global')
     parent_menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
@@ -1268,6 +1285,7 @@ class MenuNode(models.Model):
             'asset_type': AssetType.ASSET_TYPES[self.asset.asset_type.type] if self.asset else None,
             'new_window': self.new_window,
             'icon': self.icon,
+            'permissions': list(self.permissions.values_list('codename', flat=True)),
             'authentication': self.AUTH_CHOICES[self.authentication],
             'order': self.order
         }

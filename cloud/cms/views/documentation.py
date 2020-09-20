@@ -9,6 +9,7 @@ from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.models import Asset, AssetType, get_cached_menu
+from cms.permissions import CanViewDevelopers
 from util.helpers import get_language_object_from_request
 import re
 
@@ -25,7 +26,7 @@ id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STR
                      operation_description="Returns an documentation page using based on id and state param",
                      manual_parameters=[state__query_param, id__query_param])
 @api_view(("GET", ))
-@permission_classes((AllowAny, ))
+@permission_classes((CanViewDevelopers, ))
 @handle_exceptions
 def get_page(request, doc_id):
     draft = request.query_params.get('state') == 'draft'
@@ -120,7 +121,7 @@ page_size__query_param = openapi.Parameter("pageSize", openapi.IN_QUERY,
                      operation_description="Returns an array of all documentation pages. Can be filtered",
                      manual_parameters=[filter__query_param, page__query_param, page_size__query_param])
 @api_view(("GET", ))
-@permission_classes((AllowAny, ))
+@permission_classes((CanViewDevelopers, ))
 @handle_exceptions
 def get_pages(request):
     filter_query = request.query_params.get('filter')
@@ -163,7 +164,7 @@ def modify_about_dict(parent, language):
 
 
 @api_view(("GET",))
-@permission_classes((AllowAny,))
+@permission_classes((CanViewDevelopers,))
 def about_page(request):
     language = get_language_object_from_request(request)
     cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--about_page'
