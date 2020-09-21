@@ -702,11 +702,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (!this.system.permissions.editCameras) {
-                return this.router.navigate(['systems', this.system.id])
-                    .catch(error => console.error(error));
-            }
-
             if (cameraIndex === -1) {
                 cameraIndex = 0;
                 this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
