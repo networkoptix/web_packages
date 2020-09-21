@@ -108,6 +108,8 @@ INSTALLED_APPS = (
     'zapier',
     'tinymce',
     'nested_admin',
+    # Needs to be last to insure file deletion isn't interrupted by other exceptions
+    'django_cleanup.apps.CleanupConfig'
 )
 
 

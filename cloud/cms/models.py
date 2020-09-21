@@ -5,10 +5,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
-from django.db.models.signals import m2m_changed
+from django.db.models.deletion import Collector
+from django.db.models.signals import post_delete
 from django.db.utils import ProgrammingError
+from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, FieldError
@@ -1078,6 +1081,24 @@ class DataRecord(models.Model):
             self.value = self.data_structure.to_string(self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
+
+
+@receiver(post_delete, sender=DataRecord)
+def delete_file_reverse(sender, **kwargs):
+    try:
+        if kwargs['instance'].external_file:
+            f = kwargs['instance'].external_file
+            collector = Collector(using='default')
+            collector.collect([f], keep_parents=True)
+            # Check if any other object is referencing the ExternalFile
+            for model, instance in collector.instances_with_model():
+                if model != ExternalFile and (model != DataRecord or instance.id != kwargs['instance'].id):
+                    break
+            else:
+                f.delete()
+    except ObjectDoesNotExist:
+        # Prevent circular deletion caused by cascading
+        pass
 
 
 class ContributorAgreement(models.Model):

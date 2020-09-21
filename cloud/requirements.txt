@@ -18,6 +18,7 @@ django-admin-tools==0.8.1
 django-autocomplete-light==3.3.4
 django-celery-beat==1.5.0
 django-celery-results==1.0.4
+django-cleanup==5.1.0
 django-cors-headers==2.5.2
 django-csv-exports==1.0.5
 django-model-utils==3.1.2
