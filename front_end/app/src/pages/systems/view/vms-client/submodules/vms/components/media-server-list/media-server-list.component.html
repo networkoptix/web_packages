@@ -1,0 +1,41 @@
+<div class="media-server-list">
+  <div class="server-list">
+    <div
+      class="server"
+      *ngFor="let server of mediaservers"
+      [ngClass]="{
+        'show-ip': true,
+        'expanded': true,
+        'online': server.status === 'Online',
+        'offline': server.status === 'Offline',
+        'unauthorized': server.status === 'Unauthorized',
+        'empty': !server.cameras.length
+      }"
+    >
+      <div class="server-name">
+        <span class="name">{{ server.name }}</span>
+        <span class="ip-info">{{ server.url | ip_info }}</span>
+      </div>
+      <div class="cameras">
+        <a
+          class="camera"
+          *ngFor="let camera of server.cameras"
+          [routerLink]="[camera.id]"
+          [ngClass]="{
+            online: camera.isOnline,
+            live: camera.isLive,
+            recording: camera.isRecording,
+            offline: !camera.isOnline,
+            unauthorized: !camera.isAuthorized
+          }"
+        >
+          <div class="preview">
+            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl">
+          </div>
+          <span class="name">{{ camera.name }}</span>
+          <span class="ip-info">{{ camera.url | ip_info }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

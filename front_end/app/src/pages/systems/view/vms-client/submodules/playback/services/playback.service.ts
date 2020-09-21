@@ -14,6 +14,7 @@ import {
 import { ms } from '../../../utils/type-aliases'
 
 import VideoManagementSystemService from '../../vms/services/vms.service'
+import { VMS_MODE } from '../../vms/datatypes/VmsState'
 
 
 @Injectable({

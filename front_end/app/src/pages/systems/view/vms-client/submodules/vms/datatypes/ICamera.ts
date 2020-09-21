@@ -1,4 +1,4 @@
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline'
+export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline' | 'Unauthorized'
 
 
 export interface ICamera {
@@ -8,6 +8,7 @@ export interface ICamera {
   isOnline: boolean,
   isRecording: boolean,
   isLive: boolean,
+  isAuthorized: boolean,
   hasArchive: boolean,
 }
 

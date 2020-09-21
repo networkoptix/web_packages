@@ -11,3 +11,6 @@ export interface CanvasGeometry {
   height: px,
   dpr: int,
 }
+
+export type GUID = string
+

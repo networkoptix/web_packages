@@ -9,6 +9,7 @@ export class Camera implements ICamera {
     public readonly url: string,
     public readonly status: CAMERA_STATUS,
     public readonly hasArchive: boolean,
+    public readonly thumbnailUrl: string | undefined = undefined,
   ) {
   }
 
@@ -22,6 +23,10 @@ export class Camera implements ICamera {
 
   public get isRecording () {
     return this.status === 'Recording'
+  }
+
+  public get isAuthorized () {
+    return this.status !== 'Unauthorized'
   }
 }
 

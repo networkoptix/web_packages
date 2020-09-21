@@ -22,9 +22,19 @@
       display inline-block
       padding-right 1em
 
-  > player
+  > player,
+  > .no-player-message
     flex-grow 1
     background-color black
+
+  > .no-player-message
+    flex-grow 1
+    color white
+    display flex
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
 
   > .controls
     flex-grow 0
@@ -39,8 +49,18 @@
       flex-shrink 0
       width 100px
 
-    > timeline
+    > timeline,
+    > .no-archive-message
       flex-grow 1
+      border-left 1px solid lightgray
+      border-right 1px solid lightgray
+
+    > .no-archive-message
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
 
     > playback-state-indicator
       flex-grow 0

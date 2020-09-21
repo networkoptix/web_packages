@@ -11,8 +11,6 @@ import NxSystemViewIndexPageComponent from './pages/system-view-index/system-vie
 import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component'
 import { CookieService } from 'ngx-cookie-service'
 
-import IpInfoPipe from './pipes/ip_info.pipe'
-
 import routes from './routes'
 import components from './components'
 
@@ -50,7 +48,6 @@ import { routes as vmsSandboxRoutes } from './vms-client/vms-client-routing.modu
         NxSystemViewIndexPageComponent,
         NxSystemViewCameraPageComponent,
         components,
-        IpInfoPipe,
     ],
     bootstrap       : [],
     entryComponents : [

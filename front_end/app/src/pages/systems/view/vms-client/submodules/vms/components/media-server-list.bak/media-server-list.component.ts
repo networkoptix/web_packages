@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { INxViewMediaServer } from '../../view.types'
-import { NxSystem } from '../../../../../services/system.service'
+import { INxViewMediaServer } from '../../../../../view.types'
+import { NxSystem } from '../../../../../../../../services/system.service'
 import { CookieService } from 'ngx-cookie-service'
 
 
@@ -25,10 +25,10 @@ export class NxSystemMediaServerListComponent implements OnChanges {
 
     filteredMediaServers: Array<INxViewMediaServer>
     showIP: boolean = false
-    
+
     isServerExpanded: ServerVisibilityDict = {}
 
-    cameraThumbnailUrls: CameraThumbnailUrlsDict = {}    
+    cameraThumbnailUrls: CameraThumbnailUrlsDict = {}
 
     constructor (
       protected cookieService: CookieService,
@@ -42,13 +42,13 @@ export class NxSystemMediaServerListComponent implements OnChanges {
       this.filteredMediaServers = this.mediaServers
       this.resetServersVisibility()
       this.resetCameraThumbnailUrls()
-    }    
+    }
 
     protected resetServersVisibility () {
       if (this.mediaServers) {
         this.isServerExpanded = this.mediaServers.reduce(
           (acc, ms) => {
-            const cookieName = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`            
+            const cookieName = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`
             acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true
             return acc
           },
@@ -95,7 +95,7 @@ export class NxSystemMediaServerListComponent implements OnChanges {
       this.isServerExpanded[serverId] = !this.isServerExpanded[serverId]
       const cookieName = `nx_system_${this.systemId}_server_${serverId}_expansion_status`
       this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]))
-    }    
+    }
 }
 
 export default NxSystemMediaServerListComponent

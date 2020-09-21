@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import VideoManagementSystemService from '../../submodules/vms/services/vms.service'
-import Camera from '../../submodules/vms/datatypes/Camera'
+import VmsState, { VMS_MODE } from '../../submodules/vms/datatypes/VmsState'
+import MediaServer from '../../submodules/vms/datatypes/MediaServer'
+import { Subscription } from 'rxjs'
 
 
 @Component({
@@ -10,16 +12,32 @@ import Camera from '../../submodules/vms/datatypes/Camera'
 })
 export class SystemPageComponent implements OnInit {
 
-  public cameras: Array<Camera>
+  protected _state: VmsState
+  protected _subscription: Subscription
+
+  public get mediaServers (): Array<MediaServer> {
+    return this._state && this._state.mode !== VMS_MODE.NOT_INITIALIZED
+      ? this._state.mediaServers
+      : []
+  }
 
   constructor (
     private vms: VideoManagementSystemService
   ) {
-    this.vms.setFakeData()
-    this.cameras = this.vms.cameras
+    this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    this.vms.setTestMediaServers()
+    this._subscription = this.vms.subject.subscribe(this.onVmsSubjectChange)
+  }
+
+  public ngOnDestroy (): void {
+    this._subscription.unsubscribe()
+  }
+
+  public onVmsSubjectChange (s: VmsState) {
+    this._state = s
   }
 
 }

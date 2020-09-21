@@ -1,6 +1,7 @@
 import Camera from './datatypes/Camera'
 import MediaServer from './datatypes/MediaServer'
 
+const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg'
 
 export const fakeMediaServerData: Array<MediaServer> = [
     {
@@ -14,7 +15,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Full-featured test camera',
                 'http://fake.media-server.local/full-featured-test-camera',
                 'Recording',
-                true
+                true,
+                TEST_THUMBNAIL_URL,
             ),
             new Camera(
                 'live-no-archive-test-camera',
@@ -22,7 +24,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Live Recording test camera with no archive',
                 'http://fake.media-server.local/live-no-archive-test-camera',
                 'Recording',
-                false
+                false,
+                TEST_THUMBNAIL_URL,
             ),
             new Camera(
                 'not-live-not-recording-test-camera-with-archive',
@@ -31,6 +34,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'http://fake.media-server.local/not-live-not-recording-test-camera-with-archive',
                 'Archive',
                 true,
+                TEST_THUMBNAIL_URL,
             ),
             new Camera(
                 'offline-test-camera-with-no-archive',
@@ -39,6 +43,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'http://fake.media-server.local/offline-test-camera-with-no-archive',
                 'Offline',
                 false,
+                TEST_THUMBNAIL_URL,
             ),
             new Camera(
                 'live-not-recording-test-camera-with-no-archive',
@@ -47,6 +52,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'http://fake.media-server.local/live-not-recording-test-camera-with-no-archive',
                 'Live',
                 false,
+                TEST_THUMBNAIL_URL,
             ),
         ]
     },

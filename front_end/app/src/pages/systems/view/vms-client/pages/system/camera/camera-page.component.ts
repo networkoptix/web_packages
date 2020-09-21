@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { Subscription } from 'rxjs'
 
-import Camera from '../../../submodules/vms/datatypes/Camera'
+import ICamera from '../../../submodules/vms/datatypes/ICamera'
+import { VmsState, VMS_MODE } from '../../../submodules/vms/datatypes/VmsState'
 import VideoManagementSystemService from '../../../submodules/vms/services/vms.service'
 
 import PlaybackService from '../../../submodules/playback/services/playback.service'
@@ -16,8 +18,12 @@ import TimelineExtendToNowService from '../../../submodules/timeline/services/ti
 })
 export class CameraPageComponent implements OnInit, OnDestroy {
 
-  public id: number
-  public camera: Camera
+  public id: string
+  public camera: ICamera
+
+  protected _routeSubscription: Subscription
+  protected _vmsStateSubscription: Subscription
+  protected _animationFrameRequestHandler: number
 
   constructor (
     private route: ActivatedRoute,
@@ -26,47 +32,48 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     public timeline: TimelineService,
     public timelineExtendToNow: TimelineExtendToNowService,
   ) {
+    this._onRouteChange = this._onRouteChange.bind(this)
+    this._onVmsStateChange = this._onVmsStateChange.bind(this)
+    this._onAnimationFrame = this._onAnimationFrame.bind(this)
   }
-
-  protected _animationFrameRequestHandler: number
 
   public ngOnInit (): void {
-    this.route.params.subscribe(params => {
-      this.id = params['camera-id'];
-      this.camera = this.vms.selectCamera(this.id)
-      this._init()
-    });
-
+    this._routeSubscription = this.route.params.subscribe(this._onRouteChange)
+    this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
     this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+      requestAnimationFrame(this._onAnimationFrame)
   }
 
-  public onAnimationFrame (): void {
+  public ngOnDestroy (): void {
+    this._routeSubscription.unsubscribe()
+    this._vmsStateSubscription.unsubscribe()
+    cancelAnimationFrame(this._animationFrameRequestHandler)
+  }
+
+  protected _onRouteChange (params) {
+    this.id = params['camera-id'];
+    this.vms.selectCamera(this.id)
+  }
+
+  protected _onVmsStateChange (s: VmsState) {
+    switch (s.mode) {
+      case VMS_MODE.NOT_INITIALIZED:
+      case VMS_MODE.CAMERA_NOT_SELECTED:
+        this.camera = undefined
+        break
+      case VMS_MODE.CAMERA_SELECTED:
+        this.camera = s.selectedCamera
+        this._initSelectedCamera()
+    }
+  }
+
+  public _onAnimationFrame (): void {
     if (this.camera?.isLive) {
       this.timelineExtendToNow.extendToNow()
     }
 
     this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
-  }
-
-  public ngOnDestroy (): void {
-    cancelAnimationFrame(this._animationFrameRequestHandler)
-  }
-
-  protected _init () {
-    console.log('camera page (re-)initialization', this.camera)
-
-    this.playback.stop()
-
-    const now = Date.now()
-    const DURATION = 10 * 12 * 31 * 24 * 60 * 60 * 1000
-    this.timeline.reset(now - DURATION, now)
-
-    if (this.camera.isLive) {
-      this.playback.playLive()
-    }
-
+      requestAnimationFrame(this._onAnimationFrame)
   }
 
   public get showPlayer (): boolean {
@@ -79,6 +86,22 @@ export class CameraPageComponent implements OnInit, OnDestroy {
 
   public get showTimeline (): boolean {
     return this.camera && this.camera.hasArchive
+  }
+
+  protected _initSelectedCamera () {
+    this.playback.stop()
+
+    this._setFakeTimeLine()
+
+    if (this.camera.isLive) {
+      this.playback.playLive()
+    }
+  }
+
+  protected _setFakeTimeLine () {
+    const now = Date.now()
+    const DURATION = 10 * 12 * 31 * 24 * 60 * 60 * 1000
+    this.timeline.reset(now - DURATION, now)
   }
 
 }

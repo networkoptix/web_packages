@@ -1,72 +1,88 @@
 import { Injectable } from '@angular/core'
-import MediaServer from '../datatypes/MediaServer'
+import { BehaviorSubject } from 'rxjs'
+import IMediaServer from '../datatypes/IMediaServer'
 import Camera from '../datatypes/Camera'
-import fakeData from '../fakeData'
+import testMediaServers from '../testMediaServers'
+import { GUID } from '../../../utils/type-aliases'
+import {
+  VmsState,
+  VMS_MODE,
+  createNotInitializedState,
+  createCameraNotSelectedState,
+  createCameraSelectedState,
+} from '../datatypes/VmsState'
+
 
 @Injectable({
   providedIn: 'root',
  })
 export class VideoManagementSystemService {
 
-  protected _mediaServers: Array<MediaServer> = []
-
-  protected _selectedCamera: Camera = null
-
-  public cleanMediaServers () {
-    this._mediaServers = []
+  constructor () {
+    this.reset()
   }
 
-  public setFakeMediaServers () {
-    this._mediaServers = fakeData
+  public reset () {
+    this._state = createNotInitializedState()
+    this._emit()
   }
 
-  public setMediaServers (mediaServers: Array<MediaServer>) {
-    this._mediaServers = mediaServers
-    console.log('media servers set', mediaServers)
+  protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState())
+
+  protected _emit (): void {
+    this._subject.next(this.state)
   }
 
-  protected get _camerasAsFlatArray (): Array<Camera> {
-    const result = []
-    this._mediaServers.map(ms => ms.cameras.map(c => result.push(c)))
-    return result
+  public get subject (): BehaviorSubject<VmsState> {
+    return this._subject
   }
 
-  protected get _camerasAsDict (): Object {
-    return this._camerasAsFlatArray.reduce(
-      (acc, c) => {
-        acc[c.id] = c
-        return acc
-      },
-      {}
-    )
+
+  protected _state: VmsState = createNotInitializedState()
+
+  public get state (): VmsState {
+    return this._state
   }
 
-  public resetCameraSelection () {
-    this._selectedCamera = null
-  }
-
-  public selectCamera (id: string): Camera | false {
-    if (id in this._camerasAsDict) {
-      this._selectedCamera = this._camerasAsDict[id]
+  public get selectedCamera () {
+    if (this.state.mode === VMS_MODE.CAMERA_SELECTED) {
+      return this.state.selectedCamera
+    } else {
+      return undefined
     }
-    else {
-      this._selectedCamera = null
+  }
+
+  public setMediaServers (mediaServers: Array<IMediaServer>) {
+    const prevSelectedCameraId: GUID | undefined = this._state['selectedCameraId']
+    this._state = createCameraNotSelectedState(mediaServers)
+    if (prevSelectedCameraId) {
+      this._state = createCameraSelectedState(this._state, prevSelectedCameraId)
     }
-    return this.selectedCamera || false
+    this._emit()
   }
 
-
-  public get mediaServers () {
-    return this.mediaServers
+  public setTestMediaServers () {
+    this.setMediaServers(testMediaServers)
   }
 
-  public get cameras () {
-    return this._camerasAsFlatArray
+  public selectCamera (cameraId: GUID) {
+    if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
+      console.warn('attempt to select camera while VMS is not initialized yet')
+      return
+    }
+    this._state = createCameraSelectedState(this._state, cameraId)
+    this._emit()
   }
 
-  public get selectedCamera (): Camera {
-    return this._selectedCamera
+  public clearCameraSelection () {
+    if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
+      console.warn('attempt to clear camera selection while VMS is not initialized yet')
+      return
+    }
+    this._state = createCameraNotSelectedState(this._state.mediaServers)
+    this._emit()
   }
+
 }
 
 export default VideoManagementSystemService

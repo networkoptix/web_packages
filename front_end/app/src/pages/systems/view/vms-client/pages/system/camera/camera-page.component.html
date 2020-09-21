@@ -1,4 +1,6 @@
-<header>
+<div class="no-camera-selected" *ngIf="!camera">No camera selected</div>
+
+<header *ngIf="camera">
   <span class="name">{{ camera.name }}</span>
   <span class="indicator" *ngIf="!camera.isOnline">OFFLINE</span>
   <span class="indicator" *ngIf="camera.isOnline">ONLINE</span>
@@ -7,11 +9,13 @@
   <span class="indicator" *ngIf="camera.hasArchive">ARCH</span>
 </header>
 
-<player *ngIf="showPlayer"></player>
+<player *ngIf="camera && showPlayer else noPlayer"></player>
+<ng-template #noPlayer><div class="no-player-message">No Player</div></ng-template>
 
-<div class="controls">
+<div *ngIf="camera" class="controls">
   <playback-controls *ngIf="showPlaybackControls"></playback-controls>
-  <timeline *ngIf="showTimeline"></timeline>
+  <timeline *ngIf="showTimeline else noArchive"></timeline>
+  <ng-template #noArchive><div class="no-archive-message">No Archive</div></ng-template>
   <playback-state-indicator></playback-state-indicator>
 </div>
 

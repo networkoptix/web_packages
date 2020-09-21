@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
 
 import TimelinePageComponent from './pages/timeline/timeline-page.component'
 
@@ -27,6 +27,8 @@ import VmsClientRoutingModule from './vms-client-routing.module'
     VmsClientRoutingModule,
   ],
   providers: [
+  ],
+  exports: [
   ],
 })
 export class VmsClientModule {

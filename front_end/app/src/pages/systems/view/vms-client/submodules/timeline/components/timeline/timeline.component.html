@@ -1,13 +1,3 @@
-<!-- <pre class="debug">
-Full Range: {{ timeline.fullRange | json }}
-
-Visible Range: {{ timeline.visibleRange | json }}
-
-Canvas Geometry: {{ timeline.canvasGeometry | json }}
-
-TimeUnderMouse: {{ timeUnderMouse.isMouseInside }}, {{ timeUnderMouse.timeUnderMouse }}
-</pre> -->
-
 <div class="timeline">
   <canvas
     #canvas
@@ -17,7 +7,6 @@ TimeUnderMouse: {{ timeUnderMouse.isMouseInside }}, {{ timeUnderMouse.timeUnderM
     (mouseleave)="canvasMouseLeaveHandler($event)"
     (click)="canvasClickHandler($event)"
   ></canvas>
-  <!-- (mousedown)="canvasMouseDownHandler($event)" -->
   <time-under-mouse></time-under-mouse>
   <timeline-scrollbar></timeline-scrollbar>
   <timeline-playback-indicator></timeline-playback-indicator>
