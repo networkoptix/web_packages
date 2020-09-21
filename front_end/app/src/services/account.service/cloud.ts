@@ -1,19 +1,19 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT, Location }           from '@angular/common';
-import { LocalStorageService }          from 'ngx-webstorage';
 import { Router }                       from '@angular/router';
 
-import { BaseAccount }                  from './base';
-import { Exactly }                      from '../utils.service';
-import { NxConfigService }              from '../nx-config';
-import { NxCloudApiService }            from '../nx-cloud-api';
-import { NxLanguageProviderService }    from '../nx-language-provider';
-import { NxSessionService }             from '../session.service';
-import { WINDOW }                       from '../window-provider';
-import { NxAppStateService }            from '../nx-app-state.service';
-import { NxUriService }                 from '../uri.service';
-import { NxPollService }                from '../poll.service';
-import { NxSystemAPIService }           from '../system-api.service';
+import { BaseAccount }               from './base';
+import { Exactly }                   from '../utils.service';
+import { NxConfigService }           from '../nx-config';
+import { NxCloudApiService }         from '../nx-cloud-api';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxSessionService }          from '../session.service';
+import { WINDOW }                    from '../window-provider';
+import { NxAppStateService }         from '../nx-app-state.service';
+import { NxUriService }              from '../uri.service';
+import { NxPollService }             from '../poll.service';
+import { NxSystemAPIService }        from '../system-api.service';
+import { NxStorageService }          from '../storage.service';
 
 /**
  * CloudAccount overrides BaseAccount, should maintain the same interface.
@@ -30,7 +30,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
-        protected localStorageService: LocalStorageService,
+        protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
@@ -46,7 +46,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             cloudApi,
             sessionService,
             uriService,
-            localStorageService,
+            storageService,
             router,
             appStateService,
             pollService,
@@ -177,7 +177,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     this.loginDialogActive = true;
                     return this.dialogs
                         .login(this, true, true).then((result) => {
-                            this.localStorageService.store('loginRegister', true);
+                            this.storageService.loginRegister = true;
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);
                             }

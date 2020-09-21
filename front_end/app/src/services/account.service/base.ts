@@ -1,6 +1,5 @@
 import { Inject, OnDestroy, Injector }                    from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
-import { LocalStorageService }                            from 'ngx-webstorage';
 import { Router }                                         from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
@@ -8,17 +7,18 @@ import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
-import { NxDialogsService }                               from '../../dialogs/dialogs.service';
-import { NxSessionService }                               from '../session.service';
-import { NxApplyService }                                 from '../apply.service';
-import { WINDOW }                                         from '../window-provider';
-import { NxAppStateService }                              from '../nx-app-state.service';
-import { NxUriService }                                   from '../uri.service';
-import { NxPollService }                                  from '../poll.service';
-import { NxUtilsService }                                 from '../utils.service';
-import { NxSystemAPIService, NxSystemAPI }                from '../system-api.service';
-import { Account }                                        from './account';
-import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
+import { NxDialogsService }                from '../../dialogs/dialogs.service';
+import { NxSessionService }                from '../session.service';
+import { NxApplyService }                  from '../apply.service';
+import { WINDOW }                          from '../window-provider';
+import { NxAppStateService }               from '../nx-app-state.service';
+import { NxUriService }                    from '../uri.service';
+import { NxPollService }                   from '../poll.service';
+import { NxUtilsService }                  from '../utils.service';
+import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { Account }                         from './account';
+import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { NxStorageService }                from '../storage.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -65,7 +65,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
-        protected localStorageService: LocalStorageService,
+        protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
@@ -290,7 +290,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.loginDialogActive = true;
         return this.dialogs
             .login(this, true, true).then((result) => {
-                this.localStorageService.store('loginRegister', true);
+                this.storageService.loginRegister = true;
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);
                 }
@@ -325,7 +325,7 @@ export abstract class BaseAccount implements OnDestroy {
                 return this.cloudApi.logout().finally(() => {
                     this.stopAccountPoll();
                     this.account = undefined;
-                    this.localStorageService.clear('all'); // Clear session
+                    this.storageService.clear = 'all'; // Clear session
                     return this.loginWithAuthKey(auth).then(() => {
                         return this.document.location.reload();
                     });

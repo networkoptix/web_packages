@@ -6,7 +6,6 @@ import {
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NgForm }                    from '@angular/forms';
-import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 import { first }                     from 'rxjs/operators';
@@ -22,6 +21,7 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxStorageService }          from '../../../services/storage.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -59,7 +59,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private route: ActivatedRoute,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
@@ -85,7 +85,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                     return this.cloudApiService
                         .changeLanguage(this.langCode)
                         .then(() => {
-                            this.localStorage.store('langChanged', true);
+                            this.storageService.langChanged = true;
                             setTimeout(() => window.location.reload()); // reload window to catch new language
                             return false;
                         });
@@ -125,9 +125,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 }
             });
 
-        if (this.localStorage && this.localStorage.retrieve('langChanged')) {
+        if (this.storageService && this.storageService.langChanged) {
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
-            this.localStorage.store('langChanged', false);
+            this.storageService.langChanged = false;
         }
         this.applyService.hardReset();
         this.applyService.setVisible();

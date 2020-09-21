@@ -6,7 +6,6 @@ import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
 }                                    from '@angular/router';
-import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
     Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
@@ -27,6 +26,7 @@ import { WINDOW }                    from '../../services/window-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { environment }               from '../../../environments/environment';
 import { NxBootstrapProvider }       from '../../services/nx-bootstrap-provider';
+import { NxStorageService }          from '../../services/storage.service';
 
 class CombinedWidths {
     constructor(
@@ -118,7 +118,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private router: Router,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
@@ -221,7 +221,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     private systemIdUpdate(id) {
         this.systemId = id;
-        this.localStorage.store('systemId', this.systemId);
+        this.storageService.systemId = this.systemId;
 
         if (this.systemId && !this.systems) {
             this.systemsService
@@ -298,7 +298,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .subscribe((event: Event) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
-                    this.localStorage.store('systemId', this.systemId);
+                    this.storageService.systemId = this.systemId;
                     this.updateActiveSystem();
                     this.updateActive();
                 }
@@ -354,7 +354,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
                 if (!account || this.bootstrapProvider.newSystem) {
                     return;
-                };
+                }
                 const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
                 system.update().then(() => {
                     system.getInfoAndPermissions().then(() => {
@@ -373,7 +373,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.systemId = this.localStorage.retrieve('systemId');
+                this.systemId = this.storageService.systemId;
 
                 if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
                     this.systemId = this.route.firstChild.snapshot.params.systemId;

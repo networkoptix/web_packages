@@ -5,7 +5,6 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { LocalStorageService }       from 'ngx-webstorage';
 import { of }                        from 'rxjs';
 
 import { NxLanguageProviderService }       from '../../services/nx-language-provider';
@@ -14,6 +13,7 @@ import { NxProcessService, Process }       from '../../services/process.service'
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
 import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 import { NxToastService }                  from '../toast.service';
+import { NxStorageService }                from '../../services/storage.service';
 
 @Component({
     selector    : 'cloud-connect-modal-content',
@@ -43,7 +43,7 @@ export class CloudConnectModalContent implements OnInit {
     @ViewChild('connectForm', { static: true }) connectForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.localStorage.retrieve('email') };
+        this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
         this.remember = true;
@@ -57,7 +57,7 @@ export class CloudConnectModalContent implements OnInit {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private systemApiService: NxSystemAPIService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private renderer: Renderer2,
         private router: Router,
         private toast: NxToastService,
@@ -85,7 +85,7 @@ export class CloudConnectModalContent implements OnInit {
 
     setEmail(email) {
         this.auth.email = email;
-        this.localStorage.store('email', this.auth.email);
+        this.storageService.email = this.auth.email;
     }
 
     ngOnInit() {
