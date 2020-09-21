@@ -114,6 +114,9 @@
 
 .article-content {
     font-size: 1rem;
+    p,li, h1, h2, h3, a {
+        word-break: break-word;
+    }
     p, ul, ol {
         margin-block-end: 16px;
     }

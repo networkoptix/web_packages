@@ -3,6 +3,7 @@
 @use '~bootstrap/scss/bootstrap';
 
 .support-footer {
+    overflow: hidden;
     background: $light1;
     color: $dark10;
     margin-top: 88px;

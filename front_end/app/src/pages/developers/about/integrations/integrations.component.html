@@ -1,24 +1,29 @@
 <ng-template #integrationBlock let-integration="integration">
     <div class="integration-block" [routerLink]="integration.url">
         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + integration.icon"></svg-icon>
-        <p>{{integration.title}}</p>
+        <h4>{{integration.title}}</h4>
+        <p>{{integration.asset.shortDescription}}</p>
     </div>
 </ng-template>
 
 <ng-template #integrationsBlocks>
-    <div class="card integrations-block">
-        <h3>{{integrationsNode.nodes[1].title}}</h3>
-        <div class="integrations-blocks-wrapper">
-            <ng-container *ngFor="let integration of integrationsNode.nodes[1].nodes; let more=last">
-                <ng-template #block>
-                    <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
-                </ng-template>
-                <div *ngIf="more; else block" class="more-integrations" [routerLink]="integration.url">
-                    <p>and <b>{{integration.title}}</b> more</p>
-                </div>
+    <div *ngIf="integrationsDetails() as integrations" class="card integrations-block">
+        <div #integrationsScroll
+            (scroll)="updateIndex(getScrollPosition($event, integrations.plugins.length))"
+            class="integrations-blocks-wrapper">
+            <ng-container *ngFor="let integration of integrations.plugins">
+                <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
             </ng-container>
         </div>
-        <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationsNode.nodes[1].url">{{integrationsNode.nodes[1].asset.title}}</button>
+        <div class="mobile-scroll-indicator">
+            <div *ngFor="let _ of integrations.plugins; let index=index"
+                (click)="updateScroll(index, integrations.plugins.length)"
+                [ngClass]="{'selected': index === scrollIndex}"
+                class="scroll-circle"></div>
+        </div>
+        <div [routerLink]="integrations.more.url" class="more-integrations">
+            <p [innerHTML]="integrations.translatedCount"></p>
+        </div>
     </div>
 </ng-template>
 
@@ -30,11 +35,11 @@
             <p *ngFor="let block of integrationsNode.nodes[0].asset.blocks" [innerHTML]="block.contentHTML"></p>
             <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationsNode.nodes[0].url">{{integrationsNode.nodes[0].asset.title}}</button>
         </div>
-        <ng-container *ngIf="currentWindowWidth > 600">
+        <ng-container *ngIf="currentWindowWidth > 608">
             <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
         </ng-container>
     </div>
-    <ng-container *ngIf="currentWindowWidth <= 600">
+    <ng-container *ngIf="currentWindowWidth <= 608">
         <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
     </ng-container>
 </section>

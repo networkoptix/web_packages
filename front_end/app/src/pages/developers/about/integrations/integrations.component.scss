@@ -2,6 +2,8 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '~bootstrap/scss/bootstrap';
 
+$mobile-breakpoint: 609px;
+
 .heading-link {
     @include typography.regular24;
     cursor: pointer;
@@ -16,15 +18,23 @@
     align-items: center;
     flex-direction: column;
     margin: 96px auto 0 auto;
-    padding: 0 16px;
+    padding: 0;
     color: $dark10;
 
+    @media screen and (min-width: $mobile-breakpoint) {
+        padding: 0 8px;
+    }
+
     &-wrapper {
-        width: 100%;
         display: flex;
-        justify-content: stretch;
+        
+        justify-content: center;
         flex-direction: row;
-        margin: 0 -16px -16px 0;
+        margin: 0 -1rem -1rem 0;
+        width: calc(100% - 1rem);
+        @media screen and (min-width: $mobile-breakpoint) {
+            width: 100%;
+        }
     }
 
     button {
@@ -36,73 +46,124 @@
     display: flex;
     flex-direction: column;
     flex: 1 0 275px;
-    padding: 16px;
+    padding: 1rem;
+
+    @media screen and (min-width: $mobile-breakpoint) {
+        max-width: 275px;
+    }
 
     p {
-        line-height: 16px;
-        margin-bottom: 16px;
+        line-height: 1rem;
+        margin-bottom: 1rem;
     }
 }
 
-.integrations-block {
-    flex: 0 1 100%;
-    padding: 16px;
-
-    @media screen and (max-width: 600px) {
-        margin: 56px -32px 56px -16px !important;
-        border-radius: 0 !important;
-    }
-}
-
-.info-block, .integrations-block {
-    margin: 0 16px 16px 0;
+.info-block{
+    margin: 0 1rem 1rem 0;
     h3 {
         @include typography.medium15;
-        margin-bottom: 16px;
+    }
+}
+
+.integrations-block{
+    margin: 56px 0 1rem 0;
+    @media screen and (min-width: $mobile-breakpoint) {
+        margin: 0 1rem 1rem 0;
+    }
+    h3 {
+        @include typography.medium15;
     }
 }
 
 .integrations-blocks-wrapper {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 0 -48px -48px 0;
-    & > div {
-        cursor: pointer;
-        margin: 0 64px 64px 0;
-        width: 80px;
+    &::-webkit-scrollbar {
+        display: none;
     }
-
 }
 
 .integration-block {
-    svg-icon > svg {
-        width: 80px;
-        height: 80px;
+    padding: 2rem;
+    min-width: 100%;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    scroll-snap-align: start;
+    @media screen and (min-width: $mobile-breakpoint){
+        padding: 1rem;
+        min-width: 210px;
+        &:after {
+            content: "";
+            position: absolute;
+            top: 1rem;
+            bottom: 1rem;
+            right: 0;
+            border: 1px solid $light4;
+        }
     }
-    p {
-        text-align: center;
-        font-size: 14px;
-        line-height: 16px;
+    svg-icon > svg {
+        height: 48px;
+    }
+    h4 {
+        @include typography.medium18;
+        margin-top: 1rem;
     }
 }
 
+.integrations-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    @media screen and (min-width: $mobile-breakpoint){
+        flex-direction: row;
+        width: auto;
+    }
+    
+}
+
 .more-integrations {
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    border: 1px solid $light4;
+    margin: 0 16px 24px 16px;
+
+    @media screen and (min-width: $mobile-breakpoint){
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        min-height: 274px;
+        border: none;
+        margin: 0;
+    }
+
+    p {
+        @include typography.medium18;
+        margin: 0 !important;
+        text-align: center;
+    }
+}
+
+.mobile-scroll-indicator {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 80px;
-    width: 80px;
-    border-radius: 15px;
-    border: solid 2px $light4;
-    p {
-        word-spacing: 80px;
-        text-align: center;
-        line-height: 15px;
-        margin-bottom: 0;
-        b {
-            font-size: 24px;
-            line-height: 28px;
-        }
+    margin: 16px auto;
+    .scroll-circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 8px 5px;
+        display: inline-block;
+        background: $additional_light2;
+    }
+
+    .selected {
+        background: $light11;
+    }
+
+    @media screen and (min-width: $mobile-breakpoint){
+        display: none;
     }
 }

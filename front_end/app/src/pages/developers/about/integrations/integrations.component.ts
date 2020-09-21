@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostListener, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { UntilDestroy }                           from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
@@ -16,13 +16,63 @@ export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;
 
     currentWindowWidth: number;
+    scrollIndex = 0;
 
     @HostListener('window:resize') onResize() {
         this.currentWindowWidth = window.innerWidth;
     }
 
+    @ViewChild('integrationsScroll') integrationsScroll: ElementRef
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    getScrollPosition({ target: { scrollLeft, scrollWidth } }, positions) {
+        const tabWidth = scrollWidth / positions;
+        return Math.round(scrollLeft / tabWidth);
+    }
+
+    updateIndex(index) {
+        this.scrollIndex = index;
+    }
+
+    updateScroll(index, positions) {
+        const scrollWidth = this.integrationsScroll.nativeElement.scrollWidth;
+        const tabWidth = scrollWidth / positions;
+        this.integrationsScroll.nativeElement.scrollLeft = index * tabWidth;
+    }
+
+    integrationsDetails() {
+        const nodes = this.integrationsNode.nodes[1].nodes;
+        const plugins = nodes.slice(0, nodes.length - 1);
+        const more = nodes[nodes.length - 1];
+        const getPluginsToShow = () => {
+            switch (true) {
+                case (this.currentWindowWidth > 1476):
+                    return Math.min(plugins.length, 5);
+                case (this.currentWindowWidth > 1264):
+                    return Math.min(plugins.length, 4);
+                case (this.currentWindowWidth > 1048):
+                    return Math.min(plugins.length, 3);
+                case (this.currentWindowWidth > 836):
+                    return Math.min(plugins.length, 2);
+                case (this.currentWindowWidth > 608):
+                    return 1;
+                default:
+                    return plugins.length;
+            }
+        };
+        const show = getPluginsToShow();
+        const translatedCount = NxLanguageProviderService.translate(
+            this.LANG.common.morePlugins,
+            {
+                count    : parseInt(more.title) + plugins.length - show,
+                startTag : '<strong class="brand-text">',
+                endTag   : '</strong>'
+            }
+        );
+        return { plugins: plugins.slice(0, show), more, translatedCount };
+    }
 
     constructor(configService: NxConfigService, languageService: NxLanguageProviderService) {
         this.CONFIG = configService.config;
