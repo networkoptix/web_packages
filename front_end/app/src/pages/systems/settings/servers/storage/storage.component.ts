@@ -1,12 +1,12 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, OnChanges,
-    SimpleChanges, OnInit
+    LOCALE_ID, Input, OnChanges, Output,
+    SimpleChanges, OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen
+    map, first, takeUntil, delay, retryWhen, filter
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -41,6 +41,7 @@ enum STORAGE_STATUS {
 export class NxSystemStorageComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
+    @Output() storageEmit = new EventEmitter<any>();
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -185,6 +186,15 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                 .then(storages => {
                     this.refreshStorages$.next(storages);
                 });
+
+            this.systemSubscription = this.system.infoSubject
+                .pipe(filter(res => res !== undefined))
+                .subscribe(() => {
+                    this.system.getStorages({ id: this.serverId }).toPromise()
+                        .then(storages => {
+                            this.refreshStorages$.next(storages);
+                        });
+                });
             this.getSystemStorages();
         }
     }
@@ -328,6 +338,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             this.isBackupOn.value = false;
         }
         this.storage$.next(storage);
+        this.storageEmit.emit(storage);
     }
 
     getModes(mainOnly = false) {

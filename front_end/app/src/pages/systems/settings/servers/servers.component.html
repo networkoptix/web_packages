@@ -1,11 +1,13 @@
 <nx-standard-server-component
         [isOffline]="isOffline"
         [system]="system"
-        [selectedServer]="this.selectedServer">
+        [storages]="emittedStorage"
+        [selectedServer]="selectedServer">
 </nx-standard-server-component>
 
 <nx-server-storage-component
         [system]="system"
+        (storageEmit)="updateStorage($event)"
         [serverId]="this.selectedServer?.id">
 </nx-server-storage-component>
 
