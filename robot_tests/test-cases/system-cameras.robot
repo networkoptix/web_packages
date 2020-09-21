@@ -477,7 +477,7 @@ Record Always
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
 
 Record Motion
-    [Tags]    C76408    Threaded
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -515,7 +515,7 @@ Record Motion + Low Quality
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
 
 Check recording triple state
-    [Tags]    C76408    Threaded
+    [Tags]    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
@@ -607,14 +607,12 @@ Erasing current FPS has placeholder
     Element Attribute Value Should Be    ${FPS INPUT}    placeholder    30 - ${CURRENT TEXT}
     Click Button    ${SYSTEM CANCEL}
 
-
 Change Quality
     [Tags]    C76410    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
-    Toggle Recording
+    Select Camera By Name    no audio cam
     Wait Until Element is Visible    ${QUALITY DROPDOWN} 
     Click Element    ${QUALITY DROPDOWN} 
     Wait Until Element Is Visible    ${QUALITY DROPDOWN}/following-sibling::div//a/span[contains(text(),"${BEST TEXT}")]
@@ -625,11 +623,41 @@ Change Quality
     Reload Page
     Wait Until Element Contains    ${QUALITY DROPDOWN}    ${BEST TEXT}
 
-Enable/disable motion detection
-    [Tags]    C76398
+Enable/disable motion detection with recording off
+    [Tags]    C78981
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
+    Verify on Cameras Page
+    Wait Until Element Is Visible    ${DOT-MENU}
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Not Visible    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Reload Page
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Not Visible    ${MOTION SENSITIVITY IMAGE}
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
+    Reload Page
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
+
+Enable/disable motion detection with recording ones
+    [Tags]    C76398
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera By Name    no audio cam
     Verify on Cameras Page
     Wait Until Element Is Visible    ${DOT-MENU}
     Click Button    ${DOT-MENU}

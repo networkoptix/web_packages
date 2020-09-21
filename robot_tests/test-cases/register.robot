@@ -267,7 +267,7 @@ Check registration email links, colors, cloud name, and user name
     Delete Email    ${email}
     Close Mailbox
 
-Check automatic loggout when registering new account while logged in
+Check automatic logout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Go To    ${ENV}/register
