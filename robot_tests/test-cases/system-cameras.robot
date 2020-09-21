@@ -39,17 +39,18 @@ Camera settings is available to owner admin and custom with permission
     ...    ${RECORDING CHECK BOX}
     Log Out
 
-    Log in to user and system    ${EMAIL CUSTOM CAMERAS LIMITED}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Wait Until Elements are Visible
-    ...    ${CAMERAS VIEW BUTTON}
-    ...    ${EDITABLE TITLE}
-    ...    ${ASPECT RATIO DROPDOWN}
-    ...    ${ROTATION DROPDOWN}
-    ...    ${ENABLE AUDIO CHECKBOX}
-    ...    ${EDIT CREDENTIALS BUTTON}
-    ...    ${RECORDING CHECK BOX}
+    # Not currentlty being tested
+    #Log in to user and system    ${EMAIL CUSTOM CAMERAS LIMITED}    ${AUTO TESTS SYSTEM ID}
+    #Wait Until Element is Visible    ${CAMERAS LINK}
+    #Click Link    ${CAMERAS LINK}
+    #Wait Until Elements are Visible
+    #...    ${CAMERAS VIEW BUTTON}
+    #...    ${EDITABLE TITLE}
+    #...    ${ASPECT RATIO DROPDOWN}
+    #...    ${ROTATION DROPDOWN}
+    #...    ${ENABLE AUDIO CHECKBOX}
+    #...    ${EDIT CREDENTIALS BUTTON}
+    #...    ${RECORDING CHECK BOX}
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
@@ -97,6 +98,19 @@ Camera settings is not available by direct link to any viewers
     Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
+
+Camera settings are not available by direct url to unauthorized user
+    [Tags]    C79007    Threaded
+    [Setup]    Log in    ${EMAIL NOPERM}    ${password}
+    ${auth}=    Create List    admin    ${BASE PASSWORD}
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
+    ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
+    FOR    ${x}   IN RANGE    4
+        ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    ${SPACE}${SPACE}    ${SPACE}
+    END        
+    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    //div[normalize-space()\="${THIS LINK IS BROKEN TEXT}"]    //button//a[@href\='/']/..
 
 No cameras placeholder
     [Tags]    C76257    threaded
@@ -364,6 +378,7 @@ Edit credentials form Close and Cancel buttons
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 Changes made in Image settings in thick client appear correctly on cloud portal
+    [Tags]    C76374    Theaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    good cam
@@ -510,6 +525,29 @@ Check recording triple state
     ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
     ...    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
     ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+
+Recording Mode functionality (with recording schedule set)
+    [Tags]    C78982
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    triple state cam
+    Wait Until Elements are Visible
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+    ...    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+    ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+
 
 Disabled Motion With Recording
     [Tags]    C78983    Threaded

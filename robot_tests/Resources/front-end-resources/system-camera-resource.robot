@@ -101,8 +101,13 @@ Reset Camera
 
 Reset All cameras
     Reset Camera    good cam    ${AUTO SYS IP}
+    Sleep    1
     Reset Camera    unauth cam    ${AUTO SYS IP}
+    Sleep    1
     Reset Camera    offline cam    ${AUTO SYS IP}
+    Sleep    1
     Reset Camera    no license cam    https://10.1.5.126:7005
+    Sleep    1
     Reset Camera    no audio cam    ${AUTO SYS IP}
+    Sleep    1
     Reset Camera    triple state cam    https://10.1.5.126:7005
