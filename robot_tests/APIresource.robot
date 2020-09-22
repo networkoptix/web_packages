@@ -245,6 +245,19 @@ Detach Server From Cloud
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+Get Server Name
+    [Arguments]    ${system url}    ${system auth}
+    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Server Name session     /ec2/getMediaServersEx    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    ${net address}=   Replace String    ${system url}    https://    ${EMPTY}
+    ${net address}=   Replace String    ${net address}    http://     ${EMPTY}
+    FOR    ${server}    IN    @{resp.json()}
+        ${status}=   Run Keyword and return status    Should Contain    ${server}[networkAddresses]    ${net address}
+        ${name}=   Set Variable If    ${status}    ${server}[name]
+        Return From Keyword If    ${status}    ${name}
+    END
+
 Get Server Id
     [Arguments]    ${system url}    ${system auth}    ${server name}
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    disable_warnings=1
@@ -254,6 +267,15 @@ Get Server Id
         ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
         Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
     END
+
+Rename Server
+    [Arguments]    ${system url}    ${system auth}    ${new name}
+    ${old name}=   Get Server Name    ${system url}    ${system auth}
+    ${id}=   Get Server Id    ${system url}    ${system auth}    ${old name}
+    ${data}=   Create Dictionary    serverId=${id}    serverName=${new name}
+    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    disable_warnings=1
+    ${resp}=   Post Request    Rename Server session     ec2/saveMediaServerUserAttributes    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 Remove Resource From System
     [Arguments]    ${system url}    ${system auth}    ${resource id}
@@ -423,7 +445,7 @@ Change server name via API
 
 Change server port via API
     [Arguments]    ${auth}    ${server url}    ${new port}    ${server id} 
-    &{header}=   Create Dictionary    X-Server-guid=${server id}   
+    &{header}=   Create Dictionary    X-Server-guid=${server id}
     &{data}=   Create Dictionary    port=${new port}
     Create Digest Session    Change Port session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10
