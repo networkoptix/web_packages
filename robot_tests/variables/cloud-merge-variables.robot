@@ -1,4 +1,5 @@
 *** Variables ***
+${HOST}
 ${MERGE BUTTON SYSTEM}                //button[span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled and span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE DIALOG}                       //nx-modal-merge-content
@@ -12,7 +13,7 @@ ${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${ME
 ${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
 ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
-${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1/span[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]
+${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1/span[contains(text(),"${SYSTEM MERGE FAILED TEXT}")]
 ${MERGE FAILED OK BUTTON}             //nx-modal-generic-content//button[contains(text(),"${OK TEXT}")]
 ${MERGE FAILED X BUTTON}              //nx-modal-generic-content//button[contains(@class,"close")]
 ${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//p[contains(text(),"${MERGE CURRENT SYSTEM WITH TEXT}")]
@@ -22,19 +23,21 @@ ${MERGE CHECKING HINT}                ${MERGE DIALOG}//p[contains(text(),"${CHEC
 ${MERGE PASSWORD REQUIRED}            ${MERGE DIALOG}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${MERGE PASSWORD INCORRECT}           ${MERGE DIALOG}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
 ${MERGE ENTER SERVER ADDRESS}         ${MERGE DIALOG}//label[contains(text(),"${MERGE ENTER SERVER ADDRESS TEXT}")]
-${MERGE INVALID URL}                  ${MERGE DIALOG}//label[contains(text(),"${MERGE INVALID URL TEXT}")]
-${MERGE SERVER NOT FOUND}             ${MERGE DIALOG}//label[contains(text(),"${MERGE SERVER NOT FOUND TEXT}")]
 
 ${MERGE CHECK MERGE FORM}             ${MERGE DIALOG}//form[@name="checkMergeForm"]
 ${MERGE SYSTEM DROPDOWN ARROW}        ${MERGE CHECK MERGE FORM}//div[@class="dropdown"]//div[@class="nav-arrow"]
 ${MERGE SYSTEMS MENU}                 ${MERGE CHECK MERGE FORM}//ul[@class="dropdown-menu--list"]
 ${MERGE FORM SERVER URL LABEL}        ${MERGE CHECK MERGE FORM}//label[@for="serverUrl" and contains(text(), "${MERGE SERVER URL TEXT}")]
 ${MERGE FORM SERVER URL INPUT}        ${MERGE CHECK MERGE FORM}//input[@id="serverUrl"]
-${SYSTEM HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT}")]
-${SYSTEM HAS A NEWER SOFTWARE VERSION}     ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEM HAS A NEWER SOFTWARE VERSION TEXT}")]
-${SERVER HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SERVER HAS AN OLDER SOFTWARE VERSION TEXT}")]
-${SYSTEMS HAVE MISMATCHING VERSIONS}       ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEMS HAVE MISMATCHING VERSIONS TEXT}")]
-${SERVER APPEARS TO BE LISTING ITSELF}     ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SERVER APPEARS TO BE LISTING ITSELF TEXT}")]
+#${SYSTEM HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(@class, "error") and contains(text(), "${SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT}")]
+#${SYSTEM HAS A NEWER SOFTWARE VERSION}     ${MERGE CHECK MERGE FORM}//p[contains(@class, "error") and contains(text(), "${SYSTEM HAS A NEWER SOFTWARE VERSION TEXT}")]
+#${SERVER HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(@class, "error") and contains(text(), "${SERVER HAS AN OLDER SOFTWARE VERSION TEXT}")]
+${SYSTEMS HAVE MISMATCHING VERSIONS}          ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEMS HAVE MISMATCHING VERSIONS TEXT}")]
+${SERVER HAS INCOMPATIBLE VERSION}            ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SERVER HAS INCOMPATIBLE VERSION TEXT}")]
+${SERVER APPEARS TO BE LISTING ITSELF}        ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SERVER APPEARS TO BE LISTING ITSELF TEXT}")]
+${REMOVE OFFLINE AND INCOMPATIBLE SERVERS}    ${MERGE CHECK MERGE FORM}//p[contains(text(), "${REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT}")]
+${MERGE SERVER NOT FOUND}                     ${MERGE CHECK MERGE FORM}//p[contains(text(), "${MERGE SERVER NOT FOUND TEXT}")]
+${MERGE INVALID URL}                          ${MERGE CHECK MERGE FORM}//label[@for="serverUrl" and contains(text(), "${MERGE INVALID URL TEXT}")]
 
 ${MERGE ADMIN FORM}                   ${MERGE DIALOG}//form[@name="adminPasswordForm"]
 ${MERGE ADMIN FORM LOGIN LABEL}       ${MERGE ADMIN FORM}//label[@for="adminLogin" and contains(text(), "${LOGIN TEXT}")]
@@ -53,6 +56,12 @@ ${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text
 ${MERGE PASSWORD INPUT}               ${CONFIRM MERGE FORM}//input[@name="cloudOwnerPassword"]
 ${MERGE SYSTEMS BUTTON}               ${CONFIRM MERGE FORM}//button[@type="submit" and text()="${MERGE SYSTEMS TEXT}"]
 ${SYSTEM IS BEING MERGED}             //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
+
+${MERGE GENERAL ERROR FORM}           //form[@name="serverUrlErrorsForm"]
+${MERGE TRY AGAIN BUTTON}             ${MERGE GENERAL ERROR FORM}//button[contains(text(), "${TRY AGAIN TEXT}")]
+${MERGE SERVER APPEARS TO BE LISTING ITSELF}        ${MERGE GENERAL ERROR FORM}//p[contains(text(), "${SERVER APPEARS TO BE LISTING ITSELF TEXT}")]
+${MERGE REMOVE OFFLINE AND INCOMPATIBLE SERVERS}    ${MERGE GENERAL ERROR FORM}//p[contains(text(), "${REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT}")]
+${MERGE SYSTEMS HAVE DIFFERENT OWNERS}              ${MERGE GENERAL ERROR FORM}//p[contains(text(), "${SYSTEMS HAVE DIFFERENT OWNERS TEXT}")]
 
 ${MERGE FAILED DIALOG}
 

@@ -2,22 +2,51 @@
 Merge Suite Setup
     Open Browser and go to url    ${ENV}
     Set Suite Variable    @{test containers}    @{EMPTY}
+    ${id}=   Create Custom Network    custom1    1
+    Set Suite Variable    ${custom net id 1}    ${id}
+    ${id}=   Create Custom Network    custom2   2
+    Set Suite Variable    ${custom net id 2}    ${id}
 
 Merge Test Restart
-    Reload Page
-    Sleep    5
-    ${logged in}=   Run Keyword and return Status    Element Should Be Visible    ${ACCOUNT DROPDOWN}
-    Run Keyword If    ${logged in}    Log Out
-    Go To    ${ENV}
+    Remove Test Containers
+    Close All Browsers
+    Open Browser and go to url    ${ENV}
+
+Merge Test Teardown
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
+    Run Keyword If    ${status}    Log Out via API
+    Remove Test Containers
 
 Merge Suite Teardown
     Close All Browsers
     Remove Test Containers
+    Remove Custom Network    ${custom net id 1}
+    Remove Custom Network    ${custom net id 2}
 
 Remove Test Containers
     FOR    ${c}    IN    @{test containers}
         Stop Container    ${c}    remove=True
+        Remove Values From List    ${test containers}    ${c}
     END
+
+Setup System
+    [Arguments]    ${port}    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    ${system}=   Create Dictionary    name=${image}_${port}    port=${port}
+    ${cont}=   Run Container    ${image}    ${port}    network=${network}
+    Append To List    ${test containers}    ${cont}
+    Set To Dictionary    ${system}    cont=${cont}
+    ${auth}=   Create List    admin    ${base password}
+    Setup Local System    ${HOST}:${port}    ${base password}    ${system}[name]
+
+#   Connect system to cloud if email is not None
+    ${mock list}=   Create List
+    Run Keyword If    $cloud_email    Append To List    ${mock list}    1
+    FOR    ${i}    IN    @{mock list}
+        Set To Dictionary    ${system}    owner=${cloud email}
+        ${id}=   Connect System to Cloud    ${auth}   ${HOST}:${port}    ${system}[name]    ${system}[owner]    ${base password}
+        Set To Dictionary    ${system}    id=${id}
+    END
+    [Return]    ${system}
 
 Validate Check Merge Dialog
     [Arguments]      ${lonely}=${False}
@@ -31,7 +60,6 @@ Validate Check Merge Dialog
     ...    ELSE    Wait Until Elements are Visible
         ...    ${MERGE CURRENT SYSTEM WITH}
         ...    ${MERGE SYSTEM DROPDOWN}
-#        ...    ${MERGE ONLY AS OWNER}
 
 Validate Admin Password Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -66,33 +94,39 @@ Validate Confirm Merge Dialog
     ...    ${MERGE SYSTEMS BUTTON}
 
 Validate Merge Failed Dialog
-    [Arguments]    ${system}    ${server}
-    ${s}=  Replace String    ${FAILED TO MERGE SYSTEM TEXT}    %SYSTEM%    ${system}
-    ${s}=  Replace String    ${s}    %URL%    ${server}
-    ${error text}=   Get Text    //div[@class="modal-content"]//p/p[1]
-    Should Contain    ${error text}    ${s}
+#    [Arguments]    ${system}    ${server}
+#    ${s}=  Replace String    ${FAILED TO MERGE SYSTEM TEXT}    %SYSTEM%    ${system}
+#    ${s}=  Replace String    ${s}    %URL%    ${server}
+#    ${error text}=   Get Text    //div[@class="modal-content"]//p/p[1]
+#    Should Contain    ${error text}    ${s}
     Run keyword and continue on failure    Wait Until Elements Are Visible
 #    ...    //*[contains(text(), "${s}")]
-    ...    ${MERGE FAILED X BUTTON}
     ...    ${MERGE FAILED DIALOG HEADER}
+    ...    ${MERGE FAILED X BUTTON}
     ...    ${MERGE FAILED OK BUTTON}
 
-Validate System Page
+Validate General Error Dialog
     Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${RENAME SYSTEM}
-    ...    ${MERGE BUTTON SYSTEM}
-    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
+    ...    ${MERGE SYSTEMS HEADER}
+    ...    ${MERGE GO BACK BUTTON}
+    ...    ${MERGE TRY AGAIN BUTTON}
 
 Validate Merge
-    [Arguments]    ${primary}    ${secondary}
+    [Arguments]    ${primary}    ${secondary}    ${on secondary}=${False}
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
-    Wait Until Element Is Visible    //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
-    #TODO: add checking the merge text appears and Merge and Disconnect buttons are disabled during the merge.
+    Run Keyword If    ${on secondary}    Wait Until Element Is Visible    //h2[contains(text(), "${THIS SYSTEM IS BEING MERGED TEXT}") and contains(text(), "${primary}")]
+    ...    ELSE    Wait Until Element Is Visible    //div[strong="${secondary}" and contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
     ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
     ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
-#    Run keyword and continue on failure    Check For Alert    ${s}
-    Run keyword and ignore error    Check For Alert    ${s}
+    Run keyword and continue on failure    Check For Alert    ${s}
+
+
+
+Validate System and Server Merge
+    [Arguments]    ${system}    ${server}
+    ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
+    ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
+    Run keyword and continue on failure    Check For Alert    ${s}
 
 Choose System From Dropdown
     [Arguments]
@@ -136,7 +170,7 @@ Complete merge steps till final password input
     Choose System From Dropdown   ${target system name}    ${target system ip}    ${target system port}    ${input url}    ${check url}
     Validate Check Merge Dialog
     Click Button    ${MERGE NEXT BUTTON}
-    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+    Run keyword and ignore error    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
 
     Choose Primary System    ${from target}
     Click Button    ${MERGE NEXT BUTTON}
