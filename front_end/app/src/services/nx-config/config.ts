@@ -515,6 +515,7 @@ export const nxConfig: IConfig = {
 
         statisticsReportLastNumber     : { type: 'static' },
         statisticsReportLastTime       : { type: 'static' },
+        statisticsReportLastVersion    : { type: 'static' },
         statisticsReportServerApi      : { type: 'text' },
         statisticsReportTimeCycle      : { type: 'number' },
         localSystemId                  : { type: 'static' },
