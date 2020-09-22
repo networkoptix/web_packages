@@ -343,7 +343,7 @@ Language change is new default
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    validate=False    button=None
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']

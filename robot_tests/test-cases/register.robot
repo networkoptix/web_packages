@@ -284,5 +284,6 @@ Check automatic loggout when registering new account while logged in
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
+    Validate Log Out
     Wait Until Location Is    ${ENV}/register
     Wait Until Elements Are Visible    ${REGISTER FORM}
