@@ -111,4 +111,4 @@ ${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibl
 ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button
 
 #Cameras
-${NOAUTH CAMERA PASSWORD}             QWEasd!@#
+${NOAUTH CAMERA PASSWORD}             qweasd123
