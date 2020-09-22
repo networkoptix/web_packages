@@ -13,7 +13,7 @@ LM Suite Set Up
     END
     Sleep    120
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
-    Sleep    60
+    Sleep    90
 
     FOR    ${role}    IN    @{LM USERS.keys()}
         Share    ${cloud auth}    ${sys id 1}    ${role}    ${LM USERS}[${role}]

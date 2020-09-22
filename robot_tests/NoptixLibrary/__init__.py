@@ -399,6 +399,30 @@ class NoptixLibrary(object):
         if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
+    def create_custom_network(self, network_name, num, internal=False):
+        client = docker.from_env()
+        ipam_pool = docker.types.IPAMPool(
+            subnet=f'192.28.{num}.0/24',
+            iprange=f'192.28.{num}.0/24',
+            gateway=f'192.28.{num}.254'
+        )
+        ipam_config = docker.types.IPAMConfig(
+            pool_configs=[ipam_pool]
+        )
+        net = client.networks.create(
+            f'{network_name}',
+            driver='bridge',
+            ipam=ipam_config,
+            internal=internal
+        )
+
+        return net.id
+
+    def remove_custom_network(self, network_id):
+        client = docker.from_env()
+        net = client.networks.get(network_id)
+        net.remove()
+
     def build_image(self, env):
         version = ""
         suffix = "test"
@@ -428,10 +452,9 @@ class NoptixLibrary(object):
         random_mac = ':'.join((prefix, suffix)).upper()
         if network == 'host':
             cmd = f'docker run -d --name {image_name}_{port} --restart=always -e PORT={port} --network={network} -t {image_name}'
-        elif network == 'bridge':
-            cmd = f'docker run -d --name {image_name}_{port} --restart=always --mac-address={random_mac} -p {port}:7001 --network={network} -t {image_name}'
         else:
-            return 'Not supported'
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always --mac-address={random_mac} -p {port}:7001 --network={network} -t {image_name}'
+
         subprocess.run(cmd, shell=True)
 
         client = docker.client.from_env()
