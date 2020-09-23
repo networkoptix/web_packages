@@ -32,7 +32,8 @@ LM Suite Teardown
     Close All Browsers
 
 LM Test Restart
-    Log Out
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
+    Run Keyword If    ${status}    Log Out via API
     FOR    ${i}    IN RANGE    1    4
         Start Container    ${cont ${i}}
         Sleep    10
