@@ -274,5 +274,46 @@
         "enabled": true
       }
     ]
+  },
+  {
+    "name": "Developer Tools",
+    "depth": 3,
+    "nodes": [
+      {
+        "name": "Nx Server HTTP REST API",
+        "url": "https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      },
+      {
+        "name": "Nx Server Plugin SDK (C++)",
+        "url": "https://support.networkoptix.com/hc/en-us/articles/202856206-Nx-Server-Plugin-SDK-C-",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      },
+      {
+        "name": "Cloud API: Route API Calls via Nx Cloud",
+        "url": "https://support.networkoptix.com/hc/en-us/articles/360016266074-Cloud-API-Route-API-Calls-via-Nx-Cloud",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      },
+      {
+        "name": "Testcamera: IP Camera Emulator",
+        "url": "https://support.networkoptix.com/hc/en-us/articles/360018067074-Testcamera-IP-Camera-Emulator",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      },
+      {
+        "name": "Node.js Integration Library",
+        "url": "Node.js Integration Library",
+        "asset": true,
+        "asset_type": "documentation",
+        "enabled": true
+      }
+    ]
   }
 ]

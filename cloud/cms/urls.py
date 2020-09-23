@@ -11,7 +11,10 @@ urlpatterns = [
     path('agreement', agreement.get_agreement, name='get_agreement'),
     path('accept_agreement', agreement.accept_agreement, name='accept_agreement'),
     path('accept_review', asset.accept_review, name='accept_review'),
-    path('documentation/about_page', documentation.about_page, name='about_page'),
+    path('documentation/about_page', documentation.menu_to_endpoint,
+         kwargs={'cache_name': 'about_page', 'menu_name': 'Developers About Page'}, name='about_page'),
+    path('documentation/developer_tools', documentation.menu_to_endpoint,
+         kwargs={'cache_name': 'developer_tools', 'menu_name': 'Developer Tools'}, name='developer_tools'),
     path('documentation/<int:doc_id>', documentation.get_page, name='doc_page'),
     path('documentation', documentation.get_pages, name='doc_pages'),
 ]

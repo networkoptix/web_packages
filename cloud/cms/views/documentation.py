@@ -150,7 +150,7 @@ def get_pages(request):
     })
 
 
-def modify_about_dict(parent, language):
+def prepare_menu_dict(parent, language):
     for node in parent:
         asset_id = node.get('asset_id', None)
         if asset_id and node.get('asset_type', AssetType.ASSET_TYPES[AssetType.ASSET_TYPES.documentation]):
@@ -160,17 +160,17 @@ def modify_about_dict(parent, language):
                 if docs:
                     node['asset'] = docs[0]
         if node.get('nodes', None):
-            modify_about_dict(node['nodes'], language)
+            prepare_menu_dict(node['nodes'], language)
 
 
 @api_view(("GET",))
 @permission_classes((CanViewDevelopers,))
-def about_page(request):
+def menu_to_endpoint(request, cache_name, menu_name):
     language = get_language_object_from_request(request)
-    cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--about_page'
-    about_menu = DOC_CACHE[cache_id]
-    if not about_menu:
-        about_menu = get_cached_menu(settings.CUSTOMIZATION, 'Developers About Page')
-        modify_about_dict(about_menu, language=language)
-        DOC_CACHE[cache_id] = about_menu
-    return api_success(about_menu)
+    cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--{cache_name}'
+    menu_dict = DOC_CACHE[cache_id]
+    if not menu_dict:
+        menu_dict = get_cached_menu(settings.CUSTOMIZATION, menu_name)
+        prepare_menu_dict(menu_dict, language=language)
+        DOC_CACHE[cache_id] = menu_dict
+    return api_success(menu_dict)
