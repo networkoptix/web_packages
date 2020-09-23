@@ -53,7 +53,7 @@ export class PlaybackService {
 
   public playLive () {
     if (!this.canPlayLive) return
-    this._state = createInitialLiveState()
+    this._state = createInitialLiveState(this.vms.selectedCamera.liveVideoUrl)
     this._emit()
   }
 
@@ -66,7 +66,7 @@ export class PlaybackService {
     if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
       this.stop()
     }
-    this._state = createInitialArchiveState(t)
+    this._state = createInitialArchiveState(this.vms.selectedCamera.getArchiveVideoUrl(t), t)
     this._emit()
   }
 

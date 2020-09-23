@@ -1530,6 +1530,16 @@ export class NxSystem extends System implements OnDestroy {
         );
     }
 
+    public unsafeGetCameraLiveHlsUrl (cameraId) {
+        return this.mediaserver.getLiveHlsUrl(cameraId)
+    }
+
+    public unsafeGetHlsUrl (cameraId, position?, resolution='lo') {
+        return position === -1 ?
+            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
+            this.mediaserver.getHlsUrl(cameraId, position, resolution)
+    }
+
     public getCameraRecords (cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
         // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
         return this.ensureSystemAuth().then(

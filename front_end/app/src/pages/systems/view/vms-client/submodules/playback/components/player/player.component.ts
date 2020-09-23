@@ -4,6 +4,7 @@ import { PlaybackState, PLAYBACK_MODE, ArchivePlaybackState, LivePlaybackState }
 import assertNever from '../../../../utils/assertNever'
 import { Subscription } from 'rxjs'
 import { ms } from '../../../../utils/type-aliases'
+import Hls from 'hls.js'
 
 
 @Component({
@@ -14,6 +15,7 @@ import { ms } from '../../../../utils/type-aliases'
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild("video") videoView: ElementRef;
+  @ViewChild("videoSource") videoSourceView: ElementRef;
 
   protected subscription: Subscription
   protected state: PlaybackState
@@ -63,6 +65,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     switch (this.state.mode) {
       case PLAYBACK_MODE.STOPPED:
         if (prevState.mode !== this.state.mode) {
+          this._setPlaybackSource('')
           this._stop()
         }
         break
@@ -110,16 +113,48 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   //   return !!(this.state && this.state.mode !== PLAYBACK_MODE.STOPPED && !this.state.started)
   // }
 
+  protected _setPlaybackSource (sourceUrl: string) {
+    this.videoSourceView.nativeElement.src = sourceUrl
+  }
+
   protected _startLive () {
+    if (!this.state || this.state.mode !== PLAYBACK_MODE.LIVE)
+      return
     this._stop()
-    setTimeout(() => this.isBuffering = true)
-    setTimeout(() => this.$video.play(), 1000)
+    this._unsafeStartPlayback()
   }
 
   protected _startArchive () {
+    if (!this.state || this.state.mode !== PLAYBACK_MODE.ARCHIVE)
+      return
     this._stop()
-    setTimeout(() => this.isBuffering = true)
-    setTimeout(() => this.$video.play(), 1000)
+    this._unsafeStartPlayback()
+  }
+
+  protected _unsafeStartPlayback () {
+    const sourceUrl = this.state['sourceUrl']
+
+    if (sourceUrl.endsWith('mp4')) {
+      this._setPlaybackSource(sourceUrl)
+      setTimeout(() => this.isBuffering = true)
+      setTimeout(() => this.$video.play(), 1000)
+
+    } else if (sourceUrl.search('.m3u8') !== -1) {
+      if (Hls.isSupported()) {
+        setTimeout(() => this.isBuffering = true)
+        var hls = new Hls();
+        hls.loadSource(sourceUrl);
+        hls.attachMedia(this.$video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          this.$video.play();
+        });
+      } else {
+        console.warn('HLS is not supported')
+      }
+
+    } else {
+      console.warn('unsopported video source', sourceUrl)
+    }
   }
 
   // public videoPauseHandler (e: MediaStreamEvent) {

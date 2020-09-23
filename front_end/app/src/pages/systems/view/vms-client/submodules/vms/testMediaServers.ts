@@ -1,7 +1,13 @@
-import Camera from './datatypes/Camera'
+import TestCamera from './datatypes/TestCamera'
 import MediaServer from './datatypes/MediaServer'
 
 const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg'
+const now = Date.now()
+const DURATION = 12 * 31 * 24 * 60 * 60 * 1000
+const TEST_ARCHIVE_RANGE = {
+    start: now - DURATION,
+    end: now,
+}
 
 export const fakeMediaServerData: Array<MediaServer> = [
     {
@@ -9,49 +15,46 @@ export const fakeMediaServerData: Array<MediaServer> = [
         name: 'Fake Media Server',
         url: 'http://fake.media-server.local',
         cameras: [
-            new Camera(
+            new TestCamera(
                 'full-featured-test-camera',
                 'fake-media-server',
                 'Full-featured test camera',
                 'http://fake.media-server.local/full-featured-test-camera',
                 'Recording',
-                true,
+                TEST_ARCHIVE_RANGE,
                 TEST_THUMBNAIL_URL,
             ),
-            new Camera(
+            new TestCamera(
                 'live-no-archive-test-camera',
                 'fake-media-server',
                 'Live Recording test camera with no archive',
                 'http://fake.media-server.local/live-no-archive-test-camera',
                 'Recording',
-                false,
+                undefined,
                 TEST_THUMBNAIL_URL,
             ),
-            new Camera(
+            new TestCamera(
                 'not-live-not-recording-test-camera-with-archive',
                 'fake-media-server',
                 'Not Live, not recording test camera with archive',
                 'http://fake.media-server.local/not-live-not-recording-test-camera-with-archive',
                 'Archive',
-                true,
-                TEST_THUMBNAIL_URL,
+                TEST_ARCHIVE_RANGE,
             ),
-            new Camera(
+            new TestCamera(
                 'offline-test-camera-with-no-archive',
                 'fake-media-server',
                 'Offline test camera with no archive',
                 'http://fake.media-server.local/offline-test-camera-with-no-archive',
                 'Offline',
-                false,
-                TEST_THUMBNAIL_URL,
             ),
-            new Camera(
+            new TestCamera(
                 'live-not-recording-test-camera-with-no-archive',
                 'fake-media-server',
                 'Live, not recording test camera with no archive',
                 'http://fake.media-server.local/live-not-recording-test-camera-with-no-archive',
                 'Live',
-                false,
+                undefined,
                 TEST_THUMBNAIL_URL,
             ),
         ]

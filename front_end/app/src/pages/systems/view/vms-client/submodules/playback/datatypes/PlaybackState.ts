@@ -18,6 +18,7 @@ export interface StoppedPlaybackState extends AbstractPlaybackState {
 
 export interface ArchivePlaybackState extends AbstractPlaybackState {
   mode: PLAYBACK_MODE.ARCHIVE,
+  sourceUrl: string,
   startTime: ms,
   currentTime: ms,
   started: boolean,
@@ -26,6 +27,7 @@ export interface ArchivePlaybackState extends AbstractPlaybackState {
 
 export interface LivePlaybackState extends AbstractPlaybackState {
   mode: PLAYBACK_MODE.LIVE,
+  sourceUrl: string,
   currentTime: ms,
   started: boolean,
 }
@@ -42,9 +44,10 @@ export function createInitialStoppedState (): StoppedPlaybackState {
   }
 }
 
-export function createInitialArchiveState (t: ms): ArchivePlaybackState {
+export function createInitialArchiveState (sourceUrl: string, t: ms): ArchivePlaybackState {
   return {
     mode: PLAYBACK_MODE.ARCHIVE,
+    sourceUrl,
     started: false,
     paused: false,
     startTime: t,
@@ -53,9 +56,10 @@ export function createInitialArchiveState (t: ms): ArchivePlaybackState {
   }
 }
 
-export function createInitialLiveState (): LivePlaybackState {
+export function createInitialLiveState (sourceUrl: string): LivePlaybackState {
   return {
     mode: PLAYBACK_MODE.LIVE,
+    sourceUrl,
     started: false,
     currentTime: Date.now(),
     initializedAt: Date.now(),

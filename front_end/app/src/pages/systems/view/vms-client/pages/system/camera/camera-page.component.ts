@@ -91,17 +91,14 @@ export class CameraPageComponent implements OnInit, OnDestroy {
   protected _initSelectedCamera () {
     this.playback.stop()
 
-    this._setFakeTimeLine()
+    if (this.camera.hasArchive) {
+      console.log('timeline reset time', this.camera)
+      this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end)
+    }
 
     if (this.camera.isLive) {
       this.playback.playLive()
     }
-  }
-
-  protected _setFakeTimeLine () {
-    const now = Date.now()
-    const DURATION = 10 * 12 * 31 * 24 * 60 * 60 * 1000
-    this.timeline.reset(now - DURATION, now)
   }
 
 }

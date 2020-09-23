@@ -12,6 +12,7 @@ import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/Vm
 import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer'
 import Camera from '../../vms-client/submodules/vms/datatypes/Camera'
 import { CAMERA_STATUS } from '../../vms-client/submodules/vms/datatypes/ICamera'
+import { ms } from '../../vms-client/utils/type-aliases'
 
 
 @Component({
@@ -88,20 +89,45 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
       )
     }).then((mediaServers: Array<NxMediaServer>) => {
-      this.vms.setMediaServers(mediaServers.map(ms => ({
-        id: ms.id,
-        name: ms.name,
-        url: ms.url,
-        cameras: ms.cameras.map(c => new Camera(
-          c.id,
-          c.preferredServerId,
-          c.name,
-          c.url,
-          c.status as CAMERA_STATUS,
-          true, // has archive,
-          c.status === 'Recording' || c.status === 'Live' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
-        ))
-      })))
+      const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), [])
+      const archiveRanges = {}
+      const now = Date.now()
+      Promise.all(cameraIds.map(cid => {
+        return this.system.getCameraRecords(cid, 0, now, 1e10).then(ar => {
+          // console.log('got camera archive range', cid, ar)
+          if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+            // console.log('empty archive')
+          } else try {
+            const reply = ar.reply[0]
+            archiveRanges[cid] = {
+              start: parseInt(reply.startTimeMs),
+              end: parseInt(reply.startTimeMs) + parseInt(reply.durationMs) || now,
+            }
+            // console.log('non-empty archive', cid, archiveRanges[cid], ar)
+          } catch (e) {
+            console.warn(e, 'caught while requesting camera archive ranges')
+          }
+        })
+      })).then(() => {
+        this.vms.setMediaServers(mediaServers.map(ms => ({
+          id: ms.id,
+          name: ms.name,
+          url: ms.url,
+          cameras: ms.cameras.map(c => new Camera(
+            c.id,
+            c.preferredServerId,
+            c.name,
+            c.url,
+            c.status as CAMERA_STATUS,
+            archiveRanges[c.id],
+            c.status === 'Recording' || c.status === 'Live' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
+            this.system.unsafeGetCameraLiveHlsUrl(c.id),
+            (t: ms) => {
+              return this.system.unsafeGetHlsUrl(c.id, t)
+            }
+          ))
+        })))
+      })
     })
   }
 
