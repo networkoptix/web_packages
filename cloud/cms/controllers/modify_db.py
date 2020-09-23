@@ -297,7 +297,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             ext_file.size = content_file.size
             ext_file.save()
 
-            return f'src="{external_file.file.url}"'
+            return f'src="{ext_file.file.url}"'
 
         nonlocal new_record_value
         if data_structure.meta_settings.get('upload_data_images', False):
