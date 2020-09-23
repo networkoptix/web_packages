@@ -760,7 +760,7 @@ Changing credentials from invalid ones to valid ones makes the camera authorized
     Click Button    ${EDIT CREDENTIALS BUTTON}
     Verify Authentication Form
     Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    root
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    admin
     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
