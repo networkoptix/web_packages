@@ -1,18 +1,18 @@
 import { Injectable, OnDestroy }                       from '@angular/core';
-import { LocalStorageService }                         from 'ngx-webstorage';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
 
-import { NxConfigService, IConfig }                    from './nx-config';
-import { NxLanguageProviderService }                   from './nx-language-provider';
-import { NxCloudApiService }                           from './nx-cloud-api';
-import { NxPollService }                               from './poll.service';
-import { NxToastService }                              from '../dialogs/toast.service';
-import { NxUtilsService }                              from './utils.service';
-import { NxUriService }                                from './uri.service';
-import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
-import { NxSystem }                                    from './system.service';
-import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from './nx-config';
+import { NxLanguageProviderService } from './nx-language-provider';
+import { NxCloudApiService }         from './nx-cloud-api';
+import { NxPollService }             from './poll.service';
+import { NxToastService }            from '../dialogs/toast.service';
+import { NxUtilsService }            from './utils.service';
+import { NxUriService }              from './uri.service';
+import { NxRibbonService }           from '../components/ribbon/ribbon.service';
+import { NxSystem }                  from './system.service';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { NxStorageService }          from './storage.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -41,7 +41,7 @@ export class NxSystemsService implements OnDestroy {
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
         private cloudApi: NxCloudApiService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService
@@ -188,7 +188,7 @@ export class NxSystemsService implements OnDestroy {
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                const currentSystemId = this.localStorage.retrieve('systemId');
+                const currentSystemId = this.storageService.systemId;
                 if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
                     this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
                 }

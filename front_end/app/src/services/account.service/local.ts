@@ -3,21 +3,21 @@ import {
 }                                     from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
-import { LocalStorageService }        from 'ngx-webstorage';
 import { tap, catchError }            from 'rxjs/operators';
 
 import { Exactly }                    from '../utils.service';
-import { NxConfigService }            from '../nx-config';
-import { NxCloudApiService }          from '../nx-cloud-api';
-import { NxLanguageProviderService }  from '../nx-language-provider';
-import { NxSessionService }           from '../session.service';
-import { WINDOW }                     from '../window-provider';
-import { NxAppStateService }          from '../nx-app-state.service';
-import { NxUriService }               from '../uri.service';
-import { NxPollService }              from '../poll.service';
-import { NxSystemAPIService }         from '../system-api.service';
-import { BaseAccount }                from './base';
-import { Account }                    from './account';
+import { NxConfigService }           from '../nx-config';
+import { NxCloudApiService }         from '../nx-cloud-api';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxSessionService }          from '../session.service';
+import { WINDOW }                    from '../window-provider';
+import { NxAppStateService }         from '../nx-app-state.service';
+import { NxUriService }              from '../uri.service';
+import { NxPollService }             from '../poll.service';
+import { NxSystemAPIService }        from '../system-api.service';
+import { BaseAccount }               from './base';
+import { Account }                   from './account';
+import { NxStorageService }          from '../storage.service';
 
 /**
  * LocalAcount overrides BaseAccount, should maintain the same interface.
@@ -34,7 +34,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
-        protected localStorageService: LocalStorageService,
+        protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
@@ -50,7 +50,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             cloudApi,
             sessionService,
             uriService,
-            localStorageService,
+            storageService,
             router,
             appStateService,
             pollService,

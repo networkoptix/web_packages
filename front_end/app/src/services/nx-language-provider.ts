@@ -3,8 +3,8 @@ import { HttpClient }              from '@angular/common/http';
 import { TranslateService }        from '@ngx-translate/core';
 import { BehaviorSubject }         from 'rxjs';
 
+import { environment }              from '../../environments/environment';
 import { NxCloudApiService }       from './nx-cloud-api';
-import { IConfig, NxConfigService }  from './nx-config';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { NxSessionService } from './session.service';
 
@@ -16,18 +16,15 @@ interface IParams<Value = any> {
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     translateSubject = new BehaviorSubject({});
 
-    constructor(config: NxConfigService,
-        private translate: TranslateService,
+    constructor(private translate: TranslateService,
         private http: HttpClient,
         private cloudApiService: NxCloudApiService,
         private sessionService: NxSessionService
     ) {
-        this.CONFIG = config.getConfig();
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             this.currentLang = this.sessionService.language;
         }
     }
@@ -64,7 +61,7 @@ export class NxLanguageProviderService {
 
     loadLanguage() {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
-        return (this.CONFIG.isLocal
+        return (environment.isLocal
             ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
             : this.cloudApiService.getLanguage()).toPromise();
     }

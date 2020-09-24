@@ -1,13 +1,10 @@
 import { Injectable }                from '@angular/core';
 import { BehaviorSubject }           from 'rxjs';
 
-import { NxConfigService, IConfig }  from './nx-config';
-
 @Injectable({
     providedIn: 'root'
 })
 export class NxAppStateService {
-    private CONFIG: IConfig;
 
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
@@ -15,9 +12,7 @@ export class NxAppStateService {
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
 
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor() {}
 
     setFooterVisibility(visible: boolean) {
         this.footerVisibleSubject.next(visible);

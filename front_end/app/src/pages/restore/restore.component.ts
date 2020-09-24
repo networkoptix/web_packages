@@ -1,6 +1,5 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { LocalStorageService }       from 'ngx-webstorage';
 
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -11,6 +10,7 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUriService }              from '../../services/uri.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxStorageService }          from '../../services/storage.service';
 
 @Component({
     selector : 'nx-restore-component',
@@ -49,7 +49,7 @@ export class NxRestoreComponent implements OnInit {
                 private cloudApiService: NxCloudApiService,
                 private accountService: NxAccountService,
                 private processService: NxProcessService,
-                private localStorage: LocalStorageService,
+                private storageService: NxStorageService,
                 private uriService: NxUriService,
                 private dialogs: NxDialogsService,
                 private route: ActivatedRoute,
@@ -64,7 +64,7 @@ export class NxRestoreComponent implements OnInit {
         this.ready = false;
         // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
         // updateURI causes component to be re-created
-        this.context.process = this.localStorage.retrieve('restoreProcess');
+        this.context.process = this.storageService.restoreProcess;
 
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
@@ -77,7 +77,7 @@ export class NxRestoreComponent implements OnInit {
 
         this.data = {
             newPassword : '',
-            email       : this.localStorage.retrieve('email') || '',
+            email       : this.storageService.email,
             restoreCode : this.uriParamCode
         };
 
@@ -168,11 +168,11 @@ export class NxRestoreComponent implements OnInit {
 
     setContext(name) {
         this.context.process = name;
-        this.localStorage.store('restoreProcess', name);
+        this.storageService.restoreProcess = name;
     }
 
     setEmail(email) {
-        this.localStorage.store('email', email);
+        this.storageService.email = email;
     }
 
     private checkContexts(arr) {

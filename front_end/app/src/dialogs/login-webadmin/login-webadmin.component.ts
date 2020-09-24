@@ -5,15 +5,14 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { LocalStorageService }       from 'ngx-webstorage';
 
 import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxStorageService }          from '../../services/storage.service';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -40,7 +39,7 @@ export class LoginWebadminModalContent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.localStorage.retrieve('email') };
+        this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
         this.remember = true;
@@ -52,7 +51,7 @@ export class LoginWebadminModalContent implements OnInit {
         languageService: NxLanguageProviderService,
         locationService: Location,
         private processService: NxProcessService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
@@ -95,7 +94,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     setEmail(email) {
         this.auth.email = email;
-        this.localStorage.store('email', this.auth.email);
+        this.storageService.email = this.auth.email;
     }
 
     ngOnInit() {

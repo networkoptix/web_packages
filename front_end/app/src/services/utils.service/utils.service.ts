@@ -4,7 +4,6 @@ import {
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 
-import { NxConfigService, IConfig } from '../nx-config';
 import * as moment                  from 'moment';
 import * as uv                      from './utilConstants';
 
@@ -12,19 +11,16 @@ import * as uv                      from './utilConstants';
     providedIn: 'root'
 })
 export class NxUtilsService {
-    private CONFIG: IConfig;
 
     public static sortASC = true;
     public static sortDESC = false;
     public momentWithLocale
 
     constructor(
-        configService: NxConfigService,
         private deviceService: DeviceDetectorService,
         @Inject(LOCALE_ID) private locale: string,
         @Inject(DOCUMENT) private document: Document
     ) {
-        this.CONFIG = configService.getConfig();
         this.momentWithLocale = moment.locale(locale);
     }
 

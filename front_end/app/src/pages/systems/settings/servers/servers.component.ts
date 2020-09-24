@@ -33,6 +33,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     advanced: boolean;
     params: Params;
     isOffline = false;
+    emittedStorage: any;
 
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -179,5 +180,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             this.selectedServer = server;
             this.menuService.detail = this.selectedServer.id;
         }
+    }
+
+    updateStorage(storages) {
+        this.emittedStorage = storages;
     }
 }

@@ -5,9 +5,9 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of }             from 'rxjs';
 
+import { environment }                     from '../../../environments/environment';
 import { NxLanguageProviderService }       from '../../services/nx-language-provider';
 import { NxProcessService }                from '../../services/process.service';
-import { IConfig, NxConfigService }        from '../../services/nx-config';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
 import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 
@@ -22,8 +22,8 @@ export class DisconnectModalContent {
     @Input() disconnect;
     @Input() closable;
 
+    isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     password: string;
     wrongPassword: boolean;
     auth = {
@@ -38,14 +38,13 @@ export class DisconnectModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
     ) {
         this.LANG = language.translations;
-        this.CONFIG = configService.getConfig();
+        this.isLocal = environment.isLocal;
     }
 
     ngOnInit() {
@@ -54,7 +53,7 @@ export class DisconnectModalContent {
             .get()
             .then((account) => {
                 if (account) {
-                    this.auth.username = NxConfigService.isLocal ? account.first_name : account.email;
+                    this.auth.username = this.isLocal ? account.first_name : account.email;
                 }
             });
 
@@ -62,7 +61,7 @@ export class DisconnectModalContent {
             this.disconnectForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
 
-            if (this.CONFIG.isLocal) {
+            if (this.isLocal) {
                 return this.disconnectLocal(this.auth.password);
             }
             return this.account.disconnect(this.system.id, this.auth.password);

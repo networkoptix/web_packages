@@ -125,7 +125,7 @@ header {
             @include mixins.ellipsis;
         }
 
-        .ellipsis-merge {
+        .ellipsis-mr {
             @include mixins.ellipsis;
             max-width : 95%;
         }

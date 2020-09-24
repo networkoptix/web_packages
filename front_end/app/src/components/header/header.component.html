@@ -28,7 +28,7 @@
                     <span *ngIf="!showSmall" class="btn-caption" translate>Log In</span>
                 </a>
             </span>
-            <span *ngIf="!this.loginState">
+            <span *ngIf="!loginState">
                 <nx-header-language-select
                         class="auto"
                         short="true" altStyle="true"
@@ -61,7 +61,7 @@
                 <li>
                     <nx-account-settings-select></nx-account-settings-select>
                     <nx-header-language-select
-                        *ngIf="this.CONFIG.isLocal"
+                        *ngIf="CONFIG.isLocal"
                         class="auto"
                         short="true" altStyle="true"
                         instantReload="true" instantApply="true"></nx-header-language-select>
@@ -106,7 +106,7 @@
                     <li>
                             <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
                             <nx-header-language-select
-                                *ngIf="this.CONFIG.isLocal"
+                                *ngIf="CONFIG.isLocal"
                                 class="auto"
                                 short="true" altStyle="true"
                                 instantReload="true" instantApply="true"></nx-header-language-select>

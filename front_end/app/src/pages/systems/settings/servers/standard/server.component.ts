@@ -1,6 +1,6 @@
 import {
-    Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
+    Component, OnInit, SimpleChanges, OnChanges,
+    OnDestroy, Input
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
@@ -24,6 +24,17 @@ import { NxUtilsService }            from '../../../../../services/utils.service
 import { NxToastService }            from '../../../../../dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
+interface DropdownStorage {
+    name: string,
+    id: string,
+    isOnline: boolean,
+    isUsedForWriting: boolean,
+    isWritable: boolean,
+    isSystem: boolean,
+    selected: boolean,
+    value: string
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-standard-server-component',
@@ -35,6 +46,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
+    @Input() storages: any;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -50,6 +62,12 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     previousInputValue: number;
     checking: boolean;
     serverLoaded = false;
+
+    dropdownStorages: any[] = [];
+    saveStorageWatcher = new Watcher<boolean>();
+    systemStorageChosen = false;
+    currentAnalyticsDbId: any;
+    selectedStorage: Partial<DropdownStorage>;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -101,7 +119,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.initForApplyService();
 
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher],
+            [this.ipPortWatcher, this.saveStorageWatcher],
             this.saveSettings,
             () => this.applyService.reset()
         );
@@ -127,6 +145,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             }
             this.serverLoaded = false;
             this.setServer();
+        }
+
+        if (changes.storages?.currentValue) {
+            this.parseStorages();
         }
     }
 
@@ -164,19 +186,30 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     initForApplyService(): void {
-        this.saveSettings = this.processService.createProcess(() => {
+        this.saveSettings = this.processService.createProcess(async () => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
-            if (!port.value) {
-                port.value = port.originalValue;
-                this.applyService.reset();
-            } else if (port.value !== port.originalValue) {
-                return this.system.changeServerPort(port.value, serverId)
-                    .then(() => {
+            try {
+                if (!port.value) {
+                    port.value = port.originalValue;
+                } else if (port.value !== port.originalValue) {
+                    const portReturn = await this.system.changeServerPort(port.value, serverId);
+                    if (portReturn) {
                         port.originalValue = port.value;
-                        this.applyService.reset();
-                    });
+                    }
+                }
+                if (this.saveStorageWatcher.value) {
+                    const params = {
+                        metadataStorageId: this.selectedStorage.id
+                    };
+                    await this.system.updateServerSettings(this.selectedServer.id, params);
+                    await this.system.update();
+                }
+            } catch (error) {
+                return Promise.reject(error);
             }
+            this.applyService.reset();
+
             return Promise.resolve();
         });
     }
@@ -332,5 +365,74 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         } else {
             this.applyService.setWarn('');
         }
+    }
+
+    changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+        this.selectedStorage = newStorage;
+        this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
+    }
+
+    parseStorages() {
+        if (this.saveStorageWatcher.value === undefined) {
+            this.saveStorageWatcher.value = false;
+        }
+        this.currentAnalyticsDbId = this.selectedServer.addParams
+            .find(param => param.name === 'metadataStorageId')?.value;
+        this.storages = this.storages.filter(store => store.storageType === 'local' && store.isWritable);
+        this.dropdownStorages = this.storages
+            .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable }) => {
+                const selected = this.selectedStorage ? this.selectedStorage.id === storageId
+                    : this.currentAnalyticsDbId === storageId;
+                return {
+                    name     : url,
+                    isOnline,
+                    isUsedForWriting,
+                    isWritable,
+                    isSystem : storageStatus.includes('system'),
+                    selected,
+                    id       : storageId,
+                    value    : storageId
+                };
+            });
+        this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
+            this.selectDefaultStorage();
+        this.systemStorageChosen = !!this.selectedStorage?.isSystem;
+    }
+
+    selectDefaultStorage() {
+        const firstPass = this.selectDefaultStorageRecursion(
+            this.dropdownStorages,
+            ['system', 'isUsedForWriting', 'isOnline', 'isWritable']
+        );
+        return firstPass ||
+            this.selectDefaultStorageRecursion(
+                this.dropdownStorages,
+                ['isOnline', 'isWritable'],
+                true
+            );
+    }
+
+    selectDefaultStorageRecursion(
+        storages: Partial<DropdownStorage>[],
+        criteria: string[],
+        lastSetOfCriteria: boolean = false
+    ): Partial<DropdownStorage> | false {
+        const [curCriteria, ...remainingCriteria] = criteria;
+        const filteredStorages = storages.filter(storage => storage[curCriteria]);
+        if (filteredStorages.length === 1) {
+            return filteredStorages[0];
+        } else if (filteredStorages.length === 0 || storages.length === filteredStorages.length) {
+            return this.highestFreeSpace(storages);
+        } else if (remainingCriteria.length === 0) {
+            return lastSetOfCriteria ? this.highestFreeSpace(filteredStorages) : false;
+        } else {
+            return this.selectDefaultStorageRecursion(filteredStorages, remainingCriteria);
+        }
+    }
+
+    highestFreeSpace(storage) {
+        return storage.reduce((max, next) => {
+            return +max.freeSpace >= +next.freeSpace ? max : next;
+        });
     }
 }

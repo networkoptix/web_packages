@@ -10,19 +10,12 @@ import {
 import { tap }        from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+import { environment }              from '../../environments/environment';
 import { NxAppStateService }        from './nx-app-state.service';
-import { NxConfigService, IConfig } from './nx-config';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
-    CONFIG: IConfig;
-
-    constructor(
-        configService: NxConfigService,
-        private appState: NxAppStateService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor(private appState: NxAppStateService) {}
 
     public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
         return handler.handle(httpRequest)
@@ -36,7 +29,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
 
     // appState.systemAvailable for webadmin, overlay-modal.component
     checkIfSystemAvailable(res: any) {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             const offlineStatus = [504, 502, 0].includes(res.status);
             if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== this.appState.lastErrorStatus$.value) {
                 this.appState.lastErrorStatus$.next(res.status);

@@ -9,7 +9,7 @@
         <div class="btn loading" *ngIf="merge && stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
         </div>
-        <span *ngIf="merge && !stillLoading || !merge" [ngClass]="{ 'ellipsis-merge': merge, ellipsis: !merge }" [innerHtml]="_selectedItem && _selectedItem.name"></span>
+        <span *ngIf="merge && !stillLoading || !merge" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHtml]="_selectedItem && _selectedItem.name"></span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>

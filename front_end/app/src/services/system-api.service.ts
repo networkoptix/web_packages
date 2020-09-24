@@ -623,7 +623,8 @@ export class NxSystemAPI {
 
     /* Working with users */
     getAggregatedUsersData() {
-        return this.get<t.AggregatedUsers>('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
+        const routes = ['ec2/getUsers', 'ec2/getPredefinedRoles', 'ec2/getUserRoles'];
+        return this.getRequestAggregator<t.AggregatedUsers>(routes);
     }
 
     saveUser(user: NxSystemUser) {
@@ -705,7 +706,8 @@ export class NxSystemAPI {
     }
 
     getMediaServersAndCameras() {
-        return this.get<t.AggregatedServersAndCameras>('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
+        const routes = ['/ec2/getMediaServersEx', 'ec2/getCamerasEx'];
+        return this.getRequestAggregator<t.NormalResponse<[t.GetMediaServers, t.GetCameras]>>(routes);
     }
 
     getResourceTypes() {

@@ -1302,6 +1302,10 @@ export class NxSystem extends System implements OnDestroy {
             .catch(err => Promise.reject(err));
     }
 
+    updateServerSettings(serverId: string, params: IParams) {
+        return this.serverManager.updateSettings(serverId, params);
+    }
+
     detachFromSystem(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
         return this.serverManager.detachFromSystem(serverId, currentPassword);

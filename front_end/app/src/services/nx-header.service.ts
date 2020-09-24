@@ -2,7 +2,7 @@ import { Injectable }               from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Router, NavigationStart }  from '@angular/router';
 
-import { NxConfigService, IConfig } from './nx-config';
+import { environment }              from '../../environments/environment';
 import { NxMenusService, MenuNode } from './menus.service';
 
 enum systemRoutes {
@@ -15,7 +15,6 @@ enum systemRoutes {
     providedIn: 'root'
 })
 export class NxHeaderService {
-    private CONFIG: IConfig;
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject(null);
     public lastActive$ = new BehaviorSubject(null);
@@ -35,11 +34,9 @@ export class NxHeaderService {
     systemIdSubject = new BehaviorSubject<string>(undefined);
 
     constructor(
-        configService: NxConfigService,
         private router: Router,
         private menusService: NxMenusService
     ) {
-        this.CONFIG = configService.getConfig();
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
                 this.setLocation(event.url);
@@ -85,19 +82,19 @@ export class NxHeaderService {
 
         const bestMatch: any = {};
         // Check if system url or go through nodes
-        const settingsBase = this.CONFIG.isLocal ? '/settings' : '/systems';
+        const settingsBase = environment.isLocal ? '/settings' : '/systems';
         if (url.startsWith(settingsBase) ||
-            (this.CONFIG.isLocal && (
+            (environment.isLocal && (
                 url.startsWith('/view') ||
                 url.startsWith('/health')
             ))
         ) {
             bestMatch.isSystem = true;
             bestMatch.parentNode = this.menusService.currentSystemNode$.value;
-            const systemId = this.CONFIG.isLocal ? '' : this.activeSystem$.value?.id;
-            const systemUrl = `${settingsBase}${this.CONFIG.isLocal ? '' : '/'}${systemId}`;
-            const viewUrl = this.CONFIG.isLocal ? '/view' : systemUrl + '/view';
-            const healthUrl = this.CONFIG.isLocal ? '/health' : systemUrl + '/health';
+            const systemId = environment.isLocal ? '' : this.activeSystem$.value?.id;
+            const systemUrl = `${settingsBase}${environment.isLocal ? '' : '/'}${systemId}`;
+            const viewUrl = environment.isLocal ? '/view' : systemUrl + '/view';
+            const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
                 bestMatch.path = viewUrl;

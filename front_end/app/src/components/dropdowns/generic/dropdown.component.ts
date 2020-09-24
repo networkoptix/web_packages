@@ -43,6 +43,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() items: DropdownItem[];
     @Input() selected;
     @Input() merge: boolean;
+    @Input() ellipsisMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
 

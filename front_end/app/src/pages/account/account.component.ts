@@ -2,7 +2,6 @@ import {
     Component, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
@@ -50,7 +49,6 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
-        private localStorage: LocalStorageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,

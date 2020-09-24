@@ -111,8 +111,8 @@
                 <h4 translate>Settings</h4>
             </header>
             <nx-section class="pl-3">
-                <div class="d-flex align-items-center">
-                    <span class="ellipsis mr-2" translate>Port</span>
+                <div class="server-settings">
+                    <span class="ellipsis text-column" translate>Port</span>
                     <input
                         class="port-input pl-2"
                         type="number"
@@ -124,6 +124,22 @@
                         [disabled]="portChangeDisabled || serverUnavailable"
                         (change)="onPortChange()"
                     >
+                    <ng-container *ngIf="dropdownStorages.length">
+                        <span class="ellipsis text-column" translate>Analytics DB Storage</span>
+                        <nx-select 
+                            id="system"
+                            [ellipsisMargin]="true"
+                            [items]="dropdownStorages"
+                            [selected]="selectedStorage"
+                            (onSelected)="changeAnalyticsStorage($event)"></nx-select>
+                    </ng-container>
+                    <ng-container *ngIf="systemStorageChosen">
+                        <span></span>
+                        <div class="error-label">
+                            <p class="mb-0" translate>Analytics data can take up large amounts of space.</p>
+                            <p class="mb-0" translate>We recommend to choose another locations for it instead of the system partition.</p>
+                        </div>
+                    </ng-container>
                 </div>
             </nx-section>
         </nx-block>
