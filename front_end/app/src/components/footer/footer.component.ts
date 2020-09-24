@@ -47,6 +47,14 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.copyrightYear = this.CONFIG.company.copyrightYear;
         this.menusService.getMenu('Footer').subscribe(footer => {
             this.footerItems = footer;
+            if (this.CONFIG.isLocal) {
+                this.footerItems.forEach(footerItem => {
+                    footerItem.new_window = true;
+                    if (footerItem.url[0] === '/') {
+                        footerItem.url = `${this.CONFIG.cloudHost}${footerItem.url}`;
+                    }
+                });
+            }
         });
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {

@@ -85,7 +85,7 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists.replace('%systemName%', this.system.info.name);
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.name);
         this.user = {
             email     : '',
             isEnabled : true,

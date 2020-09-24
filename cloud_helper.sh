@@ -205,6 +205,8 @@ function local_build() {
     echo "Run mediaserver"
     echo "Starting mediaserver $PORT"
     docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+    sleep 10
+    open https://localhost:$PORT
 }
 
 function start_https_tunnel() {

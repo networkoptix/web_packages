@@ -102,7 +102,7 @@ export class MessageModalContent implements OnInit {
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
                 value : subject,
-                name  : this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
+                name  : this.LANG.dialogs.message.subject[subject]().replace('{{asset}}', this.data.asset)
             };
         });
 
