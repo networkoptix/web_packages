@@ -147,6 +147,7 @@ Log in to Auto Tests System
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
     Check Language Logged In    ${email}    ${password}
 

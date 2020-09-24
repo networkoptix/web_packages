@@ -158,25 +158,34 @@
                         <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
                     <nx-section *ngIf="!selectedCamera.isStream">
-                            <h4 class="mb-3" translate>Quality</h4>
-                            <div class="d-flex justify-content-start col-12 align-items-center mb-2">
-                                <span class="col-1 text-nowrap text-right" translate>FPS</span>
+                        <h4 class="mb-3" translate>Quality</h4>
+                        <div class="grid-container-with-warning">
+                            <div class="grid-item">
+                                <span class="text-right" translate>FPS</span>
+                            </div>
+                            <div class="grid-item mb-2 mb-lg-0">
                                 <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 15"
-                                    #fpsInput
                                     [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
                                     [(ngModel)]="selectedFps"
-                                    class="form-control input-sm col-3"/>
+                                    #fpsInput
+                                    class="form-control input-sm"/>
+                            </div>
+                            <div class="grid-item">
                                 <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
                             </div>
-                            <div class="d-flex justify-content-start col-12 align-items-center">
-                                <span class="col-1 text-nowrap text-right" translate>Quality</span>
+                            <div class="grid-item">
+                                <span class="text-right" translate>Quality</span>
+                            </div>
+                            <div class="grid-item">
                                 <nx-select [selected]="selectedQuality"
                                     [(ngModel)]="selectedQuality"
                                     [items]="streamQualities"
-                                    id="recording-quality"
-                                    class="col-3 pl-0 pr-0"></nx-select>
-                                    <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
+                                    id="recording-quality"></nx-select>
                             </div>
+                            <div class="grid-item">
+                                <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
+                            </div>
+                        </div>
                     </nx-section>
                 </ng-container>
             </nx-block>

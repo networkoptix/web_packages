@@ -28,6 +28,14 @@
                 justify-content : flex-start;
             }
         }
+        &-with-warning {
+            @extend .grid-container;
+            grid-template-columns : max-content 240px max-content; 
+            .grid-item {
+                white-space: nowrap;
+                justify-content: flex-start;
+            }
+        }
     }
 
     .header-top-bar {
