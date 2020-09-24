@@ -528,3 +528,14 @@ class NoptixLibrary(object):
         cmd = f"pabot --testlevelsplit --processes 10 --variable max:{max} --outputdir Load-Testing Load-Testing/push_notifications_pabot.robot"
         #       print(cmd)
         os.system(cmd)
+
+    def systems_to_check(self, systemsCount):
+        return min(4, systemsCount)
+
+    def show_additional(self, systemTileCount, systemTilesToShow):
+        return systemTileCount > systemTilesToShow
+
+    def get_tiles_to_show(self, systemCount, maxSystems):
+        return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
+    def check_grid_size(self, gridSize, tileSize, columns):
+        return gridSize > (tileSize * columns)
