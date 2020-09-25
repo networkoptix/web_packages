@@ -875,6 +875,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
             return Promise.resolve(true);
+        }).catch(() => {
+            this.lostConnection = true;
         });
     }
 

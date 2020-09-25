@@ -117,8 +117,11 @@ export class DownloadComponent implements OnInit, OnDestroy {
             if (platform.name === 'sdk') {
                 this.otherPackages = platform.files;
             } else {
-                this.downloadButton = platform.files[0];
-                this.otherPackages = platform.files.slice(1);
+                // Ensures the first client found is always selected for the download button.
+                const client = platform.files.find(({appType}) => appType === 'client');
+                this.downloadButton = client;
+                // Remove the download button from the other packages.
+                this.otherPackages = platform.files.filter(({fileName}) => fileName !== client.fileName);
             }
         }
     }
