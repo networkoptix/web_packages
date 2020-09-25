@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from api.controllers import cloud_api, cloud_gateway
 from api.helpers.exceptions import api_success, require_params, \
     APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
 
