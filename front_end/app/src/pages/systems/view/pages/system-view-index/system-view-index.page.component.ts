@@ -11,7 +11,7 @@ import VideoManagementSystemService from '../../vms-client/submodules/vms/servic
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
 import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer'
 import Camera from '../../vms-client/submodules/vms/datatypes/Camera'
-import { CAMERA_STATUS } from '../../vms-client/submodules/vms/datatypes/ICamera'
+import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import { ms } from '../../vms-client/utils/type-aliases'
 
 
@@ -91,6 +91,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }).then((mediaServers: Array<NxMediaServer>) => {
       const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), [])
       const archiveRanges = {}
+      const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
         return this.system.getCameraRecords(cid, 0, now, 1e10).then(ar => {
@@ -103,6 +104,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               start: parseInt(reply.startTimeMs),
               end: parseInt(reply.startTimeMs) + parseInt(reply.durationMs) || now,
             }
+            archives[cid] = ar.reply.map(r => new SimpleTimeRange(r.startTimeMs, r.startTimeMs + r.durationMs))
             // console.log('non-empty archive', cid, archiveRanges[cid], ar)
           } catch (e) {
             console.warn(e, 'caught while requesting camera archive ranges')
@@ -120,6 +122,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.url,
             c.status as CAMERA_STATUS,
             archiveRanges[c.id],
+            archives[c.id],
             c.status === 'Recording' || c.status === 'Live' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
             this.system.unsafeGetCameraLiveHlsUrl(c.id),
             (t: ms) => {

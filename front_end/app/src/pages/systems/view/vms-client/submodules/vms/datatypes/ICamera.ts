@@ -4,8 +4,23 @@ export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline' | 'Unau
 
 export interface ISimpleTimeRange {
   start: ms,
-  end: ms
+  end: ms,
+  duration: ms,
 }
+
+export class SimpleTimeRange {
+  constructor (
+    public readonly start: ms,
+    public readonly end: ms,
+  ) {
+  }
+
+  public get duration (): ms {
+    return this.end - this.start
+  }
+}
+
+export type CameraArchive = Array<ISimpleTimeRange>
 
 export interface ICamera {
   id: string,
@@ -17,8 +32,9 @@ export interface ICamera {
   isAuthorized: boolean,
 
 
-  archiveRange: ISimpleTimeRange,
   hasArchive: boolean,
+  archiveRange: ISimpleTimeRange,
+  archive: CameraArchive,
 
   thumbnailUrl: string,
   liveVideoUrl: string,

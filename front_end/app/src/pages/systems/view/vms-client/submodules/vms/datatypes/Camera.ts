@@ -1,5 +1,5 @@
 import { ms } from '../../../utils/type-aliases'
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS } from './ICamera'
+import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 
 
 export class Camera implements ICamera {
@@ -10,6 +10,7 @@ export class Camera implements ICamera {
     public readonly url: string,
     public readonly status: CAMERA_STATUS,
     public readonly archiveRange: ISimpleTimeRange,
+    public readonly archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
     public liveVideoUrl: string,
     public getArchiveVideoUrl: (t: ms) => string,

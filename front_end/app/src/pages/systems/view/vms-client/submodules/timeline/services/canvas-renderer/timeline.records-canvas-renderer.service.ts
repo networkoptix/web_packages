@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core'
 
 import TimelineService from '../timeline.service'
 import TimelineRecordsService from '../timeline.records.service'
+import VideoManagementSystemService from '../../../vms/services/vms.service'
+import { float, ms, px } from '../../../../utils/type-aliases'
 
 
 @Injectable({
@@ -11,7 +13,7 @@ export class TimelineRecordsCanvasRendererService {
 
   constructor (
     protected timeline: TimelineService,
-    protected records: TimelineRecordsService,
+    protected vms: VideoManagementSystemService
   ) {
   }
 
@@ -31,11 +33,28 @@ export class TimelineRecordsCanvasRendererService {
 
     // records
     ctx.fillStyle = '#6cb943'
-    ctx.fillRect(
-      0, Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
-      this.timeline.canvasGeometry.width * 0.8,
-      Math.round(RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height),
-    )
+    // ctx.fillRect(
+    //   0, Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
+    //   this.timeline.canvasGeometry.width * 0.8,
+    //   Math.round(RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height),
+    // )
+    if (this.vms.selectedCamera) {
+      const minT: ms = this.timeline.visibleRange.start
+      const maxT: ms = this.timeline.visibleRange.end
+      const pxPerMs: float = 1 / this.timeline.msPerCanvasPx
+      const MIN_WIDTH: px = 2
+      this.vms.selectedCamera.archive.filter(r => r.start < maxT && r.end > minT).map(r => {
+        const x0 = Math.round((r.start - minT) * pxPerMs)
+        let x1 = Math.round((r.end - minT) * pxPerMs)
+        if (x1 - x0 < MIN_WIDTH) {
+          x1 = x0 + MIN_WIDTH
+        }
+        const y = Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height)
+        const h = y / 3
+        const w = x1 - x0
+        ctx.fillRect(x0, y, w, h)
+      })
+    }
 
     ctx.fillStyle = oldFill
   }

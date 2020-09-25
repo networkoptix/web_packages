@@ -1,5 +1,5 @@
 import { ms } from '../../../utils/type-aliases'
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS } from './ICamera'
+import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 
 export class TestCamera implements ICamera {
   constructor (
@@ -8,8 +8,9 @@ export class TestCamera implements ICamera {
     public readonly name: string,
     public readonly url: string,
     public readonly status: CAMERA_STATUS,
-    public readonly archiveRange: ISimpleTimeRange | undefined = undefined,
     public readonly thumbnailUrl: string | undefined = undefined,
+    public readonly archiveRange: ISimpleTimeRange | undefined = undefined,
+    public readonly archive: CameraArchive = [],
   ) {
   }
 
@@ -34,11 +35,11 @@ export class TestCamera implements ICamera {
   }
 
   public get liveVideoUrl () {
-    return 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
   }
 
   public getArchiveVideoUrl (t: ms) {
-    return 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
   }
 }
 
