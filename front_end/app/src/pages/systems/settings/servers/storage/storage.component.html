@@ -26,7 +26,7 @@
                         <tr *ngFor="let storage of storages; index as i">
                             <td title="{{storage.url}}">{{storage.url}}</td>
                             <td>{{friendlyBytes( storage.totalSpace )}}</td>
-                            <td>{{friendlyBytes( storage.freeSpace.bits )}}</td>
+                            <td>{{friendlyBytes( storage.remainingSpace.bits )}}</td>
                             <td>
                                 <input
                                         type="number"
