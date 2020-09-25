@@ -268,10 +268,6 @@ do
             ;;
 
         rebuild_frontend)
-            export LDFLAGS="-L/usr/local/opt/mysql-client/lib"
-            export CPPFLAGS="-I/usr/local/opt/mysql-client/include"
-            printf "Installing cloud requirements\n\n"
-            pip install -r cloud/requirements.txt
             build_frontend
             setup_cms
             ;;
