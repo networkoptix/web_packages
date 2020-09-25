@@ -1,10 +1,12 @@
 <div class="support-footer">
     <h2 class="support-link"[routerLink]="supportNode.url">{{supportNode.title}}</h2>
-    <div class="support-wrapper" [ngStyle]="{backgroundImage: 'url(' + CONFIG.icons.dir + supportNode.icon + ')'}">
+    <div class="support-wrapper">
+        <img class="left-image" [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[0]"/>
         <div class="support-block">
             <div *ngFor="let block of supportNode.asset.blocks"
                 class="support-body"
                 [innerHTML]="block.contentHTML"></div>
         </div>
+        <img class="right-image" [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[1]"/>
     </div>
 </div>
