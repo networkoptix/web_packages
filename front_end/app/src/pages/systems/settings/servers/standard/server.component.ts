@@ -68,6 +68,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     systemStorageChosen = false;
     currentAnalyticsDbId: any;
     selectedStorage: Partial<DropdownStorage>;
+    checkingForDataAnalytics = false;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -367,9 +368,38 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
     }
 
-    changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
-        this.selectedStorage = newStorage;
-        this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
+    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+        if (newStorage.id === this.currentAnalyticsDbId) return;
+        // check if analytics data exists
+        this.checkingForDataAnalytics = true;
+        const analyticsData = await this.system.checkForAnalyticsData(this.selectedServer.id).toPromise();
+        const analyticsDataExists = Boolean(analyticsData[0]);
+        if (analyticsDataExists) {
+            this.dialogs.changeStorage(this.system)
+                .then(async (closeRes) => {
+                    if (closeRes === 'changeOk') {
+                        this.selectedStorage = newStorage;
+                        this.saveStorageWatcher.originalValue = false;
+                        this.saveStorageWatcher.value = false;
+                        const params = {
+                            metadataStorageId: this.selectedStorage.id
+                        };
+                        await this.system.updateServerSettings(this.selectedServer.id, params);
+                        await this.system.update();
+                    } else if (closeRes === 'error') {
+                        const options = {
+                            classname : this.CONFIG.toast.warning,
+                            autohide  : true,
+                            delay     : this.CONFIG.alertTimeout
+                        };
+                        this.toastService.show(this.LANG.servers.analyticsDataPolicyError, options);
+                    }
+                });
+        } else {
+            this.selectedStorage = newStorage;
+            this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
+        }
+        this.checkingForDataAnalytics = false;
     }
 
     parseStorages() {

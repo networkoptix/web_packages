@@ -129,6 +129,7 @@
                         <nx-select 
                             id="system"
                             [ellipsisMargin]="true"
+                            [stillLoading]="checkingForDataAnalytics"
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
                             (onSelected)="changeAnalyticsStorage($event)"></nx-select>

@@ -1,23 +1,23 @@
 <div class="dropdown {{dropdownType}}"
-     [ngClass]="{'dropdown-show': show}"
-     (nxClickElsewhere)="show = false">
+    [ngClass]="{'dropdown-show': show}"
+    (nxClickElsewhere)="show = false">
 
     <button class="btn btn-dropdown-toggle dropdown-toggle"
             #dropdownButtonFocus
             (click)="show = !show"
             type="button" id="{{id}}" data-toggle="dropdown">
-        <div class="btn loading" *ngIf="merge && stillLoading">
+        <div class="btn loading" *ngIf="stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
         </div>
-        <span *ngIf="merge && !stillLoading || !merge" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHtml]="_selectedItem && _selectedItem.name"></span>
+        <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHtml]="_selectedItem && _selectedItem.name"></span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
 
     <div class="dropdown-menu" [nxArrowNav]="show"
-         [style.display]="show ? 'inline-block' : 'none'"
-         [attr.aria-labelledby]="id">
+        [style.display]="show ? 'inline-block' : 'none'"
+        [attr.aria-labelledby]="id">
 
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
