@@ -105,3 +105,10 @@
 .dropdown .dropdown-toggle .ellipsis {
     max-width : none !important;
 }
+
+.break-long {
+    overflow-wrap : break-word;
+    word-wrap     : break-word;
+    word-break    : break-word;
+    hyphens       : auto;
+}
