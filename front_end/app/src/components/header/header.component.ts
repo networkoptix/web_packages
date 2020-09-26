@@ -197,7 +197,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
             this.systemId = this.localStorage.get('systemId');
             if (this.router.url.indexOf('/systems/') === 0) {
-                this.systemId = this.router.url.split('/')[2];
+                this.systemId = this.router.url.split('/')[2].split('?')[0];
             }
 
             this.systems = systems;
