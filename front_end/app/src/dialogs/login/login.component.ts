@@ -176,35 +176,28 @@ export class LoginModalContent implements OnInit {
 
             if (this.keepPage) {
                 if (isRootPath) {
-                    this.router
-                        .navigate([this.CONFIG.redirect.authorised])
-                        .then(() => {
-                            // ensure language reload as translations are loaded on page load
-                            window.location.reload();
-                        });
+                    window.location.href = this.CONFIG.redirect.authorised;
                 } else {
                     // TODO: remove window reload once we separate session state from account service
-                    window.location.reload();
+                    window.location.href = `${window.location.href}`;
                 }
             } else if (this.next) {
                 // sanitize this.next
                 this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
-                if (this.next.indexOf('/admin/') !== -1) {
-                    // *** admin section is not a part of Angular project
+                if (this.next.startsWith('/admin')) {
                     window.location.href = this.next;
                 } else {
                     this.router
                         .navigate([this.next])
-                        .catch((error) => console.error(error));
+                        .then(() => {
+                            // *** window.location.reload(); // ensure language reload as translations are loaded on page load
+                            // *** admin section is not a part of Angular project
+                            window.location.href = this.next;
+                        });
                 }
             } else {
                 setTimeout(() => {
-                    this.router
-                        .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
-                        .then(() => {
-                            // ensure language reload as translations are loaded on page load
-                            window.location.reload();
-                        });
+                    window.location.href = this.CONFIG.redirect.authorised;
                 });
             }
         }, (error) => {

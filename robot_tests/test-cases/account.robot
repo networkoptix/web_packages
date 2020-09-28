@@ -343,7 +343,7 @@ Language change is new default
     Log Out No Language
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
+    Log In    ${EMAIL NOPERM}    ${password}    validate=False    button=None
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
@@ -464,9 +464,9 @@ After account deletion user is deleted from all systems that were shared with th
     [tags]    C69862    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    Administrator    ${random email}
-    Share    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Viewer    ${random email}
-    Share    ${auth}    ${AUTOTESTS 2 SERVER SYSTEM ID}    Custom    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${AUTO TESTS USERS["${EMAIL ADMIN}"]}    ${random email}
+    Share    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${AUTO TESTS USERS["${EMAIL VIEWER}"]}    ${random email}
+    Share    ${auth}    ${AUTOTESTS 2 SERVER SYSTEM ID}    ${AUTO TESTS USERS["${EMAIL CUSTOM}"]}    ${random email}
 
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None

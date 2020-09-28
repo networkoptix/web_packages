@@ -374,6 +374,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 }
 
                 this.systemId = this.storageService.systemId;
+            if (this.router.url.indexOf('/systems/') === 0) {
+                this.systemId = this.router.url.split('/')[2].split('?')[0];
+            }
 
                 if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
                     this.systemId = this.route.firstChild.snapshot.params.systemId;
@@ -426,7 +429,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
         this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
-        this.navVisible = true;
+        this.navVisible = !!Object.keys(this.activeSystem || {}).length;
     }
 
     updateActiveSystem() {

@@ -53,7 +53,7 @@ export class NxUrlProtocolService {
     }
 
     generateLink(linkSettings: linkSettings = {}) {
-        let settings: linkSettings = {
+        let settings = {
             native           : true,
             from             : 'portal', // client, mobile, portal, webadmin
             context          : undefined,
@@ -70,7 +70,8 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol?.() || this.window.location.protocol;
+        let protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
+        protocol = protocol.replace('%CLIENT_PROTOCOL%:', 'nx-vms:');
         const host     = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
@@ -86,9 +87,9 @@ export class NxUrlProtocolService {
             getParams.context = settings.context;
         }
 
-        let url = protocol + '//' + host + '/' + settings.command + '/';
+        let url = `${protocol}//${host}/${settings.command}/`;
         if (linkSettings.systemId) {
-            url += linkSettings.systemId + '/';
+            url += `${linkSettings.systemId}/`;
         }
         if (linkSettings.action) {
             url += linkSettings.action;
@@ -96,12 +97,10 @@ export class NxUrlProtocolService {
 
         const uri = [];
         Object.keys(getParams).forEach((param) => {
-            uri.push(param + '=' + getParams[param]);
+            uri.push(`${param}=${getParams[param]}`);
         });
 
-        const uriStr = uri.join('&');
-
-        url += '?' + uriStr;
+        url += `?${uri.join('&')}`;
 
         return url;
     }
@@ -143,19 +142,31 @@ export class NxUrlProtocolService {
                 /* The browser opens a dialog that we cannot directly detect or get a response from.
                  * However, when the browser dialog opens it causes the page to blur so we use that to detect what
                  * happens.
-                 * If the page blurs only once that means that the user probably canceled the dialog.
-                 * If the page blurs more than once the vms client probably opened.
                  */
-                let blurCount      = 0;
+                let blurCount = 0;
+                let hasBlur = false; // Checks if the browser dialog opened.
+                let hasOpened = false; // Open button was clicked.
+                let hasOpenChecked = false; // Ensure that we only check on the first blur after we regain focus from the browser dialog.
                 this.window.onblur = () => {
-                    blurCount += 1;
-                };
-
-                this.window.document.onvisibilitychange = () => {
-                    if (this.window.document.hidden) {
-                        blurCount--;
+                    if (!this.window.document.hidden) {
+                        blurCount++;
                     }
                 };
+                this.window.onfocus = () => {
+                    if (hasBlur && !hasOpenChecked) {
+                        hasOpenChecked = true;
+                        // If the browser leaves focus right after coming back it means we probably tried to open the app via protocol.
+                        // Doubtful most users will change apps or click out before a second has passed.
+                        setTimeout(() => {
+                            hasOpened = blurCount > 1;
+                        }, 1000);
+                    }
+                };
+                // Browser dialog will cause a blur. If not then we never blurred.
+                setTimeout(() => {
+                    hasBlur = blurCount === 1;
+                }, 100);
+
                 // Check on before unload
                 // @ts-ignore
                 // eslint-disable-next-line prefer-promise-reject-errors
@@ -165,13 +176,13 @@ export class NxUrlProtocolService {
                             .checkVisitedKey(authKey)
                             .then((visited) => {
                                 this.window.onblur = undefined;
-                                /* Explanation for blurCount !== 1
-                                 * switch(blurCount)
-                                 *      case 0: The browser dialog didnt show up, but it thought the dialog did show up.
-                                 *      case 1: The browser dialog was canceled.
-                                 *      case > 1: The browser opened the app but the code didnt work.
+                                this.window.onfocus = undefined;
+                                /* How the check works
+                                 * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
+                                 * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
+                                 * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
                                  */
-                                if (!visited && blurCount !== 1) {
+                                if (!visited && (!hasBlur || hasOpened)) {
                                     // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }

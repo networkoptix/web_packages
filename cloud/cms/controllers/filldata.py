@@ -478,14 +478,19 @@ def zip_context(zip_file, asset, context, language_code,
     file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
                                                                  DataStructure.DATA_TYPES.file))
     for file_structure in file_structures:
+        name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
+        if add_root:
+            name = os.path.join(root_dir, name)
+
+        # Skip static files that exists in the zip package
+        if name in zip_file.namelist():
+            continue
+
         data = file_structure.find_actual_value(asset, language, version_id, draft=preview)
         # Check if there is a data_record otherwise its a placeholder value.
-        if data and file_structure.datarecord_set.filter(asset=asset).exists():
+        if data:
             try:
                 data = base64.b64decode(data)
-                name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
-                if add_root:
-                    name = os.path.join(root_dir, name)
                 zip_file.writestr(name, data)
             except binascii.Error as e:
                 logger.error(f'{file_structure.name} had the following Exception {str(e)}')

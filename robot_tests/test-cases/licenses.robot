@@ -97,7 +97,7 @@ License Key Input
     Click Button    ${ACTIVATE BUTTON}    # To clear #formattedKey
     Validate Input Error     ${INVALID LICENSE KEY TEXT}
 
-#    Log    Step 6 - commented out due to flase negative test results
+    Log    Step 6 - commented out due to false negative test results
 #    Copy To Clipboard    OPXR-4M7A-99P1-92KA
 #    Slow    Paste Text    ${LICENSE KEY INPUT}    timeout=1
 #    ${formatted key}=   Get Formatted Key Input

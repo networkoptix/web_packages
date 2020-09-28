@@ -49,6 +49,9 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
     cloud_portal = get_cloud_portal_asset()
 
     if cloud_portal:
+        S3_STRUCTURE_TYPES = [DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
+        S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
+        REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/integrations"
         state = 'release'
         if show_pending:
             state = 'review'
@@ -99,6 +102,8 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                         record_value = datastructure.find_actual_value(asset=integration,
                                                                        version_id=current_version,
                                                                        draft=show_pending or show_drafts)
+                        if datastructure.type in S3_STRUCTURE_TYPES:
+                            record_value = record_value.replace(S3_LINK, REPLACEMENT_LINK)
 
                         if not record_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
                             continue
