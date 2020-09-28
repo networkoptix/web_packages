@@ -429,7 +429,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
         this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
-        this.navVisible = !!Object.keys(this.activeSystem || {}).length;
+        this.navVisible = true;
     }
 
     updateActiveSystem() {
