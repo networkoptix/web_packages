@@ -13,7 +13,7 @@ LM Suite Set Up
     END
     Sleep    120
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
-    Sleep    60
+    Sleep    90
 
     FOR    ${role}    IN    @{LM USERS.keys()}
         Share    ${cloud auth}    ${sys id 1}    ${role}    ${LM USERS}[${role}]
@@ -32,9 +32,11 @@ LM Suite Teardown
     Close All Browsers
 
 LM Test Restart
-    Log Out
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
+    Run Keyword If    ${status}    Log Out via API
     FOR    ${i}    IN RANGE    1    4
         Start Container    ${cont ${i}}
+        Sleep    10
         Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
     END
 

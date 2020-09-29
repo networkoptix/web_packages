@@ -765,6 +765,10 @@ class ServerManager {
     rebuildArchive(serverId: string, type: number, action?: string) {
         return this.mediaserverConnections[serverId].rebuildArchive(type, action);
     }
+
+    checkForAnalyticsData(serverId: string) {
+        return this.mediaserverConnections[serverId].checkForAnalyticsData();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -992,6 +996,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
             return Promise.resolve(true);
+        }).catch(() => {
+            this.lostConnection = true;
         });
     }
 
@@ -1244,6 +1250,10 @@ export class NxSystem extends System implements OnDestroy {
             return this.mediaserver.updateStorages(updateParams);
         }
         return this.mediaserver.getStorages();
+    }
+
+    checkForAnalyticsData(serverId: string) {
+        return this.serverManager.checkForAnalyticsData(serverId);
     }
 
     initSystemMediaServers() {

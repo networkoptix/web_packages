@@ -86,16 +86,43 @@ function setup_env() {
     export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
     export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
     printf "Setting up cloud portal locally\n\n"
-    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
-
-    printf "Activating python3.7 env\n\n"
-    . ./env/bin/activate
+    setup_or_activate_virtualenv
 
     printf "Installing pip packages for build_scripts and cloud\n\n"
     export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
     npm install --prefix cloud
+}
+
+function setup_robot_env() {
+    setup_or_activate_virtualenv
+
+    pushd robot_tests
+        ROBOT_DIR=$PWD
+        if [[ ! -f chromedriver ]] ; then
+            echo "Chromedriver is missing from $ROBOT_DIR"
+            echo "Please download from https://chromedriver.chromium.org/downloads. Then try again."
+            exit 1;
+        fi
+
+        if grep -qF "$ROBOT_DIR" ~/.bash_profile ; then
+            echo "Robot env has already been setup"
+        else
+            pip install -r requirements.txt
+            echo -e "\n\nexport PYTHONPATH='$PYTHONPATH:$ROBOT_DIR'" >> ~/.bash_profile
+            echo -e "export PATH='$PATH:$ROBOT_DIR'" >> ~/.bash_profile
+            echo 'Restart your terminal or run `source ~/.bash_profile` and rerun this script.'
+        fi
+    popd
+    source ~/.bash_profile
+}
+
+function setup_or_activate_virtualenv() {
+    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
+
+    printf "Activating python3.7 env\n\n"
+    . ./env/bin/activate
 }
 
 function start_celery() {
@@ -178,6 +205,8 @@ function local_build() {
     echo "Run mediaserver"
     echo "Starting mediaserver $PORT"
     docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+    sleep 10
+    open https://localhost:$PORT
 }
 
 function start_https_tunnel() {
@@ -241,13 +270,11 @@ do
             ;;
 
         rebuild_frontend)
-            printf "Installing cloud requirements\n\n"
-            pip install -r cloud/requirements.txt
             build_frontend
             setup_cms
             ;;
         setup_cms)
-            . ./env/bin/activate
+            setup_or_activate_virtualenv
             setup_cms
             ;;
         setup_db)
@@ -255,6 +282,9 @@ do
             ;;
         setup_env)
             setup_env
+            ;;
+        setup_robot_env)
+            setup_robot_env
             ;;
         set_cloud_instance)
             if [[ -z ${CLOUD_INSTANCE} ]]; then
@@ -264,11 +294,14 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
-            if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
-                echo "Py3 not found. Likely virtualenv is not activated. Proxy configuration is not updated!"
-            else
-                python update_proxy.py
-            fi
+            # Removed for now
+            # if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
+            #   echo "Py3 not found. Likely virtualenv is not activated. Proxy configuration is not updated!"
+            # else
+            #   pushd front_end
+            #       python update_proxy.py
+            #   popd
+            # fi
             break
             ;;
         start_celery)
@@ -326,6 +359,7 @@ do
             echo 'set_cloud_instance - Sets the cloud instance env. Usage "source ./cloud_helper.sh set_cloud_instance $instance".'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'
             echo 'setup_db - Loads local db with sql file in ~/develop/nx_vms/cloud_portal/'
+            echo 'setup_robot_env - Setups robot env. Run after placing the chromedriver in robot_tests'
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'

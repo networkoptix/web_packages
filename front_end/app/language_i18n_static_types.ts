@@ -195,14 +195,15 @@ export interface VoiceCommands {
 }
 
 export interface Dialogs {
-    addUser:      AddUser;
-    buttons:      Buttons;
-    cloudStorage: CloudStorage;
-    merge:        DialogsMerge;
-    message:      DialogsMessage;
-    removeSystem: RemoveSystem;
-    titles:       DialogsTitles;
-    tooltips:     Tooltips;
+    addUser:       AddUser;
+    buttons:       Buttons;
+    cloudStorage:  CloudStorage;
+    changeStorage: ChangeStorage;
+    merge:         DialogsMerge;
+    message:       DialogsMessage;
+    removeSystem:  RemoveSystem;
+    titles:        DialogsTitles;
+    tooltips:      Tooltips;
 }
 
 export interface AddUser {
@@ -220,6 +221,10 @@ export interface Buttons {
     remove:           any;
     stayAs:           any;
     stayLoggedIn:     any;
+}
+
+export interface ChangeStorage {
+    support: any;
 }
 
 export interface CloudStorage {
@@ -658,23 +663,24 @@ export interface Search {
 }
 
 export interface Servers {
-    autoRefresh:             any;
-    beginDetach:             any;
-    beginReset:              any;
-    detachSystemFailed:      any;
-    detachSystemSuccess:     any;
-    portWarning:             any;
-    refresh:                 any;
-    refreshing:              any;
-    removeMediaserverFailed: any;
-    resetFailed:             any;
-    resetSuccessful:         any;
-    restartFailed:           any;
-    restartSuccessful:       any;
-    serverOffline:           any;
-    servers:                 any;
-    status:                  ServersStatus;
-    successRename:           any;
+    analyticsDataPolicyError: any;
+    autoRefresh:              any;
+    beginDetach:              any;
+    beginReset:               any;
+    detachSystemFailed:       any;
+    detachSystemSuccess:      any;
+    portWarning:              any;
+    refresh:                  any;
+    refreshing:               any;
+    removeMediaserverFailed:  any;
+    resetFailed:              any;
+    resetSuccessful:          any;
+    restartFailed:            any;
+    restartSuccessful:        any;
+    serverOffline:            any;
+    servers:                  any;
+    status:                   ServersStatus;
+    successRename:            any;
 }
 
 export interface ServersStatus {
@@ -1116,6 +1122,7 @@ const typeMap: any = {
         { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
+        { json: "changeStorage", js: "changeStorage", typ: r("ChangeStorage") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
@@ -1136,6 +1143,9 @@ const typeMap: any = {
         { json: "remove", js: "remove", typ: "any" },
         { json: "stayAs", js: "stayAs", typ: "any" },
         { json: "stayLoggedIn", js: "stayLoggedIn", typ: "any" },
+    ], false),
+    "ChangeStorage": o([
+        { json: "support", js: "support", typ: "any" },
     ], false),
     "CloudStorage": o([
         { json: "title", js: "title", typ: "any" },
@@ -1529,6 +1539,7 @@ const typeMap: any = {
         { json: "vendors", js: "vendors", typ: "any" },
     ], false),
     "Servers": o([
+        { json: "analyticsDataPolicyError", js: "analyticsDataPolicyError", typ: "any" },
         { json: "autoRefresh", js: "autoRefresh", typ: "any" },
         { json: "beginDetach", js: "beginDetach", typ: "any" },
         { json: "beginReset", js: "beginReset", typ: "any" },

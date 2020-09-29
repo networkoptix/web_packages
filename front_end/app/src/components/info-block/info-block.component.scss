@@ -7,6 +7,10 @@
     }
 }
 
+.column-wrapper > div:not(:last-child) {
+    margin-right: 16px !important;
+}
+
 .block {
     margin-top: 16px;
     & > h6 {
@@ -21,7 +25,7 @@
             display: flex;
             flex-direction: column;
             p {
-                margin-bottom: 4px;
+                margin: 3px 3px 3px 0;
             }
         }
         &-keys {
@@ -68,7 +72,6 @@
                 display: flex;
                 align-items: flex-end;
                 line-height: 16px;
-                margin-right: 16px;
                 &.error {
                     color: $red_l2;
                 }

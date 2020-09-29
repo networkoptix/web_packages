@@ -133,7 +133,7 @@ Restart server as owner
     Wait Until Elements are Visible    
     ...    ${RESTARTING BADGE}
     ...    ${SYSTEM NAME OFFLINE}
-    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=40
+    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=60
       
 Restart server as admin
     [Tags]    C70968
@@ -149,7 +149,7 @@ Restart server as admin
     Wait Until Elements are Visible    
     ...    ${RESTARTING BADGE}
     ...    ${SYSTEM NAME OFFLINE}
-    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=40
+    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=60
     
 Change port is only available for owner
     [Tags]    C70927    threaded

@@ -33,7 +33,7 @@
             "label": "Service maintenance image",
             "name": "static/images/placeholders/page/Maintenance.svg",
             "old_name": "static/images/503.png",
-            "type": "image",
+            "type": "file",
             "description": "Image for page. Image goes above text on page",
             "meta": {
               "background": "light",

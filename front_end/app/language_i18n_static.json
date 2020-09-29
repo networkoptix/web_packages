@@ -245,6 +245,9 @@
                 "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
             }
         },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "checking": "Checking...",
@@ -655,6 +658,7 @@
         "vendors": "Manufacturers"
     },
     "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
         "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Server is now detaching",
         "beginReset": "Server is now resetting.",

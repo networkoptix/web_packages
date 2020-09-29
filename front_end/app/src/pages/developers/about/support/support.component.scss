@@ -25,15 +25,13 @@
 }
 
 .support-wrapper {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: nowrap;
     width: 100%;
     margin: 16px 0;
-    background-color: $brand_core;
-    background-size: cover !important;
-    background-position: center !important;
     @include bootstrap.media-breakpoint-down(sm) {
         background: $light1 !important;
     }
@@ -107,4 +105,24 @@
             right: 64px;
         }
     }
+}
+
+.support-images {
+    position: absolute;
+    width: 50%;
+    top: 0px;
+    object-fit: contain;
+    height: calc(100% - 16px);
+}
+
+.left-image {
+    @extend .support-images;
+    left: 0;
+    object-position: left;
+}
+
+.right-image {
+    @extend .support-images;
+    right: 0;
+    object-position: right;
 }

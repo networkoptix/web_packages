@@ -15,6 +15,7 @@ import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
 import { AddStorageModalContent }      from './add-storage/add-storage.component';
+import { ChangeStorageModalContent }   from './change-storage/change-storage.component';
 import { RemoveUserModalContent }      from './remove-user/remove-user.component';
 import { MergeModalContent }           from './merge/merge.component';
 import { MessageModalContent }         from './message/message.component';
@@ -62,6 +63,7 @@ import { NxDialogsService }               from './dialogs.service';
         DisconnectModalContent,
         AddUserModalContent,
         AddStorageModalContent,
+        ChangeStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,
@@ -89,6 +91,7 @@ import { NxDialogsService }               from './dialogs.service';
         DisconnectModalContent,
         AddUserModalContent,
         AddStorageModalContent,
+        ChangeStorageModalContent,
         MergeModalContent,
         MessageModalContent,
         RemoveUserModalContent,

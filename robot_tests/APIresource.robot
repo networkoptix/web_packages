@@ -67,7 +67,7 @@ Connect System to Cloud
 Rename System
     [Arguments]    ${auth}    ${system id}    ${new name}
     &{data}=   Create Dictionary    systemId=${system id}    name=${new name}
-    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -201,7 +201,7 @@ Setup Local System
 Setup Cloud System
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
     &{data}=   Create Dictionary    cloudAuthKey=${auth key}    systemName=${system name}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
-    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Setup System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     ${cloud auth}=   Create List    ${owner email}    ${BASE PASSWORD}
@@ -211,28 +211,28 @@ Setup Cloud System
 Save Cloud System Credentials
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
     &{data}=   Create Dictionary    cloudAuthKey=${auth key}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
-    Create Digest Session    Save Cloud Credentials session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Save Cloud Credentials session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Restart Server
     [Arguments]    ${server url}    ${auth}
-    Create Digest Session    Restart Server session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Restart Server session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Restart Server session     /api/restart    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Restore Factory Defaults
     [Arguments]    ${server url}    ${auth}
     &{data}=   Create Dictionary    currentPassword=${auth[1]}
-    Create Digest Session    Restore Server session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Restore Server session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Restore Server session     /api/restoreState    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Detach Server From System
     [Arguments]    ${server url}    ${auth}
     &{data}=   Create Dictionary    currentPassword=${auth[1]}
-    Create Digest Session    Detach From System session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Detach From System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Detach From System session     /api/detachFromSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -240,14 +240,27 @@ Detach Server From System
 Detach Server From Cloud
     [Arguments]    ${server url}    ${auth}
     &{data}=   Create Dictionary    currentPassword=${auth[1]}    password=${BASE PASSWORD}
-    Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+Get Server Name
+    [Arguments]    ${system url}    ${system auth}
+    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    ${resp}=   Get Request    Get Server Name session     /ec2/getMediaServersEx    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    ${net address}=   Replace String    ${system url}    https://    ${EMPTY}
+    ${net address}=   Replace String    ${net address}    http://     ${EMPTY}
+    FOR    ${server}    IN    @{resp.json()}
+        ${status}=   Run Keyword and return status    Should Contain    ${server}[networkAddresses]    ${net address}
+        ${name}=   Set Variable If    ${status}    ${server}[name]
+        Return From Keyword If    ${status}    ${name}
+    END
+
 Get Server Id
     [Arguments]    ${system url}    ${system auth}    ${server name}
-    Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    disable_warnings=1
+    Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     FOR    ${server}    IN    @{resp.json()}
@@ -255,10 +268,19 @@ Get Server Id
         Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
     END
 
+Rename Server
+    [Arguments]    ${system url}    ${system auth}    ${new name}
+    ${old name}=   Get Server Name    ${system url}    ${system auth}
+    ${id}=   Get Server Id    ${system url}    ${system auth}    ${old name}
+    ${data}=   Create Dictionary    serverId=${id}    serverName=${new name}
+    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    ${resp}=   Post Request    Rename Server session     ec2/saveMediaServerUserAttributes    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Remove Resource From System
     [Arguments]    ${system url}    ${system auth}    ${resource id}
     &{data}=   Create Dictionary    id=${resource id}
-    Create Digest Session    Remove Resourcesession    ${system url}    auth=${system auth}    disable_warnings=1
+    Create Digest Session    Remove Resourcesession    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Remove Resource session     /ec2/removeResource    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -272,18 +294,18 @@ Remove Server From System
 Activate License
     [Arguments]    ${auth}    ${server url}    ${license}
     &{data}=   Create Dictionary    licenseKey=${license}
-    Create Digest Session    Activate License session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Activate License session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Remove License
     [Arguments]    ${auth}    ${server url}    ${license}
     &{data}=   Create Dictionary    key=${license}
-    Create Digest Session    Activate License session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Activate License session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Post Request    Activate License session   /ec2/removeLicense    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Add License
     [Documentation]    Generate activation file on license portal and activate it in client
@@ -291,17 +313,17 @@ Add License
     ${lic block}=   Manual Activate    ${license}    ${hwid}
     ${act obj}=   Create Dictionary    key=${license}    licenseBlock=${lic block}
     ${data}=   Create List    ${act obj}
-    Create Digest Session    Add License session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Add License session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Post Request    Add License session   /ec2/addLicenses    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Get Licenses
     [Arguments]    ${auth}    ${server url}
-    Create Digest Session    Get Licenses session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Get Licenses session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Get Request    Get Licenses session   /ec2/getLicenses
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 License Is Activated
     [Arguments]    ${auth}    ${server url}    ${license}
@@ -313,14 +335,14 @@ License Is Activated
 
 Change License Portal Host
     [Arguments]    ${auth}    ${server url}    ${new host}
-    Create Digest Session    Change License host session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Change License host session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Get Request    Change License host session   /api/systemSettings?licenseServer=${new host}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Get Server HWIDs
     [Arguments]    ${auth}    ${server url}
-    Create Digest Session    Get Server hwids session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Get Server hwids session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=    Get Request    Get Server hwids session   /api/getHardwareIds
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}[reply]
@@ -423,7 +445,7 @@ Change server name via API
 
 Change server port via API
     [Arguments]    ${auth}    ${server url}    ${new port}    ${server id} 
-    &{header}=   Create Dictionary    X-Server-guid=${server id}   
+    &{header}=   Create Dictionary    X-Server-guid=${server id}
     &{data}=   Create Dictionary    port=${new port}
     Create Digest Session    Change Port session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Change Port session    /api/configure    json=${data}    headers=${header}    timeout=10

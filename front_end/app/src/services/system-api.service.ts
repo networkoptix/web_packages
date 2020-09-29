@@ -522,6 +522,9 @@ export class NxSystemAPI {
         return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
+    /**
+     * Start of Storage
+     */
     public getStoragesInfo(queryParams) {
         return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
     }
@@ -545,6 +548,25 @@ export class NxSystemAPI {
     updateStorages(updateParams: IParams) {
         return this.post<any>('/ec2/saveStorages', updateParams);
     }
+
+    rebuildArchive(type: number, action?: string) {
+        let url = `/api/rebuildArchive?mainPool=${type}`;
+        if (action) {
+            url += `&action=${action}`;
+        }
+        return this.get(url);
+    }
+
+    checkForAnalyticsData() {
+        const queryParams = {
+            startTime : 0,
+            endTime   : Number.MAX_SAFE_INTEGER,
+            limit     : 1
+        };
+        return this.get('/ec2/analyticsLookupObjectTracks', queryParams);
+    }
+
+    // End of storage
 
     getRecordStats() {
         return this.get('/api/recStats');
@@ -728,17 +750,6 @@ export class NxSystemAPI {
     }
 
     /* End of Cameras and Servers */
-
-    /**
-     * Start of Storage
-     */
-    rebuildArchive(type: number, action?: string) {
-        let url = `/api/rebuildArchive?mainPool=${type}`;
-        if (action) {
-            url += `&action=${action}`;
-        }
-        return this.get(url);
-    }
 
     /* Formatting urls */
     previewUrl(cameraId: string, time?: number, width?: number, height?: number, rotate?: number) {

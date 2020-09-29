@@ -17,6 +17,12 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/static/customization/*": {
+    "target": "https://0.0.0.0:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/lang_en_US/language_compiled.json": {
     "target": "https://localhost:9000",
     "pathRewrite": {

@@ -37,6 +37,7 @@ import { WizardModalContent }             from './wizard/wizard.component';
 import { CloudConnectModalContent }       from './cloud-connect/cloud-connect.component';
 import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { AddStorageModalContent }         from './add-storage/add-storage.component';
+import { ChangeStorageModalContent }      from './change-storage/change-storage.component';
 import { NxAccountService }               from '../services/account.service';
 import { BaseAccount }                    from '../services/account.service/base';
 import { CloudAccount }                   from '../services/account.service/cloud';
@@ -239,6 +240,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddStorageModalContent, options, params);
+    }
+
+    changeStorage(system: NxSystem) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(ChangeStorageModalContent, options, params);
     }
 
     cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {

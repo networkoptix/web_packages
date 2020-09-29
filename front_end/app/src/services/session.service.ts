@@ -20,7 +20,7 @@ export class NxSessionService {
 
         // Listens to changes from other browser tabs.
         this.window.addEventListener('storage', (event) => {
-            if (event.key === 'ngx-webstorage|loginstate') {
+            if (event.key === 'ngx-webstorage|loginstate' && event.oldValue) {
                 this.window.location.reload();
             }
         });

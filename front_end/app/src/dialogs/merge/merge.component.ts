@@ -611,24 +611,25 @@ export class MergeModalContent {
                 this.serverUrl += ':7001';
             }
             this.cleanUrl = this.serverUrl;
+            this.getSecondaryName();
             this.nonCloudMerge = true;
+            if (!this.dryRunAvailable) {
+                this.systemUpdating = true;
+                await this.system.update().toPromise();
+                this.systemsLoaded = false;
+                this.processedSystems = [];
+                await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
+                // means dryRun is still not available after primary system update
+                if (this.system.info.capabilities.merge_systems >= 1) {
+                    const res = await this.precheckSystemMerge();
+                    return res;
+                }
+                return { error: '0' };
+            }
         } else {
             this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
         }
 
-        if (!this.dryRunAvailable) {
-            this.systemUpdating = true;
-            await this.system.update().toPromise();
-            this.systemsLoaded = false;
-            this.processedSystems = [];
-            await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
-            // means dryRun is still not available after primary system update
-            if (this.system.info.capabilities.merge_systems >= 1) {
-                const res = await this.precheckSystemMerge();
-                return res;
-            }
-            return { error: '0' };
-        }
         /**
          * targetSystem
          * no id = Other System
