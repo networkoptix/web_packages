@@ -260,7 +260,46 @@ Owner can disconnect System from Cloud
     END
 
     Log    Test teardown: get system and system users back to cloud
+    @{custom roles}=    Get User Roles    ${AUTO SYS IP}    ${AUTO SYS AUTH}
     ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   ${AUTO SYS IP}    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
     FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
         Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
     END
+    FOR    ${role}    IN    @{custom roles}
+        &{custom cameras}=   Set Variable If    '''${role["name"]}'''=='''Custom Cameras'''    &{role}
+        Exit For Loop If    '''${role["name"]}'''=='''Custom Cameras'''
+    END
+    FOR    ${role}    IN    @{custom roles}
+        &{custom cameras limited}=   Set Variable If    '''${role["name"]}'''=='''Custom Cameras Limited'''    ${role}
+        Exit For Loop If    '''${role["name"]}'''=='''Custom Cameras Limited'''
+    END
+    FOR    ${role}    IN    @{custom roles}
+        &{client custom}=   Set Variable If    '''${role["name"]}'''=='''Client Custom'''    ${role}
+        Exit For Loop If    '''${role["name"]}'''=='''Client Custom'''
+    END
+    Save User    
+    ...    ${AUTO SYS AUTH}    
+    ...    ${AUTO SYS IP}    
+    ...    ${custom cameras["name"]}    
+    ...    ${EMAIL CUSTOM CAMERAS}    
+    ...    ${EMPTY}    
+    ...    ${EMPTY}    
+    ...    user role id=${custom cameras["id"]} 
+
+    Save User    
+    ...    ${AUTO SYS AUTH}    
+    ...    ${AUTO SYS IP}    
+    ...    ${custom cameras limited["name"]}    
+    ...    ${EMAIL CUSTOM CAMERAS LIMITED}    
+    ...    ${EMPTY}    
+    ...    ${EMPTY}    
+    ...    user role id=${custom cameras limited["id"]}
+
+    Save User    
+    ...    ${AUTO SYS AUTH}    
+    ...    ${AUTO SYS IP}    
+    ...    ${client custom["name"]}    
+    ...    ${EMAIL CLIENT CUSTOM}    
+    ...    ${EMPTY}    
+    ...    ${EMPTY}    
+    ...    user role id=${client custom["id"]}

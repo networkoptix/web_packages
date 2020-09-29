@@ -4,7 +4,7 @@ Suite Setup       Start up    ${url}
 Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     reset cameras and log out
 Suite Teardown    Close All Browsers
-Force Tags        system
+Force Tags        system    cameras
 
 *** Variables ***
 ${email}       ${EMAIL OWNER}

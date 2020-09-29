@@ -6,7 +6,7 @@ import time
 import functools
 import queue
 from threading import Thread
-from os import system, path
+from os import system, path, getcwd
 from get_names import get_threaded_names
 from pabot.pabot import main as pabot
 from robot import run_cli
@@ -15,8 +15,9 @@ from robot import run_cli
 ENVIRONMENT = "https://cloud-test.hdw.mx"
 CUSTOMIZATION = "default"
 LANGUAGE = "en_US"
-OUTPUT_LOCATION = "outputs"
+OUTPUT_LOCATION = f"{getcwd()}/outputs"
 loc = OUTPUT_LOCATION
+
 
 def timer(func):
     ''' a simple decorator to print out actual run time.  
