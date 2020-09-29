@@ -277,29 +277,26 @@ Owner can disconnect System from Cloud
         &{client custom}=   Set Variable If    '''${role["name"]}'''=='''Client Custom'''    ${role}
         Exit For Loop If    '''${role["name"]}'''=='''Client Custom'''
     END
-    Save User    
+    Save User Existing
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
-    ...    ${custom cameras["name"]}    
+    ...    ${custom cameras["name"]}  
+    ...    ${custom cameras["permissions"]}  
     ...    ${EMAIL CUSTOM CAMERAS}    
-    ...    ${EMPTY}    
-    ...    ${EMPTY}    
-    ...    user role id=${custom cameras["id"]} 
+    ...    ${custom cameras["id"]} 
 
-    Save User    
+    Save User Existing
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
     ...    ${custom cameras limited["name"]}    
+    ...    ${custom cameras limited["permissions"]}    
     ...    ${EMAIL CUSTOM CAMERAS LIMITED}    
-    ...    ${EMPTY}    
-    ...    ${EMPTY}    
-    ...    user role id=${custom cameras limited["id"]}
+    ...    ${custom cameras limited["id"]}
 
-    Save User    
+    Save User Existing 
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
     ...    ${client custom["name"]}    
+    ...    ${client custom["permissions"]}
     ...    ${EMAIL CLIENT CUSTOM}    
-    ...    ${EMPTY}    
-    ...    ${EMPTY}    
-    ...    user role id=${client custom["id"]}
+    ...    ${client custom["id"]}
