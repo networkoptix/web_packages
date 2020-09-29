@@ -403,7 +403,7 @@ Save User
     ...    ${auth}
     ...    ${server url}
     ...    ${name}
-    #...    ${permissions}
+    ...    ${permissions}
     ...    ${email}
     ...    ${full name}
     ...    ${password}
@@ -414,6 +414,14 @@ Save User
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
+    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Save User Existing
+    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}
+    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${True}    isCloud=${True}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
