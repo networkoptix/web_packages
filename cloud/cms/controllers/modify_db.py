@@ -408,7 +408,10 @@ def generate_preview(asset, context=None, version_id=None, send_to_review=False)
 
 def publish_latest_version(asset, review_id, user):
     publish_errors = update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
-    if not publish_errors:
+    if asset.is_cloud_portal:
+        update_global_cache(asset.customizations.first(), asset.version_id())
+
+    if not publish_errors and asset.can_preview_on_portal:
         fill_content(asset, preview=False, incremental=True)
     return publish_errors
 
