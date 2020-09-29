@@ -197,7 +197,7 @@
     "PASSWORD TEXT": "패스워드",
     "MERGE ENTER SERVER ADDRESS TEXT": "서버 주소 입력",
     "MERGE INVALID URL TEXT": "유효한 URL을 입력",
-    "MERGE SERVER NOT FOUND TEXT": "No server found",
+    "MERGE SERVER NOT FOUND TEXT": "미디어 서버 없음",
     "MERGE SYSTEM BUTTON TEXT": "다른 시스템과 병합",
     "MERGE ENTER THE ADDRESS TEXT": "이 서버와 병합하려는 시스템에있는 서버의 주소를 입력하십시오",
     "MERGE SYSTEMS TEXT": "시스템 병합",

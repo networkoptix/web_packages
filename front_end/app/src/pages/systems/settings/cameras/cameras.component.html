@@ -128,7 +128,7 @@
                                 [value]="recording"
                                 [label]="'Recording' | translate"
                                 componentId="recording"
-                                [disabled]="!recording && recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0"
+                                [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
                                 (click)="handleRecordingToggle()"></nx-switch>
                             <div *ngIf="!recording" class="recording-hint" [ngClass]="{
                                 'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,

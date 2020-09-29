@@ -27,3 +27,55 @@ ${RENAME ERROR TEXT}                ${RENAME SERVER INPUT}/following-sibling::p/
 ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
 ${OFFLINE BADGE}                    //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
 ${CHECKING BADGE}                   //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
+
+# ADVANCED
+# Storage Locations Block
+${STORAGE LOCATIONS TITLE}          //h4[text()="${STORAGE LOCATIONS TEXT}"]
+${RESERVED SPACE INPUT}             //input[@id="reservedSpace0"]   
+${RESERVED SPACE DROPDOWN}          //select[@id="reservedSpaceUnit0"]
+${RESERVED DROPDOWN SELECTED}       ${RESERVED SPACE DROPDOWN}//option[@selected]
+${RESERVED DROPDOWN OPTION GB}      ${RESERVED SPACE DROPDOWN}//option[@value='GB']
+${RESERVED DROPDOWN OPTION TB}      ${RESERVED SPACE DROPDOWN}//option[@value='TB']
+${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0']
+@{STORAGE LOCATIONS BLOCK}
+...    ${STORAGE LOCATIONS TITLE}
+...    ${RESERVED SPACE INPUT}
+...    ${RESERVED SPACE DROPDOWN}
+...    ${STORAGE ENABLE SWITCH}
+${STORAGE ENABLE SWITCH STYLE}     ${STORAGE ENABLE SWITCH}//span[@class='slider round']
+${STORAGE SWITCH ENABLED COLOR}    rgba(58, 145, 30, 1)
+${STORAGE SWITCH DISABLED COLOR}   rgba(185, 199, 206, 1) 
+${STORAGE FREE SPACE VALUE}        //td[@title='/recordings/HD Witness Media']//following-sibling::td[2]
+
+# Log settings block
+${LOG SETTINGS TITLE}               //h4[text()="${LOG SETTINGS TEXT}"]
+${EC2_TRAN LOG LEVEL DROPDOWN}      //button[@id="EC2_TRAN"]
+${HTTP LOG LEVEL DROPDOWN}          //button[@id="HTTP"]
+${HWID LOG LEVEL DROPDOWN}          //button[@id="HWID"]
+${MAIN LOG LEVEL DROPDOWN}          //button[@id="MAIN"]
+${PERMISSIONS LOG LEVEL DROPDOWN}   //button[@id="PERMISSIONS"]
+@{LOG SETTINGS BLOCK}
+...    ${LOG SETTINGS TITLE}
+...    ${EC2_TRAN LOG LEVEL DROPDOWN} 
+...    ${HTTP LOG LEVEL DROPDOWN}
+...    ${HWID LOG LEVEL DROPDOWN}
+...    ${MAIN LOG LEVEL DROPDOWN}
+...    ${PERMISSIONS LOG LEVEL DROPDOWN}
+@{LOGLEVEL IDS}
+...    ${EC2_TRAN LOG LEVEL DROPDOWN} 
+...    ${HTTP LOG LEVEL DROPDOWN}
+...    ${HWID LOG LEVEL DROPDOWN}
+...    ${MAIN LOG LEVEL DROPDOWN}
+...    ${PERMISSIONS LOG LEVEL DROPDOWN}    
+@{LOGLEVEL OPTIONS}
+...    None
+...    Error
+...    Warning
+...    Info
+...    Debug
+...    Verbose
+
+${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${SAVE BUTTON TEXT}']
+${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']
+${LOG SAVE BUTTON}                 ${LOG SETTINGS TITLE}//ancestor::div[@class='card']//button[text()='${SAVE BUTTON TEXT}']
+

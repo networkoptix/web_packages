@@ -4,6 +4,7 @@
     "TEST EMAIL"                 :    "noptixautoqa",
     "AUTO SYS IP"                :    "https://10.1.5.126:7008",
     "AUTO SYS IP ONLY"		     :    "10.1.5.126:7008",
+    "ADVANCED SYS IP"			 :	  "https://10.1.5.126:7030",
     "PRIVACY POLICY URL HREF"    :    "https://www.networkoptix.com/privacy-policy/",
     "PRIVACY POLICY URL FULL"    :    "https://www.networkoptix.com/privacy-policy/",
     "SUPPORT URL"                :    "https://support.networkoptix.com",

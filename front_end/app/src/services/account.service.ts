@@ -445,11 +445,11 @@ export class NxAccountService implements OnDestroy {
                         .finally(() => {
                             setTimeout(() => this.window.location.reload());
                         });
+                } else {
+                    setTimeout(() => {
+                        this.window.location.reload();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.window.location.reload();
-                });
             });
     }
 

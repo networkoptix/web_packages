@@ -30,16 +30,35 @@ Settings on page should match settings on server
     Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced
     Log    Limit session duration to
     ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
 
 Setting on page matches server
-    [Arguments]    ${setting}    ${id}
+    [Arguments]    ${setting}    ${id}    ${system}=${AUTO SYS IP}
     ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
     ${string}=   Convert To String    ${status}
     ${selected}=   Convert To Lowercase    ${string}
-    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     ${id}    ${selected}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${selected}    ${system}
 
+Input on page matches server
+    [Arguments]    ${input}    ${id}    ${system}=${ADVANCED SYS IP}
+    ${data} =    Get Element Attribute    ${input}    value
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${data}    ${system}
+
+Change Input for Advanced Setting
+    [Arguments]    ${input}    ${value}
+    Input Text    ${input}    ${value}
+    Click Button    ${ADVANCED SETTINGS SAVE BUTTON}    
+    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    
+    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
+    Run Keyword Unless    '${value}' == '${EMPTY}'
+    ...    Wait Until Textfield Contains    ${input}    ${value}    
+
+Data on page matches server
+    [Arguments]    ${element}    ${id}    ${system}=${ADVANCED SYS IP}
+    ${data} =    Get Text    ${element}  
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${data}    ${system}
+    
 Evaluate Session Limit
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Sleep    5
@@ -47,19 +66,25 @@ Evaluate Session Limit
     ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
     ...    "${interval}"=="${MINUTES TEXT}"    1
     ${number}=   Evaluate      ${multiplier}*${value}
-    Evaluate Auto System Settings via API    sessionLimitMinutes      ${number}
+    Evaluate System Settings via API    sessionLimitMinutes      ${number}
 
 Changing setting changes it on server
-    [Arguments]    ${setting}    ${id}
+    [Arguments]    ${setting}    ${id}    ${system}=${AUTO SYS IP}
+    ${advanced} =    Run Keyword and Return Status    Location Should Contain    ${ADVANCED SETTINGS}
     Wait until element is enabled    ${setting}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
     ${selected}=   Set Variable If    ${status}==True    false
     ...    ${status}==False    true
     Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Evaluate Auto System Settings via API     ${id}    ${selected}
+    Run Keyword If    ${advanced}    Run Keywords
+    ...    Click Button    ${ADVANCED SETTINGS SAVE BUTTON}    AND
+    ...    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    AND
+    ...    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
+    ...    ELSE    Run Keywords
+    ...    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}    AND
+    ...    Click Button    ${SYSTEM SAVE}    AND
+    ...    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Evaluate System Settings via API     ${id}    ${selected}    ${system}
 
 Change Setting and Save
     [Arguments]    ${setting}
@@ -174,4 +199,13 @@ Wait Until Security Settings Are Visible
     ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
     ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
     ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+       
+Log in to Advanced Settings System
+    [Arguments]    ${email}
+    Go To    ${url}/systems/${ADVANCED SETTINGS SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    ...    ELSE IF    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+   
     
