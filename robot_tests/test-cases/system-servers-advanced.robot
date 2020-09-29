@@ -179,6 +179,8 @@ Reserved space dropdown menu functionality
     ${bytes 2} =    Get Text    ${RESERVED DROPDOWN SELECTED}
     ${times 1000} =    Evaluate    ${max} * 1000
     ${divide 1000} =    Evaluate    ${max} / 1000
+    ${times 1000} =    Convert To String    ${times 1000}
+    ${divide 1000} =    Convert To String    ${divide 1000}
     ${value} =    Get Element Attribute   ${RESERVED SPACE INPUT}    value
     Run Keyword If    '${bytes 2}' == 'TB'   Should Be Equal    ${value}    ${times 1000}
     ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1000}
