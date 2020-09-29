@@ -297,3 +297,17 @@ ${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/im
 ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
+
+#ADVANCED SETTINGS
+${ADVANCED SETTINGS}                    ?advanced=true
+${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
+${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
+${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
+${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
+${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
+@{ADVANCED SETTINGS ALERT BAR}
+...    ${HIDE ADVANCED SETTINGS BUTTON} 
+...    ${HIDE ADVANCED SETTINGS ICON}
+...    ${ADVANCED SETTINGS ALERT ICON} 
+...    ${ADVANCED SETTINGS ALERT} 
+...    ${ADVANCED SETTINGS WARNING}

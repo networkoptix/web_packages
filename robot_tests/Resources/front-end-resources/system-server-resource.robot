@@ -47,3 +47,18 @@ Change Port To
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL} 
+    
+Test Every Loglevel Option
+    [Arguments]    ${dropdown}    ${id}
+    FOR    ${option}    IN    @{LOGLEVEL OPTIONS}
+        Set Log Level Option    ${dropdown}    ${id}    ${option}
+        Evaluate Log Level via API    ${id}    ${option}    ${ADVANCED SYS IP}
+    END
+ 
+Set Log Level Option
+    [Arguments]    ${dropdown}    ${id}    ${option}
+    Click Element    ${dropdown}
+    Click Element    //div[@aria-labelledby="${id}"]//a/span[text()="${option}"]
+    Click Button   ${LOG SAVE BUTTON}
+    Wait Until Element is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}
+    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
