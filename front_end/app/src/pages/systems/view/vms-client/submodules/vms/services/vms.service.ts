@@ -37,6 +37,12 @@ export class VideoManagementSystemService {
     return this._subject
   }
 
+  protected _systemId: string = undefined
+
+  public get systemId (): string {
+    return this._systemId
+  }
+
 
   protected _state: VmsState = createNotInitializedState()
 
@@ -52,9 +58,10 @@ export class VideoManagementSystemService {
     }
   }
 
-  public setMediaServers (mediaServers: Array<IMediaServer>) {
+  public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>) {
+    this._systemId = systemId
     const prevSelectedCameraId: GUID | undefined = this._state['selectedCameraId']
-    this._state = createCameraNotSelectedState(mediaServers)
+    this._state = createCameraNotSelectedState(systemId, mediaServers)
     if (prevSelectedCameraId) {
       this._state = createCameraSelectedState(this._state, prevSelectedCameraId)
     }
@@ -62,7 +69,7 @@ export class VideoManagementSystemService {
   }
 
   public setTestMediaServers () {
-    this.setMediaServers(testMediaServers)
+    this.setMediaServers('test', testMediaServers)
   }
 
   public selectCamera (cameraId: GUID) {
@@ -79,7 +86,7 @@ export class VideoManagementSystemService {
       console.warn('attempt to clear camera selection while VMS is not initialized yet')
       return
     }
-    this._state = createCameraNotSelectedState(this._state.mediaServers)
+    this._state = createCameraNotSelectedState(this.systemId, this._state.mediaServers)
     this._emit()
   }
 

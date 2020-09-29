@@ -14,7 +14,7 @@ import { float, percentage } from '../../../../utils/type-aliases';
 @Component({
   selector: 'timeline-scrollbar',
   templateUrl: './timeline-scrollbar.component.html',
-  styleUrls: ['./timeline-scrollbar.component.styl'],
+  styleUrls: ['./timeline-scrollbar.component.scss'],
 })
 export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDestroy {
 

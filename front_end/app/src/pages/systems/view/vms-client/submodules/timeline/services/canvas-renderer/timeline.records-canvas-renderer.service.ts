@@ -24,7 +24,7 @@ export class TimelineRecordsCanvasRendererService {
     const RECORDS_HEIGHT_RELATIVE = 0.24
 
     // background
-    ctx.fillStyle = '#eceff1'
+    ctx.fillStyle = '#ebeff1'
     ctx.fillRect(
       0, Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
       this.timeline.canvasGeometry.width,
@@ -32,12 +32,7 @@ export class TimelineRecordsCanvasRendererService {
     )
 
     // records
-    ctx.fillStyle = '#6cb943'
-    // ctx.fillRect(
-    //   0, Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
-    //   this.timeline.canvasGeometry.width * 0.8,
-    //   Math.round(RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height),
-    // )
+    ctx.fillStyle = '#4cbd27'
     if (this.vms.selectedCamera) {
       const minT: ms = this.timeline.visibleRange.start
       const maxT: ms = this.timeline.visibleRange.end
@@ -50,7 +45,7 @@ export class TimelineRecordsCanvasRendererService {
           x1 = x0 + MIN_WIDTH
         }
         const y = Math.round(RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height)
-        const h = y / 3
+        const h = Math.round(RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height)
         const w = x1 - x0
         ctx.fillRect(x0, y, w, h)
       })

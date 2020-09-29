@@ -26,7 +26,7 @@ export class TimeRange {
     this.end = s + duration
   }
 
-  public zoom (durationDelta: ms, offset: float, limitingRange: TimeRange) {
+  public zoom (durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange) {
 
     this.start += Math.round(durationDelta * offset)
     this.end -= Math.round(durationDelta * (1.0 - offset))

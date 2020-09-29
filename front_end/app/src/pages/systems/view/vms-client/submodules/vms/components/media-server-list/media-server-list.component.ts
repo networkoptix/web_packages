@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 
 import { Subscription } from 'rxjs'
 
+import { CookieService } from 'ngx-cookie-service'
+
 import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service'
 import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
 import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
@@ -15,10 +17,19 @@ import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/Medi
 export class MediaServerListComponent implements OnInit, OnDestroy {
 
   protected _vmsStateSubscription: Subscription
+  protected _mediaservers: Array<MediaServer>
+  public showIP: boolean = false
+  public token: string = ''
+
   public mediaservers: Array<MediaServer>
 
+  public isServerExpanded: {
+    [serverId: string]: boolean
+  } = {}
+
   constructor (
-    private vms: VideoManagementSystemService
+    private vms: VideoManagementSystemService,
+    protected cookieService: CookieService,
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
   }
@@ -34,12 +45,57 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
   protected _onVmsSubjectChange (s: VmsState) {
     switch (s.mode) {
       case VMS_MODE.NOT_INITIALIZED:
-        this.mediaservers = []
+        this._mediaservers = []
         break
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
-        this.mediaservers = s.mediaServers
+        this._mediaservers = s.mediaServers
     }
+    this._resetServersVisibility()
+    this.updateFilteredList(this.token)
+  }
+
+  protected _resetServersVisibility () {
+    if (this._mediaservers) {
+      this.isServerExpanded = this._mediaservers.reduce(
+        (acc, ms) => {
+          const systemId = this.vms['systemId']
+          const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`
+          acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true
+          return acc
+        },
+        {}
+      )
+    } else {
+      this.isServerExpanded = {}
+    }
+  }
+
+  public changeServerVisibility (serverId: string) {
+    this.isServerExpanded[serverId] = !this.isServerExpanded[serverId]
+    const systemId = this.vms['systemId']
+    const cookieName = `nx_system_${systemId}_server_${serverId}_expansion_status`
+    this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]))
+  }
+
+  public updateShowIP (newValue: boolean) {
+    this.showIP = newValue
+  }
+
+  public updateFilteredList (token: string) {
+    this.token = token
+    if (!token) {
+      this.mediaservers = this._mediaservers
+      return
+    }
+    token = token.toLocaleLowerCase()
+    this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
+      const cameras = ms.cameras.filter(c => c.name.toLocaleLowerCase().includes(token) || c.url.toLocaleLowerCase().includes(token))
+      if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.url.toLocaleLowerCase().includes(token)) {
+        acc.push({ ...ms, cameras })
+      }
+      return acc
+    }, [])
   }
 }
 

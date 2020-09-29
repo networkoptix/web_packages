@@ -12,6 +12,8 @@ import cfg from '../../timeline.config'
 import topRulerDateFormats from './dateformats/top_ruler_date_formats'
 import percentageToHex from './percentageToHex'
 
+import isIntervalOdd from './intervals/utils/isIntervalOdd'
+
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +30,18 @@ export class TimelineTopRulerCanvasRendererService {
     const serifTimes = this.getSerifTimes()
     // console.log('TOP SERIFS', serifTimes, serifTimes.map(st => new Date(st)))
     this._withContext(ctx, () => {
-      ctx.fillStyle = drawingConfig.backgroundOddColor
-      ctx.fillRect(0, 0, this.timeline.canvasGeometry.width,
-        this.timeline.canvasGeometry.height * cfg.ruler.top.relativeHeight
-      )
+
+      const h = this.timeline.canvasGeometry.height * cfg.ruler.top.relativeHeight
+
+      ctx.fillStyle = drawingConfig.backgroundEvenColor
+      ctx.fillRect(0, 0, this.timeline.canvasGeometry.width, h)
+
+      ctx.strokeStyle = drawingConfig.underscoreColor
+      ctx.beginPath()
+      ctx.moveTo(0, h)
+      ctx.lineTo(this.timeline.canvasGeometry.width, h)
+      ctx.stroke()
+
       serifTimes.map((time, index, serifTimes) => this._drawSerif(ctx, interval, time, serifTimes[index - 1], serifTimes[index + 1]))
     })
   }
@@ -106,11 +116,19 @@ export class TimelineTopRulerCanvasRendererService {
     if (x0 < 0) x0 = 0
     if (x1 > this.timeline.canvasGeometry.width) x1 = this.timeline.canvasGeometry.width
     const MIN_WIDTH = 130 * this.timeline.canvasGeometry.dpr
-    if (x1 - x0 < MIN_WIDTH) return
 
     const y0: px = 0
     const y1: px = Math.round(cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height)
     const y2: px = Math.round(drawingConfig.serif.heightRelative * this.timeline.canvasGeometry.height)
+
+    if (isIntervalOdd(curTime, interval)) {
+      ctx.fillStyle = drawingConfig.backgroundOddColor
+      ctx.fillRect(x0, y0, x1 - x0, y1)
+    }
+
+    if (x1 - x0 < MIN_WIDTH) return
+
+
     ctx.strokeStyle = `${drawingConfig.serif.baseColorHex}${percentageToHex(drawingConfig.serif.opacity)}`
     ctx.beginPath()
     ctx.moveTo(x0, y0)

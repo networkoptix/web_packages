@@ -8,7 +8,7 @@ import VideoManagementSystemService from '../../../vms/services/vms.service'
 @Component({
   selector: 'playback-state-indicator',
   templateUrl: './playback-state-indicator.component.html',
-  styleUrls: ['./playback-state-indicator.component.styl'],
+  styleUrls: ['./playback-state-indicator.component.scss'],
 })
 export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
 
@@ -44,6 +44,16 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
 
   public onSubjectChange (s: PlaybackState) {
     this.state = s
+  }
+
+  public handleLiveClick () {
+    if (this.playback.canPlayLive) {
+      this.playback.playLive()
+    }
+  }
+
+  public get canPlayLive (): boolean {
+    return this.vms.selectedCamera && this.vms.selectedCamera.isLive
   }
 }
 

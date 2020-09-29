@@ -47,20 +47,29 @@
     > playback-controls
       flex-grow 0
       flex-shrink 0
-      width 100px
 
-    > timeline,
-    > .no-archive-message
-      flex-grow 1
-      border-left 1px solid lightgray
-      border-right 1px solid lightgray
+    > zoom-controls {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
 
-    > .no-archive-message
+    > timeline {
+      flex-grow: 1;
+      border-left: 1px solid $border-color;
+      border-right: 1px solid $border-color;
+    }
+
+    > .no-archive-message {
+      flex-grow: 1;
       display: flex;
-      flex-direction: row;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-transform: uppercase;
+      font-size: 3rem;
+      border-left: 1px solid $border-color;
+      border-right: 1px solid $border-color;
+    }
 
     > playback-state-indicator
       flex-grow 0

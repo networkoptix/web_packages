@@ -1,7 +1,7 @@
 export const topRulerDrawingConfig = {
   serif: {
     heightRelative: 0.3,
-    baseColorHex: '#698796', // [105, 135, 150],
+    baseColorHex: '#98acb7',
     opacity: 1.0,
   },
   topLabel: {
@@ -14,7 +14,9 @@ export const topRulerDrawingConfig = {
     baseColorHex: '#2b383f', // [43, 56, 63],
     opacity: 1.0,
   },
-  backgroundOddColor: '#f0f3f4', // [240, 243, 244]
+  backgroundEvenColor: '#ffffff',
+  backgroundOddColor: '#f1f3f4',
+  underscoreColor: '#e5e8ea',
 }
 
 export default topRulerDrawingConfig

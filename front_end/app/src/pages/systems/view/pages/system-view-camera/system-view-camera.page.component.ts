@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core'
 import { INxViewCamera  } from '../../view.types'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NxSystemService, NxSystem } from '../../../../../services/system.service'
@@ -18,9 +18,9 @@ type int = number
 @Component({
     selector: 'nx-system-view-camera-page',
     templateUrl: 'system-view-camera.page.component.html',
-    styleUrls: ['system-view-camera.page.component.styl']
+    styleUrls: ['system-view-camera.page.component.scss']
 })
-export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy {
+export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public id: string
     public camera: ICamera
@@ -30,9 +30,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy {
     protected _animationFrameRequestHandler: number
 
     constructor (
-      private route: ActivatedRoute,
-      private vms: VideoManagementSystemService,
-      private playback: PlaybackService,
+      protected self: ElementRef,
+      protected route: ActivatedRoute,
+      protected vms: VideoManagementSystemService,
+      protected playback: PlaybackService,
       public timeline: TimelineService,
       public timelineExtendToNow: TimelineExtendToNowService,
     ) {
@@ -41,11 +42,23 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy {
       this._onAnimationFrame = this._onAnimationFrame.bind(this)
     }
 
+    public handleControlsTogglingEarClick () {
+      this.$self.classList.toggle('controls-shown')
+    }
+
+    public get $self (): HTMLElement {
+      return this.self.nativeElement as HTMLElement
+    }
+
     public ngOnInit (): void {
       this._routeSubscription = this.route.params.subscribe(this._onRouteChange)
       this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
       this._animationFrameRequestHandler =
         requestAnimationFrame(this._onAnimationFrame)
+    }
+
+    public ngAfterViewInit () {
+      this.$self.classList.add('controls-shown')
     }
 
     public ngOnDestroy (): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
 import { Subscription } from 'rxjs'
@@ -13,6 +13,7 @@ import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer'
 import Camera from '../../vms-client/submodules/vms/datatypes/Camera'
 import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import { ms } from '../../vms-client/utils/type-aliases'
+import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 
 
 @Component({
@@ -29,6 +30,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   public systemId: string
   public system: NxSystem
 
+  public initialized: boolean = false
+  public initializedWithError: boolean = false
+
+  public handleSidebarTogglingEarClick () {
+    this.$self.classList.toggle('sidebarShown')
+    setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+  }
+
+  public get $self (): HTMLElement {
+    return this.self.nativeElement as HTMLElement
+  }
+
   public get mediaServers (): Array<MediaServer> {
     return this._state && this._state.mode !== VMS_MODE.NOT_INITIALIZED
       ? this._state.mediaServers
@@ -36,12 +49,14 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   constructor (
+    private self: ElementRef,
     protected router: Router,
     protected route: ActivatedRoute,
     protected accountService: NxAccountService,
     protected systemService: NxSystemService,
     protected cookieService: CookieService,
-    private vms: VideoManagementSystemService
+    protected vms: VideoManagementSystemService,
+    protected timeline: TimelineService,
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
     this._onRouteChange = this._onRouteChange.bind(this)
@@ -66,6 +81,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     if (params.systemId) {
       this.systemId = params.systemId
       this.system = undefined
+      this.initialized = false
+      this.initializedWithError = false
       this._initSystem()
     }
   }
@@ -82,9 +99,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           serverTimeInfos.map(sti => {
             mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti
           })
-          // if (!this.route.snapshot.children.length) {
-          //   this.redirectToCameraIfPossible()
-          // }
+          if (!this.route.snapshot.children.length) {
+            this._tryToRedirectToCamera(mediaServers)
+          }
           return mediaServers
         }
       )
@@ -111,7 +128,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           }
         })
       })).then(() => {
-        this.vms.setMediaServers(mediaServers.map(ms => ({
+        this.vms.setMediaServers(this.systemId, mediaServers.map(ms => ({
           id: ms.id,
           name: ms.name,
           url: ms.url,
@@ -130,8 +147,47 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
           ))
         })))
+        this.initialized = true
+        console.log(`system ${this.system.id} view initialized`)
+
+        this.$self.classList.add('sidebarShown')
+        setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
       })
+    }).catch(e => {
+      console.warn(`system ${this.system.id} view initialization failed`, e)
+      this.initialized = true
+      this.initializedWithError = true
     })
+  }
+
+  protected _tryToRedirectToCamera (mediaServers) {
+    // first try to find a cookie-stored camera id
+    // TODO: extract to a dedicated service
+    const cookie_name = `nx_last_accessed_camera_for_system_${this.systemId}`
+    const cookieCameraId = this.cookieService.get(cookie_name)
+    if (cookieCameraId) {
+      const thisCameraExists = !!mediaServers.find(ms => ms.cameras.find(c => c.id === cookieCameraId))
+      if (thisCameraExists) {
+        this.router.navigate([ cookieCameraId ], { relativeTo: this.route })
+        return
+      }
+    }
+
+    // fallback one: first online camera
+    const cameraChecker = c => c.status === 'Online' || c.status === 'Recording'
+    const firstMediaServerWithAnOnlineCamera = mediaServers.find(ms => ms.cameras.find(cameraChecker))
+    if (firstMediaServerWithAnOnlineCamera) {
+      const firstOnlineCameraId = firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker)
+      this.router.navigate([ firstOnlineCameraId ], { relativeTo: this.route })
+      return
+    }
+
+    // fallback two: simply use the first camera available
+    const firstMediaServer = mediaServers.find(ms => ms.cameras.length)
+    const firstCameraId = firstMediaServer.cameras[0].id
+    this.router.navigate([ firstCameraId ], { relativeTo: this.route })
+
+    // the case of no cameras at all was guarded against in the beginning of this method
   }
 
 }

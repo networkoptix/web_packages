@@ -1,7 +1,7 @@
 import MediaServerList from './media-server-list/media-server-list.component'
-// import NxMediaServerListHeaderComponent from './media-server-list/media-server-list-header/media-server-list-header.component'
+import NxMediaServerListHeaderComponent from './media-server-list-header/media-server-list-header.component'
 
 export default [
   MediaServerList,
-  // NxMediaServerListHeaderComponent,
+  NxMediaServerListHeaderComponent,
 ]

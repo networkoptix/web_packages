@@ -8,7 +8,6 @@ export function isIntervalOdd (
 ) {
   const date = new Date(t)
   let v
-  let result
   switch (d) {
     case 'month':
       v = date.getMonth() + 1
@@ -23,19 +22,18 @@ export function isIntervalOdd (
       v = date.getFullYear()
       break
     case 'decade':
-      v = date.getFullYear() % 10
+      v = Math.floor(date.getFullYear() / 10)
       break
     case 'century':
-      v = date.getFullYear() % 100
+      v = Math.floor(date.getFullYear() / 100)
       break
     // case 'millenia':
-    //   v = date.getFullYear() % 1000
+    //   v = Math.floor(date.getFullYear()) % 1000
     //   break
     default:
-      d = <durationMs>d
-      return (t / d) % 2 === 1
+      return !!(Math.floor(t / <durationMs>d) % 2)
   }
-  return v % 2 === 1
+  return !!(v % 2)
 }
 
 export default isIntervalOdd

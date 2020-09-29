@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import TimelineService from '../../services/timeline.service'
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service'
 import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service'
 import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service'
 import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service'
 import TimelineSelectionService from '../../services/timeline.selection.service'
 import PlaybackService from '../../../playback/services/playback.service'
+import { Subscription } from 'rxjs';
 
 const CANVAS_SELECTION_HEIGHT = 50
 // const MAX_TIMES_RENDERED = 1
@@ -15,9 +16,12 @@ const CANVAS_SELECTION_HEIGHT = 50
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.styl'],
 })
-export class TimelineComponent implements OnInit, AfterViewInit {
+export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild("canvas") canvasView: ElementRef;
+
+  protected _state: TimelineServiceStatus
+  protected _stateSubscription: Subscription
 
   constructor (
     public timeline: TimelineService,
@@ -27,16 +31,26 @@ export class TimelineComponent implements OnInit, AfterViewInit {
     public timeUnderMouse: TimelineTimeUnderMouseService,
     protected selection: TimelineSelectionService,
   ) {
+    this._onTimelineStatusChange = this._onTimelineStatusChange.bind(this)
+  }
+
+  protected _onTimelineStatusChange (s: TimelineServiceStatus) {
+    if (s.canvasGeometryUpdateRequested) {
+      this._updateCanvasGeometry()
+    }
   }
 
   protected _animationFrameRequestHandler: number
 
   public ngOnInit(): void {
+    this._stateSubscription = this.timeline.subject.subscribe(this._onTimelineStatusChange)
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public onAnimationFrame (): void {
+    this._updateCanvasGeometry() // actually shouldn't happen that often
+
     const ctx = (this.canvasView.nativeElement as HTMLCanvasElement).getContext('2d')
     // console.log('render #', times_rendered)
     this.canvasRenderer.render(ctx)
@@ -48,6 +62,7 @@ export class TimelineComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnDestroy (): void {
+    this._stateSubscription.unsubscribe()
     cancelAnimationFrame(this._animationFrameRequestHandler)
   }
 

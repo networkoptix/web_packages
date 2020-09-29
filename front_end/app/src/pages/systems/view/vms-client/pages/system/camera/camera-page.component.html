@@ -13,7 +13,8 @@
 <ng-template #noPlayer><div class="no-player-message">No Player</div></ng-template>
 
 <div *ngIf="camera" class="controls">
-  <playback-controls *ngIf="showPlaybackControls"></playback-controls>
+  <playback-controls></playback-controls>
+  <zoom-controls></zoom-controls>
   <timeline *ngIf="showTimeline else noArchive"></timeline>
   <ng-template #noArchive><div class="no-archive-message">No Archive</div></ng-template>
   <playback-state-indicator></playback-state-indicator>

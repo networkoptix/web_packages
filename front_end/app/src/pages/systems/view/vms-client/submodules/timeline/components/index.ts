@@ -3,6 +3,7 @@ import TimeUnderMouseComponent from './time-under-mouse/time-under-mouse.compone
 import TimelinePlaybackIndicatorComponent from './timeline-playback-indicator/timeline-playback-indicator.component'
 import TimelineScrollbarComponent from './timeline-scrollbar/timeline-scrollbar.component'
 import TimelineSelectionComponent from './timeline-selection/timeline-selection.component'
+import ZoomControlsComponent from './zoom-controls/zoom-controls.component'
 
 export default [
   TimelineComponent,
@@ -10,4 +11,5 @@ export default [
   TimelinePlaybackIndicatorComponent,
   TimelineScrollbarComponent,
   TimelineSelectionComponent,
+  ZoomControlsComponent,
 ]

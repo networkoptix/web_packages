@@ -34,15 +34,18 @@ export type CameraDict = {
 
 export interface CameraNotSelectedVmsState extends AbstractVmsState {
   mode: VMS_MODE.CAMERA_NOT_SELECTED,
+  systemId: string,
   mediaServers: Array<IMediaServer>,
   cameras: CameraDict
 }
 
 export function createCameraNotSelectedState (
+  systemId: string,
   mediaServers: Array<IMediaServer>,
 ): CameraNotSelectedVmsState {
   return {
     mode: VMS_MODE.CAMERA_NOT_SELECTED,
+    systemId,
     mediaServers: mediaServers,
     cameras: mediaServers.reduce((acc, ms) => {
       ms.cameras.map(c => {
@@ -56,6 +59,7 @@ export function createCameraNotSelectedState (
 
 export interface CameraSelectedVmsState extends AbstractVmsState {
   mode: VMS_MODE.CAMERA_SELECTED,
+  systemId: string,
   mediaServers: Array<IMediaServer>,
   cameras: CameraDict
   selectedCameraId: GUID,

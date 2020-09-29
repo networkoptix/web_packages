@@ -1,18 +1,24 @@
 <div class="media-server-list">
+
+  <nx-media-server-list-header
+    (ipVisibilityStateChange)="updateShowIP($event)"
+    (filterTokenChange)="updateFilteredList($event)"
+  ></nx-media-server-list-header>
+
   <div class="server-list">
     <div
       class="server"
       *ngFor="let server of mediaservers"
       [ngClass]="{
-        'show-ip': true,
-        'expanded': true,
+        'show-ip': showIP,
+        'expanded': isServerExpanded[server.id],
         'online': server.status === 'Online',
         'offline': server.status === 'Offline',
         'unauthorized': server.status === 'Unauthorized',
         'empty': !server.cameras.length
       }"
     >
-      <div class="server-name">
+      <div class="server-name" (click)=changeServerVisibility(server.id)>
         <span class="name">{{ server.name }}</span>
         <span class="ip-info">{{ server.url | ip_info }}</span>
       </div>

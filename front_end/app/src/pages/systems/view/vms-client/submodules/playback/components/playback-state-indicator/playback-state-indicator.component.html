@@ -1,5 +1,14 @@
-<div [ngClass]="{
-  'active': isLive,
-  'playing': isPlaying,
-  'recording': isRecording
-}" class="is-live"></div>
+<div
+  [ngClass]="{
+    'active': canPlayLive,
+    'playing': isPlaying,
+    'recording': isRecording
+  }"
+  class="is-live"
+  (click)="handleLiveClick()"
+>
+  <span class="line">
+    <span class="icon"></span>
+    <span class="text">live</span>
+  </span>
+</div>

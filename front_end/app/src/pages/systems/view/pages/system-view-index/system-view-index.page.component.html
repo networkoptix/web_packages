@@ -1,14 +1,16 @@
-<div class="nx-view-sidebar">
-    <media-server-list></media-server-list>
-    <!-- <nx-system-media-server-list
-        [systemId]="systemId"
-        [system]="system"
-        [mediaServers]="mediaServers"
-    ></nx-system-media-server-list> -->
-</div>
+<nx-pre-loader *ngIf="!initialized; else uninitialized"></nx-pre-loader>
 
-<router-outlet></router-outlet>
+<ng-template #uninitialized>
 
-<!-- <div *ngIf="mediaServers && noCameras" class="no-cameras-message">
-    There are no cameras in this system
-</div> -->
+    <div class="error error-initialization" *ngIf="initializedWithError; else primary">
+        system initialization error
+    </div>
+
+    <ng-template #primary>
+        <div class="nx-view-sidebar">
+            <media-server-list></media-server-list>
+            <div class="sidebar-toggling-ear" (click)="handleSidebarTogglingEarClick()"></div>
+        </div>
+        <router-outlet></router-outlet>
+    </ng-template>
+</ng-template>

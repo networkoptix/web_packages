@@ -10,6 +10,12 @@ export interface TimelineServiceStatus {
   fullRange: TimeRange,
   visibleRange: TimeRange,
   canvasGeometry: CanvasGeometry,
+  // TODO: extract into a separate zoom service?
+  zoom: {
+    canZoomIn: boolean,
+    canZoomOut: boolean,
+  },
+  canvasGeometryUpdateRequested: boolean,
 }
 
 
@@ -22,13 +28,31 @@ export class TimelineService {
   protected _canvasGeometry: CanvasGeometry = { width: 0, height: 0, dpr: 1 }
 
   protected _subject = new Subject<TimelineServiceStatus>()
+  protected _canvasGeometryUpdateRequested: boolean = true
+
+  public get canvasGeometryUpdateRequested () {
+    return this._canvasGeometryUpdateRequested
+  }
+
+  public requestCanvasGeometryUpdate () {
+    this._canvasGeometryUpdateRequested = true
+  }
 
   protected _emit () {
     this._subject.next({
       fullRange: this.fullRange,
       visibleRange: this.visibleRange,
       canvasGeometry: this.canvasGeometry,
+      zoom: this.zoomStatus,
+      canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested,
     })
+  }
+
+  public get zoomStatus () {
+    return {
+      canZoomIn: (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
+      canZoomOut: this._visibleRange.duration < this._fullRange.duration,
+    }
   }
 
   public get subject () {
@@ -71,6 +95,7 @@ export class TimelineService {
     this._canvasGeometry.width = width
     this._canvasGeometry.height = height
     this._canvasGeometry.dpr = dpr
+    this._canvasGeometryUpdateRequested = false
     this._emit()
   }
 
