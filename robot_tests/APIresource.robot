@@ -391,12 +391,19 @@ Set All Camera Add Params
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
+Get User Roles
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Get user roles    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Get user roles    /ec2/getUserRoles
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Save User
     [Arguments]
     ...    ${auth}
     ...    ${server url}
     ...    ${name}
-    ...    ${permissions}
+    #...    ${permissions}
     ...    ${email}
     ...    ${full name}
     ...    ${password}
