@@ -1,7 +1,7 @@
 <ng-template #capabilityBlock let-capability="capability">
     <div class="card hoverable capability-card" [routerLink]="capability.url">
-        <header [ngStyle]="{backgroundColor: capability.headerColor || 'gray', backgroundImage: 'url(' + capability.headerImage + ')'}">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon"></svg-icon>
+        <header [ngStyle]="getCapabilityBlockStyle(capability)">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon.split(' ')[0]"></svg-icon>
             <div class="intro-line">{{capability.display_name}}</div>
             <h3>{{capability.asset.title}}</h3>
         </header>

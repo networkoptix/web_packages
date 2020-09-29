@@ -33,12 +33,12 @@
     margin: 0 16px 16px 0;
     cursor: pointer;
     & header {
+        background-repeat: repeat;
         display: flex;
         flex-direction: column;
         justify-content: stretch;
         padding: 16px;
         min-height: 114px;
-        background-size: cover;
         & > svg-icon > svg {
             height: 30px;
             & > .st0{
@@ -58,7 +58,7 @@
         }
         & > h3 {
             @include typography.regular20;
-            color: $light1;
+            color: $light1 !important;
             margin: 0;
         }
     }

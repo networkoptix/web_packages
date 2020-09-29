@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="22px" viewBox="0 0 13 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>hexagon</title>
+    <g id="pttrn3_exp" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M7,0 L7,0.308 L12.5,3.692 L13,3.384 L13,12.616 L12.5,12.308 L7,15.692 L7,22 L5.999,22 L5.999,15.691 L0.438,12.27 L0,12.539 L0,3.458 L0.44,3.729 L5.999,0.308 L5.999,0 L7,0 Z M6.562,1.27 L0.999,4.693 L0.999,11.307 L6.5,14.692 L11.999,11.308 L11.9990689,4.61546667 L6.562,1.27 Z" id="Combined-Shape" fill="#2A373E" fill-rule="nonzero"></path>
+    </g>
+</svg>
