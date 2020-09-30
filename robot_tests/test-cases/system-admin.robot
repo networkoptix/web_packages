@@ -280,7 +280,7 @@ Owner can disconnect System from Cloud
     Save User Existing
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
-    ...    ${custom cameras["name"]}  
+    ...    ${EMAIL CUSTOM CAMERAS}
     ...    ${custom cameras["permissions"]}  
     ...    ${EMAIL CUSTOM CAMERAS}    
     ...    ${custom cameras["id"]} 
@@ -288,7 +288,7 @@ Owner can disconnect System from Cloud
     Save User Existing
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
-    ...    ${custom cameras limited["name"]}    
+    ...    ${EMAIL CUSTOM CAMERAS LIMITED}   
     ...    ${custom cameras limited["permissions"]}    
     ...    ${EMAIL CUSTOM CAMERAS LIMITED}    
     ...    ${custom cameras limited["id"]}
@@ -296,7 +296,7 @@ Owner can disconnect System from Cloud
     Save User Existing 
     ...    ${AUTO SYS AUTH}    
     ...    ${AUTO SYS IP}    
-    ...    ${client custom["name"]}    
+    ...    ${EMAIL CLIENT CUSTOM}   
     ...    ${client custom["permissions"]}
     ...    ${EMAIL CLIENT CUSTOM}    
     ...    ${client custom["id"]}
