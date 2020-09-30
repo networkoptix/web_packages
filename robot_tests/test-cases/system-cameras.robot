@@ -177,7 +177,7 @@ Rename Camera
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
     Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
-        Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
+    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
     Log Out
 
     Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
@@ -315,8 +315,8 @@ Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Select Camera by Name    good cam
     Verify on Cameras Page
+    Select Camera by Name    good cam
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
@@ -628,6 +628,7 @@ Enable/disable motion detection with recording off
     [Tags]    C78981
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
     Select Camera By Name    good cam
     Verify on Cameras Page
     Wait Until Element Is Visible    ${DOT-MENU}
@@ -760,7 +761,7 @@ Changing credentials from invalid ones to valid ones makes the camera authorized
     Click Button    ${EDIT CREDENTIALS BUTTON}
     Verify Authentication Form
     Sleep    1
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    root
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    admin
     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    ${NOAUTH CAMERA PASSWORD}
     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}

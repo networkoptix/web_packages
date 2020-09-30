@@ -36,6 +36,7 @@ Verify Authentication Form
 Toggle Recording
     Wait Until Element Is Enabled    ${ENABLED RECORDING SLIDER}
     Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Sleep    1    # added because the above checks weren't enough
     Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
