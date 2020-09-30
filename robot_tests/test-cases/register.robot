@@ -121,6 +121,7 @@ Should respond to Tab key
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
+    Sleep    1
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
     Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
