@@ -17,6 +17,7 @@ import { NxToastService }            from '../../../../../dialogs/toast.service'
 import { NxSystem }                  from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { ChildRoutes, NxUriService } from '@services/uri.service';
 
 enum MODE {
     MAIN = 0,
@@ -84,7 +85,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         private toastService: NxToastService,
         private processService: NxProcessService,
         private applyService: NxApplyService,
-        @Inject(LOCALE_ID) private locale: string
+        @Inject(LOCALE_ID) private locale: string,
+        private uriService: NxUriService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -244,7 +246,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         }
     }
 
-    setDefaultBackupSettings = async () => {
+    setDefaultBackupSettings = async() => {
         try {
             await this.system.updateOrGetBackupControl(this.serverId, 'start');
             await this.system.updateOrGetSystemSettings({
@@ -270,7 +272,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         }
     }
 
-    turnOffBackup = async () => {
+    turnOffBackup = async() => {
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
         if (backupControlRes?.reply.state !== 'BackupState_None') {
@@ -566,5 +568,23 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             this.system.rebuildArchive(this.serverId, 0, 'stop').toPromise();
             this.reindexingBackupSubscription.unsubscribe();
         }
+    }
+
+    getStorageTypeTooltip(storageType: string) {
+        return this.LANG.system.storageToolTips[storageType.toLowerCase()]();
+    }
+
+    get infoPath() {
+        return this.uriService.getSystemSettingsRoute({
+            systemId   : this.system.id,
+            childRoute : ChildRoutes.HEALTH
+        }) + 'storages';
+    }
+
+    get canSeeInfo() {
+        return (this.CONFIG.cloudCapabilities.healthMonitoring ||
+            this.system.info.capabilities &&
+            this.system.info.capabilities.vms_metrics) &&
+            this.system.canViewInfo();
     }
 }

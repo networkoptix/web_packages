@@ -734,6 +734,13 @@
                 "text": "Verbose",
                 "help": "(log all information available)"
             }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {

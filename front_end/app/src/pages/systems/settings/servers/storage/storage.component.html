@@ -9,8 +9,8 @@
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
-            <div class="buttons">
-                <button class="server-buttons pr-0">
+            <div *ngIf="canSeeInfo" class="buttons">
+                <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
                         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                   [applyClass]="true"></svg-icon>
@@ -41,6 +41,7 @@
                                 <svg-icon
                                         nx-add-svg-src
                                         class="mr-1"
+                                        [ngbTooltip]="getStorageTypeTooltip(store.storageType)"
                                         [src]="CONFIG.icons.dir + 'storage_' + store.storageType + '.svg'">
                                 </svg-icon>
                                 <span class="ellipsis">{{store.url}}</span>
