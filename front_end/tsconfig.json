@@ -12,6 +12,16 @@
     "removeComments": true,
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
+    "baseUrl": "app",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@directives/*": ["src/directives/*"],
+      "@dialogs/*": ["src/dialogs/*"],
+      "@pages/*": ["src/pages/*"],
+      "@guards/*": ["src/routeGuards/*"],
+      "@services/*": ["src/services/*"],
+      "@src/*": ["src/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],
