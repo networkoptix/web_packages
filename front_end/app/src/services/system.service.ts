@@ -272,6 +272,10 @@ class UserManager {
             const isMe         = user.isCloud && user.email === this.currentUserEmail;
             if (isMe) {
                 this.currentUser = user;
+                this.currentUser.permissions = `${this.currentUser.permissions}|${this.currentUser.role.permissions}`
+                    .split('|')
+                    .reduce((unique, permission) => unique.includes(permission) ? unique : [...unique, permission], [])
+                    .join('|');
                 this.accessRole = user.accessRole;
             }
             user.isMe = isMe;
