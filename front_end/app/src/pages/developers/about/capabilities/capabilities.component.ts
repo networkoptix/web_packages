@@ -13,7 +13,6 @@ import { WINDOW } from '../../../../services/window-provider';
 })
 export class NxCapabilitiesComponent {
     @Input() capabilitiesNode: AboutNode;
-    @Input() supportedTechNode: AboutNode;
 
     CONFIG: IConfig;
 

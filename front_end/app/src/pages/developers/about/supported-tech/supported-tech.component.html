@@ -1,0 +1,25 @@
+<ng-template #techBlock let-tech="tech">
+    <div class="tech-block" [title]="tech.title" [routerLink]="tech.url">
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tech.icon"></svg-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageBlock let-language="language">
+    <div class="language-block" [title]="language.title" [routerLink]="language.url">
+        {{language.title}}
+    </div>
+</ng-template>
+
+<section *ngIf="supportedTechNode.nodes" class="supported-tech">
+    <h2 class="heading-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
+    <div *ngIf="supportedTechNode.nodes[0].nodes.length" class="tech-wrapper">
+        <ng-container *ngFor="let tech of supportedTechNode.nodes[0].nodes">
+            <ng-container *ngTemplateOutlet="techBlock;context{tech:tech}"></ng-container>
+        </ng-container>
+    </div>
+    <div *ngIf="supportedTechNode.nodes[1].nodes.length" class="language-wrapper">
+        <ng-container *ngFor="let language of supportedTechNode.nodes[1].nodes">
+            <ng-container *ngTemplateOutlet="languageBlock;context{language:language}"></ng-container>
+        </ng-container>
+    </div>
+</section>

@@ -15,6 +15,7 @@ import { NxDevToolsComponent }     from '../dev-tools/dev-tools.component';
 import { NxGetStartedComponent }   from './get-started/get-started.component';
 import { NxIntegrationsComponent } from './integrations/integrations.component';
 import { NxSupportComponent }      from './support/support.component';
+import { NxSupportedTechComponent }         from './supported-tech/supported-tech.component';
 
 const appRoutes: Routes = [
     {
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
     providers : [],
     declarations : [
         NxCapabilitiesComponent,
+        NxSupportedTechComponent,
         NxDevToolsComponent,
         NxGetStartedComponent,
         NxIntegrationsComponent,
@@ -47,6 +49,7 @@ const appRoutes: Routes = [
     bootstrap : [],
     entryComponents : [
         NxCapabilitiesComponent,
+        NxSupportedTechComponent,
         NxDevToolsComponent,
         NxGetStartedComponent,
         NxIntegrationsComponent,
@@ -55,6 +58,7 @@ const appRoutes: Routes = [
     ],
     exports: [
         NxCapabilitiesComponent,
+        NxSupportedTechComponent,
         NxDevToolsComponent,
         NxGetStartedComponent,
         NxIntegrationsComponent,
