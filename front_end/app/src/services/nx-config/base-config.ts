@@ -88,6 +88,7 @@ export interface AccessRoles {
     editUserPermissionFlag: string;
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
+    allMediaPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
@@ -794,6 +795,7 @@ const typeMap: any = {
         { json: 'custom', js: 'custom', typ: '' },
         { json: 'editUserPermissionFlag', js: 'editUserPermissionFlag', typ: '' },
         { json: 'globalAdminPermissionFlag', js: 'globalAdminPermissionFlag', typ: '' },
+        { json: 'allMediaPermissionFlag', js: 'allMediaPermissionFlag', typ: '' },
         { json: 'customPermission', js: 'customPermission', typ: r('CustomPermission') },
         { json: 'predefinedRoles', js: 'predefinedRoles', typ: a(r('PredefinedRole')) },
         { json: 'order', js: 'order', typ: a('') }

@@ -348,7 +348,7 @@ export class NxSystemAPI {
 
     /* Working with users */
     getAggregatedUsersData() {
-        return this.get('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
+        return this.get('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles&exec_cmd=ec2%2FgetAccessRights');
     }
 
     saveUser(user) {

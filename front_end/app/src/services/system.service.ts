@@ -12,7 +12,6 @@ import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
-import { recursiveJson }                   from '../utils/recursive-json';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -22,6 +21,7 @@ export interface NxSystemRole extends PredefinedRole {
 
 export interface NxSystemUser {
     accessRole: string;
+    accessRights: { [resourceId: string]: true };
     canBeDeleted: boolean;
     canBeEdited: boolean;
     cryptSha512Hash: string;
@@ -236,9 +236,10 @@ class UserManager {
             const users = data['ec2/getUsers'];
             const userRoles = data['ec2/getUserRoles'];
             const predefinedRoles = data['ec2/getPredefinedRoles'];
+            const accessRights = data['ec2/getAccessRights'];
             return new Promise((resolve) => {
                 this.updateAccessRoles(predefinedRoles, userRoles);
-                return resolve(this.processUsers(users));
+                return resolve(this.processUsers(users, accessRights));
             });
         }, () => {
             // eslint-disable-next-line prefer-promise-reject-errors
@@ -250,10 +251,15 @@ class UserManager {
         return permissions.split('|').sort().join('|');
     }
 
-    processUsers(users: NxSystemUser[]) {
+    processUsers(users: NxSystemUser[], accessRights = []) {
         if (!Array.isArray(users)) {
             return false;
         }
+        // accessRights if individual camera permissions ever set
+        accessRights = Object.keys(accessRights).length ? accessRights.reduce((obj, next) => {
+            obj[next.userId] = next.resourceIds;
+            return obj;
+        }, {}) : {};
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
         this.users = users.map((user) => {
             // @ts-ignore: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
@@ -264,6 +270,13 @@ class UserManager {
             user.permissions = this.normalizePermissionString(user.permissions);
             user.role = this.findAccessRole(user);
             user.accessRole = user.role.name;
+            // allMediaPermissionFlag exists if the all camera permission option selected
+            if (!user.permissions.includes(this.CONFIG.accessRoles.allMediaPermissionFlag) && accessRights[user.id]) {
+                user.accessRights = accessRights[user.id].reduce((obj: { [resourceId: string]: true }, next: string) => {
+                    obj[next] = true;
+                    return obj;
+                }, {});
+            }
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
 
@@ -663,6 +676,7 @@ export class NxSystem extends System implements OnDestroy {
     private serverManager: ServerManager;
     private _subscribersCount = new BehaviorSubject<number>(0);
 
+    show404 = false;
     activeSubscription: any;
     currentUserEmail: string;
     mediaserver: any;
@@ -754,6 +768,10 @@ export class NxSystem extends System implements OnDestroy {
 
     get cameras() {
         return this.serverManager.cameras;
+    }
+
+    set cameras(newCameras: ICamera[]) {
+        this.serverManager.cameras = newCameras;
     }
 
     /**
@@ -1058,11 +1076,19 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
+                .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
                     this.isAvailable = false;
                     this.lostConnection = error && error.data && error.data.resultCode === 'forbidden';
                 });
         }));
+    }
+
+    filterCamerasFromUserPermissions() {
+        const accessRights: { [resourceId: string]: true } = this.currentUser.accessRights;
+        if (accessRights && this.cameras) {
+            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
+        }
     }
 
     updateOrGetSystemSettings(updateParams = {}) {
