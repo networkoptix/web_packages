@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs'
 import { float, int } from '../../../../utils/type-aliases';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 
+type signType = int // -1 | 0 | 1
 
 @Component({
   selector: 'zoom-controls',
@@ -51,9 +52,9 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     return this.state && this.state.zoom && this.state.zoom.canZoomOut
   }
 
-  protected _zoomingSign: -1 | 0 | 1 = 0
+  protected _zoomingSign: signType = 0
 
-  public startZooming (sign: -1 | 1) {
+  public startZooming (sign: signType) {
     this._zoomingSign = sign
   }
 

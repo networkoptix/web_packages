@@ -25,6 +25,7 @@ export type CameraArchive = Array<ISimpleTimeRange>
 export interface ICamera {
   id: string,
   name: string,
+  url: string,
   status: CAMERA_STATUS,
   isOnline: boolean,
   isRecording: boolean,

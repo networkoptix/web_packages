@@ -12,7 +12,7 @@ import PlaybackService from '../../vms-client/submodules/playback/services/playb
 import { Subscription } from 'rxjs'
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
 
-type int = number
+export type PlaybackQuality = 'auto' | 'low' | 'high'
 
 
 @Component({
@@ -28,6 +28,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
     protected _animationFrameRequestHandler: number
+
+    public isFullScreen: boolean = false
+
+    public settingsShown: boolean = false
+    public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
+    public qualitySelected: PlaybackQuality = 'auto'
 
     constructor (
       protected self: ElementRef,
@@ -55,6 +61,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
       this._animationFrameRequestHandler =
         requestAnimationFrame(this._onAnimationFrame)
+
+      document.addEventListener('fullscreenchange', e => {
+        this.isFullScreen = !this.isFullScreen
+      })
     }
 
     public ngAfterViewInit () {
@@ -117,6 +127,24 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       if (this.camera.isLive) {
         this.playback.playLive()
       }
+    }
+
+    public toggleFullScreen () {
+      if (this.isFullScreen) {
+        document.exitFullscreen()
+        this.self.nativeElement.classList.remove('is-full-screen')
+      } else {
+        this.self.nativeElement.parentElement.requestFullscreen()
+        this.self.nativeElement.classList.add('is-full-screen')
+      }
+    }
+
+    public toggleSettings () {
+      this.settingsShown = !this.settingsShown
+    }
+
+    public setQuality (q: PlaybackQuality) {
+      this.qualitySelected = q
     }
   }
 // export class NxSystemViewCameraPageComponent implements OnInit {

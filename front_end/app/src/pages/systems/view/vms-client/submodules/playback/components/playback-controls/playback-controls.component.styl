@@ -23,6 +23,26 @@
     justify-content center
     align-items center
 
+    > .glyph
+      background-image url('../../../../../../../../../images/web_interface_sprite@2x.png')
+      background-size 192px 408px
+      background-repeat no-repeat
+      width 20px
+      height 20px
+
+    &.playLive
+      > .glyph
+        background-size -2px -4px
+
+    &.pauseToggle
+      > .glyph
+        background-position -26px -2px
+
+    &.stop
+      > .glyph
+        background-size 192px 408px
+        background-position -26px -2px // same as pause, TODO: change
+
     &.enabled
       cursor pointer
       opacity 1.0

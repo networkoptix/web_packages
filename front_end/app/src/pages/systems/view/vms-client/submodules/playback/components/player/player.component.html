@@ -5,4 +5,6 @@
 >
   <source #videoSource src="" type="video/mp4">
 </video>
-<div class="overlay" [ngClass]="{ 'buffering': isBuffering }"></div>
+<div class="overlay" [ngClass]="{ 'buffering': isBuffering }">
+  <nx-pre-loader></nx-pre-loader>
+</div>

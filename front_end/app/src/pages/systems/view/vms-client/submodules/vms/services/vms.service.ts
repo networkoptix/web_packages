@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
+import { CookieService } from 'ngx-cookie-service'
 import IMediaServer from '../datatypes/IMediaServer'
 import Camera from '../datatypes/Camera'
 import testMediaServers from '../testMediaServers'
@@ -11,6 +12,7 @@ import {
   createCameraNotSelectedState,
   createCameraSelectedState,
 } from '../datatypes/VmsState'
+import ICamera from '../datatypes/ICamera'
 
 
 @Injectable({
@@ -18,7 +20,9 @@ import {
  })
 export class VideoManagementSystemService {
 
-  constructor () {
+  constructor (
+    protected cookieService: CookieService,
+  ) {
     this.reset()
   }
 
@@ -78,6 +82,8 @@ export class VideoManagementSystemService {
       return
     }
     this._state = createCameraSelectedState(this._state, cameraId)
+    const cookie_name = `nx_last_accessed_camera_for_system_${this.systemId}`
+    this.cookieService.set(cookie_name, cameraId, 365, '/')
     this._emit()
   }
 
@@ -88,6 +94,40 @@ export class VideoManagementSystemService {
     }
     this._state = createCameraNotSelectedState(this.systemId, this._state.mediaServers)
     this._emit()
+  }
+
+  public getLastAccessedCameraId () {
+    switch (this.state.mode) {
+      case VMS_MODE.NOT_INITIALIZED:
+        return null
+      case VMS_MODE.CAMERA_SELECTED:
+        return this.selectedCamera.id
+      case VMS_MODE.CAMERA_NOT_SELECTED: {
+        const cookie_name = `nx_last_accessed_camera_for_system_${this.systemId}`
+        const cookieCameraId = this.cookieService.get(cookie_name)
+        if (cookieCameraId) {
+          const thisCameraExists = !!this.state.mediaServers.find(ms => ms.cameras.find(c => c.id === cookieCameraId))
+          if (thisCameraExists) {
+            return cookieCameraId
+          }
+        }
+
+        // fallback one: first online camera
+        const cameraChecker = (c: ICamera) => c.isOnline
+        const firstMediaServerWithAnOnlineCamera = this.state.mediaServers.find(ms => ms.cameras.find(cameraChecker))
+        if (firstMediaServerWithAnOnlineCamera) {
+          const firstOnlineCamera = firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker)
+          return firstOnlineCamera.id
+        }
+
+        // fallback two: simply use the first camera available
+        const firstMediaServer = this.state.mediaServers.find(ms => ms.cameras?.length)
+        if (firstMediaServer) {
+          return firstMediaServer.cameras[0].id
+        }
+        return null
+      }
+    }
   }
 
 }

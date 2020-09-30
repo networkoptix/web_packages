@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import { ComponentsModule } from '../../../../../../components/components.module';
 
 import components from './components'
 import services from './services'
@@ -10,6 +11,7 @@ import services from './services'
   exports: components,
   imports: [
     BrowserModule,
+    ComponentsModule,
   ],
   providers: services,
 })
