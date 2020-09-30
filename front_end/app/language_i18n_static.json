@@ -883,8 +883,8 @@
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage" : "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Failed to add external storage - server doesn't respond",
         "success": "External storage added",
         "urlPlaceholder": "\/\/<Computer Name>\/<Folder>"

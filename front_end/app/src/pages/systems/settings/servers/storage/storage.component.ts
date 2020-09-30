@@ -537,6 +537,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             .subscribe(
                 (res: any) => {
                     if (res.reply.state === 'RebuildState_None') {
+                        this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
                         message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
                     }
                 },
