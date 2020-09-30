@@ -13,6 +13,8 @@ from cms.permissions import CanViewDevelopers
 from util.helpers import get_language_object_from_request
 import re
 
+SEARCH_SNIPPET_PADDING = 250
+
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the page. Ex: draft, published, or pending",
                                        type=openapi.TYPE_STRING)
@@ -51,7 +53,7 @@ def get_page(request, doc_id):
 # Simple filter for checking that each space delimited string exists somewhere in the doc
 # For more complicated filtering we will probably need to check out something like Haystack
 def simple_filter(docs, filter_query):
-    filter_regex = re.compile(rf'(?:^|\W)(.{{0,100}}({re.escape(filter_query)}).{{0,100}})(?:$|\W)', re.IGNORECASE | re.DOTALL)
+    filter_regex = re.compile(rf'(?:^|\W)(.{{0,{SEARCH_SNIPPET_PADDING}}}({re.escape(filter_query)}).{{0,{SEARCH_SNIPPET_PADDING}}})(?:$|\W)', re.IGNORECASE | re.DOTALL)
     matched_docs = []
     for doc in docs:
         matched = False
