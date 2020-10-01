@@ -1,8 +1,19 @@
 export const primaryRulerSerifDrawingConfigs = {
+  0: {
+    baseColorHex: '#adbdc5',
+    heightRelative: 0.0,
+    opacity: 0.0,
+    label: {
+      fontSize: 0,
+    }
+  },
   1: {
       baseColorHex: '#adbdc5',
       heightRelative: 0.0705, // used to be .06
       opacity: 0.3,
+      label: {
+        fontSize: 0,
+      }
   },
   2: {
     heightRelative: 0.0705, // used to be .06

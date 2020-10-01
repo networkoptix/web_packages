@@ -1,6 +1,6 @@
 import { SECOND, MINUTE, HOUR, DAY } from './regularLengthIntervals'
 
-export const MIN_WEIGHT = 1
+export const MIN_WEIGHT = 0
 export const MAX_WEIGHT = 4
 
 export const MIN_WIDTHS_FOR_INTERVALS = {
