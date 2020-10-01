@@ -158,12 +158,19 @@ Log Out via API
     Validate Log Out
     [Return]    ${status}
 
-Evaluate Auto System Settings via API
-    [Arguments]    ${setting}    ${selected}
-    # This need to be fixed in CLOUD-4798
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+Evaluate System Settings via API    
+    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${selected}
+    
+Evaluate Log Level via API
+    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
+    ${string}=   Convert To String    ${logLevel.json()}
+    ${selected} =    Convert To Lowercase    ${selected}
     Should Contain    ${string}    ${setting}': '${selected}
 
 Disconnect Server via API
@@ -172,9 +179,9 @@ Disconnect Server via API
     ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
-Set Auto System Settings via API
-    [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+Set System Settings via API
+    [Arguments]    ${setting}    ${state}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}

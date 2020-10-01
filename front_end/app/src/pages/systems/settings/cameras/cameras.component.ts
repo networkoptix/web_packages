@@ -686,6 +686,32 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.alerts = [];
         }
 
+        let cameraIndex: number;
+        if (this.system && this.system.cameras) {
+            cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+            this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.permissions.editCameras;
+            if (this.system.show404) {
+                return;
+            }
+
+            if (cameraIndex === -1) {
+                cameraIndex = 0;
+                // use case: user uses direct link to cameras, but no permission for any cameras in system
+                if (!this.system.cameras[cameraIndex]) {
+                    this.system.permissions.editCameras
+                        ? this.noCameras = true
+                        : this.system.show404 = true;
+                    return;
+                }
+                this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        }
+
         if (
             this.system &&
             this.system.cameras &&
@@ -696,21 +722,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             !this.applyService.locked
         ) {
             this.applyService.hardReset();
-            let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
-            this.show404 = cameraIndex === -1 && (!this.system.permissions.editCameras || !!this.parsedCameraId);
-            if (this.show404) {
-                return;
-            }
-
-            if (cameraIndex === -1) {
-                cameraIndex = 0;
-                this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
-                this.uriService
-                    .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
             this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];

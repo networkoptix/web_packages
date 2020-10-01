@@ -11,8 +11,8 @@
                      *ngIf="(CONFIG.settingsConfig[setting.key] | keyvalue)?.length > 0">
 
                     <div class="col-12 row p-0" *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox'">
-                        <div class="col-12 col-md-4 m-0 pr-1 pl-3  d-flex align-items-start justify-content-end flex-row">
-                            <div class="text-muted">{{setting.key}}</div>
+                        <div class="col-12 col-md-4 m-0 pr-1 pl-3  d-flex align-items-start justify-keys flex-row">
+                            <div class="text-muted break-long">{{setting.key}}</div>
                         </div>
 
                         <div class="col-12 col-md-8 d-flex align-items-start justify-content-start flex-row">
@@ -27,9 +27,9 @@
                     </div>
 
                     <div class="col-12 row p-0 d-flex align-items-start" *ngIf="CONFIG.settingsConfig[setting.key].type !== 'checkbox'">
-                        <div class="col-12 col-md-4 pr-1 pl-3 m-0 d-flex flex-column text-right item">
+                        <div class="col-12 col-md-4 pr-1 pl-3 m-0 d-flex flex-column key-align item">
                             <div class="">{{LANG.settingsConfig[setting.key] || setting.key}}</div>
-                            <div class="text-muted" *ngIf="LANG.settingsConfig[setting.key]">{{setting.key}}</div>
+                            <div class="text-muted break-long" *ngIf="LANG.settingsConfig[setting.key]">{{setting.key}}</div>
                         </div>
 
                         <div class="col-12 col-md-8 d-flex align-items-start justify-content-start flex-column item">

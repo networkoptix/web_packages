@@ -1,7 +1,6 @@
 <nx-pre-loader *ngIf="!show404 && showPreloader"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
     <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
-    <nx-page-placeholder *ngIf="show404" class="placeholder-section" [type]="'404'" ></nx-page-placeholder>
     <ng-container *ngIf="!noCameras && selectedCamera && !show404 && system.permissions.editCameras">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
@@ -128,7 +127,7 @@
                                 [value]="recording"
                                 [label]="'Recording' | translate"
                                 componentId="recording"
-                                [disabled]="!recording && recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0"
+                                [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
                                 (click)="handleRecordingToggle()"></nx-switch>
                             <div *ngIf="!recording" class="recording-hint" [ngClass]="{
                                 'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,

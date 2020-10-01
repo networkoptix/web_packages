@@ -186,7 +186,7 @@ def review(request):
 
     elif 'publish' in request.POST and UserGroupsToAssetPermissions.\
             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
-        if asset.is_cloud_portal and asset.can_preview_on_portal:
+        if asset.is_cloud_portal:
             publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
             if publishing_errors:
                 messages.error(request, "Version {} {}".format(asset_review.version.id, publishing_errors))

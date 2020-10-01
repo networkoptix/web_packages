@@ -2,7 +2,10 @@ import {
     Component, Input,
     OnDestroy, OnInit
 }                                    from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
+import {
+    ActivatedRoute, NavigationEnd, Router
+}                                    from '@angular/router';
+
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxPageService }             from '../../../services/page.service';
@@ -132,6 +135,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.router.events.subscribe(route => {
+            if (route instanceof NavigationEnd) {
+                const isSystemRoute = route.url.includes('/systems');
+                const isCameraRoute = route.url.includes('/cameras');
+                if (isSystemRoute && !isCameraRoute && this.system) {
+                    this.system.show404 = false;
+                }
+            }
+        });
+
         this.content = {
             selectedSection    : '', // updated by selectedSectionSubject
             selectedSubSection : '', // updated by selectedSubSectionSubject
@@ -236,6 +249,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                    this.system.show404 = false;
                     this.gettingSystem.run().catch(() => {
                         this.systemNoAccess = true;
                     });

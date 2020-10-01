@@ -173,15 +173,10 @@ export class LoginModalContent implements OnInit {
 
             if (this.keepPage) {
                 if (isRootPath) {
-                    this.router
-                        .navigate([this.CONFIG.redirect.authorised])
-                        .then(() => {
-                            // ensure language reload as translations are loaded on page load
-                            window.location.reload();
-                        });
+                    window.location.href = this.CONFIG.redirect.authorised;
                 } else {
                     // TODO: remove window reload once we separate session state from account service
-                    window.location.reload();
+                    window.location.href = `${window.location.href}`;
                 }
             } else if (this.next) {
                 // sanitize this.next
@@ -199,12 +194,7 @@ export class LoginModalContent implements OnInit {
                 }
             } else {
                 setTimeout(() => {
-                    this.router
-                        .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
-                        .then(() => {
-                            // ensure language reload as translations are loaded on page load
-                            window.location.reload();
-                        });
+                    window.location.href = this.CONFIG.redirect.authorised;
                 });
             }
         }, (error) => {

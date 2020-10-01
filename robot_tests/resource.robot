@@ -334,9 +334,13 @@ Share To
     Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
-    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
     ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}
-    Run Keyword If    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}
+    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}   
+    ...    ELSE IF   '${alert}'=='fail'    Run Keywords
+    ...    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}     border-color    ${ERROR COLOR}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND 
+    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}  
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
