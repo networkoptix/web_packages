@@ -23,7 +23,14 @@ Verify on Cameras Page
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
-    ...    timeout=40
+
+Verify Recording Options are Visible
+    Wait Until Elements are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..
+    ...    ${RECORD MOTION RADIO BUTTON}/..
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    ...    ${FPS INPUT}
+    ...    ${QUALITY DROPDOWN}
 
 Verify Authentication Form
     Wait Until Elements are Visible
