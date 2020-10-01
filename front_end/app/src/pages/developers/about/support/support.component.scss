@@ -11,6 +11,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-top: 48px !important;
+    }
     & > h2 {
         @include typography.regular24;
         line-height: 28px;
@@ -112,6 +115,9 @@
     top: 0px;
     object-fit: cover;
     height: 100%;
+    @include bootstrap.media-breakpoint-down(xs) {
+        display: none !important;
+    }
 }
 
 .left-image {

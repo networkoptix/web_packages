@@ -15,7 +15,10 @@
             </ng-container>
             <nx-capabilities *ngSwitchCase="aboutCases.CAPABILITIES" [capabilitiesNode]="node.node"></nx-capabilities>
             <nx-get-started *ngSwitchCase="aboutCases.GET_STARTED" [getStartedNode]="node.node"></nx-get-started>
-            <nx-dev-tools *ngSwitchCase="aboutCases.DEV_TOOLS" [devToolsNode]="node.node"></nx-dev-tools>
+            <nx-dev-tools *ngSwitchCase="aboutCases.DEV_TOOLS" 
+                [devToolsNode]="node.node"
+                [title]="node.node.displayName || node.node.title || node.node.asset.title"
+            ></nx-dev-tools>
             <nx-integrations *ngSwitchCase="aboutCases.INTEGRATIONS" [integrationsNode]="node.node"></nx-integrations>
             <nx-support *ngSwitchCase="aboutCases.SUPPORT" [supportNode]="node.node"></nx-support>
             <nx-supported-tech *ngSwitchCase="aboutCases.SUPPORTED_TECH" [supportedTechNode]="node.node"></nx-supported-tech>

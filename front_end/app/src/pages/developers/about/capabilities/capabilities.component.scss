@@ -1,5 +1,6 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
+@use '~bootstrap/scss/bootstrap';
 
 .heading-link {
     cursor: pointer;
@@ -17,6 +18,9 @@
     padding: 0 16px;
     max-width: 896px;
     color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-bottom: 24px !important;
+    }
 }
 
 .detail-blocks {
@@ -24,6 +28,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin: 8px -16px 0 0;
+    }
 }
 
 .capability-card {
@@ -49,7 +56,7 @@
         }
         & > .intro-line {
             @include typography.regular14;
-            color: rgba($light1, 0.5);
+            color: rgba($light1, 0.5) !important;
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
@@ -60,6 +67,9 @@
             @include typography.regular20;
             color: $light1 !important;
             margin: 0;
+            @include bootstrap.media-breakpoint-down(xs) {
+                font-size: 24px !important;
+            }
         }
     }
     & > .capability-detail {

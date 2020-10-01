@@ -15,6 +15,7 @@ import { AboutNode } from '../about/about.component';
 })
 export class NxDevToolsComponent {
     @Input() devToolsNode: Partial<AboutNode>;
+    @Input() title: string;
 
     CONFIG: IConfig;
 

@@ -2,7 +2,7 @@
     <div class="card hoverable capability-card" [routerLink]="capability.url">
         <header [ngStyle]="getCapabilityBlockStyle(capability)">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon.split(' ')[0]"></svg-icon>
-            <div class="intro-line">{{capability.display_name}}</div>
+            <div class="intro-line">{{capability.title}}</div>
             <h3>{{capability.asset.title}}</h3>
         </header>
         <div class="capability-detail" [innerHTML]="capability.asset.shortDescription">

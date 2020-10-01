@@ -26,8 +26,8 @@
 <!-- End of Templates -->
 
 <ng-container *ngIf="devToolsNode; else preloader">
-    <section *ngIf="devToolsNode.title;else blocks" class="dev-tools">
-        <h2 class="heading-link" [routerLink]="devToolsNode.url">{{devToolsNode.title}}</h2>
+    <section *ngIf="title; else blocks" class="dev-tools">
+        <h2 class="heading-link" [routerLink]="devToolsNode.url">{{title}}</h2>
         <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
     </section>
 </ng-container>

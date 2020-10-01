@@ -1,5 +1,6 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '../../../../styles/typography';
+@use '~bootstrap/scss/bootstrap';
 
 .get-started-heading {
     font-family: $font-family-light;
@@ -7,6 +8,10 @@
     color: $dark10;
     margin: 106px 16px 45px 16px;
     justify-content: center;
+    @include bootstrap.media-breakpoint-down(xs) {
+        font-size: 36px !important;
+        margin-top: 36px !important;
+    }
 }
 
 .get-started-blocks{
@@ -16,15 +21,21 @@
     justify-content: center;
     flex-wrap: wrap;
     padding: 48px 16px 0 16px;
+    @include bootstrap.media-breakpoint-down(xs) {
+        padding-top: 36px !important;
+    }
 }
 
 .detail-wrapper {
     flex: 1 0 232px;
     max-width: 376px;
-    min-height: 246px;
     display: flex;
     margin-bottom: 32px;
-    justify-content: center;;
+    justify-content: center;
+    min-height: 246px;
+    @include bootstrap.media-breakpoint-down(xs) {
+        min-height: 0 !important;
+    }
 }
 
 .detail-block {
@@ -32,6 +43,9 @@
     width: 200px;
     display: flex;
     flex-direction: column;
+    @include bootstrap.media-breakpoint-down(xs) {
+        width: 100% !important;
+    }
 
     .step {
         position: absolute;
@@ -41,6 +55,11 @@
         font-weight: 900;
         font-size: 40px;
         line-height: 40px;
+        @include bootstrap.media-breakpoint-down(xs) {
+            left: 16px;
+            top: 50% !important;
+            transform: translateY(-50%);
+        }
     }
 
     .step-image {
@@ -49,6 +68,9 @@
         justify-content: center;
         align-items: center;
         flex: 1 1 100%;
+        @include bootstrap.media-breakpoint-down(xs) {
+            display: none !important;
+        }
 
         svg-icon {
             transition: all ease-out 0.25s;
@@ -73,18 +95,22 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        @include bootstrap.media-breakpoint-down(xs) {
+            align-items: flex-start !important;
+            margin-left: 72px !important;
+        }
 
         & > h3 {
             @include typography.medium20;
             &:hover {
                 cursor: pointer;
-                color: $brand_core;
+                color: $brand_core !important;
             }
         }
 
         & > span {
             @include typography.regular14;
-            color: $brand_core;
+            color: $brand_core !important;
         }
     }
 }

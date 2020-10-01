@@ -17,12 +17,13 @@ $mobile-breakpoint: 609px;
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 96px auto 0 auto;
+    margin: 36px auto 0 auto;
     padding: 0;
     color: $dark10;
 
     @media screen and (min-width: $mobile-breakpoint) {
         padding: 0 8px;
+        margin-top: 96px !important;
     }
 
     &-wrapper {

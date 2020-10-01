@@ -1,5 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
+@use '~bootstrap/scss/bootstrap';
 
 .heading-link {
     @include typography.regular24;
@@ -18,6 +19,9 @@
     padding: 0 16px;
     max-width: 1200px;
     color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-top: 36px !important;
+    }
 }
 
 .detail-blocks {
