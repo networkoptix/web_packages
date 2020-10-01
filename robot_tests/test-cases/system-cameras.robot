@@ -76,26 +76,26 @@ Camera settings is not available by direct link to any viewers
     ${auth}=    Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
 
     Log Out
 
     Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
     Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
     Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
     Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
@@ -167,9 +167,7 @@ Rename Camera
     Verify on Cameras Page
     Select Camera by Name    good cam
 
-    Click Element    ${EDITABLE TITLE}
-    Sleep    1
-    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 1
+    Rename Camera    good cam name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -185,8 +183,7 @@ Rename Camera
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam name changed 1
-    Click Element    ${EDITABLE TITLE}
-    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 2
+    Rename Camera    good cam name changed 2
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -202,8 +199,7 @@ Rename Camera
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam name changed 2
-    Click Element    ${EDITABLE TITLE}
-    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed 3
+    Rename Camera    good cam name changed 3
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -752,6 +748,191 @@ Recording Quality dropdown menu functionality for camera with schedule
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
+UDP stream settings
+    [Tags]    C79005
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    UDP cam
+    Log    1
+    Rename Camera    UDP cam changed
+    Log    2
+    Change Aspect Ratio    1:1 
+    Change Rotation    90˚
+    Log    3
+    Toggle Recording
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Wait Until Element Is Not Visible    ${FPS INPUT}     
+    Wait Until Element Is Not Visible     ${QUALITY DROPDOWN}
+    Log    4
+    Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
+    Log    5
+    Disable Motion Detection
+    Wait Until Element Is Not Visible    ${MOTION SENSITIVITY IMAGE}
+    Log    6    
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Visible    ${MOTION SENSITIVITY IMAGE}
+    
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    
+    Log    1
+    ${UDP id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    UDP cam    id
+    @{auth}=   Create List    admin    ${password}
+    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${UDP id}    UDP cam changed
+    Wait Until Element Contains    ${EDITABLE TITLE}    UDP cam changed
+    Log    2
+    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    FOR    ${camera}  IN  @{cameras}
+        ${UDP json}=   Set Variable If    '''${camera['name']}'''=='''UDP cam changed'''    ${camera}
+        Exit For Loop If    '''${camera['name']}'''=='''UDP cam changed'''
+    END
+    Should Be Equal As Strings    1    ${UDP json['addParams'][9]['value']}
+    Should Be Equal As Strings    90    ${UDP json['addParams'][10]['value']}
+    Wait Until Element Contains    ${ASPECT RATIO DROPDOWN}    1:1
+    Wait Until Element Contains    ${ROTATION DROPDOWN}    90˚
+    Log    3
+    Should Be Equal As Strings    ${UDP json['scheduleEnabled']}    True
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Log    4
+    Should Be Equal As Strings    RT_Always    ${UDP json['scheduleTasks'][0]['recordingType']}
+    Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Log    5/6
+    Should Be Equal As Strings    ${UDP json['motionType']}    0    
+    Wait Until Element Is Visible    ${DOT-MENU}
+
+RTSP stream settings
+    [Tags]    C79002
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    RTSP cam
+    Log    1
+    Rename Camera    RTSP cam changed
+    Log    2
+    Change Aspect Ratio    1:1 
+    Change Rotation    90˚
+    Log    3
+    Toggle Recording
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Wait Until Element Is Not Visible    ${FPS INPUT}     
+    Wait Until Element Is Not Visible     ${QUALITY DROPDOWN}
+    Log    4
+    Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
+    Log    5
+    Disable Motion Detection
+    Wait Until Element Is Not Visible    ${MOTION SENSITIVITY IMAGE}
+    Log    6    
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Visible    ${MOTION SENSITIVITY IMAGE}
+    
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    
+    Log    1
+    ${RSTP id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    RSTP cam    id
+    @{auth}=   Create List    admin    ${password}
+    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${RSTP id}    RSTP cam changed
+    Wait Until Element Contains    ${EDITABLE TITLE}    RSTP cam changed
+    Log    2
+    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    FOR    ${camera}  IN  @{cameras}
+        ${RSTP json}=   Set Variable If    '''${camera['name']}'''=='''RSTP cam changed'''    ${camera}
+        Exit For Loop If    '''${camera['name']}'''=='''RSTP cam changed'''
+    END
+    Should Be Equal As Strings    1    ${RSTP json['addParams'][9]['value']}
+    Should Be Equal As Strings    90    ${RSTP json['addParams'][10]['value']}
+    Wait Until Element Contains    ${ASPECT RATIO DROPDOWN}    1:1
+    Wait Until Element Contains    ${ROTATION DROPDOWN}    90˚
+    Log    3
+    Should Be Equal As Strings    ${RSTP json['scheduleEnabled']}    True
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Log    4
+    Should Be Equal As Strings    RT_Always    ${RSTP json['scheduleTasks'][0]['recordingType']}
+    Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Log    5/6
+    Should Be Equal As Strings    ${RSTP json['motionType']}    0    
+    Wait Until Element Is Visible    ${DOT-MENU}
+
+HTTP stream settings
+    [Tags]    C79092
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    HTTP cam
+    Log    1
+    Rename Camera    HTTP cam changed
+    Log    2
+    Change Aspect Ratio    1:1 
+    Change Rotation    90˚
+    Log    3
+    Toggle Recording
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Wait Until Element Is Not Visible    ${FPS INPUT}     
+    Wait Until Element Is Not Visible     ${QUALITY DROPDOWN}
+    Log    4
+    Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
+    Log    5
+    Disable Motion Detection
+    Wait Until Element Is Not Visible    ${MOTION SENSITIVITY IMAGE}
+    Log    6    
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Wait Until Element Is Visible    ${MOTION SENSITIVITY IMAGE}
+    
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    
+    Log    1
+    ${http id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    HTTP cam    id
+    @{auth}=   Create List    admin    ${password}
+    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${http id}    HTTP cam changed
+    Wait Until Element Contains    ${EDITABLE TITLE}    HTTP cam changed
+    Log    2
+    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    FOR    ${camera}  IN  @{cameras}
+        ${http json}=   Set Variable If    '''${camera['name']}'''=='''HTTP cam changed'''    ${camera}
+        Exit For Loop If    '''${camera['name']}'''=='''HTTP cam changed'''
+    END
+    Should Be Equal As Strings    1    ${http json['addParams'][9]['value']}
+    Should Be Equal As Strings    90    ${http json['addParams'][10]['value']}
+    Wait Until Element Contains    ${ASPECT RATIO DROPDOWN}    1:1
+    Wait Until Element Contains    ${ROTATION DROPDOWN}    90˚
+    Log    3
+    Should Be Equal As Strings    ${http json['scheduleEnabled']}    True
+    Wait Until Elements Are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..           
+    ...    ${RECORD MOTION RADIO BUTTON}/..      
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    Log    4
+    Should Be Equal As Strings    RT_Always    ${http json['scheduleTasks'][0]['recordingType']}
+    Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Log    5/6
+    Should Be Equal As Strings    ${http json['motionType']}    0    
+    Wait Until Element Is Visible    ${DOT-MENU}
+
+
+
 Changing credentials from invalid ones to valid ones makes the camera authorized
     [Tags]    C76390
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -781,3 +962,4 @@ Changing credentials from invalid ones to valid ones makes the camera authorized
     ${results}    Execute Command    docker container restart autotests
     Reload Page
     Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}    90
+

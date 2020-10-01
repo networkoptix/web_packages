@@ -68,6 +68,12 @@ Audio Enabled Should Be
     ${current state}=   Get Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input
     Should Be Equal    "${expected state}"    "${current state}"
 
+Rename Camera
+    [Arguments]    ${name}
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${name}
+
 Camera Name Should Be
     [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
     ${cameras}=   Get Cameras    ${auth}    ${server url}
@@ -75,6 +81,14 @@ Camera Name Should Be
         log   ${camera}
         Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']}    ${name}
     END
+
+Disable Motion Detection
+    Wait Until Element Is Visible    ${DOT-MENU}
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Not Visible    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
 
 Get Camera Attribute By Camera Name
     [Arguments]    ${auth}    ${server url}    ${name}    ${attribute}
@@ -112,3 +126,10 @@ Reset All cameras
     Reset Camera    no audio cam    ${AUTO SYS IP}
     Sleep    1
     Reset Camera    triple state cam    https://10.1.5.126:7005
+    Sleep    1
+    Reset Camera    RTSP cam    ${AUTO SYS IP}
+    Sleep    1
+    Reset Camera    HTTP cam    ${AUTO SYS IP}
+    Sleep    1
+    Reset Camera    UDP cam    ${AUTO SYS IP}
+    Sleep    1
