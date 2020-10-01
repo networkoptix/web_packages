@@ -95,7 +95,7 @@ def main():
         # Get all of the products of a specific product_type
         if args.command == FETCH_BY_TYPE:
             query = f"?type={args.type}&name={args.name}&customization={args.customization}"
-            url = f"{args.instance}/admin/cms/get_product_ids/{query}"
+            url = f"{args.instance}/admin/cms/get_asset_ids/{query}"
             res = session.get(url)
             product_ids = res.json()
         else:

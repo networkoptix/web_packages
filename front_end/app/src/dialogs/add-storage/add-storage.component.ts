@@ -141,7 +141,7 @@ export class AddStorageModalContent {
                         this.storageForm.controls.login.setErrors({ loginPasswordWrong: true });
                     } else {
                         let message = this.LANG.storage.failed();
-                        if (err?.message === 'SystemOffline') {
+                        if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
                             this.system.systemInfo = this.system;
                             message = this.LANG.storage.serverOffline();
                         }
