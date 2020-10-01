@@ -66,6 +66,7 @@ $mobile-breakpoint: 609px;
 }
 
 .integrations-block{
+    position: relative;
     margin: 56px 0 1rem 0;
     @media screen and (min-width: $mobile-breakpoint) {
         margin: 0 1rem 1rem 0;
@@ -73,6 +74,18 @@ $mobile-breakpoint: 609px;
     h3 {
         @include typography.medium15;
     }
+}
+
+.preloader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light1;
 }
 
 .integrations-blocks-wrapper {

@@ -69,7 +69,7 @@ export class NxCloudApiService {
     }
 
     getIntegrations() {
-        return this.http.get<t.Integration>(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
     }
 
     getIntegrationBy(id: number, status: string) {

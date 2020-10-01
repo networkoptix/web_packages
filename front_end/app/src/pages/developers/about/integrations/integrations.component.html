@@ -21,8 +21,11 @@
                 [ngClass]="{'selected': index === scrollIndex}"
                 class="scroll-circle"></div>
         </div>
-        <div [routerLink]="integrations.more.url" class="more-integrations">
+        <div (click)="navigate(integrations.more.url)" class="more-integrations">
             <p [innerHTML]="integrations.translatedCount"></p>
+        </div>
+        <div *ngIf="!pluginCount" class="preloader-overlay">
+            <nx-pre-loader></nx-pre-loader>
         </div>
     </div>
 </ng-template>

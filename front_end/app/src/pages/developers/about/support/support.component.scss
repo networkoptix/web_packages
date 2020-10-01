@@ -38,7 +38,6 @@
     &:before, &:after {
         content: "";
         flex: 1 2 30%;
-        border-bottom: 16px solid $dark7;
         @include bootstrap.media-breakpoint-down(sm) {
             display: none;
         }
@@ -109,10 +108,10 @@
 
 .support-images {
     position: absolute;
-    width: 50%;
+    max-width: 50%;
     top: 0px;
     object-fit: cover;
-    height: calc(100% - 16px);
+    height: 100%;
 }
 
 .left-image {
