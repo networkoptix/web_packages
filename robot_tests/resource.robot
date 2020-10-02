@@ -18,6 +18,7 @@ Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
+Library      pabot.PabotLib
 
 *** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
@@ -34,6 +35,9 @@ ${selenium_timeout}    30
 *** Keywords ***
 Open Browser and go to URL
     [Arguments]    ${url}
+    Acquire Lock    MyLock
+    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}
+    Release Lock    MyLock
     Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
@@ -41,7 +45,7 @@ Open Browser and go to URL
     Go To    ${ENV}
     Check Language Anonymous
     Go To    ${url}
-    
+
 Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
@@ -330,9 +334,13 @@ Share To
     Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
-    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
     ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}
-    Run Keyword If    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}
+    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}   
+    ...    ELSE IF   '${alert}'=='fail'    Run Keywords
+    ...    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}     border-color    ${ERROR COLOR}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND 
+    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}  
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
@@ -770,8 +778,8 @@ Delete All Local Users
         Reload Page
     END
     Wait Until Element is Visible    //span[text()="admin"]
-    Page Should Not Contain Element     ${locator}  
-    
+    Page Should Not Contain Element     ${locator}
+
 Check Password Badge
     [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
@@ -785,7 +793,7 @@ Move focus and check badge
     Element Should Be Visible    ${badge}
     Click Element    ${new focus}
     Element Should Be Visible    ${badge}
-    
+
 Move focus and check element
     [Arguments]    ${element}    ${new focus}
     Click Element    ${new focus}
@@ -793,7 +801,7 @@ Move focus and check element
 
 Check New Password Outline and Error Message
     [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
-    Click Element    ${new focus} 
+    Click Element    ${new focus}
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
     ...    Element Style Should Be    ${input}    border-color    ${ERROR COLOR}
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
@@ -816,8 +824,8 @@ Check System Text
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
     Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
-    
+
 Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
-    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json 
+    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}

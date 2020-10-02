@@ -168,7 +168,7 @@ ${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"
 ${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
 ${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
 ${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${DELETE ACCOUNT CLOSE BUTTON}         ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
+${DELETE ACCOUNT CLOSE BUTTON}        ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
 ${DELETE ACCOUNT HEADER}              ${DELTE ACCOUNT DIALOG}//h1[contains(text(),"${DELETE ACCOUNT HEADER TEXT}")]
 ${DELETE ACCOUNT INFO}                ${DELTE ACCOUNT DIALOG}//span[contains(text(),"${DELETE ACCOUNT INFO TEXT}")]
 ${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]
@@ -195,7 +195,7 @@ ${DOWNLOAD VERSION NUMBER}            //h2[@class="version-number d-flex"]/b
 ${WHATS NEW LINK}                     //a[contains(text(),"${WHATS NEW TEXT}")]
 
 ${WINDOWS TAB}                        //a[@id="windows"]
-${LINUX TAB}                         //a[@id="linux"]
+${LINUX TAB}                          //a[@id="linux"]
 ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
 

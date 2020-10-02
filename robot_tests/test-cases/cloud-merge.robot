@@ -5,7 +5,7 @@ Suite Setup       Merge Suite Setup
 #Test Teardown     Run Keyword If Test Failed    Merge Test Restart
 Test Teardown     Merge Test Teardown
 Suite Teardown    Merge Suite Teardown
-Force Tags        merge
+Force Tags      merge    Threaded
 
 *** Test Cases ***
 Merge button availability

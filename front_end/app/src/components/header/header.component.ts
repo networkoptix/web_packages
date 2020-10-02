@@ -74,7 +74,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     private systemIdUpdate(id) {
-        this.systemId = id;
+        this.systemId = id.split('?')[0];
         this.localStorage.set('systemId', this.systemId);
 
         if (this.systemId && !this.systems) {

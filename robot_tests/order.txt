@@ -1,7 +1,10 @@
 --suite Test-Cases.Cloud-Merge
+--suite Test-Cases.Licenses
 --suite Test-Cases.Account
 --suite Test-Cases.Activate
 --suite Test-Cases.System-Admin
+--suite Test-Cases.System-Admin-Settings
+--suite Test-Cases.System-Admin-Offline
 --suite Test-Cases.System-Offline
 --suite Test-Cases.System-Users
 --suite Test-Cases.Systems-Page

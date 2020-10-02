@@ -383,6 +383,11 @@ Share with unregistered user - brings them to registration page with code with c
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
+
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Go To Users List
+    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    Log Out
     
     Log    Step 2
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
@@ -427,9 +432,23 @@ Share with unregistered user - brings them to registration page with code with c
     Log    Step 7 skipped thick client login
     Log    Step 8
     Log Out
-    Log In    ${random email}    ${BASE PASSWORD}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Go To Users List
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    
+Share System with the same user twice
+    [Tags]    C41892
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    Delete All Emails
+    Share To    ${EMAIL ADMIN}    ${ADV VIEWER TEXT}    fail
+    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=120
+    Close Mailbox 
     
 Check share email for registered user
     [Tags]    C47297

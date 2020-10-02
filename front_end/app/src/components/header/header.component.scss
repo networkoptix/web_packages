@@ -272,3 +272,6 @@ $header-collapsing-width-1 : 1px;
     }
 }
 
+.container-fluid, .nav {
+    flex-wrap: nowrap !important;
+}

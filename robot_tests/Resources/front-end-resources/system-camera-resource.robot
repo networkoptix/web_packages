@@ -4,7 +4,6 @@ Start up
     Reset All Cameras
     Open Browser and go to URL    ${url}
 
-
 Reset cameras and log out
     Common Restart Logout    ${url}
     Reset All cameras
@@ -23,7 +22,14 @@ Verify on Cameras Page
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
-    ...    timeout=40
+
+Verify Recording Options are Visible
+    Wait Until Elements are Visible
+    ...    ${RECORD ALWAYS RADIO BUTTON}/..
+    ...    ${RECORD MOTION RADIO BUTTON}/..
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
+    ...    ${FPS INPUT}
+    ...    ${QUALITY DROPDOWN}
 
 Verify Authentication Form
     Wait Until Elements are Visible

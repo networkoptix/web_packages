@@ -593,6 +593,7 @@ Check Limit session duration
     Click Element    ${TIME DURATION SELECTION MINUTES}
     
     Log    Step 2
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    0
     Sleep    1
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -601,14 +602,12 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Click Button     ${SYSTEM SAVE} 
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Page Should Not Contain Element     ${SYSTEM SAVE}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Evaluate System Settings via API    sessionLimitMinutes    0
     
     Log    Step 3
-    Change Setting Without Saving    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    hjkl
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
@@ -616,14 +615,12 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Click Button     ${SYSTEM SAVE} 
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Page Should Not Contain Element     ${SYSTEM SAVE}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Evaluate System Settings via API    sessionLimitMinutes    0
     
     Log    Step 4
-    Change Setting Without Saving    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    "&*("
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
@@ -631,14 +628,12 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1    
-    Click Button     ${SYSTEM SAVE} 
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Page Should Not Contain Element     ${SYSTEM SAVE}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Evaluate System Settings via API    sessionLimitMinutes    0
     
     Log    Step 5
-    Change Setting Without Saving    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    654
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
@@ -646,6 +641,7 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
+    Wait Until Elements Are Visible	 ${SYSTEM SAVE}    ${SYSTEM CANCEL}    
     Click Button     ${SYSTEM SAVE} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
@@ -654,6 +650,7 @@ Check Limit session duration
     Evaluate System Settings via API    sessionLimitMinutes    65
         
     Log    Step 6
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    1
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
@@ -667,6 +664,7 @@ Check Limit session duration
     Evaluate System Settings via API    sessionLimitMinutes    1
     
     Log    Step 7
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    600
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
@@ -695,6 +693,7 @@ Check Limit session duration
     Evaluate System Settings via API    sessionLimitMinutes    600
     
     Log    Step 8
+    Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    5
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible

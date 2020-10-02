@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}/register
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        form    Threaded File
+Force Tags        form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
@@ -144,12 +144,12 @@ Test Register Invalid
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
     Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword   
+    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword
     Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
     Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
     Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
     Run Keyword Unless    "${checked}"=="True"    Check Terms and Conditions Error
-    
+
 Restart
     Close Browser
     Open Browser and go to URL    ${url}/register

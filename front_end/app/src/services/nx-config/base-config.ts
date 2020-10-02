@@ -88,6 +88,7 @@ export interface AccessRoles {
     editUserPermissionFlag: string;
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
+    allMediaPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
@@ -570,6 +571,7 @@ export interface SettingsConfig {
     maxRtspConnectDurationSec: Setting,
     statisticsReportLastNumber: Setting,
     statisticsReportLastTime: Setting,
+    statisticsReportLastVersion: Setting,
     statisticsReportServerApi: Setting,
     statisticsReportTimeCycle:Setting,
     localSystemId: Setting,
@@ -793,6 +795,7 @@ const typeMap: any = {
         { json: 'custom', js: 'custom', typ: '' },
         { json: 'editUserPermissionFlag', js: 'editUserPermissionFlag', typ: '' },
         { json: 'globalAdminPermissionFlag', js: 'globalAdminPermissionFlag', typ: '' },
+        { json: 'allMediaPermissionFlag', js: 'allMediaPermissionFlag', typ: '' },
         { json: 'customPermission', js: 'customPermission', typ: r('CustomPermission') },
         { json: 'predefinedRoles', js: 'predefinedRoles', typ: a(r('PredefinedRole')) },
         { json: 'order', js: 'order', typ: a('') }
@@ -1181,6 +1184,7 @@ const typeMap: any = {
         { json: 'maxRtspConnectDurationSec', js: 'maxRtspConnectDurationSec', typ: r('Setting') },
         { json: 'statisticsReportLastNumber', js: 'statisticsReportLastNumber', typ: r('Setting') },
         { json: 'statisticsReportLastTime', js: 'statisticsReportLastTime', typ: r('Setting') },
+        { json: 'statisticsReportVersion', js: 'statisticsReportVersion', typ: r('Setting') },
         { json: 'statisticsReportServerApi', js: 'statisticsReportServerApi', typ: r('Setting') },
         { json: 'statisticsReportTimeCycle', js: 'statisticsReportTimeCycle', typ: r('Setting') },
         { json: 'localSystemId', js: 'localSystemId', typ: r('Setting') },

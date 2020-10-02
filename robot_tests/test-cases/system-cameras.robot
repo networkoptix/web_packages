@@ -4,7 +4,7 @@ Suite Setup       Start up    ${url}
 Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     reset cameras and log out
 Suite Teardown    Close All Browsers
-Force Tags        system
+Force Tags        system    cameras
 
 *** Variables ***
 ${email}       ${EMAIL OWNER}
@@ -258,6 +258,7 @@ View button
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
 
 Detailed Info
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -282,6 +283,7 @@ Detailed Info
     Log Out
 
 Aspect Ratio
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -295,6 +297,7 @@ Aspect Ratio
     Aspect Ratio Should Be    1:1
 
 Rotation
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
@@ -429,6 +432,7 @@ Recording Status
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Select Camera by Name    no license cam
     Verify on Cameras Page
     Select Camera By Name    no license cam
     Wait Until Element Is Visible    ${RECORDING CHECK BOX}
@@ -573,6 +577,7 @@ Disabled Motion With Recording
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
     
 Change FPS
+    [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
