@@ -96,7 +96,8 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
 
                         record_value = datastructure.find_actual_value(asset=integration,
                                                                        version_id=current_version,
-                                                                       draft=show_pending or show_drafts)
+                                                                       draft=show_pending or show_drafts,
+                                                                       customization_name=settings.CUSTOMIZATION)
                         if datastructure.type in S3_STRUCTURE_TYPES:
                             record_value = record_value.replace(S3_LINK, REPLACEMENT_LINK)
 
