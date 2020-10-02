@@ -3,13 +3,14 @@
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+            (resize)="updateButtonSize($event)"
             (click)="show = !show"
             type="button" id="systemsDropdown" data-toggle="dropdown">
 
         <div class="popup arrow up" [ngClass]="{'center' : !activeSystem}"></div>
 
         <span [ngClass]="{'nx-d-sm-none':!activeSystem}" class="glyphicon glyphicon-home"></span>
-        <span *ngIf="activeSystem" class="ellipsis">{{activeSystem.name}}</span>
+        <span *ngIf="activeSystem" class="ellipsis" [ngStyle]="maxSystemNameSize && {'max-width.px': maxSystemNameSize}">{{activeSystem.name}}</span>
         <span *ngIf="!activeSystem" class="d-none"
               [ngClass]="{'nx-d-sm-block':!activeSystem}">{{systemCounter}}&nbsp;<span translate>Systems</span></span>
         <div class="nav-arrow">
@@ -21,7 +22,7 @@
         [style.display]="show ? 'inline-block' : 'none'"
         aria-labelledby="systemsDropdown">
 
-        <ul class="dropdown-menu--list">
+        <ul class="dropdown-menu--list" [ngStyle]="(buttonSize$ | async) && rightOffset && {'max-width.px': (buttonSize$ | async) + rightOffset + 60}">
             <li *ngIf="activeSystem" class="dropdown-item-container">
                 <div class="d-flex">
                     <nx-client-button class="w-100"

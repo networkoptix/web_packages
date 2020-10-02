@@ -6,6 +6,7 @@ import { BaseDropdown }              from '../injDropdown';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { BehaviorSubject }           from 'rxjs';
 
 @Component({
     selector   : 'nx-systems',
@@ -17,6 +18,10 @@ export class NxSystemsDropdown extends BaseDropdown {
     @Input() endpoint: any;
     @Input() systems: any;
     @Input() activeSystem: any;
+    @Input() maxSystemNameSize = 0;
+    @Input() rightOffset = 0;
+
+    buttonSize$ = new BehaviorSubject(0);
 
     systemCounter: number;
     active = {
@@ -61,6 +66,10 @@ export class NxSystemsDropdown extends BaseDropdown {
                     window.location.href = url;
                 }
             });
+    }
+
+    updateButtonSize({ width }) {
+        this.buttonSize$.next(width);
     }
 
     ngOnInit(): void {

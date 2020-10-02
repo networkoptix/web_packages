@@ -1,7 +1,7 @@
 <header *ngIf="viewHeader">
     <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="app-header-left">
+        <div class="container-fluid" (resize)="updateHeaderSize($event)">
+            <div class="app-header-left" (resize)="updateLeftSize($event)">
                 <ul *ngIf="activeSystem" class="nav navbar-nav navbar-left auth-visible d-block d-md-none">
                     <li>
                         <nx-active-system [activeSystem]="activeSystem"></nx-active-system>
@@ -76,6 +76,8 @@
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
                     <li *ngIf="systemCounter" class="collapse-second">
                         <nx-systems
+                                [maxSystemNameSize]="maxSystemDropdownSize$ | async"
+                                [rightOffset]="accountSize$ | async"
                                 [endpoint]="active"
                                 [systems]="systems"
                                 [activeSystem]="activeSystem">
@@ -85,7 +87,7 @@
                     <li class="vertical-bar"></li>
 
                     <li class="collapse-first">
-                        <nx-account-settings-select></nx-account-settings-select>
+                        <nx-account-settings-select (resize)="updateAccountSize($event)"></nx-account-settings-select>
                     </li>
                 </ul>
             </div>
