@@ -9,7 +9,6 @@ ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 @{AUTO SYS AUTH}                      admin    qweasd 123
-${SCREENSHOTDIRECTORY}                Screenshots
 
 ${BROWSER}                            Chrome
 
