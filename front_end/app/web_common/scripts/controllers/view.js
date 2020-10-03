@@ -388,7 +388,7 @@
                     var showError = $scope.crashCount < CONFIG.webclient.maxCrashCount;
                     if (showError) {
                         updateVideoSource($scope.positionProvider.liveMode ||
-                        forceLive ? null : $scope.positionProvider.playedPosition);
+                        forceLive ? null : $scope.positionProvider.playedPosition + $scope.positionProvider.lastPlayedPosition);
                         $scope.crashCount += 1;
                     }
                     return !showError;

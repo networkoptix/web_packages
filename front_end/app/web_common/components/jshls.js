@@ -306,7 +306,8 @@ import * as Hls from 'hls.js';
                         console.log('Buffer Appending Error');
                         break;
                     case Hls.default.ErrorDetails.BUFFER_STALLED_ERROR:
-                        jshlsApi.load(jshlsApi.video.src);
+                        // jshlsApi.load(jshlsApi.video.src);
+                        jshlsApi.errorHandler(data);
                         break;
                     default:
                         break;
