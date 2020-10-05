@@ -13,11 +13,12 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxSessionService }          from '../../services/session.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import { LocalStorageService }       from 'ngx-store';
-import { Subscription, timer }       from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, Subscription, timer }       from 'rxjs';
 import { NxHeaderService }           from '../../services/nx-header.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -42,6 +43,20 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     viewHeader: boolean;
     systemCounter: number;
     loginState: any;
+    leftSize$ = new BehaviorSubject(0);
+    accountSize$ = new BehaviorSubject(0);
+    headerSize$ = new BehaviorSubject(0);
+    maxSystemDropdownSize$ = combineLatest([
+        this.leftSize$,
+        this.accountSize$,
+        this.headerSize$
+    ]).pipe(
+        map(([left, account, header]) => {
+            const usedWidth = left + account;
+            return header - usedWidth - 108;
+        }),
+        distinctUntilChanged()
+    );
 
     getUrlSystemId: any;
     untilHaveID: any;
@@ -283,5 +298,21 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.activeSystem &&
             !this.active.integrations &&
             !this.active.ipvd;
+    }
+
+    updateLeftSize({ width }) {
+        const wider = this.leftSize$.value < width;
+        const difference = wider ? width - this.leftSize$.value : this.leftSize$.value - width;
+        if (wider && difference > 12) {
+            this.leftSize$.next(width);
+        }
+    }
+
+    updateAccountSize({ width }) {
+        this.accountSize$.next(width);
+    }
+
+    updateHeaderSize({ width }) {
+        this.headerSize$.next(width);
     }
 }
