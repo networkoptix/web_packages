@@ -21,7 +21,6 @@ Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM
 Library      pabot.PabotLib
 
 *** Variables ***
-${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true

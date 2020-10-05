@@ -162,6 +162,7 @@ Warning dialog appears when changes are made on navigating away and works correc
 
 
 Rename Camera
+    [Tags]    C76259
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -258,15 +259,7 @@ View button
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
 
 Detailed Info
-    [Tags]    Threaded
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Click Button    ${CAMERAS DETAILED INFO BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
-    Log Out
-
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    [Tags]    C76274    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
