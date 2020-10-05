@@ -302,6 +302,8 @@ export const nxConfig: IConfig = {
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
     },
     showHeaderAndFooter : true,
+    headerHeight : 48,
+    ribbonHeight : 33,
     search              : {
         debounceTime : 500, // ms
         maxLength    : 200,

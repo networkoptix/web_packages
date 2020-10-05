@@ -23,23 +23,6 @@ nx-cam-table {
   .nx-table-wrapper {
     margin-bottom: 40px;
 
-    ::-webkit-scrollbar {
-        width: initial;
-        height: $scrollbar-height;
-    }
-    ::-webkit-scrollbar-thumb {
-        -webkit-border-radius:initial;
-        border-radius: 6px;
-        -webkit-box-shadow:initial;
-        height: 8px;
-        border: 2px solid $light4;
-    }
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: initial;
-        -webkit-border-radius: initial;
-        border-radius: initial;
-    }
-
     .csv {
       float : right;
       margin-top : 24px;
@@ -127,7 +110,7 @@ nx-cam-table {
             background : $light16;
 
             td {
-              color : $light1;
+              color : $light1 !important;
 
               .icon-negative {
                 color : $light1;

@@ -6,11 +6,19 @@ import { BehaviorSubject }           from 'rxjs';
 })
 export class NxAppStateService {
 
+    private readySubject = new BehaviorSubject(false);
+    private ribbonSubject = new BehaviorSubject(false);
+
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
-    private readySubject = new BehaviorSubject(false);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
+
+    // Header height is hardcoded everywhere to 48px :(
+    // Ribbon height is 33px ... for one row
+    // Do we have multiple row ribbon? -- TT
+    heightWithRibbon = 'calc(100% - 81px)';
+    heightWithoutRibbon = 'calc(100% - 48px)';
 
     constructor() {}
 
@@ -20,6 +28,14 @@ export class NxAppStateService {
 
     setHeaderVisibility(visible: boolean) {
         this.headerVisibleSubject.next(visible);
+    }
+
+    set ribbonVisibility(visible: boolean) {
+        this.ribbonSubject.next(visible);
+    }
+
+    get ribbonVisibility() {
+        return this.ribbonSubject.getValue();
     }
 
     set ready(ready: boolean) {

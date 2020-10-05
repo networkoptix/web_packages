@@ -2,8 +2,8 @@ import {
     Component, ElementRef, HostListener, Input, OnChanges, OnInit,
     SimpleChanges, ViewChild, ViewEncapsulation
 }                                    from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
-import { SubscriptionLike }          from 'rxjs';
+import { ActivatedRoute, Router }      from '@angular/router';
+import { fromEvent, SubscriptionLike } from 'rxjs';
 
 import { NxConfigService, IConfig }         from '../services/nx-config';
 import { NxMenuService }                    from './menu.service';
@@ -12,12 +12,15 @@ import { NxUtilsService }                   from '../services/utils.service';
 import { ButtonArrowType, NxSearchService } from '../services/search.service';
 import { NxSystem }                         from '../services/system.service';
 import { LanguageI18NStaticTypes }          from '../../language_i18n_static_types';
+import { UntilDestroy }                     from '@ngneat/until-destroy';
+import { map, startWith }                   from 'rxjs/operators';
 
 /* Usage
  <nx-menu>
  </nx-menu>
  */
 
+@UntilDestroy()
 @Component({
     selector      : 'nx-menu',
     templateUrl   : 'menu.component.html',
@@ -43,14 +46,25 @@ export class NxMenuComponent implements OnInit, OnChanges {
     navItems: any = [];
     navItemIdx: number;
 
-    routeParamsSubscription: SubscriptionLike;
-    navDirectionSubscription: SubscriptionLike;
-    navSelectionSubscription: SubscriptionLike;
+    private routeParamsSubscription: SubscriptionLike;
+    private navDirectionSubscription: SubscriptionLike;
+    private navSelectionSubscription: SubscriptionLike;
+    private resizeSubscription: SubscriptionLike;
+
+    windowHeight: number;
+    menuHeight: number;
+
+    scrollHeight: number;
+    menuHeightFit: string;
+    containerHeight: number;
+    scrollHeightFit: string;
+    permHeight: number;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @ViewChild('menuWrapper') menuWrapper: ElementRef;
+    @ViewChild('scrollArea') scrollArea: ElementRef;
 
     constructor(
         configService: NxConfigService,
@@ -109,6 +123,87 @@ export class NxMenuComponent implements OnInit, OnChanges {
                         });
                 }
             });
+
+        this.resizeSubscription = fromEvent(window, 'resize').pipe(
+            map((event: any) => event.target.innerHeight as number),
+            startWith(window.innerHeight)
+        ).subscribe(height => {
+            this.windowHeight = height - 64; // 48px header and 1rem padding
+            this.resizeMenu();
+        });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.content.currentValue) {
+            if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
+                this.menuService.content = changes.content.currentValue.level1;
+            }
+
+            // Avoid unnecessary update and overwrite user choices
+            const filtered = this.menuService.fillerItemsBy(this.menuModel);
+            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
+            if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
+                this.menuContent = filtered;
+            }
+
+            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
+                debugger;
+                this.menuHeightFit = '100%';
+                this.scrollHeightFit = '100%';
+                setTimeout(() => {
+                    this.getMenuDimensions();
+                    this.resizeMenu();
+                });
+            }
+
+            this.selectedLevel1 = changes.content.currentValue.selectedSection;
+            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
+            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+
+            this.transition = false;
+        }
+
+        if (changes.content.currentValue.selectedSection) {
+            this.systemId = changes.content.currentValue.system.id;
+        }
+
+    }
+
+    ngAfterViewInit() {
+        this.getMenuDimensions();
+    }
+
+    getMenuDimensions() {
+        // scroll area parent is "level-3-items" and their parent is "level-1-container"
+        // the idea is to calculate menu height by setting "level-3-items" height to number to which
+        // when we add number of level1 nodes multiplied by level1 node height plus difference between
+        // "level-1-container" height and scroll area height to reach window height
+        // ... I cannot repeat this sentence 10 times in a row -- TT
+        // this.menuHeightFit = '100%';
+        // this.scrollHeightFit = '100%';
+        if (this.scrollArea && this.menuModel.query === '') {
+            this.menuHeight = this.menuWrapper.nativeElement.scrollHeight; // getBoundingClientRect().height;
+            this.scrollHeight = this.scrollArea.nativeElement.getBoundingClientRect().height;
+
+            this.containerHeight = this.scrollArea.nativeElement.parentNode.parentNode.getBoundingClientRect().height;
+            // this.menuService.content.length - 1 -> the number of other level1 nodes
+            this.permHeight = (this.menuService.content.length - 1) * 40 + (this.containerHeight - this.scrollHeight);
+        }
+    }
+
+    resizeMenu() {
+        if (this.scrollArea) {
+            setTimeout(() => {
+                if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
+                    const windowHeightFit = this.windowHeight - 40
+                    this.menuHeightFit = windowHeightFit + 'px';
+                    this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
+                } else {
+                    this.menuHeightFit = '100%';
+                    this.scrollHeightFit = '100%';
+                }
+            });
+        }
     }
 
     resetNav() {
@@ -137,31 +232,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return this.navItems[this.navItemIdx].id;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.content.currentValue) {
-            if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
-                this.menuService.content = changes.content.currentValue.level1;
-            }
-
-            // Avoid unnecessary update and overwrite user choices
-            const filtered = this.menuService.fillerItemsBy(this.menuModel);
-            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
-            if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
-                this.menuContent = filtered;
-            }
-
-            this.selectedLevel1 = changes.content.currentValue.selectedSection;
-            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
-            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
-
-            this.transition = false;
-        }
-
-        if (changes.content.currentValue.selectedSection) {
-            this.systemId = changes.content.currentValue.systemId;
-        }
-    }
-
     modelChanged(model) {
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.transition = true;
@@ -177,8 +247,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.navItems = [];
         if (model.query !== '') {
             setTimeout(() => { // Avoid selection before filter finishes
+                //reset height auto fit
+                this.menuHeightFit = '100%';
+                this.scrollHeightFit = '100%';
                 this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
             });
+        } else {
+            setTimeout(() => {
+                this.getMenuDimensions();
+                this.resizeMenu();
+            })
         }
     }
 

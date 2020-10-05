@@ -7,6 +7,7 @@ import { SubscriptionLike }         from 'rxjs';
 
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
+import { Router }                   from '@angular/router';
 
 /* Usage
  */
@@ -36,7 +37,8 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private menuService: NxMenuService
+        private router: Router,
+        private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -60,6 +62,11 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
                 ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
         }
+    }
+
+    navigate() {
+        const path = this.item.query ? `${this.itemPath}?search=${this.item.query.search}` : this.itemPath;
+        this.router.navigate([path]).catch(err => console.error(err));
     }
 
     setNavIdx(item) {

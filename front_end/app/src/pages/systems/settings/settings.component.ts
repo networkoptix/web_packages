@@ -25,6 +25,7 @@ import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.se
 import { NxApplyService }            from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxAppStateService }         from '../../../services/nx-app-state.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -102,7 +103,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private router: Router,
         private scrollMechanicsService: NxScrollMechanicsService,
-        private applyService: NxApplyService
+        private applyService: NxApplyService,
+        private appStateService: NxAppStateService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -220,7 +222,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     setHeaderHeight() {
-        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight : this.CONFIG.headerHeight;
     }
 
     ngOnDestroy() {

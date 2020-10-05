@@ -73,6 +73,8 @@ export interface BaseConfig {
     settingsConfig: SettingsConfig;
     defaultLanguage: string;
     supportedLanguages: string[];
+    headerHeight: number;
+    ribbonHeight: number;
     // loggersConfig: LoggersConfig;
 }
 

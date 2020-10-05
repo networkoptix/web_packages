@@ -32,7 +32,7 @@
             display : block;
             transform: translateY(3px);
             &::after {
-                border-bottom-color: #FAFBFB !important;
+                border-bottom-color: $additional_light1 !important;
             }
         }
         & > button {

@@ -5,7 +5,7 @@
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
-                 [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
+                 [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
                 <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
                 <nx-menu *ngIf="menuVisible" [content]="content" [system]="system" [searchable]="searchableResults"></nx-menu>
             </div>
