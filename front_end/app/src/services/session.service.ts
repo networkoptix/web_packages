@@ -9,6 +9,7 @@ import { WINDOW }              from './window-provider';
 })
 export class NxSessionService {
     loginStateSubject = new ReplaySubject<string>(0);
+    language$ = new ReplaySubject<string>(0);
     private session: LocalStorageService;
 
     constructor(
@@ -17,10 +18,9 @@ export class NxSessionService {
     ) {
         this.session = this.localStorageService;
         this.loginStateSubject.next(this.loginState || '');
-
         // Listens to changes from other browser tabs.
-        this.window.addEventListener('storage', (event) => {
-            if (event.key === 'ngx-webstorage|loginstate' && event.oldValue) {
+        this.session.observe('loginState').subscribe(_ => {
+            if (!this.window.document.hasFocus()) {
                 this.window.location.reload();
             }
         });
@@ -46,6 +46,7 @@ export class NxSessionService {
 
     set language(lang: string) {
         this.session.store('language', lang);
+        this.language$.next(lang);
     }
 
     get loginState() {

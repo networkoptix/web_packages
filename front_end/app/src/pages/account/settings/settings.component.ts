@@ -22,6 +22,7 @@ import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxStorageService }          from '../../../services/storage.service';
+import { NxSessionService }          from '../../../services/session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -57,7 +58,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private storageService: NxStorageService,
         private processService: NxProcessService,
@@ -67,10 +68,11 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private pageService: NxPageService
+        private pageService: NxPageService,
+        private sessionService: NxSessionService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
+        this.LANG = this.languageService.translations;
         this.setupDefaults();
     }
 
@@ -82,16 +84,19 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {
                 if (this.langCode !== this.account.language) {
+                    this.account.language = this.langCode;
+                    this.sessionService.language = this.langCode;
                     return this.cloudApiService
                         .changeLanguage(this.langCode)
                         .then(() => {
                             this.storageService.langChanged = true;
-                            setTimeout(() => window.location.reload()); // reload window to catch new language
+                            this.languageService.currentLang = this.langCode;
                             return false;
                         });
                 }
                 return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
             }).finally(() => {
+                this.watchers.langCode.originalValue = this.watchers.langCode.value = this.langCode;
                 this.accountService.get(true);
             });
         }, {

@@ -52,7 +52,7 @@ export class LoginModalContent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         locationService: Location,
         private processService: NxProcessService,
         private storageService: NxStorageService,
@@ -63,7 +63,7 @@ export class LoginModalContent implements OnInit {
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+        this.LANG = this.languageService.translations;
         this.locationService = locationService;
 
         this.setupDefaults();
@@ -171,33 +171,31 @@ export class LoginModalContent implements OnInit {
             if (this.CONFIG.isLocal) {
                 return this.activeModal.close(result);
             }
+            this.languageService.currentLang = result.data.account.language;
             this.activeModal.close();
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             if (this.keepPage) {
                 if (isRootPath) {
-                    window.location.href = this.CONFIG.redirect.authorised;
-                } else {
-                    // TODO: remove window reload once we separate session state from account service
-                    window.location.href = `${window.location.href}`;
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 }
             } else if (this.next) {
                 // sanitize this.next
                 this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
                 if (this.next.startsWith('/admin')) {
-                    window.location.href = this.next;
+                    this.router.navigate([this.next]);
                 } else {
                     this.router
                         .navigate([this.next])
                         .then(() => {
                             // *** window.location.reload(); // ensure language reload as translations are loaded on page load
                             // *** admin section is not a part of Angular project
-                            window.location.href = this.next;
+                            this.router.navigate([this.next]);
                         });
                 }
             } else {
                 setTimeout(() => {
-                    window.location.href = this.CONFIG.redirect.authorised;
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 });
             }
         }, (error) => {

@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
 import { Inject, Injectable, OnDestroy }  from '@angular/core';
 import { TranslateService }               from '@ngx-translate/core';
-import { BehaviorSubject, Subject, from } from 'rxjs';
+import {
+    BehaviorSubject, Subject, from, combineLatest
+}                                         from 'rxjs';
 import { takeUntil, map }                 from 'rxjs/operators';
 
 import { WINDOW }                    from './window-provider';
@@ -10,6 +12,7 @@ import { MenuStructure }             from './nx-config/base-config';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService }          from './session.service';
+import { LocalStorageService }       from 'ngx-webstorage';
 
 export enum Auth {
     BOTH='Both',
@@ -44,6 +47,7 @@ export class NxMenusService implements OnDestroy {
     private menusStructure: MenuStructure;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
+    private languageChanged$ = new BehaviorSubject('')
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     private unsub$ = new Subject();
 
@@ -51,15 +55,16 @@ export class NxMenusService implements OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
+        private localStorageService: LocalStorageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+        this.LANG = this.languageService.translations;
         // @ts-ignore
-        languageService.translateSubject.pipe(takeUntil(this.unsub$)).subscribe(this.updateMenu);
+        this.languageService.translateSubject.pipe(takeUntil(this.unsub$)).subscribe(this.updateMenu);
     }
 
     ngOnDestroy() {
@@ -67,6 +72,7 @@ export class NxMenusService implements OnDestroy {
     }
 
     updateMenu = (lang) => {
+        this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, nodes]) => {
                 newMenu[name] = nodes.map(this.translateNode(lang));
@@ -82,8 +88,8 @@ export class NxMenusService implements OnDestroy {
         if (this.CONFIG.isLocal) {
             return from([menu]);
         }
-        return this.sessionService.loginStateSubject
-            .pipe(map(login => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT)));
+        return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
+            .pipe(map(([login]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT)));
     }
 
     filterMenu = (menu: MenuNode[], auth: Auth) => {
