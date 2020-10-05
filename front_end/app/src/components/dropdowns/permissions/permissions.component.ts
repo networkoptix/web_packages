@@ -54,9 +54,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         if (this.roles) {
             this.accessRoles = this.roles.filter((role) => {
                 if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                    role.optionLabel = this.LANG.accessRoles[role.name]
-                        ? this.LANG.accessRoles[role.name].label()
-                        : role.name;
+                    role.optionLabel = this.LANG.accessRoles[role.name]?.label() || role.name;
                     return true;
                 }
 

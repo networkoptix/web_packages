@@ -64,10 +64,10 @@
 
         <div class="clearfix">
             <div class="mobile-badge" *ngFor="let platform of downloads.mobile">
-                <a *ngIf="LANG.downloads.mobile[platform.name].link != 'disabled'"
+                <a *ngIf="LANG.downloads.mobile[platform.name].link() != 'disabled'"
                    class="mobile-link"
                    [ngClass]="platform.os"
-                   [href]="LANG.downloads.mobile[platform.name].link">
+                   [href]="LANG.downloads.mobile[platform.name].link()">
                 </a>
             </div>
             <div class="mobile-badge float-right" *ngIf="canSeeHistory">

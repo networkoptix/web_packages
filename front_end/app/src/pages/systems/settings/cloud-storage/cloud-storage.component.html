@@ -13,7 +13,7 @@
         <p>{{ cloudStorageInitial }}</p>
 
         <p *ngIf="!systemCloudStorageCapable" translate>Update your system to the <a routerLink="/download" target="_blank">latest build</a> to enable Cloud Storage.</p>
-        <nx-process-button *ngIf="systemCloudStorageCapable" [actionType]="'default'" [process]="enableCloudStorage" [buttonText]="LANG.dialogs.cloudStorage.enableStorage"></nx-process-button>
+        <nx-process-button *ngIf="systemCloudStorageCapable" [actionType]="'default'" [process]="enableCloudStorage" [buttonText]="LANG.dialogs.cloudStorage.enableStorage()"></nx-process-button>
     </div>
 </nx-block>
 

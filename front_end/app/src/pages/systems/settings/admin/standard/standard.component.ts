@@ -164,7 +164,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
         this.setWarningMessageThroughApplyService = () => {
             if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
-                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
+                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
             } else {
                 this.applyService.setWarn('');
             }

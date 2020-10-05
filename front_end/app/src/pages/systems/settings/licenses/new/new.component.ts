@@ -73,7 +73,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             this.licenseForm.controls.licenseKey.markAsUntouched();
 
                             this.dialogsService
-                                .notify(this.LANG.license.messages.activated, 'success');
+                                .notify(this.LANG.license.messages.activated?.(), 'success');
 
                             return;
                         }
@@ -93,7 +93,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                 // Network error has occurred during license activation. Error code: -1
                                 if (matchError('Network error has occurred')) {
                                     this.dialogsService
-                                        .notify(this.LANG.errorCodes.licenseServerError, 'danger');
+                                        .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
                                     break;
                                 }
                                 if (matchError('License is expired')) {
@@ -132,11 +132,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     }, (fail) => {
                         if (fail.name === 'HttpErrorResponse' || fail.error && fail.error.type === 'error') {
                             this.dialogsService
-                                .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                                .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
                         } else {
                             if (fail.name === 'TimeoutError') {
                                 this.dialogsService
-                                    .notify(this.LANG.errorCodes.licenseTimeout, 'danger');
+                                    .notify(this.LANG.errorCodes.licenseTimeout?.(), 'danger');
                             }
                             console.error(fail);
                         }

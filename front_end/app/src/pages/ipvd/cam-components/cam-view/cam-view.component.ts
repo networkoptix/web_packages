@@ -71,20 +71,20 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.camera = [
-            { title: this.LANG.ipvd.maxResolution, param: 'maxResolution' },
-            { title: this.LANG.ipvd.maxFps, param: 'maxFps' },
-            { title: this.LANG.ipvd.primaryCodec, secondaryParam: 'primaryCodec' },
-            { title: this.LANG.ipvd.isAudioSupported, param: 'isAudioSupported' },
-            { title: this.LANG.ipvd.isTwAudioSupported, param: 'isTwAudioSupported' },
-            { title: this.LANG.ipvd.isPtzSupported, param: 'isPtzSupported' },
-            { title: this.LANG.ipvd.isAptzSupported, param: 'isAptzSupported' },
-            { title: this.LANG.ipvd.isMdSupported, param: 'isMdSupported' },
-            { title: this.LANG.ipvd.isFisheye, param: 'isFisheye' },
-            { title: this.LANG.ipvd.isIoSupported, param: 'isIoSupported' },
-            { title: this.LANG.ipvd.isDualStreamingSupported, param: 'isDualStreamingSupported' },
-            { title: this.LANG.ipvd.sndResolution, param: 'sndResolution' },
-            { title: this.LANG.ipvd.isMultiSensor, param: 'isMultiSensor' },
-            { title: this.LANG.ipvd.isAnalyticsSupported, param: 'isAnalyticsSupported' }
+            { title: this.LANG.ipvd.maxResolution?.(), param: 'maxResolution' },
+            { title: this.LANG.ipvd.maxFps?.(), param: 'maxFps' },
+            { title: this.LANG.ipvd.primaryCodec?.(), secondaryParam: 'primaryCodec' },
+            { title: this.LANG.ipvd.isAudioSupported?.(), param: 'isAudioSupported' },
+            { title: this.LANG.ipvd.isTwAudioSupported?.(), param: 'isTwAudioSupported' },
+            { title: this.LANG.ipvd.isPtzSupported?.(), param: 'isPtzSupported' },
+            { title: this.LANG.ipvd.isAptzSupported?.(), param: 'isAptzSupported' },
+            { title: this.LANG.ipvd.isMdSupported?.(), param: 'isMdSupported' },
+            { title: this.LANG.ipvd.isFisheye?.(), param: 'isFisheye' },
+            { title: this.LANG.ipvd.isIoSupported?.(), param: 'isIoSupported' },
+            { title: this.LANG.ipvd.isDualStreamingSupported?.(), param: 'isDualStreamingSupported' },
+            { title: this.LANG.ipvd.sndResolution?.(), param: 'sndResolution' },
+            { title: this.LANG.ipvd.isMultiSensor?.(), param: 'isMultiSensor' },
+            { title: this.LANG.ipvd.isAnalyticsSupported?.(), param: 'isAnalyticsSupported' }
         ];
         this.uriSubscription = this.uri
             .getURI()

@@ -161,7 +161,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         const { ip, port } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
-        this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
+        this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
 
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error))
@@ -217,7 +217,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
-        this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
+        this.selectedServer.shownStatus = status ? this.LANG.servers.status[status]?.() : '';
         this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
@@ -290,8 +290,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     };
                     this.toastService.show(
                         NxLanguageProviderService.translate(
-                            this.LANG.toastMessage.nameFail,
-                            { type: this.LANG.common.server }
+                            this.LANG.toastMessage.nameFail?.(),
+                            { type: this.LANG.common.server?.() }
                         ), options);
                 });
         }
@@ -362,7 +362,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     onPortChange() {
         if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
-            this.applyService.setWarn(this.LANG.servers.portWarning);
+            this.applyService.setWarn(this.LANG.servers.portWarning?.());
         } else {
             this.applyService.setWarn('');
         }
@@ -392,7 +392,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
-                        this.toastService.show(this.LANG.servers.analyticsDataPolicyError, options);
+                        this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
                     }
                 });
         } else {

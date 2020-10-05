@@ -78,7 +78,7 @@ export class NxDebugComponent {
     ) {
         this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.pageTitle = this.LANG.pageTitles.debug;
+        this.pageService.pageTitle = this.LANG.pageTitles.debug?.();
         this.accountService.get().then((acc) => {
             this.init();
         });
@@ -130,7 +130,7 @@ export class NxDebugComponent {
                     if (this.debugProcess.success) {
                         resolve({
                             data: {
-                                resultCode: this.LANG.errorCodes.ok
+                                resultCode: this.LANG.errorCodes.ok?.()
                             }
                         });
                     } else {

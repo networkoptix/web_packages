@@ -173,7 +173,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            server.osName = server.osInfo ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
+            server.osName = server.osInfo ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown?.();
             if (!server.ip) {
                 NxUtilsService.formatURL(server);
             }

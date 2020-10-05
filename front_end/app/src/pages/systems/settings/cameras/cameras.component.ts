@@ -665,7 +665,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateMotionWarning() {
         const [always, motion, lowMotion] = this.recordingModesWatcher.originalValue;
         const show = this.motionEnabledWatcher.value && this.motionEnabledWatcher.changed && (motion.value + lowMotion.value);
-        this.applyService.setWarn(show ? this.LANG.common.disableMotionWarning : '');
+        this.applyService.setWarn(show ? this.LANG.common.disableMotionWarning?.() : '');
     }
 
     getSupportedMotion() {

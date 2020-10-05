@@ -96,9 +96,9 @@ export class NxModalGenericComponent {
 
     openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
-            this.LANG.dialogs.buttons.ok,
+            this.LANG.dialogs.buttons.ok(),
             null,
-            this.LANG.dialogs.buttons.cancel,
+            this.LANG.dialogs.buttons.cancel(),
             footerClass,
             true,
             true,

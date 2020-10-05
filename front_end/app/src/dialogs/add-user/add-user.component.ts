@@ -50,11 +50,11 @@ export class AddUserModalContent {
         if (this.selectedPermission.description) {
             description = this.selectedPermission.description;
         } else if (this.selectedPermission.userRoleId) {
-            description = this.LANG.accessRoles.customRole.description;
+            description = this.LANG.accessRoles.customRole.description?.();
         } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            description = this.LANG.accessRoles[this.selectedPermission.name].description;
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
         } else {
-            description = this.LANG.accessRoles.customRole.description;
+            description = this.LANG.accessRoles.customRole.description?.();
         }
 
         return (typeof description === 'function') ? description() : description;
@@ -63,9 +63,9 @@ export class AddUserModalContent {
     private getAccessDescription() {
         let description;
         if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            description = this.LANG.accessRoles[this.selectedPermission.name].description;
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
         } else {
-            description = this.LANG.accessRoles.customRole.description;
+            description = this.LANG.accessRoles.customRole.description?.();
         }
 
         return (typeof description === 'function') ? description() : description;

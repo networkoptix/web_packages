@@ -627,7 +627,7 @@ export class MergeModalContent {
                 return { error: '0' };
             }
         } else {
-            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+            this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking?.() });
         }
 
         /**

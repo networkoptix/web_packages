@@ -115,9 +115,9 @@ export class NxDialogsService {
         const params: IParams = {
             message     : this.domSanitizer.bypassSecurityTrustHtml(message),
             title,
-            actionLabel : this.LANG.dialogs.buttons.ok,
+            actionLabel : this.LANG.dialogs.buttons.ok?.(),
             buttonType  : 'default',
-            cancelLabel : this.LANG.dialogs.buttons.cancel,
+            cancelLabel : this.LANG.dialogs.buttons.cancel?.(),
             buttonClass : 'btn-primary',
             footerClass : footerClass || '',
             hasFooter   : true,

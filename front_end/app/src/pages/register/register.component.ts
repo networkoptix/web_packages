@@ -44,7 +44,7 @@ export class NxRegisterComponent implements OnInit {
         };
 
         this.LANG = this.language.translations;
-        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register?.();
     }
 
     constructor(configService: NxConfigService,
@@ -84,7 +84,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
-            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess;
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess?.();
         }
 
         if (this.uriParam === 'activated') {
@@ -148,10 +148,10 @@ export class NxRegisterComponent implements OnInit {
                     this.registerForm.controls.registerEmail.markAsTouched();
                     return false;
                 },
-                portalError: this.LANG.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount?.()
             },
             holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantRegisterPrefix
+            errorPrefix : this.LANG.errorCodes.cantRegisterPrefix?.()
         })
             .then((response) => {
                 if (response.resultCode === 'alreadyExists') {
@@ -184,7 +184,7 @@ export class NxRegisterComponent implements OnInit {
                         });
 
                     this.accountService.email = this.accountInfo.email;
-                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess;
+                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess?.();
                     this.registerSuccess = true;
                     this.storageService.regProcess = 'registerSuccess';
                 }

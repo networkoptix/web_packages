@@ -480,7 +480,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     });
 
                 const systemName = NxLanguageProviderService.translate(
-                    this.LANG.headerLabels.healthReportForSystem,
+                    this.LANG.headerLabels.healthReportForSystem?.(),
                     { systemName: data.system || '' }
                 );
                 this.headerService.currentLocation = {
@@ -519,7 +519,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     time
                 };
                 // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-                this.ribbonService.show(this.LANG.toastMessage.viewingReport, [], 'alert');
+                this.ribbonService.show(this.LANG.toastMessage.viewingReport?.(), [], 'alert');
                 setTimeout(() => {
                     this.setHeaderHeight();
                 });

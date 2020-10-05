@@ -76,11 +76,11 @@ export class LoginModalContent implements OnInit {
             return this.account.reactivate(email);
         }, {
             errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated,
-                notFound  : this.LANG.errorCodes.emailNotFound
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated(),
+                notFound  : this.LANG.errorCodes.emailNotFound()
             },
             holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix()
         })
             .run()
             .then(() => {
@@ -165,7 +165,7 @@ export class LoginModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.LANG.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount()
             }
         }).then((result) => {
             if (this.CONFIG.isLocal) {

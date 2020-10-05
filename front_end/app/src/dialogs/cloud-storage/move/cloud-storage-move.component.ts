@@ -75,7 +75,7 @@ export class CloudStorageMoveModalContent implements OnInit {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
-                    this.genericModal.openConfirm(message, title, ok);
+                    this.genericModal.openConfirm(message?.(), title?.(), ok?.());
                 }
             });
         });
@@ -84,20 +84,20 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
             errorCodes: {
                 500: () => {
-                    return this.LANG.common.systemServerError;
+                    return this.LANG.common.systemServerError?.();
                 },
                 notFound: () => {
-                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound?.();
                 },
                 cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized;
+                    return this.LANG.errorCodes.notAuthorized?.();
                 },
                 networkConnection: () => {
                     return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
-            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
+            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
+            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
         }).then(() => {
             this.updateCallback();
             this.close();
@@ -128,7 +128,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
         this.systemsService.getSystem(value).toPromise().then(({ state }) => {
             if (state === 'offline') {
-                this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
+                this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline?.();
             } else {
                 this.errorText = '';
             }

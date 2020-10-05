@@ -77,7 +77,7 @@ export class MessageModalContent implements OnInit {
 
             return this.account.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail);
         }, {
-            successMessage: this.LANG.dialogs.message.sent
+            successMessage: this.LANG.dialogs.message.sent?.()
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -90,7 +90,7 @@ export class MessageModalContent implements OnInit {
     initForm() {
         this.placeholder = '';
         if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
-            this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
+            this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];

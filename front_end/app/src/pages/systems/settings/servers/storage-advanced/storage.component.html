@@ -7,7 +7,7 @@
                     *ngIf="!loading && !storages.length"
                     svgFileName="system_settings_placeholder"
                     width="64"
-                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
             </nx-section-placeholder>
             <form class="form form-horizontal" role="form" name="storageSettings" #storageForm="ngForm" novalidate>
                 <table *ngIf="showStorage">

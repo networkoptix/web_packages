@@ -69,17 +69,17 @@ export class ResetServerModalContent {
                                 .subscribe(() => {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
-                                    const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful, { serverName: this.serverName });
+                                    const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful?.(), { serverName: this.serverName });
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
                                 });
                         })
-                            .catch(() => this.toastService.show(this.LANG.servers.restartFailed, options));
+                            .catch(() => this.toastService.show(this.LANG.servers.restartFailed?.(), options));
                     });
                 })
-                    .catch(() => this.toastService.show(this.LANG.servers.resetFailed, options));
-            }, { successMessage: this.LANG.servers.beginReset });
+                    .catch(() => this.toastService.show(this.LANG.servers.resetFailed?.(), options));
+            }, { successMessage: this.LANG.servers.beginReset?.() });
     }
 
     close() {

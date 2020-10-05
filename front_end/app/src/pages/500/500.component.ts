@@ -20,7 +20,7 @@ export class Nx500Component {
         private pageService: NxPageService
     ) {
         this.LANG = languageService.translations;
-        this.pageService.pageTitle = this.LANG.common.systemServerError;
+        this.pageService.pageTitle = this.LANG.common.systemServerError?.();
         this.CONFIG = configService.getConfig();
     }
 }

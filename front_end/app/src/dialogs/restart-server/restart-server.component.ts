@@ -90,7 +90,7 @@ export class RestartServerModalContent {
                                 return this.system.getInfo(true, false)
                                     .then(() => {
                                         if (!this.system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                                             throw Error('system is offline still');
                                         }
                                     })
@@ -104,7 +104,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                                         }
                                     }),
                                     delayWhen(() => timer(4000))
@@ -126,7 +126,7 @@ export class RestartServerModalContent {
                     this.system.currentBusyServerIds.delete(this.serverId);
                     let message = this.LANG.servers.restartFailed;
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
-                        message = this.LANG.servers.serverOffline;
+                        message = this.LANG.servers.serverOffline?.();
                         this.close(this.CONFIG.servers.status.offline);
                     }
                     this.toastService.show(message, options);

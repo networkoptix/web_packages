@@ -136,7 +136,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.acceptProcess = this.processService.createProcess(() => {
                                             return this.cloudApiService.acceptIntegration(this.plugin.review_id);
                                         }, {
-                                            successMessage: this.LANG.account.agreementAccepted
+                                            successMessage: this.LANG.account.agreementAccepted?.()
                                         }).then(() => {
                                             this.router.navigate([this.uriService.getURL()]);
                                             this.ribbonService.hide();
@@ -145,19 +145,19 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         ribbonActions.unshift(
                                             {
                                                 type  : 'process-button',
-                                                text  : this.LANG.ribbon.integration.accept,
+                                                text  : this.LANG.ribbon.integration.accept?.(),
                                                 value : this.acceptProcess
                                             },
                                             {
                                                 type  : 'link',
-                                                text  : this.LANG.ribbon.integration.reject,
+                                                text  : this.LANG.ribbon.integration.reject?.(),
                                                 value : `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
                                             }
                                         );
                                     }
 
                                     this.ribbonService.show(
-                                        this.LANG.ribbon.integration.previewRibbon,
+                                        this.LANG.ribbon.integration.previewRibbon?.(),
                                         ribbonActions
                                     );
                                 }
@@ -184,7 +184,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog() {
-        let disclaimer: string = this.LANG.privacyPolicy.integration;
+        let disclaimer: string = this.LANG.privacyPolicy.integration?.();
         disclaimer = NxLanguageProviderService.translate(
             disclaimer, {
                 INTEGRATION_COMPANY        : this.plugin.information.companyName,

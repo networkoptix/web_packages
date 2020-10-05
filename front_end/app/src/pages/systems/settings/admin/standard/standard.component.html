@@ -4,7 +4,7 @@
             *ngIf="system && settings === false || !system.isOnline; else systemSettings"
             svgFileName="system_settings_placeholder"
             width="64"
-            [translatedMessage]="LANG.system.settings.notAbleToLoadSystem">
+            [translatedMessage]="LANG.system.settings.notAbleToLoadSystem()">
     </nx-section-placeholder>
 
     <ng-template #systemSettings>
@@ -76,7 +76,7 @@
             *ngIf="system && settings === false || !system.isOnline; else securitySettings"
             svgFileName="system_settings_placeholder"
             width="64"
-            [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity">
+            [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity()">
     </nx-section-placeholder>
     <ng-template #securitySettings>
         <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>

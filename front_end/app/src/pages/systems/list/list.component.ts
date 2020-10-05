@@ -45,7 +45,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.systems;
+        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
     }
 
     constructor(
@@ -98,7 +98,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             this.fetchComplete = true;
             return this.systemsService.forceUpdateSystems().toPromise();
         }, {
-            errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix,
+            errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
             logoutForbidden : true
         });
 
@@ -127,7 +127,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.accountService.email) ||
+                        this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
                         this.hasMatch(system.name, search) ||
                         this.hasMatch(system.ownerFullName, search) ||
                         this.hasMatch(system.ownerAccountEmail, search);
