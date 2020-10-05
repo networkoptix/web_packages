@@ -2,7 +2,7 @@
     <div class="d-flex flex-row main-button" [ngClass]="{'hide-arrow': hideArrow}">
         <div class="dropdown"
              (nxClickElsewhere)="!headerService.show$ = false"
-             [ngClass]="{'show': headerService.showSubject | async}">
+             [ngClass]="{'show': headerService.showSubject | async, 'hide-title': !hideArrow}">
 
             <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
                     (click)="headerService.show$ = !headerService.show$"

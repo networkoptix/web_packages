@@ -81,7 +81,7 @@
 .navigation-grid {
     @extend .base-grid;
     background: $light1;
-    padding: 24px 16px !important;
+    padding: 24px 16px 18px 16px !important;
     &:not(.top-border) {
         background: $additional_light1;
     }
