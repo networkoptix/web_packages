@@ -305,6 +305,12 @@
                 return false;
             },
             {% endif %}
+            allow_html_in_named_anchor: true,
+            extended_valid_elements: "*[*]",
+            custom_elements: "style,link,~link",
+            valid_children: "+a[*]",
+            closed : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
+            protect: [/<svg.*\/svg>/],
             toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
             menubar: false,
             resize: 'both',
@@ -314,6 +320,23 @@
             setup: function (editor) {
                 editor.on('change', function () {
                     tinymce.triggerSave();
+                });
+
+                editor.on('postProcess', function (e) {
+                    const mapObj = {
+                        lineargradient: "linearGradient",
+                        filterunits: "filterUnits",
+                        feoffset: "feOffset",
+                        fegaussianblur: "feGaussianBlur",
+                        fecolormatrix: "feColorMatrix",
+                        fecomposite: "feComposite",
+                        stddeviation: "stdDeviation",
+                    };
+
+                    const re = new RegExp(Object.keys(mapObj).join("|"), "g");
+                    e.content = e.content.replace(re, function (matched) {
+                        return mapObj[matched];
+                    });
                 });
 
                 // Set initial width of editor to width of original textarea

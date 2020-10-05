@@ -136,6 +136,10 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['blocks'] = doc_structures.filter(name='body').first().find_actual_value(
                 asset=doc, language=language, version_id=version, draft=draft or review
             )
+            doc_dict['script'] = doc_structures.filter(name='script').first().find_actual_value(
+                asset=doc, language=language, version_id=version, draft=draft or review
+            )
+            doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
             css = doc_structures.filter(name='styling').first().find_actual_value(
                 asset=doc, language=language, version_id=version, draft=draft or review
             )

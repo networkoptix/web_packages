@@ -98,6 +98,7 @@
                     <ng-container *ngFor="let node of pageNode.nodes">
                         <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
                     </ng-container>
+                    <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
                         <h4>Related Topics</h4>
                         <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Renderer2, Inject, ViewChild, ElementRef } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
@@ -14,10 +14,11 @@ import { SearchFilter, SearchTag } from '../../../components/search/search.compo
 @Component({
     selector      : 'nx-knowledge-base',
     templateUrl   : 'knowledge-base.component.html',
-    styleUrls     : ['knowledge-base.component.scss'],
-    encapsulation : ViewEncapsulation.ShadowDom
+    styleUrls     : ['knowledge-base.component.scss']
 })
 export class NxKnowledgeBaseComponent implements OnInit {
+    @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
+
     CONFIG: IConfig;
     currentSearchResultPage = 0;
     totalSearchResultPages = 0;
@@ -30,10 +31,10 @@ export class NxKnowledgeBaseComponent implements OnInit {
     searchResults$ = new BehaviorSubject([]);
     searchQuery$ = new BehaviorSubject({ query: '', tags: ' '});
     assetId$ = new BehaviorSubject('');
-    relatedLinks$ = new BehaviorSubject<MenuNodeWithParent[]>([])
+    relatedLinks$ = new BehaviorSubject<MenuNodeWithParent[]>([]);
     relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
         map(this.filterRelatedLinks)
-    )
+    );
 
     filterRelatedLinks([assetId, nodes]: [string, MenuNodeWithParent[]]) {
         const currentIndex = nodes.findIndex(({ asset_id: id }) => `${id}` === assetId);
@@ -63,7 +64,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.searchLoading = false;
         this.searchResults$.next([]);
         this.searchMode = false;
-    }
+    };
 
     navigateSearch(doc) {
         this.router.navigate([doc.docId], { relativeTo: this.route.parent });
@@ -79,7 +80,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
             this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
             this.loadingNext = false;
         });
-    }
+    };
 
     fetchSearchHandler({ query, page, tags }) {
         return this.cloudApi.getDocumentation({ query, page, tags }).pipe(delay(this.CONFIG.search.debounceTime));
@@ -91,7 +92,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
         private router: Router,
-        private menusService: NxMenusService
+        private menusService: NxMenusService,
+        private renderer2: Renderer2
     ) {
         this.CONFIG = configService.config;
     }
@@ -150,7 +152,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
                         const state = this.route.snapshot.queryParamMap.get('state');
                         return this.cloudApi.getDocumentation(this.assetId$.value, state)
                             .pipe(
-                                tap(({ title, blocks, contentHTML }) => {
+                                tap(({ title, blocks, contentHTML, script }) => {
                                     this.search = {
                                         ...this.search,
                                         tags: []
@@ -164,9 +166,19 @@ export class NxKnowledgeBaseComponent implements OnInit {
                                             title,
                                             '',
                                             contentHTML
-                                        ))
+                                        )),
+                                        script
                                     );
                                     this.loading = false;
+                                    setTimeout(() => {
+                                        Array.from(this.scriptDiv.nativeElement.children).forEach(child => {
+                                            this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
+                                        });
+                                        const myScript = this.renderer2.createElement('script');
+                                        myScript.type = 'text/javascript';
+                                        myScript.innerHTML = this.pageNode.script;
+                                        this.renderer2.appendChild(this.scriptDiv.nativeElement, myScript);
+                                    });
                                 })
                             );
                     })
@@ -200,6 +212,7 @@ export class KnowledgeNode {
         public url: string,
         public content: string,
         public nodes: KnowledgeNode[],
+        public script: string,
         public cardClass: CardClasses,
         public cardIcon?: string,
         public cardLead?: string
@@ -210,13 +223,15 @@ export class KnowledgeNode {
         title: string,
         url: string,
         content: string,
-        nodes: KnowledgeNode[] = []
+        nodes: KnowledgeNode[] = [],
+        script = ''
     ) {
         return new KnowledgeNode(
             title,
             url,
             content,
             nodes,
+            script,
             CardClasses.NORMAL
         );
     }
@@ -226,6 +241,7 @@ export class KnowledgeNode {
         url: string,
         content,
         nodes: KnowledgeNode[],
+        script = '',
         cardIcon: string,
         cardLead: string
     ) {
@@ -234,6 +250,7 @@ export class KnowledgeNode {
             url,
             content,
             nodes,
+            script,
             CardClasses.SIDE,
             cardIcon,
             cardLead
@@ -245,13 +262,15 @@ export class KnowledgeNode {
         url: string,
         content: string,
         showHeader = true,
-        nodes = []
+        nodes = [],
+        script = ''
     ) {
         return new KnowledgeNode(
             showHeader ? title : '',
             url,
             content,
             nodes,
+            script,
             CardClasses.ARTICLE,
             '',
             ''

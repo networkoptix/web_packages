@@ -2226,6 +2226,15 @@
             "type": "long_text",
             "advanced": true,
             "optional": true
+          },
+          {
+            "name": "script",
+            "label": "Script",
+            "value": "",
+            "description": "Javascript to run with html body",
+            "type": "long_text",
+            "advanced": true,
+            "optional": true
           }
         ]
       }
