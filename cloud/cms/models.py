@@ -331,6 +331,10 @@ class AssetType(models.Model):
             return f"{self.name} - {AssetType.ASSET_TYPES[self.type]}"
         return AssetType.ASSET_TYPES[self.type]
 
+    @classmethod
+    def get_model_by_type(cls, asset_type):
+        return cls.objects.get(name='', type=asset_type)
+
     @staticmethod
     def get_type_by_name(name):
         if name == "":
@@ -1274,6 +1278,87 @@ class Menu(models.Model):
         structures = cls.generate_menus()
         for customization, structure in structures.items():
             MENU_CACHE[customization] = structure
+
+    def to_dict(self):
+        def get_nodes(nodes_list):
+            nodes = []
+            for node in nodes_list:
+                node_dict = {
+                    'name': node.name,
+                    'url' : node.url,
+                    'asset': node.asset.name if node.asset else None,
+                    'asset_type': node.asset.asset_type.type if node.asset else None,
+                    'new_window': node.new_window,
+                    'icon': node.icon,
+                    'available': [customization.name for customization in node.available.all()],
+                    'enabled': [customization.name for customization in node.enabled.all()],
+                    'authentication': node.authentication,
+                    'condition': node.condition,
+                    'permissions': [permission.codename for permission in node.permissions.all()],
+                    'order': node.order,
+                    'is_global': node.is_global,
+                    'touched': node.touched,
+                    'nodes': get_nodes(node.nodes_list) if node.nodes_list else []
+                }
+
+                nodes.append(node_dict)
+            return nodes
+
+        menu = next(menu for menu in Menu.get_prefetched_menus() if menu.id == self.id)
+        menu_dict = {
+            'name': menu.name,
+            'depth': menu.depth,
+            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else []
+        }
+
+        return menu_dict
+
+    def from_dict(self, menu_dict):
+        def set_nodes(nodes_list, parent):
+            for node in nodes_list:
+                if isinstance(parent, Menu):
+                    parent_type = 'parent_menu'
+                else:
+                    parent_type = 'parent_node'
+                node_obj = MenuNode.objects.filter(name=node['name'], **{parent_type: parent}).first()
+                if not node_obj:
+                    node_obj = MenuNode()
+                node_obj.name = node['name']
+                node_obj.url = node['url']
+                node_obj.new_window = node['new_window']
+                node_obj.icon = node['icon']
+                node_obj.authentication = node['authentication']
+                node_obj.condition = node['condition']
+                node_obj.order = node['order']
+                node_obj.is_global = node['is_global']
+                node_obj.touched = node['touched']
+                node_obj.__setattr__(parent_type, parent)
+                node_obj.save()
+
+                node_obj.available.set(list(Customization.objects.filter(name__in=node['available'])))
+                node_obj.enabled.set(list(Customization.objects.filter(name__in=node['enabled'])))
+                node_obj.permissions.set(list(Permission.objects.filter(codename__in=node['permissions'])))
+
+                if node['asset']:
+                    if node_obj.is_global:
+                        asset_customizations = Customization.objects.all()
+                    else:
+                        asset_customizations = node_obj.available.all()
+                    asset = Asset.objects.filter(name=node['asset'], asset_type__type=node['asset_type']).first()
+                    if not asset:
+                        asset_type = AssetType.objects.filter(type=node['asset_type'], name='').order_by('pk').first()
+                        asset = Asset.objects.create(name=node['asset'], asset_type=asset_type)
+                        asset.customizations.set(list(asset_customizations))
+                    node_obj.asset = asset
+                    node_obj.save()
+
+                if node['nodes']:
+                    set_nodes(node['nodes'], node_obj)
+
+        self.depth = menu_dict['depth']
+        self.save()
+        if menu_dict['nodes']:
+            set_nodes(menu_dict.get('nodes', []), self)
 
 
 class MenuNode(models.Model):

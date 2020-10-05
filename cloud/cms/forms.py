@@ -279,7 +279,8 @@ class AssetSettingsForm(forms.Form):
              'Update CMS structure and default values based on archive with structure.json and asset_type template, '
              'or upload just the structure.json'),
             ('update_asset_by_json', 'Update data records from a json file'),
-            ('update_content', 'Upload content files for asset')
+            ('import_assets_from_json', 'Create and update all assets in json file'),
+            ('update_content', 'Upload content files for asset'),
         )
     )
 
@@ -484,3 +485,14 @@ class MenuNodeInlineForm(forms.ModelForm):
         new_enabled = new_enabled.union(set(val))
         new_enabled = Customization.objects.filter(name__in=new_enabled)
         return new_enabled
+
+
+class MenuPortForm(forms.Form):
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        port_type = kwargs.pop('port_type', 'export')
+        super().__init__(*args, **kwargs)
+        self.fields['menu'].label_from_instance = lambda obj: obj.name
+        if port_type == 'import':
+            self.fields['file'] = forms.FileField()

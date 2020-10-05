@@ -1,10 +1,15 @@
 import base64
-import json
 import codecs
+from io import BytesIO
+import json
+import logging
 import os
 import re
-import logging
+import requests
+import uuid
 from zipfile import ZipFile
+
+from django.core.files.base import ContentFile
 
 from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records
@@ -456,13 +461,40 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.save()
 
 
+def external_file_to_content_file(url):
+    file_content = requests.get(url).content
+    filename = url.split('/')[-1]
+    return ContentFile(file_content, name=filename)
+
+
 def update_asset_by_json(asset, asset_json, user):
+    def sub_image_sources(match_obj):
+        file_id = str(uuid.uuid4())
+        files[file_id] = external_file_to_content_file(match_obj[1])
+        return f'src="{{image_import:{file_id}}}"'
+
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
         context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
         data_records = {}
+        files = {}
         for ds in context["values"]:
-            if DataStructure.get_type_by_name(ds["type"]) not in [DataStructure.DATA_TYPES.file,
-                                                                  DataStructure.DATA_TYPES.image]:
+            ds_obj = context_model.datastructure_set.get(name=ds['name'])
+            ds_type = DataStructure.get_type_by_name(ds['type'])
+            if ds_type not in [DataStructure.DATA_TYPES.file,
+                               DataStructure.DATA_TYPES.image]:
+                if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                    files[ds['name']] = external_file_to_content_file(ds['value'])
+                elif ds_type == DataStructure.DATA_TYPES.html and ds_obj.meta_settings.get('upload_data_images', False):
+                    ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
                 data_records[ds["name"]] = ds["value"]
-        save_unrevisioned_records(asset, None, None, context_model.datastructure_set.all(), data_records, {}, user)
+        save_unrevisioned_records(asset, None, None, context_model.datastructure_set.all(), data_records, files, user)
+
+
+def import_assets_from_json(assets_list, user):
+    for asset_dict in assets_list:
+        asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
+        asset_obj, created = Asset.objects.get_or_create(name=asset_dict['name'], asset_type=asset_type)
+        if created:
+            asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+        update_asset_by_json(asset_obj, asset_dict, user)

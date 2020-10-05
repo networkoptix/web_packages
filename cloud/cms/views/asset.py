@@ -344,15 +344,19 @@ def asset_settings(request, asset_id):
         generate_json = action == 'generate_json'
         merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
-        create_records_by_json = action == 'create_records_by_json'
+        update_asset_by_json = action == 'update_asset_by_json'
+        import_assets_from_json = action == 'import_assets_from_json'
         update_content = action == 'update_content'
 
         file = request.FILES["file"]
 
         if file.name.endswith('json'):
-            if create_records_by_json:
+            if update_asset_by_json:
                 structure.update_asset_by_json(asset, json.load(file)[0], request.user)
                 messages.success(request, "Content updated")
+            elif import_assets_from_json:
+                structure.import_assets_from_json(json.load(file), request.user)
+                messages.success(request, "Assets imported")
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             else:
@@ -421,6 +425,23 @@ def download_current_structure(request, asset_id):
             content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
         return response_attachment(content, file_name, 'application')
     return HttpResponseBadRequest("Asset not given or found")
+
+
+@require_http_methods(["GET"])
+@permission_required('cms.change_asset')
+def download_all_asset_structures(request, asset_type):
+    assets = Asset.objects.filter(asset_type__type=asset_type)
+    data = []
+    for asset in assets:
+        if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
+            continue
+        asset_dict = generate_structure.from_database(asset, True)[0]
+        asset_dict['name'] = asset.name
+        asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
+        data.append(asset_dict)
+    content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+    file_name = "structure.json"
+    return response_attachment(content, file_name, 'application')
 
 
 @require_http_methods(["GET"])

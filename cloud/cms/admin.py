@@ -6,14 +6,14 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, path
 from django.utils.html import format_html
 
 import nested_admin
 
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
-from cms.views.asset import page_editor, review
+from cms.views.asset import page_editor, review, response_attachment
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -961,6 +961,47 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if '_continue' in request.POST:
             return redirect(f'{request.path}?{request.META.get("QUERY_STRING")}')
         return response
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('port/', self.admin_site.admin_view(self.menu_porting), name='menu_porting'),
+        ]
+        return my_urls + urls
+
+    def menu_porting(self, request):
+        form_export = None
+        form_import = None
+        if request.method == "POST":
+            if 'export' in request.POST:
+                form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
+                if form_export.is_valid():
+                    data = form_export.cleaned_data
+                    menu_obj = data['menu']
+                    content = json.dumps(menu_obj.to_dict(), ensure_ascii=False, indent=4, separators=(',', ': '))
+                    return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+            elif 'import' in request.POST:
+                form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
+                if form_import.is_valid():
+                    data = form_import.cleaned_data
+                    menu = data['menu']
+                    menu.from_dict(json.load(request.FILES['file']))
+                    messages.success(request, 'Successfully imported menu')
+
+        if not form_export:
+            form_export = MenuPortForm(port_type='export')
+        if not form_import:
+            form_import = MenuPortForm(port_type='import')
+
+        return render(request, 'cms/menu_porting.html',
+                      {'formExport': form_export,
+                       'formImport': form_import,
+                       'user': request.user,
+                       'has_permission': admin.site.has_permission(request),
+                       'site_url': admin.site.site_url,
+                       'site_header': admin.site.site_header,
+                       'site_title': admin.site.site_title,
+                       'title': 'Export/Import Menus'})
 
 
 @admin.register(MenuNode)

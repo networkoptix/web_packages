@@ -23,6 +23,7 @@ PENDING = AssetCustomizationReview.REVIEW_STATES[
     AssetCustomizationReview.REVIEW_STATES.pending].lower()
 GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
 DATA_IMG_SRC_REGEX = re.compile(r'src="data:image/.*?;base64,(.*?)"')
+IMPORT_IMG_SRC_REGEX = re.compile(r'src="{image_import:(.*?)}"')
 
 
 def update_draft_state(review_id, target_state, user):
@@ -279,12 +280,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         return True
 
     def process_html():
-        def upload_data_image_match(match_obj):
-            byte_image = base64.b64decode(match_obj[1] + '===')
-            pil_image = Image.open(BytesIO(byte_image))
-            content_file = ContentFile(
-                byte_image, name=f'body-{str(uuid.uuid4())}.' + pil_image.format.lower()
-            )
+        def upload_image(content_file):
             md5 = hashlib.md5()
             for chunk in content_file.chunks():
                 md5.update(chunk)
@@ -299,9 +295,22 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
             return f'src="{ext_file.file.url}"'
 
+        def upload_data_image_match(match_obj):
+            byte_image = base64.b64decode(match_obj[1] + '===')
+            pil_image = Image.open(BytesIO(byte_image))
+            content_file = ContentFile(
+                byte_image, name=f'{data_structure.name}-{str(uuid.uuid4())}.' + pil_image.format.lower()
+            )
+            return upload_image(content_file)
+
+        def upload_imported_image(match_obj):
+            content_file = request_files[match_obj[1]]
+            return upload_image(content_file)
+
         nonlocal new_record_value
         if data_structure.meta_settings.get('upload_data_images', False):
             new_record_value = DATA_IMG_SRC_REGEX.sub(upload_data_image_match, new_record_value)
+            new_record_value = IMPORT_IMG_SRC_REGEX.sub(upload_imported_image, new_record_value)
         return True
 
     def check_optional():
@@ -328,7 +337,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None
-        if context.translatable:
+        if context and context.translatable:
             if data_structure.translatable:
                 ds_language = language
             elif not process_nontranslatable:
