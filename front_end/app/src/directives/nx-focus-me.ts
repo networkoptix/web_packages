@@ -1,13 +1,11 @@
 import { Directive, ElementRef, OnInit } from '@angular/core';
 
 @Directive({ selector: '[nxFocusMe]' })
-export class NxFocusMeDirective implements OnInit {
+export class NxFocusMeDirective {
     constructor(private _elementRef: ElementRef) {
     }
 
-    ngOnInit() {
-        setTimeout(() => {
-            this._elementRef.nativeElement.focus();
-        }, 500);
+    ngAfterViewInit() {
+        this._elementRef.nativeElement.focus();
     }
 }
