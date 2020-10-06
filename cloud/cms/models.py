@@ -363,6 +363,10 @@ class Asset(models.Model):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
     @property
+    def is_single_customization(self):
+        return self.asset_type.single_customization
+
+    @property
     def is_dirty(self):
         version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
         records_for_version = self.datarecord_set.filter(version__id=version_id)
@@ -632,7 +636,7 @@ class DataStructure(models.Model):
             return DataStructure.cast_value(self, self.default)
         content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
         if not draft:
-            if customization_name:
+            if not asset.is_single_customization and customization_name:
                 content_record = content_record.filter(
                     version__assetcustomizationreview__customization__name=customization_name,
                     version__assetcustomizationreview__state__in=[
@@ -667,7 +671,7 @@ class DataStructure(models.Model):
                 # filter only accepted content_records
                 content_record = content_record.filter(version_id__lte=version_id)
                 if not draft:
-                    if customization_name:
+                    if not asset.is_single_customization and customization_name:
                         new_review_records = content_record.filter(
                             version__assetcustomizationreview__customization__name=customization_name,
                             version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
