@@ -856,33 +856,6 @@ Checking state for selected local system - Server URL is empty
     Validate Check Merge Dialog
 
     Log    Step 2
-    Choose System From Dropdown    ${system 2}[name]
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Wait until elements are visible
-    ...    ${SERVER APPEARS TO BE LISTING ITSELF}
-    ...    ${REMOVE OFFLINE AND INCOMPATIBLE SERVERS}
-    Wait until element has style    ${SERVER APPEARS TO BE LISTING ITSELF}    color    ${ERROR COLOR WITH OPACITY}
-    Wait until element has style    ${REMOVE OFFLINE AND INCOMPATIBLE SERVERS}    color    ${ERROR COLOR WITH OPACITY}
-
-    Click Button    ${MERGE X BUTTON}
-
-Checking state for selected local system - Server URL is empty
-    [Tags]    C76223    state_local    neg
-    Log    Test Setup
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7141    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    7142    image=${IMAGE 4.1}
-    Sleep    60
-
-    Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-
-    Log    Step 2
     Choose System From Dropdown    ${OTHER SYSTEM}
     Wait until element is visible    ${MERGE FORM SERVER URL INPUT}
     ${placeholder}=   Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
@@ -1192,9 +1165,6 @@ General Errors - Selected server is already in this system
     Log    Step 1
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
-    Choose System From Dropdown    ${system 2}[name]
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Admin Password Dialog
 
     Log    Step 2
     Choose System From Dropdown    ${OTHER SYSTEM}    input url=${HOST}:${system 2}[port]    check url=True
@@ -1230,29 +1200,8 @@ General Errors - System (server) offline after owner's of the selected system pa
     Click Button    ${MERGE NEXT BUTTON}
     Validate Admin Password Dialog
 
-    Log    Step 8
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate General Error Dialog
-    Wait Until Element Is Visible    ${MERGE SYSTEMS HAVE DIFFERENT OWNERS}
-
-    Log    Step 9
-    Click Button    ${MERGE TRY AGAIN BUTTON}
-    Validate General Error Dialog
-    Wait Until Element Is Visible    ${MERGE SYSTEMS HAVE DIFFERENT OWNERS}
-
-    Log    C76464
     Log    Step 2
-    Disconnect    ${ENV}    ${owner 2 email}    ${base password}    ${system 2}[id]
-    Slow    Restart Server    ${HOST}:${system 2}[port]    ${auth}    timeout=5
-    Connect System to Cloud   ${auth}   ${HOST}:${system 2}[port]    ${system 2}[name]    ${owner 1 email}    ${base password}
-    Click Button    ${MERGE TRY AGAIN BUTTON}
-    Validate Confirm Merge Dialog
-
-    Log   Step 3
-    Click Button    ${MERGE GO BACK BUTTON}
-    Validate Admin Password Dialog
-
-    Log    Step 4
+    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE NEXT BUTTON}
     Restart Server    ${HOST}:${system 2}[port]    ${auth}   # make the server offline temporary
     Validate General Error Dialog
@@ -1279,29 +1228,6 @@ General Errors - Different owners
     Log    Steps 1, 2
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
-
-Merge Errors - System (server) offline after current account's password validation
-    [Tags]    C76273   merge_errors    neg    should
-    Log    Test Setup
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7241    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    7242    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${auth}=   Create List    admin    ${base password}
-    Sleep  60
-
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-
-    Log     Step 1
-    Complete merge steps till final password input     ${system 2}[name]
-
-    Log     Step 2
-    Stop Container    ${system 2}[cont]
-    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE SYSTEMS BUTTON}
-    Validate Merge Failed Dialog
 
     Log    Step 3
     Choose System From Dropdown    target system name=${OTHER SYSTEM}    input url=${HOST}:${system 2}[port]    check url=True
