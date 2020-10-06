@@ -39,10 +39,10 @@ export class NxAccountService implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
     location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
-    loggingOut: boolean;
+    loggingOut: boolean = false;
+    loginDialogActive: boolean = false;
+    loginWithAuthKeyInProgress: boolean = false;
     requestingLogin: Promise<any>;
-    loginDialogActive: boolean;
-    loginWithAuthKeyInProgress: boolean;
 
     private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
@@ -72,9 +72,6 @@ export class NxAccountService implements OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.location = locationService;
-        this.loggingOut = false;
-        this.loginDialogActive = false;
-        this.loginWithAuthKeyInProgress = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
@@ -97,7 +94,7 @@ export class NxAccountService implements OnDestroy {
 
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.uriService.queryParamsSubject
-            .pipe(distinct())
+            .pipe(distinct(), debounceTime(100))
             .subscribe((params: any) => {
                 if (params.auth) {
                     this.handleAuthKeyLogin(params.auth);
