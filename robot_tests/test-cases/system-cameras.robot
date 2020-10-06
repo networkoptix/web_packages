@@ -389,6 +389,7 @@ Recording toggle shows correct options
     [Tags]    C76401    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
     Select Camera by Name    offline cam
     Verify on Cameras Page
     Toggle Recording
@@ -747,7 +748,7 @@ Recording Quality dropdown menu functionality for camera with schedule
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 UDP stream settings
-    [Tags]    C79005
+    [Tags]    C79005    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -808,7 +809,7 @@ UDP stream settings
     Wait Until Element Is Visible    ${DOT-MENU}
 
 RTSP stream settings
-    [Tags]    C79002
+    [Tags]    C79002    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -869,7 +870,7 @@ RTSP stream settings
     Wait Until Element Is Visible    ${DOT-MENU}
 
 HTTP stream settings
-    [Tags]    C79092
+    [Tags]    C79092    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
