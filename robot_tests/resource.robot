@@ -490,6 +490,12 @@ Wait Until Elements Are Visible
         Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
     END
 
+Wait Until Elements Are Enabled
+    [Arguments]    @{elements}    ${timeout}=5
+    FOR     ${element}  IN  @{elements}
+        Run Keyword And Continue On Failure    Wait Until Element Is Enabled    ${element}    timeout=${timeout}
+    END
+
 Elements Should Not Be Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
@@ -506,6 +512,15 @@ Wait Until Elements Are Not Visible
     [Arguments]    @{elements}
     FOR    ${element}    IN    @{elements}
         Wait Until Element Is Not Visible    ${element}
+    END
+
+Wait Until Elements Are Disabled
+    [Arguments]    @{elements}    ${timeout}=10
+    FOR    ${element}    IN    @{elements}
+        ${status}=   Element Should Be Disabled    ${element}
+        Run Keyword Unless    ${status}    Run Keywords
+            ...    Sleep    ${timeout}
+            ...    AND    Element Should Be Disabled    ${element}
     END
 
 Slow

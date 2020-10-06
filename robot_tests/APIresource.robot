@@ -151,11 +151,12 @@ Register New User and Activate the Account
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Log Out via API
+    [Arguments]    ${validate}=${True}
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Go To    ${ENV}
-    Validate Log Out
+    Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 
 Evaluate System Settings via API    
@@ -254,7 +255,7 @@ Detach Server From Cloud
 
 Get Server Name
     [Arguments]    ${system url}    ${system auth}
-    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    disable_warnings=1
     ${resp}=   Get Request    Get Server Name session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     ${net address}=   Replace String    ${system url}    https://    ${EMPTY}
@@ -280,7 +281,7 @@ Rename Server
     ${old name}=   Get Server Name    ${system url}    ${system auth}
     ${id}=   Get Server Id    ${system url}    ${system auth}    ${old name}
     ${data}=   Create Dictionary    serverId=${id}    serverName=${new name}
-    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    disable_warnings=1
     ${resp}=   Post Request    Rename Server session     ec2/saveMediaServerUserAttributes    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 

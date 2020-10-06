@@ -1,6 +1,8 @@
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
+        ${id}=   Create Custom Network    custom${i}    ${i}
+        Sleep    5
         ${cont name}=   Run Container    ${IMAGE 4.1}    ${LM PORT ${i}}    network=bridge
         Set Suite Variable    ${cont ${i}}    ${cont name}
         ${cont id}=   Get Container Id    ${cont ${i}}
