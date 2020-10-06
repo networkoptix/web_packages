@@ -19,6 +19,10 @@ Reset DB and Open New Browser On Failure
     Close Browser
 #    Reset user noperm first/last name
     Set Account Name    ${url}    ${EMAIL NOPERM}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${url}    ${EMAIL LIVE VIEWER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    ${server auth}=    Create List    admin    ${BASE PASSWORD}
+    Disconnect Server via API    ${server auth}    f9b87e85-235f-4b6c-a6cd-fb14dfb1136d    ${BASE PASSWORD}
+    Disconnect Server via API    ${server auth}    e98fd104-680b-47dc-bd11-327e8e2147d3    ${BASE PASSWORD}
     Open Browser and go to URL    ${url}
 
 Verify Delete User Dialog
@@ -182,11 +186,7 @@ Change first and last name shows in system
         ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
         ...    AND     Exit For Loop
     END
-
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${TEST LAST NAME}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Set Account Name    ${url}    ${EMAIL LIVE VIEWER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded
