@@ -242,7 +242,7 @@ import * as Hls from 'hls.js';
                         }
                         
                         function playerErrorHandler(error) {
-                            scope.loading = false; // Some error happended - stop loading
+                            scope.loading = false; // Some error happened - stop loading
                             resetPlayer();
 
                             scope
