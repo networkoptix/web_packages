@@ -9,7 +9,7 @@ Force Tags        Threaded
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-${auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Restart
