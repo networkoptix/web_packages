@@ -16,20 +16,20 @@
                 </ul>
 
                 <div class="navbar-header">
-                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [href]="user.email ? '/systems' : '/'">
+                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="user.email ? '/systems' : '/'">
                         <img src="{{CONFIG.previewPath}}/static/images/logo.png">
                     </a>
                 </div>
 
                 <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" id="integrations" href="/integrations" (click)="onClick($event)" translate>Integrations (beta)</a>
+                        <a class="inset" id="integrations" routerLink="/integrations" (click)="onClick($event)" translate>Integrations (beta)</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" id="ipvd" href="/ipvd" (click)="onClick($event)" translate>Supported IP Video Devices</a>
+                        <a class="inset" id="ipvd" routerLink="/ipvd" (click)="onClick($event)" translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 
@@ -37,14 +37,14 @@
                     class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" id="view" href="/systems/{{activeSystem.id}}/view" (click)="onClick($event)" translate>View</a>
+                        <a class="inset" id="view" routerLink="/systems/{{activeSystem.id}}/view" (click)="onClick($event)" translate>View</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" id="systems" href="/systems/{{activeSystem.id}}" (click)="onClick($event)" translate>Settings</a>
+                        <a class="inset" id="systems" routerLink="/systems/{{activeSystem.id}}" (click)="onClick($event)" translate>Settings</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.information}"
                         *ngIf="canSeeInfo">
-                        <a class="inset" id="health" href="/systems/{{activeSystem.id}}/health/alerts" (click)="onClick($event)" translate>Information</a>
+                        <a class="inset" id="health" routerLink="/systems/{{activeSystem.id}}/health/alerts" (click)="onClick($event)" translate>Information</a>
                     </li>
                 </ul>
             </div>
