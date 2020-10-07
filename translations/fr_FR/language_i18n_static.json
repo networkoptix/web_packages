@@ -1,8 +1,8 @@
 {
     "About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
     "Download %VMS_NAME%": "Télécharger %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "Pour développeurs",
+    "Integrations (β)": "Intégrations (β)",
     "Privacy": "Confidentialité",
     "Support": "Support",
     "Supported Devices": "Périphériques supportés",
@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast consommer beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
         "recordingSettingsWarning": "Veuillez mettre à jour les paramètres d'enregistrement manquants.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Le mode d'enregistrement sera changé en \"Enregistrer toujours\"",
         "recordingModes": {
             "always": "Toujours enregistrer",
             "motion": "Enregistrer sur mouvement seulement",
@@ -183,7 +183,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Ce courriel a déjà été enregistré dans le système %systemName%"
         },
         "buttons": {
             "cancel": "Annuler",
@@ -275,8 +275,8 @@
             "serverNotYours": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel",
             "systemOfflineUrl": "{{targetSystem}} est inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "Ce serveur a une version logicielle incompatible. Veuillez mettre à jour les deux systèmes avec la <a href=\"/download\" target=\"_blank\" translate>dernière version</a>.",
+            "systemVersionsNotMatch": "Les systèmes ont des versions logicielles incompatibles. Veuillez mettre à jour les deux systèmes avec la <a href=\"/download\" target=\"_blank\" translate>dernière version</a>.",
             "urlEmpty": "Entrez l’adresse serveur",
             "urlNotValid": "Entrer un URL valide",
             "unknownError": "Une erreur inconnue est survenue. Actualisez la page et réessayez. Si le problème persiste, veuillez contacter le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -310,7 +310,7 @@
         "removeSystem": {
             "action": "Déconnecter",
             "message": "Vous ne pourrez plus vous connecter à ce système.",
-            "title": "Disconnect System from your Account?"
+            "title": "Déconnecter le système de votre compte?"
         },
         "titles": {
             "error": "Erreur",
@@ -443,7 +443,7 @@
         "oldPasswordMistmatch": "Mot de passe actuel incorrect.",
         "oldSafariNotSupported": "Les versions de Safari antérieures à 10 ne sont pas supportées",
         "passwordMismatch": "Mot de passe incorrect",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{{failedSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "le système",
         "unknownError": "Une erreur inattendue s'est produite",
         "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>.",
@@ -453,7 +453,7 @@
         "wrongParameters": "Certains paramètres dans le formulaire sont incorrects",
         "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter l'assistance.",
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
+        "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance.",
         "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau."
     },
     "integration": {
