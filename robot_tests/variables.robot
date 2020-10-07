@@ -184,10 +184,10 @@ ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
-${DOWNLOAD WINDOWS VMS LINK}          //div[contains(text(),"Windows x64 - Client & Server")]/../..
-${DOWNLOAD LINUX VMS LINK}            //div[contains(text(),"Ubuntu x64 - Client")]/../..
-${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/../..
-${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${DOWNLOAD WINDOWS VMS LINK}          //div/a[contains(text(),"Windows x64 - Client & Server")]
+${DOWNLOAD LINUX VMS LINK}            //div/a[contains(text(),"Ubuntu x64 - Client")]
+${DOWNLOAD MAC OS VMS LINK}           //div/a[contains(text(),"Mac OS - Client")]
+${DOWNLOAD ARM VMS LINK}              //div/a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 ${DOWNLOAD VMS NAME}                  //h3[contains(text(),"${DOWNLOAD TITLE TEXT}")]
