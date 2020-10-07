@@ -93,6 +93,7 @@ ${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-rib
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
+${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
