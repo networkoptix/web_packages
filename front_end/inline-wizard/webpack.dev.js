@@ -38,6 +38,20 @@ module.exports = merge(common, {
                 pathRewrite: { '^/static' : '' },
                 changeOrigin: true,
                 secure: false
+            },
+            {
+                context: '/index.html',
+                target: localStatic,
+                pathRewrite: { '^/index.html' : 'inline.html' },
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/',
+                target: localStatic,
+                pathRewrite: { '^/' : 'inline.html' },
+                changeOrigin: true,
+                secure: false
             }
         ],
         https: {
