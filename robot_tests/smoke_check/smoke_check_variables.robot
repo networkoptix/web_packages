@@ -15,4 +15,4 @@ ${email password}    QWEasd!@#
 @{local auth}        admin    ${password}
 
 ${ENV}    https://cloud-test.hdw.mx
-${VMS}    4.0
+${VMS}    4.1

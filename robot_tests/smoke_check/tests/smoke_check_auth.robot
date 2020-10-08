@@ -1,7 +1,7 @@
 *** Settings ***
 Resource         ../smoke_check_resource.robot
 
-Suite Setup      Open Browser    ${ENV}    headlesschrome
+Suite Setup      Regular Open Browser
 Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Authorization
 Suite Teardown   Close Browser
 

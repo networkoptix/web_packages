@@ -1,7 +1,7 @@
 *** Settings ***
 Resource         ../smoke_check_resource.robot
 
-Suite Setup      Open Browser    ${ENV}    headlesschrome
+Suite Setup      Regular Open Browser
 Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - User Management
 Suite Teardown   Run Keyword and Ignore Error    Clean Up
 
@@ -50,8 +50,8 @@ Check System State On Cloud Portal
     Restart Server    ${server vms}:${server vms port}    ${local auth}
 
     Log    Step 2: Check System Status
-    Run Keyword and Ignore Error    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    timeout=30
-    Run Keyword and Ignore Error    Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    timeout=30
+    Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
 
     Log    Steps 3, 4: Check System Status after it's back online
     Reload Page
@@ -64,7 +64,7 @@ Disconnect System From Cloud - Portal
     Click Button    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT PASSWORD INPUT}     ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM CANCEL BUTTON}
 
-    Log    Step2: Click on Disconnect button
+    Log    Step 2: Click on Disconnect button
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
     Wait Until Element Is Visible    ${DISCONNECT FORM PASSWORD IS REQUIRED}
 

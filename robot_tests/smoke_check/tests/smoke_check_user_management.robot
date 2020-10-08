@@ -7,7 +7,7 @@ Suite Teardown   Clean Up
 
 *** Keywords ***
 Startup
-    Open Browser    ${ENV}    headlesschrome
+    Regular Open Browser
     ${system id}=   Connect System to Cloud    ${local auth}    ${server users}:${server users port}    ${system users}    ${email users}    ${password}
     ${cloud system id}=   Get Cloud System Id    ${server users}:${server users port}    ${local auth}
     Set Suite Variable    ${system id}
@@ -15,9 +15,8 @@ Startup
     Set Suite Variable    @{cloud auth}    ${email users}    ${password}
 #     Users list is loaded very slow(or never) without restarting the server and reloading the page. See CLOUD-4758
     Restart Server    ${server users}:${server users port}    ${local auth}
-    Sleep    90
     Reload Page
-    Sleep    15
+    Sleep    60
 
 Clean Up
     Wait Until Keyword Succeeds    5x    5s    Disconnect    ${ENV}    ${email users}    ${password}    ${system id}
@@ -204,6 +203,7 @@ Client - Delete cloud user
     [Tags]    C30447    C30660    users
     Log    Step 1: Delete user
     Remove User    ${local auth}    ${server users}:${server users port}    ${new user data}[id]
+    Restart Server    ${server users}:${server users port}    ${local auth}
 
     Log    Verify user is deleted from cloud
     ${cloud users}=   Get Cloud System Users    ${cloud auth}    ${cloud system id}
@@ -222,7 +222,7 @@ Client - Share to existing cloud user
     [Tags]    C30446    C30651    users
 
     Log    Step 1: Share to existing user(viewer permissions)
-    &{existing user data}=   Save User
+    ${existing user data}=   Save User
     ...    ${local auth}
     ...    ${server users}:${server users port}
     ...    new_cloud_user
@@ -259,10 +259,3 @@ Client - Share to existing cloud user
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
     Select user in Users List    ${email existing user2}
     Log Out
-
-
-#Client - Add Local User
-
-#Client - Delete Local User
-
-#Portal - Delete Local User

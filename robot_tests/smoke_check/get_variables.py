@@ -2,7 +2,7 @@
 
 def get_variables(env, vms):
     vars = {}
-    url = "http://10.1.5.182"
+    url = "https://10.1.5.192"
     vars["server_vms"] = url
     vars["server_users"] = url
     if 'cloud-test' in env:

@@ -37,7 +37,7 @@ Download Page
 
     Log    Step 2: Check download link
     Click Link    ${${os} TAB}
-    Wait Until Element Is Visible    ${DOWNLOAD ${os} VMS LINK}
+    Wait Until Element Is Visible    ${DOWNLOAD ${os} VMS TEXT}
     ${url}=    Get Element Attribute    ${DOWNLOAD ${os} VMS LINK}    href
     Check File Exists    ${url}
 
