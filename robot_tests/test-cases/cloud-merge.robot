@@ -942,7 +942,7 @@ Checking state for selected local system - No server is found for system 4.0
     Wait until element is not visible    ${MERGE FAILED DIALOG}
 
 Checking state for selected local system - Selected server has an older software version
-    [Tags]    C76266    state_local    neg
+    [Tags]    C76226    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7147    image=${IMAGE 4.1}    cloud email=${owner email}
@@ -987,9 +987,8 @@ Checking state for selected local system - Selected server has a newer software 
     Should be equal as strings     ${error text}    ${SERVER HAS INCOMPATIBLE VERSION TEXT}
     Wait until element has style    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]    color    ${ERROR COLOR WITH OPACITY}
 
-    Log    Step 3 - sometimes false(?) negative - could not reproduce
+    Log    Step 3
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Capture Page Screenshot
     Validate Check Merge Dialog
     Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
@@ -1011,7 +1010,7 @@ Checking state for selected local system - URL validation error
     Log    Step 3 - Not Implemented
 
     Log    Step 4-9
-    ${invalid URLs}=   Create List    example.com:7001?    example.com:asd    http://com:7001    127.0.0.1.7:7001    # example.com - valid
+    ${invalid URLs}=   Create List    example.com:7001?    example.com:asd    example.com.    http://com:7001    127.0.0.1.7:7001    # example.com - valid
     FOR    ${url}    IN    @{invalid URLs}
         Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    ${url}    timeout=0.5
         Click Button    ${MERGE NEXT BUTTON}
