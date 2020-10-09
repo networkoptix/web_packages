@@ -61,7 +61,9 @@ import * as Hls from 'hls.js';
                         scope.videoFlags = {};
                         scope.error = {};
                         scope.loading = false; // Initiate state - not loading (do nothing)
-                        
+
+                        var handlingError = false;
+                        var iosErrorTimeout = undefined;
                         var videowindow = element.find('.videowindow');
                         
                         function getFormatSrc(mediaformat) {
@@ -242,6 +244,11 @@ import * as Hls from 'hls.js';
                         }
                         
                         function playerErrorHandler(error) {
+                            if (handlingError) {
+                                return;
+                            }
+
+                            handlingError = true;
                             scope.loading = false; // Some error happened - stop loading
                             resetPlayer();
 
@@ -253,13 +260,17 @@ import * as Hls from 'hls.js';
                                         return;
                                     }
 
-                                    $http.get(getFormatSrc('hls')).then((response) => {
-                                        scope.videoFlags.errorLoading = true;
-                                        scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
-                                        scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
-                                    });
+                                    iosErrorTimeout = $timeout(() => {
+                                        $http.get(getFormatSrc('hls')).then((response) => {
+                                            scope.videoFlags.errorLoading = true;
+                                            scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
+                                            scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
+                                        });
+                                    }, 100);
                                 }, (error) => {
                                     scope.videoFlags.errorLoading = error;
+                                }).finally(() => {
+                                    handlingError = false;
                                 });
                             
                             // console.error(error);
@@ -496,6 +507,10 @@ import * as Hls from 'hls.js';
                         }
                         
                         function srcChanged() {
+                            if (iosErrorTimeout) {
+                                $timeout.cancel(iosErrorTimeout);
+                            }
+                            handlingError = false;
                             scope.loading = true; // source changed - start loading
                             scope.videoFlags.errorLoading = false;
                             
@@ -509,8 +524,8 @@ import * as Hls from 'hls.js';
                                     scope.preview = null;
                                     return;
                                 }
-                                $timeout(initNewPlayer);
-                                $timeout(updateWidth);
+                                $timeout(() => { initNewPlayer() });
+                                $timeout(() => { updateWidth() });
                             }
                         }
                         
