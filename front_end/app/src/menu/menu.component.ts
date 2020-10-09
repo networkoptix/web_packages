@@ -147,7 +147,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
 
             if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
-                debugger;
                 this.menuHeightFit = '100%';
                 this.scrollHeightFit = '100%';
                 setTimeout(() => {

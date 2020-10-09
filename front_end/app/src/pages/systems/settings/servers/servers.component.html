@@ -11,7 +11,7 @@
         [serverId]="this.selectedServer?.id">
 </nx-server-storage-component>
 
-<nx-cloud-storage layout="simple" type="servers"></nx-cloud-storage>
+<nx-cloud-storage *ngIf="!CONFIG.isLocal && system?.canUserViewCloudStorage()" layout="simple" type="servers"></nx-cloud-storage>
 
 <ng-container *ngIf="!isOffline && system && advanced">
         <nx-alert-block
