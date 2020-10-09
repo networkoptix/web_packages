@@ -187,7 +187,7 @@ ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
 ${DOWNLOAD WINDOWS VMS LINK}          //div/a[contains(text(),"Windows x64 - Client & Server")]
 ${DOWNLOAD LINUX VMS LINK}            //div/a[contains(text(),"Ubuntu x64 - Server")]
-${DOWNLOAD MAC OS VMS LINK}           //div/a[contains(text(),'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”')]
+${DOWNLOAD MAC OS VMS LINK}           //div/p[contains(text(),'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”')]/preceding-sibling::a
 ${DOWNLOAD ARM VMS LINK}              //div/a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
