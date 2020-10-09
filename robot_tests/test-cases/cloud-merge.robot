@@ -1007,7 +1007,12 @@ Checking state for selected local system - URL validation error
     Click Button    ${MERGE BUTTON SYSTEM}
     Choose System From Dropdown    ${OTHER SYSTEM}
 
-    Log    Step 3 - Not Implemented
+    Log    Step 3
+    Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    example    timeout=0.5
+    Set Focus To Element     ${ACCOUNT DROPDOWN}
+    Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE INVALID URL}
+    Wait until element has style    ${MERGE INVALID URL}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
 
     Log    Step 4-9
     ${invalid URLs}=   Create List    example.com:7001?    example.com:asd    example.com.    http://com:7001    127.0.0.1.7:7001    # example.com - valid
