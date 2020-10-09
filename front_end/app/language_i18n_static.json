@@ -885,7 +885,11 @@
         "modes": {
             "main": "Main",
             "backup": "Backup",
-            "notInUse": "Not in use"
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage" : "Delete External Storage?",

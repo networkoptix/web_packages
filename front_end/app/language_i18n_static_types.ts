@@ -703,9 +703,13 @@ export interface Storage {
 }
 
 export interface Modes {
-    main:     any;
-    backup:   any;
-    notInUse: any;
+    main:         any;
+    backup:       any;
+    notInUse:     any;
+    reserved:     any;
+    inaccessible: any;
+    changing:     any;
+    disabled:     any;
 }
 
 export interface ReindexingDone {
@@ -1587,6 +1591,10 @@ const typeMap: any = {
         { json: "main", js: "main", typ: "any" },
         { json: "backup", js: "backup", typ: "any" },
         { json: "notInUse", js: "notInUse", typ: "any" },
+        { json: "reserved", js: "reserved", typ: "any" },
+        { json: "inaccessible", js: "inaccessible", typ: "any" },
+        { json: "changing", js: "changing", typ: "any" },
+        { json: "disabled", js: "disabled", typ: "any" },
     ], false),
     "ReindexingDone": o([
         { json: "mainSuccess", js: "mainSuccess", typ: "any" },

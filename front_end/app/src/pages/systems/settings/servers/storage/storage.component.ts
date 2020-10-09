@@ -321,12 +321,12 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         let numOfMains = 0;
         let isUpdating = false;
         storage.forEach(({ isBackup, isUsedForWriting, status, updating }) => {
-            if (isUsedForWriting) {
+            if (isUsedForWriting && status !== STORAGE_STATUS.INACCESSIBLE) {
                 isBackup ? status === 0 && numOfBackups++ : numOfMains++;
             }
             if (updating) isUpdating = true;
         });
-
+        
         if (numOfMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
             store.mainOnly = true;
@@ -343,8 +343,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.storageEmit.emit(storage);
     }
 
-    getModes(mainOnly = false) {
-        return this.modes.map((mode, index) => ({ ...mode, disabled: mainOnly && index }));
+    getModes(store) {
+        return this.modes.map((mode, index) => ({ ...mode, disabled: store.mainOnly && index }));
     }
 
     getArchiveSpace(usage, storageId): number {
@@ -429,24 +429,33 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     calcDDWidth() {
-        const longest = this.modes.reduce((a, b) => {
-            if (b.name === 'horizontal' || a.name.length > b.name.length) {
-                return a;
-            }
-            if (a.name === 'horizontal' || a.name.length < b.name.length) {
-                return b;
-            }
-        });
+        const modes: {
+            [key: string]: string
+        } = Object.entries(this.LANG.storage.modes).reduce((accum, [key, value]) => ({...accum, [key]: value()}), {});
+        // Add max additional width here for each key of this.LANG.storage.modes
+        const addWidth = {
+            disabled: 36,
+            reserved: 36,
+            main: 36,
+            notInUse: 56
+        }
 
-        // calculate dd size ... for simplicity a span is used
-        const dd = document.createElement('span');
-        dd.style.visibility = 'hidden';
-        dd.innerText = longest.name;
-        document.body.appendChild(dd);
-        // add button's left and right padding and space for info icon
-        this.ddWidth = Math.round(dd.getBoundingClientRect().width + 80);
+        this.ddWidth = Object.entries(modes).reduce((width, current) => {
+            const [key, currentText] = current;
+            // calculate dd size ... for simplicity a span is used
+            const dd = document.createElement("span");
+            dd.style.visibility = "hidden";
+            dd.innerText = currentText;
+            document.body.appendChild(dd);
+            // add button's left and right padding and space for info icon
+            const iconWidths = addWidth[key] || 16;
+            const currentWidth = Math.round(
+                dd.getBoundingClientRect().width + iconWidths
+            );
 
-        document.body.removeChild(dd);
+            document.body.removeChild(dd);
+            return Math.max(width, currentWidth);
+        }, 0);
     }
 
     deleteStorage(storage) {
