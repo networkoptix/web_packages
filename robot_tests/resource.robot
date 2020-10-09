@@ -843,3 +843,6 @@ Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
+    
+Delete User Via API
+    
