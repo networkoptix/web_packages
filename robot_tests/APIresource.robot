@@ -50,12 +50,12 @@ Create system and attach to cloud
     [Return]    ${bind json["id"]}
 
 Connect System to Cloud
-    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
-    &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
+    &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
     Log    ${bind json}
     Sleep    5
-    &{Setup Cloud System json}=    Save Cloud System Credentials
+    ${Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}
     ...    ${bind json["authKey"]}
@@ -223,6 +223,12 @@ Save Cloud System Credentials
     ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
+
+Ping Server
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Ping Server session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
+    ${resp}=   Get Request    Ping Server session     /api/ping    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 Restart Server
     [Arguments]    ${server url}    ${auth}
