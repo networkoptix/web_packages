@@ -243,7 +243,7 @@ class UserManager {
     }
 
     isOwner(user: NxSystemUser) {
-        return this.currentUser?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
+        return user?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
     }
 
     checkPermissions() {
