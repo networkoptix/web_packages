@@ -4,9 +4,11 @@ import {
     SimpleChanges, OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
-import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, filter
+    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer
+}                                    from 'rxjs';
+import {
+    map, first, takeUntil, delay, retryWhen, filter, switchMap
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -184,19 +186,11 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
                     this.loading = false;
                 });
-            this.system.getStorages({ id: this.serverId }).toPromise()
-                .then(storages => {
-                    this.refreshStorages$.next(storages);
-                });
-
             this.systemSubscription = this.system.infoSubject
-                .pipe(filter(res => res !== undefined))
-                .subscribe(() => {
-                    this.system.getStorages({ id: this.serverId }).toPromise()
-                        .then(storages => {
-                            this.refreshStorages$.next(storages);
-                        });
-                });
+                .pipe(
+                    filter(res => res !== undefined),
+                    switchMap(() => this.system.getStorages({ id: this.serverId }))
+                ).subscribe(this.refreshStorages$);
             this.getSystemStorages();
         }
     }
@@ -326,7 +320,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             }
             if (updating) isUpdating = true;
         });
-        
+
         if (numOfMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
             store.mainOnly = true;
@@ -431,20 +425,20 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     calcDDWidth() {
         const modes: {
             [key: string]: string
-        } = Object.entries(this.LANG.storage.modes).reduce((accum, [key, value]) => ({...accum, [key]: value()}), {});
+        } = Object.entries(this.LANG.storage.modes).reduce((accum, [key, value]) => ({ ...accum, [key]: value() }), {});
         // Add max additional width here for each key of this.LANG.storage.modes
         const addWidth = {
-            disabled: 36,
-            reserved: 36,
-            main: 36,
-            notInUse: 56
-        }
+            disabled : 36,
+            reserved : 36,
+            main     : 36,
+            notInUse : 56
+        };
 
         this.ddWidth = Object.entries(modes).reduce((width, current) => {
             const [key, currentText] = current;
             // calculate dd size ... for simplicity a span is used
-            const dd = document.createElement("span");
-            dd.style.visibility = "hidden";
+            const dd = document.createElement('span');
+            dd.style.visibility = 'hidden';
             dd.innerText = currentText;
             document.body.appendChild(dd);
             // add button's left and right padding and space for info icon
