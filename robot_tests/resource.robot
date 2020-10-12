@@ -13,7 +13,6 @@ Library      String
 Library      DateTime
 Library      Collections
 Library      OperatingSystem
-Library      RPA.Desktop.Clipboard
 Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
