@@ -129,6 +129,7 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
                                     "recordAfter": 0,
                                     "recordBeforeMs": 1000,
                                     "requestType": "R0VU",
+                                    "httpMethod": "GET",
                                     "streamQuality": "highest",
                                     "url": zapier_trigger,
                                     "useSource": False
