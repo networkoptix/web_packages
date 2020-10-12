@@ -195,11 +195,13 @@ Log settings functionality
     ...    @{LOG SETTINGS BLOCK}
     Log    The following will test every log level option for each one of the (5) dropdowns    
     FOR    ${dropdown}    IN    @{LOGLEVEL IDS}
+       Wait Until Elements Are Visible    @{LOG SETTINGS BLOCK}
        ${id} =    Get Element Attribute    ${dropdown}    id
        ${original} =    Get Text    ${dropdown}/span
        ${original} =    Fetch From Left    ${original}    ( 
        Test Every Loglevel Option    ${dropdown}    ${id}
        Set Log Level Option    ${dropdown}    ${id}    ${original}
+       Reload Page
     END     
 
     
