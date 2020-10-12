@@ -59,7 +59,7 @@ ${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class
 ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 
 #ADVANCED SETTINGS
-${ADVANCED SETTINGS SAVE BUTTON}        //button[@type="submit"]
+${ADVANCED SETTINGS SAVE BUTTON}        //div[@class="process-button"]
 ${ADVANCED SETTINGS CLOSE BUTTON}       //button[text()="Close"]
 
 ${ADDITIONAL LOCAL FS TYPES INPUT}          //input[@id='additionalLocalFsTypes']
