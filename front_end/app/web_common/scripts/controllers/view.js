@@ -532,6 +532,9 @@
 
                     // record active camera again as only one camera should be selected per system
                     $scope.storage.activeCameras[$scope.activeCamera.server.id] = $scope.activeCamera.id;
+
+                    // reset stream quality to avoid error being shown if current selection is not supported
+                    $scope.activeResolution = 'Auto';
                 }
 
                 $scope.$watch('activeCamera', function () {
