@@ -20,10 +20,12 @@
     <% } %>
 
 </head>
-<body class="inline-webadmin">
+<body>
 
 <!-- Add your site or application content here -->
-<div class="panel master" ng-view=""></div>
+<div class="panel master"
+     ng-view=""
+     ng-class="{ 'webadmin-wizard' : inIframe, 'inline-webadmin' : !inIframe}"></div>
 
 <% for (key in htmlWebpackPlugin.files.chunks) { %>
 <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>

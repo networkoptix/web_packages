@@ -45,6 +45,9 @@ These hacks are to make header and dialog have a bit different colors
   box-shadow: none;
 }
 
+.has-error .form-control {
+  border-color : $error !important;
+}
 
 .help-block {
   color: $windowText; // lighten the text some for contrast
@@ -93,13 +96,11 @@ button, select, .form-control{
 }
 
 .btn{
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 0 16px;
+  height: 32px;
 }
 
 .btn-default{
-
-  border-bottom: 1px solid $button_d2;
 
   &:focus{
     background-color: $button;

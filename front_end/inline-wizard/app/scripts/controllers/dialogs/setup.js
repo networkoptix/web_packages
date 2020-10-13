@@ -17,6 +17,12 @@ angular.module('webInlineWizard')
         }else{
             $log.log("This is first try");
         }
+        $scope.inIframe = false;
+        try {
+            $scope.inIframe = (window.self !== window.top);
+        } catch (e) {
+            $scope.inIframe = true;
+        }
 
         /*
             This is kind of universal wizard controller.

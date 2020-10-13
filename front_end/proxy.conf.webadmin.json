@@ -1,24 +1,24 @@
 {
   "/api/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/customization/*": {
-    "target": "https://0.0.0.0:7001",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -33,7 +33,7 @@
     "changeOrigin": true
   },
   "/static/scripts/commonPasswordsList.json": {
-    "target": "https://dev2.cloud.hdw.mx",
+    "target": "https://cloud-test.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

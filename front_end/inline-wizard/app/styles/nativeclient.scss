@@ -3,34 +3,37 @@
 @import 'master';
 
 
-.master .horisontal-line-text .line {
+.master .horizontal-line-text .line {
   border-top-color:$dark12;
 }
 
 
-body.inline-webadmin{
-  padding:0 !important;
-  margin:0 !important;
-  height:100% !important;
-  overflow:hidden;
-  background-color: $window;
+body {
+  padding          : 0 !important;
+  margin           : 0 !important;
+  height           : 100% !important;
+  overflow         : hidden;
+  background-color : transparent !important;
 }
 
-.inline-webadmin .panel{
+.inline-webadmin.panel{
   height:100%;
   width:100%;
   padding-bottom: 58px;
+  background-color : $window;
 }
 
 .inline-webadmin .panel-body{
   position:relative;
-  height:100%;
+  height:100% !important;
+  border : none !important;
 }
 
 .inline-webadmin .panel-footer{
   position:absolute;
   bottom:0;
   width:100%;
+  border-top : 1px solid $light17;
 }
 
 .inline-webadmin .panel-body-big{
