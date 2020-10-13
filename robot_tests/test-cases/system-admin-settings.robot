@@ -557,16 +557,19 @@ Checking the dependency of security settings checkboxes
     Log    Step 2
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
     Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
     
     Log    Step 3
     Change Setting Without Saving    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
     Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
     Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
     
     Log    Step 4
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
 Check Limit session duration
