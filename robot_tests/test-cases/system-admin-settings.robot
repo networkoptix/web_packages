@@ -471,6 +471,7 @@ System Settings block is not available when the system is offline
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PLACEHOLDER ICON}    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
