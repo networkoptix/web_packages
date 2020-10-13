@@ -1,8 +1,8 @@
 {
     "About %CLOUD_NAME%": "Про %CLOUD_NAME%",
     "Download %VMS_NAME%": "Завантажити %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "Розробникам",
+    "Integrations (β)": "Інтеграції (β)",
     "Privacy": "Приватність",
     "Support": "Підтримка",
     "Supported Devices": "Пристрої, що підтримуються",
@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
         "recordingSettingsWarning": "Оновіть відсутні налаштування запису.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Режим запису буде змінено на \"Запис завжди\"",
         "recordingModes": {
             "always": "Завжди записувати",
             "motion": "Запис тільки руху",
@@ -183,7 +183,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Ця електронна адреса вже зареєстрована в системі %systemName%"
         },
         "buttons": {
             "cancel": "Скасувати",
@@ -275,8 +275,8 @@
             "serverNotYours": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
             "systemOfflineUrl": "{{targetSystem}} недоступний.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "Цей сервер має несумісну версію Пз. Будь ласка, оновіть обидві системи до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a>.",
+            "systemVersionsNotMatch": "Системи мають невідповідні версії програмного забезпечення. Будь ласка, оновіть обидві системи до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a>.",
             "urlEmpty": "Введіть адресу сервера",
             "urlNotValid": "Введіть дійсний URL",
             "unknownError": "Сталася невідома помилка. Оновіть сторінку та спробуйте ще раз. Якщо проблема не зникне, будь ласка, <a href=\"%SUPPORT_LINK%\" target=\"_blank\">зв'яжіться з підтримкою</a>.",
@@ -309,7 +309,7 @@
         },
         "removeSystem": {
             "action": "Відключити",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Ви більше не зможете увійти в цю систему.",
             "title": "Відключити систему від облікового запису?"
         },
         "titles": {
@@ -443,7 +443,7 @@
         "oldPasswordMistmatch": "Введений пароль невірний.",
         "oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
         "passwordMismatch": "Невірний пароль",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "Система {{failedSystem}} наразі недоступна. Повторіть спробу через кілька хвилин або зв'яжіться з <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службою підтримки</a>.",
         "thisSystem": "система",
         "unknownError": "Сталася неочікувана помилка",
         "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>.",
@@ -451,9 +451,9 @@
         "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
         "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
         "wrongParameters": "Деякі параметри у формі невірні",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
+        "licenseFail": "Не вдалося активувати ліцензію. Будь ласка, спробуйте ще раз або зверніться до служби підтримки.",
+        "licenseTimeout": "Не вдалося активувати ліцензію через таймаут підключення. Переконайтесь, що сервер підключений до Інтернету, і повторіть спробу.",
+        "licenseServerError": "Не вдалося активувати ліцензію. Ліцензійний сервер не відповідає. Будь ласка, спробуйте ще раз або зверніться до служби підтримки.",
         "networkConnection": "Не вдається підключитися до {{cloudName}}, перевірте підключення до мережі."
     },
     "integration": {
@@ -583,7 +583,7 @@
     },
     "pleaseSelect": "Будь ласка виберіть...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Ви знайдете {{INTEGRATION_COMPANY}} політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a>. Політика конфіденційності %COMPANY_NAME%, яка включає інструкції щодо відкликання згоди, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a>.",
         "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
     },
     "registration": {

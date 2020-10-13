@@ -9,7 +9,7 @@ Force Tags        Threaded
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-${auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Restart
@@ -121,6 +121,7 @@ Should respond to Tab key
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
+    Sleep    1
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
     Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
@@ -267,7 +268,7 @@ Check registration email links, colors, cloud name, and user name
     Delete Email    ${email}
     Close Mailbox
 
-Check automatic loggout when registering new account while logged in
+Check automatic logout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Go To    ${ENV}/register
@@ -275,11 +276,13 @@ Check automatic loggout when registering new account while logged in
     Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 

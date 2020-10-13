@@ -20,7 +20,7 @@ ${INTEGRATION TILE TEXT}              //div[contains(@class, "card--body-descr")
 ${INTEGRATION TILE HEADER}            //div[@class="card--header extended-header"]
 #${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
 ${INTEGRATION TILE FOOTER}            //div[@class="card--footer"]
-@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}    ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}
+@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}    ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]

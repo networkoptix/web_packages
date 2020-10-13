@@ -396,6 +396,7 @@ export const nxConfig: IConfig = {
         editUserPermissionFlag    : 'GlobalAdminPermission',
         editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
         globalAdminPermissionFlag : 'GlobalAdminPermission',
+        allMediaPermissionFlag    : 'GlobalAccessAllMediaPermission',
         customPermission          : {
             name        : 'Custom',
             permissions : 'NoPermission'
@@ -527,6 +528,7 @@ export const nxConfig: IConfig = {
 
         statisticsReportLastNumber     : { type: 'static' },
         statisticsReportLastTime       : { type: 'static' },
+        statisticsReportLastVersion    : { type: 'static' },
         statisticsReportServerApi      : { type: 'text' },
         statisticsReportTimeCycle      : { type: 'number' },
         localSystemId                  : { type: 'static' },

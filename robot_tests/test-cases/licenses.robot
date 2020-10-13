@@ -3,6 +3,7 @@ Resource    ../resource.robot
 Suite Setup    LM Suite Set Up
 Test Teardown    Run Keyword If Test Failed    LM Test Restart
 Suite Teardown    LM Suite Teardown
+Force Tags    Licenses
 
 *** Test Cases ***
 License Management availability for different users

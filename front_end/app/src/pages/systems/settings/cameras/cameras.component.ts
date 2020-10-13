@@ -694,23 +694,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.alerts = [];
         }
 
-        if (
-            this.system &&
-            this.system.cameras &&
-            this.system.cameras.length > 0 &&
-            this.applyService &&
-            this.applyService.applyComponentRef &&
-            this.applyService.applyComponentRef.instance &&
-            !this.applyService.locked
-        ) {
-            this.applyService.hardReset();
-            const byParam = NxUtilsService.byParam((camera: ICamera) => {
-                return camera.name;
-            }, NxUtilsService.sortASC);
-            this.system.cameras.sort(byParam);
-            let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
-            this.show404 = cameraIndex === -1 && (!this.system.permissions.editCameras || !!this.parsedCameraId);
-            if (this.show404) {
+        let cameraIndex: number;
+        if (this.system && this.system.cameras) {
+            cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+            this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.permissions.editCameras;
+            if (this.system.show404) {
                 return;
             }
 

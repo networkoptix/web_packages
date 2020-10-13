@@ -2,7 +2,9 @@ import {
     Component, Input,
     OnDestroy, OnInit
 }                                 from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+    ActivatedRoute, Router, NavigationEnd
+}                                 from '@angular/router';
 import { UntilDestroy }           from '@ngneat/until-destroy';
 import { Subscription }           from 'rxjs';
 import { filter, tap }            from 'rxjs/operators';
@@ -139,6 +141,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.getSystemInfo();
         });
 
+        this.router.events.subscribe(route => {
+            if (route instanceof NavigationEnd) {
+                const isSystemRoute = route.url.includes('/systems');
+                const isCameraRoute = route.url.includes('/cameras');
+                if (isSystemRoute && !isCameraRoute && this.system) {
+                    this.system.show404 = false;
+                }
+            }
+        });
+
         this.content = {
             selectedSection    : '', // updated by selectedSectionSubject
             selectedSubSection : '', // updated by selectedSubSectionSubject
@@ -245,6 +257,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                    this.system.show404 = false;
                     this.gettingSystem.run().catch(() => {
                         this.systemNoAccess = true;
                     });
@@ -537,12 +550,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         this.mergeTargetSystem = undefined;
         this.systemsService.getSystem(this.systemId, false)
-                .subscribe((system: NxSystem) => {
-                    this.systemNoAccess = system === undefined;
-                    if (this.systemNoAccess) {
-                        this.system.stopPoll();
-                    }
-                });
+            .subscribe((system: NxSystem) => {
+                this.systemNoAccess = system === undefined;
+                if (this.systemNoAccess) {
+                    this.system.stopPoll();
+                }
+            });
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

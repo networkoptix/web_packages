@@ -199,10 +199,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 this.setPage(this.params.page || 1, true);
 
                 if (this.params.camera) {
-                    const row = this.pagedItems.findIndex((camera) => {
-                        return camera.model === this.params.camera;
-                    });
-
                     const camera = this.pagedItems.find((camera) => {
                         return camera.model === this.params.camera;
                     });
@@ -436,6 +432,12 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this._elements.slice(startIndex, endIndex);
+
+        // Reset page because slice was outside _elements bounds.
+        // If _elements was empty no results would show instead.
+        if (this.pagedItems.length === 0) {
+            return this.setPage(1);
+        }
 
         if (this.params && parseInt(this.params.page) !== pageParam) {
             const queryParams: Params = {};

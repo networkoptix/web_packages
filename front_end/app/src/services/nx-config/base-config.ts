@@ -109,6 +109,7 @@ export interface AccessRoles {
     editUserPermissionFlag: string;
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
+    allMediaPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
@@ -592,6 +593,7 @@ export interface SettingsConfig {
     maxRtspConnectDurationSec: Setting,
     statisticsReportLastNumber: Setting,
     statisticsReportLastTime: Setting,
+    statisticsReportLastVersion: Setting,
     statisticsReportServerApi: Setting,
     statisticsReportTimeCycle:Setting,
     localSystemId: Setting,

@@ -4,7 +4,7 @@ Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start
 Suite Teardown    Close All Browsers
-Force Tags        email    form    Threaded File    hm
+Force Tags        email    form    Threaded    hm
 
 *** Variables ***
 ${url}    ${ENV}
@@ -12,10 +12,10 @@ ${password}    ${BASE PASSWORD}
 
 *** Test Cases ***                 TYPE     HARDWARE      NAME                         CATEGORY     METRIC
 #errors
-One Error On Server                error    Server        testserver error             Activity     Transactions/s
-Error with Warning on server       error    Server        testserver both              Activity     Active plugins list
-Two Errors On Server A             error    Server        testserver 2 errors          Load         Server threads
-Two Errors On Server B             error    Server        testserver 2 errors          Load         Decoding speed
+One Error On Server                error    Server        testserver error         Activity     Transactions/s
+Error with Warning on server       error    Server        testserver both          Activity     Active plugins list
+Two Errors On Server A             error    Server        testserver 2 errors      Load         Server threads
+Two Errors On Server B             error    Server        testserver 2 errors      Load         Decoding speed
 
 One Error On Camera                error    Camera        test error                   Info         Server
 Error with Warning On Camera       error    Camera        test both                    Info         Firmware

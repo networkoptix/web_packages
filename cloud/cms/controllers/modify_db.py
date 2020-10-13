@@ -473,7 +473,10 @@ def publish_latest_version(asset, review_id, user, state=None):
     if not state:
         state = AssetCustomizationReview.REVIEW_STATES.accepted
     publish_errors = update_draft_state(review_id, state, user)
-    if not publish_errors:
+    if asset.is_cloud_portal:
+        update_global_cache(asset.customizations.first(), asset.version_id())
+
+    if not publish_errors and asset.can_preview_on_portal:
         fill_content(asset, preview=False, incremental=True)
     return publish_errors
 

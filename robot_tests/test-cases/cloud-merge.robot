@@ -2,7 +2,7 @@
 Documentation     Make sure there is no running servers on the test machine before running the suite
 Resource          ../resource.robot
 Suite Setup       Merge Suite Setup
-#Test Teardown     Run Keyword If Test Failed    Merge Test Restart
+Test Setup        Merge Test Setup
 Test Teardown     Merge Test Teardown
 Suite Teardown    Merge Suite Teardown
 Force Tags        merge
@@ -189,45 +189,6 @@ Merge Dialog - Dropdown has no valid systems
     Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "incompatible")]
     Element should not be visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]
 
-#Merge Dialog - Server URL field validation
-#    [Tags]    C70982    merge_dialog
-#    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-#    ${port 1}=   Set Variable    7321
-#    ${port 2}=   Set Variable    7322
-#    ${port 3}=   Set Variable    7323
-#    ${system 1}=   Set Variable    ${IMAGE 4.1}_${port 1}
-#    ${system 2}=   Set Variable    ${IMAGE 4.1}_${port 2}
-#    ${system 3}=   Set Variable    ${IMAGE 4.1}_${port 3}
-#    ${cont 1}=   Run Container    ${IMAGE 4.1}    ${port 1}    network=bridge
-#    ${cont 2}=   Run Container    ${IMAGE 4.1}    ${port 2}    network=bridge
-#    ${cont 3}=   Run Container    ${IMAGE 4.1}    ${port 3}    network=bridge
-#    FOR    ${i}    IN RANGE   1    4
-#        Append To List    ${test containers}    ${cont ${i}}
-#    END
-#    ${sys 1 id}=   Create system and attach to cloud    ${HOST}    ${port 1}    ${system 1}    ${owner email}
-#    Setup Local System    ${HOST}:${port 2}    ${base password}    ${system 2}
-#    Setup Local System    ${HOST}:${port 3}    ${base password}    ${system 3}
-#    Sleep    90
-#
-#    Log    Step 1
-#    Click Button    ${MERGE BUTTON SYSTEM}
-#    Validate Check Merge Dialog
-#    Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
-#    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}")]
-#
-#    Log    Step 2
-#    Choose System From Dropdown    ${OTHER SYSTEM}
-#    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
-#    Click Button    ${MERGE NEXT BUTTON}
-#    Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
-#    Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
-#
-#    Log    Step 3
-#    Input Text    ${MERGE FORM SERVER URL INPUT}    ${HOST}:${port 2}
-#    Click Button    ${MERGE NEXT BUTTON}
-#    Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-#    Validate Admin Password Dialog
-
 Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge Cloud system
     [Tags]    C76480    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -255,7 +216,7 @@ Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge
     Log    Step 3
     Choose System From Dropdown    ${system 2}[name]
     Click Button    ${MERGE NEXT BUTTON}
-    Validate Choose Primary Dialog
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
 Merge Dialog - Close X Button Checking
     [Tags]    C76574    merge_dialog
@@ -291,8 +252,6 @@ Merge Dialog - Close X Button Checking
     Validate Check Merge Dialog
     Choose System From Dropdown    ${system 2}[name]
     Click Button    ${MERGE NEXT BUTTON}
-#    Giving false negative results
-#    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
     Validate Admin Password Dialog
 
     Log    Step 6
@@ -307,7 +266,7 @@ Merge Dialog - Close X Button Checking
     Validate Admin Password Dialog
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 8
     Click Button    ${MERGE X BUTTON}
@@ -315,89 +274,152 @@ Merge Dialog - Close X Button Checking
 
 # Positive scenarios
 Positive scenario with selected cloud system (selected system is secondary)
-    [Tags]    C70931    pos    must
+    [Tags]    C70930    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7041    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7042    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 3}=   Setup System    7043    image=${IMAGE 4.0}    cloud email=${owner email}
     ${system 4}=   Setup System    7044    image=${IMAGE 4.0}    cloud email=${owner email}
+    ${auth}=   Create List    admin    ${base password}
     Sleep    60
     Log In    ${owner email}    ${BASE PASSWORD}
 
     FOR    ${i}    IN    1    3
+        ${j}=   Evaluate    ${i}+1
+
         Log    Step 1: Open System 1 page
         Go To    ${ENV}/systems/${system ${i}}[id]
         Reload Page
-        Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+        Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
         Log    Step 2: Press merge button and check the dialog state
         Click Button    ${MERGE BUTTON SYSTEM}
         Validate Check Merge Dialog
+        Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
+        Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//span[text()="${system ${j}}[name]"]
 
         Log    Step 3: Select System 2 and press 'Next'
-        ${j}=   Evaluate    ${i}+1
         Choose System From Dropdown    ${system ${j}}[name]
-        Click Button    ${MERGE NEXT BUTTON}
-        Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+        Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
+        Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+        Validate Choose Primary Dialog    ${system ${i}}[name]    ${system ${j}}[name]
 
         Log    Step 4: Select system 2 as primary an press 'Next'
-        Choose Primary System   from target=True
-        Click Button    ${MERGE NEXT BUTTON}
-        Validate Confirm Merge Dialog
+        Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+        Validate Confirm Merge Dialog    ${system ${i}}[name]    ${system ${j}}[name]
 
         Log    Step 5: Enter correct password and press 'Merge Systems'
-        Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-        Click Button    ${MERGE SYSTEMS BUTTON}
-        Validate Merge    ${system ${j}}[name]    ${system ${i}}[name]    on secondary=True
+        Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
+        Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+#        Gives false negative results
+#        Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
+#        Element Should Be Disabled    ${DISCONNECT FROM NX}
+
+        Log    Step 6: Enter correct password and press 'Merge Systems'
+        Validate Merge    ${system ${i}}[name]    ${system ${j}}[name]
+        Wait Until Elements Are Enabled    ${MERGE BUTTON SYSTEM}    ${DISCONNECT FROM NX}
+
+        Log    Step 7: Verify systems are actually merged
+        ${cont 1 id}=   Get Container Id    ${system ${i}}[cont]
+        ${cont 2 id}=   Get Container Id    ${system ${j}}[cont]
+        ${server 1 id}=   Get Server Id    ${HOST}:${system ${i}}[port]    ${auth}    Server ${cont 1 id}
+        ${server 2 id}=   Get Server Id    ${HOST}:${system ${i}}[port]    ${auth}    Server ${cont 2 id}
+        Click Link    ${SERVERS LINK}
+        Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${cont 1 id}")]
+        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 1 id}")]
+        Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+        Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${cont 2 id}")]
+        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 2 id}")]
+        Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+
+        Log    Step 8: Verify secondary system is not available anymore
+        Go To    ${ENV}/systems/${system ${i}}[id]
+        Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+        Click Button    ${MERGE BUTTON SYSTEM}
+        Validate Check Merge Dialog
+        Click Button    ${MERGE SYSTEM DROPDOWN}
+        Element Should Not Be Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system ${j}}[name]")]
+        Go To    ${ENV}/systems/
+        Wait Until Element Is Visible    //h2[contains(text(), "${system ${i}}[name]")]
+        Wait Until Element Is Not Visible    //h2[contains(text(), "${system ${j}}[name]")]
     END
 
 Positive scenario with selected cloud system (selected system is primary)
-    [Tags]    C70930    pos    must
+    [Tags]    C70931    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7031    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    7032    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${system 1}=   Setup System    7031    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
+    ${system 2}=   Setup System    7032    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
+    ${auth}=   Create List    admin    ${base password}
     Sleep    60
 
-    Log    Step 1: Open System 1 page
+    Log    Step 1
     Log In    ${owner email}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${system 1}[id]
     Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
-    Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
 
-    Log    Step 3: Select System 2 and press 'Next'
     Choose System From Dropdown    ${system 2}[name]
-    Click Button    ${MERGE NEXT BUTTON}
-    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-    Validate Choose Primary Dialog
+    Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
-    Log    Step 4: Keep primary system and press 'Next'
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Log    Step 2
+    Choose Primary System    from target=True
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
+    Validate Confirm Merge Dialog    ${system 2}[name]    ${system 1}[name]
 
-    Log    Step 5: Enter correct password and press 'Merge Systems'
-    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+    Log    Step 3
+    Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
     Click Button    ${MERGE SYSTEMS BUTTON}
-    Validate Merge    ${system 1}[name]    ${system 2}[name]
+
+    Log    Step 4
+    Validate Merge    ${system 2}[name]    ${system 1}[name]    on secondary=True
+
+    Log   Step 5
+    ${cont 1 id}=   Get Container Id    ${system 1}[cont]
+    ${cont 2 id}=   Get Container Id    ${system 1}[cont]
+    ${server 1 id}=   Get Server Id    ${HOST}:${system 1}[port]    ${auth}    Server ${cont 1 id}
+    ${server 2 id}=   Get Server Id    ${HOST}:${system 1}[port]    ${auth}    Server ${cont 2 id}
+    Click Link    ${SERVERS LINK}
+    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+
+    Log    Step 6
+    Go To    ${ENV}/systems/${system 2}[id]
+    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog    lonely=True
+    Go To    ${ENV}/systems/
+    Wait Until Element Is Visible    //h2[contains(text(), "${system 2}[name]")]
+    Wait Until Element Is Not Visible    //h2[contains(text(), "${system 1}[name]")]
+
+    Log    Step 7
+    Go To    ${ENV}/systems/${system 1}[id]
+    Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Positive scenario with selected local autodiscovered system not connected to the cloud
     [Tags]    C70932    pos    must
-    Log    Test set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7051    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7052    image=${IMAGE 4.1}
+    ${auth}=   Create List    admin    ${base password}
     Sleep    60
 
     Log    Step 1: Open System 1 page
     Log In    ${owner email}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${system 1}[id]
     Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 2: Press merge button and check the dialog state
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -406,29 +428,40 @@ Positive scenario with selected local autodiscovered system not connected to the
     Log    Steps 3, 4: Select System 2 and press 'Next'
     Choose System From Dropdown    ${system 2}[name]
     Click Button    ${MERGE NEXT BUTTON}
-    # Switching dialog states is too fast, robot doesn't catch checking state
-    # Wait Until Element Is Visible    ${MERGE CHECKING HINT}    timeout=5
 
     Log    Steps 5, 6: Validate Admin dialog, enter correct password and press 'Merge Systems'
     Validate Admin Password Dialog
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 7: Enter the corect password for System 2 and press 'Next'
-    Validate Confirm Merge Dialog
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
     Validate Merge    ${system 1}[name]    ${system 2}[name]
 
+    Log    Step 8: Validate Merge Success
+    ${cont 1 id}=   Get Container Id    ${system 1}[cont]
+    ${cont 2 id}=   Get Container Id    ${system 1}[cont]
+    ${server 1 id}=   Get Server Id    ${HOST}:${system 1}[port]    ${auth}    Server ${cont 1 id}
+    ${server 2 id}=   Get Server Id    ${HOST}:${system 2}[port]    ${auth}    Server ${cont 2 id}
+    Click Link    ${SERVERS LINK}
+    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+
 Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
     [Tags]    C76220    pos    must
-    Log    Fails due to CLOUD-5790
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7061    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7062    image=${IMAGE 4.1}    network=custom1
     ${system 3}=   Setup System    7063    image=${IMAGE 4.1}
     ${system 4}=   Setup System    7064    image=${IMAGE 4.1}
+    ${auth}=   Create List    admin    ${base password}
     Sleep    60
 
     Log    Step 1: Open System 1 page
@@ -442,10 +475,8 @@ Positive scenario with selected non-autodiscovered system (dropdown + Server URL
     Validate Check Merge Dialog
 
     Log    Steps 3, 4: Select Other System
-    Choose System From Dropdown    ${OTHER SYSTEM}    target system ip=${HOST}    target system port=${system 2}[port]    input url=${HOST}:${system 2}[port]
+    Choose System From Dropdown    ${OTHER SYSTEM}    input url=${HOST}:${system 2}[port]
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
-    # Switching dialog states is too fast, robot doesn't catch checking state
-    # Wait Until Element Is Visible    ${MERGE CHECKING HINT}    timeout=5
 
     Log    Steps 5, 6: Validate Admin dialog, enter correct password and press 'Merge Systems'
     Validate Admin Password Dialog
@@ -453,7 +484,7 @@ Positive scenario with selected non-autodiscovered system (dropdown + Server URL
     Click Button    ${MERGE NEXT BUTTON}
 
     Log    Step 7: Enter the corect password for System 2 and press 'Next'
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${HOST}:${system 2}[port]
     Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=0.5
     Click Button    ${MERGE SYSTEMS BUTTON}
 
@@ -466,13 +497,25 @@ Positive scenario with selected non-autodiscovered system (dropdown + Server URL
     ${s}=   Replace String    ${s}   %SERVER%    ${HOST}:${system 2}[port]
     Run keyword and continue on failure    Check For Alert    ${s}
 
+    ${cont 1 id}=   Get Container Id    ${system 1}[cont]
+    ${cont 2 id}=   Get Container Id    ${system 1}[cont]
+    ${server 1 id}=   Get Server Id    ${HOST}:${system 1}[port]    ${auth}    Server ${cont 1 id}
+    ${server 2 id}=   Get Server Id    ${HOST}:${system 2}[port]    ${auth}    Server ${cont 2 id}
+    Click Link    ${SERVERS LINK}
+    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 1 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${cont 2 id}")]
+    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+
 Positive scenario with selected non-autodiscovered system (only Server URL input)
     [Tags]    C76221    pos
-    Log    Fails due to CLOUD-5790
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7071    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
     ${system 2}=   Setup System    7072    image=${IMAGE 4.1}    network=custom2
+    ${auth}=   Create List    admin    ${base password}
     Sleep    60
 
     Log    Step 1: Press Merge button and validate the dialog
@@ -491,7 +534,7 @@ Positive scenario with selected non-autodiscovered system (only Server URL input
     Slow    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}    timeout=0.5
     Click Button    ${MERGE NEXT BUTTON}
 
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${HOST}:${system 2}[port]
     Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=0.5
     Click Button    ${MERGE SYSTEMS BUTTON}
 
@@ -545,7 +588,7 @@ Positive scenario with back button use (on choosing primary system)
     Validate Check Merge Dialog
     Choose System From Dropdown    ${system 2}[name]
     Click Button    ${MERGE NEXT BUTTON}
-    Validate Choose Primary Dialog
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 2
     Click Button    ${MERGE GO BACK BUTTON}
@@ -553,36 +596,36 @@ Positive scenario with back button use (on choosing primary system)
 
     Log    Step 3
     Choose System From Dropdown    ${system 3}[name]
-    Click Button    ${MERGE NEXT BUTTON}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
     Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-    Validate Choose Primary Dialog
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 3}[name]
 
     Log    Step 4
     Choose Primary System    from target=True
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
+    Validate Confirm Merge Dialog    ${system 3}[name]    ${system 1}[name]
 
     Log    Step 5
-    Click Button    ${MERGE GO BACK BUTTON}
-    Validate Choose Primary Dialog
+    Slow    Click Button    ${MERGE GO BACK BUTTON}    timeout=0.25
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 3}[name]    from target=True
 
     Log    Step 6
-    Click Button    ${MERGE GO BACK BUTTON}
+    Slow    Click Button    ${MERGE GO BACK BUTTON}    timeout=0.25
     Validate Check Merge Dialog
 
     Log    Step 7
     Choose System From Dropdown    ${system 2}[name]
-    Click Button    ${MERGE NEXT BUTTON}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
     Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-    Validate Choose Primary Dialog
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 8
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 9
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE SYSTEMS BUTTON}
+    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=0.25
     Validate Merge    ${system 1}[name]    ${system 2}[name]
 
 Different types of users in both Systems
@@ -613,9 +656,9 @@ Different types of users in both Systems
     Reload Page
     Sleep    60    # To avoid false negative tests
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-    Complete merge steps till final password input    ${system 2}[name]
+    Complete merge steps till final password input    ${system 1}[name]    ${system 2}[name]
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE SYSTEMS BUTTON}
+    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
     Validate Merge    ${system 1}[name]    ${system 2}[name]
 
     ${sys 1 users}=   Get Cloud System Users    ${auth}    ${system 1}[id]
@@ -625,10 +668,13 @@ Different types of users in both Systems
     END
     Should Contain    ${sys 1 user emails}    ${sys 2 adv viewer}
     Should Contain    ${sys 1 user emails}    ${all systems user}
+    Should Contain    ${sys 1 user emails}    ${sys 1 admin}
     FOR    ${user}    IN    @{sys 1 users}
         Run Keyword If    '${user}[accountEmail]' == '${sys 2 adv viewer}'
         ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[advancedViewer]
         Run Keyword If    '${user}[accountEmail]' == '${all systems user}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[cloudAdmin]
+        Run Keyword If    '${user}[accountEmail]' == '${sys 1 admin}'
         ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[cloudAdmin]
     END
 
@@ -636,9 +682,9 @@ Different types of users in both Systems
     Go To    ${ENV}/systems/${system 3}[id]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
-    Complete merge steps till final password input    ${system 1}[name]
+    Complete merge steps till final password input    ${system 3}[name]    ${system 1}[name]
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE SYSTEMS BUTTON}
+    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
     Validate Merge    ${system 3}[name]    ${system 1}[name]
 
     ${sys 3 users}=   Get Cloud System Users    ${auth}    ${system 3}[id]
@@ -656,11 +702,14 @@ Different types of users in both Systems
         ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[custom]
         Run Keyword If    '${user}[accountEmail]' == '${all systems user}'
         ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[custom]
+        Run Keyword If    '${user}[accountEmail]' == '${sys 1 admin}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[cloudAdmin]
+        Run Keyword If    '${user}[accountEmail]' == '${sys 2 adv viewer}'
+        ...    Should Be Equal As Strings    ${user}[customPermissions]    ${permissions}[advancedViewer]
     END
 
 Checking state for selected Cloud system - System offline / back online
     [Tags]    C70983    C70987    state_cloud    neg    should
-    Log    Fails due to CLOUD-5798
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7121    image=${IMAGE 4.1}    cloud email=${owner email}
@@ -685,8 +734,10 @@ Checking state for selected Cloud system - System offline / back online
         Log    Step 2
         ${j}=   Evaluate    ${i}+1
         Choose System From Dropdown    ${system ${j}}[name]
+        Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system ${j}}[name]")]/following-sibling::span[contains(text(), "offline")]
         ${s}=   Replace String    ${CANNOT MERGE WITH OFFLINE SYSTEM TEXT}    %SYSTEM NAME%    ${system ${j}}[name]
         Wait until element is visible    //p[contains(text(),"${s}")]
+        Wait until element has style    //p[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}
 
         Log    Step 3
         Click Button    ${MERGE NEXT BUTTON}
@@ -699,18 +750,20 @@ Checking state for selected Cloud system - System offline / back online
         Start Container    ${system ${j}}[cont]
         Sleep    60
         Click Button    ${MERGE NEXT BUTTON}
-        Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-        Validate Choose Primary Dialog
+        Wait until element is visible    ${MERGE CHECKING HINT}
+        Validate Choose Primary Dialog    ${system ${i}}[name]    ${system ${j}}[name]
 
         Log    Step 3: Click <- button
         Click Button    ${MERGE GO BACK BUTTON}
         Validate Check Merge Dialog
-        Wait until element is not visible    //p[contains(text(),"${s}")]
+        Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system ${j}}[name]")]
+        Wait until element is not visible    ${MERGE CHECK MERGE FORM}//p[contains(text(),"${s}")]
+        Wait until element is not visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "offline")]
 
         Log    Step 4: Click Next
         Click Button    ${MERGE NEXT BUTTON}
         Wait until element is visible    ${MERGE CHECKING HINT}
-        Validate Choose Primary Dialog
+        Validate Choose Primary Dialog    ${system ${i}}[name]    ${system ${j}}[name]
 
         Click Button    ${MERGE X BUTTON}
         Log Out
@@ -718,8 +771,7 @@ Checking state for selected Cloud system - System offline / back online
 
 Checking state for selected Cloud system - systems have different versions
     [Tags]    C70984    C70985   state_cloud    neg    should
-    Log    Fails due to CLOUD-5796
-    Log    Test Set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7131    image=${IMAGE 4.0}    cloud email=${owner email}
     ${system 2}=   Setup System    7132    image=${IMAGE 4.1}    cloud email=${owner email}
@@ -730,25 +782,41 @@ Checking state for selected Cloud system - systems have different versions
     Go To    ${ENV}/systems/${system 2}[id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
     Choose System From Dropdown    ${system 1}[name]
+    Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]/following-sibling::span[contains(text(), "incompatible")]
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Wait until element is visible   ${SYSTEMS HAVE MISMATCHING VERSIONS}
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//a[@href="/download"]
+    ${error text}=   Get Text    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Should be equal as strings     ${error text}    ${SYSTEMS HAVE MISMATCHING VERSIONS TEXT}
+    Wait until element has style    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]    color    ${ERROR COLOR WITH OPACITY}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Run Keyword and ignore error    Wait Until Element Is Visible    ${MERGE CHECKING HINT}    # Gives false negative results
+    Validate Check Merge Dialog
+    Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]/following-sibling::span[contains(text(), "incompatible")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
     Log    C70985: System has a newer software version
     Go To    ${ENV}/systems/${system 1}[id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
     Choose System From Dropdown    ${system 2}[name]
+    Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]/following-sibling::span[contains(text(), "incompatible")]
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Wait Until Element Is visible   ${SYSTEMS HAVE MISMATCHING VERSIONS}
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//a[@href="/download"]
+    ${error text}=   Get Text    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Should be equal as strings     ${error text}    ${SYSTEMS HAVE MISMATCHING VERSIONS TEXT}
+    Wait until element has style    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]    color    ${ERROR COLOR WITH OPACITY}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Run Keyword and ignore error    Wait Until Element Is Visible    ${MERGE CHECKING HINT}    # Gives false negative results
+    Validate Check Merge Dialog
+    Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]/following-sibling::span[contains(text(), "incompatible")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
 Checking state for selected Cloud system - Duplicate servers
     [Tags]    C71004    state_cloud    state_cloud    neg    should
-    Log    Test Set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7133    image=${IMAGE 4.1}    network=host    cloud email=${owner email}
     ${system 2}=   Setup System    7134    image=${IMAGE 4.1}    network=host    cloud email=${owner email}
@@ -796,6 +864,8 @@ Checking state for selected local system - Server URL is empty
     Log    Step 3
     Click Button    ${MERGE NEXT BUTTON}
     Wait until element is visible    ${MERGE ENTER SERVER ADDRESS}
+    Wait until element has style    ${MERGE ENTER SERVER ADDRESS}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
 
 Checking state for selected local system - No server is found for system 4.1
     [Tags]    C76223    C76224    state_local    neg
@@ -829,8 +899,7 @@ Checking state for selected local system - No server is found for system 4.1
     Input Text   ${MERGE FORM SERVER URL INPUT}    ${HOST}:4321
     Click Button    ${MERGE NEXT BUTTON}
     Wait Until Element Is Visible    ${MERGE SERVER NOT FOUND}
-
-    Log    Step 3 - Cannot Be Automated
+    Wait until element has style    ${MERGE SERVER NOT FOUND}    color    ${ERROR COLOR WITH OPACITY}
 
 Checking state for selected local system - No server is found for system 4.0
     [Tags]    C76528    state_local    neg
@@ -856,21 +925,25 @@ Checking state for selected local system - No server is found for system 4.0
     Log    Step 2
     Input Text   ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at http://example.com:7001
 
     Log    Step 3
     Input Text   ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
     Validate Merge Failed Dialog
-    #TODO: add checking text
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at http://example.com:7001
+    ${error p2}=   Replace String    ${SERVER IS INACCESSIBLE TEXT}    %SERVER%    http://example.com:7001
+    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
 
     Log    Step 4
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE FAILED DIALOG}
 
 Checking state for selected local system - Selected server has an older software version
-    [Tags]    C76266    state_local    neg
-    Log    Test Set up
+    [Tags]    C76226    state_local    neg
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7147    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7148    image=${IMAGE 4.0}
@@ -882,13 +955,18 @@ Checking state for selected local system - Selected server has an older software
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Choose System From Dropdown    ${system 2}[name]
-    Wait Until Element Is Visible   ${SERVER HAS INCOMPATIBLE VERSION}
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//a[@href="/download"]
+    ${error text}=   Get Text    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Should be equal as strings     ${error text}    ${SERVER HAS INCOMPATIBLE VERSION TEXT}
+    Wait until element has style    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]    color    ${ERROR COLOR WITH OPACITY}
 
     Log    Step 3
     Click Button    ${MERGE NEXT BUTTON}
-    Wait Until Element Is Visible   ${SERVER HAS INCOMPATIBLE VERSION}
+    Validate Check Merge Dialog
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
-Checking state for selected local system - Selected server has an newer software version
+Checking state for selected local system - Selected server has a newer software version
     [Tags]    C76396    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -901,12 +979,18 @@ Checking state for selected local system - Selected server has an newer software
     Go To    ${ENV}/systems/${system 1}[id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
     Choose System From Dropdown    ${system 2}[name]
-    Wait Until Element Is Visible   ${SERVER HAS INCOMPATIBLE VERSION}
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//a[@href="/download"]
+    ${error text}=   Get Text    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
+    Should be equal as strings     ${error text}    ${SERVER HAS INCOMPATIBLE VERSION TEXT}
+    Wait until element has style    ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]    color    ${ERROR COLOR WITH OPACITY}
 
     Log    Step 3
-    Click Button    ${MERGE NEXT BUTTON}
-    Wait Until Element Is Visible   ${SERVER HAS INCOMPATIBLE VERSION}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Validate Check Merge Dialog
+    Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
 Checking state for selected local system - URL validation error
     [Tags]    C76227    state_local    neg
@@ -923,19 +1007,27 @@ Checking state for selected local system - URL validation error
     Click Button    ${MERGE BUTTON SYSTEM}
     Choose System From Dropdown    ${OTHER SYSTEM}
 
-    Log    Step 3 - Not Implemented
+    Log    Step 3
+    Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    example    timeout=0.5
+    Set Focus To Element     ${ACCOUNT DROPDOWN}
+    Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE INVALID URL}
+    Wait until element has style    ${MERGE INVALID URL}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
 
     Log    Step 4-9
-    ${invalid URLs}=   Create List    example.com:7001?    example.com:asd    http://com:7001    127.0.0.1.7:7001    # example.com - valid
+    ${invalid URLs}=   Create List    example.com:7001?    example.com:asd    example.com.    http://com:7001    127.0.0.1.7:7001    # example.com - valid
     FOR    ${url}    IN    @{invalid URLs}
         Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    ${url}    timeout=0.5
         Click Button    ${MERGE NEXT BUTTON}
         Run keyword and continue on failure    Wait Until Element Is Visible    ${MERGE INVALID URL}
+        Wait until element has style    ${MERGE INVALID URL}    color    ${ERROR COLOR WITH OPACITY}
+        Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
     END
 
 # Password Validation
 Owner's of the selected system password validation
     [Tags]    C76265    C76266    password_valid
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7211    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7212    image=${IMAGE 4.1}
@@ -955,15 +1047,19 @@ Owner's of the selected system password validation
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${EMPTY}
     Click Button    ${MERGE NEXT BUTTON}
     Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
+    Wait until element has style    ${MERGE PASSWORD REQUIRED}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE ADMIN FORM PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
     Log    C76266: Enter invalid password and click Next
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}   ds$6Hf4f&dh
     Click Button    ${MERGE NEXT BUTTON}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
+    Wait until element has style    ${MERGE PASSWORD INCORRECT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE ADMIN FORM PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
 Current account's password validation
     [Tags]    C76267    C76268    password_valid
-    Log    Test Set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7221    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7222    image=${IMAGE 4.1}    cloud email=${owner email}
@@ -973,17 +1069,21 @@ Current account's password validation
     Go To    ${ENV}/systems/${system 1}[id]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
-    Complete merge steps till final password input    ${system 2}[name]
+    Complete merge steps till final password input    ${system 1}[name]    ${system 2}[name]
 
     Log    C76267: Click Next with blank password field
     Input Text    ${MERGE PASSWORD INPUT}    ${EMPTY}
     Click Button    ${MERGE SYSTEMS BUTTON}
     Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
+    Wait until element has style    ${MERGE PASSWORD REQUIRED}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
     Log    C76268: Enter invalid password and click Next
     Input Text    ${MERGE PASSWORD INPUT}   ds$6Hf4f&dh
     Click Button    ${MERGE SYSTEMS BUTTON}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
+    Wait until element has style    ${MERGE PASSWORD INCORRECT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait until element has style    ${MERGE PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
 General errors - Duplicate servers
     [Tags]    C76484    C76485    general_errors    neg    should
@@ -998,7 +1098,6 @@ General errors - Duplicate servers
     Sleep    60
     Detach Server From System    ${HOST}:${system 2}[port]    ${auth}
     Setup Local System    ${HOST}:${system 2}[port]    ${base password}    ${system 2}[name]
-
     Log In    ${owner email}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${system 1}[id]
     Reload Page
@@ -1023,7 +1122,7 @@ General errors - Duplicate servers
     ...    ${MERGE REMOVE OFFLINE AND INCOMPATIBLE SERVERS}
 
     Log    Step 4
-    Click Button    ${MERGE NEXT BUTTON}
+    Click Button    ${MERGE TRY AGAIN BUTTON}
     Validate General Error Dialog
     Wait Until Elements Are Visible
     ...    ${MERGE SERVER APPEARS TO BE LISTING ITSELF}
@@ -1040,7 +1139,7 @@ General errors - Duplicate servers
     Remove Resource From System    ${HOST}:${system 2}[port]    ${auth}    ${id}
 
     Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=2
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 3
     Click Button   ${MERGE GO BACK BUTTON}
@@ -1048,21 +1147,20 @@ General errors - Duplicate servers
 
     Log    Step 4
     Click Button   ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
 General Errors - Selected server is already in this system
     [Tags]    C76466    general_errors    neg
-    Log    Fails due to CLOUD-5807
-    Log    Test Set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${system 1}=   Setup System    7233    image=${IMAGE 4.1}    cloud email=${owner email}
     ${system 2}=   Setup System    7234    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${system 3}=   Setup System    7235    image=${IMAGE 4.1}    cloud email=${owner email}
     Sleep    90
 
     ${auth}=   Create List    ${owner email}    ${base password}
     Merge Systems    ${auth}    ${system 1}[id]    ${system 2}[id]
     Sleep    60
-
     Log In    ${owner email}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${system 1}[id]
     Reload Page
@@ -1073,7 +1171,7 @@ General Errors - Selected server is already in this system
     Validate Check Merge Dialog
 
     Log    Step 2
-    Choose System From Dropdown    ${OTHER SYSTEM}    target system ip=${HOST}    target system port=${system 2}[port]    input url=${HOST}:${system 2}[port]
+    Choose System From Dropdown    ${OTHER SYSTEM}    input url=${HOST}:${system 2}[port]    check url=True
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
     Validate Admin Password Dialog
 
@@ -1087,10 +1185,10 @@ General Errors - Selected server is already in this system
 
 General Errors - System (server) offline after owner's of the selected system password validation
     [Tags]    C76272    general_errors    neg
-    Log    Test set up
+    Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7235    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    7236    image=${IMAGE 4.1}
+    ${system 1}=   Setup System    7236    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${system 2}=   Setup System    7237    image=${IMAGE 4.1}
     ${auth}=   Create List    admin    ${base password}
     Sleep    60
 
@@ -1116,12 +1214,12 @@ General Errors - System (server) offline after owner's of the selected system pa
 
 General Errors - Different owners
     [Tags]    C76225    C76464    general_errors    neg    should
-    Log    Test set up
+    Log    Test Setup
     ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7237    image=${IMAGE 4.1}    cloud email=${owner 1 email}
-    ${system 2}=   Setup System    7238    image=${IMAGE 4.1}    cloud email=${owner 2 email}
-    ${system 3}=   Setup System    7239    image=${IMAGE 4.1}    cloud email=${owner 1 email}
+    ${system 1}=   Setup System    7238    image=${IMAGE 4.1}    cloud email=${owner 1 email}
+    ${system 2}=   Setup System    7239    image=${IMAGE 4.1}    cloud email=${owner 2 email}
+    ${system 3}=   Setup System    7240    image=${IMAGE 4.1}    cloud email=${owner 1 email}
     ${auth}=   Create List    admin    ${base password}
     Sleep   60
 
@@ -1136,7 +1234,7 @@ General Errors - Different owners
     Validate Check Merge Dialog
 
     Log    Step 3
-    Choose System From Dropdown    target system name=${OTHER SYSTEM}    target system ip=${HOST}    target system port=${system 2}[port]    input url=${HOST}:${system 2}[port]
+    Choose System From Dropdown    target system name=${OTHER SYSTEM}    input url=${HOST}:${system 2}[port]    check url=True
     Click Button    ${MERGE NEXT BUTTON}
     Validate Admin Password Dialog
 
@@ -1174,7 +1272,7 @@ General Errors - Different owners
     Slow    Restart Server    ${HOST}:${system 2}[port]    ${auth}    timeout=5
     Connect System to Cloud   ${auth}   ${HOST}:${system 2}[port]    ${system 2}[name]    ${owner 1 email}    ${base password}
     Click Button    ${MERGE TRY AGAIN BUTTON}
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${HOST}:${system 2}[port]
 
     Log   Step 3
     Click Button    ${MERGE GO BACK BUTTON}
@@ -1182,7 +1280,7 @@ General Errors - Different owners
 
     Log    Step 4
     Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${HOST}:${system 2}[port]
 
 Merge Errors - System (server) offline after current account's password validation
     [Tags]    C76273   merge_errors    neg    should
@@ -1199,13 +1297,19 @@ Merge Errors - System (server) offline after current account's password validati
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
-    Complete merge steps till final password input     ${system 2}[name]
+    Complete merge steps till final password input     ${system 1}[name]    ${system 2}[name]
 
     Log     Step 2
     Stop Container    ${system 2}[cont]
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
     Validate Merge Failed Dialog
+
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
+    ${error p2}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 2}[name]
+    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1226,14 +1330,22 @@ Merge Errors - Primary System becomes offline during merge process
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
-    Complete merge steps till final password input     ${system 2}[name]
+    Complete merge steps till final password input    ${system 1}[name]     ${system 2}[name]
 
     Log     Step 2
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
     Restart Server    ${HOST}:${system 1}[port]    ${auth}
     Validate Merge Failed Dialog
-    #TODO: add checking text
+
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
+    ${error offline}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 1}[name]
+    ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 1}[name]
+    ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
+    ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
+    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1254,14 +1366,22 @@ Merge Errors - Secondary System becomes offline during merge process
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
-    Complete merge steps till final password input     ${system 2}[name]
+    Complete merge steps till final password input    ${system 1}[name]     ${system 2}[name]
 
     Log     Step 2
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
     Restart Server    ${HOST}:${system 2}[port]    ${auth}
     Validate Merge Failed Dialog
-    #TODO: add checking text
+
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
+    ${error offline}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 2}[name]
+    ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 2}[name]
+    ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
+    ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
+    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1299,25 +1419,29 @@ Merge Errors - Duplicate servers for 4.0 Systems
     Log    Step 3
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
     Log    Step 4
     Input Text    ${MERGE PASSWORD INPUT}    ${base password}
     Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
     Validate Merge Failed Dialog
-    #TODO: add checking text
+
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
+    Should be equal as strings    ${txt}    ${error p1}\n${SERVER APPEARS TO BE LISTING ITSELF TEXT}\n${REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT}
 
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE DIALOG}
 
 Merge Errors - Different owners for Sytems 4.0
     [Tags]    C76547    merge_errors    neg
-    Log    Fails due to CLOUD-5802
     Log    Test Setup
     ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    7251    image=${IMAGE 4.0}    network=custom1    cloud email=${owner 1 email}
-    ${system 2}=   Setup System    7252    image=${IMAGE 4.0}    network=custom2    cloud email=${owner 2 email}
+    ${system 1}=   Setup System    7251    image=${IMAGE 4.0}    network=bridge    cloud email=${owner 1 email}
+    ${system 2}=   Setup System    7252    image=${IMAGE 4.0}    network=host    cloud email=${owner 2 email}
+    ${system 3}=   Setup System    7253    image=${IMAGE 4.1}    network=bridge    cloud email=${owner 1 email}
     Sleep    60
 
     Log In    ${owner 1 email}    ${BASE PASSWORD}
@@ -1327,23 +1451,29 @@ Merge Errors - Different owners for Sytems 4.0
 
     Log    Step 1
     Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog    lonely=True
+    Validate Check Merge Dialog
 
     Log    Step 2
-    Input Text    ${MERGE FORM SERVER URL INPUT}    ${HOST}:${system 2}[port]
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Choose System From Dropdown    ${OTHER SYSTEM}
+    Wait until element is visible    ${MERGE FORM SERVER URL INPUT}
+    Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    ${HOST}:${system 2}[port]    timeout=1
+    Click Button    ${MERGE NEXT BUTTON}
     Validate Admin Password Dialog
 
     Log    Step 3
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Confirm Merge Dialog
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${HOST}:${system 2}[port]
 
     Log    Step 4
     Input Text    ${MERGE PASSWORD INPUT}    ${base password}
     Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
     Validate Merge Failed Dialog
-    #TODO: add checking text
+
+    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at ${HOST}:${system 2}[port]
+    Should be equal as strings    ${txt}    ${error p1}\n${THIS SYSTEM HAS DIFFERENT OWNER TEXT}
 
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE DIALOG}

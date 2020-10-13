@@ -48,7 +48,8 @@ def get_article(request, url_param, **kwargs):
             article = article_review.version.asset
             version = article.version_id(settings.CUSTOMIZATION)
             url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
-            if url_ds.find_actual_value(asset=article, version_id=version) != url_param:
+            if url_ds.find_actual_value(asset=article, version_id=version,
+                                        customization_name=settings.CUSTOMIZATION) != url_param:
                 article = None
 
     # If article is not found, then return a 404
@@ -74,10 +75,12 @@ def get_article(request, url_param, **kwargs):
 
             # Get values for title and body of article for this version
             title = article_structures.filter(name='title').first().find_actual_value(
-                asset=article, language=language, version_id=version, draft=draft or review
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
             )
             body = article_structures.filter(name='body').first().find_actual_value(
-                asset=article, language=language, version_id=version, draft=draft or review
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
             )
             article_dict = {
                 "title": title,

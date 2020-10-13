@@ -379,6 +379,10 @@ class Asset(models.Model):
         return self.is_asset_type(AssetType.ASSET_TYPES.vms)
 
     @property
+    def is_single_customization(self):
+        return self.asset_type.single_customization
+
+    @property
     def is_dirty(self):
         version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
         records_for_version = self.datarecord_set.filter(version__id=version_id)
@@ -417,10 +421,16 @@ class Asset(models.Model):
     def read_global_value(self, record_name, language=None):
         global_contexts = self.asset_type.context_set.filter(is_global=True)
         data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
+        customization = None
 
-        return data_structure.find_actual_value(
-            asset=self, language=language, version_id=self.version_id()
-        ) if data_structure else None
+        if self.asset_type.single_customization and self.customizations.exists():
+            customization = self.customizations.first().name
+
+        if not data_structure:
+            return None
+        return data_structure.find_actual_value(asset=self, language=language,
+                                                version_id=self.version_id(),
+                                                customization_name=customization)
 
     def replace_global_values(self, content: str, global_contexts_dict=None):
         if not global_contexts_dict:
@@ -649,15 +659,24 @@ class DataStructure(models.Model):
     def __str__(self):
         return self.name
 
-    def find_actual_value(self, asset=None, language=None, version_id=None, draft=False):
+    def find_actual_value(self, asset=None, language=None, version_id=None, draft=False, customization_name=None):
         content_value = ""
         if not asset:
             return DataStructure.cast_value(self, self.default)
         content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
         if not draft:
-            content_record = content_record.\
-                exclude(version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected).\
-                order_by('version_id')
+            if not asset.is_single_customization and customization_name:
+                content_record = content_record.filter(
+                    version__assetcustomizationreview__customization__name=customization_name,
+                    version__assetcustomizationreview__state__in=[
+                        AssetCustomizationReview.REVIEW_STATES.pending,
+                        AssetCustomizationReview.REVIEW_STATES.accepted,
+                        AssetCustomizationReview.REVIEW_STATES.blocked
+                    ])
+            else:
+                content_record = content_record.\
+                    exclude(version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
+            content_record = content_record.order_by('version_id')
 
         # try to get translated content
         if self.translatable:
@@ -680,22 +699,24 @@ class DataStructure(models.Model):
                 # which is not more than version_id
                 # filter only accepted content_records
                 content_record = content_record.filter(version_id__lte=version_id)
-                if content_record:
-                    if not draft:
-                        new_review_records = content_record.\
-                            filter(version__assetcustomizationreview__state=AssetCustomizationReview.
-                                   REVIEW_STATES.accepted)
-                        # If the version matches take it
-                        version_content_record = content_record.filter(version_id=version_id).last()
-                        if version_content_record:
-                            content_record = version_content_record
-                        # Take any record that is accepted
-                        elif new_review_records.exists():
-                            content_record = new_review_records.last()
-                        # Take any record that has been reviewed
-                        else:
-                            content_record = content_record.\
-                                filter(version__accepted_by__isnull=False).last()
+                if not draft:
+                    if not asset.is_single_customization and customization_name:
+                        new_review_records = content_record.filter(
+                            version__assetcustomizationreview__customization__name=customization_name,
+                            version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+                        )
+                    else:
+                        new_review_records = content_record.filter(
+                            version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+                        )
+                    # If the version matches take it
+                    version_content_record = content_record.filter(version_id=version_id).last()
+                    if version_content_record:
+                        content_record = version_content_record
+                    # Take any record that is accepted
+                    elif new_review_records.exists():
+                        content_record = new_review_records.last()
+                    # Take any record that has been reviewed
                     else:
                         content_record = content_record.last()
 
@@ -1012,6 +1033,10 @@ class AssetCustomizationReview(models.Model):
                    version__id__lte=self.version_id,
                    version__asset=asset,
                    customization=self.customization).distinct()
+
+        # Rejection should only to the last
+        if state == AssetCustomizationReview.REVIEW_STATES.rejected:
+            customization_reviews = [customization_reviews.last()]
         for review in customization_reviews:
             review.update_state(user, state)
 

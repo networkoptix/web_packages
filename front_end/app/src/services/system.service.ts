@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-    BehaviorSubject, of, Subscription, Observable
+    BehaviorSubject, of, Subscription, Observable, from
 }                                from 'rxjs';
 import { flatMap, tap }          from 'rxjs/operators';
 
@@ -34,6 +34,7 @@ export interface NxSystemRole extends PredefinedRole {
 export interface NxSystemUser {
     isLocalOwner: boolean;
     accessRole: string;
+    accessRights: { [resourceId: string]: true };
     canBeDeleted: boolean;
     canBeEdited: boolean;
     cryptSha512Hash: string;
@@ -314,9 +315,10 @@ class UserManager {
             const users = data['ec2/getUsers'];
             const userRoles = data['ec2/getUserRoles'];
             const predefinedRoles = data['ec2/getPredefinedRoles'];
+            const accessRights = data['ec2/getAccessRights'];
             return new Promise((resolve) => {
                 this.updateAccessRoles(predefinedRoles, userRoles);
-                return resolve(this.processUsers(users));
+                return resolve(this.processUsers(users, accessRights));
             });
         }, () => {
             // eslint-disable-next-line prefer-promise-reject-errors
@@ -328,10 +330,15 @@ class UserManager {
         return permissions.split('|').sort().join('|');
     }
 
-    processUsers(users: NxSystemUser[]) {
+    processUsers(users: NxSystemUser[], accessRights = []) {
         if (!Array.isArray(users)) {
             return false;
         }
+        // accessRights if individual camera permissions ever set
+        accessRights = Object.keys(accessRights).length ? accessRights.reduce((obj, next) => {
+            obj[next.userId] = next.resourceIds;
+            return obj;
+        }, {}) : {};
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
         this.users = users.map((user) => {
             // @ts-ignore: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
@@ -342,6 +349,13 @@ class UserManager {
             user.permissions = this.normalizePermissionString(user.permissions);
             user.role = this.findAccessRole(user);
             user.accessRole = user.role.name;
+            // allMediaPermissionFlag exists if the all camera permission option selected
+            if (!user.permissions.includes(this.CONFIG.accessRoles.allMediaPermissionFlag) && accessRights[user.id]) {
+                user.accessRights = accessRights[user.id].reduce((obj: { [resourceId: string]: true }, next: string) => {
+                    obj[next] = true;
+                    return obj;
+                }, {});
+            }
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
             user.isCloudOwner = this.isOwner(user);
@@ -780,6 +794,7 @@ export class NxSystem extends System implements OnDestroy {
     private _subscribersCount = new BehaviorSubject<number>(0);
 
     activeSubscription: Subscription;
+    show404 = false;
     currentUserEmail: string;
     mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
@@ -870,6 +885,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.cameras;
     }
 
+    set cameras(newCameras: ICamera[]) {
+        this.serverManager.cameras = newCameras;
+    }
+
     /**
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
@@ -954,14 +973,6 @@ export class NxSystem extends System implements OnDestroy {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-        if (systemId) {
-            this.cloudApi.getCloudStorageUsage(systemId)
-                .then(() => {
-                    this.cloudStorageSystemEnabled = true;
-                }, () => {
-                    this.cloudStorageSystemEnabled = false;
-                });
-        }
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
              Some options here:
@@ -1058,7 +1069,7 @@ export class NxSystem extends System implements OnDestroy {
 
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
-            .then((response) => {
+            .then(async(response: any) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
                     return Promise.reject(error);
@@ -1076,7 +1087,10 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
+                this.cloudStorageCapable = this.info.capabilities && !!this.info.capabilities.cloudStorage;
+                if (this.cloudStorageCapable) {
+                    this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
+                }
                 this.mergeInfo = response.mergeInfo;
 
                 if (!suppressUpdate) {
@@ -1209,6 +1223,10 @@ export class NxSystem extends System implements OnDestroy {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.updateSystemServersCameras() : Promise.reject())
                 .then(() => this.getUsers(true))
+                .then(() => this.getServers().toPromise())
+                .then(() => this.getCameras())
+                .then(() => from(this.getUsers(true)))
+                .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
@@ -1220,7 +1238,14 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.updateSystemServersCameras();
     }
 
-    updateOrGetSystemSettings<T>(updateParams?: T) {
+    filterCamerasFromUserPermissions() {
+        const accessRights: { [resourceId: string]: true } = this.currentUser.accessRights;
+        if (accessRights && this.cameras) {
+            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
+        }
+    }
+
+    updateOrGetSystemSettings(updateParams = {}) {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
@@ -1384,7 +1409,7 @@ export class NxSystem extends System implements OnDestroy {
             return Promise.resolve(true);
         }
 
-        return this.auth_promise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
+        this.auth_promise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             if (authKeys.authGet) {
                 this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                 // console.log('new ones are good')
@@ -1396,6 +1421,7 @@ export class NxSystem extends System implements OnDestroy {
                 return Promise.reject(authKeys);
             }
         });
+        return this.auth_promise;
     }
     // </changed by @gbezyuk to fix auth race condition>
 
@@ -1412,7 +1438,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getResourceTypes().toPromise()
         ).then(resource_types => {
-            return this.resource_types = resource_types;
+            this.resource_types = resource_types;
+            return this.resource_types;
         });
     }
 
