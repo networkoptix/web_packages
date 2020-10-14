@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Impostazioni del watermark",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Posizioni di archiviazione",
-    "LOG SETTINGS TEXT": "Impostazioni registro"
+    "LOG SETTINGS TEXT": "Impostazioni registro",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

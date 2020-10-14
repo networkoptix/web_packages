@@ -607,7 +607,7 @@ export class MergeModalContent {
                     const res = await this.precheckSystemMerge();
                     return res;
                 }
-                return { error: '0' };
+                return this.systemMergeable ? 'canceled' : { error: '0' }; // systemMergeable === '' = mergeable
             }
         } else {
             this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });

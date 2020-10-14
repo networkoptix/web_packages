@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "הגדרות סימן מים",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "מיקום האחסון",
-    "LOG SETTINGS TEXT": "הגדרות יומן רישום"
+    "LOG SETTINGS TEXT": "הגדרות יומן רישום",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

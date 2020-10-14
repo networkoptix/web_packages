@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "透かし設定",
     "WEB SOCKET ENABLED TEXT": "Webソケット",
     "STORAGE LOCATIONS TEXT": "ストレージの場所",
-    "LOG SETTINGS TEXT": "ログ設定"
+    "LOG SETTINGS TEXT": "ログ設定",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Configurações de marca d'água",
     "WEB SOCKET ENABLED TEXT": "Sockets da Web",
     "STORAGE LOCATIONS TEXT": "Locais de armazenamento",
-    "LOG SETTINGS TEXT": "Configurações de log"
+    "LOG SETTINGS TEXT": "Configurações de log",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Watermerk instellingen",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Opslaglocaties",
-    "LOG SETTINGS TEXT": "Logboekinstellingen"
+    "LOG SETTINGS TEXT": "Logboekinstellingen",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

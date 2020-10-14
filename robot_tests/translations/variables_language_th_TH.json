@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "การตั้งค่าลายน้ำ",
     "WEB SOCKET ENABLED TEXT": "ซ็อกเก็ตเว็บ",
     "STORAGE LOCATIONS TEXT": "ที่จัดเก็บ",
-    "LOG SETTINGS TEXT": "ล็อกการตั้งค่า"
+    "LOG SETTINGS TEXT": "ล็อกการตั้งค่า",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

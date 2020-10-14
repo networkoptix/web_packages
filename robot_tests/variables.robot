@@ -298,6 +298,7 @@ ${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/im
 ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
+${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
 
 #ADVANCED SETTINGS
 ${ADVANCED SETTINGS}                    ?advanced=true

@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Filigran ayarları",
     "WEB SOCKET ENABLED TEXT": "Web soketleri",
     "STORAGE LOCATIONS TEXT": "Depolama konumları",
-    "LOG SETTINGS TEXT": "Günlük ayarları"
+    "LOG SETTINGS TEXT": "Günlük ayarları",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

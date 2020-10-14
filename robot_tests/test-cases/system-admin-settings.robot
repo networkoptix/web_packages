@@ -471,6 +471,7 @@ System Settings block is not available when the system is offline
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PLACEHOLDER ICON}    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
@@ -557,16 +558,19 @@ Checking the dependency of security settings checkboxes
     Log    Step 2
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
     Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
     
     Log    Step 3
     Change Setting Without Saving    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
     Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
     Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
     
     Log    Step 4
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
 Check Limit session duration

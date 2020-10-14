@@ -48,7 +48,7 @@ Input on page matches server
 Change Input for Advanced Setting
     [Arguments]    ${input}    ${value}
     Input Text    ${input}    ${value}
-    Click Button    ${ADVANCED SETTINGS SAVE BUTTON}    
+    Click Element    ${ADVANCED SETTINGS SAVE BUTTON}    
     Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    
     Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
     Run Keyword Unless    '${value}' == '${EMPTY}'
@@ -77,7 +77,7 @@ Changing setting changes it on server
     ...    ${status}==False    true
     Set Checkbox Value    ${setting}    ${selected}
     Run Keyword If    ${advanced}    Run Keywords
-    ...    Click Button    ${ADVANCED SETTINGS SAVE BUTTON}    AND
+    ...    Click Element   ${ADVANCED SETTINGS SAVE BUTTON}    AND
     ...    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    AND
     ...    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
     ...    ELSE    Run Keywords

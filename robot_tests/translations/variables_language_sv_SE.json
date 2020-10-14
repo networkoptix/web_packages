@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Vattenmärkesinställningar",
     "WEB SOCKET ENABLED TEXT": "Webb sockets",
     "STORAGE LOCATIONS TEXT": "Lagringsplatser",
-    "LOG SETTINGS TEXT": "Logginställningar"
+    "LOG SETTINGS TEXT": "Logginställningar",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }
