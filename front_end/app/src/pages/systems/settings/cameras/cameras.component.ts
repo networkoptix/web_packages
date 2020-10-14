@@ -684,11 +684,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     setCamera = (forceUpdate = false) => {
         this.applyService.setVisible(false);
-        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id && !forceUpdate) {
+        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera?.id && !forceUpdate) {
             return;
         }
 
-        if (this.selectedCamera && this.parsedCameraId !== this.selectedCamera.id) {
+        if (this.selectedCamera && this.parsedCameraId !== this.selectedCamera?.id) {
             this.showOffline = false;
             this.showUnauthorized = false;
             this.alerts = [];
@@ -696,9 +696,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         let cameraIndex: number;
         if (this.system && this.system.cameras) {
-            cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+            cameraIndex = this.system.cameras.findIndex(camera => camera?.id === `{${this.parsedCameraId}}`);
             this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.permissions.editCameras;
             if (this.system.show404) {
+                return;
+            }
+            if (!this.system.cameras.length) {
+                this.showPreloader = false;
                 return;
             }
 

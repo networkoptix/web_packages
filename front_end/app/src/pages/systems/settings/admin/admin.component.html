@@ -76,7 +76,7 @@
                     <span>
                         <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
                         <span *ngIf="!system.isMine">
-                            <span class="system-header-bold">{{system.info.name}}</span>
+                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </span>
                     </span>
