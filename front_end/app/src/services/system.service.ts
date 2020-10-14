@@ -753,7 +753,7 @@ class ServerManager {
 
     renameServer(serverId: string, serverName: string) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
-        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, { name: 'serverName', value: serverName });
+        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, { serverName });
     }
 
     restartServer(serverId: string) {

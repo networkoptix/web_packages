@@ -23,7 +23,7 @@ import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
 import { NxUriService }              from '../../../../services/uri.service';
 import { NxToastService }            from '../../../../dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxApplyService } from '../../../../services/apply.service';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -45,7 +45,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systems;
     params: Params;
 
-    systemName: string;
+    systemNameWatcher = new Watcher('');
     editMode = false;
     emptyName = false;
 
@@ -64,6 +64,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     merging: boolean;
 
     settingsForSystem;
+
+    get systemName() {
+        return this.systemNameWatcher.value;
+    }
+
+    set systemName(value) {
+        this.systemNameWatcher.value = value;
+    }
 
     private setupDefaults() {
         this.params = this.route.snapshot.queryParams;
@@ -135,7 +143,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.system = system;
-                this.systemName = this.system.info.name || this.system.info.systemName;
+                this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
+                this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
                 this.pageService.pageTitle = this.system.info.systemName;
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
@@ -175,6 +184,29 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     error => error
                 );
             });
+
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.systemNameWatcher],
+            this.processService.createProcess(() => {
+                if (this.systemNameWatcher.changed) {
+                    return this.cloudApiService.renameSystem(this.system.id, this.systemName)
+                        .then(() => {
+                            this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
+                        }).catch(() => {
+                            this.systemNameWatcher.reset();
+                            const options = {
+                                classname : this.CONFIG.toast.warning,
+                                autohide  : true,
+                                delay     : this.CONFIG.alertTimeout
+                            };
+                            this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
+                        });
+                } else {
+                    return Promise.resolve();
+                }
+            }),
+            this.systemNameWatcher.reset
+        );
     }
 
     syncMergeAlerts() {
@@ -207,17 +239,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         if (!this.systemName || this.emptyName) {
             this.systemName = originalName;
-        } else if (this.systemName !== originalName) {
-            this.cloudApiService.renameSystem(this.system.id, this.systemName)
-                .catch(() => {
-                    this.systemName = originalName;
-                    const options = {
-                        classname : this.CONFIG.toast.warning,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
-                });
         }
     }
 

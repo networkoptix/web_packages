@@ -53,12 +53,12 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     serverIdFromParams;
 
-    serverName: string;
     editMode = false;
     emptyName = false;
 
     saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
+    serverNameWatcher = new Watcher('');
     previousInputValue: number;
     checking: boolean;
     serverLoaded = false;
@@ -83,6 +83,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     parsedServerId: string;
     serverDetails: InfoBlockSection;
     serversSubscription: SubscriptionLike;
+
+    get serverName() {
+        return this.serverNameWatcher.value;
+    }
+
+    set serverName(value) {
+        this.serverNameWatcher.value = value;
+    }
 
     private setupDefaults() {
         this.checking = false;
@@ -120,7 +128,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.initForApplyService();
 
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.saveStorageWatcher],
+            [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
             this.saveSettings,
             () => this.applyService.reset()
         );
@@ -187,9 +195,29 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     initForApplyService(): void {
-        this.saveSettings = this.processService.createProcess(async () => {
+        this.saveSettings = this.processService.createProcess(async() => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
+            if (this.serverNameWatcher.changed) {
+                await this.system.renameServer(this.selectedServer.id, this.serverNameWatcher.value)
+                    .then(() => {
+                        this.serverNameWatcher.originalValue = this.serverNameWatcher.value;
+                        this.selectedServer.name = this.serverNameWatcher.value;
+                    })
+                    .catch(() => {
+                        this.serverNameWatcher.reset();
+                        const options = {
+                            classname : this.CONFIG.toast.warning,
+                            autohide  : true,
+                            delay     : this.CONFIG.alertTimeout
+                        };
+                        this.toastService.show(
+                            NxLanguageProviderService.translate(
+                                this.LANG.toastMessage.nameFail?.(),
+                                { type: this.LANG.common.server?.() }
+                            ), options);
+                    });
+            }
             try {
                 if (!port.value) {
                     port.value = port.originalValue;
@@ -278,22 +306,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
         if (!this.serverName || this.emptyName) {
             this.serverName = originalName;
-        } else if (this.serverName !== originalName) {
-            this.system.renameServer(this.selectedServer.id, this.serverName)
-                .then(() => { this.selectedServer.name = this.serverName; })
-                .catch(() => {
-                    this.selectedServer.name = originalName;
-                    const options = {
-                        classname : this.CONFIG.toast.warning,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(
-                        NxLanguageProviderService.translate(
-                            this.LANG.toastMessage.nameFail?.(),
-                            { type: this.LANG.common.server?.() }
-                        ), options);
-                });
         }
     }
 
