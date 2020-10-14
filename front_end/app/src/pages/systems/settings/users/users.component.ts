@@ -8,19 +8,20 @@ import { UntilDestroy }                         from '@ngneat/until-destroy';
 import { filter }                               from 'rxjs/operators';
 import { Subscription }                         from 'rxjs';
 
-import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
+import { NxDialogsService }                     from '@dialogs/dialogs.service';
 import { NxSettingsService }                    from '../settings.service';
 import { NxMenuService }                        from '../../../../menu';
-import { NxConfigService, IConfig }             from '../../../../services/nx-config';
-import { NxPageService }                        from '../../../../services/page.service';
-import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
-import { NxUtilsService }                       from '../../../../services/utils.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
-import { NxProcessService, Process }            from '../../../../services/process.service';
-import { NxUriService }                         from '../../../../services/uri.service';
-import { NxApplyService, Watcher }              from '../../../../services/apply.service';
-import { NxToastService }                       from '../../../../dialogs/toast.service';
+import { NxConfigService, IConfig }             from '@services/nx-config';
+import { NxPageService }                        from '@services/page.service';
+import { NxLanguageProviderService }            from '@services/nx-language-provider';
+import { NxUtilsService }                       from '@services/utils.service';
+import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
+import { NxProcessService, Process }            from '@services/process.service';
+import { NxUriService }                         from '@services/uri.service';
+import { NxApplyService, Watcher }              from '@services/apply.service';
+import { NxToastService }                       from '@dialogs/toast.service'
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
+import { WINDOW }                               from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -64,8 +65,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef,
+        private configService: NxConfigService,
         private route: ActivatedRoute,
         private applyService: NxApplyService,
         private language: NxLanguageProviderService,

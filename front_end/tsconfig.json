@@ -17,6 +17,7 @@
       "@components/*": ["src/components/*"],
       "@directives/*": ["src/directives/*"],
       "@dialogs/*": ["src/dialogs/*"],
+      "@environments/*": ["environments/*"],
       "@pages/*": ["src/pages/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],

@@ -96,7 +96,7 @@
             </nx-section>
             <nx-section *ngIf="(selectedUser.isCloud && selectedUser.isMe)
                 || selectedUser.canBeEdited">
-                <div *ngIf="selectedUser.isCloud && selectedUser.isMe" class="float-left">
+                <div *ngIf="!CONFIG.isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
                         id="accountSettingsButton"
                         (click)="routeToAccountSettings()"
