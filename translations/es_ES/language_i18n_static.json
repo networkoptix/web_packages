@@ -1,7 +1,7 @@
 {
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
     "Download %VMS_NAME%": "Descargar %VMS_NAME%",
-    "For developers": "For developers",
+    "For developers": "Para desarrolladores",
     "Integrations (β)": "Integraciones (β)",
     "Privacy": "Privacidad",
     "Support": "Asistencia",
@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
         "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "El modo de grabación cambiará a \"Grabar siempre\"",
         "recordingModes": {
             "always": "Grabar Siempre",
             "motion": "Grabar solo movimiento",

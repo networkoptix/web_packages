@@ -7,6 +7,7 @@ import 'angular-ui-bootstrap';
 
 import 'hint.css/hint.min.css';
 import '../styles/nativeclient.scss';
+import '../styles/webadminclient.scss';
 
 require('es6-promise/auto');
 require('./config.js');

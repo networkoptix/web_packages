@@ -45,7 +45,7 @@ export class DetachServerModalContent {
                 return this.system.detachFromSystem(this.serverId, this.password).toPromise()
                     .then(res => {
                         if (Number(res.error)) {
-                            this.toastService.show(this.LANG.servers.detachSystemFailed, options);
+                            this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
                             return res;
                         }
                         return this.system.removeMediaserver(this.serverId).toPromise();
@@ -55,12 +55,12 @@ export class DetachServerModalContent {
                             this.system.currentServerNotBusy = true;
                             this.activeModal.close('success');
                             options.classname = this.CONFIG.toast.success;
-                            this.toastService.show(this.LANG.servers.detachSystemSuccess, options);
+                            this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
                         })
                     )
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
-                        this.toastService.show(this.LANG.servers.detachSystemFailed, options);
+                        this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
                     });
             });
     }

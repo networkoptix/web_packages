@@ -21,7 +21,7 @@
 
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
-                <hr *ngIf="item.name === 'horizontal'; else systemSelect">
+                <hr *ngIf="item.name === 'horizontal'; else systemSelect" [ngClass]="{'narrow-hr': hrMargin}">
                 <ng-template #systemSelect>
                     <a *ngIf="!item.disabled; else disabledItem" class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
                         [ngClass]="{ 'selected': _selectedItem && _selectedItem.value === item.value }"

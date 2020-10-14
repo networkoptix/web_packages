@@ -68,10 +68,12 @@ def get_agreement(request):
 
             # Get values for title and body of agreement for this version
             title = agreement_structures.filter(name='title').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review
+                asset=agreement, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
             )
             body = agreement_structures.filter(name='text').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review
+                asset=agreement, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
             )
             agreement_dict = {
                 "title": title,

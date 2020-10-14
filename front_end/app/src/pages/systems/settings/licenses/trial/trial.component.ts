@@ -48,7 +48,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                         this.haveTrialLicense = true;
 
                         this.dialogsService
-                            .notify(this.LANG.license.messages.trialActivated, 'success');
+                            .notify(this.LANG.license.messages.trialActivated?.(), 'success');
                     }
 
                     if (response.error) {
@@ -72,7 +72,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 }, (fail) => {
                     if (fail.error.type === 'error') {
                         this.dialogsService
-                            .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                            .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
                     }
                 });
         });

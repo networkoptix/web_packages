@@ -1,11 +1,16 @@
 @use "../../../../../styles/typography";
 @use '../../../../../../styles/theme_variables' as *;
 
+form.form-horizontal {
+    overflow: auto auto !important;
+}
+
 .storage-container {
     table {
         display               : grid;
         border-collapse       : collapse;
-        min-width             : 100%;
+        width: 100%;
+        min-width: 648px;
         grid-template-columns : 40% fit-content(100%) auto;
 
         &.hasAction {

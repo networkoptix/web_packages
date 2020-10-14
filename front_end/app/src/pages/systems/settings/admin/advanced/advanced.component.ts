@@ -94,20 +94,20 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error)
+                            .alert(errorToShow, this.LANG.dialogs.titles.error?.())
                             .catch(error => {
                                 console.error(error);
                             });
                     } else {
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
+                            .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
                             .catch(error => {
                                 console.error(error);
                             });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved, this.LANG.dialogs.titles.error)
+                        .alert(this.LANG.dialogs.message.settingsNotSaved?.(), this.LANG.dialogs.titles.error?.())
                         .catch(error => {
                             console.error(error);
                         });

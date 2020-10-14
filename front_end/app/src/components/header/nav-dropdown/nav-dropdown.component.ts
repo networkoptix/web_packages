@@ -1,4 +1,4 @@
-import { Component }                 from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild }                 from '@angular/core';
 import { BehaviorSubject }           from 'rxjs';
 
 import { BaseDropdown }              from '../../dropdowns/injDropdown';
@@ -7,6 +7,7 @@ import { MenuNode }                  from '../../../services/menus.service';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxHeaderService }           from '../../../services/nx-header.service';
+import { WINDOW } from '../../../services/window-provider';
 
 @Component({
     selector    : 'nx-nav-dropdown',
@@ -14,13 +15,16 @@ import { NxHeaderService }           from '../../../services/nx-header.service';
     styleUrls   : [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
+    @ViewChild('dropDownButton') dropDownButton: ElementRef
     name = new BehaviorSubject('');
     nodes = new BehaviorSubject<MenuNode[]>([])
     path = ''
+    offset = 0;
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        public headerService: NxHeaderService
+        public headerService: NxHeaderService,
+        @Inject(WINDOW) private window: Window
     ) {
         super(languageService, configService);
         headerService.currentLocation$.subscribe(({ path, parentNode }) => {
@@ -44,6 +48,10 @@ export class NxNavDropdownComponent extends BaseDropdown {
     hide() {
         this.show = false;
         return false;
+    }
+
+    updateOffset() {
+        this.offset = this.window.innerWidth > 420 ? 0 : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
     }
 
     get hideDropdown() {

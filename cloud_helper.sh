@@ -193,6 +193,7 @@ function local_build() {
     REPO=$PWD
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules
     pushd $BUILD_DIR
         . "$REPO/../webadmin/build.sh"
         cp server-external/bin/external.dat $REPO/tools/docker

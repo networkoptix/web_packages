@@ -110,6 +110,7 @@ ${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-rib
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
+${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
@@ -185,7 +186,7 @@ ${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"
 ${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
 ${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
 ${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${DELETE ACCOUNT CLOSE BUTTON}         ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
+${DELETE ACCOUNT CLOSE BUTTON}        ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
 ${DELETE ACCOUNT HEADER}              ${DELTE ACCOUNT DIALOG}//h1[contains(text(),"${DELETE ACCOUNT HEADER TEXT}")]
 ${DELETE ACCOUNT INFO}                ${DELTE ACCOUNT DIALOG}//span[contains(text(),"${DELETE ACCOUNT INFO TEXT}")]
 ${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]
@@ -201,10 +202,10 @@ ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
-${DOWNLOAD WINDOWS VMS LINK}          //div[contains(text(),"Windows x64 - Client & Server")]/../..
-${DOWNLOAD LINUX VMS LINK}            //div[contains(text(),"Ubuntu x64 - Client")]/../..
-${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/../..
-${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${DOWNLOAD WINDOWS VMS LINK}          //div/a[contains(text(),"Windows x64 - Client & Server")]
+${DOWNLOAD LINUX VMS LINK}            //div/a[contains(text(),"Ubuntu x64 - Server")]
+${DOWNLOAD MAC OS VMS LINK}           //div/p[contains(text(),'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”')]/preceding-sibling::a
+${DOWNLOAD ARM VMS LINK}              //div/a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 ${DOWNLOAD VMS NAME}                  //h3[contains(text(),"${DOWNLOAD TITLE TEXT}")]
@@ -212,7 +213,7 @@ ${DOWNLOAD VERSION NUMBER}            //h2[@class="version-number d-flex"]/b
 ${WHATS NEW LINK}                     //a[contains(text(),"${WHATS NEW TEXT}")]
 
 ${WINDOWS TAB}                        //a[@id="windows"]
-${LINUX TAB}                         //a[@id="linux"]
+${LINUX TAB}                          //a[@id="linux"]
 ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
 
@@ -314,3 +315,17 @@ ${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/im
 ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
+
+#ADVANCED SETTINGS
+${ADVANCED SETTINGS}                    ?advanced=true
+${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
+${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
+${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
+${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
+${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
+@{ADVANCED SETTINGS ALERT BAR}
+...    ${HIDE ADVANCED SETTINGS BUTTON} 
+...    ${HIDE ADVANCED SETTINGS ICON}
+...    ${ADVANCED SETTINGS ALERT ICON} 
+...    ${ADVANCED SETTINGS ALERT} 
+...    ${ADVANCED SETTINGS WARNING}

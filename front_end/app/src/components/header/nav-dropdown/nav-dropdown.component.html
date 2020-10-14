@@ -3,7 +3,8 @@
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
-        (click)="show = !show"
+        #dropDownButton
+        (click)="updateOffset(); show = !show;"
         [disabled]="hideDropdown"
         [ngClass]="{'hide-dropdown': hideDropdown}"
         type="button" id="activeSystemDropdown" data-toggle="dropdown">
@@ -13,9 +14,10 @@
         </div>
     </button>
     <div *ngIf="show" class="popup arrow up"></div>
-    <ul class="dropdown-menu"
+    <ul class="dropdown-menu width-override"
         *ngIf="!hideDropdown"
         [style.display]="show ? 'inline-block' : 'none'"
+        [style.transform]="'translateX(' + offset + 'px)'"
         aria-labelledby="navLocationDropdown"
         [nxArrowNav]="show">
         <li *ngFor="let node of nodes | async" class="dropdown-item-container">

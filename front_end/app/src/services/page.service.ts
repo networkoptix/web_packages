@@ -34,7 +34,7 @@ export class NxPageService {
     }
 
     public set pageTitleRemoveHyphen(title: any) {
-        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
+        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default?.()) {
             this.title.setTitle(this.LANG.pageTitles.template({ title: title() }).replace('- ', ''));
             return;
         }

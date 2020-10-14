@@ -20,6 +20,7 @@
 .tab-link {
     height: 100%;
     border-bottom: 1px solid transparent;
+    cursor: pointer;
     &:hover {
         background: $light2;
         border-bottom: 1px solid $light5;

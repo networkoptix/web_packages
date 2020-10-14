@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const server_address = process.env.server_address || 'http://10.1.5.196:7001';
+const server_address = process.env.server_address || 'http://0.0.0.0:7001';
 const host = '0.0.0.0';
 const port = 9001;
 const localStatic = `https://${host}:${port}`;
@@ -36,6 +36,20 @@ module.exports = merge(common, {
                 context: '/static/',
                 target: localStatic,
                 pathRewrite: { '^/static' : '' },
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/index.html',
+                target: localStatic,
+                pathRewrite: { '^/index.html' : 'inline.html' },
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/',
+                target: localStatic,
+                pathRewrite: { '^/' : 'inline.html' },
                 changeOrigin: true,
                 secure: false
             }

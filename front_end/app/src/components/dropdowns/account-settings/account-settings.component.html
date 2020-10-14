@@ -25,7 +25,7 @@
         [style.right.px]="rightOffset$.value"
         aria-labelledby="accountSettingsSelect">
 
-        <ul class="dropdown-menu--list">
+        <ul class="dropdown-menu--list width-override">
             <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
                 <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/" ><span translate>Account Settings</span>

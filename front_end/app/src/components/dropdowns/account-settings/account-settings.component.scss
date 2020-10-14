@@ -32,7 +32,7 @@
             display : block;
             transform: translateY(3px);
             &::after {
-                border-bottom-color: #FAFBFB !important;
+                border-bottom-color: $additional_light1 !important;
             }
         }
         & > button {
@@ -86,4 +86,10 @@
 
 .inset.btn-dropdown-toggle.dropdown-toggle-transparent.dropdown-toggle.arrow-padding {
     padding-right: 32px !important;
+}
+
+.width-override {
+    @media screen and (max-width: 420px){
+        width: 100vw !important;
+    }
 }

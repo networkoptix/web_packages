@@ -9,7 +9,6 @@ ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 @{AUTO SYS AUTH}                      admin    qweasd 123
-${SCREENSHOTDIRECTORY}                Screenshots
 
 ${BROWSER}                            Chrome
 
@@ -31,19 +30,17 @@ ${EMAIL CUSTOM CAMERAS LIMITED}       ${TEST EMAIL}+customcameraslimited${BASE E
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
 ${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
-${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
-${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
-${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
 
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
-${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
-${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
-${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
 &{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
 ...    ${EMAIL ADV VIEWER}=advancedViewer
@@ -111,4 +108,4 @@ ${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibl
 ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button
 
 #Cameras
-${NOAUTH CAMERA PASSWORD}             QWEasd!@#
+${NOAUTH CAMERA PASSWORD}             qweasd123

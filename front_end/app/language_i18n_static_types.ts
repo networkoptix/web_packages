@@ -704,9 +704,13 @@ export interface Storage {
 }
 
 export interface Modes {
-    main:     any;
-    backup:   any;
-    notInUse: any;
+    main:         any;
+    backup:       any;
+    notInUse:     any;
+    reserved:     any;
+    inaccessible: any;
+    changing:     any;
+    disabled:     any;
 }
 
 export interface ReindexingDone {
@@ -727,6 +731,7 @@ export interface LanguageI18NStaticTypesSystem {
     users:            Users;
     yourSystem:       any;
     loggers:          Loggers;
+    storageToolTips:  StorageToolTips;
 }
 
 export interface Loggers {
@@ -763,6 +768,14 @@ export interface WarningMessages {
 export interface SystemStatus {
     offline:     any;
     unavailable: any;
+}
+
+export interface StorageToolTips {
+    local:   any;
+    usb:     any;
+    network: any;
+    smb:     any;
+    cloud:   any;
 }
 
 export interface Users {
@@ -1580,6 +1593,10 @@ const typeMap: any = {
         { json: "main", js: "main", typ: "any" },
         { json: "backup", js: "backup", typ: "any" },
         { json: "notInUse", js: "notInUse", typ: "any" },
+        { json: "reserved", js: "reserved", typ: "any" },
+        { json: "inaccessible", js: "inaccessible", typ: "any" },
+        { json: "changing", js: "changing", typ: "any" },
+        { json: "disabled", js: "disabled", typ: "any" },
     ], false),
     "ReindexingDone": o([
         { json: "mainSuccess", js: "mainSuccess", typ: "any" },
@@ -1598,6 +1615,7 @@ const typeMap: any = {
         { json: "users", js: "users", typ: r("Users") },
         { json: "yourSystem", js: "yourSystem", typ: "any" },
         { json: "loggers", js: "loggers", typ: r("Loggers") },
+        { json: "storageToolTips", js: "storageToolTips", typ: r("StorageToolTips") },
     ], false),
     "Loggers": o([
         { json: "none", js: "none", typ: r("Debug") },
@@ -1628,6 +1646,13 @@ const typeMap: any = {
     "SystemStatus": o([
         { json: "offline", js: "offline", typ: "any" },
         { json: "unavailable", js: "unavailable", typ: "any" },
+    ], false),
+    "StorageToolTips": o([
+        { json: "local", js: "local", typ: "any" },
+        { json: "usb", js: "usb", typ: "any" },
+        { json: "network", js: "network", typ: "any" },
+        { json: "smb", js: "smb", typ: "any" },
+        { json: "cloud", js: "cloud", typ: "any" },
     ], false),
     "Users": o([
         { json: "cloudDelete", js: "cloudDelete", typ: "any" },

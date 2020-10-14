@@ -116,4 +116,12 @@
       box-shadow       : none;
       border           : 1px solid $light4;
       background-color : $light1;
+
+    &::-webkit-scrollbar-track {
+        background-color : $light1 !important;
     }
+
+    &::-webkit-scrollbar-thumb {
+        border : 2px solid $light1 !important;
+    }
+}

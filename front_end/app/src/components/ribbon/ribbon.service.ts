@@ -1,7 +1,8 @@
 import { Injectable }      from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { RibbonAction }    from './ribbon.component';
+import { RibbonAction }      from './ribbon.component';
+import { NxAppStateService } from '../../services/nx-app-state.service';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
     text: string | Function;
@@ -19,7 +20,9 @@ export class NxRibbonService {
 
     contextSubject = new BehaviorSubject(this.context);
 
-    constructor() {
+    constructor(
+        private appStateService: NxAppStateService
+    ) {
     }
 
     show(message, actions: RibbonActionInput[], type?, updateFunction?) {
@@ -38,6 +41,7 @@ export class NxRibbonService {
             updateFunction
         };
         this.contextSubject.next(this.context);
+        this.appStateService.ribbonVisibility = true;
     }
 
     hide() {
@@ -49,5 +53,6 @@ export class NxRibbonService {
             updateFunction : ''
         };
         this.contextSubject.next(this.context);
+        this.appStateService.ribbonVisibility = false;
     }
 }

@@ -180,25 +180,6 @@ $grid-breakpoints: typography.$grid-breakpoints;
         tr:hover td {
             background : transparentize(theme_variables.$brand_core, 0.9);
         }
-
-        ::-webkit-scrollbar {
-            width  : initial;
-            height : 8px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            -webkit-border-radius : initial;
-            border-radius         : 6px;
-            -webkit-box-shadow    : initial;
-            height                : 8px;
-            border                : 2px solid theme_variables.$light4;
-        }
-
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow    : initial;
-            -webkit-border-radius : initial;
-            border-radius         : initial;
-        }
     }
 
     &--footer {

@@ -11,6 +11,7 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
 import { ILanguage, ILanguages }     from '../../../services/nx-cloud-api.types';
+import { LocalStorageService }       from 'ngx-webstorage';
 
 class BaseLanguageDropdown extends BaseDropdown {
     @Input() instantReload;
@@ -35,7 +36,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
-        private languageService: NxLanguageProviderService
+        private languageService: NxLanguageProviderService,
+        private localStorageService: LocalStorageService
     ) {
         super(languageService, configService);
 
@@ -77,8 +79,9 @@ class BaseLanguageDropdown extends BaseDropdown {
                 } else {
                     this.cloudApi
                         .changeLanguage(this.langCode)
-                        .then((response) => {
-                            window.location.reload();
+                        .then(_ => {
+                            this.localStorageService.store('language', this.langCode);
+                            this.languageService.currentLang = this.langCode;
                         });
                 }
             }

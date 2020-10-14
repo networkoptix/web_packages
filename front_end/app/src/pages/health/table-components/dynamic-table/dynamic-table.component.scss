@@ -26,25 +26,6 @@ nx-dynamic-table {
       width: 100%;
     }
 
-    ::-webkit-scrollbar {
-      width  : initial;
-      height : 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      -webkit-border-radius : initial;
-      border-radius         : 6px;
-      -webkit-box-shadow    : initial;
-      height                : 8px;
-      border                : 2px solid $light4;
-    }
-
-    ::-webkit-scrollbar-track {
-      -webkit-box-shadow    : initial;
-      -webkit-border-radius : initial;
-      border-radius         : initial;
-    }
-
     .horizontalTooltip {
       position         : absolute;
       left             : 50%;

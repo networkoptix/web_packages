@@ -304,6 +304,8 @@ export const nxConfig: IConfig = {
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
     },
     showHeaderAndFooter : true,
+    headerHeight : 48,
+    ribbonHeight : 33,
     search              : {
         debounceTime : 500, // ms
         maxLength    : 200,
@@ -397,6 +399,7 @@ export const nxConfig: IConfig = {
         editUserPermissionFlag    : 'GlobalAdminPermission',
         editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
         globalAdminPermissionFlag : 'GlobalAdminPermission',
+        allMediaPermissionFlag    : 'GlobalAccessAllMediaPermission',
         customPermission          : {
             name        : 'Custom',
             permissions : 'NoPermission'
@@ -528,6 +531,7 @@ export const nxConfig: IConfig = {
 
         statisticsReportLastNumber     : { type: 'static' },
         statisticsReportLastTime       : { type: 'static' },
+        statisticsReportLastVersion    : { type: 'static' },
         statisticsReportServerApi      : { type: 'text' },
         statisticsReportTimeCycle      : { type: 'number' },
         localSystemId                  : { type: 'static' },

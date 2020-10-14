@@ -645,7 +645,7 @@ export class NxSystemAPI {
 
     /* Working with users */
     getAggregatedUsersData() {
-        const routes = ['ec2/getUsers', 'ec2/getPredefinedRoles', 'ec2/getUserRoles'];
+        const routes = ['ec2/getUsers', 'ec2/getPredefinedRoles', 'ec2/getUserRoles', 'ec2/getAccessRights'];
         return this.getRequestAggregator<t.AggregatedUsers>(routes);
     }
 

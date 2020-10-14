@@ -107,10 +107,11 @@ export class PushComponent implements OnInit, OnDestroy {
                 if (!message.notification) {
                     message.notification = {};
                 }
-                message.notification.title = message.notification.title || '';
+                message.notification.title = message.notification.title || ' ';
                 message.notification.body = message.notification.body || '';
                 this.receivedMessages.push(message);
-                const _notify = new Notification(message.notification.title, message.notification);
+                // tslint:disable-next-line:no-unused-expression
+                new Notification(message.notification.title, message.notification);
                 if (message.data) {
                     message.data = JSON.stringify(message.data);
                 }
@@ -239,7 +240,7 @@ export class PushComponent implements OnInit, OnDestroy {
                 control.setErrors({ incorrect: true });
             }
         } else {
-            return '';
+            return {};
         }
     }
 

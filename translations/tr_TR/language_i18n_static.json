@@ -1,7 +1,7 @@
 {
     "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
-    "For developers": "For developers",
+    "For developers": "Geliştiriciler İçin",
     "Integrations (β)": "Entegrasyonlar (β)",
     "Privacy": "Gizlilik",
     "Support": "Destek",
@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
         "recordingSettingsWarning": "Lütfen eksik kayıt ayarlarını güncelleyin.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Kayıt modu \"Her zaman kaydet\" olarak değiştirilecek",
         "recordingModes": {
             "always": "Her zaman kaydet",
             "motion": "Yalnızca hareketi kaydet",

@@ -151,19 +151,27 @@ Register New User and Activate the Account
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Log Out via API
+    [Arguments]    ${validate}=${True}
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Go To    ${ENV}
-    Validate Log Out
+    Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 
-Evaluate Auto System Settings via API
-    [Arguments]    ${setting}    ${selected}
-    # This need to be fixed in CLOUD-4798
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+Evaluate System Settings via API    
+    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${selected}
+    
+Evaluate Log Level via API
+    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
+    ${string}=   Convert To String    ${logLevel.json()}
+    ${selected} =    Convert To Lowercase    ${selected}
     Should Contain    ${string}    ${setting}': '${selected}
 
 Disconnect Server via API
@@ -172,9 +180,9 @@ Disconnect Server via API
     ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
-Set Auto System Settings via API
-    [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+Set System Settings via API
+    [Arguments]    ${setting}    ${state}    ${system}=${AUTO SYS IP}
+    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}
@@ -247,7 +255,7 @@ Detach Server From Cloud
 
 Get Server Name
     [Arguments]    ${system url}    ${system auth}
-    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    Create Digest Session    Get Server Name session    ${system url}    auth=${system auth}    disable_warnings=1
     ${resp}=   Get Request    Get Server Name session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     ${net address}=   Replace String    ${system url}    https://    ${EMPTY}
@@ -273,7 +281,7 @@ Rename Server
     ${old name}=   Get Server Name    ${system url}    ${system auth}
     ${id}=   Get Server Id    ${system url}    ${system auth}    ${old name}
     ${data}=   Create Dictionary    serverId=${id}    serverName=${new name}
-    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    Create Digest Session    Rename Server session    ${system url}    auth=${system auth}    disable_warnings=1
     ${resp}=   Post Request    Rename Server session     ec2/saveMediaServerUserAttributes    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
@@ -391,6 +399,13 @@ Set All Camera Add Params
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
+Get User Roles
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Get user roles    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Get user roles    /ec2/getUserRoles
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Save User
     [Arguments]
     ...    ${auth}
@@ -407,6 +422,14 @@ Save User
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
+    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Save User Existing
+    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}
+    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${True}    isCloud=${True}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200

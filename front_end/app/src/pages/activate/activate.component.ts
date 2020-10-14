@@ -45,7 +45,7 @@ export class NxActivateComponent implements OnInit {
 
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.activate;
+        this.pageService.pageTitle = this.LANG.pageTitles.activate?.();
 
         this.activate = this.processService.createProcess(() => {
             this.loading = true;
@@ -71,9 +71,9 @@ export class NxActivateComponent implements OnInit {
                     return false;
                 }
             },
-            errorPrefix: this.LANG.errorCodes.cantActivatePrefix
+            errorPrefix: this.LANG.errorCodes.cantActivatePrefix?.()
         }).then(() => {
-            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess;
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
             this.sessionStorage.store('activationSuccess', true);
             this.activationSuccess = true;
             this.loading = false;
@@ -90,14 +90,14 @@ export class NxActivateComponent implements OnInit {
             return this.cloudApiService.reactivate(this.accountInfo.email);
         }, {
             errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated,
-                notFound  : this.LANG.errorCodes.emailNotFound
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated?.(),
+                notFound  : this.LANG.errorCodes.emailNotFound?.()
             },
             holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix?.()
         }).then(() => {
-            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess;
-            this.dialogs.notify(this.LANG.account.activationLinkSent, 'success');
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
+            this.dialogs.notify(this.LANG.account.activationLinkSent?.(), 'success');
         });
     }
 
@@ -156,7 +156,7 @@ export class NxActivateComponent implements OnInit {
 
     private checkActivate() {
         if (this.accountInfo.activateCode) {
-            this.pageService.pageTitle = this.LANG.pageTitles.activateCode;
+            this.pageService.pageTitle = this.LANG.pageTitles.activateCode?.();
             this.activate.run();
         }
     }

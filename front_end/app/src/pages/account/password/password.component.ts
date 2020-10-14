@@ -77,10 +77,10 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
                 .changePassword(this.pass.newPassword, this.pass.password);
         }, {
             errorCodes: {
-                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch,
-                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch
+                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.()
             },
-            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix,
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
             ignoreUnauthorized : true
         }).then(() => {
             this.form.reset();

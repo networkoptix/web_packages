@@ -140,7 +140,7 @@ export class CloudConnectModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.LANG.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount()
             }
         }).then((result) => {
             if (result.cloudConnectionSubscriptionStatus) {

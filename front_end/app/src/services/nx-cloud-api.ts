@@ -14,7 +14,7 @@ export class NxCloudApiService {
     private CONFIG: IConfig;
 
     constructor(
-        configService: NxConfigService,
+        private configService: NxConfigService,
         private http: HttpClient,
         private cacheService: NxUriCacheService
     ) {
@@ -41,7 +41,7 @@ export class NxCloudApiService {
     }
 
     connect(systemName, email, password) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
+        return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
             name     : systemName,
             email    : email,
             password : password

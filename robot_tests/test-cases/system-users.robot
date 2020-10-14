@@ -11,7 +11,8 @@ ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
-${offline system url}     http://10.1.5.182:7077
+${offline system ip}      https://10.1.5.192
+${offline system port}    7077
 ${offline system name}    4.0_system_users_test_1
 @{TMP USERS}
 
@@ -69,15 +70,18 @@ Owner / user can unlink offline System from Cloud / Account
     Log    Prepare offline system with owner and viewer
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user email}=   Register and activate account with random email    firstName    lastName    ${password}
-    ${id}=   Create system and attach to cloud    http://10.1.5.182    7077    ${offline system name}    ${owner email}    ${password}
+    ${user 2 email}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${id}=   Create system and attach to cloud    ${offline system ip}    ${offline system port}    ${offline system name}    ${owner email}    ${password}
     @{auth}=   Create List    ${owner email}    ${password}
     Share    ${auth}    ${id}    ${ACCESS ROLES}[viewer]    ${user email}
+    Share    ${auth}    ${id}    ${ACCESS ROLES}[viewer]    ${user 2 email}
     # Make the system offline
-    Detach Server From System    ${offline system url}    ${auth}
+    Restore Factory Defaults    ${offline system ip}:${offline system port}    ${auth}
 
     Log    C41898: Step 1
     Go To    ${url}/systems/${id}
     Log In    ${user email}    ${password}    button=None
+    Wait Until Element Is Visible    ${SYSTEM OFFLINE}
     Disconnect from my account
     Log out
 
@@ -91,18 +95,18 @@ Owner / user can unlink offline System from Cloud / Account
 
     Go To    ${url}/systems/${id}
     Log In    ${owner email}    ${password}    button=None
+    Wait Until Element Is Visible    ${SYSTEM OFFLINE}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Run keyword and expect error    *    Select user in Users List    ${user email}
 
     Log    C41897: Step 1 - add user and disconnect system from cloud
-    Share    ${auth}    ${id}    ${ACCESS ROLES}[viewer]    ${user email}
     Disconnect from cloud
     Log Out
 
     Log    C41897: Step 2 - make sure viewer has no systems
-    ${systems}=   Get Account Systems    ${ENV}    ${user email}    ${password}
+    ${systems}=   Get Account Systems    ${ENV}    ${user 2 email}    ${password}
     Should Be Empty    ${systems}
-    Log In   ${user email}    ${password}
+    Log In   ${user 2 email}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 Should display same user data as user provided during registration
@@ -383,6 +387,11 @@ Share with unregistered user - brings them to registration page with code with c
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
+
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Go To Users List
+    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    Log Out
     
     Log    Step 2
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
@@ -427,9 +436,23 @@ Share with unregistered user - brings them to registration page with code with c
     Log    Step 7 skipped thick client login
     Log    Step 8
     Log Out
-    Log In    ${random email}    ${BASE PASSWORD}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Go To Users List
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    
+Share System with the same user twice
+    [Tags]    C41892
+    Log in to Auto Tests System    ${EMAIL OWNER} 
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    Delete All Emails
+    Share To    ${EMAIL ADMIN}    ${ADV VIEWER TEXT}    fail
+    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=120
+    Close Mailbox 
     
 Check share email for registered user
     [Tags]    C47297

@@ -39,11 +39,11 @@ export class DeleteCloudUserModalContent {
                     errorCodes: {
                         wrongParameters: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
-                            this.passwordError = this.LANG.passwordRequirements.missingMessage;
+                            this.passwordError = this.LANG.passwordRequirements.missingMessage();
                         },
                         wrongPassword: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordWrong: true });
-                            this.passwordError = this.LANG.errorCodes.notAuthorized;
+                            this.passwordError = this.LANG.errorCodes.notAuthorized();
                         }
                     },
                     ignoreError: true
@@ -61,7 +61,7 @@ export class DeleteCloudUserModalContent {
 
     setPassword(input) {
         this.passwordError = input.touched && input.errors?.required
-            ? this.LANG.passwordRequirements.missingMessage
+            ? this.LANG.passwordRequirements.missingMessage()
             : '';
         this.passwordForUser = input.value;
     }

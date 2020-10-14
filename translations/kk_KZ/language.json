@@ -1,6 +1,6 @@
 {
-  "language": "en_US",
-  "language_name": "LANGUAGE_NAME",
+  "language": "kk_KZ",
+  "language_name": "Kazakh",
   "cloudName": "%CLOUD_NAME%",
   "errorCodes": {
     "ok": "ok",

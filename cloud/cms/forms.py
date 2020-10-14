@@ -56,7 +56,7 @@ def get_languages_list():
 
 def generate_branding_variables(datastructure):
     cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
-                                       asset_type=get_cloud_portal_asset().asset_type)
+                                     asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
 
     brands = [

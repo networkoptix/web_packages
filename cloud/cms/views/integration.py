@@ -101,7 +101,8 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
 
                         record_value = datastructure.find_actual_value(asset=integration,
                                                                        version_id=current_version,
-                                                                       draft=show_pending or show_drafts)
+                                                                       draft=show_pending or show_drafts,
+                                                                       customization_name=settings.CUSTOMIZATION)
                         if datastructure.type in S3_STRUCTURE_TYPES:
                             record_value = record_value.replace(S3_LINK, REPLACEMENT_LINK)
 
@@ -278,6 +279,8 @@ def get_integrations(request):
         integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user))
 
     # Sort integrations by name. Ignore case.
-    integration_list.sort(key=lambda x: x["information"]["name"].lower())
+    # Name might not exist if integration was just created.
+    # This breaks the integration store for the owner of the nameless integration.
+    integration_list.sort(key=lambda x: x["information"].get("name", "~~~~").lower())
 
     return api_success({'data': integration_list})

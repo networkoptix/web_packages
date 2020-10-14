@@ -310,7 +310,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 if (filter.value) {
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied'];
+                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied']?.();
                     } else {
                         tagsSelected = filter.label;
                     }
@@ -324,7 +324,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 if (select.selected && select.selected.value !== '0') { // not default value
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied'];
+                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied']?.();
                     } else {
                         selectsSelected = select.label + '&nbsp;&ndash;&nbsp;' + select.selected.name;
                     }

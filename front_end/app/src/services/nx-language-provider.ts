@@ -1,12 +1,14 @@
-import { Injectable }              from '@angular/core';
+import { Inject, Injectable }              from '@angular/core';
 import { HttpClient }              from '@angular/common/http';
 import { TranslateService }        from '@ngx-translate/core';
 import { BehaviorSubject }         from 'rxjs';
 
 import { environment }              from '../../environments/environment';
-import { NxCloudApiService }       from './nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
-import { NxSessionService } from './session.service';
+import { NxCloudApiService }        from './nx-cloud-api';
+import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
+import { NxSessionService }         from './session.service';
+import { LocalStorageService }      from 'ngx-webstorage';
+import { WINDOW }                   from './window-provider';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -16,17 +18,29 @@ interface IParams<Value = any> {
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
-    LANG: LanguageI18NStaticTypes;
-    translateSubject = new BehaviorSubject({});
+    translations: LanguageI18NStaticTypes;
+    translateSubject = new BehaviorSubject<LanguageI18NStaticTypes>(null);
 
     constructor(private translate: TranslateService,
         private http: HttpClient,
         private cloudApiService: NxCloudApiService,
-        private sessionService: NxSessionService
+        private sessionService: NxSessionService,
+        private storageService: LocalStorageService,
+        @Inject(WINDOW) private window: Window
     ) {
         if (environment.isLocal) {
             this.currentLang = this.sessionService.language;
         }
+        this.translations = this.translate.translations[this.translate.currentLang];
+        this.translateSubject.next(this.translations);
+        this.translateSubject.subscribe(translations => {
+            this.translations = translations;
+        });
+        this.storageService.observe('language').subscribe(_ => {
+            if (!this.window.document.hasFocus()) {
+                this.window.location.reload();
+            }
+        });
     }
 
     /**
@@ -66,8 +80,8 @@ export class NxLanguageProviderService {
             : this.cloudApiService.getLanguage()).toPromise();
     }
 
-    setTranslations(lang: string, json: JSON): void {
-        this.translate.setTranslation(lang, json);
+    setTranslations(lang: string, translation): void {
+        this.translate.setTranslation(lang, translation);
         this.translate.currentLang = lang;
 
         this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
@@ -75,10 +89,6 @@ export class NxLanguageProviderService {
 
     public get currentLanguage(): string {
         return this.translate.currentLang;
-    }
-
-    public get translations(): LanguageI18NStaticTypes {
-        return this.translate.translations[this.translate.currentLang];
     }
 
     public set newTranslation(translate: { language: string, json: JSON }) {
@@ -93,7 +103,12 @@ export class NxLanguageProviderService {
     }
 
     public set currentLang(language: string) {
+        if (language === this.translate.currentLang) {
+            return;
+        }
         this.translate.currentLang = language;
-        this.sessionService.language = language;
+        this.loadLanguage().then(translation => {
+            this.setTranslations(language, translation);
+        });
     }
 }

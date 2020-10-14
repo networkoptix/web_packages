@@ -16,7 +16,7 @@
     }
     // Microsoft Edge
     ::-ms-input-placeholder {
-        color : red;
+        color : $color;
         font-family: theme_variables.$font-family-regular;
     }
     // Safari and Chrome

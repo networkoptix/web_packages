@@ -64,6 +64,17 @@ def get_variables(cloud_url, test_email):
                       json={"name":"Auto Tests"})
     y = x.json()
     vars["AUTOTESTS 2 SERVER OFFLINE SYSTEM ID"] = y["systems"][0]["id"]
+    
+    #get the system id for the Advanced Settings and add it to the dictionary
+    r = requests.post(f"{cloud_url}/cdb/system/get",
+                      auth=HTTPDigestAuth(f"{test_email}+advsetanchor@gmail.com", "qweasd 123"),
+                      json={"name": "Auto Tests"})
+    s = r.json()
+    sys_id = s["systems"][0]["id"]
+    vars["ADVANCED SETTINGS SYSTEM ID"] = sys_id
+    r = requests.get(f"https://{sys_id}.{relay}/api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null",
+                     auth=HTTPDigestAuth("admin", "qweasd 123"),
+                     verify=False)
 
     domain = cloud_url.split('//')[1]
     key = domain.split('.')[0]

@@ -1,5 +1,5 @@
 *** Variables ***
-${HOST}
+${HOST}                               https://10.1.5.115
 ${MERGE BUTTON SYSTEM}                //button[span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled and span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE DIALOG}                       //nx-modal-merge-content
@@ -16,6 +16,7 @@ ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-h
 ${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1/span[contains(text(),"${SYSTEM MERGE FAILED TEXT}")]
 ${MERGE FAILED OK BUTTON}             //nx-modal-generic-content//button[contains(text(),"${OK TEXT}")]
 ${MERGE FAILED X BUTTON}              //nx-modal-generic-content//button[contains(@class,"close")]
+${MERGE FAILED ERROR TEXT}            //nx-modal-generic-content//div[contains(@class, "modal-body")]/p
 ${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//p[contains(text(),"${MERGE CURRENT SYSTEM WITH TEXT}")]
 ${MERGE ENTER THE ADDRESS}            ${MERGE DIALOG}//p[contains(text(),"${MERGE ENTER THE ADDRESS TEXT}")]
 ${MERGE ONLY AS OWNER}                ${MERGE DIALOG}//p[contains(text(),"${YOU CAN ONLY MERGE AS OWNER TEXT}")]
@@ -51,7 +52,9 @@ ${MERGE RADIO SECOND SYSTEM}          ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@na
 ${MERGE TAKE SYSTEM NAME}             ${MERGE CHOOSE PRIMARY FORM}//p[contains(text(), "${TAKE SYSTEM NAME AND SETTINGS TEXT}")]
 
 ${CONFIRM MERGE FORM}                 ${MERGE DIALOG}//form[@name="confirmMergeForm"]
-${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
+${CONFIRM MERGE TEXT}                 ${CONFIRM MERGE FORM}/div/p
+#${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
+#${MERGE SETTINGS WILL BE TAKEN}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
 ${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
 ${MERGE PASSWORD INPUT}               ${CONFIRM MERGE FORM}//input[@name="cloudOwnerPassword"]
 ${MERGE SYSTEMS BUTTON}               ${CONFIRM MERGE FORM}//button[@type="submit" and text()="${MERGE SYSTEMS TEXT}"]

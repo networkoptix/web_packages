@@ -7,10 +7,20 @@
      triggers="hover">
 
     <div class="total-label" [innerHTML]="totalSpaceLabel"></div>
-    <div class="bar reserved" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="reservedPercentage"></div>
-    <div class="bar available" [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}" [style.width.%]="availPercentage"></div>
-    <div class="bar archive" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="archivePercentage"></div>
-    <div class="bar used" [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}" [style.width.%]="usedPercentage"></div>
+    <div class="bar available"
+        [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}"
+        [style.width.%]="100"></div>
+    <div class="bar used" 
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [style.width.%]="usedPercentage"></div>
+    <div class="bar archive"
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [style.left.%]="usedPercentage"
+        [style.width.%]="archivePercentage"></div>
+    <div class="bar reserved"
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [style.right.%]="0"
+        [style.width.%]="reservedPercentage"></div>
 </div>
 
 <ng-template #popLegend>

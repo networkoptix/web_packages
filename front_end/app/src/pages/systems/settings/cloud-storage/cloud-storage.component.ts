@@ -78,7 +78,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     ngOnInit() {
         this.setupDefaults();
-        this.cloudStorageInital = NxLanguageProviderService.translate(this.LANG.dialogs.cloudStorage.initial, { compCapacity: this.compCloudCapacity });
+        this.cloudStorageInital = NxLanguageProviderService.translate(this.LANG.dialogs.cloudStorage.initial?.(), { compCapacity: this.compCloudCapacity });
         this.layoutSimple = (this.layout && this.layout === 'simple');
         this.initEnableCloudStorageProcess();
     }
@@ -143,7 +143,7 @@ export class NxCloudStorageComponent implements OnInit {
 
         const single = this.usageStats.archiveFrom === 1;
         const { camera, cameras } = this.LANG.dialogs.cloudStorage;
-        return `${this.usageStats.archiveFrom} ${single ? camera : cameras}`;
+        return `${this.usageStats.archiveFrom} ${single ? camera?.() : cameras?.()}`;
     }
 
     // String methods for view
@@ -200,14 +200,14 @@ export class NxCloudStorageComponent implements OnInit {
         }, {
             errorCodes: {
                 cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized;
+                    return this.LANG.errorCodes.notAuthorized?.();
                 },
                 networkConnection: () => {
                     return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success,
-            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix
+            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success?.(),
+            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix?.()
         }).then(() => {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();

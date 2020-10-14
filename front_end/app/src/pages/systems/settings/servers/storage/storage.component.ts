@@ -6,7 +6,7 @@ import {
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, filter
+    map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -17,6 +17,7 @@ import { NxToastService }            from '../../../../../dialogs/toast.service'
 import { NxSystem }                  from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { ChildRoutes, NxUriService } from '@services/uri.service';
 
 enum MODE {
     MAIN = 0,
@@ -59,6 +60,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     percentBackupDone = 0;
     storage$ = new BehaviorSubject<any[] | any>([]);
     refreshStorages$ = new Subject<any>();
+    dropdownOffset$ = new BehaviorSubject(0);
+    scrollOffset$ = new BehaviorSubject(0);
 
     doesBackupExist = false;
     customSettings = false;
@@ -72,6 +75,12 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     STATUS: any;
     reindexingMainSubscription: Subscription;
     reindexingBackupSubscription: Subscription;
+    dropdownOffsetCalc$ = combineLatest([
+        this.dropdownOffset$.pipe(distinctUntilChanged()),
+        this.scrollOffset$.pipe(distinctUntilChanged())
+    ]).pipe(
+        map(([offset, scroll]) => offset - scroll + 22) // margin offset
+    )
 
     mainStorageIds: string[] = [];
     backupStorageIds: string[] = [];
@@ -84,7 +93,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         private toastService: NxToastService,
         private processService: NxProcessService,
         private applyService: NxApplyService,
-        @Inject(LOCALE_ID) private locale: string
+        @Inject(LOCALE_ID) private locale: string,
+        private uriService: NxUriService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -182,19 +192,11 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
                     this.loading = false;
                 });
-            this.system.getStorages({ id: this.serverId }).toPromise()
-                .then(storages => {
-                    this.refreshStorages$.next(storages);
-                });
-
             this.systemSubscription = this.system.infoSubject
-                .pipe(filter(res => res !== undefined))
-                .subscribe(() => {
-                    this.system.getStorages({ id: this.serverId }).toPromise()
-                        .then(storages => {
-                            this.refreshStorages$.next(storages);
-                        });
-                });
+                .pipe(
+                    filter(res => res !== undefined),
+                    switchMap(() => this.system.getStorages({ id: this.serverId }))
+                ).subscribe(this.refreshStorages$);
             this.getSystemStorages();
         }
     }
@@ -244,7 +246,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         }
     }
 
-    setDefaultBackupSettings = async () => {
+    setDefaultBackupSettings = async() => {
         try {
             await this.system.updateOrGetBackupControl(this.serverId, 'start');
             await this.system.updateOrGetSystemSettings({
@@ -270,7 +272,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         }
     }
 
-    turnOffBackup = async () => {
+    turnOffBackup = async() => {
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
         if (backupControlRes?.reply.state !== 'BackupState_None') {
@@ -319,7 +321,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         let numOfMains = 0;
         let isUpdating = false;
         storage.forEach(({ isBackup, isUsedForWriting, status, updating }) => {
-            if (isUsedForWriting) {
+            if (isUsedForWriting && status !== STORAGE_STATUS.INACCESSIBLE) {
                 isBackup ? status === 0 && numOfBackups++ : numOfMains++;
             }
             if (updating) isUpdating = true;
@@ -341,8 +343,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.storageEmit.emit(storage);
     }
 
-    getModes(mainOnly = false) {
-        return this.modes.map((mode, index) => ({ ...mode, disabled: mainOnly && index }));
+    getModes(store) {
+        return this.modes.map((mode, index) => ({ ...mode, disabled: store.mainOnly && index }));
     }
 
     getArchiveSpace(usage, storageId): number {
@@ -378,6 +380,14 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         } else {
             return this.modes[MODE.BACKUP];
         }
+    }
+
+    updateFirstColumnSize({ width }) {
+        this.dropdownOffset$.next(width);
+    }
+
+    handleScroll(event) {
+        this.scrollOffset$.next(event.target.scrollLeft);
     }
 
     changeMode(
@@ -427,24 +437,33 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     calcDDWidth() {
-        const longest = this.modes.reduce((a, b) => {
-            if (b.name === 'horizontal' || a.name.length > b.name.length) {
-                return a;
-            }
-            if (a.name === 'horizontal' || a.name.length < b.name.length) {
-                return b;
-            }
-        });
+        const modes: {
+            [key: string]: string
+        } = Object.entries(this.LANG.storage.modes).reduce((accum, [key, value]) => ({ ...accum, [key]: value() }), {});
+        // Add max additional width here for each key of this.LANG.storage.modes
+        const addWidth = {
+            disabled : 36,
+            reserved : 36,
+            main     : 36,
+            notInUse : 56
+        };
 
-        // calculate dd size ... for simplicity a span is used
-        const dd = document.createElement('span');
-        dd.style.visibility = 'hidden';
-        dd.innerText = longest.name;
-        document.body.appendChild(dd);
-        // add button's left and right padding and space for info icon
-        this.ddWidth = Math.round(dd.getBoundingClientRect().width + 80);
+        this.ddWidth = Object.entries(modes).reduce((width, current) => {
+            const [key, currentText] = current;
+            // calculate dd size ... for simplicity a span is used
+            const dd = document.createElement('span');
+            dd.style.visibility = 'hidden';
+            dd.innerText = currentText;
+            document.body.appendChild(dd);
+            // add button's left and right padding and space for info icon
+            const iconWidths = addWidth[key] || 16;
+            const currentWidth = Math.round(
+                dd.getBoundingClientRect().width + iconWidths
+            );
 
-        document.body.removeChild(dd);
+            document.body.removeChild(dd);
+            return Math.max(width, currentWidth);
+        }, 0);
     }
 
     deleteStorage(storage) {
@@ -566,5 +585,23 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
             this.system.rebuildArchive(this.serverId, 0, 'stop').toPromise();
             this.reindexingBackupSubscription.unsubscribe();
         }
+    }
+
+    getStorageTypeTooltip(storageType: string) {
+        return this.LANG.system.storageToolTips[storageType.toLowerCase()]();
+    }
+
+    get infoPath() {
+        return this.uriService.getSystemSettingsRoute({
+            systemId   : this.system.id,
+            childRoute : ChildRoutes.HEALTH
+        }) + 'storages';
+    }
+
+    get canSeeInfo() {
+        return (this.CONFIG.cloudCapabilities.healthMonitoring ||
+            this.system.info.capabilities &&
+            this.system.info.capabilities.vms_metrics) &&
+            this.system.canViewInfo();
     }
 }

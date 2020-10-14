@@ -19,7 +19,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             chunks: ['commons', 'webInline', 'inline'],
             chunksSortMode: 'manual',
-            template: 'index.html',
+            template: 'index-template.html',
             filename: 'inline.html',
             inject:false
         }),

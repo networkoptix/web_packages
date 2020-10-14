@@ -2,15 +2,15 @@
         *ngIf="!loading && !showStorage"
         svgFileName="system_settings_placeholder"
         width="64"
-        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
 </nx-section-placeholder>
 
 <nx-block type="my-3 storage-info" *ngIf="!loading && (storage$ | async).length">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
-            <div class="buttons">
-                <button class="server-buttons pr-0">
+            <div *ngIf="canSeeInfo" class="buttons">
+                <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
                         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                   [applyClass]="true"></svg-icon>
@@ -23,7 +23,11 @@
 
     <nx-section nonPadded>
         <div class="storage-container">
-            <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
+            <form class="form form-horizontal"
+                (scroll)="handleScroll($event)"
+                role="form"
+                name="storageSettings"
+                novalidate>
                 <table [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
                     <thead>
                         <tr>
@@ -36,16 +40,18 @@
 
                     <tbody>
                         <tr class="table-row-spacer" [ngClass]="{'hasAction' : (storage$ | async).hasAction}"></tr>
-                        <tr *ngFor="let store of (storage$ | async)">
-                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE || store.updating }">
+                        <tr *ngFor="let store of (storage$ | async); let row=index">
+                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE || store.updating }"
+                                (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
                                         nx-add-svg-src
                                         class="mr-1"
+                                        [ngbTooltip]="getStorageTypeTooltip(store.storageType)"
                                         [src]="CONFIG.icons.dir + 'storage_' + store.storageType + '.svg'">
                                 </svg-icon>
                                 <span class="ellipsis">{{store.url}}</span>
                             </td>
-                            <td *ngIf="!store.updating; else changingMode" [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.minWidth.px]="ddWidth" [ngSwitch]="store.status">
+                            <td *ngIf="!store.updating; else changingMode" [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.width.px]="ddWidth" [ngSwitch]="store.status">
                                 <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >
                                     <span translate>Reserved</span>
                                     <svg-icon nx-add-svg-src
@@ -60,18 +66,22 @@
                                 </div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
                                 <div *ngSwitchCase="STATUS.REINDEXING" translate>Reindexing...</div>
-                                <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.minWidth.px]="ddWidth">
+                                <div *ngSwitchCase="STATUS.IN_USE" 
+                                    class="position-absolute"
+                                    [style.left.px]="dropdownOffsetCalc$ | async"
+                                    [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"
-                                        [items]="getModes(store.mainOnly)"
+                                        [items]="getModes(store)"
                                         [selected]="selectMode(store)"
-                                        (onSelected)="changeMode(store, $event)">
+                                        (onSelected)="changeMode(store, $event)"
+                                        [hrMargin]="true">
                                     </nx-select>
                                 </div>
                             </td>
                             <ng-template #changingMode>
-                                <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.minWidth.px]="ddWidth">
+                                <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.width.px]="ddWidth">
                                     <div class="disabled-label" >
-                                        <span translate>Changing mode...</span>
+                                        <span>{{LANG.storage.modes.changing()}}</span>
                                     </div>
                                 </td>
                             </ng-template>

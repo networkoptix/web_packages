@@ -80,7 +80,7 @@ export class NxContentComponent implements OnInit {
         this.agreeProcess = this.processService.createProcess(() => {
             return this.cloudApiService.acceptAgreement(this.agreementDetails.review_id);
         }, {
-            successMessage: this.LANG.account.agreementAccepted
+            successMessage: this.LANG.account.agreementAccepted?.()
         }).then(() => {
             this.showAgree = false;
             if (this.account.is_staff) {

@@ -1,4 +1,5 @@
 @use "../../../../styles/theme_variables" as *;
+@use '~bootstrap/scss/bootstrap';
 
 .main-button {
     margin-right: 26px;
@@ -58,6 +59,15 @@
         padding-right: 16px !important;
         padding-left: 0 !important;
     }
+
+    &.hide-title > #systemsDropdown {
+        @include bootstrap.media-breakpoint-down(xs) {
+            padding-right: 0 !important;
+            span {
+                display: none !important;
+            }
+        }
+    }
 }
 
 .popup {
@@ -69,7 +79,7 @@
         z-index: 9999 !important;
         border-bottom-color: $light6 !important;
         transform: translateY(3px);
-        & > svg-icon {
+        &::after {
             border-bottom-color: $additional_light1 !important;
         }
     }

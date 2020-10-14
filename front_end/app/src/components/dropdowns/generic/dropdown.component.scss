@@ -9,6 +9,9 @@ nx-select {
         width: 95%;
         margin: 6px auto;
         border-color: $light6;
+        &.narrow-hr {
+            width: calc(95% - 16px);
+        }
     }
 
     .additional-help {

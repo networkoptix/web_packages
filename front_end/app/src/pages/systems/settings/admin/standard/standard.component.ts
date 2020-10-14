@@ -102,7 +102,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             if (previousValue === undefined && currentValue) {
                 this.cleanUpWatchers(currentValue);
             }
-            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue) && !firstChange) {
+            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue) && !firstChange && !this.applyService.locked) {
                 this.setWatcherValues(currentValue);
             }
         }
@@ -164,7 +164,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
         this.setWarningMessageThroughApplyService = () => {
             if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
-                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
+                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
             } else {
                 this.applyService.setWarn('');
             }
