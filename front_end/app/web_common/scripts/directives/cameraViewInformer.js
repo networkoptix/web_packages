@@ -84,7 +84,7 @@
                 // ... on Safari - 'nx.player.playing' will be fired while
                 // switching playing camera to camera with not supported video
                 // and prevent error msg from displaying
-                scope.condition = !(scope.player !== false && scope.player !== undefined && scope.flags.status === 'Unauthorized');
+                scope.condition = !scope.player && scope.flags.status === 'Unauthorized';
             });
         }
 
