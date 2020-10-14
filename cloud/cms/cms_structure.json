@@ -1860,6 +1860,15 @@
             "meta": {
               "regex": "^https?:\\/\\/([\\da-z\\.~_-]+)\\.([a-z\\.]{2,6})([\\/\\w ~\\.-]*)*\\/?$"
             }
+          },
+          {
+            "name": "supportWebText",
+            "label": "Support web text",
+            "value": "",
+            "description": "Hyperlink text for support url",
+            "placeholder": "support text",
+            "type": "text",
+            "optional": true
           }
         ]
       },

@@ -79,8 +79,8 @@
                      id="info-support-phone"></div>
                 <div *ngIf="plugin.support.supportWeb">
                     <a [href]="plugin.support.supportWeb"
-                       target="_blank"
-                       id="info-support-url">{{plugin.support.supportWeb}}</a>
+                       target="_blank" id="info-support-url"
+                       [innerText]="plugin.support.supportWebText || plugin.support.supportWeb"></a>
                 </div>
                 <div *ngIf="plugin.support.supportEmail">
                     <a href="mailto:{{plugin.support.supportEmail}}"
