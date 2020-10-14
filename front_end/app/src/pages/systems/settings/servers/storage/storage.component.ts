@@ -33,6 +33,13 @@ enum STORAGE_STATUS {
     REINDEXING
 }
 
+enum STORAGE_TYPES {
+    LOCAL = 'local',
+    USB = 'usb',
+    NETWORK = 'smb',
+    CLOUD = 'cloud'
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-storage-component',
@@ -47,6 +54,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     viewContainerRef: ViewContainerRef;
+    storageTypes = STORAGE_TYPES
 
     loading: boolean;
     showStorage: boolean;
@@ -181,6 +189,11 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                         if (store.status === STORAGE_STATUS.IN_USE && store.isUsedForWriting) {
                             store.isBackup ? this.backupStorageIds.push(store.storageId)
                                 : this.mainStorageIds.push(store.storageId);
+                        }
+                        const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
+                        if (store.status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(store.storageType)) {
+                            store.hasAction = true;
+                            storage.hasAction = true;
                         }
 
                         storage[idx] = { ...store };
@@ -320,11 +333,15 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         let numOfBackups = 0;
         let numOfMains = 0;
         let isUpdating = false;
-        storage.forEach(({ isBackup, isUsedForWriting, status, updating }) => {
+        storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
             if (isUsedForWriting && status !== STORAGE_STATUS.INACCESSIBLE) {
                 isBackup ? status === 0 && numOfBackups++ : numOfMains++;
             }
-            if (updating) isUpdating = true;
+            if (updating) {
+                isUpdating = true
+            };
+            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD]
+            hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
         if (numOfMains === 1) {
@@ -339,8 +356,21 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         } else {
             this.isBackupOn.value = false;
         }
-        this.storage$.next(storage);
-        this.storageEmit.emit(storage);
+        const sortByTypeAndUrl = (
+            { storageType: aType, url: aUrl }, 
+            { storageType: bType, url: bUrl }
+        ) => {
+            const {LOCAL, USB, NETWORK, CLOUD} = STORAGE_TYPES;
+            const typeOrder = [LOCAL, USB, NETWORK, CLOUD];
+            if (aType === bType) {
+                return aUrl < bUrl ? -1 : 1;
+            }
+            return typeOrder.indexOf(aType) - typeOrder.indexOf(bType) 
+        }
+    
+        const sortedStrorage = storage.sort(sortByTypeAndUrl)
+        this.storage$.next(sortedStrorage);
+        this.storageEmit.emit(sortedStrorage);
     }
 
     getModes(store) {
@@ -482,6 +512,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                             if (response.id) {
                                 this.init();
                             }
+                        }).catch(_ => {
+                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, {url: storage.url}), 'warning');
                         });
                 }
             });

@@ -88,11 +88,9 @@
                             <td class="size-chart">
                                 <nx-storage-size-component [store]="store"></nx-storage-size-component>
                             </td>
-                            <td *ngIf="(storage$ | async).hasAction" [ngSwitch]="store.status" class="d-flex justify-content-end">
+                            <td *ngIf="(storage$ | async).hasAction" class="d-flex justify-content-end">
                                 <!-- Add settings button -->
-                                <button *ngSwitchCase="STATUS.INACCESSIBLE"
-                                        class="btn btn-text has-icon"
-                                        (click)="deleteStorage(store)">
+                                <button class="btn btn-text has-icon" *ngIf="store.storageType !== storageTypes.CLOUD" (click)="deleteStorage(store)">
                                     <svg-icon
                                             nx-add-svg-src
                                             [src]="CONFIG.icons.dir + 'delete.svg'"></svg-icon>
