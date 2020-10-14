@@ -86,7 +86,7 @@
         }
 
         .bottom-shadow-cover {
-            position: absolute;
+            position: sticky;
             bottom: 0;
             background: $light5;
             width: 100%;
