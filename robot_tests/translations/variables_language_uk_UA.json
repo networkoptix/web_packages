@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Налаштування водяного знака",
     "WEB SOCKET ENABLED TEXT": "Веб-сокети",
     "STORAGE LOCATIONS TEXT": "Місця зберігання",
-    "LOG SETTINGS TEXT": "Налаштування журналу"
+    "LOG SETTINGS TEXT": "Налаштування журналу",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

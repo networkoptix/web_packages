@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Nastavení vodoznaku",
     "WEB SOCKET ENABLED TEXT": "Webové zásuvky",
     "STORAGE LOCATIONS TEXT": "Umístění uložiště",
-    "LOG SETTINGS TEXT": "Deník nastavení"
+    "LOG SETTINGS TEXT": "Deník nastavení",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

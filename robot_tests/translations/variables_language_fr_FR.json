@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "Paramètres du filigrane",
     "WEB SOCKET ENABLED TEXT": "Sockets Web",
     "STORAGE LOCATIONS TEXT": "Emplacements du stockage",
-    "LOG SETTINGS TEXT": "Paramètres journal"
+    "LOG SETTINGS TEXT": "Paramètres journal",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

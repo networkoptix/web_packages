@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "카메라 설정",
     "WEB SOCKET ENABLED TEXT": "웹 소켓",
     "STORAGE LOCATIONS TEXT": "저장 위치",
-    "LOG SETTINGS TEXT": "로그 설정"
+    "LOG SETTINGS TEXT": "로그 설정",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }

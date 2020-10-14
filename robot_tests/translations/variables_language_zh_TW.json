@@ -422,5 +422,6 @@
     "WATERMARK SETTINGS TEXT": "浮水印設定",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "儲存位置",
-    "LOG SETTINGS TEXT": "日誌設定"
+    "LOG SETTINGS TEXT": "日誌設定",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
 }
