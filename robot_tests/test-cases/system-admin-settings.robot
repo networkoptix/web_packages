@@ -484,6 +484,16 @@ System settings block view for different System versions
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until System Settings Are Visible
+    Log Out
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until System Settings Are Visible
+    Log Out
+    Go To    ${url}/systems/${3 DOT 2 SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until System Settings Are Visible
 
 
 Security block is not available for other users
@@ -744,8 +754,11 @@ Security block view for 3 dot 2 System
     Set 3 dot 2 System Settings via API    auditTrailEnabled    true
     Log    Step 1 covered in other testcases by default
     Log    Step 2
-    Go To    ${url}/systems
-    Log In     ${EMAIL MERGE OWNER 3.0}    ${BASE PASSWORD}    button=None
+    Go To    ${url}/systems/${3 DOT 2 SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible
     ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked

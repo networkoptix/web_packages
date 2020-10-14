@@ -189,7 +189,7 @@ Set System Settings via API
     
 Set 3 dot 2 System Settings via API
     [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
+    Create Digest Session    returnedSetting    https://10.1.5.238:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}
