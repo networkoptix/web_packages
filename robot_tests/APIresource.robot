@@ -12,11 +12,11 @@ ${customization}    default
 Merge Systems
     [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
-    &{data}=   Create Dictionary    systemId=${secondary id}
+    ${data}=   Create Dictionary    systemId=${secondary id}
     Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
