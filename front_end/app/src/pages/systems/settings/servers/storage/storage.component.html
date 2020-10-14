@@ -23,7 +23,11 @@
 
     <nx-section nonPadded>
         <div class="storage-container">
-            <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
+            <form class="form form-horizontal"
+                (scroll)="handleScroll($event)"
+                role="form"
+                name="storageSettings"
+                novalidate>
                 <table [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
                     <thead>
                         <tr>
@@ -36,8 +40,9 @@
 
                     <tbody>
                         <tr class="table-row-spacer" [ngClass]="{'hasAction' : (storage$ | async).hasAction}"></tr>
-                        <tr *ngFor="let store of (storage$ | async)">
-                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE || store.updating }">
+                        <tr *ngFor="let store of (storage$ | async); let row=index">
+                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE || store.updating }"
+                                (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
                                         nx-add-svg-src
                                         class="mr-1"
@@ -61,11 +66,15 @@
                                 </div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
                                 <div *ngSwitchCase="STATUS.REINDEXING" translate>Reindexing...</div>
-                                <div *ngSwitchCase="STATUS.IN_USE" class="position-absolute" [style.width.px]="ddWidth">
+                                <div *ngSwitchCase="STATUS.IN_USE" 
+                                    class="position-absolute"
+                                    [style.left.px]="dropdownOffsetCalc$ | async"
+                                    [style.minWidth.px]="ddWidth">
                                     <nx-select [type]="'clear-fit'"
                                         [items]="getModes(store)"
                                         [selected]="selectMode(store)"
-                                        (onSelected)="changeMode(store, $event)">
+                                        (onSelected)="changeMode(store, $event)"
+                                        [hrMargin]="true">
                                     </nx-select>
                                 </div>
                             </td>

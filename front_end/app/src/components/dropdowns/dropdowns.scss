@@ -64,6 +64,9 @@ header {
     }
 
     &-clear-fit {
+        & button.btn-dropdown-toggle {
+            box-shadow: none !important;
+        }
         .btn-dropdown-toggle {
             @include typography.regular13;
             background-color : transparent !important;

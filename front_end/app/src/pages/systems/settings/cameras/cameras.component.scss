@@ -69,7 +69,7 @@
         .camera-buttons {
             flex: 0 0 auto;
             &:hover {
-                color: $dark15;
+                color: $dark15 !important;
                 svg-icon {
                     svg {
                         g,
@@ -82,7 +82,7 @@
             @include typography.regular13;
             // flex: 0 0 auto;
             background-color: inherit;
-            color: $light16;
+            color: $light16 !important;
             display: flex;
             align-items: center;
             white-space: nowrap;

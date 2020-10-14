@@ -4,11 +4,9 @@ import {
     SimpleChanges, OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
+import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
 import {
-    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer
-}                                    from 'rxjs';
-import {
-    map, first, takeUntil, delay, retryWhen, filter, switchMap
+    map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -62,6 +60,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     percentBackupDone = 0;
     storage$ = new BehaviorSubject<any[] | any>([]);
     refreshStorages$ = new Subject<any>();
+    dropdownOffset$ = new BehaviorSubject(0);
+    scrollOffset$ = new BehaviorSubject(0);
 
     doesBackupExist = false;
     customSettings = false;
@@ -75,6 +75,12 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     STATUS: any;
     reindexingMainSubscription: Subscription;
     reindexingBackupSubscription: Subscription;
+    dropdownOffsetCalc$ = combineLatest([
+        this.dropdownOffset$.pipe(distinctUntilChanged()),
+        this.scrollOffset$.pipe(distinctUntilChanged())
+    ]).pipe(
+        map(([offset, scroll]) => offset - scroll + 22) // margin offset
+    )
 
     mainStorageIds: string[] = [];
     backupStorageIds: string[] = [];
@@ -374,6 +380,14 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         } else {
             return this.modes[MODE.BACKUP];
         }
+    }
+
+    updateFirstColumnSize({ width }) {
+        this.dropdownOffset$.next(width);
+    }
+
+    handleScroll(event) {
+        this.scrollOffset$.next(event.target.scrollLeft);
     }
 
     changeMode(

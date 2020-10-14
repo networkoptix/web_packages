@@ -40,7 +40,7 @@
         }
         .server-buttons {
             &:hover {
-                color: $dark15;
+                color: $dark15 !important;
                 svg-icon {
                     svg {
                         g, path {
@@ -51,7 +51,7 @@
             }
             @include typography.regular13;
             background-color: inherit;
-            color: $light16;
+            color: $light16 !important;
             display: flex;
             align-items: center;
             white-space: nowrap;
