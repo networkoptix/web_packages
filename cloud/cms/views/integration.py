@@ -109,11 +109,16 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
 
                     if context_dict:
                         integration_dict[context_name] = context_dict
-                        if context.name == "downloadFiles":
+                        if context_name == "downloadFiles":
                             downloads_order = {}
                             for datastructure in context.datastructure_set.all():
                                 downloads_order[datastructure.name] = datastructure.order
                             integration_dict[f"{context_name}Order"] = downloads_order
+
+                        elif context_name == "support":
+                            if integration_dict['support'].get('hideEmail'):
+                                del integration_dict['support']['supportEmail']
+                                del integration_dict['support']['hideEmail']
 
                 if not integration_dict:
                     continue

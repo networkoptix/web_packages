@@ -1817,6 +1817,15 @@
         "translatable": false,
         "values": [
           {
+            "name": "hideEmail",
+            "label": "Hide email",
+            "value": false,
+            "description": "Hides the support email from the frontend",
+            "type": "check_box",
+            "optional": true,
+            "advanced": true
+          },
+          {
             "name": "supportEmail",
             "label": "Support E-mail",
             "value": "",
