@@ -80,8 +80,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     private modelSubscription: SubscriptionLike;
 
     private params: any = {};
-    private showAdvancedOptions: boolean;
 
+    public showAdvancedOptions: boolean;
     public advSearch = false;
 
     private searchUpdated: any = Subject;
@@ -414,8 +414,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 }
             });
         }
-
         this.uri.pageOffset = window.pageYOffset;
+        // make sure we reset page on new model
+        queryParams.page = undefined;
 
         return this.uri.updateURI(this.uri.getURL(), queryParams);
     }
