@@ -106,18 +106,33 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
-        return this.system.getCameraRecords(cid, 0, now, 1e10).then(ar => {
+        // return this.system.getCameraRecords(cid, 0, now, 1e10).then(ar => {
+        //   // console.log('got camera archive range', cid, ar)
+        //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+        //     // console.log('empty archive')
+        //   } else try {
+        //     const reply = ar.reply[0]
+        //     archiveRanges[cid] = {
+        //       start: parseInt(reply.startTimeMs),
+        //       end: parseInt(reply.startTimeMs) + parseInt(reply.durationMs) || now,
+        //     }
+        //     archives[cid] = ar.reply.map(r => new SimpleTimeRange(r.startTimeMs, r.startTimeMs + r.durationMs))
+        //     // console.log('non-empty archive', cid, archiveRanges[cid], ar)
+        //   } catch (e) {
+        //     console.warn(e, 'caught while requesting camera archive ranges')
+        //   }
+        // })
+        return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
           // console.log('got camera archive range', cid, ar)
           if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
             // console.log('empty archive')
           } else try {
-            const reply = ar.reply[0]
             archiveRanges[cid] = {
-              start: parseInt(reply.startTimeMs),
-              end: parseInt(reply.startTimeMs) + parseInt(reply.durationMs) || now,
+              start: parseInt(ar.reply[0].startTimeMs),
+              end: parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
             }
             archives[cid] = ar.reply.map(r => new SimpleTimeRange(r.startTimeMs, r.startTimeMs + r.durationMs))
-            // console.log('non-empty archive', cid, archiveRanges[cid], ar)
+            console.log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
           } catch (e) {
             console.warn(e, 'caught while requesting camera archive ranges')
           }

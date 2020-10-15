@@ -1473,7 +1473,7 @@ export class NxSystem extends System implements OnDestroy {
 
     protected _setMediaServersAndCameras (api_reply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        let mss = api_reply['ec2/getMediaServersEx'];
+        let mss = api_reply['ec2/getMediaServersEx'] || api_reply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
         let cs = api_reply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resource_types => {

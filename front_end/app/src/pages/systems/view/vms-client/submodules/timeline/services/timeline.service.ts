@@ -30,6 +30,11 @@ export class TimelineService {
   protected _subject = new Subject<TimelineServiceStatus>()
   protected _canvasGeometryUpdateRequested: boolean = true
 
+  public constructor () {
+    this._onAnimationFrame = this._onAnimationFrame.bind(this)
+    requestAnimationFrame(this._onAnimationFrame)
+  }
+
   public get canvasGeometryUpdateRequested () {
     return this._canvasGeometryUpdateRequested
   }
@@ -157,7 +162,7 @@ export class TimelineService {
     this._emit()
   }
 
-  public stepScrollToStartTime (targetT: ms, step = cfg.SCROLL_STEP) {
+  public stepScrollToStartTime (targetT: ms) {
     if (targetT > this._fullRange.end - this._visibleRange.duration) {
       targetT = this._fullRange.end - this._visibleRange.duration
     }
@@ -165,12 +170,49 @@ export class TimelineService {
       targetT = this._fullRange.start
     }
     const dt = targetT - this._visibleRange.start
-    const offset = Math.round(dt * step)
+    const offset = Math.round(dt)
     this._visibleRange.shift(offset)
   }
 
-  public jumpScrollTo (targetT: ms) {
-    this.stepScrollToStartTime(targetT, 1.0)
+  protected _scrollAnimationDurationMs = 200
+  protected _scrollAnimationStartTime: ms
+  protected _initialScrollMs: ms
+  protected _targetScrollMs: ms
+
+  public jumpScrollTo (targetT: ms, animate: boolean = false) {
+    if (animate) {
+      this._scrollAnimationStartTime = Date.now()
+      this._initialScrollMs = this._visibleRange.start
+      this._targetScrollMs = targetT
+    }
+    else {
+      this.stepScrollToStartTime(targetT)
+    }
+  }
+
+  protected _onAnimationFrame () {
+    const now = Date.now()
+    const diff = now - this._scrollAnimationStartTime
+    if (diff < this._scrollAnimationDurationMs) {
+      const percentage = diff / this._scrollAnimationDurationMs
+      const diffMs = (this._targetScrollMs - this._initialScrollMs)
+      const current = this._initialScrollMs + diffMs * percentage
+      this.stepScrollToStartTime(current)
+      // console.log(
+      //   'animation progress',
+      //   percentage,
+      //   current,
+      //   new Date(current),
+      //   this._scrollAnimationDurationMs,
+      //   this._scrollAnimationStartTime,
+      //   this._initialScrollMs,
+      //   this._targetScrollMs,
+      // )
+    } else if (this._targetScrollMs) {
+      this.stepScrollToStartTime(this._targetScrollMs)
+      this._targetScrollMs = undefined
+    }
+    requestAnimationFrame(this._onAnimationFrame)
   }
 }
 

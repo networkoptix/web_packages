@@ -9,12 +9,15 @@ import {
   createInitialStoppedState,
   createInitialArchiveState,
   createInitialLiveState,
+  ArchivePlaybackState
 } from '../datatypes/PlaybackState'
 
 import { ms } from '../../../utils/type-aliases'
 
 import VideoManagementSystemService from '../../vms/services/vms.service'
 import { VMS_MODE } from '../../vms/datatypes/VmsState'
+
+import TimelineService from '../../timeline/services/timeline.service'
 
 
 @Injectable({
@@ -24,6 +27,7 @@ export class PlaybackService {
 
   constructor (
     protected vms: VideoManagementSystemService,
+    protected timeline: TimelineService,
   ) {
   }
 
@@ -146,7 +150,13 @@ export class PlaybackService {
         this._emit()
         break
       case PLAYBACK_MODE.ARCHIVE:
-        this._state.currentTime = this._state.startTime + timeSinceStart
+        // make time marker appear fixed while the timeline scrolls, not the contrary
+        const newT = this._state.startTime + timeSinceStart
+        const diff = newT - this._state.currentTime
+        this._state.currentTime = newT
+        this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+
+        this._jumpOverTheGapIfNeeded()
         this._emit()
         break
       default:
@@ -240,6 +250,32 @@ export class PlaybackService {
         return true
       default:
         assertNever(this._state)
+    }
+  }
+
+  private _jumpOverTheGapIfNeeded () {
+    if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
+      const state = this._state as ArchivePlaybackState
+      // TODO: optimize
+      if (!this.vms.selectedCamera.archive.find(r => r.start <= state.currentTime && r.end >= state.currentTime)) {
+        const nextChunk = this.vms.selectedCamera.archive.find(r => r.start >= state.currentTime)
+        if (nextChunk) {
+          const was = this._state.currentTime
+          const nextChunkStart = nextChunk.start
+          const diff = nextChunkStart - (this._state as ArchivePlaybackState).currentTime;
+          this._state.currentTime = nextChunkStart
+          this._state.startTime += diff
+          // console.log('jump', diff, 'was', was, 'diff', diff, new Date(diff + this.timeline.visibleRange.start))
+
+          // TODO: request scroll jump animation
+          // this.timeline.jumpScrollTo(this._state.currentTime)
+          this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, true)
+
+          // TODO: maybe the logic here should be very different, actually
+        } else {
+          this.canPlayArchive ? this.playLive() : this.stop()
+        }
+      }
     }
   }
 }
