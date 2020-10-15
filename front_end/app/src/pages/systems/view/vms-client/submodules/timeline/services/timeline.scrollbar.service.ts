@@ -138,17 +138,17 @@ export class TimelineScrollbarService {
   public handleBackgroundDblClick (e: MouseEvent) {
     this.isBackgroundMouseDown = false
     const targetTime = this._targetTimeFromMouseEvent(e)
-    this.timeline.jumpScrollTo(targetTime)
+    this.timeline.jumpScrollTo(targetTime, true)
     this._emit()
   }
 
   public handleButtonLeftDblClick () {
-    this.timeline.jumpScrollTo(this.timeline.fullRange.start)
+    this.timeline.jumpScrollTo(this.timeline.fullRange.start, true)
     this._emit()
   }
 
   public handleButtonRightDblClick () {
-    this.timeline.jumpScrollTo(this.timeline.fullRange.end - this.timeline.visibleRange.duration)
+    this.timeline.jumpScrollTo(this.timeline.fullRange.end - this.timeline.visibleRange.duration, true)
     this._emit()
   }
 

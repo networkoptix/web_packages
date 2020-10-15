@@ -4,6 +4,7 @@ import { Subject } from 'rxjs'
 import TimeRange from './TimeRange'
 import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases'
 import cfg from './timeline.config'
+import { config } from 'process'
 
 
 export interface TimelineServiceStatus {
@@ -162,7 +163,7 @@ export class TimelineService {
     this._emit()
   }
 
-  public stepScrollToStartTime (targetT: ms) {
+  public stepScrollToStartTime (targetT: ms, step=cfg.SCROLL_STEP) {
     if (targetT > this._fullRange.end - this._visibleRange.duration) {
       targetT = this._fullRange.end - this._visibleRange.duration
     }
@@ -170,7 +171,7 @@ export class TimelineService {
       targetT = this._fullRange.start
     }
     const dt = targetT - this._visibleRange.start
-    const offset = Math.round(dt)
+    const offset = Math.round(dt * step)
     this._visibleRange.shift(offset)
   }
 
@@ -186,7 +187,7 @@ export class TimelineService {
       this._targetScrollMs = targetT
     }
     else {
-      this.stepScrollToStartTime(targetT)
+      this.stepScrollToStartTime(targetT, 1.0)
     }
   }
 
@@ -209,7 +210,7 @@ export class TimelineService {
       //   this._targetScrollMs,
       // )
     } else if (this._targetScrollMs) {
-      this.stepScrollToStartTime(this._targetScrollMs)
+      this.stepScrollToStartTime(this._targetScrollMs, 1.0)
       this._targetScrollMs = undefined
     }
     requestAnimationFrame(this._onAnimationFrame)

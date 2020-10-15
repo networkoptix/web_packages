@@ -150,11 +150,15 @@ export class PlaybackService {
         this._emit()
         break
       case PLAYBACK_MODE.ARCHIVE:
-        // make time marker appear fixed while the timeline scrolls, not the contrary
+
         const newT = this._state.startTime + timeSinceStart
         const diff = newT - this._state.currentTime
         this._state.currentTime = newT
-        this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+
+        // make time marker appear fixed while the timeline scrolls, not the contrary
+        if (this._state.currentTime > this.timeline.visibleRange.start && this._state.currentTime < this.timeline.visibleRange.end) {
+          this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+        }
 
         this._jumpOverTheGapIfNeeded()
         this._emit()
