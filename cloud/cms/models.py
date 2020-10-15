@@ -58,9 +58,22 @@ def rename_permission_group(group, asset):
 
 
 def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
-    return Asset.objects.get(customizations__name__in=[customization],
-                             asset_type__name="",
-                             asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
+    asset = Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.cloud_portal
+    ).first()
+    if asset:
+        return asset
+
+    customization_obj = Customization.objects.filter(name=customization).first()
+    if customization_obj:
+        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
+                                            asset_type=asset_type)
+        cloud_portal.customizations.set([customization_obj])
+        return cloud_portal
+    raise Asset.DoesNotExist(f"No cloud portal asset found for {customization}. "
+                             f"Most likely a customization with the name \"{customization}\" doesn't exist.")
 
 
 def get_asset_by_revision(version_id):
