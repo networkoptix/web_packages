@@ -137,7 +137,7 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
-        
+
     def subscribe_push_notification(self, env, email, password, token, name):
         authAscii = email+":"+password
         authAscii = authAscii.encode('ascii')
@@ -145,25 +145,25 @@ class CloudPortalAPI(object):
         headers = {'Authorization': auth}
         r = requests.put(f'{env}/api/notifications/subscriptions/{token}', headers=headers, json={'type': 'notification','systems': ['all'],'deviceInfo': {'name': name, 'os':'web'}})
         return r.json()
-        
+
     def get_new_FCM_token(self, key, auth, body):
         headers = {'Content-Type': 'application/json','x-goog-api-key': key, 'x-goog-firebase-installations-auth': auth}
         print(headers)
         r = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations', headers=headers, data=body)
         print(r)
-        token = r.json()['token'] 
+        token = r.json()['token']
         return token
-    
+
     def push_notifications_requests(self, env, email, password, process, min, max):
         r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
 #        print(r)
 #        print(r.json())
         self.systemsDict = r.json()
         self.systemsList = []
-        
+
         for system in self.systemsDict['systems']:
             self.systemsList.append(system)
-            
+
         self.sortedList = sorted(self.systemsList, key = lambda i: i['registrationTime'])
         uid = 0
         self.userId = str(uuid.uuid1())
@@ -183,11 +183,11 @@ class CloudPortalAPI(object):
             title = process+" "+str(uid)+"_"+self.userId
 #            print(authKey, id, name)
  #           print(system)
-                      
+
             emailIntStart = (int(name.strip(string.ascii_letters)))*10
  #           print(name+" stripped number "+str(emailIntStart)+" minEmail "+str(self.minEmail))
             emailIntEnd = emailIntStart+10
-            
+
  #           if  emailIntStart == self.maxEmail:
  #              break
  #           elif emailIntStart >= self.minEmail:
@@ -205,7 +205,7 @@ class CloudPortalAPI(object):
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
                         }
                     }
-                }         
+                }
     # to test script comment out the post and write to file instead
             r = requests.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(id, authKey), headers={'Content-Type':'application/json'}, data=json.dumps(body))
             f.write(f"{r.text} {title}\n")
@@ -219,26 +219,26 @@ class CloudPortalAPI(object):
 
         systemsDict = r.json()
         systemsList = []
-        
+
         for system in systemsDict['systems']:
             systemsList.append(system)
-            
+
         sortedList = sorted(systemsList, key = lambda i: i['registrationTime'])
         sysID = 1
         systemsJson = []
 
         for system in sortedList:
-            
+
             authKey = system["authKey"]
             id = system["id"]
             name = system["name"]
 
             title = str(sysID)+" "+str(uuid.uuid1())
 
-                      
+
             emailIntStart = (int(name.strip(string.ascii_letters)))*10
             emailIntEnd = emailIntStart+10
-            
+
 
             targetList = []
             for x in range(emailIntStart, emailIntEnd):
@@ -258,14 +258,13 @@ class CloudPortalAPI(object):
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
                         }
                     }
-                }         
+                }
             systemsJson.append({"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
             sysID += 1
         f= open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
-        
+
     def check_http_connection(selfself, protocol, ip, url):
         r = requests.get(protocol+ip+url)
         return r.status_code
-    

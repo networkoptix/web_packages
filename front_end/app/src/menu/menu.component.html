@@ -60,6 +60,7 @@
                 </div>
             </div>
             <div class="level-3-items"
+                 id="level3{{item.id}}"
                  *ngIf="(selectedLevel1 === item.id || menuModel.query !== '' && searchMode) && item.level3?.length"
                  [ngClass]="{
                     'min-height-level-3': item.level3 && item.level3.length > 4,

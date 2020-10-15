@@ -7,12 +7,15 @@ import re
 def get_variables(cust="default", lang="en_US", env="cloud-test"):
     if cust == "dw" or cust == "hanwha":
         env = f'https://{cust}.{env}.hdw.mx'
-    elif cust != "default":    
+    elif cust == "localhost":
+        env = 'https://localhost:9000'
+    elif cust != "default":
         env = f'https://{cust}.cloud.hdw.mx'
     else:
         env = f'https://{env}.hdw.mx'
+
     env_json = {"ENV": env}
-    
+
     # open up the customization file we want and create a dictionary called customization_json
     with codecs.open("customizations/" + cust + ".json", 'r', encoding='utf-8-sig') as customization_variables:
         customization_json = json.load(customization_variables)
