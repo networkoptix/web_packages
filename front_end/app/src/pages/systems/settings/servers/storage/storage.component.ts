@@ -2,6 +2,7 @@ import {
     Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
 }                                       from '@angular/core';
 import { Subscription }                 from 'rxjs';
+import { map }                          from 'rxjs/operators';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { NxSystem }                     from '../../../../../services/system.service';
 import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
@@ -74,14 +75,19 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     updateAndGetStorage() {
-        this.system.updateOrGetSystemStorage().toPromise().then(response => {
-            this.loading = false;
-            this.showStorage = (Object.keys(response.reply.storages).length > 0);
-            const { storages, watchers } = mapStorages(response.reply.storages);
-            this.storages = storages;
-            this.watchers = watchers;
-            this.updateSaveProcess();
-        });
+        this.system.getStorages({ id: this.serverId })
+            .pipe(
+                map((storages: any) => storages.map(({ id }) => id))
+            ).subscribe((storageIds) => {
+                this.system.updateOrGetSystemStorage().toPromise().then(response => {
+                    this.loading = false;
+                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
+                    const { storages, watchers } = mapStorages(response.reply.storages, storageIds);
+                    this.storages = storages;
+                    this.watchers = watchers;
+                    this.updateSaveProcess();
+                });
+            });
     }
 
     updateSaveProcess() {
@@ -142,7 +148,10 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
     usedForWriting : isUsedForWriting.value
 });
 
-export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, isUsedForWriting: ufw, ...storage }) => {
+export const mapStorages = (storages, storageIds) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, isUsedForWriting: ufw, ...storage }) => {
+    if (!storageIds.includes(storage.storageId)) {
+        return false;
+    }
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
     const remainingSpace = new FreeSpace(new BitConverter(freeSpace.bits - reservedSpace._bits.originalValue), reservedSpace);
@@ -150,10 +159,10 @@ export const mapStorages = (storages) => storages.map(({ freeSpace: free, reserv
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
     return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, remainingSpace, watchers: [...reservedSpace.watcher, isUsedForWriting] };
-}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => ({
+}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => storage ? ({
     storages : [...storages, storage],
     watchers : [...watchers, ...moreWatchers]
-}), { storages: [], watchers: [] });
+}) : { storages, watchers }, { storages: [], watchers: [] });
 
 export class BitConverter {
     _bits = new Watcher<number>()
