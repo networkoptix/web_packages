@@ -3,12 +3,15 @@
     <nx-section nonPadded>
         <div class="storage-container">
             <nx-pre-loader *ngIf="loading"></nx-pre-loader>
-            <nx-section-placeholder
-                    *ngIf="!loading && !storages.length"
-                    svgFileName="system_settings_placeholder"
-                    width="64"
-                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
-            </nx-section-placeholder>
+            <ng-container *ngIf="!loading && !showStorage">
+                <nx-section-placeholder
+                        *ngIf="failedToLoad"
+                        svgFileName="system_settings_placeholder"
+                        width="64"
+                        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+                </nx-section-placeholder>
+                <div *ngIf="!failedToLoad" class="no-storage-placeholder" translate>No main storage drive was selected for writing - video will not be recorded on this server.</div>
+            </ng-container>
             <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
                 <table *ngIf="showStorage">
                     <thead>

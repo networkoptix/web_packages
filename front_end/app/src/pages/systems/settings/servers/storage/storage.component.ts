@@ -29,6 +29,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     saveSettings: Process;
     storages = [];
     watchers: Watcher<any>[] = [];
+    failedToLoad = false;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -79,13 +80,24 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             .pipe(
                 map((storages: any) => storages.map(({ id }) => id))
             ).subscribe((storageIds) => {
+                if (!storageIds.length) {
+                    this.loading = false;
+                    this.showStorage = false;
+                    this.failedToLoad = false;
+                    this.storages = [];
+                    this.watchers = [];
+                    return;
+                }
                 this.system.updateOrGetSystemStorage().toPromise().then(response => {
                     this.loading = false;
+                    this.failedToLoad = false;
                     this.showStorage = (Object.keys(response.reply.storages).length > 0);
                     const { storages, watchers } = mapStorages(response.reply.storages, storageIds);
                     this.storages = storages;
                     this.watchers = watchers;
                     this.updateSaveProcess();
+                }).catch(() => {
+                    this.failedToLoad = true;
                 });
             });
     }
