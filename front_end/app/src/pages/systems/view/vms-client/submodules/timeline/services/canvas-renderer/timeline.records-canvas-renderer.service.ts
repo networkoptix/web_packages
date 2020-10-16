@@ -34,13 +34,22 @@ export class TimelineRecordsCanvasRendererService {
     // records
     ctx.fillStyle = '#4cbd27'
     if (this.vms.selectedCamera) {
-      const minT: ms = this.timeline.visibleRange.start
-      const maxT: ms = this.timeline.visibleRange.end
+      const startMs: ms = this.timeline.visibleRange.start
+      const endMs: ms = this.timeline.visibleRange.end
       const pxPerMs: float = 1 / this.timeline.msPerCanvasPx
+      const minGapMs: ms = Math.floor(this.timeline.msPerCanvasPx)
       const MIN_WIDTH: px = 2
-      this.vms.selectedCamera.archive.filter(r => r.start < maxT && r.end > minT).map(r => {
-        const x0 = Math.round((r.start - minT) * pxPerMs)
-        let x1 = Math.round((r.end - minT) * pxPerMs)
+
+      // const _a = performance.now()
+      const records = this.vms.selectedCamera.getRecords(startMs, endMs, minGapMs)
+      // const _b = performance.now()
+
+      // console.log('records', records.length)// s, _b - _a)
+      // console.log('records', minGapMs, records.length, records)
+
+      records.map(r => {
+        const x0 = Math.round((r.start - startMs) * pxPerMs)
+        let x1 = Math.round((r.end - startMs) * pxPerMs)
         if (x1 - x0 < MIN_WIDTH) {
           x1 = x0 + MIN_WIDTH
         }

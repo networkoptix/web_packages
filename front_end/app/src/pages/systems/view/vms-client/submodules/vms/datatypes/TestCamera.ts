@@ -1,7 +1,12 @@
 import { ms } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
+import BirdViewTree from './BirdViewTree'
+
 
 export class TestCamera implements ICamera {
+
+  protected _birdViewTree: BirdViewTree
+
   constructor (
     public readonly id: string,
     public readonly preferredServerId: string,
@@ -12,6 +17,22 @@ export class TestCamera implements ICamera {
     public readonly archiveRange: ISimpleTimeRange | undefined = undefined,
     public readonly archive: CameraArchive = [],
   ) {
+    this._birdViewTree = new BirdViewTree(archiveRange, this.archive)
+    // console.log(this.id, 'TEST Camera birdview tree initialized', this.archive.length, this.archive.reduce(
+    //   (acc, r) => {
+    //       if (acc.prev) {
+    //           const gap = r.start - acc.prev.end
+    //           if (gap > acc.maxGap) {
+    //               acc.maxGap = gap
+    //           }
+    //       }
+    //       acc.prev = r
+    //       return acc
+    //   }, {
+    //       prev: null,
+    //       maxGap: 0
+    //   }
+    // ).maxGap)
   }
 
   public get isLive () {
@@ -40,6 +61,10 @@ export class TestCamera implements ICamera {
 
   public getArchiveVideoUrl (t: ms) {
     return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  }
+
+  public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
+    return this._birdViewTree.getRecords(startMs, endMs, minGapMs)
   }
 }
 

@@ -119,6 +119,36 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 new SimpleTimeRange(now - DURATION * 2, now),
                 generateGappedArchive(now - DURATION * 2, now, 60)
             ),
+            new TestCamera(
+                'offline-thousand-chunks-test-camera',
+                'thousand-chunks-fake-media-server',
+                'Offline offline-thousand-chunks test camera',
+                'http://gapped.media-server.local/offline-thousand-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 1e3)
+            ),
+            new TestCamera(
+                'offline-ten-thousands-chunks-test-camera',
+                'ten-thousands-chunks-fake-media-server',
+                'Offline offline-ten-thousands-chunks test camera',
+                'http://gapped.media-server.local/offline-ten-thousands-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 1e4)
+            ),
+            new TestCamera(
+                'offline-1M-chunks-test-camera',
+                '1M-chunks-fake-media-server',
+                'Offline offline-1M-chunks test camera',
+                'http://gapped.media-server.local/offline-1M-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 1e6)
+            ),
         ],
     }
 ]

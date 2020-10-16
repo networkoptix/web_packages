@@ -131,7 +131,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               start: parseInt(ar.reply[0].startTimeMs),
               end: parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
             }
-            archives[cid] = ar.reply.map(r => new SimpleTimeRange(r.startTimeMs, r.startTimeMs + r.durationMs))
+            archives[cid] = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
             console.log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
           } catch (e) {
             console.warn(e, 'caught while requesting camera archive ranges')

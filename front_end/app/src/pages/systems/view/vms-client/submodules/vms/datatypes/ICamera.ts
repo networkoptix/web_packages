@@ -7,6 +7,7 @@ export interface ISimpleTimeRange {
   end: ms,
   duration: ms,
 }
+export type IRecord = ISimpleTimeRange
 
 export class SimpleTimeRange {
   constructor (
@@ -20,7 +21,7 @@ export class SimpleTimeRange {
   }
 }
 
-export type CameraArchive = Array<ISimpleTimeRange>
+export type CameraArchive = Array<IRecord>
 
 export interface ICamera {
   id: string,
@@ -41,6 +42,7 @@ export interface ICamera {
   liveVideoUrl: string,
 
   getArchiveVideoUrl (t: ms),
+  getRecords (startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
 }
 
 export default ICamera

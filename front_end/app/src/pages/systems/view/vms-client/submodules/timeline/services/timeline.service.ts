@@ -180,6 +180,10 @@ export class TimelineService {
   protected _initialScrollMs: ms
   protected _targetScrollMs: ms
 
+  public get targetScrollMs () {
+    return this._targetScrollMs || this.visibleRange.start
+  }
+
   public jumpScrollTo (targetT: ms, animate: boolean = false) {
     if (animate) {
       this._scrollAnimationStartTime = Date.now()
@@ -209,9 +213,11 @@ export class TimelineService {
       //   this._initialScrollMs,
       //   this._targetScrollMs,
       // )
+      this._emit()
     } else if (this._targetScrollMs) {
       this.stepScrollToStartTime(this._targetScrollMs, 1.0)
       this._targetScrollMs = undefined
+      this._emit()
     }
     requestAnimationFrame(this._onAnimationFrame)
   }
