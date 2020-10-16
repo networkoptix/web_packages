@@ -405,6 +405,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "מספר שרתים רשומים כקיימים במערכת - הן שנבחרו והן במערכת הנוכחית.<br>הסר שרתים לא מקוונים ובלתי תואמים מכל המערכות ונסה שוב.",
         "EmailAlreadyExists": "האימייל הזה כבר רשום",
         "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
+        "cloudInvalidResponse": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
         "INCOMPATIBLE": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\">לגרסא האחרונה</a>.",
         "cloud_systems_have_different_owners": "מערכת זו מחוברת ל- %CLOUD_NAME%, אך משוייכים לבעלים אחרים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">ישנו שרת המציג את עצמו שמערכת הנוכחית וגם כמערכת שנבחרה.</p><p>הסר שרתים לא מקוונים ו\\או עם גרסה שונה מכל מערכת ונסה שוב.</p>",

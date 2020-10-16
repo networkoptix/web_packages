@@ -405,6 +405,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Egyes szerverlisták mindkét rendszerben léteznek - a kiválasztott és az aktuális rendszerben.<br>Távolítsa el az offline és inkompatibilis kiszolgálókat minden egyes rendszerből, és próbálja újra.",
         "EmailAlreadyExists": "Ez az e-mail már regisztrálva van",
         "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
+        "cloudInvalidResponse": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
         "INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
         "cloud_systems_have_different_owners": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
