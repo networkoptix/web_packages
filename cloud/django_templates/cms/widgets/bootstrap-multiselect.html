@@ -31,9 +31,33 @@
 {% include 'django/forms/widgets/select.html' %}
 
 <script>
+
     (function ($) {
+        function {{ widget.field_name }}AddHandler() {
+            setTimeout(function () {
+                const selects = $('.field-{{ widget.field_name }} select.multiselect').not('select.initialized, .djn-empty-form *');
+                selects.multiselect({{ widget.options_json | safe }});
+                selects.addClass('initialized');
+                {{ widget.field_name }}bindAddHandlers();
+            });
+        }
+
+        function {{ widget.field_name }}bindAddHandlers() {
+            $('.add-handler').each(function(key, el) {
+                const events = $._data(el).events;
+                if (!events || !events.click || !events.click.find(clickEvent => clickEvent.handler.name === '{{ widget.field_name }}AddHandler')) {
+                    $(el).click({{ widget.field_name }}AddHandler);
+                }
+            });
+        }
+
         $(document).ready(function () {
-            $('#{{ widget.attrs.id }}').multiselect({{ widget.options_json | safe }});
+            const select = $('#{{ widget.attrs.id }}');
+            const nonEmptySelect = select.not('.djn-empty-form *');
+            select.addClass('multiselect');
+            nonEmptySelect.multiselect({{ widget.options_json | safe }});
+            nonEmptySelect.addClass('initialized');
+            {{ widget.field_name }}bindAddHandlers();
         });
     })(django.jQuery);
 </script>

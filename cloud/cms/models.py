@@ -1280,8 +1280,11 @@ class Menu(models.Model):
         nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
         nodes_to_attr = 'nodes_list'
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
-        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order'), to_attr=nodes_to_attr),
-                      models.Prefetch(enabled_lookup, to_attr='enabled_list')]
+        permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
+        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order').select_related('asset', 'asset__asset_type'),
+                                      to_attr=nodes_to_attr),
+                      models.Prefetch(enabled_lookup, to_attr='enabled_list'),
+                      models.Prefetch(permission_lookup)]
         child_prefetches = tuple()
         if depth < max_depth:
             child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)

@@ -576,7 +576,7 @@ def get_asset_state(request, asset_id):
         raise APIException('Cannot access state for this asset')
 
     state = 'Draft'
-    latest_review = AssetCustomizationReview.objects.filter(version__asset=asset).last()
+    latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
     if latest_review:
         state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
 
