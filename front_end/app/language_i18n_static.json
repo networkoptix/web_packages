@@ -165,7 +165,6 @@
         "vendor": "Vendor",
         "model": "Model",
         "ip": "IP Address",
-        "server": "Server",
         "os": "OS",
         "version": "Version",
         "voiceCommands": {
@@ -894,6 +893,8 @@
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage" : "Delete External Storage?",
         "failed": "Failed to add external storage",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "failedRemove": "Failed to delete external storage {url}",
         "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",

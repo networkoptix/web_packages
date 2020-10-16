@@ -690,17 +690,19 @@ export interface ServersStatus {
 }
 
 export interface Storage {
-    reindexingDone:          ReindexingDone;
-    modes:                   Modes;
-    alreadyUsed:             any;
-    deleteExternalStorage:   any;
-    failed:                  any;
+    reindexingDone:             ReindexingDone;
+    modes:                      Modes;
+    alreadyUsed:                any;
+    deleteExternalStorage:      any;
+    failed:                     any;
+    stillHasArchivesPreWarning: any;
+    stillHasArchives:           any;
+    reservedTooSmallTooltip:    any;
+    reservedSystemTooltip:      any;
+    serverOffline:              any;
+    success:                    any;
+    urlPlaceholder:             any;
     failedRemove:            any;
-    reservedTooSmallTooltip: any;
-    reservedSystemTooltip:   any;
-    serverOffline:           any;
-    success:                 any;
-    urlPlaceholder:          any;
 }
 
 export interface Modes {
@@ -1582,6 +1584,8 @@ const typeMap: any = {
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
         { json: "failed", js: "failed", typ: "any" },
+        { json: "stillHasArchivesPreWarning", js: "stillHasArchivesPreWarning", typ: "any" },
+        { json: "stillHasArchives", js: "stillHasArchives", typ: "any" },
         { json: "failedRemove", js: "failedRemove", typ: "any" },
         { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
         { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },

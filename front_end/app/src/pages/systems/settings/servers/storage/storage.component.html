@@ -76,6 +76,12 @@
                                         (onSelected)="changeMode(store, $event)"
                                         [hrMargin]="true">
                                     </nx-select>
+                                    <svg-icon nx-add-svg-src
+                                        *ngIf="selectMode(store).value === 'modeNotInUse' && store.archiveSpace"
+                                        class="archive-warning"
+                                        [ngbTooltip]="LANG.storage.stillHasArchives()"
+                                        [src]="CONFIG.icons.dirNonStandard + 'error.svg'">
+                                    </svg-icon>
                                 </div>
                             </td>
                             <ng-template #changingMode>
