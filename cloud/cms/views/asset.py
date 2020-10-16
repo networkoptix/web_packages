@@ -16,6 +16,7 @@ from cms.forms import *
 from cms.models import UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 
+from .integration import INTEGRATION_CACHE
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
 
@@ -192,6 +193,7 @@ def review(request):
                 messages.error(request, "Version {} {}".format(asset_review.version.id, publishing_errors))
             else:
                 messages.success(request, "Version {} has been published".format(asset_review.version.id))
+            INTEGRATION_CACHE.clear_cache()
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, "Version {} has been accepted".format(asset_review.version.id))

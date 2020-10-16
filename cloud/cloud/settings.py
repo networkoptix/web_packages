@@ -232,7 +232,8 @@ CACHES = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
-        "KEY_PREFIX": "integrations"
+        "KEY_PREFIX": "integrations",
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
     }
 }
 
