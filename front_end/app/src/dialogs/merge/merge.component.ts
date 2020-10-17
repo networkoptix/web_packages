@@ -134,7 +134,8 @@ export class MergeModalContent {
                                     system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                                     if (system.moduleInfo.remoteAddresses) {
                                         system.moduleInfo.remoteAddresses.forEach((addy: string) => {
-                                            this.systemUrls[`${addy}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
+                                            const ip = NxUtilsService.cleanIp(addy);
+                                            this.systemUrls[`${ip}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
                                         });
                                     }
                                 }
@@ -307,18 +308,20 @@ export class MergeModalContent {
                     .map(peer => {
                         if (peer.remoteAddresses) {
                             peer.remoteAddresses.forEach((addy: string) => {
-                                this.systemUrls[`${addy}:${peer.port}`] = peer.id.replace(/{|}/g, '');
+                                const ip = NxUtilsService.cleanIp(addy);
+                                this.systemUrls[`${ip}:${peer.port}`] = peer.id.replace(/{|}/g, '');
                             });
                         }
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                        const ip = NxUtilsService.cleanIp(peer.remoteAddresses[0]);
                         const system: any = {
                             ...peer,
                             id             : peer.id.replace(/[{}]/g, ''),
-                            url            : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            url            : `${ip}:${peer.port}`,
                             systemName     : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
-                            ip             : peer.remoteAddresses[0],
                             name           : peer.name,
                             discoveredPeer : true,
+                            ip,
                             isNew
                         };
                         if (this.system && this.system.moduleInfo && peer.status === 'Incompatible') {
@@ -750,7 +753,7 @@ export class MergeModalContent {
         let systemName: string;
         if (system.systemName) {
             systemName = system.systemName;
-            status = ` (${system.name}, ${system.remoteAddresses[0]}:${system.port}) ${status}`;
+            status = ` (${system.name}, ${NxUtilsService.cleanIp(system.remoteAddresses[0])}:${system.port}) ${status}`;
         } else {
             systemName = system.name || system.info.name;
         }
