@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 
-from ...models import *
+from cloud.utils import chunked_queryset
+from notifications.models import *
+
 from datetime import datetime, timedelta
 
 
@@ -11,8 +13,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         cutoff_date = datetime.now() - timedelta(days=settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
         cutoff_date_created = datetime.now() - timedelta(days=settings.CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS)
-        PushNotification.objects.filter(send_date__lt=cutoff_date).delete()
-        PushNotification.objects.filter(created_date__lt=cutoff_date_created).delete()
+        clean_qs = PushNotification.objects.filter(
+            Q(send_date__lt=cutoff_date) | Q(created_date__lt=cutoff_date_created)
+        )
+
+        for qs_chunk in chunked_queryset(clean_qs, 30000):
+            qs_chunk.delete()
+
         self.stdout.write(self.style.SUCCESS(
             f'Successfully deleted push notifications sent more than {settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS}'
             f' days ago or created more than {settings.CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS} days ago.'
