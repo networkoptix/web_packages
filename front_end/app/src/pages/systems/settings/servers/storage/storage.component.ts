@@ -357,9 +357,9 @@ export class NxSystemStorageComponent implements OnInit {
                 isBackup ? status === 0 && numOfBackups++ : numOfMains++;
             }
             if (updating) {
-                isUpdating = true
+                isUpdating = true;
             };
-            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD]
+            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
             hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
@@ -376,20 +376,24 @@ export class NxSystemStorageComponent implements OnInit {
             this.isBackupOn.value = false;
         }
         const sortByTypeAndUrl = (
-            { storageType: aType, url: aUrl }, 
+            { storageType: aType, url: aUrl },
             { storageType: bType, url: bUrl }
         ) => {
-            const {LOCAL, USB, NETWORK, CLOUD} = STORAGE_TYPES;
+            const { LOCAL, USB, NETWORK, CLOUD } = STORAGE_TYPES;
             const typeOrder = [LOCAL, USB, NETWORK, CLOUD];
             if (aType === bType) {
                 return aUrl < bUrl ? -1 : 1;
             }
-            return typeOrder.indexOf(aType) - typeOrder.indexOf(bType) 
-        }
-    
-        const sortedStrorage = storage.sort(sortByTypeAndUrl)
-        this.storage$.next(sortedStrorage);
-        this.storageEmit.emit(sortedStrorage);
+            return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
+        };
+
+        const sortedStorage = storage.sort(sortByTypeAndUrl);
+        this.storage$.next(sortedStorage);
+        this.storageEmit.emit(sortedStorage);
+    }
+
+    getIconSrc(store) {
+        return `${this.CONFIG.icons.dir}${store.updating ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
 
     getModes(store) {

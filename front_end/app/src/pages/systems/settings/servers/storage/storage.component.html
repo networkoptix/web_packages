@@ -45,9 +45,10 @@
                                 (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
                                         nx-add-svg-src
+                                        [ngClass]="{'animate-rotation': store.updating}"
                                         class="mr-1"
                                         [ngbTooltip]="getStorageTypeTooltip(store.storageType)"
-                                        [src]="CONFIG.icons.dir + 'storage_' + store.storageType + '.svg'">
+                                        [src]="getIconSrc(store)">
                                 </svg-icon>
                                 <span class="ellipsis">{{store.url}}</span>
                             </td>
