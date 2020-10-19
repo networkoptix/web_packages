@@ -135,8 +135,8 @@ Log In With Remember Me
     Validate Log In    ${email}
 
 Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    [Arguments]    ${email}    ${sysId}=${AUTO TESTS SYSTEM ID}
+    Go To    ${url}/systems/${sysId}
     Log In    ${email}    ${password}    button=None
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
@@ -616,7 +616,7 @@ Make sure viewer is in the system
     Close Browser
 
 User is in cloud system
-    [Arguments]    ${user email}    ${system id}
+    [Arguments]    ${user email}    ${system id}    ${auth}=${auth}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
         ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
@@ -625,8 +625,8 @@ User is in cloud system
     [Return]    ${status}
 
 Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}
-    ${is there}=   User is in cloud system    ${email}    ${system id}
+    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
+    ${is there}=   User is in cloud system    ${email}    ${system id}    auth=${auth}
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not

@@ -175,9 +175,10 @@ Evaluate Log Level via API
     Should Contain    ${string}    ${setting}': '${selected}
 
 Disconnect Server via API
-    [Arguments]    ${auth}    ${sysId}    ${password}
+    [Arguments]    ${auth}    ${sysId}    ${password}    ${email}
+    &{data}=    Create Dictionary    password=${password}    system_id=${sysid}    email=${email}
     Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
+    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Set System Settings via API
@@ -267,14 +268,13 @@ Get Server Name
     END
 
 Get Server Id
+    #only use for single servers
     [Arguments]    ${system url}    ${system auth}    ${server name}
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
+    log    ${resp.json()}
     Should Be Equal As Strings    ${resp.status_code}    200
-    FOR    ${server}    IN    @{resp.json()}
-        ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
-        Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
-    END
+    Return From Keyword    ${resp.json()}[0][id]
 
 Rename Server
     [Arguments]    ${system url}    ${system auth}    ${new name}
