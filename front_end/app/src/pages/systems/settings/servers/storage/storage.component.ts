@@ -71,7 +71,10 @@ export class NxSystemStorageComponent implements OnInit {
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
 
+    doesMainExist = false;
     doesBackupExist = false;
+    mainReindexDisabled = false;
+    backupReindexDisabled = false;
     customSettings = false;
     shouldSaveDefaultSettings = false;
     isBackupOn: Watcher<boolean> = new Watcher();
@@ -349,13 +352,19 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     updateStorage(storage) {
-        let numOfBackups = 0;
-        let numOfMains = 0;
+        let onlineBackups = 0;
+        let totalBackups = 0;
+        let onlineMains = 0;
+        let totalMains = 0;
         let isUpdating = false;
         storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
-            if (isUsedForWriting && status !== STORAGE_STATUS.INACCESSIBLE) {
-                isBackup ? status === 0 && numOfBackups++ : numOfMains++;
+            if (isUsedForWriting) {
+                isBackup ? totalBackups++ : totalMains++;
+                if (status !== STORAGE_STATUS.INACCESSIBLE) {
+                    isBackup ? status === 0 && onlineBackups++ : onlineMains++;
+                }
             }
+
             if (updating) {
                 isUpdating = true;
             };
@@ -363,13 +372,16 @@ export class NxSystemStorageComponent implements OnInit {
             hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
-        if (numOfMains === 1) {
+        if (onlineMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
             store.mainOnly = true;
         }
+        this.mainReindexDisabled = onlineMains === 0 && totalMains > 0;
+        this.backupReindexDisabled = onlineBackups === 0 && totalBackups > 0;
+        this.doesMainExist = Boolean(totalMains);
         // gets rid of backup archive section if changing from backup to main
         // waits until finished changing modes when changing from main to backup
-        this.doesBackupExist = Boolean(numOfBackups) && !isUpdating;
+        this.doesBackupExist = Boolean(totalBackups) && !isUpdating;
         if (this.doesBackupExist) {
             this.checkArchiveState();
         } else {
