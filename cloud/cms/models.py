@@ -411,6 +411,26 @@ class Asset(models.Model):
 
         return accepted_review.version.id if accepted_review else 0
 
+    @classmethod
+    def version_ids(cls, assets, customization=settings.CUSTOMIZATION):
+        asset_ids = {asset.id for asset in assets}
+        version_dict = {}
+        accepted_reviews = AssetCustomizationReview.objects.filter(
+            customization__name=customization, state=AssetCustomizationReview.REVIEW_STATES.accepted,
+            version__asset__in=assets
+        ).order_by('-pk').select_related('version').only('version')
+
+        for review in accepted_reviews:
+            if review.version.asset_id not in version_dict:
+                version_dict[review.version.asset_id] = review.version_id
+                asset_ids.discard(review.version.asset_id)
+                if not asset_ids:
+                    break
+        else:
+            for asset_id in asset_ids:
+                version_dict[asset_id] = 0
+        return version_dict
+
     def change_preview_status(self, new_status):
         self.preview_status = new_status
         self.save()
