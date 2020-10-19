@@ -145,7 +145,7 @@
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="!loading && (storage$ | async).length">
+<nx-block id="reindex-archive-block" *ngIf="!loading && (storage$ | async).length">
     <header>
         <div class="header-top-bar">
             <h4 translate>Reindex Archive</h4>
@@ -161,7 +161,7 @@
                 (click)="reindexingMain = true; reindexStorage('main')"
                 translate>Reindex Main Storage</button>
             <ng-template #reindexMainProgress>
-                <section class="reindex-section mt-3 mb-2">
+                <section id="reindex-main" class="reindex-section mt-3 mb-2">
                     <div class="progress-bar-section mr-3">
                         <div class="progress-bar-header mb-1">
                             <div translate>Reindexing Main Storage...</div>
@@ -186,7 +186,7 @@
                     (click)="reindexingBackup = true; reindexStorage('backup')"
                     translate>Reindex Backup Storage</button>
                 <ng-template #reindexBackupProgress>
-                    <section class="reindex-section mt-3 mb-2">
+                    <section id="reindex-backup" class="reindex-section mt-3 mb-2">
                         <div class="progress-bar-section mr-3">
                             <div class="progress-bar-header mb-1">
                                 <div translate>Reindexing Backup Storage...</div>
