@@ -299,6 +299,7 @@ ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/im
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
 ${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
+${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
 
 #ADVANCED SETTINGS
 ${ADVANCED SETTINGS}                    ?advanced=true

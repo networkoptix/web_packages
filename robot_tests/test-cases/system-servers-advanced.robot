@@ -61,6 +61,7 @@ Advanced server settings for offline system
     ${location} =    Get Location
     Log    Step 1
     Go To    ${location}${ADVANCED SETTINGS}
+    Wait Until Element is Visible    ${PLACEHOLDER NO SETTINGS}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK}
