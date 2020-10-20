@@ -1,17 +1,21 @@
 *** Settings ***
 Resource         ../smoke_check_resource.robot
 
-Suite Setup      Regular Open Browser
-Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Authorization
+Suite Setup      Auth Suite Setup
+Test Teardown    Run Keyword if Test Failed    Common Restart Logout    ${ENV}
 Suite Teardown   Close Browser
 
-*** Test Cases ***
-Log In as Existing User
-    [Tags]    T169283    auth
-    Log In    ${email auth}    ${password}
+*** Keywords ***
+Auth Suite Setup
+    Open browser and go to URL    ${ENV}
+    ${email auth}=   Get Random Email    ${email base}
+    Register And Activate Account    SmokeCheck    Auth    ${email auth}    ${password}
+    Set Suite Variable    ${email auth}    ${email auth}
 
-Log Out
-    [Tags]    T169276    auth
+*** Test Cases ***
+Log in and Log out as Existing User
+    [Tags]    T169283    T169276    auth
+    Log In    ${email auth}    ${password}
     Log Out
 
 Create Account
@@ -23,10 +27,10 @@ Create Account
     Validate Register Success
 
     Log    Step 2: Check email with Activation link
-    ${link}=   Get the link from email    ${email base}    ${random email}    ${email password}    activate
+    ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${random email}    activate_account
 
     Log    Step 3: Click on Activation link
-    Go To    ${link}
+    Go To    ${ENV}/activate/${code}
     Validate Activation Success
 
     Log    Step 4: Log in

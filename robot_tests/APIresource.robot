@@ -89,9 +89,9 @@ Get Cloud System Settings
 
 Get Cloud System Users
     [Arguments]    ${auth}    ${system id}
-    &{data}=   Create Dictionary    systemId=${system id}
+    ${data}=   Create Dictionary    systemId=${system id}
     Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
+    ${resp}=   Get Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
 

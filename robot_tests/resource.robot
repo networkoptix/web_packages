@@ -13,7 +13,6 @@ Library      String
 Library      DateTime
 Library      Collections
 Library      OperatingSystem
-Library      RPA.Desktop.Clipboard
 Library      NoptixImapLibrary
 Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
@@ -322,7 +321,7 @@ Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
