@@ -69,7 +69,8 @@
                 </div>
             </div>
 
-            <div *ngIf="plugin.support" class="mt-3 clearfix" id="info-support">
+            <div *ngIf="plugin.support && (plugin.support.supportPhone || plugin.support.supportWeb || plugin.support.supportEmail)"
+                 class="mt-3 clearfix" id="info-support">
                 <div>
                     <label class="group-label" id="info-support-label" translate>Support</label>
                 </div>
