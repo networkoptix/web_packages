@@ -843,5 +843,10 @@ Get Lang List
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
     
-Delete User Via API
+Log In If Needed
+    [Arguments]    ${email}    ${password}
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Log In    ${email}    ${password}    button=None    AND
+    ...    Validate Log In    ${email} 
     
