@@ -22,7 +22,6 @@ from cms.forms import *
 from cms.models import UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 
-from .integration import INTEGRATION_CACHE
 from ..controllers.documentation import DOC_CACHE
 
 
@@ -245,8 +244,6 @@ def review(request):
                     messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
                 else:
                     messages.success(request, f"Version {publishing_errors} has been published")
-                INTEGRATION_CACHE.clear_cache()
-                DOC_CACHE.clear_cache()
             else:
                 messages.error(request, f"Cannot publish on this portal")
         else:

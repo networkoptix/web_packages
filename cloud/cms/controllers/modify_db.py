@@ -14,9 +14,11 @@ from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
 
+from cms.controllers.documentation import DOC_CACHE
 from cms.controllers.filldata import fill_content
 from api.models import Account
 from cms.models import *
+from cms.views.integration import INTEGRATION_CACHE
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
@@ -522,6 +524,11 @@ def publish_latest_version(asset, review_id, user, state=None):
 
     if not publish_errors and asset.can_preview_on_portal:
         fill_content(asset, preview=False, incremental=True)
+
+    if asset.is_cloud_portal:
+        MENU_CACHE.clear_cache()
+        INTEGRATION_CACHE.clear_cache()
+    DOC_CACHE.clear_cache()
     return publish_errors
 
 
