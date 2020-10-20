@@ -293,9 +293,9 @@
           {
             "label": "Left block link",
             "name": "%BLOCK1_LINK%",
-            "value": "javascript:;",
+            "value": "",
             "advanced": true,
-            "optional": false,
+            "optional": true,
             "description": "Link URL for left block",
             "type": "text"
           },
@@ -343,9 +343,9 @@
           {
             "label": "Middle block link",
             "name": "%BLOCK2_LINK%",
-            "value": "javascript:;",
+            "value": "",
             "advanced": true,
-            "optional": false,
+            "optional": true,
             "description": "Link URL for left block",
             "type": "text"
           },
@@ -393,9 +393,9 @@
           {
             "label": "Right block link",
             "name": "%BLOCK3_LINK%",
-            "value": "javascript:;",
+            "value": "",
             "advanced": true,
-            "optional": false,
+            "optional": true,
             "description": "Link URL for left block",
             "type": "text"
           },
