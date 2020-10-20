@@ -206,6 +206,26 @@ def get_integration_type():
     return None
 
 
+class PackagesCache(object):
+    def __init__(self):
+        self.cache = caches['packages']
+
+    def __delitem__(self, file_name):
+        self.cache.delete(file_name)
+
+    def __getitem__(self, file_name):
+        return self.cache.get(file_name, None)
+
+    def __setitem__(self, file_name, package_file):
+        self.cache.set(file_name, package_file)
+
+    def clear_cache(self):
+        self.cache.clear()
+
+    def get(self, file_name):
+        return self.cache.get(file_name, None)
+
+
 # CMS structure (data structure). Only developers can change that
 class Language(models.Model):
     name = models.CharField(max_length=255, unique=True)

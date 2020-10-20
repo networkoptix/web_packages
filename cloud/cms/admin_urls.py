@@ -9,7 +9,8 @@ urlpatterns = [
 
     url(r'preview/', asset.make_preview, name="preview"),
 
-    url(r'package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
+    url(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
+    url(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),
 
     url(r'asset_settings/(?P<asset_id>.+?)/$', asset.asset_settings, name="asset_settings"),
 
