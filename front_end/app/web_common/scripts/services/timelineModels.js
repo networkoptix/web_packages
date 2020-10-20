@@ -1122,23 +1122,11 @@
             window.timeManager.nowToServer() + 100000,
             this.requestDetailization,
             window.Config.webclient.chunksToCheckFatal
-        ).then(function (data) {
-            var chunks = parseChunks(data.data.reply);
-            //If there are no chunks in the short cache use lastMinute
-            var endDate = window.timeManager.nowToDisplay - window.TimelineConfig.lastMinuteDuration;
-            if (chunks.length > 0) {
-                //This is supposed to find the cutoff point in the chunk
-                var endTime = window.Config.webclient.endOfArchiveTime;
-                var i = chunks.length - 1;
-                for (; i > 0; --i) {
-                    if (endTime - chunks[i].durationMs <= 0) {
-                        break;
-                    }
-                    endTime -= chunks[i].durationMs;
-                }
-                endDate = chunks[i].startTimeMs + chunks[i].durationMs - endTime;
-            }
-            return self.playedPosition > endDate;
+        ).then(function () {
+            var lastMinute = window.timeManager.nowToDisplay() - window.TimelineConfig.lastMinuteDuration;
+            // Greater than last minute or last chunk should jump to live.
+            // Let timeline handle marker positioning.
+            return self.playedPosition > lastMinute;
         }, function () {
             return null;
         });
