@@ -60,7 +60,7 @@ ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 
 #ADVANCED SETTINGS
 ${ADVANCED SETTINGS SAVE BUTTON}        //div[@class="process-button"]
-${ADVANCED SETTINGS CLOSE BUTTON}       //button[text()="Close"]
+${ADVANCED SETTINGS CLOSE BUTTON}       //button[text()="${CLOSE TEXT}"]
 
 ${ADDITIONAL LOCAL FS TYPES INPUT}          //input[@id='additionalLocalFsTypes']
 ${ADDITIONAL LOCAL FS TYPES LABEL}          //div[text()='${ADDITIONAL LOCAL FS TYPES TEXT}']

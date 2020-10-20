@@ -33,6 +33,7 @@ Advanced server settings availability
     Log    Step 3
     Log Out
     Log in to user and system    ${EMAIL ADMIN}   ${ADVANCED SETTINGS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     ${location} =    Get Location    
     Go To    ${location}${ADVANCED SETTINGS}

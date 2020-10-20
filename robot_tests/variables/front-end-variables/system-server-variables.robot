@@ -68,12 +68,12 @@ ${PERMISSIONS LOG LEVEL DROPDOWN}   //button[@id="PERMISSIONS"]
 ...    ${MAIN LOG LEVEL DROPDOWN}
 ...    ${PERMISSIONS LOG LEVEL DROPDOWN}    
 @{LOGLEVEL OPTIONS}
-...    None
-...    Error
-...    Warning
-...    Info
-...    Debug
-...    Verbose
+...    ${NONE TEXT}
+...    ${ERROR TEXT}
+...    ${WARNING TEXT}
+...    ${INFO TEXT}
+...    ${DEBUG TEXT}
+...    ${VERBOSE TEXT}
 
 ${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${SAVE BUTTON TEXT}']
 ${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']

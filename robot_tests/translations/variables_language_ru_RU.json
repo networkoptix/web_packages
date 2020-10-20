@@ -423,5 +423,6 @@
     "WEB SOCKET ENABLED TEXT": "Web сокеты",
     "STORAGE LOCATIONS TEXT": "Места хранения",
     "LOG SETTINGS TEXT": "Настройки журнала",
-    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "Закрыть"
 }
