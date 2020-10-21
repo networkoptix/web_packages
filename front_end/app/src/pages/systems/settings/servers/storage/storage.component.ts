@@ -50,6 +50,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     init() {
+        this.loading = true;
         if (this.system.currentServerNotBusy) {
             if (this.system && this.system.servers && this.system.servers.length) {
                 this.updateAndGetStorage();
@@ -88,7 +89,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
                     this.watchers = [];
                     return;
                 }
-                this.system.updateOrGetSystemStorage().toPromise().then(response => {
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }).toPromise().then(response => {
                     this.loading = false;
                     this.failedToLoad = false;
                     this.showStorage = (Object.keys(response.reply.storages).length > 0);

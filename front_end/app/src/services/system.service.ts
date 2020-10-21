@@ -663,6 +663,10 @@ class ServerManager {
     restoreFactorySettings(serverId, currentPassword) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
+
+    getStorages(serverId) {
+        return this.mediaserverConnections[serverId].getStorages();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -1090,11 +1094,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    updateOrGetSystemStorage(updateParams?) {
-        if (updateParams) {
+    updateOrGetSystemStorage(updateParams) {
+        if (!updateParams.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.mediaserver.getStorages();
+        return this.serverManager.getStorages(updateParams.serverId);
     }
 
     getStorages(queryParams) {
