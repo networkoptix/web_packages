@@ -28,6 +28,12 @@
         left : 0 !important;
     }
 
+    ul {
+        @media (max-width: $collapse-second-width) {
+            max-width: 100% !important;
+        }
+    }
+
     & li {
         & > a {
             white-space : nowrap;
