@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Opslaglocaties",
     "LOG SETTINGS TEXT": "Log instellingen",
-    "NOT ABLE TO LOAD TEXT": "Kan systeeminstellingen niet laden."
+    "NOT ABLE TO LOAD TEXT": "Kan systeeminstellingen niet laden.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

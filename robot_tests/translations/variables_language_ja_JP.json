@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Webソケット",
     "STORAGE LOCATIONS TEXT": "ストレージの場所",
     "LOG SETTINGS TEXT": "ログ設定",
-    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "閉じる",
+    "NONE TEXT": "なし",
+    "ERROR TEXT": "エラー",
+    "WARNING TEXT": "警告",
+    "INFO TEXT": "情報",
+    "DEBUG TEXT": "デバッグ",
+    "VERBOSE TEXT": "詳細"
 }

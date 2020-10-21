@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Web soketleri",
     "STORAGE LOCATIONS TEXT": "Depolama konumları",
     "LOG SETTINGS TEXT": "Günlük ayarları",
-    "NOT ABLE TO LOAD TEXT": "Sistem ayarları yüklenemiyor."
+    "NOT ABLE TO LOAD TEXT": "Sistem ayarları yüklenemiyor.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

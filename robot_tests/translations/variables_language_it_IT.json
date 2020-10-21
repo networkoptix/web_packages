@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Posizioni di archiviazione",
     "LOG SETTINGS TEXT": "Impostazioni registro",
-    "NOT ABLE TO LOAD TEXT": "Impossibile caricare le impostazioni di sistema."
+    "NOT ABLE TO LOAD TEXT": "Impossibile caricare le impostazioni di sistema.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

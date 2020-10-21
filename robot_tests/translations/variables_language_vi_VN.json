@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Nơi lưu trữ",
     "LOG SETTINGS TEXT": "Cài đặt nhật ký",
-    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

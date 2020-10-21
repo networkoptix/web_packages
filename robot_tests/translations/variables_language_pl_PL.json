@@ -423,5 +423,12 @@
     "WEB SOCKET ENABLED TEXT": "Gniazda sieciowe Web Sockets",
     "STORAGE LOCATIONS TEXT": "Lokalizacje archiwum",
     "LOG SETTINGS TEXT": "Ustawienia dziennika",
-    "NOT ABLE TO LOAD TEXT": "Not able to load system settings."
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }
