@@ -47,7 +47,7 @@ else
 fi
 
 echo "pip install requirements"
-[ ! -d "env" ] && virtualenv env -p python3.8
+[ ! -d "env" ] && virtualenv env -p python3.7
 . ./env/bin/activate
 pip install -r build_scripts/requirements.txt
 
