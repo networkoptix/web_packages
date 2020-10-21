@@ -42,7 +42,7 @@ nx-block {
     max-width:  calc(#{variables.$fluid-container-max-width} / 4);
   }
   nx-menu {
-    max-height: 100%;
+    height: 100%;
   }
 }
 
