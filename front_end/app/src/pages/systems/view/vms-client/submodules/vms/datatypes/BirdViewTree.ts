@@ -73,7 +73,7 @@ export class BirdViewTree {
     }
 
     protected _zoomingRequiredCallback = (node: BirdViewTreeNode, part: 'left' | 'right', minGapMs: ms) => {
-        // console.log('_zoomingRequiredCallback', node.depth, minGapMs)
+        // console.log('_zoomingRequiredCallback', node.depth, minGapMs, part, node.startMs, node.endMs)
         const { records, perfect } = part === 'left'
             ? this._spareArchiveDetails(node.startMs, node.centerMs, minGapMs)
             : this._spareArchiveDetails(node.centerMs, node.endMs, minGapMs)
@@ -339,7 +339,8 @@ export class BirdViewTreeNode {
     }
 
     public getRecords (startMs: ms, endMs: ms, minGapMs: ms): CameraArchive {
-        // console.log('GR', this.depth, this._minGapMs, '|', startMs, endMs, minGapMs)
+        // console.log('GR', new Date(startMs), new Date(endMs))
+        // console.log('GR', this.depth, this.startMs, this.endMs, '|',  this._minGapMs, '||', startMs, endMs, minGapMs)
         if (startMs > this._endMs || endMs < this._startMs) {
             console.warn('BirdViewTree::getRecords miss')
             return []
@@ -355,14 +356,14 @@ export class BirdViewTreeNode {
         // }
 
 
-        if (!this._isPerfect && minGapMs < this._minGapMs) {
+        if (!this._isPerfect && (minGapMs < this._minGapMs)) {
             let zoomingRequired = false
             let result = []
 
-            const nextMinGap = this._minGapMs === Infinity ? minGapMs : this._minGapMs / 2
+            const nextMinGap = this._minGapMs === Infinity ? minGapMs : Math.floor(this._minGapMs / 2)
             // console.log('nextMinGap', nextMinGap)
 
-            if (startMs < this._intervalCenterMs) {
+            if (startMs <= this._intervalCenterMs) {
                 // should look into the left subtree or request building such
                 if (!this._leftChild) {
                     // console.log('BirdViewTree::getRecords zooming required (LEFT)', this.depth, nextMinGap)
@@ -372,7 +373,7 @@ export class BirdViewTreeNode {
 
                     result = result.concat(this._records.filter(r => r.start < this._intervalCenterMs && r.end > startMs))
                 } else {
-                    result = result.concat(this._leftChild.getRecords(Math.max(this._startMs, startMs), this._intervalCenterMs, minGapMs))
+                    result = result.concat(this._leftChild.getRecords(Math.max(this._startMs, startMs), Math.min(endMs, this._intervalCenterMs), minGapMs))
                 }
             }
 
@@ -386,12 +387,18 @@ export class BirdViewTreeNode {
 
                     result = result.concat(this._records.filter(r => r.start < endMs && r.end > this._intervalCenterMs))
                 } else {
-                    result = result.concat(this._rightChild.getRecords(this._intervalCenterMs, Math.min(this._endMs, endMs), minGapMs))
+                    result = result.concat(this._rightChild.getRecords(Math.max(this._intervalCenterMs, startMs), Math.min(this._endMs, endMs), minGapMs))
                 }
             }
+
             return result
         } else {
             const result = this._records.filter(r => r.start < endMs && r.end > startMs)
+            // if (this._isPerfect) {
+            //     console.log('depth', this.depth, this._records.length, 'perfection', result.length, result[0], result[result.length - 1], '|', startMs, endMs)
+            // }
+            // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', new Date(startMs), new Date(endMs),
+            //     this._records.length === result.length, this._records.length, result.length)
             // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', result.length, new Date(startMs), new Date(endMs), result)
             return result
         }

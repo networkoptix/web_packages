@@ -11,6 +11,7 @@ import ICamera from '../../vms-client/submodules/vms/datatypes/ICamera'
 import PlaybackService from '../../vms-client/submodules/playback/services/playback.service'
 import { Subscription } from 'rxjs'
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
+import FpsMeterService from '@services/fps-meter.service'
 
 export type PlaybackQuality = 'auto' | 'low' | 'high'
 
@@ -42,6 +43,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       protected playback: PlaybackService,
       public timeline: TimelineService,
       public timelineExtendToNow: TimelineExtendToNowService,
+      protected fpsMeter: FpsMeterService,
     ) {
       this._onRouteChange = this._onRouteChange.bind(this)
       this._onVmsStateChange = this._onVmsStateChange.bind(this)
@@ -69,6 +71,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public ngAfterViewInit () {
       this.$self.classList.add('controls-shown')
+      this.fpsMeter.install()
     }
 
     public ngOnDestroy (): void {

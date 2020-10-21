@@ -15,7 +15,7 @@
 <div *ngIf="camera" class="controls">
   <playback-controls></playback-controls>
   <zoom-controls></zoom-controls>
-  <timeline *ngIf="showTimeline else noArchive"></timeline>
+  <timeline *ngIf="showTimeline else noArchive" (dblclick)="onTimeLineDoubleClick($event)"></timeline>
   <ng-template #noArchive><div class="no-archive-message">No Archive</div></ng-template>
   <playback-state-indicator></playback-state-indicator>
 </div>

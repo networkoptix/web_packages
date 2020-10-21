@@ -9,7 +9,7 @@ import VideoManagementSystemService from '../../../submodules/vms/services/vms.s
 import PlaybackService from '../../../submodules/playback/services/playback.service'
 import TimelineService from '../../../submodules/timeline/services/timeline.service'
 import TimelineExtendToNowService from '../../../submodules/timeline/services/timeline.extend-to-now.service'
-
+import FpsMeterService from '../../../../../../../services/fps-meter.service'
 
 @Component({
   selector: 'camera-page',
@@ -31,6 +31,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     private playback: PlaybackService,
     public timeline: TimelineService,
     public timelineExtendToNow: TimelineExtendToNowService,
+    protected fpsMeter: FpsMeterService,
   ) {
     this._onRouteChange = this._onRouteChange.bind(this)
     this._onVmsStateChange = this._onVmsStateChange.bind(this)
@@ -42,6 +43,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
     this._animationFrameRequestHandler =
       requestAnimationFrame(this._onAnimationFrame)
+    this.fpsMeter.install()
   }
 
   public ngOnDestroy (): void {
@@ -99,6 +101,11 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     if (this.camera.isLive) {
       this.playback.playLive()
     }
+  }
+
+  public onTimeLineDoubleClick (e: MouseEvent) {
+    // TODO: remove
+    console.log(this.vms.selectedCamera['_birdViewTree']['_treeRoot'])
   }
 
 }

@@ -64,6 +64,7 @@ export class TestCamera implements ICamera {
   }
 
   public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
+    // console.log('========', new Date(startMs), new Date(endMs))
     return this._birdViewTree.getRecords(startMs, endMs, minGapMs)
   }
 }

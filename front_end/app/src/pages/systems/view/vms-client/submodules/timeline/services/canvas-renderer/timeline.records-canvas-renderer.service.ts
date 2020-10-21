@@ -40,13 +40,22 @@ export class TimelineRecordsCanvasRendererService {
       const minGapMs: ms = Math.floor(this.timeline.msPerCanvasPx)
       const MIN_WIDTH: px = 2
 
-      // const _a = performance.now()
+      // let _a = performance.now()
       const records = this.vms.selectedCamera.getRecords(startMs, endMs, minGapMs)
-      // const _b = performance.now()
 
-      // console.log('records', records.length)// s, _b - _a)
-      // console.log('records', minGapMs, records.length, records)
+      // if (records.length >= 1) {
+      //   const last = records.length - 1
+      //   console.log(new Date(startMs), new Date(endMs), '|',
+      //     records.length, records[0], new Date(records[0].start),
+      //     records[last], new Date(records[last].end)
+      //   )
+      // } else {
+      //   console.log('too few', records)
+      // }
+      // let _b = performance.now()
+      // const gettingRecordsTime = _b - _a
 
+      // _a = performance.now()
       records.map(r => {
         const x0 = Math.round((r.start - startMs) * pxPerMs)
         let x1 = Math.round((r.end - startMs) * pxPerMs)
@@ -58,6 +67,10 @@ export class TimelineRecordsCanvasRendererService {
         const w = x1 - x0
         ctx.fillRect(x0, y, w, h)
       })
+
+      // _b = performance.now()
+      // console.log('records', records.length, _b - _a, 'drawing', _b - _a)
+      // console.log(records.length)
     }
 
     ctx.fillStyle = oldFill

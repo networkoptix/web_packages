@@ -159,6 +159,56 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 new SimpleTimeRange(now - DURATION * 2, now),
                 generateGappedArchive(now - DURATION * 2, now, 2e5)
             ),
+            new TestCamera(
+                'offline-500K-chunks-test-camera',
+                '500K-chunks-fake-media-server',
+                'Offline offline-500K-chunks test camera',
+                'http://gapped.media-server.local/offline-500K-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 5e5)
+            ),
+            new TestCamera(
+                'offline-1M-chunks-test-camera',
+                '1M-chunks-fake-media-server',
+                'Offline offline-1M-chunks test camera',
+                'http://gapped.media-server.local/offline-1M-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 1e6)
+            ),
+            new TestCamera(
+                'offline-10M-chunks-test-camera',
+                '10M-chunks-fake-media-server',
+                'Offline offline-10M-chunks test camera',
+                'http://gapped.media-server.local/offline-10M-chunks-test-camera',
+                'Offline',
+                TEST_THUMBNAIL_URL,
+                new SimpleTimeRange(now - DURATION * 2, now),
+                generateGappedArchive(now - DURATION * 2, now, 1e7)
+            ),
+            // new TestCamera(
+            //     'offline-100M-chunks-test-camera',
+            //     '100M-chunks-fake-media-server',
+            //     'Offline offline-100M-chunks test camera',
+            //     'http://gapped.media-server.local/offline-100M-chunks-test-camera',
+            //     'Offline',
+            //     TEST_THUMBNAIL_URL,
+            //     new SimpleTimeRange(now - DURATION * 2, now),
+            //     generateGappedArchive(now - DURATION * 2, now, 1e8)
+            // ),
+            // new TestCamera(
+            //     'offline-1G-chunks-test-camera',
+            //     '1G-chunks-fake-media-server',
+            //     'Offline offline-1G-chunks test camera',
+            //     'http://gapped.media-server.local/offline-1G-chunks-test-camera',
+            //     'Offline',
+            //     TEST_THUMBNAIL_URL,
+            //     new SimpleTimeRange(now - DURATION * 2, now),
+            //     generateGappedArchive(now - DURATION * 2, now, 1e9)
+            // ),
         ],
     }
 ]

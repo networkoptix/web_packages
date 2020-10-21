@@ -137,7 +137,10 @@ export class TimelinePrimaryRulerCanvasRendererService {
   protected _getIntervalWeight(time: ms, intervals: Array<IrregularLengthInterval>): int {
     const interval = [...intervals].reverse().find(i => isAlignedByIrregularInterval(time, i))
     // console.log(interval, this._intervalWeightAnimations[interval], this._intervalWeightAnimations[interval].get())
-    const result = this._intervalWeightAnimations[interval].get()
+    const result = this._intervalWeightAnimations[interval]?.get() || 0
+    if (!this._intervalWeightAnimations[interval]) {
+      console.warn('_getIntervalWeight', 'no animation for the interval', time, intervals, this._intervalWeightAnimations)
+    }
     // if (result != ~~result) console.log('GIW', result)
     return result
     // const result = MAX_WEIGHT - [...intervals].reverse().findIndex(i => isAlignedByIrregularInterval(time, i))

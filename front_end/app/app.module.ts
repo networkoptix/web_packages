@@ -42,6 +42,8 @@ import { NxUriCacheService }                  from './src/services/uri-cache.ser
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }       from './src/services/local-system-status-interceptor.service';
 
+import { FpsMeterService }                      from './src/services/fps-meter.service';
+
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
@@ -121,7 +123,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        FpsMeterService,
     ],
     declarations: [
         AppComponent
