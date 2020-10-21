@@ -6,7 +6,13 @@ export interface ISimpleTimeRange {
   start: ms,
   end: ms,
   duration: ms,
+  clone (): SimpleTimeRange,
+  contains (r: SimpleTimeRange): boolean,
+  isContained (r: SimpleTimeRange): boolean,
+  isDisjointWith (r: SimpleTimeRange): boolean,
+  overlapsWith (r: SimpleTimeRange): boolean,
 }
+
 export type IRecord = ISimpleTimeRange
 
 export class SimpleTimeRange {
@@ -18,6 +24,30 @@ export class SimpleTimeRange {
 
   public get duration (): ms {
     return this.end - this.start
+  }
+
+  public clone (): SimpleTimeRange {
+    return new SimpleTimeRange(this.start, this.end)
+  }
+
+  public static fromISTR (tr: ISimpleTimeRange): SimpleTimeRange {
+      return new SimpleTimeRange(tr.start, tr.end)
+  }
+
+  public contains (r: SimpleTimeRange): boolean {
+      return (this.start <= r.start && this.end >= r.end)
+  }
+
+  public isContained (r: SimpleTimeRange): boolean {
+      return r.contains(this)
+  }
+
+  public isDisjointWith (r: SimpleTimeRange): boolean {
+      return this.start > r.end || this.end < r.start
+  }
+
+  public overlapsWith (r: SimpleTimeRange): boolean {
+      return !this.isDisjointWith(r)
   }
 }
 

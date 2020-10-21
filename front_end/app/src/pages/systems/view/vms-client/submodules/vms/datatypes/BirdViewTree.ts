@@ -1,7 +1,48 @@
 import { start } from 'repl'
 import { last, min } from 'rxjs/operators'
 import { int, ms } from '../../../utils/type-aliases'
-import { CameraArchive, ISimpleTimeRange, IRecord } from './ICamera'
+import { CameraArchive, ISimpleTimeRange, IRecord, SimpleTimeRange } from './ICamera'
+
+
+export interface SubrangeIdicies {
+    firstIndex: int,
+    lastIndex: int,
+}
+
+
+function binarySearch (haystack, needle, comparator = simpleComparator) {
+    let l = 0, r = haystack.length - 1
+    // console.log('<=== BS started', haystack, needle)
+    while (l <= r) {
+        const m = l + Math.ceil((r - l) / 2)
+        const v = haystack[m]
+        const comparison = comparator(v, needle, m)
+        // console.log(haystack, needle, '|', l, m, r, v, comparison, represent(haystack, needle, l, m, r))
+        if (comparison === 0) {
+            // console.log('==>', v, 'found at', m)
+            return m
+        } else if (comparison < 0) {
+            // console.log('too small, going right')
+            l = (m === l) ? l + 1 : m
+        } else {
+            // console.log('too big, going left')
+            r = (m === r) ? r - 1 : m
+        }
+    }
+    // if (l === r) {
+    //     console.log('==> loop end, equality', l,  haystack[l] === needle ? 'found' : 'not found')
+    //     return haystack[l] === needle
+    // } else {
+    // console.log('==> loop end, inequality, not found', l, r)
+    return -1
+    // }
+}
+
+function simpleComparator (a, b, m) {
+    // if (typeof(a) === 'number')
+    //     return Math.sign(a - b)
+    return a === b ? 0 : a < b ? -1 : +1
+}
 
 
 export class BirdViewTree {
@@ -39,61 +80,61 @@ export class BirdViewTree {
         node.setChild(part, minGapMs, records, perfect)
     }
 
-    protected _binarySearchForArchiveSubRange (startMs: ms, endMs: ms) {
-        let l = 0
-        let r = this._originalArchive.length - 1
-        let firstIndex = l // the first record to end after startMs
-        let lastIndex = r // the last record to start before endMs
+    // protected _binarySearchForArchiveSubRange (startMs: ms, endMs: ms) {
+    //     let l = 0
+    //     let r = this._originalArchive.length - 1
+    //     let firstIndex = l // the first record to end after startMs
+    //     let lastIndex = r // the last record to start before endMs
 
-        // first records first
-        while (l < r) {
-            // console.log('F', l, r)
-            const m = l + Math.round((r - l) / 2)
-            const mRec = this._originalArchive[m]
-            const prevRec = m > 0 ? this._originalArchive[m - 1] : null
-            // console.log(l, r, m, mRec, prevRec)
-            if (mRec.end > startMs) {
-                if (!prevRec || prevRec.end < startMs) {
-                    firstIndex = m
-                    // console.log('found!', m)
-                    break
-                } else {
-                    // console.log('going left')
-                    r = (m === r) ? (r - 1) : m
-                }
-            } else {
-                // console.log('going right')
-                l = (m === l) ? (l + 1) : m
-            }
-        }
+    //     // first records first
+    //     while (l < r) {
+    //         // console.log('F', l, r)
+    //         const m = l + Math.round((r - l) / 2)
+    //         const mRec = this._originalArchive[m]
+    //         const prevRec = m > 0 ? this._originalArchive[m - 1] : null
+    //         // console.log(l, r, m, mRec, prevRec)
+    //         if (mRec.end > startMs) {
+    //             if (!prevRec || prevRec.end < startMs) {
+    //                 firstIndex = m
+    //                 // console.log('found!', m)
+    //                 break
+    //             } else {
+    //                 // console.log('going left')
+    //                 r = (m === r) ? (r - 1) : m
+    //             }
+    //         } else {
+    //             // console.log('going right')
+    //             l = (m === l) ? (l + 1) : m
+    //         }
+    //     }
 
-        l = 0
-        r = this._originalArchive.length - 1
-        // last records last
-        while (l < r) {
-            // console.log('L', l, r)
-            const m = l + Math.round((r - l) / 2)
-            const mRec = this._originalArchive[m]
-            const nextRec = m < this._originalArchive.length - 1 ? this._originalArchive[m + 1] : null
-            // console.log(l, r, m, mRec, prevRec)
-            if (mRec.start < endMs) {
-                if (!nextRec || nextRec.start > endMs) {
-                    lastIndex = m
-                    // console.log('found!', m)
-                    break
-                } else {
-                    // console.log('going left')
-                    r = (m === r) ? (r - 1) : m
-                }
-            } else {
-                // console.log('going right')
-                l = (m === l) ? (l + 1) : m
-            }
-        }
+    //     l = 0
+    //     r = this._originalArchive.length - 1
+    //     // last records last
+    //     while (l < r) {
+    //         // console.log('L', l, r)
+    //         const m = l + Math.round((r - l) / 2)
+    //         const mRec = this._originalArchive[m]
+    //         const nextRec = m < this._originalArchive.length - 1 ? this._originalArchive[m + 1] : null
+    //         // console.log(l, r, m, mRec, prevRec)
+    //         if (mRec.start < endMs) {
+    //             if (!nextRec || nextRec.start > endMs) {
+    //                 lastIndex = m
+    //                 // console.log('found!', m)
+    //                 break
+    //             } else {
+    //                 // console.log('going left')
+    //                 r = (m === r) ? (r - 1) : m
+    //             }
+    //         } else {
+    //             // console.log('going right')
+    //             l = (m === l) ? (l + 1) : m
+    //         }
+    //     }
 
-        return { firstIndex, lastIndex }
+    //     return { firstIndex, lastIndex }
 
-    }
+    // }
 
     protected _undetalizeArchiveSubRange (firstIndex: int, lastIndex: int, minGapMs) {
         const records = []
@@ -118,11 +159,81 @@ export class BirdViewTree {
         return records
     }
 
+    public getSubrangeIndicies (sr: ISimpleTimeRange): SubrangeIdicies {
+        if (sr.contains(this._originalArchiveRange)) {
+            console.log('contains')
+            return {
+                firstIndex: 0,
+                lastIndex: this._originalArchive.length - 1,
+            }
+        }
+        if (this._originalArchiveRange.isDisjointWith(sr)) {
+            console.log('no overlap')
+            return {
+                firstIndex: -1,
+                lastIndex: -1,
+            }
+        }
+        return {
+            firstIndex: this._binarySearchForTheFirstSubrangeIndex(sr.start),
+            lastIndex: this._binarySearchForTheLastSubrangeIndex(sr.end),
+        }
+    }
+
+    protected _binarySearchForTheFirstSubrangeIndex (subrangeStart: ms): int {
+        return binarySearch(
+            this._originalArchive,
+            subrangeStart,
+            (record: IRecord, needle: ms, i: int) => {
+                // needle ===def=== subrangeStart
+                const prev = i >= 1 ? this._originalArchive[i - 1] : null
+                // console.log('FIRST comparator', record, needle, i, prev)
+                if (prev) {
+                    if (record.end > needle) {
+                        // console.log('A', prev.end > needle ? +1 : 0)
+                        return prev.end > needle ? +1 : 0
+                    } else {
+                        // console.log('B', -1)
+                        return -1
+                    }
+                } else {
+                    // console.log('C', (record.end > needle && record.start < this._range.end) ? 0 : -1)
+                    return (record.end > needle && record.start < this._originalArchiveRange.end) ? 0 : -1
+                }
+            }
+        )
+    }
+
+    protected _binarySearchForTheLastSubrangeIndex (subrangeEnd: ms): int {
+        return binarySearch(
+            this._originalArchive,
+            subrangeEnd,
+            (record: IRecord, needle: ms, i: int) => {
+                // needle ===def=== subrangeEnd
+                const next = i <= this._originalArchive.length - 2 ? this._originalArchive[i + 1] : null
+                // console.log('LAST comparator', record, needle, i, next)
+                if (next) {
+                    if (record.start < needle) {
+                        // console.log('A', next.start < needle ? -1 : 0)
+                        return next.start < needle ? -1 : 0
+                    } else {
+                        // console.log('B', +1)
+                        return +1
+                    }
+                } else {
+                    // console.log('C', (record.start < needle && record.end > this._range.start) ? 0 : +1)
+                    return (record.start < needle && record.end > this._originalArchiveRange.start) ? 0 : +1
+                }
+            }
+        )
+    }
+
     protected _spareArchiveDetails (startMs: ms, endMs: ms, minGapMs: ms) {
 
         // TODO: optimize (use binary search insted of linear map; spare detailization same time)
 
-        const { firstIndex, lastIndex } = this._binarySearchForArchiveSubRange(startMs, endMs)
+        const { firstIndex, lastIndex } = this.getSubrangeIndicies(new SimpleTimeRange(startMs, endMs))
+            // this._binarySearchForArchiveSubRange(startMs, endMs)
 
         const maxDetailizedLength = lastIndex - firstIndex + 1
 
