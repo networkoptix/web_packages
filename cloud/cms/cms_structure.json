@@ -400,7 +400,7 @@
             "type": "text"
           },
           {
-            "label": "Left block link target",
+            "label": "Right block link target",
             "name": "%BLOCK3_TARGET%",
             "value": "_self",
             "description": "Target for right block link. _self for same page, _blank for new tab/window.",
