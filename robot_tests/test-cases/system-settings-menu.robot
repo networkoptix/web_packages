@@ -31,26 +31,32 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 *** Test Cases ***
+Should login as "viewer" and should have no ability to "search" in left menu
+    Log in                                      ${EMAIL AUTO TESTS ANCHOR}      ${password}
+    Wait Until Page Contains Element            ${LEFT MENU}
+    Wait Until Page Does Not Contain Element    ${LEFT MENU SEARCH INPUT}
+    Restart
+
 Should show system settings with left menu
     [Tags]    system settings    left_menu    threaded
     Log in to Auto Tests System         ${EMAIL OWNER}
     Wait Until Page Contains Element    ${LEFT MENU}
 
 Should have selected LEVEL-1 node (check specs)
-    Wait Until Page Contains Element    ${LEFT MENU LEVEL1}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             background-color    ${COLOR LIGHT5 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             color               ${COLOR DARK9 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             font-size           ${MENU L1 FONT SIZE}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             padding-left        ${MENU L1 PLEFT}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             padding-right       ${MENU L1 PRIGHT}
-    Wait Until Element Contains Style   ${LEFT MENU LEVEL1}             font-family         ${FONT MEDIUM}
+    Wait Until Page Contains Element    ${LEFT MENU LEVEL1 ADMIN}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR LIGHT5 RGB}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       color               ${COLOR DARK9 RGB}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       font-size           ${MENU L1 FONT SIZE}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       padding-left        ${MENU L1 PLEFT}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       padding-right       ${MENU L1 PRIGHT}
+    Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ADMIN}       font-family         ${FONT MEDIUM}
     Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ICON}        color               ${COLOR DARK9 RGB}
 
 Should have LEVEL-3 node (check specs)
     Mouse Over                          ${LEFT MENU LEVEL1 USERS}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 USERS}       background-color    ${COLOR ALIGHT3 RGB}
     Click Element                       ${LEFT MENU LEVEL1 USERS}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1}             background-color    ${COLOR ALIGHT2 RGB}
+    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR ALIGHT2 RGB}
 
 Should have LEVEL-3 selected node (check specs)
     Wait Until Page Contains Element    ${LEFT MENU LEVEL3 USER1}
@@ -139,7 +145,7 @@ Should perform search with 'OR' criteria
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
 Should navigate with up/down arrows when search criteria is entered
-    Click Element                       ${LEFT MENU LEVEL1}
+    Click Element                       ${LEFT MENU LEVEL1 ADMIN}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Log     Fist item should be selected (by default)
@@ -158,3 +164,6 @@ Should navigate with up/down arrows when search criteria is entered
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     color               ${COLOR DARK9 RGB}
 
     Click Button                        ${LEFT MENU SEARCH CLEAR}
+
+
+
