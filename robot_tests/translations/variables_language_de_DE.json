@@ -424,11 +424,11 @@
     "STORAGE LOCATIONS TEXT": "Speicherorte",
     "LOG SETTINGS TEXT": "Logeinstellungen",
     "NOT ABLE TO LOAD TEXT": "Systemeinstellungen können nicht geladen werden.",
-    "CLOSE TEXT": "Close",
-    "NONE TEXT": "None",
-    "ERROR TEXT": "Error",
-    "WARNING TEXT": "Warning",
+    "CLOSE TEXT": "Schließen",
+    "NONE TEXT": "Keine",
+    "ERROR TEXT": "Fehler",
+    "WARNING TEXT": "Warnung",
     "INFO TEXT": "Info",
     "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Ausführlich"
 }

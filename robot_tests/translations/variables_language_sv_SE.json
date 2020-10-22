@@ -424,11 +424,11 @@
     "STORAGE LOCATIONS TEXT": "Lagringsplatser",
     "LOG SETTINGS TEXT": "Logginställningar",
     "NOT ABLE TO LOAD TEXT": "Kan inte ladda systeminställningar.",
-    "CLOSE TEXT": "Close",
-    "NONE TEXT": "None",
-    "ERROR TEXT": "Error",
-    "WARNING TEXT": "Warning",
+    "CLOSE TEXT": "Stäng",
+    "NONE TEXT": "Ingen",
+    "ERROR TEXT": "Fel",
+    "WARNING TEXT": "Varning",
     "INFO TEXT": "Info",
     "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Detaljerad"
 }
