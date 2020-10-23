@@ -94,9 +94,11 @@
         <div class="w-100 p-0" style="flex-shrink: 12;">
             <div class="row m-0 pl-2 pr-2 pt-0" *ngIf="plugin">
                 <div class="col-12 col-lg-9">
-                    <router-outlet></router-outlet>
+                    <div>
+                        <router-outlet></router-outlet>
+                    </div>
+                    <nx-footer></nx-footer>
                 </div>
-
                 <div class="col-12 mt-3 col-lg-3 mt-lg-0 position-relative">
                     <div class="right-menu">
                         <nx-block side-element type="gray"
@@ -164,8 +166,6 @@
                         </nx-block>
                     </div>
                 </div>
-
-                <nx-footer class="col-12 col-lg-9"></nx-footer>
             </div>
         </div>
     </div>
