@@ -616,7 +616,7 @@ Make sure viewer is in the system
     Close Browser
 
 User is in cloud system
-    [Arguments]    ${user email}    ${system id}
+    [Arguments]    ${user email}    ${system id}    ${auth}=${auth}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
         ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
@@ -631,7 +631,7 @@ Add user to cloud system if not there
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
-    ${current cloud system id}=    Get Cloud System Id      ${server ip}   ${system auth}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
     ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     [Return]    ${current cloud system id}

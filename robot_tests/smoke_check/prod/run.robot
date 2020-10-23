@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation    PROD: Run -d smoke_check/prod/res -v ENV:https://nxvms.com smoke_check/prod/ru.sh from /robot_tests
+Documentation    "robot -d smoke_check/prod/res -v ENV:https://nxvms.com smoke_check/prod/ru.sh from /robot_tests"
 Resource         resource.robot
 
 Suite Setup      Smoke Check Setup

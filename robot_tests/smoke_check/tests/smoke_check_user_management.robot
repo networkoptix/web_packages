@@ -96,7 +96,6 @@ Portal - Delete user
 
     Log    Step 2: Log in as deleted user and verify the system is not there
     Log In    ${new portal user}    ${password}
-#    Temporary commented out due to false-negative tests when running in headless mode
     Wait Until Element is Visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
     Go To    ${ENV}
     Log Out
@@ -233,7 +232,6 @@ Client - Delete cloud user
 
 Client - Share to registered user
     [Tags]    C30446    C30651    users
-
     ${random email}=    Get Random Email    ${email base}
     Register And Activate Account    SmokeCheck    RegisteredCloudUser    ${random email}    ${password}
 
@@ -247,33 +245,15 @@ Client - Share to registered user
     ...    SmokeCheck RegisteredCloudUser
     ...    ${password}
     ...    is cloud=${True}
-#    Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
+    Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
+    Sleep    60
 
-#    Log    Step 2: Check email for the user
-#    ${link}=   Get the link from email     ${email base}    ${random email}    ${email password}    system_shared
-
-    Log    Steps 3, 4: Follow the link from the email and log in
     Go To    ${ENV}
-    Log In    ${random email}    ${password}    validate=${False}
-    Reload Page
-
-    Log    Step 5: Validate the System page and verify the user information and rights are as expected
-    Wait Until Elements Are Visible
-    ...    ${ACCOUNT DROPDOWN}
-    ...    ${DISCONNECT FROM MY ACCOUNT}
-    ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
-    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
-    ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${system owner}")]
-    Wait Until Elements Are Not Visible
-    ...    ${RENAME SYSTEM}
-    ...    ${USERS LIST LINK}
-    ...    ${SERVERS LINK}
-    ...    ${MERGE BUTTON SYSTEM}
-    Log Out
-
-    Log    Step 6: Verify the user appeared in owner's users list
-    Go To    ${ENV}/systems
-    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Log In    ${system owner}    ${password}    validate=False
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
-    Select user in Users List    ${random email}
+    Select user in users list    ${random email}
     Log Out
+
+    ${user systems}=   Get Account Systems    ${ENV}    ${random email}    ${password}
+    Should Contain    ${user systems}    ${system users}[cloud id]
+
