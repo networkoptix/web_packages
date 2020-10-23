@@ -231,51 +231,49 @@ Client - Delete cloud user
     Elements Should Not Be Visible    ${USERS LIST}//span[@class="user" and text()='${new cloud user}']
     Log Out
 
-#Client - Share to registered user
-#    [Tags]    C30446    C30651    users
-#
-#    ${random email}=    Get Random Email    ${email base}
-#    Register And Activate Account    SmokeCheck    RegisteredCloudUser    ${random email}    ${password}
-#
-#    Log    Step 1: Share to existing user(viewer permissions)
-#    Save User
-#    ...    ${local auth}
-#    ...    https://${system users}[ip]:${system users}[port]
-#    ...    registered_cloud_user
-#    ...    ${permissions}[viewer]
-#    ...    ${random email}
-#    ...    SmokeCheck RegisteredCloudUser
-#    ...    ${password}
-#    ...    is cloud=${True}
+Client - Share to registered user
+    [Tags]    C30446    C30651    users
+
+    ${random email}=    Get Random Email    ${email base}
+    Register And Activate Account    SmokeCheck    RegisteredCloudUser    ${random email}    ${password}
+
+    Log    Step 1: Share to existing user(viewer permissions)
+    Save User
+    ...    ${local auth}
+    ...    https://${system users}[ip]:${system users}[port]
+    ...    registered_cloud_user
+    ...    ${permissions}[viewer]
+    ...    ${random email}
+    ...    SmokeCheck RegisteredCloudUser
+    ...    ${password}
+    ...    is cloud=${True}
 #    Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
-#
-##    Log    Step 2: Check email for the user
-##    ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${random email}    system_shared
-##    Should not be empty    ${code}
-#
-#    Log    Steps 3, 4: Follow the link from the email and log in
-#    Go To    ${ENV}/systems/${system users}[cloud id]
-#    Log In    ${random email}    ${password}    validate=${False}    button=None
-#    Reload Page
-#
-#    Log    Step 5: Validate the System page and verify the user information and rights are as expected
-#    Wait Until Elements Are Visible
-#    ...    ${ACCOUNT DROPDOWN}
-#    ...    ${DISCONNECT FROM MY ACCOUNT}
-#    ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
-#    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
-#    ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${system owner}")]
-#    ...    timeout=60
-#    Wait Until Elements Are Not Visible
-#    ...    ${RENAME SYSTEM}
-#    ...    ${USERS LIST LINK}
-#    ...    ${SERVERS LINK}
-#    ...    ${MERGE BUTTON SYSTEM}
-#    Log Out
-#
-#    Log    Step 6: Verify the user appeared in owner's users list
-#    Go To    ${ENV}/systems
-#    Log In    ${system owner}    ${password}    validate=${False}    button=None
-#    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
-#    Select user in Users List    ${random email}
-#    Log Out
+
+#    Log    Step 2: Check email for the user
+#    ${link}=   Get the link from email     ${email base}    ${random email}    ${email password}    system_shared
+
+    Log    Steps 3, 4: Follow the link from the email and log in
+    Go To    ${ENV}
+    Log In    ${random email}    ${password}    validate=${False}
+    Reload Page
+
+    Log    Step 5: Validate the System page and verify the user information and rights are as expected
+    Wait Until Elements Are Visible
+    ...    ${ACCOUNT DROPDOWN}
+    ...    ${DISCONNECT FROM MY ACCOUNT}
+    ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
+    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
+    ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${system owner}")]
+    Wait Until Elements Are Not Visible
+    ...    ${RENAME SYSTEM}
+    ...    ${USERS LIST LINK}
+    ...    ${SERVERS LINK}
+    ...    ${MERGE BUTTON SYSTEM}
+    Log Out
+
+    Log    Step 6: Verify the user appeared in owner's users list
+    Go To    ${ENV}/systems
+    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
+    Select user in Users List    ${random email}
+    Log Out

@@ -368,6 +368,13 @@ Get System Settings
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Get System Settings From Server
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get System Settings session   /api/systemSettings
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}[reply][settings]
+
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}    disable_warnings=1
@@ -437,6 +444,7 @@ Save User Existing
     [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${True}    isCloud=${True}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
+    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -456,6 +464,15 @@ Remove User
     ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Remove User By Email
+    [Arguments]    ${auth}    ${server url}    ${email}
+    ${users}=   Get Users    ${auth}    ${server url}
+    FOR    ${user}     IN    @{users}
+        Run Keyword If    "${user}[email]" == "${email}"    Run Keywords
+           ...    Remove User    ${auth}    ${server url}    ${user}[id]    AND
+           ...    Exit For Loop
+    END
 
 Get Cameras
     [Arguments]    ${auth}    ${server url}

@@ -1,7 +1,7 @@
 *** Variables ***
 ${email base}              cloudsmokecheck@gmail.com
-@{local auth}         admin    ${password}
-@{cloud auth}         ${email base}    ${password}
+@{local auth}              admin    ${password}
+@{cloud auth}              ${email base}    ${password}
 ${password}                qweasd 123
 ${new password}            QWEasd!@#
 ${restored password}       qweasd777$

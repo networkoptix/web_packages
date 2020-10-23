@@ -6,9 +6,9 @@ Suite Teardown    Close Browser
 
 *** Variables ***
 ${url}            https://nxvms.com
-${system ip}      https://10.1.5.192
+${system ip}      https://10.1.5.133
 ${system port}    7070
-${system name}    4.1_smoke_test_prod
+${system name}    4.1_prod_watcher
 ${cloud owner}    cloudsmokecheck@gmail.com
 ${password}       qweasd 123
 ${cloud services}    //div[contains(@class, "card-header")]/h6[contains(text(), "Cloud Services")]

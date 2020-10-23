@@ -1,6 +1,5 @@
 import time
 import subprocess
-import telebot
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -12,8 +11,6 @@ password = 'QWEasd!@#'
 
 
 class CloudWatcher:
-    bot = telebot.TeleBot('1358820574:AAG0pAau7Va3o0El2seTqPLBnWcTctsB0wE')
-
     def __init__(self):
         try:
             context = ssl.create_default_context()
@@ -39,7 +36,7 @@ class CloudWatcher:
                Following errors occurred during cloud monitoring:<br>
                {error_list}
                Check <a href="https://status.nxvms.com">status.nxvms.com</a><br> 
-               Run full smoke check in <a href="http://10.1.5.192:8080">Jenkins</a>
+               Run full smoke check in <a href="http://10.1.5.133:8080">Jenkins</a>
             </p>
           </body>
         </html>
@@ -51,7 +48,7 @@ class CloudWatcher:
         self.smtp_server.sendmail(sender_email, receiver_email, message.as_string())
 
     def run(self):
-        cmd = 'robot -d $HOME/dev/nx/cloud_portal/robot_tests/cloud_watcher/res $HOME/dev/nx/cloud_portal/robot_tests/cloud_watcher/check_status.robot'
+        cmd = 'robot -d smoke_check/prod/cloud_watcher/res smoke_check/prod/cloud_watcher/check_status.robot'
         while True:
             subprocess.run(cmd, shell=True)
             time.sleep(60)

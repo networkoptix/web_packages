@@ -16,7 +16,7 @@ Setup Remote System
     ${cont id}=   Execute Command    docker run -d --name ${system name} --restart=always -p ${port}:7001 -t ${IMAGE}
     Set To Dictionary    ${system}    cont=${cont id}
 #    If port is not specified, it might change after restarting the server
-#    ${port str}=   Execute Command    docker port "${system name}" 7001
+#    ${port str}=   Execute Command    docker port ${system name} 7001
 #    @{port str split}=   Split String    ${port str}    :
 #    Set To Dictionary    ${system}    port=${port str split}[1]
     Setup Local System    https://${ssh host ip}:${system}[port]    ${password}    ${system name}

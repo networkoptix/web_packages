@@ -103,6 +103,7 @@ Restore Password
     Wait Until Location Contains    restore_password/sent
 
     Log    Step 3: Check email inbox
+
     ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${email acc}    restore_password
 
     Log    Step 4: Click on Restore Password button
