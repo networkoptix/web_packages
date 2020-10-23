@@ -8,7 +8,7 @@
     border-radius : 0 0 2px 2px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
 
     .level-1-container {
