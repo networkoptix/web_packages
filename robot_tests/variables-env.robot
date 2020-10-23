@@ -30,17 +30,17 @@ ${EMAIL CUSTOM CAMERAS LIMITED}       ${TEST EMAIL}+customcameraslimited${BASE E
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
 ${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
-${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
-${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
 
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
-${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
-${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
-${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
 &{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
 ...    ${EMAIL ADV VIEWER}=advancedViewer
@@ -109,3 +109,8 @@ ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-
 
 #Cameras
 ${NOAUTH CAMERA PASSWORD}             qweasd123
+
+#Docker server machine info
+${QA BURBANK IP}                      10.1.5.238
+${QA BURBANK USER}                    qaburbank
+${QA BURBANK PASS}                    QABurbank777$ 

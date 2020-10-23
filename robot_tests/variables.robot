@@ -193,6 +193,7 @@ ${DOWNLOAD MAC OS VMS LINK}           //div[@id="macos-panel"]//a[contains(@clas
 ${DOWNLOAD MAC OS VMS TEXT}           ${DOWNLOAD MAC OS VMS LINK}//div[contains(text(),"Mac OS - Client installer")]
 ${DOWNLOAD ARM VMS LINK}              //div[@id="arm-panel"]//a[contains(@class, "download-button")]
 ${DOWNLOAD ARM VMS TEXT}              ${DOWNLOAD ARM VMS LINK}//div[contains(text(),"ARM") and contains(text(),"Client")]
+
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 ${DOWNLOAD VMS NAME}                  //h3[contains(text(),"${DOWNLOAD TITLE TEXT}")]
@@ -302,6 +303,8 @@ ${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/im
 ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
+${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
+${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
 
 #ADVANCED SETTINGS
 ${ADVANCED SETTINGS}                    ?advanced=true

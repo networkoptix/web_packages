@@ -281,6 +281,10 @@ export class NxSystemAPI {
         return this.get('/api/storageSpace');
     }
 
+    public getStoragesInfo(queryParams) {
+        return this.get('/ec2/getStorages', queryParams);
+    }
+
     updateStorages(updateParams) {
         return this.post('/ec2/saveStorages', updateParams);
     }

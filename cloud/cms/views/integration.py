@@ -56,11 +56,11 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
         elif show_drafts:
             state = 'draft'
 
-        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
-        global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+        global_contexts_dict = None
+        versions = Asset.version_ids(integrations)
 
         for integration in integrations:
-            current_version = integration.version_id()
+            current_version = versions[integration.id]
             customization_id_state_key = f"{settings.CUSTOMIZATION}-{language.code}-{integration.id}-{state}"
 
             if show_pending:
@@ -84,6 +84,11 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
             integration_dict = INTEGRATION_CACHE[customization_id_state_key]
             # If the integration doesnt exist or the version is wrong recalculate it
             if not integration_dict or integration_dict['version'] != current_version or show_drafts:
+                if not global_contexts_dict:
+                    global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True,
+                                                             hidden=False)
+                    global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+
                 integration_dict = dict()
                 for context in contexts:
                     # Make context json friendly
@@ -109,11 +114,16 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
 
                     if context_dict:
                         integration_dict[context_name] = context_dict
-                        if context.name == "downloadFiles":
+                        if context_name == "downloadFiles":
                             downloads_order = {}
                             for datastructure in context.datastructure_set.all():
                                 downloads_order[datastructure.name] = datastructure.order
                             integration_dict[f"{context_name}Order"] = downloads_order
+
+                        elif context_name == "support":
+                            if integration_dict['support'].get('hideEmail'):
+                                del integration_dict['support']['supportEmail']
+                                del integration_dict['support']['hideEmail']
 
                 if not integration_dict:
                     continue

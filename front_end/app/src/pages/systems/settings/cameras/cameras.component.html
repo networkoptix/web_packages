@@ -47,7 +47,7 @@
                         <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
                             <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
                         </div>
-                        <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
+                        <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>
                                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
                             </span>
@@ -77,7 +77,7 @@
                         <div class="grid-item">
                             <span class="text-right" translate>Aspect Ratio</span>
                         </div>
-                        <div class="grid-item mb-2 mb-lg-0">
+                        <div class="grid-item mb-2 mb-md-0">
                             <nx-select
                                     [selected]="false"
                                     [(ngModel)]="selectedAspect"

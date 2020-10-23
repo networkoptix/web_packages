@@ -170,19 +170,20 @@ export class AppComponent {
                 cloudStorageSize
             };
             // @ts-ignore
-            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
+            const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
+                showAnalyticsEvents,
                 sortSupportedDevicesByPopularity,
                 supportedHardwareTypes,
                 supportedResolutions,
                 vendorsShown: parseInt(vendorsShown)
             });
             // @ts-ignore
-            const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
+            const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
             this.CONFIG.integration.filter = {
-                items: integrationFilterItems,
-                limitation: integrationFilterLimitation
+                items      : integrationFilterItems,
+                limitation : integrationFilterLimitation
             };
             // @ts-ignore
             if (window.SETTINGS.appTypesForPlatform) {

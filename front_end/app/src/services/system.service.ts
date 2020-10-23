@@ -663,6 +663,10 @@ class ServerManager {
     restoreFactorySettings(serverId, currentPassword) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
+
+    getStorages(serverId) {
+        return this.mediaserverConnections[serverId].getStorages();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -857,14 +861,6 @@ export class NxSystem extends System implements OnDestroy {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-        if (systemId) {
-            this.cloudApi.getCloudStorageUsage(systemId)
-                .then(() => {
-                    this.cloudStorageSystemEnabled = true;
-                }, () => {
-                    this.cloudStorageSystemEnabled = false;
-                });
-        }
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
              Some options here:
@@ -915,7 +911,7 @@ export class NxSystem extends System implements OnDestroy {
     getInfoAndPermissions(useCache = true, suppressUpdate = false): any {
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
-            .then((response: any) => {
+            .then(async(response: any) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
                     return Promise.reject(error);
@@ -933,7 +929,10 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
+                this.cloudStorageCapable = this.info.capabilities && !!this.info.capabilities.cloudStorage;
+                if (this.cloudStorageCapable) {
+                    this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
+                }
                 this.mergeInfo = response.mergeInfo;
                 if (!suppressUpdate) {
                     this.systemInfo = this;
@@ -1095,11 +1094,15 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    updateOrGetSystemStorage(updateParams?) {
-        if (updateParams) {
+    updateOrGetSystemStorage(updateParams) {
+        if (!updateParams.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.mediaserver.getStorages();
+        return this.serverManager.getStorages(updateParams.serverId);
+    }
+
+    getStorages(queryParams) {
+        return this.mediaserver.getStoragesInfo(queryParams);
     }
 
     initSystemMediaServers() {

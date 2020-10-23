@@ -119,7 +119,9 @@ export class IpvdSearchService {
 
             if (this._showAnalytics && query.length) {
                 const matches = camera.analyticsEvents.filter(analytic => analytic.toLowerCase().includes(query));
-                return matches.length;
+                if (matches.length) {
+                    return true;
+                }
             }
 
             // Filter by query

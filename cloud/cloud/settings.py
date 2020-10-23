@@ -232,14 +232,22 @@ CACHES = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'],
-        "KEY_PREFIX": "integrations"
+        "KEY_PREFIX": "integrations",
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
+    },
+    "packages": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": "packages",
+        "TIMEOUT": 60 * 60
     }
 }
 
 DEPLOYMENT_READY = 'ready'
 
 if LOCAL_ENVIRONMENT:
-    _HOST = 'https://dev2.cloud.hdw.mx'
+    _HOST = 'https://cloud-test.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"
@@ -557,8 +565,8 @@ DOWNLOADS_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}
 DOWNLOADS_VERSION_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/{{build}}/downloads.json'
 
 MAX_RETRIES = conf['max_retries']
-CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS = 30
-CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS = 45
+CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS = 15
+CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS = 30
 CMS_MAX_FILE_SIZE = 9437184
 INTEGRATION_STORE_PAGE = '/integrations'
 

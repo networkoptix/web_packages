@@ -180,3 +180,14 @@
 .progress-text {
     color: inherit;
 }
+
+.no-storage-placeholder {
+    @include typography.placeholder;
+    height: 100%;
+    width: 100%;
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

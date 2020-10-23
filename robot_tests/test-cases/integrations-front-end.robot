@@ -185,11 +185,9 @@ Anonymous and basic user does not see disabled integration store
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     Element Should Not be Visible    ${FOOTER INTEGRATIONS LINK}
     Go To    ${hanwha}/integrations
-    Wait Until Location Contains    404
     
-    Log In    ${EMAIL VIEWER}    ${BASE PASSWORD}
-    Go to    ${hanwha}/integrations
-    Wait Until Location Contains    404
+    Log In    ${EMAIL VIEWER}    ${BASE PASSWORD}    button=None
+    Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
     Log Out
     Sleep    1
 

@@ -157,7 +157,7 @@ export class NxUrlProtocolService {
                         // Doubtful most users will change apps or click out before a second has passed.
                         setTimeout(() => {
                             hasOpened = blurCount > 1;
-                        }, 1000);
+                        }, 100);
                     }
                 };
                 // Browser dialog will cause a blur. If not then we never blurred.

@@ -20,10 +20,12 @@ Reset DB and Open New Browser On Failure
 #    Reset user noperm first/last name
     Set Account Name    ${url}    ${EMAIL NOPERM}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Set Account Name    ${url}    ${EMAIL LIVE VIEWER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    ${server auth}=    Create List    admin    ${BASE PASSWORD}
-    Disconnect Server via API    ${server auth}    f9b87e85-235f-4b6c-a6cd-fb14dfb1136d    ${BASE PASSWORD}
-    Disconnect Server via API    ${server auth}    e98fd104-680b-47dc-bd11-327e8e2147d3    ${BASE PASSWORD}
-    Open Browser and go to URL    ${url}
+    ${server auth}=   Create List    admin    ${BASE PASSWORD}
+    ${delete 2 id}=   Get Cloud System Id    https://10.1.5.126:7013    ${server auth} 
+    ${delete 1 id}=   Get Cloud System Id    https://10.1.5.126:7012    ${server auth}
+    @{auth}=    Create List    ${EMAIL DELETE USER}    ${BASE PASSWORD}
+    Disconnect Server via API    ${auth}    ${delete 2 id}    ${BASE PASSWORD}    ${EMAIL DELETE USER}
+    Disconnect Server via API    ${auth}    ${delete 1 id}    ${BASE PASSWORD}    ${EMAIL DELETE USER}
 
 Verify Delete User Dialog
     Wait Until Elements are Visible

@@ -29,7 +29,7 @@ module.exports = merge(common, {
     output: {
         filename  : 'scripts/[name].[chunkhash].js',
         path      : path.resolve(__dirname, 'dist'),
-        publicPath: '/'
+        publicPath: '/static/'
     },
     module : {
         rules: [

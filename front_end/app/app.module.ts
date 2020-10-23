@@ -9,7 +9,7 @@ import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }     from '@angular/common/http';
 import { FormsModule }                                from '@angular/forms';
 import { LayoutModule }                               from '@angular/cdk/layout';
-import { AngularFireModule, FirebaseOptionsToken }    from '@angular/fire';
+import { AngularFireModule, FIREBASE_OPTIONS }        from '@angular/fire';
 import { AngularFireMessagingModule }                 from '@angular/fire/messaging';
 
 import { InputTrimModule }                         from 'ng2-trim-directive';
@@ -104,7 +104,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
         {
-            provide   : FirebaseOptionsToken,
+            provide   : FIREBASE_OPTIONS,
             deps      : [NxConfigService],
             useFactory: initializeApp
         },

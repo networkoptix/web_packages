@@ -12,11 +12,11 @@ ${customization}    default
 Merge Systems
     [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
-    &{data}=   Create Dictionary    systemId=${secondary id}
+    ${data}=   Create Dictionary    systemId=${secondary id}
     Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
@@ -175,9 +175,10 @@ Evaluate Log Level via API
     Should Contain    ${string}    ${setting}': '${selected}
 
 Disconnect Server via API
-    [Arguments]    ${auth}    ${sysId}    ${password}
+    [Arguments]    ${auth}    ${sysId}    ${password}    ${email}
+    &{data}=    Create Dictionary    password=${password}    system_id=${sysid}    email=${email}
     Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
+    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Set System Settings via API
@@ -189,7 +190,7 @@ Set System Settings via API
     
 Set 3 dot 2 System Settings via API
     [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
+    Create Digest Session    returnedSetting    https://10.1.5.238:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}
@@ -273,14 +274,13 @@ Get Server Name
     END
 
 Get Server Id
+    #only use for single servers
     [Arguments]    ${system url}    ${system auth}    ${server name}
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
+    log    ${resp.json()}
     Should Be Equal As Strings    ${resp.status_code}    200
-    FOR    ${server}    IN    @{resp.json()}
-        ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
-        Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
-    END
+    Return From Keyword    ${resp.json()}[0][id]
 
 Rename Server
     [Arguments]    ${system url}    ${system auth}    ${new name}

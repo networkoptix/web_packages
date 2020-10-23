@@ -33,6 +33,7 @@ Advanced server settings availability
     Log    Step 3
     Log Out
     Log in to user and system    ${EMAIL ADMIN}   ${ADVANCED SETTINGS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     ${location} =    Get Location    
     Go To    ${location}${ADVANCED SETTINGS}
@@ -60,6 +61,7 @@ Advanced server settings for offline system
     ${location} =    Get Location
     Log    Step 1
     Go To    ${location}${ADVANCED SETTINGS}
+    Wait Until Element is Visible    ${PLACEHOLDER NO SETTINGS}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK}
@@ -195,11 +197,13 @@ Log settings functionality
     ...    @{LOG SETTINGS BLOCK}
     Log    The following will test every log level option for each one of the (5) dropdowns    
     FOR    ${dropdown}    IN    @{LOGLEVEL IDS}
+       Wait Until Elements Are Visible    @{LOG SETTINGS BLOCK}
        ${id} =    Get Element Attribute    ${dropdown}    id
        ${original} =    Get Text    ${dropdown}/span
        ${original} =    Fetch From Left    ${original}    ( 
        Test Every Loglevel Option    ${dropdown}    ${id}
        Set Log Level Option    ${dropdown}    ${id}    ${original}
+       Reload Page
     END     
 
     

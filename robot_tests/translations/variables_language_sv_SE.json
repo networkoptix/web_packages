@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "Vattenmärkesinställningar",
     "WEB SOCKET ENABLED TEXT": "Webb sockets",
     "STORAGE LOCATIONS TEXT": "Lagringsplatser",
-    "LOG SETTINGS TEXT": "Logginställningar"
+    "LOG SETTINGS TEXT": "Logginställningar",
+    "NOT ABLE TO LOAD TEXT": "Kan inte ladda systeminställningar.",
+    "CLOSE TEXT": "Stäng",
+    "NONE TEXT": "Ingen",
+    "ERROR TEXT": "Fel",
+    "WARNING TEXT": "Varning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Detaljerad"
 }

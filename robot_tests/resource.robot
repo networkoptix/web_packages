@@ -135,8 +135,8 @@ Log In With Remember Me
     Validate Log In    ${email}
 
 Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    [Arguments]    ${email}    ${sysId}=${AUTO TESTS SYSTEM ID}
+    Go To    ${url}/systems/${sysId}
     Log In    ${email}    ${password}    button=None
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
@@ -625,8 +625,8 @@ User is in cloud system
     [Return]    ${status}
 
 Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}
-    ${is there}=   User is in cloud system    ${email}    ${system id}
+    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
+    ${is there}=   User is in cloud system    ${email}    ${system id}    auth=${auth}
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
@@ -842,3 +842,11 @@ Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
+    
+Log In If Needed
+    [Arguments]    ${email}    ${password}
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Log In    ${email}    ${password}    button=None    AND
+    ...    Validate Log In    ${email} 
+    

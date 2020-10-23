@@ -108,7 +108,7 @@ export class PushComponent implements OnInit, OnDestroy {
                 message.notification.title = message.notification.title || ' ';
                 message.notification.body = message.notification.body || '';
                 this.receivedMessages.push(message);
-                // tslint:disable-next-line:no-unused-expression
+                // eslint-disable-next-line no-new
                 new Notification(message.notification.title, message.notification);
                 if (message.data) {
                     message.data = JSON.stringify(message.data);
