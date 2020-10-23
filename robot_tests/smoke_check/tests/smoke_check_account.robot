@@ -7,7 +7,7 @@ Suite Teardown   Close Browser
 
 *** Keywords ***
 Account Suite Setup
-    Open browser and go to URL    ${ENV}
+    Open browser and go to URL    ${ENV}    False    False
     ${email acc}=   Get Random Email    ${email base}
     Register And Activate Account    SmokeCheck    Acc    ${email acc}    ${password}
     Set Suite Variable    ${email acc}    ${email acc}

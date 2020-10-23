@@ -1,7 +1,7 @@
 *** Settings ***
 Resource         ../smoke_check_resource.robot
 
-Suite Setup      Open browser and go to URL    ${ENV}
+Suite Setup      Open browser and go to URL    ${ENV}    False    False
 Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Cloud Pages
 Suite Teardown   Close Browser
 
@@ -84,3 +84,4 @@ Supported Devices
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
+

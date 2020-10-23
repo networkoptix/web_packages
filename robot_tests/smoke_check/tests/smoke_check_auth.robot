@@ -7,7 +7,7 @@ Suite Teardown   Close Browser
 
 *** Keywords ***
 Auth Suite Setup
-    Open browser and go to URL    ${ENV}
+    Open browser and go to URL    ${ENV}    False    False
     ${email auth}=   Get Random Email    ${email base}
     Register And Activate Account    SmokeCheck    Auth    ${email auth}    ${password}
     Set Suite Variable    ${email auth}    ${email auth}

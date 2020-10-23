@@ -7,8 +7,7 @@ Suite Teardown   Users Suite Teardown
 
 *** Keywords ***
 Users Suite Setup
-    Open browser and go to URL    ${ENV}
-
+    Open browser and go to URL    ${ENV}    False    False
     ${system owner}=    Get Random Email    ${email base}
     Register And Activate Account    SmokeCheck    Users    ${system owner}    ${password}
     Set Suite Variable    ${system owner}    ${system owner}
@@ -246,7 +245,7 @@ Client - Share to registered user
     ...    ${password}
     ...    is cloud=${True}
     Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
-    Sleep    60
+    Sleep    30
 
     Go To    ${ENV}
     Log In    ${system owner}    ${password}    validate=False
@@ -256,4 +255,3 @@ Client - Share to registered user
 
     ${user systems}=   Get Account Systems    ${ENV}    ${random email}    ${password}
     Should Contain    ${user systems}    ${system users}[cloud id]
-

@@ -7,8 +7,7 @@ Suite Teardown   VMS Suite Teardown
 
 *** Keywords ***
 VMS Suite Setup
-    Open browser and go to URL    ${ENV}
-
+    Open browser and go to URL    ${ENV}    False    False
     ${system owner}=    Get Random Email    ${email base}
     Register And Activate Account    SmokeCheck    VMS    ${system owner}    ${password}
     Set Suite Variable    ${system owner}    ${system owner}

@@ -32,16 +32,18 @@ ${selenium_timeout}    30
 
 *** Keywords ***
 Open Browser and go to URL
-    [Arguments]    ${url}
-    Acquire Lock    MyLock
-    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}
-    Release Lock    MyLock
+    [Arguments]    ${url}    ${import IDs}=${True}    ${check language}=${True}
+    Run Keyword If    ${import IDs}    Run Keywords
+        ...    Acquire Lock    MyLock    AND
+        ...    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}    AND
+        ...    Release Lock    MyLock
     Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
-    Go To    ${ENV}
-    Check Language Anonymous
+    Run Keyword If    ${check language}    Run Keywords
+       ...    Go To    ${ENV}    AND
+       ...    Check Language Anonymous
     Go To    ${url}
 
 Regular Open Browser
@@ -135,8 +137,8 @@ Log In With Remember Me
     Validate Log In    ${email}
 
 Log in to Auto Tests System
-    [Arguments]    ${email}    ${sysId}=${AUTO TESTS SYSTEM ID}
-    Go To    ${url}/systems/${sysId}
+    [Arguments]    ${email}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${email}    ${password}    button=None
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
@@ -333,12 +335,12 @@ Share To
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
     ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}
-    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}   
+    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
     ...    ELSE IF   '${alert}'=='fail'    Run Keywords
     ...    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}    AND
     ...    Element Style Should Be    ${ADD USER EMAIL}     border-color    ${ERROR COLOR}    AND
-    ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND 
-    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}  
+    ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND
+    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
@@ -625,8 +627,8 @@ User is in cloud system
     [Return]    ${status}
 
 Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
-    ${is there}=   User is in cloud system    ${email}    ${system id}    auth=${auth}
+    [Arguments]    ${system id}    ${access role}    ${email}
+    ${is there}=   User is in cloud system    ${email}    ${system id}
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
@@ -842,11 +844,3 @@ Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
-    
-Log In If Needed
-    [Arguments]    ${email}    ${password}
-    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Run Keyword If    ${status}    Run Keywords
-    ...    Log In    ${email}    ${password}    button=None    AND
-    ...    Validate Log In    ${email} 
-    

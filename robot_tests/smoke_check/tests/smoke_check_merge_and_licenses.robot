@@ -6,7 +6,7 @@ Suite Teardown    Merge Suite Teardown
 
 *** Keywords ***
 Merge Suite Setup
-    Open Browser and go to URL    ${ENV}
+    Open Browser and go to URL    ${ENV}    False    False
     # Register test users
     ${merge owner}=   Get Random Email    ${email base}
     Register and activate account    SmokeCheck    MergeOwner    ${merge owner}    ${password}
