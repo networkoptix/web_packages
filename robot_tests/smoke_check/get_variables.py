@@ -1,31 +1,22 @@
 
+CLOUD_HOSTS = {
+    "test": ["https://cloud-test.hdw.mx", "http://cloud-test.hdw.mx"],
+    "dev2": ["https://dev2.cloud.hdw.mx", "http://dev2.cloud.hdw.mx"],
+    "stage": ["https://stage.nxvms.com", "http://stage.nxvms.com"],
+    "prod": ["https://nxvms.com", "http://nxvms.com"]
+}
+
+
+def get_tag(env):
+    for tag, urls in CLOUD_HOSTS.items():
+        if env in urls:
+            return tag
+
 
 def get_variables(env, vms):
     vars = {}
-    url = "http://10.1.5.182"
-    vars["server_vms"] = url
-    vars["server_users"] = url
-    if 'cloud-test' in env:
-        if vms == '4.0':
-            vars["system_vms"] = "4.0_smoke_test_1"
-            vars["system_users"] = "4.0_smoke_test_2"
-            vars["server_vms_port"] = 7021
-            vars["server_users_port"] = 7022
-        elif vms == '4.1':
-            vars["system_vms"] = "4.1_smoke_test_1"
-            vars["system_users"] = "4.1_smoke_test_2"
-            vars["server_vms_port"] = 7011
-            vars["server_users_port"] = 7012
-    elif 'nxvms' in env:
-        if vms == '4.0':
-            vars["system_vms"] = "4.0_smoke_prod_1"
-            vars["system_users"] = "4.0_smoke_prod_2"
-            vars["server_vms_port"] = 7031
-            vars["server_users_port"] = 7032
-        elif vms == '4.1':
-            vars["system_vms"] = "4.1_smoke_prod_1"
-            vars["system_users"] = "4.1_smoke_prod_2"
-            vars["server_vms_port"] = 7041
-            vars["server_users_port"] = 7042
+
+    tag = get_tag(env)
+    vars["IMAGE"] = f'{vms}_{tag}'
 
     return vars

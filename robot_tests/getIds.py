@@ -6,11 +6,13 @@ import urllib3
 
 
 def get_variables(cloud_url, test_email):
-    if 'nxvms.com' in cloud_url:
-        relay = 'relay.vmsproxy.com'
-    else:
-        relay = 'relay.vmsproxy.hdw.mx'
     vars = {}
+    if 'nxvms.com' in cloud_url:
+        vars["relay"] = 'relay.vmsproxy.com'
+        return vars
+    else:
+        vars["relay"] = relay = 'relay.vmsproxy.hdw.mx'
+
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # the post request gets upset about ssl if you put the s so we remove it
