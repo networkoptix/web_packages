@@ -32,15 +32,19 @@ export class NxActiveSystemDropdown extends BaseDropdown {
         super(languageService, configService);
     }
 
-    private updateActive(endpoint = 'settings') {
+    updateActiveByUri() {
+        this.updateActive(this.router.url.split('/').filter(String)[2]); // .filter(String) <- remove leading "/"
+    }
+
+    updateActive(endpoint = 'settings') {
         this.active.health = (endpoint === 'health');
         this.active.view = (endpoint === 'view');
         this.active.settings = (endpoint === 'settings');
-        this.show = false;
     }
 
     ngOnInit(): void {
-        this.updateActive(this.router.url.split('/')[2]);
+        this.updateActiveByUri();
+        this.show = false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
