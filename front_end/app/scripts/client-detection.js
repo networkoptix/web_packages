@@ -152,7 +152,7 @@
         var touch = false;
         switch (os) {
             case supportedOS.macos:
-                osVersion = /Mac OS X (10[\.\_\d]+)/.exec(nAgt)[1];
+                osVersion = /Mac OS X (1\d[\.\_\d]+)/.exec(nAgt)[1];
                 touch = true;
                 break;
 
