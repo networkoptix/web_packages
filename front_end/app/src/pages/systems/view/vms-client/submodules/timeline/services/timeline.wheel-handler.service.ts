@@ -20,7 +20,7 @@ export class TimelineWheelHandlerService {
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
       this.wheelScroll(e.deltaX)
     } else {
-      this.wheelZoom(e.deltaY, e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr))
+      this.wheelZoom(-e.deltaY, e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr))
     }
     this.timeUnderMouse.handleMouseMove(e)
   }
