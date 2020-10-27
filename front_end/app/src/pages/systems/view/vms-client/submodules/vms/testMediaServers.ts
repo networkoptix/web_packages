@@ -196,8 +196,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
             //     'http://gapped.media-server.local/offline-100M-chunks-test-camera',
             //     'Offline',
             //     TEST_THUMBNAIL_URL,
-            //     new SimpleTimeRange(now - DURATION * 2, now),
-            //     generateGappedArchive(now - DURATION * 2, now, 1e8)
+            //     new SimpleTimeRange(now - DURATION * 20, now),
+            //     generateGappedArchive(now - DURATION * 20, now, 1e8)
             // ),
             // new TestCamera(
             //     'offline-1G-chunks-test-camera',
@@ -206,8 +206,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
             //     'http://gapped.media-server.local/offline-1G-chunks-test-camera',
             //     'Offline',
             //     TEST_THUMBNAIL_URL,
-            //     new SimpleTimeRange(now - DURATION * 2, now),
-            //     generateGappedArchive(now - DURATION * 2, now, 1e9)
+            //     new SimpleTimeRange(now - DURATION * 200, now),
+            //     generateGappedArchive(now - DURATION * 200, now, 1e9)
             // ),
         ],
     }
