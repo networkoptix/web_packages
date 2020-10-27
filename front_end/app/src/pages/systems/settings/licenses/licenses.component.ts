@@ -31,17 +31,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
     // Constructor and class initialization methods
     private setupDefaults() {
-        this.classMap = {
-            digital       : this.LANG.license.info.digital,
-            analog        : 'Analog',
-            edge          : 'Edge',
-            vmax          : 'VMAX',
-            videowall     : 'Video Wall',
-            analogencoder : 'Analog Encoder',
-            starter       : 'Starter',
-            iomodule      : 'IO Module',
-            bridge        : 'Bridge'
-        };
+        this.classMap = this.LANG.license.info;
 
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
@@ -208,10 +198,10 @@ export class NxSystemLicensesComponent implements OnInit {
                                                     const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
                                                     if (Object.keys(server).length) {
                                                         item.info.serverName = server.name;
-                                                        item.info.serverStatus = server.status;
-                                                        item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                        item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()];
+                                                        item.info.status = item.info.serverStatus === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
                                                     } else {
-                                                        item.info.serverName = 'Server not found';
+                                                        item.info.serverName = this.LANG.license.info.serverNotFound;
                                                         item.info.serverStatus = server.status;
                                                         item.info.status = this.LANG.license.info.error;
                                                     }
