@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -38,6 +38,10 @@ def health_check(request):
     plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
     status = 503 if plan else 200
     return HttpResponse(status=status)
+
+
+def view_404(request, *args, **kwargs):
+    return render(request, 'static/index.html')
 
 
 urlpatterns = [
@@ -69,10 +73,11 @@ urlpatterns = [
         TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
 
-    url(r'^(?!static|preview).*',
+    url(r'^(?!static|preview|admin).*',
         TemplateView.as_view(template_name="static/index.html"))
 ]
 
 if settings.LOCAL_ENVIRONMENT:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
 
+handler404 = 'cloud.urls.view_404'
