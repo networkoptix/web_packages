@@ -16,7 +16,7 @@ export const topRulerDrawingConfig = {
   },
   backgroundEvenColor: '#ffffff',
   backgroundOddColor: '#f1f3f4',
-  underscoreColor: '#e5e8ea',
+  underscoreColor: '#a5a8aa', //'#e5e8ea',
 }
 
 export default topRulerDrawingConfig

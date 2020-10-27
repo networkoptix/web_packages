@@ -4,6 +4,8 @@ import IrregularLengthInterval from './IrregularLengthInterval'
 
 // assert ordered
 export const irregularLengthIntervals: Array<IrregularLengthInterval> = [
+  500,
+  SECOND, // double entry for SECOND is not a typo here!
   SECOND,
   5 * SECOND,
   10 * SECOND,

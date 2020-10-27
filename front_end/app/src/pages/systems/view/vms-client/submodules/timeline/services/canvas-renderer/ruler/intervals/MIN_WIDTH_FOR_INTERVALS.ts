@@ -4,6 +4,7 @@ export const MIN_WEIGHT = 0
 export const MAX_WEIGHT = 4
 
 export const MIN_WIDTHS_FOR_INTERVALS = {
+  [500]: [ 15, Infinity, Infinity, Infinity ],
   [SECOND]: [ 15, 50, Infinity, Infinity ],
   [5 * SECOND]: [ 15, 50, 250, Infinity ],
   [10 * SECOND]: [ 15, 50, 500, 1000 ],
