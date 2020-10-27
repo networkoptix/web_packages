@@ -155,16 +155,35 @@ export class PlaybackService {
         const diff = newT - this._state.currentTime
         this._state.currentTime = newT
 
-        // make time marker appear fixed while the timeline scrolls, not the contrary
-        if (this._state.currentTime > this.timeline.visibleRange.start && this._state.currentTime < this.timeline.visibleRange.end) {
-          this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+        if (!this.isBeyondVisibleRange) {
+          const marginMs = this.timeline.canvasWidthToDuration(100)
+          // make time marker appear fixed while the timeline scrolls, not the contrary
+          if (this._state.currentTime > this.timeline.visibleRange.start + marginMs
+            && this._state.currentTime < this.timeline.visibleRange.end
+          ) {
+            this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+          }
         }
-
         this._jumpOverTheGapIfNeeded()
+
         this._emit()
         break
       default:
         assertNever(this._state)
+    }
+  }
+
+  public get isBeyondVisibleRange (): boolean {
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        return false
+      case PLAYBACK_MODE.LIVE:
+        return true
+      case PLAYBACK_MODE.ARCHIVE:
+        return this._state.currentTime < this.timeline.visibleRange.start
+          || this._state.currentTime > this.timeline.visibleRange.end
+      default:
+        return false
     }
   }
 
@@ -264,6 +283,8 @@ export class PlaybackService {
       if (!this.vms.selectedCamera.archive.find(r => r.start <= state.currentTime && r.end >= state.currentTime)) {
         const nextChunk = this.vms.selectedCamera.archive.find(r => r.start >= state.currentTime)
         if (nextChunk) {
+          const wasVisible = !this.isBeyondVisibleRange
+
           const was = this._state.currentTime
           const nextChunkStart = nextChunk.start
           const diff = nextChunkStart - (this._state as ArchivePlaybackState).currentTime;
@@ -273,7 +294,9 @@ export class PlaybackService {
 
           // TODO: request scroll jump animation
           // this.timeline.jumpScrollTo(this._state.currentTime)
-          this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, true)
+          if (wasVisible) {
+            this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, true)
+          }
 
           // TODO: maybe the logic here should be very different, actually
         } else {
