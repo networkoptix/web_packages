@@ -19,26 +19,25 @@ import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    private allElements: any;
-    private elements: any;
-    private emptyFilter: any = {};
-    private filterModel: any = {};
-
-    private integrationSubscription: Subscription;
-    private uriSubscription: Subscription;
+    allElements: any;
+    elements: any;
+    filterModel: any = {};
     params: any;
     account: any;
-
     selectors = {
-        access    : false,
-        analytics : false,
-        cameras   : false,
-        home      : false,
-        psim      : false
+        access   : false,
+        analytics: false,
+        cameras  : false,
+        home     : false,
+        psim     : false
     };
+
+    private emptyFilter: any = {};
+    private integrationSubscription: Subscription;
+    private uriSubscription: Subscription;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
