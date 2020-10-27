@@ -5,12 +5,12 @@ import { UpgradeModule }             from '@angular/upgrade/static';
 import { RouterModule, Routes }      from '@angular/router';
 import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }           from '@ngx-translate/core';
-import { ComponentsModule }          from '../../../components/components.module';
+import { ComponentsModule }          from '@components/components.module';
 import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
 import {
     ApplyGuard, AuthGuard, SystemGuard
 }                                    from '../../../routeGuards';
-import { MenuModule }                from '../../../menu';
+import { MenuModule }                from '@src/menu';
 import { NxSystemLicensesComponent } from './licenses/licenses.component';
 import { NxSystemLicensesModule }    from './licenses/licenses.module';
 import { NxSystemSettingsComponent } from './settings.component';

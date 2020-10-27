@@ -68,6 +68,14 @@
                                 </span>
                                 <span class="ml-1" translate>Detailed Info</span>
                         </button>
+                        <button *ngIf="canSeeInfo" class="server-buttons pr-0"
+                                routerLink="/api-tool/{{system.id}}/{{parsedServerId}}">
+                                <span>
+                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                              [applyClass]="true"></svg-icon>
+                                </span>
+                            <span class="ml-1" translate>API tool</span>
+                        </button>
                     </div>
                 </div>
                 <div class="col-4">
@@ -126,7 +134,7 @@
                     >
                     <ng-container *ngIf="dropdownStorages.length">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
-                        <nx-select 
+                        <nx-select
                             id="system"
                             [ellipsisMargin]="true"
                             [stillLoading]="checkingForDataAnalytics"

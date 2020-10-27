@@ -580,6 +580,7 @@ export interface PageTitles {
     systems:                any;
     template:               any;
     view:                   any;
+    apiTool:                any;
 }
 
 export interface PasswordRequirements {
@@ -697,12 +698,12 @@ export interface Storage {
     failed:                     any;
     stillHasArchivesPreWarning: any;
     stillHasArchives:           any;
+    failedRemove:               any;
     reservedTooSmallTooltip:    any;
     reservedSystemTooltip:      any;
     serverOffline:              any;
     success:                    any;
     urlPlaceholder:             any;
-    failedRemove:            any;
 }
 
 export interface Modes {
@@ -1482,6 +1483,7 @@ const typeMap: any = {
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
         { json: "view", js: "view", typ: "any" },
+        { json: "apiTool", js: "apiTool", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },

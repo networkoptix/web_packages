@@ -783,6 +783,10 @@ class ServerManager {
     checkForAnalyticsData(serverId: string) {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
+
+    getApiDoc(serverId: string) {
+        return this.mediaserverConnections[serverId].getApiDoc();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -998,6 +1002,12 @@ export class NxSystem extends System implements OnDestroy {
             this.cloudApi
         );
     }
+
+    getServerApiDoc(serverId: string) {
+        return this.serverManager
+            .getApiDoc(serverId).toPromise()
+            .catch(err => Promise.reject(err));
+    };
 
     updateSystemAuth(force?: boolean) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update

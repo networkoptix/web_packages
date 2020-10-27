@@ -8,8 +8,8 @@ import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { TranslateModule }                  from '@ngx-translate/core';
 
-import { DirectivesModule }                 from '../../../../directives/directives.module';
-import { ComponentsModule }                 from '../../../../components/components.module';
+import { DirectivesModule }                 from '@directives/directives.module';
+import { ComponentsModule }                 from '@components/components.module';
 import { NxSystemServersComponent }         from './servers.component';
 import { NxSystemStandardServerComponent }  from './standard/server.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
@@ -40,7 +40,7 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
         NxServerLoggerComponent,
         NxSystemStorageComponent,
         NxSystemAdvancedStorageComponent,
-        NxStorageSizeComponent
+        NxStorageSizeComponent,
     ],
     bootstrap: [
     ],

@@ -1,7 +1,7 @@
 import { NgModule }                  from '@angular/core';
 import { Angular2CsvModule }         from 'angular2-csv';
 
-import { DirectivesModule }          from '../directives/directives.module';
+import { DirectivesModule }          from '@directives/directives.module';
 import { SandboxModule }             from './sandbox/sandbox.module';
 import { IpvdModule }                from './ipvd/ipvd.module';
 import { DownloadModule }            from './download/download.module';
@@ -9,7 +9,6 @@ import { DownloadHistoryModule }     from './download-history/download-history.m
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
-// import { RightMenuModule }           from './right-menu/right-menu.module';
 import { ContentModule }             from './content/content.module';
 import { IntegrationsModule }        from './integration/integrations.module';
 import { IntegrationsListModule }    from './integration/list/list.module';
@@ -29,6 +28,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
 import { NxDevelopersModule }        from './developers/developers.module';
+import { NxApiToolModule }           from './api-tool/api-tool.module';
 
 @NgModule({
     imports: [
@@ -55,6 +55,7 @@ import { NxDevelopersModule }        from './developers/developers.module';
         NxSystemsListModule,
         NxSystemViewModule,
         NxDevelopersModule,
+        NxApiToolModule,
         NxAccountModule,
         NxDebugModule,
         NxGridLayoutModule,
@@ -80,6 +81,7 @@ import { NxDevelopersModule }        from './developers/developers.module';
         IntegrationsListModule,
         NxSettingsModule,
         NxDevelopersModule,
+        NxApiToolModule,
         NxHealthModule,
         ContentModule,
         // RightMenuModule, // TODO: Remove it after test
