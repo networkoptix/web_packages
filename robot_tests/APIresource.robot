@@ -394,21 +394,21 @@ Set Camera Attribute
     ...    cameraId=${camera id}
     ...    ${attribute}=${value}
     Create Digest Session    Save camera attribute    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera attribute     /ec2/saveCameraUserAttributes    json=${data}    timeout=10
+    ${resp}=   Post Request    Save camera attribute     /ec2/saveCameraUserAttributes    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Set All Camera Attributes
     [Arguments]    ${server url}    ${auth}    ${camera json}
     Create Digest Session    Save camera attributes    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera attributes     /ec2/saveCameraUserAttributes    json=${camera json}    timeout=10
+    ${resp}=   Post Request    Save camera attributes     /ec2/saveCameraUserAttributes    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Set All Camera Add Params
     [Arguments]    ${server url}    ${auth}    ${camera json}
     Create Digest Session    Save camera add params    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=10
+    ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
@@ -441,9 +441,8 @@ Save User
     [Return]    ${resp.json()}
 
 Save User Existing
-    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}
-    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${True}    isCloud=${True}    userRoleId=${userRoleId}
-    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
+    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}    ${user id}
+    &{data}=   Create Dictionary    email=${email}   id=${user id}   isCloud=${True}    isEnabled=${True}    name=${name}    permissions=${permissions}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
