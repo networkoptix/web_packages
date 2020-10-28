@@ -100,13 +100,14 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
     if (this._haveIntervalsChanged(intervals)) {
       const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals)
+      console.log('intervals changed', this._prevIntervals, intervals, intervalDiffDict)
       Object.keys(intervalDiffDict).map(k => {
         const v = intervalDiffDict[k]
         if (v.length) {
           this._lastIntervalChanges[k] = Date.now()
           // HERE animations happen
           if (k in this._intervalWeightAnimations) {
-            this._intervalWeightAnimations[k].abort()
+            // this._intervalWeightAnimations[k].abort()
             this._intervalWeightAnimations[k].set(v[1])
           } else {
             this._intervalWeightAnimations[k] = new AnimatedFloat(v[0], ANIMATION_DURATION)
