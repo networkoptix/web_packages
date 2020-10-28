@@ -627,7 +627,7 @@ User is in cloud system
     [Return]    ${status}
 
 Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}
+    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
     ${is there}=   User is in cloud system    ${email}    ${system id}
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 

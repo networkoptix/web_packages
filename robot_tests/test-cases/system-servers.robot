@@ -166,10 +166,10 @@ Server name can be changed
     Input Text    ${RENAME SERVER INPUT}    server 1 name changed
     Click Button    ${RENAME SAVE BUTTON}
     Check for Alert    ${SERVER NAME SAVED}
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Select Server By Name    server 1 name changed
     Reload Page 
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
 
     Log    Reset the name to server 1
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
@@ -184,7 +184,7 @@ Server name changed via API updates on cloud
     ${split[1]}=   Replace String    ${split[1]}    %7D    ${EMPTY}
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1 name changed
     Reload Page
-    Wait Until Element Contains    ${SERVER NAME}    server 1 name changed
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     
     Log    Reset the name to server 1
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
@@ -404,7 +404,7 @@ Owner has Access
 
 Admin has Access
     [Tags]    C69853    C70927    threaded
-    [Setup]    Log in to Auto Tests System    ${admin}    sysId=${sysId1}
+    [Setup]    Log in to user and system    ${admin}    ${sysId1}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
@@ -413,22 +413,22 @@ Admin has Access
 
 Viewer does not have Access
     [Tags]    C69853    threaded
-    [Setup]    Log in to Auto Tests System    ${viewer}    sysId=${sysId1}
+    [Setup]    Log in to user and system    ${viewer}    ${sysId1}
     Element Should not be Visible    ${SERVERS LINK}
 
 Advanced Viewer does not have Access
     [Tags]    C69853    threaded
-    [Setup]    Log in to Auto Tests System    ${adv viewer}    sysId=${sysId1}
+    [Setup]    Log in to user and system    ${adv viewer}    ${sysId1}
     Element Should not be Visible    ${SERVERS LINK}
 
 Live Viewer does not have Access
     [Tags]    C69853    threaded
-    [Setup]    Log in to Auto Tests System    ${live viewer}    sysId=${sysId1}
+    [Setup]    Log in to user and system    ${live viewer}    ${sysId1}
     Element Should not be Visible    ${SERVERS LINK}
 
 Custom User does not have Access
     [Tags]    C69853    threaded
-    [Setup]    Log in to Auto Tests System    ${custom}    sysId=${sysId1}
+    [Setup]    Log in to user and system    ${custom}    ${sysId1}
     Element Should not be Visible    ${SERVERS LINK}
 
 Tab order is correct for online system
