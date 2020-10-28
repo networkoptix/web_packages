@@ -852,6 +852,15 @@ Log In If Needed
     ...    Log In    ${email}    ${password}    button=None    AND
     ...    Validate Log In    ${email} 
     
+Register and Activate Generic Users
+    ${admin}=          Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${viewer}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${live viewer}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${custom}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    &{generic users}=    Create Dictionary     admin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advViewer=${adv viewer}    custom=${custom}
+    [Return]    &{generic users}
+    
 Create Docker Server
     [Arguments]    ${name}
     Open Connection    ${QA BURBANK IP}

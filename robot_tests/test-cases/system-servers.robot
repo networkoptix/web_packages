@@ -4,7 +4,7 @@ Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Server Settings Suite Tear Down
-Force Tags        system
+Force Tags        system    Threaded
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
@@ -66,16 +66,12 @@ Server Settings Suite Setup
     Common Restart Logout    ${url}
     Merge Systems    ${auth}    ${sysId1}    ${sysId2}
     
-    ${admin}=          Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${viewer}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${live viewer}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${custom}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${admin}          ${admin}
-    Set Suite Variable    ${viewer}         ${viewer}
-    Set Suite Variable    ${live viewer}    ${live viewer}
-    Set Suite Variable    ${adv viewer}     ${adv viewer}
-    Set Suite Variable    ${custom}         ${custom}
+    &{users}=    Register and Activate Generic Users
+    Set Suite Variable    ${admin}          ${users}[admin]
+    Set Suite Variable    ${viewer}         ${users}[viewer]
+    Set Suite Variable    ${live viewer}    ${users}[liveViewer]
+    Set Suite Variable    ${adv viewer}     ${users}[advViewer]
+    Set Suite Variable    ${custom}         ${users}[custom]
     Add user to cloud system if not there    ${sysId1}    cloudAdmin    ${admin}    auth=${auth}
     Add user to cloud system if not there    ${sysId1}    viewer    ${viewer}    auth=${auth}
     Add user to cloud system if not there    ${sysId1}    advancedViewer    ${adv viewer}    auth=${auth}

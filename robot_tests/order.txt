@@ -8,6 +8,7 @@
 --suite Test-Cases.System-Admin-Settings
 --suite Test-Cases.System-Admin-Offline
 --suite Test-Cases.System-Admin-Adv-Settings
+--suite Test-Cases.System-Servers
 --suite Test-Cases.System-Offline
 --suite Test-Cases.Systems-Page
 --suite Test-Cases.Restore-Pass-Form-Validation-Password
