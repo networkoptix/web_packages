@@ -4,7 +4,7 @@ Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Server Settings Suite Tear Down
-Force Tags        system
+Force Tags        system    Threaded
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}

@@ -4,7 +4,7 @@ Suite Setup       Setup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Run Keywords    Close All Browsers    Remove Temporary Users
-Force Tags        system
+Force Tags        system    Threaded
 
 *** Variables ***
 ${email}       ${EMAIL OWNER}
