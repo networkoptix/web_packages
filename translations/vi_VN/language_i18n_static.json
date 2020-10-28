@@ -741,7 +741,8 @@
             "analogencoder": "Bộ mã hóa tương tự",
             "starter": "Bắt đầu",
             "iomodule": "Mô đun IO",
-            "bridge": "Cầu"
+            "bridge": "Cầu",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "Yêu cầu thêm {{number}}",

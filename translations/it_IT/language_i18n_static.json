@@ -741,7 +741,8 @@
             "analogencoder": "Encoder analogico",
             "starter": "Iniziale",
             "iomodule": "Modulo I / O",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} richieste",

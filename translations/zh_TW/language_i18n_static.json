@@ -741,7 +741,8 @@
             "analogencoder": "類比",
             "starter": "Starter",
             "iomodule": "I/O 模組",
-            "bridge": "橋接"
+            "bridge": "橋接",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "還需要{{number}} 個",

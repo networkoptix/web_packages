@@ -741,7 +741,8 @@
             "analogencoder": "Аналоговый кодировщик",
             "starter": "Стартовая",
             "iomodule": "Модуль ввода/вывода",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "Требуется еще {{number}}",

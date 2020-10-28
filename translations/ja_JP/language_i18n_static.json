@@ -741,7 +741,8 @@
             "analogencoder": "アナログエンコーダー",
             "starter": "スターター",
             "iomodule": "IOモジュール",
-            "bridge": "ブリッジ"
+            "bridge": "ブリッジ",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} 以上必要",

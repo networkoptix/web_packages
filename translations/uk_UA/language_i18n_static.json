@@ -741,7 +741,8 @@
             "analogencoder": "Аналоговий кодувальник",
             "starter": "Стартер",
             "iomodule": "Модуль Вводу/Виводу",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} потрібно більше",

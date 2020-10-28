@@ -741,7 +741,8 @@
             "analogencoder": "Analog enkoder",
             "starter": "Starter",
             "iomodule": "I/O Modul",
-            "bridge": "Brygga"
+            "bridge": "Brygga",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} mer krävs",

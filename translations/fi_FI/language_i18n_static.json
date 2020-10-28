@@ -741,7 +741,8 @@
             "analogencoder": "Analoginen Enkooderi",
             "starter": "Starter",
             "iomodule": "IO Module",
-            "bridge": "Silta"
+            "bridge": "Silta",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} more required",

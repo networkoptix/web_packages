@@ -741,7 +741,8 @@
             "analogencoder": "เข้ารหัสอนาล็อก",
             "starter": "เริ่มต้น",
             "iomodule": "I/O โมดูล",
-            "bridge": "การเชื่อมต่อ"
+            "bridge": "การเชื่อมต่อ",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "ต้องการอีก {{number}}",

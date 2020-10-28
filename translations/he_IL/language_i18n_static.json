@@ -741,7 +741,8 @@
             "analogencoder": "דוחס אנלוגי",
             "starter": "מתחיל",
             "iomodule": "מודול קלט/פלט",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "נדרש {{number}} נוספים",

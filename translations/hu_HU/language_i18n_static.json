@@ -741,7 +741,8 @@
             "analogencoder": "Analóg enkóder",
             "starter": "Indító",
             "iomodule": "I/O modul",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "További {{number}} szükséges",
