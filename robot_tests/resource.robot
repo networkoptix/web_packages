@@ -833,9 +833,9 @@ Check New Password Outline and Error Message
 # ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
 
 Check System Text
-    [Arguments]    ${user}
+    [Arguments]    ${user}    ${sysId}
     Log Out
-    Log in to Auto Tests System    ${user}
+    Log in to user and system    ${user}    ${sysId}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
     Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
@@ -844,3 +844,19 @@ Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
+    
+Log In If Needed
+    [Arguments]    ${email}    ${password}
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Log In    ${email}    ${password}    button=None    AND
+    ...    Validate Log In    ${email} 
+    
+Create Docker Server
+    [Arguments]    ${name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker run -d --name ${name} --restart always -p 7001 4.1_test
+    ${results}    Execute Command    docker container port ${name}
+    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    [Return]    ${port1}
