@@ -1483,7 +1483,7 @@ export class NxSystem extends System implements OnDestroy {
 
     protected _setMediaServersAndCameras (api_reply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        let mss = api_reply['ec2/getMediaServersEx'];
+        let mss = api_reply['ec2/getMediaServersEx'] || api_reply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
         let cs = api_reply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resource_types => {
@@ -1538,6 +1538,16 @@ export class NxSystem extends System implements OnDestroy {
             this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
             this.mediaserver.getHlsUrl(cameraId, position, resolution)
         );
+    }
+
+    public unsafeGetCameraLiveHlsUrl (cameraId) {
+        return this.mediaserver.getLiveHlsUrl(cameraId)
+    }
+
+    public unsafeGetHlsUrl (cameraId, position?, resolution='lo') {
+        return position === -1 ?
+            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
+            this.mediaserver.getHlsUrl(cameraId, position, resolution)
     }
 
     public getCameraRecords (cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {

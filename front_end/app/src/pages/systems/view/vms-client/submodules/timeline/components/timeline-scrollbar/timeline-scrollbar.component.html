@@ -1,0 +1,32 @@
+<div class="button left"
+  [ngClass]="{ enabled: canScrollLeft }"
+  (mousedown)="buttonLeftMouseDownHandler()"
+  (dblclick)="buttonLeftDblClickHandler()"
+></div>
+<div class="background"
+  (mousedown)="backgroundMouseDownHandler($event)"
+  (dblclick)="backgroundDblClickHandler($event)"
+>
+  <div
+    class="current-playback-indicator"
+    #currentPlayback
+    [ngClass]="{ 'active': isPlaying }"
+    [ngStyle]="{ 'left.%': playbackLeftPercent }"
+  ></div>
+  <div
+    class="bar"
+    #bar
+    (dblclick)="barDoubleClickHandler($event)"
+    (mousedown)="barMouseDownHandler($event)"
+    [ngClass]="{ 'grabbed': isBarGrabbed }"
+  >
+    <span class="stripe"></span>
+    <span class="stripe"></span>
+    <span class="stripe"></span>
+  </div>
+</div>
+<div class="button right"
+  [ngClass]="{ enabled: canScrollRight }"
+  (mousedown)="buttonRightMouseDownHandler()"
+  (dblclick)="buttonRightDblClickHandler()"
+></div>

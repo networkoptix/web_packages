@@ -7,13 +7,20 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from '../../../components/components.module';
 import { ApplyGuard } from '../../../routeGuards';
-import { NxSystemViewComponent } from './views/system-view/system-view.component'
-import { NxSystemCameraViewComponent } from './views/system-camera-view/system-camera-view.component'
+import NxSystemViewIndexPageComponent from './pages/system-view-index/system-view-index.page.component'
+import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component'
 import { CookieService } from 'ngx-cookie-service'
 
-import components from './components'
 import routes from './routes'
-import IpInfoPipe from './pipes/ip_info.pipe'
+import components from './components'
+
+import VmsClientModule from './vms-client/vms-client.module'
+import VmsClientPlaybackModule from './vms-client/submodules/playback/playback.module'
+import VmsClientTimelineModule from './vms-client/submodules/timeline/timeline.module'
+import VmsClientVmsModule from './vms-client/submodules/vms/vms.module'
+
+
+import { routes as vmsSandboxRoutes } from './vms-client/vms-client-routing.module'
 
 @NgModule({
     imports: [
@@ -24,24 +31,30 @@ import IpInfoPipe from './pipes/ip_info.pipe'
         NgbModule,
         TranslateModule,
         ComponentsModule,
+
+        VmsClientPlaybackModule,
+        VmsClientTimelineModule,
+        VmsClientVmsModule,
+        VmsClientModule,
+
         RouterModule.forChild(routes),
+        RouterModule.forChild(vmsSandboxRoutes),
     ],
     providers: [
         ApplyGuard,
         CookieService,
     ],
     declarations: [
-        NxSystemViewComponent,
-        NxSystemCameraViewComponent,
+        NxSystemViewIndexPageComponent,
+        NxSystemViewCameraPageComponent,
         components,
-        IpInfoPipe,
     ],
     bootstrap       : [],
     entryComponents : [
-        NxSystemViewComponent,
+        NxSystemViewIndexPageComponent,
     ],
     exports: [
-        NxSystemViewComponent,
+        NxSystemViewIndexPageComponent,
     ]
 })
 export class NxSystemViewModule {

@@ -1,0 +1,73 @@
+@use '../../../../../../../../../styles/theme_variables' as *;
+
+:host {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+
+  > .is-live {
+    opacity: 0.0;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #e1e7ea;
+    color: #000;
+
+    > .line {
+      display: block;
+
+      > .icon {
+        display: inline-block;
+        border: 1px solid green;
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        margin-right: 2px;
+      }
+
+      > .text {
+        display: inline-block;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+    }
+
+    &.playing {
+      > .line {
+        > .icon {
+          background: green;
+        }
+      }
+    }
+
+    &.recording {
+      > .line {
+        > .icon {
+          border-color: red;
+        }
+      }
+      &.playing {
+        > .line {
+          > .icon {
+            background: red;
+          }
+        }
+      }
+    }
+
+    &.active {
+      opacity: 0.8;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1.0;
+      }
+    }
+  }
+}

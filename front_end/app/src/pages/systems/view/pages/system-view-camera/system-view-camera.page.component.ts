@@ -1,0 +1,261 @@
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core'
+import { INxViewCamera  } from '../../view.types'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NxSystemService, NxSystem } from '../../../../../services/system.service'
+import { NxAccountService } from '../../../../../services/account.service'
+import { CookieService } from 'ngx-cookie-service'
+import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
+import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service'
+import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
+import ICamera from '../../vms-client/submodules/vms/datatypes/ICamera'
+import PlaybackService from '../../vms-client/submodules/playback/services/playback.service'
+import { Subscription } from 'rxjs'
+import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
+import FpsMeterService from '@services/fps-meter.service'
+
+export type PlaybackQuality = 'auto' | 'low' | 'high'
+
+
+@Component({
+    selector: 'nx-system-view-camera-page',
+    templateUrl: 'system-view-camera.page.component.html',
+    styleUrls: ['system-view-camera.page.component.scss']
+})
+export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    public id: string
+    public camera: ICamera
+
+    protected _routeSubscription: Subscription
+    protected _vmsStateSubscription: Subscription
+    protected _animationFrameRequestHandler: number
+
+    public isFullScreen: boolean = false
+
+    public settingsShown: boolean = false
+    public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
+    public qualitySelected: PlaybackQuality = 'auto'
+
+    constructor (
+      protected self: ElementRef,
+      protected route: ActivatedRoute,
+      protected vms: VideoManagementSystemService,
+      protected playback: PlaybackService,
+      public timeline: TimelineService,
+      public timelineExtendToNow: TimelineExtendToNowService,
+      protected fpsMeter: FpsMeterService,
+    ) {
+      this._onRouteChange = this._onRouteChange.bind(this)
+      this._onVmsStateChange = this._onVmsStateChange.bind(this)
+      this._onAnimationFrame = this._onAnimationFrame.bind(this)
+    }
+
+    public handleControlsTogglingEarClick () {
+      this.$self.classList.toggle('controls-shown')
+    }
+
+    public get $self (): HTMLElement {
+      return this.self.nativeElement as HTMLElement
+    }
+
+    public ngOnInit (): void {
+      this._routeSubscription = this.route.params.subscribe(this._onRouteChange)
+      this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
+      this._animationFrameRequestHandler =
+        requestAnimationFrame(this._onAnimationFrame)
+
+      document.addEventListener('fullscreenchange', e => {
+        this.isFullScreen = !this.isFullScreen
+      })
+    }
+
+    public ngAfterViewInit () {
+      this.$self.classList.add('controls-shown')
+      this.fpsMeter.install()
+    }
+
+    public ngOnDestroy (): void {
+      this._routeSubscription.unsubscribe()
+      this._vmsStateSubscription.unsubscribe()
+      cancelAnimationFrame(this._animationFrameRequestHandler)
+    }
+
+    protected _onRouteChange (params) {
+      this.id = params['cameraId'];
+      this.vms.selectCamera(this.id)
+    }
+
+    protected _onVmsStateChange (s: VmsState) {
+      switch (s.mode) {
+        case VMS_MODE.NOT_INITIALIZED:
+        case VMS_MODE.CAMERA_NOT_SELECTED:
+          this.camera = undefined
+          this.vms.selectCamera(this.id)
+          break
+        case VMS_MODE.CAMERA_SELECTED:
+          this.camera = s.selectedCamera
+          this._initSelectedCamera()
+      }
+    }
+
+    public _onAnimationFrame (): void {
+      if (this.camera?.isLive) {
+        this.timelineExtendToNow.extendToNow()
+      }
+
+      this._animationFrameRequestHandler =
+        requestAnimationFrame(this._onAnimationFrame)
+    }
+
+    public get showPlayer (): boolean {
+      return this.camera && this.camera.isLive || this.camera.hasArchive
+    }
+
+    public get showPlaybackControls (): boolean {
+      return this.showPlayer
+    }
+
+    public get showTimeline (): boolean {
+      return this.camera && this.camera.hasArchive
+    }
+
+    protected _initSelectedCamera () {
+      this.playback.stop()
+
+      if (this.camera.hasArchive) {
+        console.log('timeline reset time', this.camera)
+        this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end)
+      }
+
+      if (this.camera.isLive) {
+        this.playback.playLive()
+      }
+    }
+
+    public toggleFullScreen () {
+      if (this.isFullScreen) {
+        document.exitFullscreen()
+        this.self.nativeElement.classList.remove('is-full-screen')
+      } else {
+        this.self.nativeElement.parentElement.requestFullscreen()
+        this.self.nativeElement.classList.add('is-full-screen')
+      }
+    }
+
+    public toggleSettings () {
+      this.settingsShown = !this.settingsShown
+    }
+
+    public setQuality (q: PlaybackQuality) {
+      this.qualitySelected = q
+    }
+  }
+// export class NxSystemViewCameraPageComponent implements OnInit {
+
+//   public system: NxSystem
+//   camera: INxViewCamera
+
+//   protected POLLING_DELAY_MS: int = 100
+
+//   public fake_camera: Camera
+
+//   constructor (
+//     protected route: ActivatedRoute,
+//     protected router: Router,
+//     private accountService: NxAccountService,
+//     private systemService: NxSystemService,
+//     protected cookieService: CookieService,
+
+//     protected timeline: TimelineService,
+//     protected timelineExtendToNow: TimelineExtendToNowService,
+//     protected vms: VideoManagementSystemService,
+//     protected playback: PlaybackService,
+//   ) {
+//   }
+
+//   public ngOnInit () {
+//     this.route.params.subscribe(params => {
+//       return this.accountService.get().then(account => {
+
+//         this.playback.stop()
+
+//         const now = Date.now()
+//         this.timeline.reset(now, now)
+
+//         this.camera = undefined
+//         this.fake_camera = undefined
+//         this.vms.clearCameraSelection()
+//         this.system = null
+
+//         setTimeout(() => {
+//           // @ts-ignore -- TODO: Need to handle account not being available
+//           this.system = this.systemService.createSystem(account.email, this.route.snapshot.parent.params.systemId)
+//           this.pollSystemForMediaServers()
+//         }, 200)
+//       })
+//     });
+
+//     this._animationFrameRequestHandler =
+//       requestAnimationFrame(this.onAnimationFrame.bind(this))
+//   }
+
+//   protected _animationFrameRequestHandler: number
+
+//   public onAnimationFrame (): void {
+//     if (this.camera) {
+
+//       if (this.fake_camera?.isLive) {
+//         this.timelineExtendToNow.extendToNow()
+//       }
+//     }
+
+//     this._animationFrameRequestHandler =
+//       requestAnimationFrame(this.onAnimationFrame.bind(this))
+//   }
+
+//   public ngOnDestroy (): void {
+//     cancelAnimationFrame(this._animationFrameRequestHandler)
+//   }
+
+//   protected pollSystemForMediaServers () {
+//     if (!this.system || !this.system.mediaservers) {
+//       setTimeout(this.pollSystemForMediaServers.bind(this), this.POLLING_DELAY_MS)
+//     } else {
+//       this.camera = this.system.mediaservers.reduce(
+//         (acc, ms) => {
+//           ms.cameras.map(c => acc[c.id] = c)
+//           return acc
+//         },
+//         {}
+//       )[this.route.snapshot.params.cameraId]
+
+//       const result = this.vms.selectCamera(this.camera.id)
+//       if (result) {
+//         console.log('fake camera selected')
+//         this.fake_camera = result
+//         const now = Date.now()
+//         const DURATION = 12 * 31 * 24 * 60 * 60 * 1000
+//         this.timeline.reset(now - DURATION, now)
+//       } else {
+//         console.log('fake selection failed')
+//       }
+//       // TODO: set playback source
+//       // TODO: provide archive range
+//       if (this.fake_camera.isLive) {
+//         this.playback.playLive()
+//       }
+
+//       // redirect if cameraId in the url does not match any camera of the system
+//       if (!this.camera) {
+//         this.router.navigate(['systems', this.system.id, 'view'])
+//       } else {
+//         // TODO: extract to a dedicated service
+//         const cookie_name = `nx_last_accessed_camera_for_system_${this.system.id}`
+//         this.cookieService.set(cookie_name, this.camera.id)
+//       }
+//     }
+//   }
+//
+// }
+
+export default NxSystemViewCameraPageComponent
