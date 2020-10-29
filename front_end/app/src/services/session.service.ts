@@ -19,7 +19,8 @@ export class NxSessionService {
 
         // Listens to changes from other browser tabs.
         this.window.addEventListener('storage', (event) => {
-            if (event.key === 'ngx_loginState' && event.oldValue) {
+            // If the window doesnt have focus always reload on login state change.
+            if (event.key === 'ngx_loginState' && (event.oldValue || !this.window.document.hasFocus())) {
                 this.window.location.reload();
             }
         });
