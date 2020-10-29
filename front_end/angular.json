@@ -42,13 +42,14 @@
             "styles": [
               "app/styles/main.scss"
             ],
+            "scripts": [
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "app/src/styles",
                 "app/styles"
               ]
-            },
-            "scripts": []
+            }
           },
           "configurations": {
             "production": {

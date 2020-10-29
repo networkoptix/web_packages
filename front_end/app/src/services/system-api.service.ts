@@ -324,7 +324,11 @@ export class NxSystemAPI {
     }
 
     getApiDoc() {
-        return this.get<JSON>('/static/api.json');
+        // return this.get<JSON>('/static/api.json'); // current API
+        // return this.get<JSON>('/static/openapi_v1.json'); // when we have it
+
+        // mock response
+        return this.http.get<JSON>('/static/openapi_v1.json');
     }
 
     login(login: string, password: string, remember = false): Observable<{data: {account: Account, resultCode: string}}|any> {

@@ -10,24 +10,24 @@ import { Subscription }           from 'rxjs';
 import { filter, tap }            from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../menu/menu.service';
+import { NxMenuService }             from '@src/menu';
 import {
     ICamera, NxSystem, NxSystemService
-}                                    from '../../../services/system.service';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { Account, NxAccountService } from '../../../services/account.service';
-import { NxUtilsService }            from '../../../services/utils.service';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
-import { NxApplyService }            from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { NxAppStateService }         from '../../../services/nx-app-state.service';
+}                                    from '@services/system.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { Account, NxAccountService } from '@services/account.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxUriService }              from '@services/uri.service';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
+import { NxApplyService }            from '@services/apply.service';
+import { NxPageService }             from '@services/page.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

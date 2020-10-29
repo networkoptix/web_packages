@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 import { ComponentsModule }     from '@components/components.module';
 import { NxApiToolComponent }   from './api-tool.component';
-import { SwaggerUiComponent }   from './swagger/swagger-ui.component';
+import { MenuModule }           from '@src/menu';
 
 const appRoutes: Routes = [
     { path: 'api-tool/:systemId/:serverId', component: NxApiToolComponent }
@@ -20,12 +20,12 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers: [],
     declarations: [
         NxApiToolComponent,
-        SwaggerUiComponent
     ],
     bootstrap: [],
     entryComponents: [

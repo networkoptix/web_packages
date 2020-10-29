@@ -1,1 +1,21 @@
-<swagger-ui></swagger-ui>
+{{swagger}}
+<ng-container>
+    <div class="block-container mt-3">
+        <div class="row">
+            <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
+            <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+                 [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
+                <nx-pre-loader *ngIf="!content"></nx-pre-loader>
+                <nx-menu *ngIf="content"
+                         [content]="content"
+                         [searchable]="true"></nx-menu>
+            </div>
+            <!-- Offset for the fixed menu -->
+            <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
+                <nx-pre-loader *ngIf="!apiDoc"></nx-pre-loader>
+                <div id="swagger-ui"></div>
+                <nx-footer *ngIf="true"></nx-footer>
+            </div>
+        </div>
+    </div>
+</ng-container>
