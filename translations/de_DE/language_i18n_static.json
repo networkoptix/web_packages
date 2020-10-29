@@ -742,7 +742,7 @@
             "starter": "Starter",
             "iomodule": "I/O-Modul",
             "bridge": "Bridge",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Server nicht gefunden"
         },
         "messages": {
             "required": "{{number}} weitere erforderlich",

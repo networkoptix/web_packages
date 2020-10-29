@@ -424,11 +424,11 @@
     "STORAGE LOCATIONS TEXT": "Posizioni di archiviazione",
     "LOG SETTINGS TEXT": "Impostazioni registro",
     "NOT ABLE TO LOAD TEXT": "Impossibile caricare le impostazioni di sistema.",
-    "CLOSE TEXT": "Close",
-    "NONE TEXT": "None",
-    "ERROR TEXT": "Error",
-    "WARNING TEXT": "Warning",
-    "INFO TEXT": "Info",
+    "CLOSE TEXT": "Chiudere",
+    "NONE TEXT": "Nessuna",
+    "ERROR TEXT": "Errore",
+    "WARNING TEXT": "Attenzione",
+    "INFO TEXT": "Informazioni",
     "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Dettagliato"
 }

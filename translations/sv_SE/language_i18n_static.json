@@ -742,7 +742,7 @@
             "starter": "Starter",
             "iomodule": "I/O Modul",
             "bridge": "Brygga",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Servern hittades inte"
         },
         "messages": {
             "required": "{{number}} mer krävs",
