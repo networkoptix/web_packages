@@ -1,5 +1,12 @@
 *** Variables ***
 ${email base}              cloudsmokecheck@gmail.com
+${email acc}               cloudsmokecheck+acc@gmail.com
+${email auth}              cloudsmokecheck+auth@gmail.com
+${email vms}               cloudsmokecheck+vms@gmail.com
+${email users}             cloudsmokecheck+users@gmail.com
+${email existing user1}    cloudsmokecheck+registered1@gmail.com
+${email existing user2}    cloudsmokecheck+registered2@gmail.com
+
 @{local auth}              admin    ${password}
 @{cloud auth}              ${email base}    ${password}
 ${password}                qweasd 123
@@ -7,7 +14,7 @@ ${new password}            QWEasd!@#
 ${restored password}       qweasd777$
 ${email password}          QWEasd!@#
 
-${ssh host ip}        10.1.5.133
+${ssh host ip}        10.1.5.238
 @{ssh auth}           test_runner    qweasd 123
 ${system users port}  7711
 ${system vms port}    7712

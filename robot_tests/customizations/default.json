@@ -1,5 +1,5 @@
 {
-    "PRODUCT_NAME"               :    "Nx Cloud",
+    "PRODUCT_NAME"               :    "Nx Witness Cloud",
     "VMS_NAME"                   :    "Nx Witness",
     "TEST EMAIL"                 :    "noptixautoqa",
     "AUTO SYS IP"                :    "https://10.1.5.126:7008",
@@ -25,7 +25,7 @@
     "COLOR LIGHT16"              :    "#698796",
     "COLOR LIGHT16 RGB"          :    "rgba(105, 135, 150, 1)",
     "GREYED OUT TEXT COLOR"		 :	  "rgba(135, 159, 171, 1)",
-    "ITUNES STORE LINK"          :    "https://apps.apple.com/eg/app/hd-witness/id1050899754",
+    "ITUNES STORE LINK"          :    "https://itunes.apple.com/eg/app/hd-witness/id1050899754",
     "PLAY STORE LINK"            :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
     "IPVD VENDORS SHOWN"         :    "30",
     "SYSTEMS DROPDOWN SHOWN"     :    "12",

@@ -2,7 +2,6 @@
 Resource         ../smoke_check_resource.robot
 
 Suite Setup      Open browser and go to URL    ${ENV}    False    False
-Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Cloud Pages
 Suite Teardown   Close Browser
 
 
@@ -37,16 +36,19 @@ Download Page
 
     Log    Step 3: Check AppStore and GooglePlay buttons
     ${url}=    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href
-    Should Contain    ${url}    https://apps.apple.com/
+    Should Be Equal As Strings    ${url}    ${ITUNES STORE LINK}
+#    Should Contain    ${url}    https://apps.apple.com/
 
     ${url}=    Get Element Attribute    ${PLAY STORE DOWNLOAD BUTTON}    href
-    Should Contain    ${url}    https://play.google.com/
+    Should Be Equal As Strings    ${url}    ${PLAY STORE LINK}
+#    Should Contain    ${url}    https://play.google.com/
 
 Terms
     [Tags]    C30824    pages
     Wait Until Element Is Visible    ${FOOTER TERMS LINK}
     ${terms url}=   Get Element Attribute    ${FOOTER TERMS LINK}    href
-    Should Be Equal As Strings    ${terms url}    ${ENV}/content/eula
+    Should Contain    ${terms url}    eula
+#    Should Be Equal As Strings    ${terms url}    ${ENV}/content/eula
 
 
 Support
@@ -59,7 +61,8 @@ Privacy
     [Tags]    C34452    pages
     Wait Until Element Is Visible    ${FOOTER PRIVACY LINK}
     ${privacy url}=   Get Element Attribute    ${FOOTER PRIVACY LINK}    href
-    Should Be Equal As Strings    ${privacy url}    https://www.networkoptix.com/privacy-policy/
+    Should Contain    ${privacy url}    www.networkoptix.com/privacy-policy
+#    Should Be Equal As Strings    ${privacy url}    https://www.networkoptix.com/privacy-policy/
 
 Integrations
     [Tags]    C57508    pages

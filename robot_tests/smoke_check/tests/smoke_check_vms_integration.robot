@@ -8,12 +8,13 @@ Suite Teardown   VMS Suite Teardown
 *** Keywords ***
 VMS Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${system owner}=    Get Random Email    ${email base}
-    Register And Activate Account    SmokeCheck    VMS    ${system owner}    ${password}
-    Set Suite Variable    ${system owner}    ${system owner}
+    ${email}=    Get Random Email    ${email base}
+    Run Keyword If     'nxvms' not in $env    Run Keywords
+       ...    Register And Activate Account    SmokeCheck    VMS    ${email}    ${password}    AND
+       ...    Set Suite Variable    ${email vms}    ${email}
 
     ${system vms}=   Setup Remote System    ${ssh auth}    ciqa    system_vms    ${ssh host ip}    ${system vms port}
-    ${cloud id}=   Connect System to Cloud    ${local auth}   https://${system vms}[ip]:${system vms}[port]    ${system vms}[name]    ${system owner}    ${password}    ${ENV}
+    ${cloud id}=   Connect System to Cloud    ${local auth}   https://${system vms}[ip]:${system vms}[port]    ${system vms}[name]    ${email vms}    ${password}    ${ENV}
     Set To Dictionary    ${system vms}    cloud id=${cloud id}
     Set Suite Variable    ${system vms}    ${system vms}
     Restart Server    https://${system vms}[ip]:${system vms}[port]    ${local auth}
@@ -33,20 +34,20 @@ Connect System To Cloud - Client
     [Tags]    C30443    C30647    vms
 
     Go To    ${ENV}/systems
-    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Log In    ${email vms}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}
     Log Out
 
 Log in to VMS as cloud owner
     [Tags]    C30825    vms
-    ${auth}=    Create List    ${system owner}    ${password}
+    ${auth}=    Create List    ${email vms}    ${password}
     Get Users    ${auth}    https://${system vms}[ip]:${system vms}[port]
 
 Check System State On Cloud Portal
     [Tags]    C30826    vms
 
     Go To    ${ENV}/systems/${system vms}[cloud id]
-    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Log In    ${email vms}    ${password}    validate=${False}    button=None
 
     Log    Step 1: Make System offline
     Restart Server    https://${system vms}[ip]:${system vms}[port]    ${local auth}
@@ -63,7 +64,7 @@ Disconnect System From Cloud - Portal
     [Tags]    C69845    C30653    vms
 
     Go To    ${ENV}/systems/${system vms}[cloud id]
-    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Log In    ${email vms}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 1: Click on Disconnect from Nx button
@@ -97,9 +98,9 @@ Disconnect System From Cloud - Portal
 Disconnect System From Cloud - Client
     [Tags]    C30444    C30654    vms
 
-    ${system id}=   Connect System to Cloud    ${local auth}    https://${system vms}[ip]:${system vms}[port]    ${system vms}    ${system owner}   ${password}
+    ${system id}=   Connect System to Cloud    ${local auth}    https://${system vms}[ip]:${system vms}[port]    ${system vms}    ${email vms}   ${password}
     Go To    ${ENV}/systems/${system id}
-    Log In    ${system owner}    ${password}    validate=${False}    button=None
+    Log In    ${email vms}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
 
     Log    Step 1: Disconnect system from cloud in client and verify it is disconnected successfully
@@ -108,7 +109,7 @@ Disconnect System From Cloud - Client
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     Log    Step 2: Verify system is disconnected from cloud
-    ${user systems}=   Get Account Systems    ${ENV}    ${system owner}    ${password}
+    ${user systems}=   Get Account Systems    ${ENV}    ${email vms}    ${password}
     Should Not Contain    ${user systems}    ${system id}
 
     Go To    ${ENV}/systems/
