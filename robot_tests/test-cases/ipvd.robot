@@ -284,8 +284,9 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Go To IPVD Page
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
     IPVD Text Search    Axis
-    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
-    Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}/span    2 ${IPVD FILTERS APPLIED TEXT}
+    #${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
+    #Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 

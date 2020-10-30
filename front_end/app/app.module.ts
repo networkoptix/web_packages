@@ -7,7 +7,7 @@ import {
 import { RouterModule }                                              from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule }                          from '@angular/forms';
-import { AngularFireModule, FirebaseOptionsToken }                   from '@angular/fire';
+import { AngularFireModule, FIREBASE_OPTIONS }                   from '@angular/fire';
 import { AngularFireMessagingModule }                                from '@angular/fire/messaging';
 import { LayoutModule }                                              from '@angular/cdk/layout';
 
@@ -114,9 +114,9 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
         {
-            provide    : FirebaseOptionsToken,
-            deps       : [NxConfigService],
-            useFactory : initializeApp
+            provide   : FIREBASE_OPTIONS,
+            deps      : [NxConfigService],
+            useFactory: initializeApp
         },
         AuthGuard,
         SystemGuard,

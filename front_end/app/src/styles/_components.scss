@@ -126,6 +126,10 @@
             margin      : 20px 16px;
             line-height : 1.4;
         }
+
+        &[href=''] {
+            pointer-events: none;
+        }
     }
 }
 

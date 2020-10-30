@@ -580,6 +580,10 @@ export class NxSystemAPI {
         return this.get('/api/recStats');
     }
 
+    public getStoragesInfo(queryParams) {
+        return this.get('/ec2/getStorages', queryParams);
+    }
+
     changePort(port: number) {
         return this.configureServer({ port }).catch(err => Promise.reject(err));
     }

@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "Vízjel beállítások",
     "WEB SOCKET ENABLED TEXT": "Web socket",
     "STORAGE LOCATIONS TEXT": "Tároló helyek",
-    "LOG SETTINGS TEXT": "Naplóbeállítások"
+    "LOG SETTINGS TEXT": "Naplóbeállítások",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

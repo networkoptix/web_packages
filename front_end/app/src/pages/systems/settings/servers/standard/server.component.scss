@@ -1,6 +1,8 @@
-
 @use '../../../../../styles/typography';
 @use '../../../../../../styles/theme_variables' as *;
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .server-info {
     font-family : typography.$font-family-regular;
@@ -10,53 +12,87 @@
         display: flex;
         align-items: center;
         .header-title {
-            min-width: 0;
             h2 {
-                @include typography.medium24;
+                font-family : typography.$font-family-regular;
+                height: 32px;
                 font-weight: bold;
-                line-height: 40px;
-                height: 40px;
-                margin: 0 8px 0 0;
+                font-size: 24px;
+                display : contents;
+            }
+            .tag {
+                @include typography.medium11;
+                margin-left: 8px;
+                color: $light1;
+                padding: 4px 8px;
+                text-transform: uppercase;
+                border-radius: 2px;
+            }
+            .online {
+                background-color: typography.$brand_core;
+            }
+            .offline {
+                background-color: $error;
+            }
+            .checking {
+                background-color: $light16 !important;
             }
         }
-        .edit-button {
-            width: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .buttons {
-            display: flex;
-            flex-grow: 1;
-            justify-content: flex-end;
+        .section-server-buttons {
+            @include media-breakpoint-up(lg) {
+                height      : 32px;
+                align-items : center !important;
+            }
+
             .server-buttons {
                 &:hover {
-                    color: $dark15;
+                    color : $dark15;
+
                     svg-icon {
                         svg {
                             g, path {
-                                fill: $dark15 !important;
+                                fill : $dark15 !important;
                             }
                         }
                     }
                 }
+
                 @include typography.regular13;
-                background-color: inherit;
-                color: $light16;
-                display: flex;
-                align-items: center;
-                white-space: nowrap;
+                background-color : inherit;
+                color            : $light16;
+                display          : flex;
+                align-items      : center;
+                white-space      : nowrap;
+                height           : 20px;
+
                 svg-icon {
                     svg {
-                        height: 20px;
+                        height : 20px;
+
                         g, path {
-                            fill: $light16 !important;
+                            fill : $light16 !important;
                         }
                     }
                 }
+
+                .animate-rotation {
+                    animation-name            : rotate;
+                    animation-duration        : 1.8s;
+                    animation-iteration-count : infinite;
+                    transform-origin          : 50% 50%;
+                }
+
+                @keyframes rotate {
+                    0% {
+                        transform : rotate(0deg);
+                    }
+                    100% {
+                        transform : rotate(360deg);
+                    }
+                }
+
                 a {
-                    text-decoration: none;
-                    color: inherit;
+                    text-decoration : none;
+                    color           : inherit;
                 }
             }
         }

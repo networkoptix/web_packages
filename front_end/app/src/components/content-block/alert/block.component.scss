@@ -242,6 +242,7 @@
     &.fixed-height {
         height   : rem(300px);
         overflow : hidden;
+        margin   : 0;
 
         .card--header {
             min-height: 81px;
@@ -251,7 +252,7 @@
             overflow: hidden;
         }
     }
-    
+
     &.extended-header {
         .card--header {
             height  : auto;

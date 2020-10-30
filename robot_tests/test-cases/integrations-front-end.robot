@@ -71,7 +71,6 @@ Integration Store Search
     Should be equal as numbers    ${number of filters}    8
 
     Log    Step 2
-    Validate changes when input text into search field    v
     Validate changes when input text into search field    vi
     Validate changes when input text into search field    vis
 

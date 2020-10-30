@@ -404,7 +404,9 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
-        "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "FAIL": "Systemet <strong>{{failedSystem}}</strong> är offline.",
+        "Connection timed out": "Systemet <strong>{{failedSystem}}</strong> är offline.",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste versionen</a>.",
         "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
@@ -739,7 +741,8 @@
             "analogencoder": "Analog enkoder",
             "starter": "Starter",
             "iomodule": "I/O Modul",
-            "bridge": "Brygga"
+            "bridge": "Brygga",
+            "serverNotFound": "Servern hittades inte"
         },
         "messages": {
             "required": "{{number}} mer krävs",

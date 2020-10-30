@@ -512,28 +512,29 @@ export interface License {
 }
 
 export interface Info {
-    type:          any;
-    channels:      any;
-    server:        any;
-    hwid:          any;
-    status:        any;
-    expires:       any;
-    time:          any;
-    deactivations: any;
-    trial:         any;
-    online:        any;
-    error:         any;
-    expired:       any;
-    ok:            any;
-    digital:       any;
-    analog:        any;
-    edge:          any;
-    vmax:          any;
-    videowall:     any;
-    analogencoder: any;
-    starter:       any;
-    iomodule:      any;
-    bridge:        any;
+    type:           any;
+    channels:       any;
+    server:         any;
+    hwid:           any;
+    status:         any;
+    expires:        any;
+    time:           any;
+    deactivations:  any;
+    trial:          any;
+    online:         any;
+    error:          any;
+    expired:        any;
+    ok:             any;
+    digital:        any;
+    analog:         any;
+    edge:           any;
+    vmax:           any;
+    videowall:      any;
+    analogencoder:  any;
+    starter:        any;
+    iomodule:       any;
+    bridge:         any;
+    serverNotFound: any;
 }
 
 export interface Messages {
@@ -1440,6 +1441,7 @@ const typeMap: any = {
         { json: "starter", js: "starter", typ: "any" },
         { json: "iomodule", js: "iomodule", typ: "any" },
         { json: "bridge", js: "bridge", typ: "any" },
+        { json: "serverNotFound", js: "serverNotFound", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },

@@ -12,11 +12,11 @@ ${customization}    default
 Merge Systems
     [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
-    &{data}=   Create Dictionary    systemId=${secondary id}
+    ${data}=   Create Dictionary    systemId=${secondary id}
     Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    [Return]    ${resp.json()}
 
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
@@ -50,12 +50,12 @@ Create system and attach to cloud
     [Return]    ${bind json["id"]}
 
 Connect System to Cloud
-    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
-    &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
+    &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
     Log    ${bind json}
     Sleep    5
-    &{Setup Cloud System json}=    Save Cloud System Credentials
+    ${Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}
     ...    ${bind json["authKey"]}
@@ -89,9 +89,9 @@ Get Cloud System Settings
 
 Get Cloud System Users
     [Arguments]    ${auth}    ${system id}
-    &{data}=   Create Dictionary    systemId=${system id}
+    ${data}=   Create Dictionary    systemId=${system id}
     Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
+    ${resp}=   Get Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
 
@@ -175,9 +175,10 @@ Evaluate Log Level via API
     Should Contain    ${string}    ${setting}': '${selected}
 
 Disconnect Server via API
-    [Arguments]    ${auth}    ${sysId}    ${password}
+    [Arguments]    ${auth}    ${sysId}    ${password}    ${email}
+    &{data}=    Create Dictionary    password=${password}    system_id=${sysid}    email=${email}
     Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
+    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Set System Settings via API
@@ -189,7 +190,7 @@ Set System Settings via API
     
 Set 3 dot 2 System Settings via API
     [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
+    Create Digest Session    returnedSetting    https://10.1.5.238:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}
@@ -223,6 +224,12 @@ Save Cloud System Credentials
     ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
+
+Ping Server
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Ping Server session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
+    ${resp}=   Get Request    Ping Server session     /api/ping    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 Restart Server
     [Arguments]    ${server url}    ${auth}
@@ -267,14 +274,13 @@ Get Server Name
     END
 
 Get Server Id
+    #only use for single servers
     [Arguments]    ${system url}    ${system auth}    ${server name}
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
+    log    ${resp.json()}
     Should Be Equal As Strings    ${resp.status_code}    200
-    FOR    ${server}    IN    @{resp.json()}
-        ${id}=   Set Variable If    '${server}[name]' == '${server name}'    ${server}[id]
-        Return From Keyword If    '${server}[name]' == '${server name}'    ${id}
-    END
+    Return From Keyword    ${resp.json()}[0][id]
 
 Rename Server
     [Arguments]    ${system url}    ${system auth}    ${new name}
@@ -362,6 +368,13 @@ Get System Settings
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Get System Settings From Server
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get System Settings session   /api/systemSettings
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}[reply][settings]
+
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}    disable_warnings=1
@@ -381,21 +394,21 @@ Set Camera Attribute
     ...    cameraId=${camera id}
     ...    ${attribute}=${value}
     Create Digest Session    Save camera attribute    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera attribute     /ec2/saveCameraUserAttributes    json=${data}    timeout=10
+    ${resp}=   Post Request    Save camera attribute     /ec2/saveCameraUserAttributes    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Set All Camera Attributes
     [Arguments]    ${server url}    ${auth}    ${camera json}
     Create Digest Session    Save camera attributes    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera attributes     /ec2/saveCameraUserAttributes    json=${camera json}    timeout=10
+    ${resp}=   Post Request    Save camera attributes     /ec2/saveCameraUserAttributes    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Set All Camera Add Params
     [Arguments]    ${server url}    ${auth}    ${camera json}
     Create Digest Session    Save camera add params    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=10
+    ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
     
@@ -428,8 +441,8 @@ Save User
     [Return]    ${resp.json()}
 
 Save User Existing
-    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}
-    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${True}    isCloud=${True}    userRoleId=${userRoleId}
+    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}    ${user id}
+    &{data}=   Create Dictionary    email=${email}   id=${user id}   isCloud=${True}    isEnabled=${True}    name=${name}    permissions=${permissions}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -450,6 +463,15 @@ Remove User
     ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Remove User By Email
+    [Arguments]    ${auth}    ${server url}    ${email}
+    ${users}=   Get Users    ${auth}    ${server url}
+    FOR    ${user}     IN    @{users}
+        Run Keyword If    "${user}[email]" == "${email}"    Run Keywords
+           ...    Remove User    ${auth}    ${server url}    ${user}[id]    AND
+           ...    Exit For Loop
+    END
 
 Get Cameras
     [Arguments]    ${auth}    ${server url}
