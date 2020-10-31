@@ -742,7 +742,7 @@
             "starter": "Başlangıç",
             "iomodule": "I/O Modül",
             "bridge": "Köprü",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Sunucu bulunamadı"
         },
         "messages": {
             "required": "{{number}} daha gerekli",

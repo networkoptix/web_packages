@@ -424,11 +424,11 @@
     "STORAGE LOCATIONS TEXT": "Depolama konumları",
     "LOG SETTINGS TEXT": "Günlük ayarları",
     "NOT ABLE TO LOAD TEXT": "Sistem ayarları yüklenemiyor.",
-    "CLOSE TEXT": "Close",
-    "NONE TEXT": "None",
-    "ERROR TEXT": "Error",
-    "WARNING TEXT": "Warning",
-    "INFO TEXT": "Info",
-    "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Verbose"
+    "CLOSE TEXT": "Kapat",
+    "NONE TEXT": "Hiç",
+    "ERROR TEXT": "Hata",
+    "WARNING TEXT": "Uyarı",
+    "INFO TEXT": "Bilgi",
+    "DEBUG TEXT": "Hata ayıklama",
+    "VERBOSE TEXT": "Ayrıntılı"
 }

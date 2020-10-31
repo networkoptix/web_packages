@@ -12,7 +12,7 @@ import { TranslateModule }                  from '@ngx-translate/core';
 import { ComponentsModule }                 from '../../../../components/components.module';
 import { NxSystemStandardServerComponent }  from './standard/server.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
-import { NxSystemAdvancedStorageComponent } from './storage/storage.component';
+import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.component';
 
 @NgModule({
     imports         : [
