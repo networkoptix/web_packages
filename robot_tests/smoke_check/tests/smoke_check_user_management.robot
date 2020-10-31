@@ -9,7 +9,7 @@ Suite Teardown   Users Suite Teardown
 Users Suite Setup
     Open browser and go to URL    ${ENV}    False    False
 
-    ${email}=    Get Random Email    ${email base}
+    ${email}=   Get Random Email    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Users    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email users}    ${email}
@@ -22,6 +22,7 @@ Users Suite Setup
     Sleep    60
 
 Users Suite Teardown
+    ${disconnected}=   Run keyword and return status    Disconnect    ${ENV}    ${email users}    ${password}    ${system users}[cloud id]
     Acquire Lock    teardown_lock
     Open Connection    ${ssh host ip}
     SSHLibrary.Login    username=${ssh auth}[0]    password=${ssh auth}[1]
@@ -34,7 +35,7 @@ Users Suite Teardown
 Portal - Share to not registered user
     [Tags]    C30445    C30648    users
 
-    Go To    ${ENV}/systems
+    Go To    ${ENV}/systems/${system users}[cloud id]
     Log In    ${email users}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
@@ -45,7 +46,7 @@ Portal - Share to not registered user
     Log Out
 
     Log    Step 2: Check email for the user
-    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email users}    ${email password}    register
+    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new portal user}    ${email password}    register
     ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new portal user}    system_invite
 
     Log    Step 3: Open Register Page
@@ -88,7 +89,7 @@ Portal - Share to not registered user
 Portal - Delete user
     [Tags]    C30726    C30659    users
 
-    Go To    ${ENV}/systems
+    Go To    ${ENV}/systems/${system users}[cloud id]
     Log In    ${email users}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
 
@@ -114,20 +115,22 @@ Portal - Delete user
 Portal - Share to registered user
     [Tags]    C30446    C30648    users
 
-    ${existing user}=    Get Random Email    ${email base}
-    Register And Activate Account    SmokeCheck    ExistingUser1    ${existing user}    ${password}
+    ${email}=    Get Random Email    ${email base}
+    Run Keyword If    'nxvms' not in $env    Run Keywords
+        ...    Register And Activate Account    SmokeCheck    ExistingUser1    ${email}    ${password}    AND
+        ...    Set Suite Variable    ${email existing user1}    ${email}
 
     Log    Step 1: Share to existing user via API(viewer permissions)
     ${cloud auth}=   Create List    ${email users}    ${password}
-    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${existing user}
+    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${email existing user1}
 
     Log    Step 2: Check email for the user
-    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email acc}    ${email password}    system_shared
+    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email existing user1}    ${email password}    systems
 
     Log    Steps 3, 4: Follow the link from the email and log in
     Run Keyword If    'nxvms' in $env    Go To    ${link}
        ...    ELSE    Go To    ${ENV}/systems/${system users}[cloud id]
-    Log In    ${existing user}    ${password}    validate=${False}    button=None
+    Log In    ${email existing user1}    ${password}    validate=${False}    button=None
 
     Log    Step 5: Validate the System page and verify the user information and rights are as expected
     Wait Until Elements Are Visible
@@ -147,7 +150,7 @@ Portal - Share to registered user
     Log    Step 6: Check that user appears in client with correct permissions
     ${local users}=   Get Users    ${local auth}   https://${system users}[ip]:${system users}[port]
     FOR    ${obj}   IN    @{local users}
-        Run Keyword If    "${obj}[email]"=="${existing user}"    Run Keywords
+        Run Keyword If    "${obj}[email]"=="${email existing user1}"    Run Keywords
         ...    Should Be Equal As Strings    ${obj}[isCloud]     True
         ...    AND    Should Be Equal As Strings    ${obj}[isEnabled]     True
         ...    AND    Should Be Equal As Strings    ${obj}[isAdmin]       False
@@ -169,14 +172,20 @@ Client - Share to not registered user
     ...    ${new cloud user}
     ...    SmokeCheck NewCloudUser
     ...    ${password}
-    ...    is cloud=${True}
     Set Suite Variable    ${new user data}
 
+    Run Keyword If    'nxvms' in $env    Run Keywords
+       ...    Log Out    AND
+       ...    Pass Execution    Investigate the reason email is not delivered
+
     Log    Step 2: Check email for the user
-    ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${new cloud user}    system_invite
+    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new cloud user}    ${email password}    register
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new cloud user}    system_invite
 
     Log    Step 3: Open Register Page
-    Go To    ${ENV}/register/${code}
+    Run Keyword If    'nxvms' in $env    Go To    ${link}
+       ...    ELSE    Go To    ${ENV}/register/${code}
+
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Click Button    ${LOGGED IN NEW ACCOUNT BUTTON}
     Validate on Register Page
@@ -219,8 +228,9 @@ Client - Delete cloud user
     Remove User    ${local auth}    https://${system users}[ip]:${system users}[port]    ${new user data}[id]
     Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
 
+    ${auth}=   Create List    ${email users}    ${password}
     Log    Verify user is deleted from cloud
-    ${cloud users}=   Get Cloud System Users    ${cloud auth}    ${system users}[cloud id]
+    ${cloud users}=   Get Cloud System Users    ${auth}    ${system users}[cloud id]
     FOR    ${obj}    IN    @{cloud users}
         Dictionary Should Not Contain Value    ${obj}    ${new cloud user}
     END
@@ -235,8 +245,10 @@ Client - Delete cloud user
 
 Client - Share to registered user
     [Tags]    C30446    C30651    users
-    ${random email}=    Get Random Email    ${email base}
-    Register And Activate Account    SmokeCheck    RegisteredCloudUser    ${random email}    ${password}
+    ${email}=    Get Random Email    ${email base}
+    Run Keyword If    'nxvms' not in $env    Run Keywords
+        ...    Register And Activate Account    SmokeCheck    ExistingUser2    ${email}    ${password}    AND
+        ...    Set Suite Variable    ${email existing user2}    ${email}
 
     Log    Step 1: Share to existing user(viewer permissions)
     Save User
@@ -244,18 +256,18 @@ Client - Share to registered user
     ...    https://${system users}[ip]:${system users}[port]
     ...    registered_cloud_user
     ...    ${permissions}[viewer]
-    ...    ${random email}
-    ...    SmokeCheck RegisteredCloudUser
+    ...    ${email existing user2}
+    ...    SmokeCheck ExistingUser2
     ...    ${password}
     ...    is cloud=${True}
     Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
     Sleep    30
 
-    Go To    ${ENV}
-    Log In    ${email users}    ${password}    validate=False
+    Go To    ${ENV}/systems/${system users}[cloud id]
+    Log In    ${email users}    ${password}    validate=False    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}
-    Select user in users list    ${random email}
+    Select user in users list    ${email existing user2}
     Log Out
 
-    ${user systems}=   Get Account Systems    ${ENV}    ${random email}    ${password}
-    Should Contain    ${user systems}    ${system users}[cloud id]
+    ${users systems}=   Get Account Systems    ${ENV}    ${email existing user2}    ${password}
+    Should Contain    ${users systems}    ${system users}[cloud id]

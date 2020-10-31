@@ -2,7 +2,7 @@
 Resource    ../smoke_check_resource.robot
 Suite Setup       Merge Suite Setup
 Suite Teardown    Merge Suite Teardown
-
+Force Tags    merge_and_licenses
 
 *** Keywords ***
 Merge Suite Setup
@@ -178,7 +178,6 @@ Add and delete users
     Should be True    ${is deleted}
 
 Activate licenses on portal
-    Pass Execution If    'nxvms' in $env    Not yet on prod
     Go To    ${ENV}/systems/${merge 1}[id]
     Log In    ${merge owner}    ${password}    validate=False    button=None
     Wait Until Elements Are Visible
