@@ -22,9 +22,7 @@ Open New Browser On Failure
 Go to download page
     Wait Until Elements Are Visible    ${DOWNLOAD LINK}    //h2[@class\="text-center"]
     Click Link    ${DOWNLOAD LINK}
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Log In    ${email}    ${password}    button=None
-    Validate Log In    ${email}
+    Log In If Needed   ${email}    ${password}   
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
     Click Link    ${WINDOWS TAB}
 
@@ -62,9 +60,10 @@ Going to the downloads page anonymous asks for login and closing takes you back 
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Click Button    ${LOG IN CLOSE BUTTON}
-    Wait Until Location Is    ${url}/
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Run Keyword If    ${status}    Run Keywords    
+    ...    Click Button    ${LOG IN CLOSE BUTTON}    AND
+    ...    Wait Until Location Is    ${url}/
 
 Going to the downloads page anonymous asks for login and login shows downloads page
     [tags]    C42069
@@ -74,9 +73,7 @@ Going to the downloads page should show you the tab according to your OS
     [tags]    C41550
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Log In    ${email}    ${password}    button=None
-    Validate Log In    ${email} 
+    Log In If Needed   ${email}    ${password}  
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
     #we convert to lowercase because the ids are lowercase but the os call gives uppercase
     ${os}    Get OS

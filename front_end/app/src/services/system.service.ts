@@ -787,6 +787,10 @@ class ServerManager {
     getApiDoc(serverId: string) {
         return this.mediaserverConnections[serverId].getApiDoc();
     }
+
+    getStorages(serverId) {
+        return this.mediaserverConnections[serverId].getStorages();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -1280,11 +1284,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    updateOrGetSystemStorage<T>(updateParams?: T) {
-        if (updateParams) {
+    updateOrGetSystemStorage<T extends any>(updateParams?: T) {
+        if (!updateParams?.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.mediaserver.getStorages();
+        return this.serverManager.getStorages(updateParams.serverId);
     }
 
     checkForAnalyticsData(serverId: string) {

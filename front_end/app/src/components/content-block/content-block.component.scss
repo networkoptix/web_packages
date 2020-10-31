@@ -277,6 +277,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
     &.fixed-height {
         height   : theme_variables.rem(300px);
         overflow : hidden;
+        margin   : 0;
 
         .card--header {
             min-height: 81px;

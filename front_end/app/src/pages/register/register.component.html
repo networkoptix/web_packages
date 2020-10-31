@@ -43,7 +43,7 @@
                        [(ngModel)]="accountInfo.firstName"
                        #firstName="ngModel"
                        id="firstName" name="firstName" maxlength="255"
-                       required autocomplete="off" nxFocusMe>
+                       required autocomplete="off" nxFocusMe [timeout]="500">
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"

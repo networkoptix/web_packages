@@ -107,4 +107,4 @@ Restart
     
 Setup
     Open Browser and go to URL    ${url}
-    Local User Start    ${email}    
+    Local User Start    ${email}    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS SYSTEM ID}

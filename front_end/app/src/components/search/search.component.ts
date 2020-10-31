@@ -451,8 +451,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 }
             });
         }
-
         this.uri.pageOffset = window.pageYOffset;
+        // make sure we reset page on new model
+        queryParams.page = undefined;
 
         return this.uri.updateURI(this.uri.getURL(), queryParams);
     }

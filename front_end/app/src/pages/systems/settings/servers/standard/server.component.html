@@ -36,35 +36,38 @@
     <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded">
         <nx-block header-style="extended">
             <header>
-                <div class="header-top-bar d-flex justify-content-start">
-                    <div *ngIf="renameDisabled; else editableTitle" class="header-title">
+                <div class="header-top-bar d-flex flex-column flex-lg-row align-items-start justify-content-between">
+                    <div class="header-title d-flex flex-column flex-lg-row align-items-start">
                         <h2>{{ selectedServer.name }}</h2>
+                        <span
+                                class="ml-0 ml-lg-2 mt-2 mt-lg-1"
+                            *ngIf="selectedServer.internalStatus"
+                            [ngClass]="{
+                                tag: true,
+                                offline: serverOffline,
+                                online: selectedServer.internalStatus === CONFIG.servers.status.restarting
+                                    || selectedServer.internalStatus === CONFIG.servers.status.reseting,
+                                checking: checking
+                            }">
+                            {{ selectedServer.shownStatus }}
+                        </span>
                     </div>
-                    <ng-template #editableTitle >
-                        <div class="header-title" [ngClass]="{ 'w-100': editMode }">
-                            <h2 NxEditable
-                                #editTitle
-                                class="w-100"
-                                [(content)]="serverName"
-                                (contentChange)="handleNameChange($event)"
-                                (blur)="handleBlur()"
-                                (focus)="handleFocus()"
-                                [hasError]="!serverName || emptyName"
-                                id="editable-title"></h2>
-                            <span *ngIf="!serverName" class="input-error" translate>Server name is required</span>
-                            <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
-                        </div>
-                        <div class="edit-button" [ngClass]="{ 'd-none' : editMode }" (click)="editTitle.focus()">
-                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
-                        </div>
-                    </ng-template>
-                    <div class="buttons" [ngClass]="{ 'd-none' : editMode }">
-                        <button *ngIf="canSeeInfo" class="server-buttons pr-0"
+                    <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
+                        <button class="server-buttons pr-0 pl-0 pl-lg-3 mt-2 mt-lg-0"
+                            *ngIf="serverOffline"
+                            (click)="checkStatus()">
+                            <span [ngClass]="{ 'animate-rotation': checking }">
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                                    [applyCss]="true"></svg-icon>
+                            </span>
+                            <span class="ml-1" translate>Check Status</span>
+                        </button>
+                        <button *ngIf="canSeeInfo" class="server-buttons pr-0 pl-0 pl-lg-3 mt-2 mt-lg-0"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
                                 <span>
                                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
-                                        [applyClass]="true"></svg-icon>
+                                        [applyCss]="true"></svg-icon>
                                 </span>
                                 <span class="ml-1" translate>Detailed Info</span>
                         </button>
@@ -78,7 +81,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-6 col-lg-4">
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>

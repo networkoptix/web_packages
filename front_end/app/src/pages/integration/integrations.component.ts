@@ -27,21 +27,20 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     allElements: any;
     elements: any;
-    params;
-    account;
     filterModel: any = {};
+    params: any;
+    account: any;
+    selectors = {
+        access   : false,
+        analytics: false,
+        cameras  : false,
+        home     : false,
+        psim     : false
+    };
 
     private emptyFilter: any = {};
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
-
-    selectors = {
-        access    : false,
-        analytics : false,
-        cameras   : false,
-        home      : false,
-        psim      : false
-    };
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();

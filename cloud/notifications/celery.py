@@ -24,6 +24,8 @@ def setup_periodic_tasks(sender, **kwargs):
     logger.info("Setting up periodic tasks")
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_month='1'),
                              clean_logs.s(), name="clean logs", queue='broadcast-notifications')
+    sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='tue'),
+                             clean_push_logs.s(), name="clean push logs", queue='broadcast-notifications')
 
 
 @app.task(bind=True)
@@ -38,10 +40,14 @@ def clean_logs():
     call_command('clearsessions')
     logger.info('Cleaning emails from last month')
     call_command('cleanoldemails')
-    logger.info('Cleaning push notifications from last month')
-    call_command('cleanoldpush')
     logger.info('Cleaning access logs from last month')
     call_command('cleanaccesslog')
+
+
+@app.task
+def clean_push_logs():
+    logger.info('Cleaning push notifications from last month')
+    call_command('cleanoldpush')
 
 
 @signals.after_setup_logger.connect

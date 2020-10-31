@@ -109,3 +109,8 @@ ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-
 
 #Cameras
 ${NOAUTH CAMERA PASSWORD}             qweasd123
+
+#Docker server machine info
+${QA BURBANK IP}                      10.1.5.238
+${QA BURBANK USER}                    qaburbank
+${QA BURBANK PASS}                    QABurbank777$ 

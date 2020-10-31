@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "카메라 설정",
     "WEB SOCKET ENABLED TEXT": "웹 소켓",
     "STORAGE LOCATIONS TEXT": "저장 위치",
-    "LOG SETTINGS TEXT": "로그 설정"
+    "LOG SETTINGS TEXT": "로그 설정",
+    "NOT ABLE TO LOAD TEXT": "시스템 설정을 불러올 수 없습니다.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

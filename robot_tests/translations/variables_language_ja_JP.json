@@ -382,7 +382,7 @@
     "MAX P2P QUEUE SIZE TEXT": "最大P2Pキューサイズ(バイト)",
     "MAX RECORD QUEUE SIZE TEXT": "レコードキューの最大サイズ（バイト）",
     "MAX RECORD QUEUE ELEMENTS TEXT": "レコードキューの最大サイズ（要素）",
-    "MAX REMOTE ARCHIVE SYNC THREADS TEXT": "最大リモートアーカイブ同期スレッド",
+    "MAX REMOTE ARCHIVE SYNC THREADS TEXT": "最大カメラストレージとの同期スレッド",
     "MAX RTP RETRY COUNT TEXT": "最大RTP再試行回数",
     "MAX RTSP CONNECT DURATION TEXT": "最大RTSP接続期間の秒数",
     "MAX SCENE ITEMS TEXT": "最大シーンアイテム（0はデフォルト）",
@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "透かし設定",
     "WEB SOCKET ENABLED TEXT": "Webソケット",
     "STORAGE LOCATIONS TEXT": "ストレージの場所",
-    "LOG SETTINGS TEXT": "ログ設定"
+    "LOG SETTINGS TEXT": "ログ設定",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "閉じる",
+    "NONE TEXT": "なし",
+    "ERROR TEXT": "エラー",
+    "WARNING TEXT": "警告",
+    "INFO TEXT": "情報",
+    "DEBUG TEXT": "デバッグ",
+    "VERBOSE TEXT": "詳細"
 }

@@ -16,8 +16,12 @@
 {% block content%}
 <div>
     <h3>Download package for asset</h3>
-    <p><a href="{% url 'download_package' asset.id %}" download>Download package (zip)</a></p>
-    <p><a href="{% url 'download_package' asset.id %}?draft" download>Download package draft (zip)</a></p>
+    <p><a href="{% url 'download_package' asset.id %}"
+          {% if asset.is_cloud_portal %}onclick="return pollPackage(false)"{% else %}download{% endif %}
+    >Download package (zip)</a></p>
+    <p><a href="{% url 'download_package' asset.id %}?draft"
+          {% if asset.is_cloud_portal %}onclick="return pollPackage(true)"{% else %}download{% endif %}
+    >Download package draft (zip)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}" download>Download structure (json)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}?format=html" download>Download structure (html)</a></p>
 </div>
@@ -72,18 +76,56 @@ Example for vms
             Afterwards it reloads the page so that the user can see any error messages with the file upload
          */
         var cookieCheckInterval = undefined;
+        var isDraft = undefined;
+        var packageInterval = undefined;
+        var packageUrl = undefined;
         var checkCookie = function () {
             var lastCookie = document.cookie;
             return function () {
                 var currentCookie = document.cookie;
-                if (currentCookie != lastCookie) {
+                if (currentCookie !== lastCookie) {
                     clearInterval(cookieCheckInterval);
                     window.location.reload();
                 }
             };
         }();
+
+        var checkPackage = function() {
+            var pollRequest = new XMLHttpRequest();
+            pollRequest.onload = function() {
+                if (pollRequest.readyState !== 4) return;
+
+                var text = JSON.parse(pollRequest.responseText);
+                if (text.msg === 'Package is ready') {
+                    var downloadUrl = "{% url 'download_package_async' asset.id %}" + (isDraft ? '?draft=True' : '');
+                    window.open(downloadUrl)
+                    setTimeout(function() {
+                        clearInterval(packageInterval);
+                    }, 2 * 1000);
+                }
+            }
+            pollRequest.open("GET", packageUrl)
+            pollRequest.send(null)
+        };
+
         function cookieInterval() {
             cookieCheckInterval = setInterval(checkCookie, 100);
+        }
+
+
+        function pollPackage(draft) {
+            isDraft = draft;
+            if (packageInterval) {
+                clearInterval(packageInterval);
+            }
+            alert('Starting poll for package. Please dont reload.');
+            packageUrl = "{% url 'download_package' asset.id %}" + (isDraft ? '?draft=True' : '');
+            checkPackage();
+            var startPackage = new XMLHttpRequest();
+            startPackage.open("GET", packageUrl)
+            startPackage.send(null)
+            packageInterval = setInterval(checkPackage, 30 * 1000);
+            return false;
         }
     </script>
 

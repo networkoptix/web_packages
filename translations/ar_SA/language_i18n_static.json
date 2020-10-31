@@ -404,7 +404,9 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "DUPLICATE_MEDIASERVER_FOUND": "بعض قوائم الخادم موجودة في كلا النظامين - في النظام المحدد وفي النظام الحالي.<br>قم بإزالة الخوادم غير المتصلة وغير المتوافقة من كل نظام وحاول مرة أخرى.",
         "EmailAlreadyExists": "هذا البريد الإلكتروني مسجل مسبقاً",
-        "FAIL": "النظام <strong>{{failedSystem}}</strong> غير قابل للوصول حاليًا.<br>حاول مرة أخرى بعد لحظات قليلة أو اتصل بـ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">دعم</a>.",
+        "FAIL": "System <strong>{{failedSystem}}</strong> is offline.",
+        "Connection timed out": "System <strong>{{failedSystem}}</strong> is offline.",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
@@ -739,7 +741,8 @@
             "analogencoder": "Analog Encoder",
             "starter": "Starter",
             "iomodule": "IO Module",
-            "bridge": "Bridge"
+            "bridge": "Bridge",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} more required",
