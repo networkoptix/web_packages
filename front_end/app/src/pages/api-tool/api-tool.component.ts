@@ -128,7 +128,7 @@ export class NxApiToolComponent implements OnInit{
             this.swagger = undefined;
             this.apiDoc = {};
         } else {
-            this.apiDoc = Object.assign({}, this.apiDocFull);
+            this.apiDoc = NxUtilsService.deepCopy(this.apiDocFull);
             Object.keys(this.apiDoc.paths).forEach(endpoint => {
                 const category = endpoint.split('/').filter(String)[2];
                 if (category !== this.content.selectedSection) {
@@ -137,18 +137,21 @@ export class NxApiToolComponent implements OnInit{
             });
         }
 
-        this.swagger = SwaggerUI({
-            dom_id          : '#swagger-ui',
-            layout          : 'BaseLayout',
-            presets         : [
-                SwaggerUI.presets.apis,
-                SwaggerUI.SwaggerUIStandalonePreset
-            ],
-            spec            : this.apiDoc,
-            // filter          : 'RESTful API', // currently all API have same tag
-            // url             : '/static/openapi_v1.json',
-            docExpansion    : 'list',
-            operationsSorter: 'alpha'
+        // wait for the DOM element
+        setTimeout( () => {
+            SwaggerUI({
+                dom_id          : '#swagger-ui',
+                layout          : 'BaseLayout',
+                presets         : [
+                    SwaggerUI.presets.apis,
+                    SwaggerUI.SwaggerUIStandalonePreset
+                ],
+                spec            : this.apiDoc,
+                // filter          : 'RESTful API', // currently all API have same tag
+                // url             : '/static/openapi_v1.json',
+                docExpansion    : 'list',
+                operationsSorter: 'alpha'
+            });
         });
     }
 

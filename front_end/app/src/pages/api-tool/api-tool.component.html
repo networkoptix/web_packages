@@ -1,4 +1,4 @@
-{{swagger}}
+
 <ng-container>
     <div class="block-container mt-3">
         <div class="row">
@@ -13,8 +13,34 @@
             <!-- Offset for the fixed menu -->
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
                 <nx-pre-loader *ngIf="!apiDoc"></nx-pre-loader>
-                <div id="swagger-ui"></div>
-                <nx-footer *ngIf="true"></nx-footer>
+                <div id="swagger-ui" *ngIf="this.content.selectedSection !== 'api_information'"></div>
+
+                <div *ngIf="this.content.selectedSection === 'api_information'">
+                    <h2>API Information</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis ex nec velit dictum
+                        elementum sed eget odio. Vivamus placerat tincidunt enim, a rutrum urna feugiat nec. Maecenas
+                        dapibus posuere tellus. Proin ut posuere ante. In a rhoncus quam. Integer posuere ex quis mauris
+                        rhoncus mattis. Aenean interdum ante magna, eget pellentesque tortor vehicula vel. Aliquam
+                        placerat justo eros. Vivamus vitae iaculis lorem, a accumsan odio. Vivamus ac libero aliquet,
+                        vestibulum tellus quis, vestibulum augue. Phasellus vestibulum metus quis elit ullamcorper, sed
+                        blandit leo condimentum. Sed ac ipsum aliquam, ullamcorper tortor nec, congue ante. Suspendisse
+                        potenti. Nulla mattis ligula sit amet tincidunt dignissim. Aliquam volutpat tempor eros, non
+                        cursus ipsum tempor nec. Mauris dictum, ligula eget vulputate auctor, libero magna lobortis
+                        mauris, eu faucibus ipsum mauris sit amet ex.
+                    </p>
+
+                    <h2>API Changes</h2>
+                    <p>Nulla at risus id sem mollis eleifend vitae eu eros. Phasellus egestas eros diam, at aliquam sem
+                        imperdiet eget. Curabitur tempor, massa in vulputate commodo, arcu magna accumsan diam, ut
+                        mattis magna turpis eget ante. Donec aliquam euismod tempus. Phasellus eros mauris, faucibus
+                        tempus consectetur a, dictum id nunc. Suspendisse porttitor ante non turpis feugiat lobortis. In
+                        a ante nulla. Aliquam gravida mauris et erat mattis, eu viverra ex sodales. Integer id orci
+                        volutpat, egestas nisi at, cursus nisl. Pellentesque vel fringilla leo. Curabitur neque nisi,
+                        condimentum eget bibendum sed, placerat in eros. Nulla aliquam nunc et neque ornare condimentum.
+                        Fusce sed scelerisque ligula. Fusce et tincidunt ligula, non cursus nulla. Ut sed ex at elit
+                        consectetur mollis sit amet a nibh.
+                    </p>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,7 @@
 @use '../../styles/typography';
-@use '../../../styles/theme_variables' as variables;
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/buttons' as *;
+
 @use '~bootstrap/scss/bootstrap';
 
 .fixed-sidebar {
@@ -16,13 +18,13 @@
 	@include bootstrap.media-breakpoint-up(md) {
 		position : fixed;
 		left     : 0;
-		width    : calc((100% - #{variables.$scrollbar-height}) / 3)
+		width    : calc((100% - #{$scrollbar-height}) / 3)
 	}
 
 	// replicate col-xl-3
 	@include bootstrap.media-breakpoint-up(xl) {
-		width     : calc((100% - #{variables.$scrollbar-height}) / 4);
-		max-width : calc(#{variables.$fluid-container-max-width} / 4);
+		width     : calc((100% - #{$scrollbar-height}) / 4);
+		max-width : calc(#{$fluid-container-max-width} / 4);
 	}
 
 	nx-menu {
@@ -32,8 +34,8 @@
 
 .swagger-ui {
 	/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
-	font-family : sans-serif;
-	color       : #3b4151
+	font-family : $font-family-regular;
+	color       : $dark9;
 }
 
 .swagger-ui html {
@@ -46,12 +48,17 @@
 	margin : 0
 }
 
-.swagger-ui article, .swagger-ui aside, .swagger-ui footer, .swagger-ui header, .swagger-ui nav, .swagger-ui section {
+.swagger-ui article, .swagger-ui aside, .swagger-ui footer, .swagger-ui header, .swagger-ui nav {
 	display : block
 }
 
+.swagger-ui section {
+	display : block;
+	padding : 0 !important;
+}
+
 .swagger-ui h1 {
-	font-size : 2em;
+	font-size : $h1-font-size;
 	margin    : .67em 0
 }
 
@@ -88,7 +95,6 @@
 
 .swagger-ui b, .swagger-ui strong {
 	font-weight : inherit;
-	font-weight : bolder
 }
 
 .swagger-ui code, .swagger-ui kbd, .swagger-ui samp {
@@ -142,10 +148,25 @@
 }
 
 .swagger-ui button, .swagger-ui input, .swagger-ui optgroup, .swagger-ui select, .swagger-ui textarea {
-	font-family : sans-serif;
+	font-family : $font-family-regular;
 	font-size   : 100%;
 	line-height : 1.15;
 	margin      : 0
+}
+
+.swagger-ui input {
+	display          : block;
+	height           : 32px;
+	font-size        : 14px;
+	line-height      : 1.428571429;
+	color            : $dark9;
+	background-color : $light1;
+	background-image : none;
+	border           : 1px solid $light6;
+	border-radius    : 2px;
+	transition       : none;
+	box-shadow       : none;
+	padding          : 5px 10px;
 }
 
 .swagger-ui button, .swagger-ui input {
@@ -3082,7 +3103,8 @@
 }
 
 .swagger-ui .code, .swagger-ui code {
-	font-family : Consolas, monaco, monospace
+	font-family : $font-family-regular;
+	font-size: 14px;
 }
 
 .swagger-ui .courier {
@@ -9037,7 +9059,7 @@
 	width      : 100%;
 	max-width  : 1460px;
 	margin     : 0 auto;
-	padding    : 0 20px;
+	padding    : 0 16px;
 	box-sizing : border-box
 }
 
@@ -9046,8 +9068,13 @@
 	flex-direction : column
 }
 
+.swagger-ui .information-container.wrapper {
+	display : none;
+}
+
 .swagger-ui .opblock-tag {
-	display       : flex;
+	//display       : flex;
+	display       : none;
 	align-items   : center;
 	padding       : 10px 20px 10px 10px;
 	cursor        : pointer;
@@ -9080,14 +9107,6 @@
 	flex        : 1;
 	padding     : 0 10px;
 	font-family : sans-serif;
-	color       : #3b4151
-}
-
-.swagger-ui .parameter__type {
-	font-size   : 12px;
-	padding     : 5px 0;
-	font-family : monospace;
-	font-weight : 600;
 	color       : #3b4151
 }
 
@@ -9142,10 +9161,12 @@
 }
 
 .swagger-ui .opblock {
-	margin        : 0 0 15px;
-	border        : 1px solid #000;
-	border-radius : 4px;
-	box-shadow    : 0 0 3px rgba(0, 0, 0, .19)
+	margin           : 0 0 15px;
+	box-shadow       : none;
+	background-color : $light1 !important;
+	background-clip  : border-box;
+	border           : 1px solid $light4 !important;
+	border-radius    : 2px;
 }
 
 .swagger-ui .opblock .tab-header {
@@ -9167,27 +9188,21 @@
 }
 
 .swagger-ui .opblock .tab-header .tab-item.active h4 span:after {
-	position   : absolute;
-	bottom     : -15px;
-	left       : 50%;
-	width      : 120%;
-	height     : 4px;
-	content    : "";
-	transform  : translateX(-50%);
-	background : grey
-}
-
-.swagger-ui .opblock.is-open .opblock-summary {
-	border-bottom : 1px solid #000
+	//position   : absolute;
+	//bottom     : -15px;
+	//left       : 50%;
+	//width      : 120%;
+	//height     : 4px;
+	//content    : "";
+	//transform  : translateX(-50%);
+	//background : grey
 }
 
 .swagger-ui .opblock .opblock-section-header {
 	display     : flex;
 	align-items : center;
-	padding     : 8px 20px;
+	padding     : 16px 16px 0;
 	min-height  : 50px;
-	background  : hsla(0, 0%, 100%, .8);
-	box-shadow  : 0 1px 2px rgba(0, 0, 0, .1)
 }
 
 .swagger-ui .opblock .opblock-section-header > label {
@@ -9205,24 +9220,20 @@
 }
 
 .swagger-ui .opblock .opblock-section-header h4 {
-	font-size   : 14px;
+	@include typography.regular18;
 	flex        : 1;
 	margin      : 0;
-	font-family : sans-serif;
-	color       : #3b4151
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-	font-size     : 14px;
-	font-weight   : 700;
+	@include typography.medium13nocolor;
 	min-width     : 80px;
-	padding       : 6px 15px;
+	padding       : 2px 8px;
 	text-align    : center;
-	border-radius : 3px;
+	border-radius : 2px;
 	background    : #000;
 	text-shadow   : 0 1px 0 rgba(0, 0, 0, .1);
-	font-family   : sans-serif;
-	color         : #fff
+	color         : $light1;
 }
 
 .swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
@@ -9247,6 +9258,11 @@
 	max-width   : calc(100% - 110px - 15rem)
 }
 
+.swagger-ui .opblock .opblock-summary-path a{
+	@include typography.medium13;
+	line-height : 16px;
+}
+
 .swagger-ui .opblock .opblock-summary-path__deprecated {
 	text-decoration : line-through
 }
@@ -9264,10 +9280,31 @@
 }
 
 .swagger-ui .opblock .opblock-summary {
-	display     : flex;
-	align-items : center;
-	padding     : 5px;
-	cursor      : pointer
+	display          : flex;
+	align-items      : center;
+	padding          : 12px;
+	cursor           : pointer;
+	background-color : $additional_light1 !important;
+	position         : relative;
+
+	&::after {
+		position   : absolute;
+		top        : 50%;
+		right      : 16px;
+		width      : 20px;
+		height     : 20px;
+		content    : " ";
+		background : transparent url(/static/images/icons/standard/arrow_expand.svg) no-repeat;
+		transform  : translateY(-50%);
+	}
+}
+
+.swagger-ui .opblock.is-open .opblock-summary {
+	border-bottom : 1px solid $light3 !important;
+
+	&::after {
+		transform  : translateY(-50%) scaleY(-1);
+	}
 }
 
 .swagger-ui .opblock .opblock-summary .view-line-link {
@@ -9290,7 +9327,7 @@
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-	background : #49cc90
+	background : $brand-success;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary {
@@ -9298,7 +9335,7 @@
 }
 
 .swagger-ui .opblock.opblock-post .tab-header .tab-item.active h4 span:after {
-	background : #49cc90
+	//background : #49cc90
 }
 
 .swagger-ui .opblock.opblock-put {
@@ -9307,7 +9344,7 @@
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-	background : #fca130
+	background : $brand-warning;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary {
@@ -9315,7 +9352,7 @@
 }
 
 .swagger-ui .opblock.opblock-put .tab-header .tab-item.active h4 span:after {
-	background : #fca130
+	//background : #fca130
 }
 
 .swagger-ui .opblock.opblock-delete {
@@ -9332,7 +9369,7 @@
 }
 
 .swagger-ui .opblock.opblock-delete .tab-header .tab-item.active h4 span:after {
-	background : #f93e3e
+	//background : #f93e3e
 }
 
 .swagger-ui .opblock.opblock-get {
@@ -9341,7 +9378,7 @@
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-	background : #61affe
+	background : $brand-info;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary {
@@ -9349,7 +9386,7 @@
 }
 
 .swagger-ui .opblock.opblock-get .tab-header .tab-item.active h4 span:after {
-	background : #61affe
+	//background : #61affe
 }
 
 .swagger-ui .opblock.opblock-patch {
@@ -9366,7 +9403,7 @@
 }
 
 .swagger-ui .opblock.opblock-patch .tab-header .tab-item.active h4 span:after {
-	background : #50e3c2
+	//background : #50e3c2
 }
 
 .swagger-ui .opblock.opblock-head {
@@ -9383,7 +9420,7 @@
 }
 
 .swagger-ui .opblock.opblock-head .tab-header .tab-item.active h4 span:after {
-	background : #9012fe
+	//background : #9012fe
 }
 
 .swagger-ui .opblock.opblock-options {
@@ -9400,7 +9437,7 @@
 }
 
 .swagger-ui .opblock.opblock-options .tab-header .tab-item.active h4 span:after {
-	background : #0d5aa7
+	//background : #0d5aa7
 }
 
 .swagger-ui .opblock.opblock-deprecated {
@@ -9418,7 +9455,7 @@
 }
 
 .swagger-ui .opblock.opblock-deprecated .tab-header .tab-item.active h4 span:after {
-	background : #ebebeb
+	//background : #ebebeb
 }
 
 .swagger-ui .opblock .opblock-schemes {
@@ -9484,25 +9521,19 @@
 }
 
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
-	font-size   : 12px;
-	margin      : 0 0 5px;
+	@include typography.regular13;
+	margin      : 0;
 	padding     : 15px 20px;
-	font-family : sans-serif;
-	color       : #3b4151
 }
 
 .swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-external-docs-wrapper h4, .swagger-ui .opblock-title_normal h4 {
-	font-size   : 12px;
+	@include typography.regular13;
 	margin      : 0 0 5px;
-	font-family : sans-serif;
-	color       : #3b4151
 }
 
 .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
-	font-size   : 14px;
-	margin      : 0;
-	font-family : sans-serif;
-	color       : #3b4151
+	@include typography.regular13;
+	margin      : 0 !important;
 }
 
 .swagger-ui .opblock-external-docs-wrapper h4 {
@@ -9552,24 +9583,16 @@
 }
 
 .swagger-ui .response-col_status {
-	font-size   : 14px;
-	font-family : sans-serif;
-	color       : #3b4151
+
 }
 
 .swagger-ui .response-col_status .response-undocumented {
-	font-size   : 11px;
-	font-family : monospace;
-	font-weight : 600;
-	color       : #909090
+
 }
 
 .swagger-ui .response-col_links {
 	padding-left : 2em;
 	max-width    : 40em;
-	font-size    : 14px;
-	font-family  : sans-serif;
-	color        : #3b4151
 }
 
 .swagger-ui .response-col_links .response-undocumented {
@@ -9593,22 +9616,20 @@
 }
 
 .swagger-ui .opblock-body pre.microlight {
-	font-size       : 12px;
+	font-size       : 14px;
 	margin          : 0;
 	padding         : 10px;
 	white-space     : pre-wrap;
 	word-wrap       : break-word;
-	word-break      : break-all;
 	word-break      : break-word;
 	-webkit-hyphens : auto;
 	-ms-hyphens     : auto;
 	hyphens         : auto;
-	border-radius   : 4px;
-	background      : #333;
+	border-radius   : 2px;
+	background      : $light16 !important;
 	overflow-wrap   : break-word;
-	font-family     : monospace;
-	font-weight     : 600;
-	color           : #fff
+	font-family     : $font-family-regular;
+	color           : $light1;
 }
 
 .swagger-ui .opblock-body pre.microlight .headerline {
@@ -9623,6 +9644,10 @@
 	overflow-y : auto;
 	max-height : 400px;
 	min-height : 6em
+}
+
+.swagger-ui .highlight-code > .microlight code span {
+	color : $light1 !important;
 }
 
 .swagger-ui .curl-command {
@@ -9647,6 +9672,7 @@
 }
 
 .swagger-ui .scheme-container {
+	display    : none;
 	margin     : 0 0 20px;
 	padding    : 30px 0;
 	background : #fff;
@@ -9745,8 +9771,7 @@
 }
 
 .swagger-ui .response-control-media-type__accept-message {
-	color     : green;
-	font-size : .7em
+	font-size : 10px;
 }
 
 .swagger-ui .response-control-examples__title, .swagger-ui .response-control-media-type__title {
@@ -9856,16 +9881,22 @@
 }
 
 .swagger-ui .btn {
-	font-size     : 14px;
-	font-weight   : 700;
-	padding       : 5px 23px;
-	transition    : all .3s;
-	border        : 2px solid grey;
-	border-radius : 4px;
-	background    : transparent;
-	box-shadow    : 0 1px 2px rgba(0, 0, 0, .1);
-	font-family   : sans-serif;
-	color         : #3b4151
+	@include button;
+	color            : $dark9 !important;
+	background-color : $light4 !important;
+	box-shadow       : inset 0 -1px 0 0 $light7 !important;
+	font-family      : $font-family-medium;
+
+	&:hover:not([disabled]):not(.disabled) {
+		background-color : $light6 !important;
+		box-shadow       : inset 0 -1px 0 0 $light8;
+	}
+
+	&:active,
+	&.active {
+		background-color : $light6 !important;
+		box-shadow       : inset 0 1px 0 0 $light8 !important;
+	}
 }
 
 .swagger-ui .btn.btn-sm {
@@ -9879,7 +9910,7 @@
 }
 
 .swagger-ui .btn:hover {
-	box-shadow : 0 0 5px rgba(0, 0, 0, .3)
+	//box-shadow : 0 0 5px rgba(0, 0, 0, .3)
 }
 
 .swagger-ui .btn.cancel {
@@ -10009,16 +10040,15 @@
 }
 
 .swagger-ui select {
+	color              : $dark9 !important;
+	background-color   : $light4 !important;
+	box-shadow         : inset 0 -1px 0 0 $light7;
+	font-family        : $font-family-medium;
 	font-size          : 14px;
-	font-weight        : 700;
 	padding            : 5px 40px 5px 10px;
-	border             : 2px solid #41444e;
-	border-radius      : 4px;
-	background         : #f7f7f7 url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13.418 7.859a.695.695 0 01.978 0 .68.68 0 010 .969l-3.908 3.83a.697.697 0 01-.979 0l-3.908-3.83a.68.68 0 010-.969.695.695 0 01.978 0L10 11l3.418-3.141z"/></svg>') right 10px center no-repeat;
-	background-size    : 20px;
-	box-shadow         : 0 1px 2px 0 rgba(0, 0, 0, .25);
-	font-family        : sans-serif;
-	color              : #3b4151;
+	border             : none !important;
+	border-radius      : 2px;
+	height             : 32px;
 	-webkit-appearance : none;
 	-moz-appearance    : none;
 	appearance         : none
@@ -10063,11 +10093,6 @@
 
 .swagger-ui input[type=email], .swagger-ui input[type=file], .swagger-ui input[type=password], .swagger-ui input[type=search], .swagger-ui input[type=text], .swagger-ui textarea {
 	min-width     : 100px;
-	margin        : 5px 0;
-	padding       : 8px 10px;
-	border        : 1px solid #d9d9d9;
-	border-radius : 4px;
-	background    : #fff
 }
 
 .swagger-ui input[type=email].invalid, .swagger-ui input[type=file].invalid, .swagger-ui input[type=password].invalid, .swagger-ui input[type=search].invalid, .swagger-ui input[type=text].invalid, .swagger-ui textarea.invalid {
@@ -10129,17 +10154,17 @@
 }
 
 .swagger-ui textarea {
-	font-size     : 12px;
+	font-size     : 14px;
 	width         : 100%;
 	min-height    : 280px;
 	padding       : 10px;
 	border        : none;
-	border-radius : 4px;
+	border-radius : 2px;
 	outline       : none;
-	background    : hsla(0, 0%, 100%, .8);
-	font-family   : monospace;
+	background    : $light16 !important;
+	font-family   : $font-family-regular;
 	font-weight   : 600;
-	color         : #3b4151
+	color         : $light1;
 }
 
 .swagger-ui textarea:focus {
@@ -10604,7 +10629,18 @@
 .swagger-ui table {
 	width           : 100%;
 	padding         : 0 10px;
-	border-collapse : collapse
+	border-collapse : collapse;
+	border          : 1px solid $light4;
+}
+
+.swagger-ui table thead tr td, .swagger-ui table thead tr th {
+	@include typography.medium13;
+	padding       : 4px 16px;
+	text-align    : left;
+}
+
+.swagger-ui table thead {
+	background-color: $additional_light1;
 }
 
 .swagger-ui table.model tbody tr td {
@@ -10619,7 +10655,6 @@
 
 .swagger-ui table.headers td {
 	font-size      : 12px;
-	font-weight    : 300;
 	vertical-align : middle;
 	font-family    : monospace;
 	font-weight    : 600;
@@ -10632,23 +10667,14 @@
 }
 
 .swagger-ui table tbody tr td {
-	padding        : 10px 0 0;
-	vertical-align : top
+	@include typography.regular14;
+	padding        : 8px 16px;
+	vertical-align : top;
+	border         : 1px solid $light4;
 }
 
 .swagger-ui table tbody tr td:first-of-type {
 	min-width : 6em;
-	padding   : 10px 0
-}
-
-.swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	font-size     : 12px;
-	font-weight   : 700;
-	padding       : 12px 0;
-	text-align    : left;
-	border-bottom : 1px solid rgba(59, 65, 81, .2);
-	font-family   : sans-serif;
-	color         : #3b4151
 }
 
 .swagger-ui .parameters-col_description {
@@ -10666,15 +10692,11 @@
 }
 
 .swagger-ui .parameter__name {
-	font-size    : 16px;
-	font-weight  : 400;
-	margin-right : .75em;
-	font-family  : sans-serif;
-	color        : #3b4151
+	@include typography.bold13;
 }
 
 .swagger-ui .parameter__name.required {
-	font-weight : 700
+	//font-weight : 700
 }
 
 .swagger-ui .parameter__name.required span {
@@ -10686,24 +10708,13 @@
 	position  : relative;
 	top       : -6px;
 	padding   : 5px;
-	content   : "required";
+	content   : "";
 	color     : rgba(255, 0, 0, .6)
 }
 
-.swagger-ui .parameter__extension, .swagger-ui .parameter__in {
-	font-size   : 12px;
-	font-style  : italic;
-	font-family : monospace;
-	font-weight : 600;
-	color       : grey
-}
-
-.swagger-ui .parameter__deprecated {
-	font-size   : 12px;
-	font-style  : italic;
-	font-family : monospace;
-	font-weight : 600;
-	color       : red
+.swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameter__deprecated {
+	@include typography.regular13nocolor;
+	color       : $light8;
 }
 
 .swagger-ui .parameter__empty_value_toggle {
@@ -10722,7 +10733,7 @@
 }
 
 .swagger-ui .table-container {
-	padding : 20px
+	padding : 16px;
 }
 
 .swagger-ui .response-col_description {
@@ -11064,9 +11075,8 @@
 }
 
 .swagger-ui .markdown p, .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown p, .swagger-ui .renderedMarkdown pre {
-	margin     : 1em auto;
-	word-break : break-all;
-	word-break : break-word
+	margin     : 0 auto 1em auto;
+	word-break : break-word;
 }
 
 .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown pre {
@@ -11079,12 +11089,12 @@
 
 .swagger-ui .markdown code, .swagger-ui .renderedMarkdown code {
 	font-size     : 14px;
-	padding       : 5px 7px;
-	border-radius : 4px;
-	background    : rgba(0, 0, 0, .05);
+	padding       : 1px 6px;
+	border-radius : 2px;
+	border        : 1px solid $light10;
 	font-family   : monospace;
-	font-weight   : 600;
-	color         : #9012fe
+	font-weight   : 400;
+	color         : $dark9;
 }
 
 .swagger-ui .markdown pre > code, .swagger-ui .renderedMarkdown pre > code {

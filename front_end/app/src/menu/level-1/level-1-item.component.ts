@@ -55,7 +55,6 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     menuClick(sectionId) {
-        debugger;
         if (!this.searchMode) {
             this.menuService.section = sectionId;
             if (this.itemPath) {
