@@ -3,13 +3,16 @@
     <nx-section nonPadded>
         <div class="storage-container">
             <nx-pre-loader *ngIf="loading"></nx-pre-loader>
-            <nx-section-placeholder
-                    *ngIf="!loading && !storages.length"
-                    svgFileName="system_settings_placeholder"
-                    width="64"
-                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
-            </nx-section-placeholder>
-            <form class="form form-horizontal" role="form" name="storageSettings" #storageForm="ngForm" novalidate>
+            <ng-container *ngIf="!loading && !showStorage">
+                <nx-section-placeholder
+                        *ngIf="failedToLoad"
+                        svgFileName="system_settings_placeholder"
+                        width="64"
+                        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+                </nx-section-placeholder>
+                <div *ngIf="!failedToLoad" class="no-storage-placeholder" translate>No main storage drive was selected for writing - video will not be recorded on this server.</div>
+            </ng-container>
+            <form *ngIf="!loading" class="form form-horizontal" role="form" name="storageSettings" novalidate>
                 <table *ngIf="showStorage">
                     <thead>
                         <tr>
@@ -26,17 +29,17 @@
                         <tr *ngFor="let storage of storages; index as i">
                             <td title="{{storage.url}}">{{storage.url}}</td>
                             <td>{{friendlyBytes( storage.totalSpace )}}</td>
-                            <td>{{friendlyBytes( storage.freeSpace.bits )}}</td>
+                            <td>{{friendlyBytes( storage.remainingSpace.bits )}}</td>
                             <td>
                                 <input
                                         type="number"
                                         id="reservedSpace{{ i }}"
                                         name="reservedSpace{{ i }}"
                                         min="0"
-                                        [max]="storage.maxReserve[storage.reservedSpace.uom]"
+                                        [max]="storage.freeSpace[storage.reservedSpace.uom]"
                                         [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
                                         [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
-                                        (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.maxReserve[storage.reservedSpace.uom])"
+                                        (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.freeSpace[storage.reservedSpace.uom])"
                                         class="w-50 p-1 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"/>
                                 <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"
                                         [(ngModel)]="storage.reservedSpace.uom"
@@ -58,6 +61,16 @@
                     </tbody>
                 </table>
             </form>
+        </div>
+    </nx-section>
+    <nx-section *ngIf="watchersChanged">
+        <div class="col-12 p-0 d-flex">
+            <nx-process-button
+                    [process]="saveSettings"
+                    [buttonText]="'Save' | translate"></nx-process-button>
+            <button
+                    class="btn btn-default ml-2"
+                    (click)="resetWatchers()" translate>Cancel</button>
         </div>
     </nx-section>
 </nx-block>

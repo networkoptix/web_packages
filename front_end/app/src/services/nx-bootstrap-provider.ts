@@ -156,9 +156,10 @@ export class NxBootstrapProvider {
                 cloudStorageSize
             };
 
-            const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
+            const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
+                showAnalyticsEvents,
                 sortSupportedDevicesByPopularity,
                 supportedHardwareTypes,
                 supportedResolutions,

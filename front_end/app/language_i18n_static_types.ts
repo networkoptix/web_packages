@@ -30,7 +30,6 @@ export interface LanguageI18NStaticTypes {
     ipvdFeedback:          IpvdFeedback;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
-    license:               License;
     menu:                  Menu;
     pageTitles:            PageTitles;
     passwordRequirements:  PasswordRequirements;
@@ -45,6 +44,7 @@ export interface LanguageI18NStaticTypes {
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
     headerLabels:          HeaderLabels;
+    license:               License;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -698,12 +698,12 @@ export interface Storage {
     failed:                     any;
     stillHasArchivesPreWarning: any;
     stillHasArchives:           any;
+    failedRemove:               any;
     reservedTooSmallTooltip:    any;
     reservedSystemTooltip:      any;
     serverOffline:              any;
     success:                    any;
     urlPlaceholder:             any;
-    failedRemove:            any;
 }
 
 export interface Modes {
@@ -984,7 +984,6 @@ const typeMap: any = {
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
-        { json: "license", js: "license", typ: r("License") },
         { json: "menu", js: "menu", typ: r("Menu") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
@@ -999,6 +998,7 @@ const typeMap: any = {
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
+        { json: "license", js: "license", typ: r("License") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
