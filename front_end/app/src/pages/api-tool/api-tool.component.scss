@@ -2,27 +2,27 @@
 @use '../../../styles/theme_variables' as *;
 @use '../../styles/buttons' as *;
 
-@use '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .fixed-sidebar {
 	margin        : 0 !important;
 	padding-left  : 1rem !important;
 	padding-right : 0 !important;
 
-	@include bootstrap.media-breakpoint-down(sm) {
+	@include media-breakpoint-down(sm) {
 		height        : auto !important;
 		padding-right : 1rem !important;
 	}
 
 	// replicate col-md-4
-	@include bootstrap.media-breakpoint-up(md) {
+	@include media-breakpoint-up(md) {
 		position : fixed;
 		left     : 0;
 		width    : calc((100% - #{$scrollbar-height}) / 3)
 	}
 
 	// replicate col-xl-3
-	@include bootstrap.media-breakpoint-up(xl) {
+	@include media-breakpoint-up(xl) {
 		width     : calc((100% - #{$scrollbar-height}) / 4);
 		max-width : calc(#{$fluid-container-max-width} / 4);
 	}
