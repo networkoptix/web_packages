@@ -66,6 +66,10 @@ export interface Integration {
     id: number
 }
 
+export interface IntegrationCount {
+    count: number;
+}
+
 export interface SystemAuth {
     authGet: string,
     authPost: string,

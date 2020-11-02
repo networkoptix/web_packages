@@ -1,6 +1,6 @@
 <ng-template #techBlock let-tech="tech">
     <div class="tech-block" [title]="tech.title" [routerLink]="tech.url">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tech.icon"></svg-icon>
+        <img [src]="CONFIG.images.dirDevelopers + tech.icon">
     </div>
 </ng-template>
 

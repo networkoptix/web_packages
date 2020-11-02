@@ -53,7 +53,7 @@
             {% endif %}
             <tr class="djn-tr form-row{% if inline_admin_form.original or inline_admin_form.show_url %} has_original{% endif %}">
 
-                <td data-toggle="collapse" class="{% if inline_admin_form.form.inlines %}toggle-collapse"{% endif %}
+                <td data-toggle="collapse" class="{% if inline_admin_form.form.inlines %}toggle-collapse collapsed"{% endif %}
                     data-target="#nested-{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% elif not forloop.last %}{%if is_nested %}{% endif %}{{ inline_admin_form.form|form_index }}{% endif %}">
                 </td>
                 <td class="original{% if inline_admin_formset.opts.sortable_field_name %} is-sortable{% endif %}">
@@ -105,7 +105,7 @@
 
             {% if inline_admin_form.form.inlines %}
                 <tr id="nested-{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% elif not forloop.last %}{%if is_nested %}{% endif %}{{ inline_admin_form.form|form_index }}{% endif %}"
-                    class="djn-tr collapse in">
+                    class="djn-tr collapse">
                     <td class="nested-menu-items" class="djn-td" colspan="{{ inline_admin_form|cell_count }}">
                 {% for nested in inline_admin_form.form.inlines %}
                     {% include nested.opts.template with inline_admin_formset=nested %}

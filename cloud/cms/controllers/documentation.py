@@ -69,7 +69,7 @@ def split_blocks(html):
     return blocks
 
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False):
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
     doc_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation)
     if review:
         state = 'review'
@@ -82,8 +82,6 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
     # Get global contexts and fill any matching variables in datarecords
     cloud_portal = None
-    global_contexts = None
-    global_contexts_dict = None
 
     for doc in docs:
         version = None
@@ -116,7 +114,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             continue
 
         if not doc_dict or (not trust_cache and (doc_dict.get('version', None) != version or draft)):
-            if global_contexts_dict is None:
+            if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
                 global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)

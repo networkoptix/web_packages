@@ -122,7 +122,7 @@ def context_editor_action(request, asset, context_id, language_code):
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
             add_upload_error_messages(request, "Asset error for {}. {}", asset_errors)
         else:
-            # To cache documentation and verify that hmtl body can be parsed correctly
+            # To cache documentation and verify that html body can be parsed correctly
             if asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
                 documentation.generate_doc_json(
                     [asset], language=language, draft=preview or save_draft, review=send_review
@@ -332,7 +332,7 @@ def asset_settings(request, asset_id):
     asset = Asset.objects.get(pk=asset_id)
     form = None
     if request.method == "POST":
-        form = AssetSettingsForm(request.POST, request.FILES)
+        form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
         if not form.is_valid():
             form = None
 
@@ -342,7 +342,8 @@ def asset_settings(request, asset_id):
         merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
         update_asset_by_json = action == 'update_asset_by_json'
-        import_assets_from_json = action == 'import_assets_from_json'
+        import_assets_from_json = action in ('import_assets_from_json', 'import_assets_from_json_publish')
+        import_assets_from_json_publish = action == 'import_assets_from_json_publish'
         update_content = action == 'update_content'
 
         file = request.FILES["file"]
@@ -352,7 +353,7 @@ def asset_settings(request, asset_id):
                 structure.update_asset_by_json(asset, json.load(file)[0], request.user)
                 messages.success(request, "Content updated")
             elif import_assets_from_json:
-                structure.import_assets_from_json(json.load(file), request.user)
+                structure.import_assets_from_json(json.load(file), request.user, publish=import_assets_from_json_publish)
                 messages.success(request, "Assets imported")
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
@@ -389,7 +390,7 @@ def asset_settings(request, asset_id):
                 }[item[0]]
                 messages.add_message(request, log_type, item[1])
     else:
-        form = AssetSettingsForm()
+        form = AssetSettingsForm(user=request.user)
 
     return render(request, 'cms/asset_settings.html',
                   {'asset': asset,
@@ -539,7 +540,7 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
             return Asset.objects.none()
 
         qs = Asset.objects.filter(
-            asset_type__type=AssetType.ASSET_TYPES.documentation
+            asset_type__type__in=[AssetType.ASSET_TYPES.documentation, AssetType.ASSET_TYPES.integration]
         )
         if not self.request.user.is_superuser:
             qs = qs.filter(customization__name__in=self.request.user.customizations_with_permission('cms.publish_version'))

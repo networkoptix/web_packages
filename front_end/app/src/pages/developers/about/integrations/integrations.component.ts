@@ -47,8 +47,7 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     integrationsDetails() {
-        const nodes = this.integrationsNode.nodes[1].nodes;
-        const plugins = nodes.slice(0, nodes.length - 1);
+        const plugins = this.integrationsNode.nodes[1].nodes;
         const more = { url: '/integrations' };
         const getPluginsToShow = () => {
             switch (true) {
@@ -91,8 +90,8 @@ export class NxIntegrationsComponent implements OnInit {
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
-        this.cloudApi.getIntegrations().subscribe(integrations => {
-            this.pluginCount = integrations.data.length || 0;
+        this.cloudApi.getIntegrationsCount().subscribe(data => {
+            this.pluginCount = data.count || 0;
         });
     }
 

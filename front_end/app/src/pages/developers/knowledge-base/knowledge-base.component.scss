@@ -1,6 +1,6 @@
 @use '../../../../styles/theme_variables' as *;
 @use '../../../styles/typography';
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 .page-wrapper {
     display: grid;
@@ -19,6 +19,10 @@
         padding: 1rem;
         grid-column: span 12;
         grid-row: 1 / -1;
+
+        ::ng-deep .menu-level-2 > .menu-link {
+            font-size: 13px !important;
+        }
 
         @include bootstrap.media-breakpoint-up(md) {
             position: sticky;
@@ -63,6 +67,8 @@
     @include bootstrap.media-breakpoint-up(md) {
         grid-template-columns: repeat(8, 1fr);
         grid-column: span 8;
+        margin-left: 8px;
+        margin-right: 8px;
     }
     @include bootstrap.media-breakpoint-up(lg) {
         grid-template-columns: repeat(9, 1fr);
@@ -104,15 +110,16 @@
     margin: 1rem;
     padding: 2rem 0 1rem 0;
     border-top: 2px solid $additional_light2;
+
     & > h4 {
-    @include typography.medium15; 
-    }
-    & > a {
-        text-decoration: underline;
+        @include typography.medium15;
+        color: $dark17 !important;
+        letter-spacing: 0.64px;
     }
 }
 
-.article-content {
+::ng-deep .article-content {
+    margin-top: 36px;
     font-size: 1rem;
     p,li, h1, h2, h3, a {
         word-break: break-word;

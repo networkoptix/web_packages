@@ -279,10 +279,16 @@ class AssetSettingsForm(forms.Form):
              'Update CMS structure and default values based on archive with structure.json and asset_type template, '
              'or upload just the structure.json'),
             ('update_asset_by_json', 'Update data records from a json file'),
-            ('import_assets_from_json', 'Create and update all assets in json file'),
             ('update_content', 'Upload content files for asset'),
+            ('import_assets_from_json', 'Create and update all assets from json file'),
         )
     )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user and user.is_superuser:
+            self.fields['action'].choices += ('import_assets_from_json_publish', 'Create and update all assets from json file and publish/accept reviews'),
 
 
 class AssetForm(forms.ModelForm):

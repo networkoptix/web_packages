@@ -9,12 +9,14 @@ import requests
 import uuid
 from zipfile import ZipFile
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 
+from cms.controllers.documentation import DOC_CACHE
 from cms.controllers.generate_structure import templatify_json
-from cms.controllers.modify_db import save_unrevisioned_records
+from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
-    Menu
+    Menu, AssetCustomizationReview
 
 logger = logging.getLogger(__name__)
 
@@ -479,22 +481,36 @@ def update_asset_by_json(asset, asset_json, user):
         data_records = {}
         files = {}
         for ds in context["values"]:
-            ds_obj = context_model.datastructure_set.get(name=ds['name'])
-            ds_type = DataStructure.get_type_by_name(ds['type'])
-            if ds_type not in [DataStructure.DATA_TYPES.file,
-                               DataStructure.DATA_TYPES.image]:
-                if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
-                    files[ds['name']] = external_file_to_content_file(ds['value'])
-                elif ds_type == DataStructure.DATA_TYPES.html and ds_obj.meta_settings.get('upload_data_images', False):
-                    ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
-                data_records[ds["name"]] = ds["value"]
-        save_unrevisioned_records(asset, None, None, context_model.datastructure_set.all(), data_records, files, user)
+            ds_obj = context_model.datastructure_set.filter(name=ds['name']).first()
+            if ds_obj:
+                ds_type = DataStructure.get_type_by_name(ds['type'])
+                if ds_type not in [DataStructure.DATA_TYPES.file,
+                                   DataStructure.DATA_TYPES.image]:
+                    if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                        files[ds['name']] = external_file_to_content_file(ds['value'])
+                    elif ds_type == DataStructure.DATA_TYPES.html and ds_obj.meta_settings.get('upload_data_images', False):
+                        ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                    data_records[ds["name"]] = ds["value"]
+        save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
 
 
-def import_assets_from_json(assets_list, user):
+def import_assets_from_json(assets_list, user, publish=False):
     for asset_dict in assets_list:
         asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
-        asset_obj, created = Asset.objects.get_or_create(name=asset_dict['name'], asset_type=asset_type)
-        if created:
+        asset_obj = Asset.objects.filter(name=asset_dict['name'], asset_type=asset_type).first()
+        if not asset_obj:
+            asset_obj = Asset.objects.create(name=asset_dict['name'], asset_type=asset_type)
             asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
         update_asset_by_json(asset_obj, asset_dict, user)
+
+        if publish:
+            # Send for review
+            send_version_for_review(asset_obj, user)
+            asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
+
+            # Accept review
+            for customization in asset_obj.customizations.all():
+                review = AssetCustomizationReview.objects.filter(version__asset=asset_obj, customization=customization).last()
+                update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+            if asset_obj.is_documentation:
+                DOC_CACHE.clear_cache()

@@ -39,6 +39,13 @@
     min-width: 275px;
     margin: 0 16px 16px 0;
     cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 4px 8px 0 rgba(199, 199, 199, 0.2);
+    }
+    &:active {
+        box-shadow: 0 0 14px 0 rgba(199, 199, 199, 0.5);
+    }
     & header {
         background-repeat: repeat;
         display: flex;
@@ -55,7 +62,7 @@
             }
         }
         & > .intro-line {
-            @include typography.regular14;
+            @include typography.medium14;
             color: rgba($light1, 0.5) !important;
             display: flex;
             justify-content: flex-end;
@@ -64,12 +71,9 @@
             margin-bottom: 3px;
         }
         & > h3 {
-            @include typography.regular20;
+            @include typography.medium24;
             color: $light1 !important;
             margin: 0;
-            @include bootstrap.media-breakpoint-down(xs) {
-                font-size: 24px !important;
-            }
         }
     }
     & > .capability-detail {

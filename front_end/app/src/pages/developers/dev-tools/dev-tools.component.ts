@@ -6,6 +6,7 @@ import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { AboutNode } from '../about/about.component';
+import { takeWhile } from 'rxjs/operators';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -47,11 +48,13 @@ export class NxDevToolsComponent {
                 icon,
                 newWindow
             });
-            this.cloudApi.getDocumentation('developer_tools').subscribe(devTools => {
-                this.devToolsNode = {
-                    nodes: devTools.map(mapToDevToolsNode)
-                };
-            });
+            this.cloudApi.getDocumentation('developer_tools')
+                .pipe(takeWhile(_ => !this.devToolsNode))
+                .subscribe(devTools => {
+                    this.devToolsNode = {
+                        nodes: devTools.map(mapToDevToolsNode)
+                    };
+                });
         }
     }
 };

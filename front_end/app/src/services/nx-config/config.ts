@@ -174,6 +174,10 @@ export const nxConfig: IConfig = {
         dirPagePlaceholder    : '/static/images/placeholders/page/',
         dirSectionPlaceholder : '/static/images/placeholders/section/'
     },
+    images: {
+        dir           : '/static/images/',
+        dirDevelopers : '/static/images/developers/'
+    },
     integration: {
         adminLink            : '/admin/cms/asset/%ID%/pages/',
         defaultPlatformNames : {

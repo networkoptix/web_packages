@@ -37,8 +37,9 @@
         & > .tech-block {
             margin: 0 78px 78px 0;
             cursor: pointer;
-            & > svg-icon > svg {
-                height: 60px;
+            height: 56px;
+            & > img {
+                height: 100%;
                 @include bootstrap.media-breakpoint-down(xs) {
                     height: 40px;
                 }

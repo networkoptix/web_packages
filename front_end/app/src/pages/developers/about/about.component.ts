@@ -15,7 +15,7 @@ export enum AboutTemplates {
     SUPPORT='support'
 }
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({
     selector    : 'nx-about',
     templateUrl : 'about.component.html',
@@ -26,7 +26,7 @@ export class NxAboutComponent {
     @Input() lead: string = '%CLOUD_NAME% is an extensible IP Video Development Platform created for software developers who want to create new Powered-by-%VMS_NAME% products and scalable integrations.'
 
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
-    aboutCases = AboutTemplates
+    aboutCases = AboutTemplates;
 
     get aboutStructure() {
         return this.aboutStructure$.value;

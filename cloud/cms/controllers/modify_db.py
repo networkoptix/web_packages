@@ -335,13 +335,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
     upload_errors = []
     # Only process non-translatable data structures if language is default.
-    process_nontranslatable = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language == language
+    default_language = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language
+    process_nontranslatable = default_language == language
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None
         if context and context.translatable:
             if data_structure.translatable:
-                ds_language = language
+                ds_language = language or default_language
             elif not process_nontranslatable:
                 continue
 

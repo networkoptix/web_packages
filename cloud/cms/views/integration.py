@@ -284,3 +284,21 @@ def get_integrations(request):
     integration_list.sort(key=lambda x: x["information"].get("name", "~~~~").lower())
 
     return api_success({'data': integration_list})
+
+
+@api_view(("GET", ))
+@permission_classes((AllowAny, ))
+def get_integrations_count(request):
+    is_enabled = check_integration_store_enabled()
+    is_portal_manager = UserGroupsToAssetPermissions. \
+        check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
+    response = {}
+    if is_enabled or is_portal_manager or has_beta_access:
+        integration_count = Asset.objects.filter(
+            asset_type__type=AssetType.ASSET_TYPES.integration, customizations__name=settings.CUSTOMIZATION,
+            contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+        ).distinct().count()
+        response['count'] = integration_count
+    return api_success(response)

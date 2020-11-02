@@ -1326,7 +1326,7 @@ class Menu(models.Model):
                     'order': node.order,
                     'is_global': node.is_global,
                     'touched': node.touched,
-                    'nodes': get_nodes(node.nodes_list) if node.nodes_list else []
+                    'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
                 }
 
                 nodes.append(node_dict)

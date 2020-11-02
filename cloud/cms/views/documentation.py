@@ -8,8 +8,10 @@ from django.conf import settings
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
-from cms.models import Asset, AssetType, get_cached_menu
+from cms.controllers.filldata import global_contexts_to_dict
+from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset
 from cms.permissions import CanViewDevelopers
+from cms.views.integration import make_integrations_json
 from util.helpers import get_language_object_from_request
 import re
 
@@ -152,17 +154,28 @@ def get_pages(request):
     })
 
 
-def prepare_menu_dict(parent, language):
+def prepare_menu_dict(parent, language, global_contexts=None, global_contexts_dict=None):
     for node in parent:
         asset_id = node.get('asset_id', None)
-        if asset_id and node.get('asset_type', AssetType.ASSET_TYPES[AssetType.ASSET_TYPES.documentation]):
+        if asset_id:
             asset = Asset.objects.filter(id=asset_id).first()
+            asset_type = asset.asset_type.type
             if asset:
-                docs = generate_doc_json([asset], language=language)
-                if docs:
-                    node['asset'] = docs[0]
+                if asset_type == AssetType.ASSET_TYPES.documentation:
+                    docs = generate_doc_json(
+                        [asset], language=language, global_contexts=global_contexts,
+                        global_contexts_dict=global_contexts_dict
+                    )
+                    if docs:
+                        node['asset'] = docs[0]
+                elif asset_type == AssetType.ASSET_TYPES.integration:
+                    integrations = make_integrations_json([asset], language=language)
+                    if integrations:
+                        node['asset'] = integrations[0]
         if node.get('nodes', None):
-            prepare_menu_dict(node['nodes'], language)
+            prepare_menu_dict(
+                node['nodes'], language, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict
+            )
 
 
 @api_view(("GET",))
@@ -173,6 +186,9 @@ def menu_to_endpoint(request, cache_name, menu_name):
     menu_dict = DOC_CACHE[cache_id]
     if not menu_dict:
         menu_dict = get_cached_menu(settings.CUSTOMIZATION, menu_name)
-        prepare_menu_dict(menu_dict, language=language)
+        cloud_portal = get_cloud_portal_asset()
+        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+        global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+        prepare_menu_dict(menu_dict, language=language, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict)
         DOC_CACHE[cache_id] = menu_dict
     return api_success(menu_dict)

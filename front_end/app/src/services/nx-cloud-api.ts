@@ -72,6 +72,10 @@ export class NxCloudApiService {
         return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
     }
 
+    getIntegrationsCount() {
+        return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/integration_count');
+    }
+
     getIntegrationBy(id: number, status: string) {
         let uri = this.CONFIG.apiBase + '/integration/' + id;
         uri += (status) ? '?' + status : '';

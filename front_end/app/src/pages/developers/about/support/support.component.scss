@@ -1,6 +1,6 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '../../../../styles/typography';
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 .support-footer {
     overflow: hidden;
@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 365px;
     @include bootstrap.media-breakpoint-down(xs) {
         margin-top: 48px !important;
     }
@@ -35,6 +36,7 @@
     flex-wrap: nowrap;
     width: 100%;
     margin: 16px 0;
+    flex-grow: 1;
     @include bootstrap.media-breakpoint-down(sm) {
         background: $light1 !important;
     }
@@ -63,31 +65,39 @@
             min-width: unset;
             max-width: 436px;
             flex-basis: 100%;
-        } 
+        }
         & > * {
             z-index: 2;
             text-align: center;
         }
-        .support-body {
+        ::ng-deep .support-body {
             margin-bottom: 40px;
             line-height: 1.23;
-        }
-        & > button {
-            @include typography.regular18;
-            display: block;
-            letter-spacing: 0.3px;
-            height: auto;
-            padding: 24px;
-            max-width: 280px;
-            margin-bottom: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 15px 0 rgba($light7, 0.5);
-            background: $light1;
 
-            &:hover {
-                box-shadow: 0 2px 15px 0 rgba($dark15, 0.3);
+            a {
+                text-decoration: none;
+                & > button {
+                    @include typography.regular18;
+                    display: block !important;
+                    letter-spacing: 0.3px;
+                    padding: 22px 27px !important;
+                    height: unset !important;
+                    max-width: unset !important;
+                    margin: 40px auto 31px;
+                    border-radius: 5px !important;
+                    box-shadow: 0 2px 15px 0 rgba(212, 212, 212, 0.5) !important;
+                    background: $light1;
+
+                    &:hover {
+                        box-shadow: 0 2px 15px 0 #d4d4d4 !important;
+                    }
+                    &:active {
+                        box-shadow: inset 0 1px 4px 0 #d4d4d4 !important;
+                    }
+                }
             }
         }
+
         &:before, &:after {
             content: "";
             z-index: 1;

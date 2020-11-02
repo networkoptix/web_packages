@@ -1,8 +1,8 @@
 <ng-template #integrationBlock let-integration="integration">
-    <div class="integration-block" [routerLink]="integration.url">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + integration.icon"></svg-icon>
+    <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]">
+        <img [src]="integration.asset.information.logo">
         <h4>{{integration.title}}</h4>
-        <p>{{integration.asset.shortDescription}}</p>
+        <p>{{integration.asset.information.shortDescription}}</p>
     </div>
 </ng-template>
 

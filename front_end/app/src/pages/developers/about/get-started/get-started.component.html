@@ -1,25 +1,26 @@
 <ng-template #stepBlock let-block="block" let-step="step">
     <div class="detail-wrapper">
-        <div class="detail-block">
+        <div class="detail-block" [routerLink]="block.url"
+             (mouseenter)="block.currentIcon = block.aniIcon"
+             (mouseleave)="block.currentIcon = block.icon">
             <div class="step">{{step}}</div>
             <div class="step-image" [id]="'step-image-' + step">
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + block.icon"></svg-icon>
+                <img [src]="CONFIG.images.dirDevelopers + block.currentIcon">
             </div>
             <div class="step-text">
-                <h3 (mouseover)="slideUp('step-image-' + step)"
-                    (mouseleave)="slideBack('step-image-' + step)"
-                    [routerLink]="block.url"
-                >{{block.title}}</h3>
-                <span>{{block.asset.title}}</span>
+                <h3>{{block.asset.title}}</h3>
+                <span>{{block.title}}</span>
             </div>
         </div>
     </div>
 </ng-template>
-<ng-container *ngIf="getStartedNode.nodes">
-    <h2 class="get-started-heading" [routerLink]="getStartedNode.url">{{getStartedNode.title}}</h2>
-    <section class="get-started-blocks">
-        <ng-container *ngFor="let block of getStartedNode.nodes;let index=index">
-            <ng-container *ngTemplateOutlet="stepBlock;context{block:block, step:index + 1}"></ng-container>
-        </ng-container>
+<ng-container *ngIf="steps.nodes">
+    <h2 class="get-started-heading" [routerLink]="steps.url">{{steps.title}}</h2>
+    <section class="get-started-section">
+        <div class="get-started-blocks">
+            <ng-container *ngFor="let block of steps.nodes;let index=index">
+                <ng-container *ngTemplateOutlet="stepBlock;context{block:block, step:index + 1}"></ng-container>
+            </ng-container>
+        </div>
     </section>
 </ng-container>

@@ -41,6 +41,7 @@ from cloud.logger import downgrade_unauthorized_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+INSTANCE = os.getenv('INSTANCE_NAME', 'local')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
