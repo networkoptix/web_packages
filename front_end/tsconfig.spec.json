@@ -8,17 +8,20 @@
       "jquery",
       "jsdom",
       "node"
-    ]
+    ],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
-    "polyfills.ts"
+    "app/setupJest.ts",
+    "app/polyfills.ts"
   ],
   "include": [
-    "app/src/**/*.spec.ts"
+    "**/*.spec.ts"
   ],
   "exclude": [
     "node_modules",
     "test",
-    "**/spec.js"
+    "**/*.spec.js"
   ]
 }

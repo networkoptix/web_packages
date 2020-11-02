@@ -10,9 +10,11 @@
     "bundle-report": "npm run lang && ng build --stats-json && webpack-bundle-analyzer dist/stats.json",
     "postbuild": "./cloud-portal-postbuild.sh",
     "postbuild-webadmin": "./cloud-portal-postbuild.sh",
-    "postinstall": "ngcc; node setSkin.js --skin blue",
+    "postinstall": "ngcc && node setSkin.js --skin blue",
     "test": "ng test",
     "test:watch": "ng test --watch",
+    "jest": "jest --watchAll",
+    "jest:w": "jest --watch",
     "e2e": "ng e2e",
     "lint": "eslint app/src/**/*.ts --fix",
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
@@ -73,24 +75,27 @@
   },
   "devDependencies": {
     "@angular-builders/jest": "9.0.1",
-    "@angular-devkit/build-angular": "0.901.12",
-    "@angular-devkit/build-optimizer": "0.901.12",
-    "@angular/cli": "9.1.12",
-    "@angular/compiler-cli": "9.1.12",
-    "@angular/language-service": "9.1.12",
+    "@angular-devkit/build-angular": "0.901.6",
+    "@angular-devkit/build-optimizer": "0.901.6",
+    "@angular/cli": "9.1.6",
+    "@angular/compiler-cli": "9.1.7",
+    "@angular/language-service": "9.1.7",
+    "@babel/core": "^7.11.4",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-syntax-decorators": "^7.10.4",
     "@biesbjerg/ngx-translate-extract": "6.0.4",
     "@types/core-js": "2.5.3",
     "@types/hammerjs": "2.0.36",
     "@types/hls.js": "^0.12.6",
-    "@types/jasmine": "3.5.10",
-    "@types/jasminewd2": "2.0.8",
-    "@types/jest": "25.2.3",
+    "@types/jest": "^26.0.10",
     "@types/node": "^12.11.1",
     "@types/webpack": "4.41.13",
     "@typescript-eslint/eslint-plugin": "3.9.1",
     "@typescript-eslint/parser": "3.9.1",
     "angular2-template-loader": "0.6.2",
     "babel-core": "6.26.3",
+    "babel-jest": "^26.3.0",
     "babel-loader": "7.1.5",
     "babel-preset-env": "1.7.0",
     "clean-webpack-plugin": "0.1.19",
@@ -105,11 +110,8 @@
     "eslint-plugin-standard": "4.0.1",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
-    "jasmine-core": "3.5.0",
-    "jasmine-spec-reporter": "5.0.2",
-    "jest": "26.0.1",
-    "jest-config": "26.0.1",
-    "jest-preset-angular": "8.2.0",
+    "jest": "^26.4.2",
+    "jest-preset-angular": "^8.3.1",
     "mini-css-extract-plugin": "0.9.0",
     "postcss-loader": "3.0.0",
     "protractor": "5.4.4",
@@ -124,5 +126,16 @@
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.11.0"
+  },
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupFilesAfterEnv": [
+      "<rootDir>/app/setupJest.ts"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/tsconfig.json"
+      }
+    }
   }
 }

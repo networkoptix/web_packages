@@ -2,5 +2,19 @@
 	"presets": ["babel-preset-env"],
 	"ignore": [
 		"app/web_common/scripts/vendor/hls.js"
-	]
+	],
+	"env": {
+		"test": {
+			"plugins": [
+				[
+					"@babel/plugin-proposal-class-properties",
+					{ "loose": true }
+				],
+				[
+					"@babel/plugin-proposal-decorators",
+					{ "legacy": true }
+				]
+			]
+		}
+	}
 }
