@@ -10,9 +10,12 @@ module.exports = {
     collectCoverage: true,
     coverageReporters: ['html'],
     coverageDirectory: 'coverage/cloud_portal',
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
-        prefix: '<rootDir>/app'
-    }),
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
+            prefix: '<rootDir>/app'
+        }),
+        '\\.scss$': 'identity-obj-proxy'
+    },
     modulePathIgnorePatterns: [
         "<rootDir>/app/src/pages/systems/view/components/camera-timeline/"
     ]

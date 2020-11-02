@@ -4,7 +4,6 @@ import {
     TestBed,
     inject
 } from '@angular/core/testing';
-import { describe, expect } from '@jest/globals';
 import { NxRibbonComponent } from './ribbon.component';
 import { NxRibbonService, RibbonActionInput } from './ribbon.service';
 

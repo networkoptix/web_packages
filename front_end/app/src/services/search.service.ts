@@ -29,7 +29,7 @@ export class NxSearchService {
 
     ngOnDestroy() {}
 
-    static findMatch(searchFor, model) {
+    findMatch(searchFor, model) {
         const _searchFor = searchFor && searchFor.toLowerCase();
 
         if (!_searchFor) {
@@ -67,7 +67,7 @@ export class NxSearchService {
         return false;
     }
 
-    static getMatchPatterns(model) {
+    getMatchPatterns(model) {
         model.queryExactMatch = '';
         model.queryEndsWith = '';
         model.queryStartsWith = '';

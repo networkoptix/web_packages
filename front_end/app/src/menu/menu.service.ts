@@ -18,7 +18,7 @@ export class NxMenuService implements OnDestroy {
     private regex;
     private _hoverItemId;
 
-    constructor() {
+    constructor(private searchService: NxSearchService) {
     }
 
     set content(content) {
@@ -103,7 +103,7 @@ export class NxMenuService implements OnDestroy {
                             searchAggregate += (additional) ? ' ' + additional : '';
                             searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
 
-                            if (NxSearchService.findMatch(searchAggregate, model)) {
+                            if (this.searchService.findMatch(searchAggregate, model)) {
                                 if (!haveNode) {
                                     haveNode = { ...node };
                                     haveNode.level3 = []; // remove items so we can all only matches
