@@ -30,7 +30,7 @@ interface DropdownStorage {
     isOnline: boolean,
     isUsedForWriting: boolean,
     isWritable: boolean,
-    isSystem: boolean,
+    isNotSystem: boolean,
     selected: boolean,
     value: string
 }
@@ -422,18 +422,19 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .find(param => param.name === 'metadataStorageId')?.value;
         this.storages = this.storages.filter(store => store.storageType === 'local' && store.isWritable);
         this.dropdownStorages = this.storages
-            .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable }) => {
+            .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
                 const selected = this.selectedStorage ? this.selectedStorage.id === storageId
                     : this.currentAnalyticsDbId === storageId;
                 return {
-                    name     : url,
+                    name        : url,
                     isOnline,
                     isUsedForWriting,
                     isWritable,
-                    isSystem : storageStatus.includes('system'),
+                    isNotSystem : !storageStatus.includes('system'),
                     selected,
-                    id       : storageId,
-                    value    : storageId
+                    id          : storageId,
+                    value       : storageId,
+                    freeSpace
                 };
             });
         this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
@@ -444,7 +445,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     selectDefaultStorage() {
         const firstPass = this.selectDefaultStorageRecursion(
             this.dropdownStorages,
-            ['system', 'isUsedForWriting', 'isOnline', 'isWritable']
+            ['isNotSystem', 'isUsedForWriting', 'isOnline', 'isWritable']
         );
         return firstPass ||
             this.selectDefaultStorageRecursion(

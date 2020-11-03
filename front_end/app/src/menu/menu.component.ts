@@ -95,7 +95,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.transition = true;
                 this.searchMode = (this.isSearchable && this.menuModel.query !== '');
                 this.menuModel.query = params?.search || '';
-                NxSearchService.getMatchPatterns(this.menuModel);
+                this.searchService.getMatchPatterns(this.menuModel);
                 this.modelChanged(this.menuModel);
             });
 

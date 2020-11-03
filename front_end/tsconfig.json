@@ -32,14 +32,20 @@
       "node"
     ]
   },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
+  "files": [
+    "app/setupJest.ts"
+  ],
   "include": [
     "app/main.ts",
     "app/polyfills.ts"
-],
+  ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
     "ipvd",
-    "health_monitor"
+    "health_monitor",
+    "app/**/*.spec.ts"
   ]
 }
