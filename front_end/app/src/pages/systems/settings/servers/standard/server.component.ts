@@ -439,7 +439,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             });
         this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
             this.selectDefaultStorage();
-        this.systemStorageChosen = !!this.selectedStorage?.isNotSystem;
+        this.systemStorageChosen = !this.selectedStorage?.isNotSystem;
     }
 
     selectDefaultStorage() {
