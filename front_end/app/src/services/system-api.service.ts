@@ -325,8 +325,6 @@ export class NxSystemAPI {
 
     getApiDoc() {
         // return this.get<JSON>('/static/api.json'); // current API
-        // return this.get<JSON>('/static/openapi_v1.json'); // when we have it
-
         // mock response
         return this.http.get<JSON>('/static/openapi_v1.json');
     }

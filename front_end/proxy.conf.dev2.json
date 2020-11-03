@@ -35,15 +35,6 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/static/openapi_v1.json": {
-    "target": "http://artifacts.lan.hdw.mx/develop/vms/16212/default/linux-x64/distrib/",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/static/openapi_v1.json": "openapi_v1.json"
-    }
-  },
   "/static/lang_en_US/language_compiled.json": {
     "target": "https://localhost:9000",
     "pathRewrite": {

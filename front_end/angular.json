@@ -37,7 +37,8 @@
               "app/language_i18n_static.json",
               "app/language_i18n.json",
               "app/language.json",
-              "app/languages.json"
+              "app/languages.json",
+              "app/openapi_v1.json"
             ],
             "styles": [
               "app/styles/main.scss"
