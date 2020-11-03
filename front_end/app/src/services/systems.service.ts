@@ -217,6 +217,7 @@ export class NxSystemsService implements OnDestroy {
 
 export interface NxSystemWithUserInfo extends NxSystem {
     ownerAccountEmail: string;
+    ownerFullName: string;
     name: string;
     systemName: string;
     isMine: boolean;

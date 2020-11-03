@@ -27,10 +27,7 @@ export class NxToastService {
         }
     }
 
-    notify(message: string, type: string, hold?: boolean) {
-        type = type || this.CONFIG.toast.info;
-        hold = hold || false;
-
+    notify(message: string, type = this.CONFIG.toast.info, hold = false) {
         const options = {
             autohide : !hold,
             classname: type,

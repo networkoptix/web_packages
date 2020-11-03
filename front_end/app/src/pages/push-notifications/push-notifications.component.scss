@@ -10,8 +10,25 @@
   font-size: 11px;
 }
 
-.table td {
-  height: 32px;
+table {
+  display: table !important;
+}
+
+thead {
+  display: table-header-group !important;
+}
+
+tbody {
+  display: table-row-group !important;
+}
+
+tr {
+  display: table-row !important;
+  height: 44px;
+}
+
+th, td {
+  display: table-cell !important;
 }
 
 .devices table {

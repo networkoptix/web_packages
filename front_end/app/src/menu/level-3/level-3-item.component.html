@@ -5,14 +5,16 @@
    (click)="navigate()"
     (mouseover)="setNavIdx(item)">
     <div *ngIf="first" class="top-shadow-cover"></div>
-    <div class="ellipsis">
+    <div class="menu-level-3-content ellipsis">
         <span *ngIf="item.icon" class="menu-level-3-icon glyphicon" [ngClass]="item.icon"></span>
         <svg-icon *ngIf="item.svgIcon"
                 nx-add-svg-src
                 [src]="CONFIG.icons.dir + item.svgIcon + '.svg'"
                 [applyClass]="true"
                 class="menu-level-3-svg-icon"></svg-icon>
-        <span [innerHTML]="item.label" class="user" [ngClass]="{'indent': item.indent && !item.icon && !item.svgIcon}"></span>
+        <span class="menu-level-3-label user"
+              [innerHTML]="item.label"
+              [ngClass]="{'indent': item.indent && !item.icon && !item.svgIcon}"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalText"
               [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"></span>

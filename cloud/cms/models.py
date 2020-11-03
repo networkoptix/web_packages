@@ -85,9 +85,22 @@ def rename_permission_group(group, asset):
 
 
 def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
-    return Asset.objects.filter(customizations__name__in=[customization],
-                                asset_type__name="",
-                                asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
+    asset = Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.cloud_portal
+    ).first()
+    if asset:
+        return asset
+
+    customization_obj = Customization.objects.filter(name=customization).first()
+    if customization_obj:
+        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
+                                            asset_type=asset_type)
+        cloud_portal.customizations.set([customization_obj])
+        return cloud_portal
+    raise Asset.DoesNotExist(f"No cloud portal asset found for {customization}. "
+                             f"Most likely a customization with the name \"{customization}\" doesn't exist.")
 
 
 def get_asset_by_revision(version_id):
@@ -233,6 +246,26 @@ def get_integration_type():
     except ProgrammingError:
         pass
     return None
+
+
+class PackagesCache(object):
+    def __init__(self):
+        self.cache = caches['packages']
+
+    def __delitem__(self, file_name):
+        self.cache.delete(file_name)
+
+    def __getitem__(self, file_name):
+        return self.cache.get(file_name, None)
+
+    def __setitem__(self, file_name, package_file):
+        self.cache.set(file_name, package_file)
+
+    def clear_cache(self):
+        self.cache.clear()
+
+    def get(self, file_name):
+        return self.cache.get(file_name, None)
 
 
 # CMS structure (data structure). Only developers can change that
@@ -461,6 +494,26 @@ class Asset(models.Model):
                    version__asset=self).last()
 
         return accepted_review.version.id if accepted_review else 0
+
+    @classmethod
+    def version_ids(cls, assets, customization=settings.CUSTOMIZATION):
+        asset_ids = {asset.id for asset in assets}
+        version_dict = {}
+        accepted_reviews = AssetCustomizationReview.objects.filter(
+            customization__name=customization, state=AssetCustomizationReview.REVIEW_STATES.accepted,
+            version__asset__in=assets
+        ).order_by('-pk').select_related('version').only('version')
+
+        for review in accepted_reviews:
+            if review.version.asset_id not in version_dict:
+                version_dict[review.version.asset_id] = review.version_id
+                asset_ids.discard(review.version.asset_id)
+                if not asset_ids:
+                    break
+        else:
+            for asset_id in asset_ids:
+                version_dict[asset_id] = 0
+        return version_dict
 
     def change_preview_status(self, new_status):
         self.preview_status = new_status

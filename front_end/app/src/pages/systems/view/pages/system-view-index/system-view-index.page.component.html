@@ -1,0 +1,16 @@
+<nx-pre-loader *ngIf="!initialized; else uninitialized"></nx-pre-loader>
+
+<ng-template #uninitialized>
+
+    <div class="error error-initialization" *ngIf="initializedWithError; else primary">
+        system initialization error
+    </div>
+
+    <ng-template #primary>
+        <div class="nx-view-sidebar">
+            <media-server-list></media-server-list>
+            <div class="sidebar-toggling-ear" (click)="handleSidebarTogglingEarClick()"></div>
+        </div>
+        <router-outlet></router-outlet>
+    </ng-template>
+</ng-template>

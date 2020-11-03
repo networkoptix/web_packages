@@ -107,6 +107,7 @@ export class NxLanguageProviderService {
             return;
         }
         this.translate.currentLang = language;
+        this.sessionService.language = language;
         this.loadLanguage().then(translation => {
             this.setTranslations(language, translation);
         });

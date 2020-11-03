@@ -6,11 +6,13 @@ import urllib3
 
 
 def get_variables(cloud_url, test_email):
-    if 'nxvms.com' in cloud_url:
-        relay = 'relay.vmsproxy.com'
-    else:
-        relay = 'relay.vmsproxy.hdw.mx'
     vars = {}
+    if 'nxvms.com' in cloud_url:
+        vars["relay"] = 'relay.vmsproxy.com'
+        return vars
+    else:
+        vars["relay"] = relay = 'relay.vmsproxy.hdw.mx'
+
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # the post request gets upset about ssl if you put the s so we remove it
@@ -59,7 +61,7 @@ def get_variables(cloud_url, test_email):
                      verify=False)
 
     #get the system id for the system with the 2serverofflineanchor email and add it to the dictionary
-    x = requests.post(f"{cloud_url}/cdb/system/get", 
+    x = requests.post(f"{cloud_url}/cdb/system/get",
                       auth=HTTPDigestAuth(f"{test_email}+2serverofflineanchor@gmail.com", "qweasd 123"),
                       json={"name":"Auto Tests"})
     y = x.json()
@@ -72,6 +74,17 @@ def get_variables(cloud_url, test_email):
     s = r.json()
     sys_id = s["systems"][0]["id"]
     vars["ADVANCED SETTINGS SYSTEM ID"] = sys_id
+    r = requests.get(f"https://{sys_id}.{relay}/api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null",
+                     auth=HTTPDigestAuth("admin", "qweasd 123"),
+                     verify=False)
+    
+    #get the system id for the 3.2 system and add it to the dictionary
+    r = requests.post(f"{cloud_url}/cdb/system/get",
+                      auth=HTTPDigestAuth(f"{test_email}+3.2anchor@gmail.com", "qweasd 123"),
+                      json={"name": "Auto Tests"})
+    s = r.json()
+    sys_id = s["systems"][0]["id"]
+    vars["3 DOT 2 SYSTEM ID"] = sys_id
     r = requests.get(f"https://{sys_id}.{relay}/api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null",
                      auth=HTTPDigestAuth("admin", "qweasd 123"),
                      verify=False)

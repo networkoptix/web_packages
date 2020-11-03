@@ -1,6 +1,6 @@
 <ng-template #compactTags let-tag="tag">
     <!-- If this behavior is needed for other components in the future it's probably best to create a better abstraction, maybe make this a directive -->
-    <nx-tag *ngIf="!tag.hidden && tag.id !== 'mine'"
+    <nx-tag *ngIf="!tag.hidden && tag.id !== 'mine' && tag.label"
         (resize)="updateTagSize(tag.label, $event)"
         [style.grid-column]="gridColumnLookup[tag.label]"
         [ngClass]="{ready:gridColumnLookup[tag.label]}"

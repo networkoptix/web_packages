@@ -36,7 +36,7 @@ export class Watcher<T extends any> {
     valueSubject = new BehaviorSubject<T>(undefined);
 
     constructor(value?: T) {
-        this.originalValue = value;
+        this.value = value;
     }
 
     get value() {

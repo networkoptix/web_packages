@@ -17,7 +17,7 @@ describe('NxRibbonService', () => {
     it('should be initialized', inject([NxRibbonService], (service: NxRibbonService) => {
         expect(service.context.visibility).toBeFalsy();
         expect(service.context.message).toBe('');
-        expect(service.context.actions).toBe([]);
+        expect(service.context.actions).toEqual([]);
         expect(service.context.type).toBe('');
     }));
 

@@ -30,7 +30,6 @@ export interface LanguageI18NStaticTypes {
     ipvdFeedback:          IpvdFeedback;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
-    license:               License;
     menu:                  Menu;
     pageTitles:            PageTitles;
     passwordRequirements:  PasswordRequirements;
@@ -45,6 +44,7 @@ export interface LanguageI18NStaticTypes {
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
     headerLabels:          HeaderLabels;
+    license:               License;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -513,28 +513,29 @@ export interface License {
 }
 
 export interface Info {
-    type:          any;
-    channels:      any;
-    server:        any;
-    hwid:          any;
-    status:        any;
-    expires:       any;
-    time:          any;
-    deactivations: any;
-    trial:         any;
-    online:        any;
-    error:         any;
-    expired:       any;
-    ok:            any;
-    digital:       any;
-    analog:        any;
-    edge:          any;
-    vmax:          any;
-    videowall:     any;
-    analogencoder: any;
-    starter:       any;
-    iomodule:      any;
-    bridge:        any;
+    type:           any;
+    channels:       any;
+    server:         any;
+    hwid:           any;
+    status:         any;
+    expires:        any;
+    time:           any;
+    deactivations:  any;
+    trial:          any;
+    online:         any;
+    error:          any;
+    expired:        any;
+    ok:             any;
+    digital:        any;
+    analog:         any;
+    edge:           any;
+    vmax:           any;
+    videowall:      any;
+    analogencoder:  any;
+    starter:        any;
+    iomodule:       any;
+    bridge:         any;
+    serverNotFound: any;
 }
 
 export interface Messages {
@@ -691,16 +692,19 @@ export interface ServersStatus {
 }
 
 export interface Storage {
-    reindexingDone:          ReindexingDone;
-    modes:                   Modes;
-    alreadyUsed:             any;
-    deleteExternalStorage:   any;
-    failed:                  any;
-    reservedTooSmallTooltip: any;
-    reservedSystemTooltip:   any;
-    serverOffline:           any;
-    success:                 any;
-    urlPlaceholder:          any;
+    reindexingDone:             ReindexingDone;
+    modes:                      Modes;
+    alreadyUsed:                any;
+    deleteExternalStorage:      any;
+    failed:                     any;
+    stillHasArchivesPreWarning: any;
+    stillHasArchives:           any;
+    failedRemove:               any;
+    reservedTooSmallTooltip:    any;
+    reservedSystemTooltip:      any;
+    serverOffline:              any;
+    success:                    any;
+    urlPlaceholder:             any;
 }
 
 export interface Modes {
@@ -981,7 +985,6 @@ const typeMap: any = {
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
-        { json: "license", js: "license", typ: r("License") },
         { json: "menu", js: "menu", typ: r("Menu") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
@@ -996,6 +999,7 @@ const typeMap: any = {
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
+        { json: "license", js: "license", typ: r("License") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
@@ -1439,6 +1443,7 @@ const typeMap: any = {
         { json: "starter", js: "starter", typ: "any" },
         { json: "iomodule", js: "iomodule", typ: "any" },
         { json: "bridge", js: "bridge", typ: "any" },
+        { json: "serverNotFound", js: "serverNotFound", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },
@@ -1583,6 +1588,9 @@ const typeMap: any = {
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
         { json: "failed", js: "failed", typ: "any" },
+        { json: "stillHasArchivesPreWarning", js: "stillHasArchivesPreWarning", typ: "any" },
+        { json: "stillHasArchives", js: "stillHasArchives", typ: "any" },
+        { json: "failedRemove", js: "failedRemove", typ: "any" },
         { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
         { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },
         { json: "serverOffline", js: "serverOffline", typ: "any" },

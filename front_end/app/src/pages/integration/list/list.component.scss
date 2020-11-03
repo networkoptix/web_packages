@@ -69,9 +69,10 @@
 
 .tags-compact {
     display: grid;
-    grid-template-columns: repeat(70, 1px);
+    grid-template-columns: repeat(auto-fill, 1px);
     grid-auto-flow: dense;
     gap: 4px;
+
     & > nx-tag {
         grid-column: span 70;
         &:not(.ready) {

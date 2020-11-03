@@ -1,5 +1,5 @@
 {
-    "PRODUCT_NAME"               :    "Nx Cloud",
+    "PRODUCT_NAME"               :    "Nx Witness Cloud",
     "VMS_NAME"                   :    "Nx Witness",
     "TEST EMAIL"                 :    "noptixautoqa",
     "AUTO SYS IP"                :    "https://10.1.5.126:7008",
@@ -16,14 +16,6 @@
     "COPYRIGHT SYMBOL"           :    " ©",
     "YEAR"                       :    "2020",
     "COMPANY"                    :    "Network Optix",
-    "THEME COLOR"                :    "#2FA2DB",
-    "THEME COLOR RGB"            :    "rgba(47, 162, 219, 1)",
-    "COLOR LIGHT4"               :    "#E1E7EA",
-    "COLOR LIGHT4 RGB"           :    "rgba(225, 231, 234, 1)",
-    "COLOR LIGHT5"               :    "#D7DFE3",
-    "COLOR LIGHT5 RGB"           :    "rgba(215, 223, 227, 1)",
-    "COLOR LIGHT16"              :    "#698796",
-    "COLOR LIGHT16 RGB"          :    "rgba(105, 135, 150, 1)",
     "GREYED OUT TEXT COLOR"		 :	  "rgba(135, 159, 171, 1)",
     "ITUNES STORE LINK"          :    "https://apps.apple.com/eg/app/hd-witness/id1050899754",
     "PLAY STORE LINK"            :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
@@ -36,5 +28,48 @@
     "INTEGRATION ALL FIELDS"     :    "vis - QA - face_recognition",
     "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}",
     "CUST LANGUAGE LIST"	     :	  "default_lang_list.json",
-    "DEFAULT LANGUAGE"		     :	  "en_US"
+    "DEFAULT LANGUAGE"		     :	  "en_US",
+
+    "THEME COLOR"                : "#2FA2DB",
+    "THEME COLOR RGB"            : "rgba(47, 162, 219, 1)",
+    "COLOR TRANSPARENT RGB"      : "rgba(0, 0, 0, 0)",
+    "COLOR LIGHT1"               : "#FFF",
+    "COLOR LIGHT1 RGB"           : "rgba(255, 255, 255, 1)",
+    "COLOR LIGHT4"               : "#E1E7EA",
+    "COLOR LIGHT4 RGB"           : "rgba(225, 231, 234, 1)",
+    "COLOR LIGHT5"               : "#D7DFE3",
+    "COLOR LIGHT5 RGB"           : "rgba(215, 223, 227, 1)",
+    "COLOR LIGHT6"               : "#CDD7DC",
+    "COLOR LIGHT6 RGB"           : "rgba(205, 215, 220, 1)",
+    "COLOR LIGHT8"               : "#B9C7CE",
+    "COLOR LIGHT8 RGB"           : "rgba(185, 199, 206, 1)",
+    "COLOR LIGHT13"              : "#879FAB",
+    "COLOR LIGHT13 RGB"          : "rgba(135, 159, 171, 1)",
+    "COLOR LIGHT16"              : "#698796",
+    "COLOR LIGHT16 RGB"          : "rgba(105, 135, 150, 1)",
+
+    "COLOR ALIGHT2 RGB"          : "rgba(240, 243, 244, 1)",
+    "COLOR ALIGHT3 RGB"          : "rgba(230, 235, 237, 1)",
+
+    "COLOR DARK9 RGB"            : "rgba(43, 56, 63, 1)",
+
+    "FONT REGULAR"               :    "robotoregular",
+    "FONT MEDIUM"                :    "robotomedium",
+
+    "SEARCH FONT SIZE"           : "14px",
+    "SEARCH PLEFT"               : "40px",
+    "SEARCH PRIGHT"              : "10px",
+    "SEARCH HEIGHT"              : "32px",
+
+    "MENU L1 FONT SIZE"          :    "15px",
+    "MENU L1 LINE HEIGHT"        :    "40px",
+    "MENU L1 DECORATION"         :    "none",
+    "MENU L1 PLEFT"              :    "40px",
+    "MENU L1 PRIGHT"             :    "8px",
+    "MENU L1 BRADIUS"            :    "2px",
+    "MENU L1 CURSOR"             :    "pointer",
+
+    "MENU L3 FONT SIZE"          :    "13px",
+    "MENU L3 PLEFT"              :    "12px",
+    "MENU L3 PRIGHT"             :    "12px"
 }

@@ -1,0 +1,10 @@
+<!-- Player ({{ mode }}) {{ isBuffering && 'buffering' }} -->
+<video #video [muted]="true"
+  (play)="videoPlayHandler($event)"
+  (click)="videoClickHandler($event)"
+>
+  <source #videoSource src="" type="video/mp4">
+</video>
+<div class="overlay" [ngClass]="{ 'buffering': isBuffering }">
+  <nx-pre-loader></nx-pre-loader>
+</div>

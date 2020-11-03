@@ -252,7 +252,7 @@
           {
             "label": "Layout",
             "name": "%LAYOUT%",
-            "value": "<p class='lead'>%SUBTITLE%</p><div class='row'><div class='col-sm-4 promo-block'><h2 class='text-center'>%BLOCK1_TITLE%</h2><h4 class='text-center'>%BLOCK1_CONTENT%</h4></div><div class='col-sm-4 promo-block'><h2 class='text-center'>%BLOCK2_TITLE%</h2><h4 class='text-center'>%BLOCK2_CONTENT%</h4></div><div class='col-sm-4 promo-block'><h2 class='text-center'>%BLOCK3_TITLE%</h2><h4 class='text-center'>%BLOCK3_CONTENT%</h4></div></div>",
+            "value": "<p class='lead'>%SUBTITLE%</p><div class='row'><a class='col-sm-4 promo-block' style='text-decoration: none' href='%BLOCK1_LINK%' target='%BLOCK1_TARGET%'><h2 class='text-center'>%BLOCK1_TITLE%</h2><h4 class='text-center'>%BLOCK1_CONTENT%</h4></a><a class='col-sm-4 promo-block' style='text-decoration: none' href='%BLOCK2_LINK%' target='%BLOCK2_TARGET%'><h2 class='text-center'>%BLOCK2_TITLE%</h2><h4 class='text-center'>%BLOCK2_CONTENT%</h4></a><a class='col-sm-4 promo-block' style='text-decoration: none' href='%BLOCK3_LINK%' target='%BLOCK3_TARGET%'><h2 class='text-center'>%BLOCK3_TITLE%</h2><h4 class='text-center'>%BLOCK3_CONTENT%</h4></a></div>",
             "description": "HTML layout for promo block on landing page, about and registration.",
             "type": "long_text"
           },
@@ -292,6 +292,29 @@
             "type": "long_text"
           },
           {
+            "label": "Left block link",
+            "name": "%BLOCK1_LINK%",
+            "value": "",
+            "advanced": true,
+            "optional": true,
+            "description": "Link URL for left block",
+            "type": "text"
+          },
+          {
+            "label": "Left block link target",
+            "name": "%BLOCK1_TARGET%",
+            "value": "_self",
+            "description": "Target for left block link. _self for same page, _blank for new tab/window.",
+            "advanced": true,
+            "type": "select",
+            "meta": {
+              "options": [
+                "_self",
+                "_blank"
+              ]
+            }
+          },
+          {
             "label": "Middle block icon",
             "name": "static/images/promo/landing_promo_2.png",
             "value": "",
@@ -319,6 +342,29 @@
             "type": "long_text"
           },
           {
+            "label": "Middle block link",
+            "name": "%BLOCK2_LINK%",
+            "value": "",
+            "advanced": true,
+            "optional": true,
+            "description": "Link URL for left block",
+            "type": "text"
+          },
+          {
+            "label": "Middle block link target",
+            "name": "%BLOCK2_TARGET%",
+            "value": "_self",
+            "description": "Target for middle block link. _self for same page, _blank for new tab/window.",
+            "advanced": true,
+            "type": "select",
+            "meta": {
+              "options": [
+                "_self",
+                "_blank"
+              ]
+            }
+          },
+          {
             "label": "Right block icon",
             "name": "static/images/promo/landing_promo_3.png",
             "value": "",
@@ -344,6 +390,29 @@
             "value": "No port-forwarding and IP configuration anymore",
             "description": "8-10 words",
             "type": "long_text"
+          },
+          {
+            "label": "Right block link",
+            "name": "%BLOCK3_LINK%",
+            "value": "",
+            "advanced": true,
+            "optional": true,
+            "description": "Link URL for left block",
+            "type": "text"
+          },
+          {
+            "label": "Right block link target",
+            "name": "%BLOCK3_TARGET%",
+            "value": "_self",
+            "description": "Target for right block link. _self for same page, _blank for new tab/window.",
+            "advanced": true,
+            "type": "select",
+            "meta": {
+              "options": [
+                "_self",
+                "_blank"
+              ]
+            }
           }
         ]
       },
@@ -1776,6 +1845,15 @@
         "translatable": false,
         "values": [
           {
+            "name": "hideEmail",
+            "label": "Hide email",
+            "value": false,
+            "description": "Hides the support email from the frontend",
+            "type": "check_box",
+            "optional": true,
+            "advanced": true
+          },
+          {
             "name": "supportEmail",
             "label": "Support E-mail",
             "value": "",
@@ -1810,6 +1888,15 @@
             "meta": {
               "regex": "^https?:\\/\\/([\\da-z\\.~_-]+)\\.([a-z\\.]{2,6})([\\/\\w ~\\.-]*)*\\/?$"
             }
+          },
+          {
+            "name": "supportWebText",
+            "label": "Support web text",
+            "value": "",
+            "description": "Hyperlink text for support url",
+            "placeholder": "support text",
+            "type": "text",
+            "optional": true
           }
         ]
       },

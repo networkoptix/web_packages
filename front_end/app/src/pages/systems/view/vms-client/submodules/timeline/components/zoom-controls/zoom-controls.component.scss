@@ -1,0 +1,45 @@
+$background-color: #f0f3f4;
+$border-color: #cdd7dc;
+
+$hover-background: #cdd7dc;
+$hover-foreground: #f0f3f4;
+
+:host {
+  display: inline-block;
+  background-color: $background-color;
+  width: 40px;
+  overflow: hidden;
+  padding: 6px 0;
+  border-left: 1px solid $border-color;
+  border-top: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  > .button {
+    opacity: 0.2;
+    display: block;
+    flex-grow: 1;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    font-size: 25px;
+
+    &.enabled {
+      cursor: pointer;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1.0;
+        background-color: $hover-background;
+        color: $hover-foreground;
+      }
+    }
+  }
+}

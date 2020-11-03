@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "Configuraciones de marca de agua",
     "WEB SOCKET ENABLED TEXT": "Sockets web",
     "STORAGE LOCATIONS TEXT": "Ubicaciones de almacenamiento",
-    "LOG SETTINGS TEXT": "Configuración del Registro"
+    "LOG SETTINGS TEXT": "Configuración del Registro",
+    "NOT ABLE TO LOAD TEXT": "No se puede cargar la configuración del sistema.",
+    "CLOSE TEXT": "Cerrar",
+    "NONE TEXT": "Ninguno",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Advertencia",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Depurar",
+    "VERBOSE TEXT": "Verbose"
 }

@@ -1,5 +1,6 @@
 @use "../../../../../styles/typography";
 @use '../../../../../../styles/theme_variables' as *;
+@use "../../../../../styles/mixins" as *;
 
 form.form-horizontal {
     overflow: auto auto !important;
@@ -198,4 +199,16 @@ form.form-horizontal {
             }
         }
     }
+}
+
+svg-icon.archive-warning {
+    position: absolute;
+    right: 12px;
+    top: calc(50% - 10px);
+    height: 20px;
+    width: 20px;
+}
+
+.animate-rotation {
+    @include rotate;
 }

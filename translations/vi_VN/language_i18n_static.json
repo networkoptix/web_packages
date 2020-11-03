@@ -404,7 +404,9 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
         "DUPLICATE_MEDIASERVER_FOUND": "Một số máy chủ liệt kê tồn tại trong cả hệ thống được chọn và hệ thống hiện tại.<br>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi Hệ thống và thử lại.",
         "EmailAlreadyExists": "Email này đã được đăng ký",
-        "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
+        "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
+        "Connection timed out": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "Các hệ thống có phiên bản phần mềm không khớp. Vui lòng cập nhật cả trong số họ đến <a href=\"/download\">build mới nhất</a>.",
         "cloud_systems_have_different_owners": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Một máy chủ dường như được liệt kê chính nó dưới cả hệ thống được chọn và hệ thống hiện tại.</p><p>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi hệ thống và thử lại.</p>",
@@ -739,7 +741,8 @@
             "analogencoder": "Bộ mã hóa tương tự",
             "starter": "Bắt đầu",
             "iomodule": "Mô đun IO",
-            "bridge": "Cầu"
+            "bridge": "Cầu",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "Yêu cầu thêm {{number}}",

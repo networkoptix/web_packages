@@ -50,7 +50,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             if (this.CONFIG.isLocal) {
                 this.footerItems.forEach(footerItem => {
                     footerItem.new_window = true;
-                    if (footerItem.url[0] === '/') {
+                    if (footerItem.url[0] === '/' && !footerItem.url.includes('swagger-ui')) {
                         footerItem.url = `${this.CONFIG.cloudHost}${footerItem.url}`;
                     }
                 });

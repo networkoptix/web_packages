@@ -8,7 +8,7 @@
 
                 <p *ngFor="let line of block.lines; let lineIndex=index"
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
-                    [style.height.px]="line.overrideHeightPx"
+                    [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
                     [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                     [title]="line.name"
                     (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)"

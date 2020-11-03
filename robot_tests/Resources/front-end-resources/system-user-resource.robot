@@ -1,8 +1,6 @@
 *** Keywords ***
 Reset DB and Open New Browser On Failure 
     Close Browser
-    Reset System Names
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}  
     Open Browser and go to URL    ${url}
 
 Remove Temporary Users
@@ -42,9 +40,9 @@ Check Special Hint
     ...    ELSE    Fail    msg=User type did not match any expected types
 
 Verify Changed Info Via API
-    [Arguments]    ${new locals}    ${local user}=ocal+
+    [Arguments]    ${new locals}    ${ip}    ${local user}=ocal+
     @{locals} =    Create List 
-    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    @{users} =    Get Users     ${auth}    ${ip}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
@@ -70,22 +68,22 @@ Verify In Local Users UI
 	    ...    ${LOCAL USER LOGIN}
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
+	    Run Keyword Unless    '${email}' == '${admin}' and '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
 	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+${user}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
-	    Run Keyword If    '${email}' == '${EMAIL OWNER}'
+	    Run Keyword If    '${email}' == '${owner}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' != '${ADMIN TEXT}'
+	    ...    ELSE IF    '${email}' == '${admin}' and '${role names}[${user}]' != '${ADMIN TEXT}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
 		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
     END
     
 Modify Local Users via Cloud UI
-    [Arguments]    ${local users}    
+    [Arguments]    ${local users}    ${email}
     @{new locals} =    Create List 
     Verify In Local Users UI    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
@@ -178,9 +176,9 @@ Modify All Local User Info
     [Return]    ${new local}
     
 Local User Start
-    [Arguments]    ${email}
-    @{local users} =   Reset Local Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Log in to Auto Tests System    ${email} 
+    [Arguments]    ${email}    ${auth}    ${server ip}    ${server id}
+    @{local users} =   Reset Local Users    ${auth}    ${server ip}
+    Log in to user and system    ${email}    ${server id}
     Go To Users List
     [Return]    ${local users}
 

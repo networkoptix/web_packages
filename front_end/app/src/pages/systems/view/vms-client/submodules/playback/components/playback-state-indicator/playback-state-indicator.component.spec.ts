@@ -1,0 +1,25 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import PlaybackStateIndicatorComponent from './playback-state-indicator.component';
+
+describe('PlaybackStateIndicatorComponent', () => {
+  let component: PlaybackStateIndicatorComponent;
+  let fixture: ComponentFixture<PlaybackStateIndicatorComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ PlaybackStateIndicatorComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PlaybackStateIndicatorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

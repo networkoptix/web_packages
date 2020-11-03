@@ -85,7 +85,19 @@ export class NxBootstrapProvider {
         if (this.CONFIG.isLocal) {
             return this.getWebadminConfig().toPromise()
                 .then((data: any) => {
-                    this.configService.updateConfig(data);
+                    const { companyLink, companyName, copyrightYear } = data;
+                    delete data.companyLink;
+                    delete data.companyName;
+                    delete data.copyrightYear;
+                    delete data.footerLinks;
+                    const company = {
+                        copyrightYear,
+                        links: {
+                            website: companyLink
+                        },
+                        name: companyName
+                    };
+                    this.configService.updateConfig({ ...data, company });
                     return Promise.resolve();
                 }).catch(() => {
                     return Promise.resolve();
@@ -112,7 +124,7 @@ export class NxBootstrapProvider {
     }
 
     setSettings(data) {
-        if (Object.keys(data).length > 0) {
+        if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
             this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
@@ -145,9 +157,10 @@ export class NxBootstrapProvider {
                 cloudStorageSize
             };
 
-            const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
+            const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
+                showAnalyticsEvents,
                 sortSupportedDevicesByPopularity,
                 supportedHardwareTypes,
                 supportedResolutions,
@@ -174,7 +187,6 @@ export class NxBootstrapProvider {
             this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
             this.CONFIG.trafficRelayHost = data.trafficRelayHost;
             this.CONFIG.vmsName = data.vmsName;
-            this.CONFIG.dynamicMenus = data.menus;
 
             // detect preview mode
             if (window.location.href.indexOf('preview') >= 0) {
@@ -182,5 +194,6 @@ export class NxBootstrapProvider {
                 this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
             }
         }
+        this.CONFIG.dynamicMenus = data?.menus;
     }
 }

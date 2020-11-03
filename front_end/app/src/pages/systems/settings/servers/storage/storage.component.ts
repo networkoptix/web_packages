@@ -1,7 +1,7 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, OnChanges, Output,
-    SimpleChanges, OnInit, EventEmitter
+    LOCALE_ID, Input, Output,
+    OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
@@ -9,14 +9,14 @@ import {
     map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap
 }                                    from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { Watcher, NxApplyService }   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { Watcher, NxApplyService }   from '@services/apply.service';
+import { NxDialogsService }          from '@services/../dialogs/dialogs.service';
+import { NxToastService }            from '@services/../dialogs/toast.service';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_types';
+import { IConfig, NxConfigService }  from '@services/nx-config';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 
 enum MODE {
@@ -33,13 +33,20 @@ enum STORAGE_STATUS {
     REINDEXING
 }
 
+enum STORAGE_TYPES {
+    LOCAL = 'local',
+    USB = 'usb',
+    NETWORK = 'smb',
+    CLOUD = 'cloud'
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-storage-component',
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemStorageComponent implements OnInit, OnChanges {
+export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() serverId: string;
     @Output() storageEmit = new EventEmitter<any>();
@@ -47,6 +54,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     viewContainerRef: ViewContainerRef;
+    storageTypes = STORAGE_TYPES
 
     loading: boolean;
     showStorage: boolean;
@@ -63,11 +71,16 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
 
+    doesMainExist = false;
     doesBackupExist = false;
+    mainReindexDisabled = false;
+    backupReindexDisabled = false;
     customSettings = false;
     shouldSaveDefaultSettings = false;
     isBackupOn: Watcher<boolean> = new Watcher();
     watchers: Watcher<any>[] = [this.isBackupOn];
+    modeWatchers: {[key: string]: Watcher<any>} = {};
+    changedModes: string[] = [];
 
     ddWidth: number;
     modes: any;
@@ -114,12 +127,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.calcDDWidth();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system?.currentValue || changes.serverId?.currentValue) {
-            this.init();
-        }
+        this.init();
     }
 
     init() {
@@ -127,23 +135,24 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         this.showStorage = false;
 
         if (this.system?.currentServerNotBusy && this.system?.servers?.length && this.serverId) {
-            this.storageSubscription = combineLatest(
+            this.storageSubscription = combineLatest([
                 this.refreshStorages$,
                 this.system.updateOrGetSystemStorage(),
-                this.system.getRecordStats())
-
-                .pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
+                this.system.getRecordStats()
+            ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
                         console.error(results.storage.message);
                         this.loading = false;
                         return;
                     }
+                    this.modeWatchers = {};
 
                     const storage = results.storage || [];
 
                     storage.hasAction = false;
                     storage.forEach((store, idx) => {
+                        this.modeWatchers[store.id] = new Watcher(this.selectMode(store).value);
                         const storeInfo = results.storeInfo.find((info) => {
                             if (store.id === info.storageId) {
                                 return info;
@@ -182,6 +191,11 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                             store.isBackup ? this.backupStorageIds.push(store.storageId)
                                 : this.mainStorageIds.push(store.storageId);
                         }
+                        const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
+                        if (store.status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(store.storageType)) {
+                            store.hasAction = true;
+                            storage.hasAction = true;
+                        }
 
                         storage[idx] = { ...store };
                     });
@@ -202,23 +216,44 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     setupWatchers() {
+        const watchers = [this.isBackupOn];
+        const modeWatchers = Object.entries(this.modeWatchers);
         const resetWatchers = () => {
             this.shouldSaveDefaultSettings = false;
-            this.watchers.forEach(watcher => watcher.reset());
+            watchers.forEach(watcher => watcher.reset());
+            const storage = this.storage$.value;
+            this.changedModes = [];
+            modeWatchers.forEach(([id, watcher]) => {
+                watcher.reset();
+                const store = storage.find(({ storageId }) => storageId === id);
+                store.isUsedForWriting = true;
+                store.isBackup = false;
+                switch (watcher.originalValue) {
+                    case 'modeBackup':
+                        store.isBackup = true;
+                        break;
+
+                    case 'modeNotInUse':
+                        store.isUsedForWriting = false;
+                        break;
+                }
+            });
+            this.storage$.next(storage);
         };
 
         const saveSettings: Process = this.processService.createProcess(() => {
-            if (this.isBackupOn.value) {
-                if (this.shouldSaveDefaultSettings) {
-                    return this.setDefaultBackupSettings();
-                }
-            } else {
-                return this.turnOffBackup();
-            }
+            return Promise.all([
+                this.isBackupOn.value && this.shouldSaveDefaultSettings
+                    ? this.setDefaultBackupSettings()
+                    : !this.isBackupOn.value
+                        ? this.turnOffBackup()
+                        : Promise.resolve(),
+                this.handleModeUpdate()
+            ]);
         });
 
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.isBackupOn],
+            [...watchers, ...modeWatchers.map(([_, watcher]) => watcher)],
             saveSettings,
             resetWatchers
         );
@@ -317,30 +352,60 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     updateStorage(storage) {
-        let numOfBackups = 0;
-        let numOfMains = 0;
+        let onlineBackups = 0;
+        let totalBackups = 0;
+        let onlineMains = 0;
+        let totalMains = 0;
         let isUpdating = false;
-        storage.forEach(({ isBackup, isUsedForWriting, status, updating }) => {
-            if (isUsedForWriting && status !== STORAGE_STATUS.INACCESSIBLE) {
-                isBackup ? status === 0 && numOfBackups++ : numOfMains++;
+        storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
+            if (isUsedForWriting) {
+                isBackup ? totalBackups++ : totalMains++;
+                if (status !== STORAGE_STATUS.INACCESSIBLE) {
+                    isBackup ? status === 0 && onlineBackups++ : onlineMains++;
+                }
             }
-            if (updating) isUpdating = true;
+
+            if (updating) {
+                isUpdating = true;
+            };
+            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
+            hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
-        if (numOfMains === 1) {
+        if (onlineMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
             store.mainOnly = true;
         }
+        this.mainReindexDisabled = onlineMains === 0 && totalMains > 0;
+        this.backupReindexDisabled = onlineBackups === 0 && totalBackups > 0;
+        this.doesMainExist = Boolean(totalMains);
         // gets rid of backup archive section if changing from backup to main
         // waits until finished changing modes when changing from main to backup
-        this.doesBackupExist = Boolean(numOfBackups) && !isUpdating;
+        this.doesBackupExist = Boolean(totalBackups) && !isUpdating;
         if (this.doesBackupExist) {
             this.checkArchiveState();
         } else {
             this.isBackupOn.value = false;
         }
-        this.storage$.next(storage);
-        this.storageEmit.emit(storage);
+        const sortByTypeAndUrl = (
+            { storageType: aType, url: aUrl },
+            { storageType: bType, url: bUrl }
+        ) => {
+            const { LOCAL, USB, NETWORK, CLOUD } = STORAGE_TYPES;
+            const typeOrder = [LOCAL, USB, NETWORK, CLOUD];
+            if (aType === bType) {
+                return aUrl < bUrl ? -1 : 1;
+            }
+            return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
+        };
+
+        const sortedStorage = storage.sort(sortByTypeAndUrl);
+        this.storage$.next(sortedStorage);
+        this.storageEmit.emit(sortedStorage);
+    }
+
+    getIconSrc(store) {
+        return `${this.CONFIG.icons.dir}${store.updating ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
 
     getModes(store) {
@@ -373,7 +438,7 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
     }
 
     selectMode(store) {
-        if (!store.isUsedForWriting) {
+        if (!store.isUsedForWriting && !store.usedForWriting) {
             return this.modes[MODE.NOT_IN_USE];
         } else if (!store.isBackup) {
             return this.modes[MODE.MAIN];
@@ -405,32 +470,53 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
         if (checkChanged(selected)) {
             updateParams.isBackup = selected.value === 'modeBackup';
             updateParams.usedForWriting = selected.value !== 'modeNotInUse';
-            this.system.saveStorage(updateParams).subscribe(this.handleModeUpdate(id, updateParams));
-        }
-    }
-
-    handleModeUpdate = (storageIdToUpdate, updateParams) => () => {
-        const setUpdating = (updating?) => {
+            this.modeWatchers[id].value = selected.value;
+            this.changedModes = [...this.changedModes, id];
             this.storage$.pipe(first()).subscribe(storage => {
-                const store = storage.find(({ storageId }) => storageId === storageIdToUpdate);
-                store.updating = updating;
+                const store = storage.find(({ storageId }) => storageId === id);
                 store.isBackup = updateParams.isBackup;
                 store.isUsedForWriting = updateParams.usedForWriting;
                 this.updateStorage(storage);
             });
+        }
+        const showWarn = Object.values(this.modeWatchers).some(({ changed, value }) => value === 'modeNotInUse' && changed);
+        this.applyService.setWarn(showWarn ? this.LANG.storage.stillHasArchivesPreWarning?.() : '');
+    }
+
+    handleModeUpdate = () => {
+        let updatingStores = [];
+        const setUpdating = (updating?, toUpdate = this.changedModes) => {
+            if (!updating) {
+                updatingStores = updatingStores.filter(id => !toUpdate.includes(id));
+            } else {
+                this.storage$.pipe(first()).subscribe(storage => {
+                    const updatedStorage = storage.map((store) => {
+                        if (toUpdate.includes(store.storageId)) {
+                            store.updating = updating;
+                            updatingStores.push(store);
+                        }
+                        return store;
+                    });
+                    this.updateStorage(updatedStorage);
+                });
+            }
         };
         setUpdating(true);
         const done$ = new Subject();
         interval(5000).pipe(takeUntil(done$)).subscribe(curInterval => {
-            if (curInterval >= 6) {
-                setUpdating(false);
+            if (curInterval >= 6 || !this.changedModes.length) {
+                setUpdating(false, updatingStores);
                 done$.next('done');
             } else {
-                this.system.getStorageStatus({ path: updateParams.url }).pipe(takeUntil(done$)).subscribe(({ reply: { storage: { storageStatus } } }) => {
-                    if (!storageStatus.includes('beingChecked')) {
-                        setUpdating(false);
-                        done$.next('done');
-                    }
+                updatingStores.forEach(({ url: path }) => {
+                    this.system.getStorageStatus({ path }).pipe(takeUntil(done$)).subscribe(({ reply: { storage: { storageStatus, storageId } } }) => {
+                        if (!storageStatus.includes('beingChecked')) {
+                            setUpdating(false, [storageId]);
+                            if (!updatingStores.length) {
+                                done$.next('done');
+                            }
+                        }
+                    });
                 });
             }
         });
@@ -482,6 +568,8 @@ export class NxSystemStorageComponent implements OnInit, OnChanges {
                             if (response.id) {
                                 this.init();
                             }
+                        }).catch(_ => {
+                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, {url: storage.url}), 'warning');
                         });
                 }
             });

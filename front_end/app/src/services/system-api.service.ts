@@ -15,6 +15,7 @@ import { NxUriCacheService }                   from './uri-cache.service';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
+import { environment }                         from '@environments/environment';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -168,6 +169,10 @@ export class NxSystemAPI {
         if (this.authGet) {
             params.auth = this.authGet;
         }
+
+        if (environment.isLocal) {
+            headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
+        }
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
@@ -203,6 +208,9 @@ export class NxSystemAPI {
         }
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
+        }
+        if (environment.isLocal) {
+            headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
         }
         return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),

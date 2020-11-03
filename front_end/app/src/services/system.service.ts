@@ -243,7 +243,7 @@ class UserManager {
     }
 
     isOwner(user: NxSystemUser) {
-        return this.currentUser?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
+        return user?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
     }
 
     checkPermissions() {
@@ -783,6 +783,10 @@ class ServerManager {
     checkForAnalyticsData(serverId: string) {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
+
+    getStorages(serverId) {
+        return this.mediaserverConnections[serverId].getStorages();
+    }
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -1270,11 +1274,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    updateOrGetSystemStorage<T>(updateParams?: T) {
-        if (updateParams) {
+    updateOrGetSystemStorage<T extends any>(updateParams?: T) {
+        if (!updateParams?.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.mediaserver.getStorages();
+        return this.serverManager.getStorages(updateParams.serverId);
     }
 
     checkForAnalyticsData(serverId: string) {
@@ -1473,7 +1477,7 @@ export class NxSystem extends System implements OnDestroy {
 
     protected _setMediaServersAndCameras (api_reply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        let mss = api_reply['ec2/getMediaServersEx'];
+        let mss = api_reply['ec2/getMediaServersEx'] || api_reply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
         let cs = api_reply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resource_types => {
@@ -1528,6 +1532,16 @@ export class NxSystem extends System implements OnDestroy {
             this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
             this.mediaserver.getHlsUrl(cameraId, position, resolution)
         );
+    }
+
+    public unsafeGetCameraLiveHlsUrl (cameraId) {
+        return this.mediaserver.getLiveHlsUrl(cameraId)
+    }
+
+    public unsafeGetHlsUrl (cameraId, position?, resolution='lo') {
+        return position === -1 ?
+            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
+            this.mediaserver.getHlsUrl(cameraId, position, resolution)
     }
 
     public getCameraRecords (cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {

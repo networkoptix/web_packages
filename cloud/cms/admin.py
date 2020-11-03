@@ -645,6 +645,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             )
         }),
     )
+    actions = ('delete_selected',)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}

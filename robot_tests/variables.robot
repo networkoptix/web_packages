@@ -57,7 +57,7 @@ ${LARGE ACCOUNT DROPDOWN}             //header//nx-account-settings-select//butt
 ${SMALL ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and contains(@class,'small-icon-overrides')]
 ${LARGE CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and not(contains(@class, 'small-button'))]
 ${SMALL CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and contains(@class, 'small-button')]
-${LARGE LOGIN BUTTON}                 //nx-header/header//a[contains(@class, 'login-button')]  
+${LARGE LOGIN BUTTON}                 //nx-header/header//a[contains(@class, 'login-button')]
 ${SMALL LOGIN BUTTON}                 //nx-header/header//ul[contains(@class, 'navbar-right')]//span[contains(@class, 'glyphicon-login')]
 ${SYSTEM NAME HEADING}                //nx-system-admin-component//div[contains(@class,'header-title')]/h2[@id='editable-title']
 ${HEADER TAB WRAPPER}                 //nx-header/header//div[contains(@class, 'tab-wrapper')]
@@ -107,6 +107,30 @@ ${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contain
 ${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
 ${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG IN BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message']//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
+
+#Systems - left menu
+${LEFT MENU}                          //nx-menu
+${LEFT MENU BUTTONS}                  ${LEFT MENU}//div[contains(@class, 'nx-menu-section')]//nx-menu-button
+${LEFT MENU OVERLAY}                  ${LEFT MENU}/div[contains(@class,'nx-menu')]/div[contains(@class,'nx-menu-overlay')]
+${LEFT MENU NO RESULT}                ${LEFT MENU}/div[contains(@class,'nx-menu')]/div[contains(@class,'nx-menu-placeholder')]
+${LEFT MENU SEARCH INPUT}             ${LEFT MENU}/nx-search//input
+${LEFT MENU SEARCH CLEAR}             ${LEFT MENU}/nx-search//button[contains(@class,'search-clear')]
+${LEFT MENU MATCHES CONTENT}          ${LEFT MENU}//div[contains(@class, 'nx-menu-section')]//div[contains(@class, 'level-3-items')]//div[contains(@class, 'menu-level-3-content')]
+${LEFT MENU SEARCH MATCHES}           ${LEFT MENU}//div[contains(@class, 'nx-menu-section')]//span[@class='highlighted']
+
+${LEFT MENU LEVEL1 ADMIN}             ${LEFT MENU}//nx-level-1-item/a[@id='admin']
+${LEFT MENU LEVEL1 ICON}              ${LEFT MENU LEVEL1 ADMIN}//svg-icon
+${LEFT MENU LEVEL3 GENERAL}           ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="general"]
+${LEFT MENU LEVEL3 LIC}               ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="license"]
+${LEFT MENU LEVEL3 STARAGE}           ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="cloudStorage"]
+
+${LEFT MENU LEVEL1 USERS}             ${LEFT MENU}//nx-level-1-item/a[@id='users']
+${LEFT MENU LEVEL3 USER1}             ${LEFT MENU LEVEL1 USERS}/../..//div[1]/nx-level-3-item/a
+${LEFT MENU LEVEL3 USER1 EXT}         ${LEFT MENU LEVEL3 USER1}//span[contains(@class, "menu-level-3-additional")]
+${LEFT MENU LEVEL3 USER2}             ${LEFT MENU LEVEL1 USERS}/../..//div[2]/nx-level-3-item/a
+${LEFT MENU LEVEL3 USER2 EXT}         ${LEFT MENU LEVEL3 USER2}//span[contains(@class, "menu-level-3-additional")]
+
+${LEFT MENU LEVEL1 SERVERS}           ${LEFT MENU}//nx-level-1-item/a[@id='servers']
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
@@ -202,10 +226,15 @@ ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
-${DOWNLOAD WINDOWS VMS LINK}          //div/a[contains(text(),"Windows x64 - Client & Server")]
-${DOWNLOAD LINUX VMS LINK}            //div/a[contains(text(),"Ubuntu x64 - Server")]
-${DOWNLOAD MAC OS VMS LINK}           //div/p[contains(text(),'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”')]/preceding-sibling::a
-${DOWNLOAD ARM VMS LINK}              //div/a[contains(text(),"ARM") and contains(text(),"Client")]
+${DOWNLOAD WINDOWS VMS LINK}          //div[@id="windows-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD WINDOWS VMS TEXT}          ${DOWNLOAD WINDOWS VMS LINK}//div[contains(text(),"Windows x64 - Client installer")]
+${DOWNLOAD LINUX VMS LINK}            //div[@id="linux-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD LINUX VMS TEXT}            ${DOWNLOAD LINUX VMS LINK}//div[contains(text(),"Ubuntu x64 - Client installer")]
+${DOWNLOAD MAC OS VMS LINK}           //div[@id="macos-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD MAC OS VMS TEXT}           ${DOWNLOAD MAC OS VMS LINK}//div[contains(text(),"Mac OS - Client installer")]
+${DOWNLOAD ARM VMS LINK}              //div[@id="arm-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD ARM VMS TEXT}              ${DOWNLOAD ARM VMS LINK}//div[contains(text(),"ARM") and contains(text(),"Client")]
+
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 ${DOWNLOAD VMS NAME}                  //h3[contains(text(),"${DOWNLOAD TITLE TEXT}")]
@@ -315,6 +344,8 @@ ${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/im
 ${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
 ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
+${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
+${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
 
 #ADVANCED SETTINGS
 ${ADVANCED SETTINGS}                    ?advanced=true
@@ -324,8 +355,9 @@ ${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/st
 ${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
 ${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
 @{ADVANCED SETTINGS ALERT BAR}
-...    ${HIDE ADVANCED SETTINGS BUTTON} 
+...    ${HIDE ADVANCED SETTINGS BUTTON}
 ...    ${HIDE ADVANCED SETTINGS ICON}
-...    ${ADVANCED SETTINGS ALERT ICON} 
-...    ${ADVANCED SETTINGS ALERT} 
+...    ${ADVANCED SETTINGS ALERT ICON}
+...    ${ADVANCED SETTINGS ALERT}
+...    ${ADVANCED SETTINGS WARNING}
 ...    ${ADVANCED SETTINGS WARNING}

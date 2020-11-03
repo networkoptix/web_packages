@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "浮水印设置",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "存储位置",
-    "LOG SETTINGS TEXT": "日志设置"
+    "LOG SETTINGS TEXT": "日志设置",
+    "NOT ABLE TO LOAD TEXT": "Not able to load system settings.",
+    "CLOSE TEXT": "Close",
+    "NONE TEXT": "None",
+    "ERROR TEXT": "Error",
+    "WARNING TEXT": "Warning",
+    "INFO TEXT": "Info",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Verbose"
 }

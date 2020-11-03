@@ -7,7 +7,7 @@ import {
 import { RouterModule }                                              from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule }                          from '@angular/forms';
-import { AngularFireModule, FirebaseOptionsToken }                   from '@angular/fire';
+import { AngularFireModule, FIREBASE_OPTIONS }                   from '@angular/fire';
 import { AngularFireMessagingModule }                                from '@angular/fire/messaging';
 import { LayoutModule }                                              from '@angular/cdk/layout';
 
@@ -43,6 +43,8 @@ import { PagesModule }                        from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }       from './src/services/local-system-status-interceptor.service';
+
+import { FpsMeterService }                      from './src/services/fps-meter.service';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -114,9 +116,9 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
         {
-            provide    : FirebaseOptionsToken,
-            deps       : [NxConfigService],
-            useFactory : initializeApp
+            provide   : FIREBASE_OPTIONS,
+            deps      : [NxConfigService],
+            useFactory: initializeApp
         },
         AuthGuard,
         DevelopersGuard,
@@ -124,7 +126,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        FpsMeterService,
     ],
     declarations: [
         AppComponent

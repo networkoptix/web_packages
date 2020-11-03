@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from shlex import shlex
 import subprocess
+from typing import Any, Union
 
 import docker
 import email.header
@@ -21,7 +22,7 @@ from robot.api import logger
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
                                    timestr_to_secs)
 from selenium.webdriver.support.color import Color
@@ -168,6 +169,22 @@ class NoptixLibrary(object):
             except Exception as e:
                 print(e)
                 not_found = f"{value} does not equal the expected {expected}"
+            time.sleep(.2)
+        raise AssertionError(not_found)
+
+    def wait_until_element_contains_style(self, locator, styleAttribute, expected, timeout=10):
+        timeout = timeout + time.time()
+        not_found = "No element found with style " + expected
+        value = ""
+        while time.time() < timeout:
+            try:
+                value = self.get_element_style(locator, styleAttribute)
+                logger.debug(value)
+                if expected in value:
+                    return
+            except Exception as e:
+                print(e)
+                not_found = f"{value} does not contains the expected {expected}"
             time.sleep(.2)
         raise AssertionError(not_found)
 
@@ -562,3 +579,40 @@ class NoptixLibrary(object):
         return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
     def check_grid_size(self, gridSize, tileSize, columns):
         return gridSize > (tileSize * columns)
+
+    def check_if_match_and_criteria(self, locator, criteria):
+        queries = set(criteria.lower().split())
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                matches = set()
+                for highlight in highlights:
+                    matches.add(highlight.get_attribute('innerHTML').lower())
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+            if len(queries - matches) > 0 or len(matches - queries) > 0:
+                raise InvalidArgumentException("Matches found don't reflect search")
+
+        return True
+
+    def check_if_match_or_criteria(self, locator, criteria):
+        queries = criteria.lower().split("|")
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                for highlight in highlights:
+                    if highlight.get_attribute('innerHTML').lower() not in queries:
+                        raise InvalidArgumentException("Matches found don't reflect search")
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+        return True
