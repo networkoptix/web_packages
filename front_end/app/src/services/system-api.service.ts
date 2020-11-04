@@ -344,7 +344,9 @@ export class NxSystemAPI {
     }
 
     logout() {
-        return this.post('/api/cookieLogout').toPromise();
+        return this.post('/api/cookieLogout').pipe(tap(() => {
+            this.cookieService.delete('x-runtime-guid');
+        })).toPromise();
     }
 
     logUrl(params: {id?: number, lines?: number}) {
