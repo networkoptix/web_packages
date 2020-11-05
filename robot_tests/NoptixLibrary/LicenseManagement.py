@@ -197,7 +197,7 @@ class LicenseManagement(object):
     @staticmethod
     def get_hwid(server_auth, server_url, key):
         """ Get HWID the key is activated to """
-        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]))
+        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]), verify=False)
         assert 200 == r.status_code
         licenses = r.json()
 
@@ -214,7 +214,7 @@ class LicenseManagement(object):
         else:
             from_license_portal = {'count': 4, 'license_type': 'Professional'}
 
-        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]))
+        r = requests.get(f'{server_url}/ec2/getLicenses', auth=HTTPDigestAuth(server_auth[0], server_auth[1]), verify=False)
         assert 200 == r.status_code
         licenses = r.json()
 
