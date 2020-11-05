@@ -17,7 +17,8 @@ module.exports = {
         '\\.scss$': 'identity-obj-proxy'
     },
     modulePathIgnorePatterns: [
-        "<rootDir>/app/src/pages/systems/view/components/camera-timeline/"
+        "<rootDir>/app/src/pages/systems/view/components/camera-timeline/",
+        "<rootDir>/app/src/pages/systems/view/"
     ]
 };
     // might use in future
