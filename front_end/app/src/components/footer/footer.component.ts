@@ -6,9 +6,9 @@ import { DomSanitizer }             from '@angular/platform-browser';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 import { Subscription }             from 'rxjs';
 
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxAppStateService }        from '../../services/nx-app-state.service';
-import { NxMenusService, MenuNode } from '../../services/menus.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxAppStateService }        from '@services/nx-app-state.service';
+import { NxMenusService, MenuNode } from '@services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -50,9 +50,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             if (this.CONFIG.isLocal) {
                 this.footerItems.forEach(footerItem => {
                     footerItem.new_window = true;
-                    if (footerItem.url[0] === '/' && !footerItem.url.includes('swagger-ui')) {
-                        footerItem.url = `${this.CONFIG.cloudHost}${footerItem.url}`;
-                    }
+                    footerItem.url = footerItem.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
                 });
             }
         });
