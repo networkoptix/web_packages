@@ -32,9 +32,6 @@ const appRoutes: Routes = [
         NxContentComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxContentComponent
-    ],
     exports        : [
         NxContentComponent
     ]

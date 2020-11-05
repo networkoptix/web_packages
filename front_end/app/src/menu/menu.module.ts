@@ -46,13 +46,6 @@ import { NxAlertCounter }        from './alert-counter/alert-counter.component';
         NxAlertCounter
     ],
     bootstrap: [],
-    entryComponents: [
-        NxMenuComponent,
-        NxLevel1ItemComponent,
-        NxLevel2ItemComponent,
-        NxLevel3ItemComponent,
-        NxAlertCounter
-    ],
     exports: [
         NxMenuComponent,
         NxLevel1ItemComponent,

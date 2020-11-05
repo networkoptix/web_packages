@@ -35,8 +35,6 @@ import { NxSystemViewModule }        from './systems/view/view.module';
     ],
     declarations: [
     ],
-    entryComponents: [
-    ],
     providers: [
     ],
     exports: [

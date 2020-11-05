@@ -30,9 +30,6 @@ import { NxAccountSettingsComponent } from './settings.component';
         NxAccountSettingsComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxAccountSettingsComponent
-    ],
     exports        : [
         NxAccountSettingsComponent
     ]

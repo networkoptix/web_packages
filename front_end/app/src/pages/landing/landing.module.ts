@@ -30,9 +30,6 @@ const appRoutes: Routes = [
         NxLandingComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxLandingComponent
-    ],
     exports: [
         NxLandingComponent
     ]

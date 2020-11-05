@@ -92,7 +92,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot()
     ],
-    entryComponents : [],
     providers       : [
         NgbToast,
         NgbModal,

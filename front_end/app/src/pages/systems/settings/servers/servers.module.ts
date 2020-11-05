@@ -44,9 +44,6 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSystemServersComponent
-    ],
     exports: [
         NxSystemServersComponent
     ]

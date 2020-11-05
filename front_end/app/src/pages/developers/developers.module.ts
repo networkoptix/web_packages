@@ -81,10 +81,6 @@ const appRoutes: Routes = [
         NxKnowledgeBaseComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxAboutComponent,
-        NxKnowledgeBaseComponent
-    ],
     exports: [
         NxAboutComponent,
         NxKnowledgeBaseComponent

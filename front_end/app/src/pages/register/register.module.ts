@@ -57,9 +57,6 @@ const appRoutes: Routes = [
         NxRegisterComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxRegisterComponent
-    ],
     exports: [
         NxRegisterComponent
     ]

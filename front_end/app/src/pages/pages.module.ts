@@ -64,8 +64,6 @@ import { NxDevelopersModule }        from './developers/developers.module';
     ],
     declarations: [
     ],
-    entryComponents: [
-    ],
     providers: [
     ],
     exports: [

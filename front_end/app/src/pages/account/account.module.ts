@@ -59,9 +59,6 @@ const appRoutes: Routes = [
         NxAccountComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxAccountComponent
-    ],
     exports        : [
         NxAccountComponent
     ]

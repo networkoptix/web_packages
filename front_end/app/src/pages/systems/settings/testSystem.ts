@@ -3,11 +3,11 @@ import { NxSystem } from '../../../services/system.service';
 export function setupTestSystem() : NxSystem {
   return {
     "cloudStorageSystemEnabled": false,
-    "mediaservers": null,
-    "resource_types": null,
-    "canMerge": 1,
-    "id": "c27aaff0-0694-469b-a8d6-c43cd8a9648c",
-    "info": {
+    "mediaservers"             : null,
+    "resourceTypes"            : null,
+    "canMerge"                 : 1,
+    "id"                       : "c27aaff0-0694-469b-a8d6-c43cd8a9648c",
+    "info"                     : {
       "name": "4.1_dev_storage",
       "id": "c27aaff0-0694-469b-a8d6-c43cd8a9648c",
       "customization": "default",
@@ -83,7 +83,7 @@ export function setupTestSystem() : NxSystem {
       "thrownError": null,
       "_value": ""
     },
-    
+
     "currentServerNotBusy": true,
     "currentUserEmail": "noptixautoqa+owner@gmail.com",
     "mediaserver": {

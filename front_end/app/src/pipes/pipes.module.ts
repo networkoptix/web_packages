@@ -9,8 +9,6 @@ import { NxHealthDatePipe } from './health-date';
         NxHealthDatePipe,
         NxSafePipe
     ],
-    entryComponents: [
-    ],
     exports: [
         NxHealthDatePipe,
         NxSafePipe

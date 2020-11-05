@@ -41,8 +41,6 @@ const appRoutes: Routes = [
     ],
     bootstrap: [
     ],
-    entryComponents: [
-    ],
     exports: [
         NxSystemsListComponent
     ]

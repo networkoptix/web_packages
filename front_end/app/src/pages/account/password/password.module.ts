@@ -29,9 +29,6 @@ import { NxAccountPasswordComponent } from './password.component';
         NxAccountPasswordComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxAccountPasswordComponent
-    ],
     exports        : [
         NxAccountPasswordComponent
     ]

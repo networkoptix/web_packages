@@ -36,9 +36,6 @@ import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSystemAdminComponent
-    ],
     exports: [
         NxSystemAdminComponent
     ]

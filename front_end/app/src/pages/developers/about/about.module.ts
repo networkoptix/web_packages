@@ -45,14 +45,6 @@ const appRoutes: Routes = [
         NxAboutComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxCapabilitiesComponent,
-        NxDevToolsComponent,
-        NxGetStartedComponent,
-        NxIntegrationsComponent,
-        NxSupportComponent,
-        NxAboutComponent
-    ],
     exports: [
         NxCapabilitiesComponent,
         NxDevToolsComponent,

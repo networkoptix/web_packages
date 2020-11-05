@@ -32,9 +32,6 @@ import { NxCloudStorageComponent }  from './cloud-storage.component';
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxCloudStorageComponent
-    ],
     exports: [
         NxCloudStorageComponent
     ]

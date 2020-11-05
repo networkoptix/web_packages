@@ -33,9 +33,6 @@ const appRoutes: Routes = [
         NxDebugComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxDebugComponent
-    ],
     exports        : [
         NxDebugComponent
     ]

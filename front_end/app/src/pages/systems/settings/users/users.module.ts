@@ -32,9 +32,6 @@ import { NxSystemUsersComponent } from './users.component';
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSystemUsersComponent
-    ],
     exports: [
         NxSystemUsersComponent
     ]

@@ -45,10 +45,6 @@ const appRoutes: Routes = [
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSandboxComponent,
-        NxSandboxComponent
-    ],
     exports: [
         NxSandboxComponent
     ]

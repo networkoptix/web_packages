@@ -46,9 +46,6 @@ const appRoutes: Routes = [
         BoolIconComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxIpvdComponent
-    ],
     exports        : [
         NxIpvdComponent
     ]

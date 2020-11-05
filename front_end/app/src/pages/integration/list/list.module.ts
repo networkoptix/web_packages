@@ -26,9 +26,6 @@ import { NxIntegrationsListComponent } from './list.component';
         NxIntegrationsListComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxIntegrationsListComponent
-    ],
     exports: [
         NxIntegrationsListComponent
     ]

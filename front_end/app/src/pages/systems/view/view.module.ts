@@ -50,9 +50,6 @@ import { routes as vmsSandboxRoutes } from './vms-client/vms-client-routing.modu
         components,
     ],
     bootstrap       : [],
-    entryComponents : [
-        NxSystemViewIndexPageComponent,
-    ],
     exports: [
         NxSystemViewIndexPageComponent,
     ]

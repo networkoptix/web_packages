@@ -24,9 +24,6 @@ import { NxSetupComponent } from './setup.component';
         NxSetupComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxSetupComponent
-    ],
     exports: [
         NxSetupComponent
     ]

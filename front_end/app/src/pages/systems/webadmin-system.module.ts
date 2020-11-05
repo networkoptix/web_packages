@@ -104,8 +104,6 @@ export const localSettingsRoutes: Routes = [
     ],
     bootstrap: [
     ],
-    entryComponents: [
-    ],
     exports: [
     ]
 })

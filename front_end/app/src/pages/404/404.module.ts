@@ -29,9 +29,6 @@ const appRoutes: Routes = [
         Nx404Component
     ],
     bootstrap: [],
-    entryComponents: [
-        Nx404Component
-    ],
     exports: [
         Nx404Component
     ]

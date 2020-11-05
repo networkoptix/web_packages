@@ -27,9 +27,6 @@ import { DirectivesModule }      from '../../directives/directives.module';
         NxGridLayoutComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxGridLayoutComponent
-    ],
     exports: [
         NxGridLayoutComponent
     ]

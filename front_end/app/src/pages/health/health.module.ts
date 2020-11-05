@@ -112,15 +112,6 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
         NxUpdateInfoComponent
     ],
     bootstrap       : [],
-    entryComponents : [
-        NxHealthComponent,
-        NxReportViewerComponent,
-        NxSystemAlertsComponent,
-        NxSystemMetricsComponent,
-        NxImageSectionComponent,
-        NxImageComponent,
-        NxUpdateInfoComponent
-    ],
     exports: [
         NxHealthComponent,
         NxReportViewerComponent,

@@ -39,9 +39,6 @@ export function initializeApp(CONFIG: NxConfigService) {
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        PushComponent
-    ],
     exports: [
         PushComponent
     ]

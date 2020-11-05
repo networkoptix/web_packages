@@ -28,9 +28,6 @@ const appRoutes: Routes = [
         Nx503Component
     ],
     bootstrap      : [],
-    entryComponents: [
-        Nx503Component
-    ],
     exports: [
         Nx503Component
     ]

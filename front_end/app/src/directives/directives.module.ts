@@ -30,7 +30,6 @@ import { NxIntersectionObserver }     from './nx-intersection.directive';
         NxAddSvgSrc,
         NxIntersectionObserver
     ],
-    entryComponents : [],
     exports         : [
         NxArrowNavDirective,
         NxClickElsewhereDirective,

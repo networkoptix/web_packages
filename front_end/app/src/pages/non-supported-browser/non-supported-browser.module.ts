@@ -24,9 +24,6 @@ const appRoutes: Routes = [
         NonSupportedBrowserComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NonSupportedBrowserComponent
-    ],
     exports: [
         NonSupportedBrowserComponent
     ]

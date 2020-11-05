@@ -26,7 +26,6 @@ import { NxScrollMechanicsService }        from '../../../services/scroll-mechan
 import { WINDOW }                          from '../../../services/window-provider';
 import { NxAppSourceService }              from '../../../services/nx-app-source.service';
 import { NxHeaderService }                 from '../../../services/nx-header.service';
-import { translate }                       from '@angular/localize/src/translate';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

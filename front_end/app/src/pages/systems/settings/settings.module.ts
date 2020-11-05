@@ -111,9 +111,6 @@ export const cloudSettingsRoutes: Routes = [
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSystemSettingsComponent
-    ],
     exports: [
         NxSystemSettingsComponent,
         NxNoSystemsComponent

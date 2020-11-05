@@ -6,9 +6,9 @@ mkdir ./dist/styles;
 mv ./dist/*.css ./dist/styles;
 sed -i -e 's/href="static\/styles\./href="static\/styles\/styles\./g' dist/index.html;
 
-mv ./dist/languages.*.png ./dist/styles
 mv ./dist/*.js ./dist/scripts;
 sed -i -e 's/src="static\//type="text\/javascript" src="static\/scripts\//g' dist/index.html;
+rm dist/index.html-e;
 
 # Webadmin specific actions
 if [ $IS_WEBADMIN ]; then

@@ -36,9 +36,6 @@ import { NxCamerasComponent }       from './cameras.component';
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxCamerasComponent
-    ],
     exports: [
         NxCamerasComponent
     ]

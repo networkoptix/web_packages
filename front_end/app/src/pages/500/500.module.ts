@@ -28,9 +28,6 @@ const appRoutes: Routes = [
         Nx500Component,
     ],
     bootstrap      : [],
-    entryComponents: [
-        Nx500Component,
-    ],
     exports        : [
         Nx500Component,
     ]

@@ -38,9 +38,6 @@ const appRoutes: Routes = [
         NxIntegrationsComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxIntegrationsComponent
-    ],
     exports: [
         NxIntegrationsComponent
     ]

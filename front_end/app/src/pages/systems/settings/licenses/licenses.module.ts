@@ -44,9 +44,6 @@ import { NxLicenseSummaryComponent } from './summary/summary.component';
     ],
     bootstrap: [
     ],
-    entryComponents: [
-        NxSystemLicensesComponent
-    ],
     exports: [
         NxSystemLicensesComponent
     ]

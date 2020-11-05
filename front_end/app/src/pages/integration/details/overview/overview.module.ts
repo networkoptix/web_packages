@@ -24,9 +24,6 @@ import { NxOverviewComponent } from './overview.component';
         NxOverviewComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxOverviewComponent
-    ],
     exports: [
         NxOverviewComponent
     ]

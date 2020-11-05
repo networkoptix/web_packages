@@ -10,6 +10,7 @@ import { ComponentsModule }   from '../../components/components.module';
 import { DirectivesModule }   from '../../directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
 
+@Injectable()
 export class ParamResolver implements Resolve<any> {
     constructor() {
     }
@@ -68,9 +69,6 @@ const appRoutes: Routes = [
         NxRestoreComponent
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxRestoreComponent
     ],
     exports: [
         NxRestoreComponent
