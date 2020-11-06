@@ -165,6 +165,7 @@
         "vendor": "Vendor",
         "model": "Model",
         "ip": "IP Address",
+        "server": "Server",
         "os": "OS",
         "version": "Version",
         "voiceCommands": {

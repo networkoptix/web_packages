@@ -19,6 +19,7 @@ const appRoutes: Routes = [
     {
         path      : '',
         component : NxAboutComponent,
+        canActivate : [DevelopersGuard],
         children  : [
             {
                 path     : 'knowledge-base',
