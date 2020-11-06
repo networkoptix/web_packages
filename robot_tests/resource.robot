@@ -906,9 +906,9 @@ Start Docker Server
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     Execute Command    docker start ${name}
     ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
     Close Connection
     Release Lock   start_server_lock
-    ${port info}=   Split String    ${port info}    :
     [Return]    ${port info}[1]
 
 Stop Docker Server
@@ -927,9 +927,9 @@ Restart Docker Server
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
     Close Connection
     Release Lock   restart_server_lock
-    ${port info}=   Split String    ${port info}    :
     [Return]    ${port info}[1]
 
 Get container port by name
