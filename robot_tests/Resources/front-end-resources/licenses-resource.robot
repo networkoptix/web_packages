@@ -35,7 +35,8 @@ LM Test Restart
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
     Run Keyword If    ${status}    Log Out via API
     FOR    ${i}    IN RANGE    1    4
-        Start Docker Server    ${cont ${i}}
+        ${port}=   Start Docker Server    ${cont ${i}}
+        Set Suite Variable    ${LM PORT ${i}}    ${port}
         Sleep    10
         Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${lm port ${i}}    ${LM HOST}
     END

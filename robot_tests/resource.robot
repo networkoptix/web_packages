@@ -882,9 +882,9 @@ Setup Docker Server
     ${port info}=   Split String    ${port info}    :
     Set to Dictionary    ${server}    port=${port info}[1]
     ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
     Close Connection
     Release Lock   create_server_lock
-    Set to Dictionary    ${server}    name=${name}
     [Return]    ${server}
 
 Delete Docker Server
@@ -923,6 +923,7 @@ Stop Docker Server
 Restart Docker Server
     [Arguments]    ${port}    ${name}    ${auth}
     Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    Sleep    10
     Acquire Lock   restart_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}

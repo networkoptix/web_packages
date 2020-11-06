@@ -460,7 +460,6 @@ License Details Block: Deactivated license
         Deactivate Licenses    ${key}
         ${port}=   Restart Docker Server    ${LM PORT 2}    ${cont 2}    ${CLOUD AUTH}
         Set Suite Variable    ${LM PORT 2}    ${port}
-        Sleep    10
         ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
         Should Not Be True    ${activated}
         Reload Page
@@ -494,7 +493,6 @@ License Details Block: License with expired status
     Should Be True    ${activated}
     ${port}=   Restart Docker Server    ${LM PORT 2}    ${cont 2}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 2}    ${port}
-    Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
@@ -596,7 +594,6 @@ License Summary Block: License key is expired
     ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${saas vw}
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
 
     Reload Page
     Validate Licenses Page    trial left=True    clean=False
@@ -638,7 +635,6 @@ VMS integration
         Should Be True    ${activated}
         ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
         Set Suite Variable    ${LM PORT 1}    ${port}
-        Sleep    10
         Reload Page
         Validate Licenses Page    trial left=True    clean=False
         # Verify licenses' summary records are updated correctly
@@ -666,7 +662,6 @@ VMS integration
         Should Be True    ${activated}
         ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
         Set Suite Variable    ${LM PORT 1}    ${port}
-        Sleep    10
         Reload Page
 
         Validate Licenses Page    trial left=True    clean=False
@@ -687,7 +682,6 @@ VMS integration
 
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
 
     Validate Licenses Page    trial left=True    clean=False
@@ -701,7 +695,6 @@ VMS integration
 
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False
@@ -717,7 +710,6 @@ VMS integration
     Should Be True    ${activated}
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
     Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${n}    ${n}
@@ -726,7 +718,6 @@ VMS integration
     Deactivate Licenses    ${key}
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False
@@ -739,7 +730,6 @@ VMS integration
     Should Be True    ${activated}
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
     Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${n}    ${n}
@@ -748,7 +738,6 @@ VMS integration
     Remove License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
     Set Suite Variable    ${LM PORT 1}    ${port}
-    Sleep    10
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False
