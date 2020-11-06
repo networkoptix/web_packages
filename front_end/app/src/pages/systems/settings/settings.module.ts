@@ -1,7 +1,5 @@
 import { NgModule }                  from '@angular/core';
 import { CommonModule }              from '@angular/common';
-import { BrowserModule }             from '@angular/platform-browser';
-import { UpgradeModule }             from '@angular/upgrade/static';
 import { RouterModule, Routes }      from '@angular/router';
 import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }           from '@ngx-translate/core';
@@ -24,11 +22,12 @@ import { NxSystemUsersModule }       from './users/users.module';
 import { NxSystemServersModule }     from './servers/servers.module';
 import { NxCamerasModule }           from './cameras/cameras.module';
 import { NxCloudStorageModule }      from './cloud-storage/cloud-storage.module';
+import { NxSettingsService }         from './settings.service';
 
 export const cloudSettingsRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path        : 'systems/:systemId',
+        path        : '',
         component   : NxSystemSettingsComponent,
         canActivate : [AuthGuard],
         children    : [
@@ -87,8 +86,6 @@ export const cloudSettingsRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         TranslateModule,
@@ -96,23 +93,21 @@ export const cloudSettingsRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-        NxCamerasModule,
         NxCloudStorageModule,
         NxSystemLicensesModule,
+        NxCamerasModule,
         MenuModule,
         RouterModule.forChild(cloudSettingsRoutes)
     ],
     providers: [
-        ApplyGuard
+        ApplyGuard,
+        NxSettingsService
     ],
     declarations: [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxSystemSettingsComponent
     ],
     exports: [
         NxSystemSettingsComponent,

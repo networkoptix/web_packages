@@ -119,7 +119,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.resolutions = [];
         this.hardwareTypes = [];
 
-        this.uriPath = '/' + this.route.snapshot.url.map(e => e.path).join('/');
+        this.uriPath = '/' + this.route.snapshot.parent.url.map(e => e.path).join('/');
 
         this.disclaimerParams = {
             companyName : this.CONFIG.company.name,

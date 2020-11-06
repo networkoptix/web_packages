@@ -71,8 +71,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         ComponentsModule,
         MenuModule,
         DialogsModule,
-        // @ts-ignore
-        environment.isLocal ? WebadminPageModule : PagesModule,
         DirectivesModule,
         PipesModule,
         ServiceModule,
@@ -85,16 +83,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
             }
         }),
         DeviceDetectorModule.forRoot(),
-        RouterModule.forRoot([], {
-            initialNavigation        : true,
-            scrollPositionRestoration: 'enabled',
-            anchorScrolling          : 'enabled',
-            enableTracing            : false
-        }),
         NgxMaskModule.forRoot(options),
-        NgxWebstorageModule.forRoot()
+        NgxWebstorageModule.forRoot(),
+        // Need to find a different way to choose page module for webadmin
+        environment.isLocal ? WebadminPageModule : PagesModule
     ],
-    entryComponents : [],
     providers       : [
         NgbToast,
         NgbModal,

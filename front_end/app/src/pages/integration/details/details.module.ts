@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
@@ -15,7 +13,7 @@ import { NxSetupComponent }              from './setup/setup.component';
 
 const appRoutes: Routes = [
     {
-        path      : 'integrations/:id',
+        path      : '',
         component : NxIntegrationDetailsComponent,
         children  : [
             { path: '', component: NxOverviewComponent },
@@ -27,15 +25,12 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,
         MenuModule,
         AngularSvgIconModule,
-
         RouterModule.forChild(appRoutes)
     ],
     providers : [],
@@ -43,9 +38,6 @@ const appRoutes: Routes = [
         NxIntegrationDetailsComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxIntegrationDetailsComponent
-    ],
     exports: [
         NxIntegrationDetailsComponent
     ]

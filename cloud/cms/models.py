@@ -977,22 +977,22 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
-    def check_customization_permission(user, customization=None, permission=None):
+    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None):
         return UserGroupsToAssetPermissions.\
             check_permission(user, get_cloud_portal_asset(customization), permission)
 
     @staticmethod
-    def check_customization_access(user, customization=None):
+    def check_customization_access(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, "cms.access_customization")
 
     @staticmethod
-    def check_customization_change_account(user, customization=None):
+    def check_customization_change_account(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, "api.change_account")
 
     @staticmethod
-    def check_customization_publish(user, customization=None):
+    def check_customization_publish(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, "cms.publish_version")
 

@@ -35,9 +35,6 @@ const appRoutes: Routes = [
         NxRightMenuComponent,
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxRightMenuComponent
-    ],
     exports        : [
         NxRightMenuComponent
     ]

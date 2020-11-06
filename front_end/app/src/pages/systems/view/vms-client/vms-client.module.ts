@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core'
-import { BrowserModule } from '@angular/platform-browser'
 
 import TimelinePageComponent from './pages/timeline/timeline-page.component'
 
@@ -11,6 +10,7 @@ import PlaybackModule from './submodules/playback/playback.module'
 import TimelineModule from './submodules/timeline/timeline.module'
 
 import VmsClientRoutingModule from './vms-client-routing.module'
+import { CommonModule } from '@angular/common'
 
 
 @NgModule({
@@ -20,7 +20,7 @@ import VmsClientRoutingModule from './vms-client-routing.module'
     CameraPageComponent,
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
     VmsModule,
     PlaybackModule,
     TimelineModule,

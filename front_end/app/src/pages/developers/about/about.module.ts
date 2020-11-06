@@ -1,6 +1,4 @@
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgModule }             from '@angular/core';
@@ -27,8 +25,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
@@ -47,15 +43,6 @@ const appRoutes: Routes = [
         NxAboutComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxCapabilitiesComponent,
-        NxSupportedTechComponent,
-        NxDevToolsComponent,
-        NxGetStartedComponent,
-        NxIntegrationsComponent,
-        NxSupportComponent,
-        NxAboutComponent
-    ],
     exports: [
         NxCapabilitiesComponent,
         NxSupportedTechComponent,

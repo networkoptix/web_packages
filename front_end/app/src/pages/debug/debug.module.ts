@@ -1,8 +1,6 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
 import { FormsModule }          from '@angular/forms';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
@@ -20,9 +18,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
         FormsModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
@@ -33,9 +29,6 @@ const appRoutes: Routes = [
         NxDebugComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxDebugComponent
-    ],
     exports        : [
         NxDebugComponent
     ]

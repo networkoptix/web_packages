@@ -48,13 +48,14 @@ import { NxLeftMenuComponent }                from './left-menu/left-menu.compon
 import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
 import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
 import { NxHeaderMainButtonComponent }        from './header/main-button/main-button.component';
-import { NxSystemTileComponent }            from './dropdowns/drop-menu/system-tile/system-tile.component';
-import { NxNavigationTileComponent }        from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxSystemTileComponent }              from './dropdowns/drop-menu/system-tile/system-tile.component';
+import { NxNavigationTileComponent }          from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxAdditionalSystemsTileComponent }   from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
 import { NxTabsComponent }                    from './header/tabs/tabs.component';
 import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
 import { NxInfoBlockComponent }               from './info-block/info-block.component';
+import { NxImageComponent }                   from '@pages/health/table-components/image/image.component';
 
 @NgModule({
     imports: [
@@ -115,55 +116,8 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxTabsComponent,
         NxNavDropdownComponent,
         NxOverlayModalComponent,
-        NxLeftMenuComponent
-    ],
-    entryComponents: [
-        NxThreeDotDropdown,
-        NxGenericDropdown,
-        NxLanguageDropdown,
-        NxHeaderLanguageDropdown,
-        NxAccountSettingsDropdown,
-        NxActiveSystemDropdown,
-        NxNavLocationDropdown,
-        NxPermissionsDropdown,
-        NxMultiSelectDropdown,
-        NxDropMenu,
-        NxProcessButtonComponent,
-        NxPreLoaderComponent,
-        NxCheckboxComponent,
-        NxRadioComponent,
-        NxAlertBlockComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
-        NxMultiLineEllipsisComponent,
-        NxExternalVideoComponent,
-        // NxLayoutRightComponent,
-        NxTagComponent,
-        NxCarouselComponent,
-        NxRibbonComponent,
-        NxVendorListComponent,
-        NxSearchComponent,
-        NxHeaderComponent,
-        NxHeaderMainButtonComponent,
-        NxFooterComponent,
-        NxLandingDisplayComponent,
-        NxPasswordComponent,
-        NxPasswordValidationComponent,
-        NxPasswordTagValidationComponent,
-        NxEmailComponent,
-        NxClientButtonComponent,
-        NxSwitchComponent,
-        NxApplyComponent,
-        NxPagePlaceholderComponent,
-        NxSectionPlaceholderComponent,
-        ToastsContainer,
-        NxSystemTileComponent,
-        NxNavigationTileComponent,
-        NxAdditionalSystemsTileComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxOverlayModalComponent,
-        NxLeftMenuComponent
+        NxLeftMenuComponent,
+        NxImageComponent
     ],
     providers: [
         NxProcessButtonComponent,
@@ -198,7 +152,8 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxInfoBlockComponent,
         NxRibbonService,
         NxOverlayModalComponent,
-        NxLeftMenuComponent
+        NxLeftMenuComponent,
+        NxImageComponent
     ],
     exports: [
         NxThreeDotDropdown,
@@ -247,7 +202,8 @@ import { NxInfoBlockComponent }               from './info-block/info-block.comp
         NxAdditionalSystemsTileComponent,
         NxNavDropdownComponent,
         NxOverlayModalComponent,
-        NxLeftMenuComponent
+        NxLeftMenuComponent,
+        NxImageComponent
     ]
 })
 export class ComponentsModule {

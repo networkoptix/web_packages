@@ -25,7 +25,7 @@ export class NxCloudApiService {
         return this.http.get('/api/utils/language');
     }
 
-    checkResponseHasError<T extends any>(data: T) {
+    checkResponseHasError<T extends any>(data: any) {
         // this is not a repetition
         if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;

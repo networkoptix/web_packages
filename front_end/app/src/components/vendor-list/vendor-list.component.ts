@@ -171,11 +171,11 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     setVendorsShown(vendors) {
-        const byCountDESC = NxUtilsService.byParam((elm) => {
+        const byCountDESC = NxUtilsService.byParam((elm: any) => {
             return elm.count;
         }, NxUtilsService.sortDESC);
 
-        const byNameASC = NxUtilsService.byParam((elm) => {
+        const byNameASC = NxUtilsService.byParam((elm: any) => {
             return elm.name.toLowerCase();
         }, NxUtilsService.sortASC);
 
