@@ -449,17 +449,16 @@ export interface HeaderLabels {
 }
 
 export interface LanguageI18NStaticTypesIntegration {
-    "Access Control":     any;
-    Connector:            any;
-    "Data Analytics":     any;
-    Drone:                any;
-    "Health Monitor":     any;
-    Storage:              any;
-    myIntegrationsLabel:  any;
-    phoneNumberWithLabel: any;
-    requirements:         any;
-    testedVersionLabel:   any;
-    testedVersionsLabel:  any;
+    "Access Control":    any;
+    Connector:           any;
+    "Data Analytics":    any;
+    Drone:               any;
+    "Health Monitor":    any;
+    Storage:             any;
+    myIntegrationsLabel: any;
+    requirements:        any;
+    testedVersionLabel:  any;
+    testedVersionsLabel: any;
 }
 
 export interface Ipvd {
@@ -1368,7 +1367,6 @@ const typeMap: any = {
         { json: "Health Monitor", js: "Health Monitor", typ: "any" },
         { json: "Storage", js: "Storage", typ: "any" },
         { json: "myIntegrationsLabel", js: "myIntegrationsLabel", typ: "any" },
-        { json: "phoneNumberWithLabel", js: "phoneNumberWithLabel", typ: "any" },
         { json: "requirements", js: "requirements", typ: "any" },
         { json: "testedVersionLabel", js: "testedVersionLabel", typ: "any" },
         { json: "testedVersionsLabel", js: "testedVersionsLabel", typ: "any" },

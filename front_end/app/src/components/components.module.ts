@@ -5,7 +5,7 @@ import { RouterModule }                       from '@angular/router';
 import { FormsModule }                        from '@angular/forms';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
-import { DirectivesModule }                   from '../directives/directives.module';
+import { DirectivesModule }                   from '@directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
 import { NxRadioComponent }                   from './radio/radio.component';

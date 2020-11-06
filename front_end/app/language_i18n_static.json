@@ -475,7 +475,6 @@
         "Health Monitor": "Health Monitor",
         "Storage": "Storage",
         "myIntegrationsLabel": "Mine",
-        "phoneNumberWithLabel": "Tel: {number}",
         "requirements": "{name} Requirements",
         "testedVersionLabel": "Tested with {vmsName} version:",
         "testedVersionsLabel": "Tested with {vmsName} versions:"

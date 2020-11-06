@@ -31,6 +31,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
     @Input() content;
     @Input() searchable;
+    @Input() autoFit = false;
 
     systemId;
     selectedLevel1: string;
@@ -146,9 +147,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuContent = filtered;
             }
 
-            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
-                this.menuHeightFit = '100%';
-                this.scrollHeightFit = '100%';
+            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection && this.autoFit) {
+                // reset menu height
+                this.menuHeightFit = '';
+                this.scrollHeightFit = '';
                 setTimeout(() => {
                     this.getMenuDimensions();
                     this.resizeMenu();
@@ -177,9 +179,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // when we add number of level1 nodes multiplied by level1 node height plus difference between
         // "level-1-container" height and scroll area height to reach window height
         // ... I cannot repeat this sentence 10 times in a row -- TT
-        // this.menuHeightFit = '100%';
-        // this.scrollHeightFit = '100%';
-        if (this.scrollArea && this.menuModel.query === '') {
+
+        if (this.autoFit && this.scrollArea && this.menuModel.query === '') {
             this.menuHeight = this.menuWrapper.nativeElement.scrollHeight; // getBoundingClientRect().height;
             this.scrollHeight = this.scrollArea.nativeElement.getBoundingClientRect().height;
 
@@ -190,7 +191,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     resizeMenu() {
-        if (this.scrollArea) {
+        if (this.autoFit && this.scrollArea) {
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
                     const windowHeightFit = this.windowHeight - 40;
