@@ -1,32 +1,27 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
 import { Angular2CsvModule }    from 'angular2-csv';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
-import {
-    NxIpvdComponent, CamTableComponent,
-    CamViewComponent, CsvButtonComponent,
-    BoolIconComponent
-}                               from './';
+import { NxIpvdComponent }      from './ipvd.component';
+import { CamTableComponent }    from './cam-components/cam-table/cam-table.component';
+import { CamViewComponent }     from './cam-components/cam-view/cam-view.component';
+import { CsvButtonComponent }   from './cam-components/csv-button/csv-button.component';
+import { BoolIconComponent }    from './cam-components/bool-icon/bool-icon.component';
+import { IpvdSearchService }    from './ipvd-search.service';
 
 const appRoutes: Routes = [
-    { path: 'ipvd', component: NxIpvdComponent },
-    { path: 'embed/ipvd', component: NxIpvdComponent }
+    { path: '', component: NxIpvdComponent }
 ];
 
 @NgModule({
     imports        : [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         NgbModule,
         FormsModule,
         TranslateModule,
@@ -34,10 +29,11 @@ const appRoutes: Routes = [
         DirectivesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
-        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
+    providers      : [
+        IpvdSearchService
+    ],
     declarations   : [
         NxIpvdComponent,
         CamTableComponent,

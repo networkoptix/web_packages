@@ -137,13 +137,13 @@ export class NxUriService {
         const { systemId = '', ..._otherParams } = params;
         const otherParams = Object.entries(_otherParams);
 
-        const routesConfig = this.router.config.filter(route => {
-            if (NxConfigService.isLocal) {
-                return route.path === 'settings';
-            } else {
-                return route.path === 'systems/:systemId';
-            }
-        });
+        // const routesConfig = this.router.config.filter(route => {
+        //     if (NxConfigService.isLocal) {
+        //         return route.path === 'settings';
+        //     } else {
+        //         return route.path === 'systems/:systemId';
+        //     }
+        // });
 
         let base = this.CONFIG.menus.systemSettings.baseUrl;
         let childRoute = '';
@@ -154,13 +154,22 @@ export class NxUriService {
 
         if (otherParams.length) {
             const [[param, value]] = otherParams;
-            const child = { ...routesConfig[0].children.find(({ path }) => path.includes(param)) };
+            // const child = { ...routesConfig[0].children.find(({ path }) => path.includes(param)) };
             const isChildRoute = param === 'childRoute';
-            childRoute = '/' + (isChildRoute ? value : child.path.replace(':' + param, <string> value)) + '/';
-
-            if (this.CONFIG.isLocal && isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
-                base = '/';
-                childRoute += '/';
+            childRoute = '/' + (isChildRoute ? value : '') + '/';
+            if (isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
+                if (this.CONFIG.isLocal) {
+                    base = '/';
+                    childRoute += '/';
+                }
+            } else {
+                // TODO: This probably needs to be refactored, temporary fix for lazy load
+                const routeLookup = {
+                    cameraId : 'cameras',
+                    serverId : 'servers',
+                    userId   : 'users'
+                };
+                childRoute += routeLookup[param] + '/' + value;
             }
         }
         return base + childRoute;

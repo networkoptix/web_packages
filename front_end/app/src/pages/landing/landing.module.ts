@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
@@ -10,16 +8,12 @@ import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
-    { path: '', component: NxLandingComponent },
-    { path: 'login', component: NxLandingComponent },
-    { path: 'logout', component: NxLandingComponent }
+    { path: '', component: NxLandingComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
     imports : [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,

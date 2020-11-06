@@ -9,9 +9,9 @@ import CameraPageComponent from './pages/system/camera/camera-page.component'
 
 export const routes: Routes = [
 
-  { path: 'sandbox/timeline', component: TimelinePageComponent },
+  { path: 'timeline', component: TimelinePageComponent },
 
-  { path: 'sandbox/web-client',
+  { path: 'web-client',
     component: SystemPageComponent,
     children: [
       {

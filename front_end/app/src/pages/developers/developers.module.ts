@@ -1,7 +1,5 @@
 import { NgModule }                      from '@angular/core';
 import { CommonModule }                  from '@angular/common';
-import { BrowserModule }                 from '@angular/platform-browser';
-import { UpgradeModule }                 from '@angular/upgrade/static';
 import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
@@ -18,7 +16,7 @@ import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
 
 const appRoutes: Routes = [
     {
-        path      : 'developers',
+        path      : '',
         component : NxAboutComponent,
         children  : [
             {
@@ -64,8 +62,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,

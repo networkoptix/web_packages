@@ -3,35 +3,58 @@ import { Angular2CsvModule }         from 'angular2-csv';
 
 import { DirectivesModule }          from '../directives/directives.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { LandingModule }             from './landing/landing.module';
-import { NxOverviewModule }          from './integration/details/overview/overview.module';
-import { NxSetupModule }             from './integration/details/setup/setup.module';
-import { NxHealthModule }            from './health/health.module';
 import { NxAccountModule }           from './account/account.module';
-import { Nx404Module }               from './404/404.module';
 import { NxDebugModule }             from './debug/debug.module';
-import { NxGridLayoutModule }        from './layout/layout.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
-import { NxSystemModule }            from './systems/webadmin-system.module';
-import { NxSystemViewModule }        from './systems/view/view.module';
+import {
+    RouterModule, Routes, PreloadAllModules
+}                                   from '@angular/router';
+
+const lazyRoutes: Routes = [
+    {
+        path         : 'settings',
+        loadChildren : () => import('./systems/webadmin-system.module').then(m => m.NxSystemModule)
+    },
+    {
+        path         : 'view',
+        loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
+    },
+    {
+        path         : 'health',
+        loadChildren : () => import('./health/health.module').then(m => m.NxHealthModule)
+    },
+    {
+        path       : '',
+        redirectTo : 'settings',
+        pathMatch  : 'full'
+    },
+    {
+        path         : '404',
+        loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
+    },
+    {
+        path         : '**',
+        loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
+    }
+];
 
 @NgModule({
     imports: [
         DirectivesModule,
         NonSupportedBrowserModule,
         Angular2CsvModule,
-        NxOverviewModule,
-        NxSetupModule,
-        NxHealthModule,
-        NxSystemModule,
-        NxSystemViewModule,
         NxAccountModule,
         NxDebugModule,
-        NxGridLayoutModule,
         Nx500Module,
         Nx503Module,
-        Nx404Module // Must be last module for routing
+        RouterModule.forRoot(lazyRoutes, {
+            initialNavigation : true,
+            scrollPositionRestoration : 'enabled',
+            anchorScrolling : 'enabled',
+            enableTracing : false,
+            preloadingStrategy: PreloadAllModules
+        })
     ],
     declarations: [
     ],
@@ -39,15 +62,11 @@ import { NxSystemViewModule }        from './systems/view/view.module';
     ],
     exports: [
         NonSupportedBrowserModule,
-        NxHealthModule,
         Angular2CsvModule,
-        NxSystemModule,
-        LandingModule,
         NxDebugModule,
-        NxGridLayoutModule,
         Nx500Module,
         Nx503Module,
-        Nx404Module // Must be last module for routing
+        RouterModule
     ]
 })
 export class WebadminPageModule {

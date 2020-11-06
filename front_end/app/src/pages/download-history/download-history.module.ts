@@ -1,7 +1,5 @@
 import { Injectable, NgModule }                  from '@angular/core';
 import { CommonModule }                          from '@angular/common';
-import { BrowserModule }                         from '@angular/platform-browser';
-import { UpgradeModule }                         from '@angular/upgrade/static';
 import { Resolve, Router, RouterModule, Routes } from '@angular/router';
 import { NgbModule }                             from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }                       from '@ngx-translate/core';
@@ -36,8 +34,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         NgbModule,
         TranslateModule,
         DirectivesModule,

@@ -100,7 +100,7 @@ export class NxContentComponent implements OnInit {
 
     subscribeParams() {
         this.route.paramMap.subscribe((paramMap) => {
-            this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
+            this.agreement = this.route.snapshot.parent.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
             this.title = '';

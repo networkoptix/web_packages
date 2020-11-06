@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,13 +18,9 @@ import VmsClientTimelineModule from './vms-client/submodules/timeline/timeline.m
 import VmsClientVmsModule from './vms-client/submodules/vms/vms.module'
 
 
-import { routes as vmsSandboxRoutes } from './vms-client/vms-client-routing.module'
-
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         TranslateModule,
@@ -36,9 +30,7 @@ import { routes as vmsSandboxRoutes } from './vms-client/vms-client-routing.modu
         VmsClientTimelineModule,
         VmsClientVmsModule,
         VmsClientModule,
-
-        RouterModule.forChild(routes),
-        RouterModule.forChild(vmsSandboxRoutes),
+        RouterModule.forChild(routes)
     ],
     providers: [
         ApplyGuard,

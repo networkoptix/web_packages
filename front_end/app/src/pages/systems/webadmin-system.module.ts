@@ -1,7 +1,5 @@
 import { NgModule }                         from '@angular/core';
 import { CommonModule }                     from '@angular/common';
-import { BrowserModule }                    from '@angular/platform-browser';
-import { UpgradeModule }                    from '@angular/upgrade/static';
 import { RouterModule, Routes }             from '@angular/router';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }                  from '@ngx-translate/core';
@@ -25,7 +23,7 @@ import { NxSystemLicensesComponent }        from './settings/licenses/licenses.c
 
 export const localSettingsRoutes: Routes = [
     {
-        path        : 'settings',
+        path        : '',
         component   : NxSystemSettingsComponent,
         canActivate : [AuthGuard],
         children    : [
@@ -72,19 +70,12 @@ export const localSettingsRoutes: Routes = [
                 canActivate : [SystemGuard]
             }
         ]
-    },
-    {
-        path       : '',
-        redirectTo : 'settings',
-        pathMatch  : 'full'
     }
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         TranslateModule,

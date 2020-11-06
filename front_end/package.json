@@ -7,7 +7,7 @@
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.webadmin.json",
     "build": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
-    "bundle-report": "npm run lang && ng build --stats-json && webpack-bundle-analyzer dist/stats.json",
+    "bundle-report": "npm run lang && ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
     "postbuild": "./cloud-portal-postbuild.sh",
     "postbuild-webadmin": "./cloud-portal-postbuild.sh",
     "postinstall": "ngcc && node setSkin.js --skin blue",
@@ -76,7 +76,7 @@
   "devDependencies": {
     "@angular-builders/jest": "9.0.1",
     "@angular-devkit/build-angular": "0.1002.0",
-    "@angular-devkit/build-optimizer": "0.901.12",
+    "@angular-devkit/build-optimizer": "0.1002.0",
     "@angular/cli": "10.2.0",
     "@angular/compiler-cli": "10.2.2",
     "@angular/language-service": "10.2.2",
