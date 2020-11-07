@@ -56,6 +56,7 @@ import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dr
 import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
 import { NxInfoBlockComponent }               from './info-block/info-block.component';
 import { NxImageComponent }                   from '@pages/health/table-components/image/image.component';
+import { QuicklinkModule }                    from 'ngx-quicklink';
 
 @NgModule({
     imports: [
@@ -66,7 +67,8 @@ import { NxImageComponent }                   from '@pages/health/table-componen
         NgbToastModule,
         NgbModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        QuicklinkModule
     ],
     declarations: [
         NxThreeDotDropdown,
@@ -156,6 +158,7 @@ import { NxImageComponent }                   from '@pages/health/table-componen
         NxImageComponent
     ],
     exports: [
+        QuicklinkModule,
         NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,

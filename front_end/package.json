@@ -61,6 +61,7 @@
     "ngx-file-drop": "8.0.8",
     "ngx-mask": "^9.0.0",
     "ngx-order-pipe": "2.0.1",
+    "ngx-quicklink": "^0.2.6",
     "ngx-translate-messageformat-compiler": "4.7.0",
     "ngx-webstorage": "5.0.0",
     "popper.js": "1.16.1",
@@ -68,9 +69,9 @@
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "6.6.3",
     "rxjs-compat": "6.6.3",
+    "tslib": "2.0.3",
     "underscore": "1.9.1",
     "what-input": "5.2.10",
-    "tslib": "2.0.3",
     "zone.js": "0.11.3"
   },
   "devDependencies": {

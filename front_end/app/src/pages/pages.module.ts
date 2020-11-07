@@ -14,9 +14,8 @@ import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
-import {
-    RouterModule, Routes, PreloadAllModules
-}                                    from '@angular/router';
+import { RouterModule, Routes }      from '@angular/router';
+import { QuicklinkStrategy }         from 'ngx-quicklink';
 
 const lazyRoutes: Routes = [
     {
@@ -119,7 +118,7 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration : 'enabled',
             anchorScrolling : 'enabled',
             enableTracing : false,
-            preloadingStrategy : PreloadAllModules
+            preloadingStrategy : QuicklinkStrategy
         })
     ],
     declarations: [
