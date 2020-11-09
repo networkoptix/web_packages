@@ -13,7 +13,10 @@ import { NxDevToolsComponent }     from '../dev-tools/dev-tools.component';
 import { NxGetStartedComponent }   from './get-started/get-started.component';
 import { NxIntegrationsComponent } from './integrations/integrations.component';
 import { NxSupportComponent }      from './support/support.component';
-import { NxSupportedTechComponent }         from './supported-tech/supported-tech.component';
+import {
+    NxSupportedTechComponent
+}                                  from './supported-tech/supported-tech.component';
+import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
 
 const appRoutes: Routes = [
     {
@@ -29,6 +32,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         FormsModule,
+        NgbModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],

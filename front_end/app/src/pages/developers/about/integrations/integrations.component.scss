@@ -2,7 +2,10 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '~bootstrap/scss/bootstrap';
 
-$mobile-breakpoint: 609px;
+$tablet-breakpoint: 609px;
+$large-tablet-breakpoint: 1049px;
+$desktop-breakpoint: 1265px;
+$large-desktop-breakpoint: 1477px;
 
 .heading-link {
     @include typography.regular24;
@@ -21,7 +24,7 @@ $mobile-breakpoint: 609px;
     padding: 0;
     color: $dark10;
 
-    @media screen and (min-width: $mobile-breakpoint) {
+    @media screen and (min-width: $tablet-breakpoint) {
         padding: 0 8px;
         margin-top: 96px !important;
     }
@@ -33,7 +36,7 @@ $mobile-breakpoint: 609px;
         flex-direction: row;
         margin: 0 -1rem -1rem 0;
         width: calc(100% - 1rem);
-        @media screen and (min-width: $mobile-breakpoint) {
+        @media screen and (min-width: $tablet-breakpoint) {
             width: 100%;
         }
     }
@@ -49,7 +52,7 @@ $mobile-breakpoint: 609px;
     flex: 1 0 275px;
     padding: 1rem;
 
-    @media screen and (min-width: $mobile-breakpoint) {
+    @media screen and (min-width: $tablet-breakpoint) {
         max-width: 275px;
     }
 
@@ -69,11 +72,18 @@ $mobile-breakpoint: 609px;
 .integrations-block{
     position: relative;
     margin: 56px 0 1rem 0;
-    @media screen and (min-width: $mobile-breakpoint) {
+    width: 100%;
+    max-width: 1200px;
+    @media screen and (min-width: $tablet-breakpoint) {
         margin: 0 1rem 1rem 0;
     }
+
     h3 {
         @include typography.medium15;
+    }
+
+    .store-button {
+        margin: 0 auto 20px 20px
     }
 }
 
@@ -90,94 +100,60 @@ $mobile-breakpoint: 609px;
 }
 
 .integrations-blocks-wrapper {
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    display: flex;
-    &::-webkit-scrollbar {
-        display: none;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 4px;
+    margin: 20px;
+
+    @media screen and (min-width: $tablet-breakpoint) {
+        grid-template-columns: repeat(2, 1fr);
     }
+
+    @media screen and (min-width: $large-tablet-breakpoint) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (min-width: $desktop-breakpoint) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media screen and (min-width: $large-desktop-breakpoint) {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
 }
 
 .integration-block {
-    padding: 2rem;
-    min-width: 100%;
     cursor: pointer;
     position: relative;
-    width: 100%;
-    scroll-snap-align: start;
-    @media screen and (min-width: $mobile-breakpoint){
-        padding: 1rem;
-        min-width: 210px;
-        &:after {
-            content: "";
-            position: absolute;
-            top: 1rem;
-            bottom: 1rem;
-            right: 0;
-            border: 1px solid $light4;
-        }
+    height: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid $light4;
+    background-color: $additional_light1;
+    &:hover {
+        background-color: $additional_light2;
     }
     img {
-        height: 48px;
-    }
-    h4 {
-        @include typography.medium18;
-        margin-top: 1rem;
+        max-height: 54px;
+        max-width: calc(100% - 24px);
     }
 }
 
 .integrations-block {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    @media screen and (min-width: $mobile-breakpoint){
-        flex-direction: row;
-        width: auto;
+    @media screen and (max-width: $tablet-breakpoint) {
+        width: 100%;
     }
-    
-}
-
-.more-integrations {
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    border: 1px solid $light4;
-    margin: 0 16px 24px 16px;
-
-    @media screen and (min-width: $mobile-breakpoint){
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
-        transform: rotate(180deg);
-        min-height: 274px;
-        border: none;
-        margin: 0;
-    }
-
-    p {
-        @include typography.medium18;
-        margin: 0 !important;
-        text-align: center;
+    & > h3 {
+        margin: 20px 20px 0 20px;
     }
 }
 
-.mobile-scroll-indicator {
-    display: flex;
-    justify-content: center;
-    margin: 16px auto;
-    .scroll-circle {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin: 8px 5px;
-        display: inline-block;
-        background: $additional_light2;
-    }
-
-    .selected {
-        background: $light11;
-    }
-
-    @media screen and (min-width: $mobile-breakpoint){
-        display: none;
+.more-span- {
+    @for $start from 1 through 5 {
+        &#{$start} {
+            grid-column: -#{$start + 1} / -1;
+        }
     }
 }

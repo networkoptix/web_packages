@@ -1,32 +1,21 @@
 <ng-template #integrationBlock let-integration="integration">
-    <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]">
-        <img [src]="integration.asset.information.logo">
-        <h4>{{integration.title}}</h4>
-        <p>{{integration.asset.information.shortDescription}}</p>
+    <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]" [ngbTooltip]="integration.asset.information.shortDescription">
+        <img [src]="integration.asset.information.logo" [alt]="integration.title">
     </div>
 </ng-template>
 
 <ng-template #integrationsBlocks>
     <div *ngIf="integrationsDetails() as integrations" class="card integrations-block">
-        <div #integrationsScroll
-            (scroll)="updateIndex(getScrollPosition($event, integrations.plugins.length))"
-            class="integrations-blocks-wrapper">
+        <h3 translate>Examples of Plugin</h3>
+        <div class="integrations-blocks-wrapper">
             <ng-container *ngFor="let integration of integrations.plugins">
                 <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
             </ng-container>
+            <div (click)="navigate(integrations.more.url)" class="integration-block" [ngClass]="integrations.moreStart">
+                <p [innerHTML]="integrations.translatedCount"></p>
+            </div>
         </div>
-        <div class="mobile-scroll-indicator">
-            <div *ngFor="let _ of integrations.plugins; let index=index"
-                (click)="updateScroll(index, integrations.plugins.length)"
-                [ngClass]="{'selected': index === scrollIndex}"
-                class="scroll-circle"></div>
-        </div>
-        <div (click)="navigate(integrations.more.url)" class="more-integrations">
-            <p [innerHTML]="integrations.translatedCount"></p>
-        </div>
-        <div *ngIf="!pluginCount" class="preloader-overlay">
-            <nx-pre-loader></nx-pre-loader>
-        </div>
+        <button class="btn btn-default store-button" routerLink="/integrations" translate>Go to store</button>
     </div>
 </ng-template>
 

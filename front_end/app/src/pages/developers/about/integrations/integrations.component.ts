@@ -6,8 +6,8 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { AboutNode } from '../about.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,55 +26,53 @@ export class NxIntegrationsComponent implements OnInit {
         this.currentWindowWidth = window.innerWidth;
     }
 
-    @ViewChild('integrationsScroll') integrationsScroll: ElementRef
+    // @ViewChild('integrationsScroll') integrationsScroll: ElementRef
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    getScrollPosition({ target: { scrollLeft, scrollWidth } }, positions) {
-        const tabWidth = scrollWidth / positions;
-        return Math.round(scrollLeft / tabWidth);
-    }
+    // getScrollPosition({ target: { scrollLeft, scrollWidth } }, positions) {
+    //     const tabWidth = scrollWidth / positions;
+    //     return Math.round(scrollLeft / tabWidth);
+    // }
 
-    updateIndex(index) {
-        this.scrollIndex = index;
-    }
+    // updateIndex(index) {
+    //     this.scrollIndex = index;
+    // }
 
-    updateScroll(index, positions) {
-        const scrollWidth = this.integrationsScroll.nativeElement.scrollWidth;
-        const tabWidth = scrollWidth / positions;
-        this.integrationsScroll.nativeElement.scrollLeft = index * tabWidth;
-    }
+    // updateScroll(index, positions) {
+    //     const scrollWidth = this.integrationsScroll.nativeElement.scrollWidth;
+    //     const tabWidth = scrollWidth / positions;
+    //     this.integrationsScroll.nativeElement.scrollLeft = index * tabWidth;
+    // }
 
     integrationsDetails() {
-        const plugins = this.integrationsNode.nodes[1].nodes;
+        const allPlugins = this.integrationsNode.nodes[1].nodes;
         const more = { url: '/integrations' };
         const getPluginsToShow = () => {
             switch (true) {
                 case (this.currentWindowWidth > 1476):
-                    return Math.min(plugins.length, 5);
+                    return 9;
                 case (this.currentWindowWidth > 1264):
-                    return Math.min(plugins.length, 4);
+                    return 7;
                 case (this.currentWindowWidth > 1048):
-                    return Math.min(plugins.length, 3);
-                case (this.currentWindowWidth > 836):
-                    return Math.min(plugins.length, 2);
-                case (this.currentWindowWidth > 608):
-                    return 1;
+                    return 5;
                 default:
-                    return plugins.length;
+                    return 3;
             }
         };
-        const show = getPluginsToShow();
-        const translatedCount = NxLanguageProviderService.translate(
+        const maxPlugins = getPluginsToShow();
+        const show = Math.min(allPlugins.length, maxPlugins);
+        const translatedCount = this.sanitizer.bypassSecurityTrustHtml(NxLanguageProviderService.translate(
             this.LANG.common.morePlugins,
             {
                 count    : this.pluginCount - show,
-                startTag : '<strong class="brand-text">',
+                startTag : '<strong style="font-size: 20px; display: block; text-align: center;">',
                 endTag   : '</strong>'
             }
-        );
-        return { plugins: plugins.slice(0, show), more, translatedCount };
+        ));
+        const plugins = allPlugins.slice(0, show);
+        return { plugins, more, translatedCount, moreStart: `more-span${plugins.length - maxPlugins - 1}` };
     }
 
     navigate(url: string) {
@@ -86,7 +84,8 @@ export class NxIntegrationsComponent implements OnInit {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
+        private sanitizer: DomSanitizer
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
