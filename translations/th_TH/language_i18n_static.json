@@ -404,7 +404,9 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของแล้ว ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
         "DUPLICATE_MEDIASERVER_FOUND": "เซิร์ฟเวอร์บางรายการมีอยู่ในทั้งสองระบบ - ในรายการที่เลือกและในปัจจุบัน<br>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองใหม่อีกครั้ง",
         "EmailAlreadyExists": "ลงทะเบียนอีเมล์นี้แล้ว",
-        "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
+        "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
+        "Connection timed out": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
         "cloud_systems_have_different_owners": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของแล้ว ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">เซิร์ฟเวอร์ดูเหมือนว่าจะแสดงรายการตัวเองภายใต้ระบบที่เลือกและระบบปัจจุบัน</p><p>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองอีกครั้ง</p>",
@@ -739,7 +741,8 @@
             "analogencoder": "เข้ารหัสอนาล็อก",
             "starter": "เริ่มต้น",
             "iomodule": "I/O โมดูล",
-            "bridge": "การเชื่อมต่อ"
+            "bridge": "การเชื่อมต่อ",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "ต้องการอีก {{number}}",

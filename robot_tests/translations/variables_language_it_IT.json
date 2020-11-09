@@ -422,5 +422,13 @@
     "WATERMARK SETTINGS TEXT": "Impostazioni del watermark",
     "WEB SOCKET ENABLED TEXT": "Web sockets",
     "STORAGE LOCATIONS TEXT": "Posizioni di archiviazione",
-    "LOG SETTINGS TEXT": "Impostazioni registro"
+    "LOG SETTINGS TEXT": "Impostazioni registro",
+    "NOT ABLE TO LOAD TEXT": "Impossibile caricare le impostazioni di sistema.",
+    "CLOSE TEXT": "Chiudere",
+    "NONE TEXT": "Nessuna",
+    "ERROR TEXT": "Errore",
+    "WARNING TEXT": "Attenzione",
+    "INFO TEXT": "Informazioni",
+    "DEBUG TEXT": "Debug",
+    "VERBOSE TEXT": "Dettagliato"
 }

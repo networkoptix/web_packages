@@ -1,7 +1,5 @@
 import { NgModule }                   from '@angular/core';
 import { CommonModule }               from '@angular/common';
-import { BrowserModule }              from '@angular/platform-browser';
-import { UpgradeModule }              from '@angular/upgrade/static';
 import { RouterModule }               from '@angular/router';
 import { FormsModule }                from '@angular/forms';
 import { AngularSvgIconModule }       from 'angular-svg-icon';
@@ -15,8 +13,6 @@ import { NxAccountSettingsComponent } from './settings.component';
 @NgModule({
     imports        : [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -30,9 +26,6 @@ import { NxAccountSettingsComponent } from './settings.component';
         NxAccountSettingsComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxAccountSettingsComponent
-    ],
     exports        : [
         NxAccountSettingsComponent
     ]

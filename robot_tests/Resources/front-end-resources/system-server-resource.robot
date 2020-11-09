@@ -1,5 +1,6 @@
 *** Keywords ***
 Verify on Servers Page
+    [Arguments]    ${timeout}=${selenium_timeout}
     Wait Until Elements are Visible
     ...    ${PORT INPUT}
     ...    ${RESTART SERVER BUTTON}
@@ -7,6 +8,7 @@ Verify on Servers Page
     ...    ${IP}       
     ...    ${OS}       
     ...    ${VERSION}  
+    ...    timeout=${timeout}
 
 Verify Server Buttons Are Enabled
     Wait Until Elements are Enabled
@@ -14,12 +16,12 @@ Verify Server Buttons Are Enabled
     ...    ${RESTART SERVER BUTTON}
 
 Log in to user and system
-    [Arguments]    ${user}    ${system id}
+    [Arguments]    ${user}    ${system id}    ${verify}=True
     Log in    ${user}    ${password}
     Go To    ${url}/systems/${system id}
-    Run Keyword If    '${user}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    #Run Keyword If    '${user}'=='${EMAIL OWNER}' and ${verify}==True    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    #Run Keyword If    '${user}'=='${EMAIL ADMIN}' and ${verify}==True   Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    #Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Verify Rename Dialog
     Wait Until Elements are Visible
@@ -39,6 +41,7 @@ Select Server By Name
     [Arguments]    ${server name}
     Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${server name}")]
     Click Link    //nx-level-3-item/a//span[contains(text(),"${server name}")]/../..
+    Verify on Servers Page
 
 Change Port To
     [Arguments]    ${port}

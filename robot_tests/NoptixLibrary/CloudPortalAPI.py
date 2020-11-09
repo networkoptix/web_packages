@@ -32,7 +32,8 @@ class CloudPortalAPI(object):
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/merge', data)
-            return r.status_code
+            assert r.status_code == 200
+            return r.json()
 
     def change_password(self, env, email, old_password, new_password):
         with self.log_in(env, email, old_password) as s:
@@ -116,7 +117,8 @@ class CloudPortalAPI(object):
         with self.log_in(env, email, password) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
-            return r.status_code
+            assert r.status_code == 200
+            return r.json()
 
     def delete_account(self, env, email, password):
         with self.log_in(env, email, password) as s:

@@ -471,6 +471,7 @@ System Settings block is not available when the system is offline
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    ${PLACEHOLDER ICON}    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Element Should Not Be Visible      ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
@@ -478,6 +479,16 @@ System Settings block is not available when the system is offline
 System settings block view for different System versions
     [Tags]    C69743    system settings    threaded
     Go To    ${url}/systems/${AUTO TESTS 4.0 SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until System Settings Are Visible
+    Log Out
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until System Settings Are Visible
+    Log Out
+    Go To    ${url}/systems/${3 DOT 2 SYSTEM ID}
     Log In    ${email}    ${password}    button=None
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
@@ -557,16 +568,19 @@ Checking the dependency of security settings checkboxes
     Log    Step 2
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
     Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
     
     Log    Step 3
     Change Setting Without Saving    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
     Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
     Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
     
     Log    Step 4
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
 Check Limit session duration
@@ -740,8 +754,11 @@ Security block view for 3 dot 2 System
     Set 3 dot 2 System Settings via API    auditTrailEnabled    true
     Log    Step 1 covered in other testcases by default
     Log    Step 2
-    Go To    ${url}/systems
-    Log In     ${EMAIL MERGE OWNER 3.0}    ${BASE PASSWORD}    button=None
+    Go To    ${url}/systems/${3 DOT 2 SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible
     ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked

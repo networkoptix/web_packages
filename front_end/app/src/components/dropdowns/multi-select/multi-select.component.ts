@@ -63,7 +63,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     }
 
     clearSelected() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = false;
             const index   = this.innerValue.indexOf(item.id);
             if (index > -1) {
@@ -72,14 +72,14 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
         });
 
         // ensure 'change' will be triggered as checkboxes didn't fire click event
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
         this.updateModel();
 
         // break anchor nav event
         return false;
     }
 
-    change(evt, item: Item) {
+    change(evt, item: any) {
         const index = this.innerValue.indexOf(item.id);
         if (index > -1) {
             this.innerValue.splice(index, 1);
@@ -97,28 +97,28 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     applyLocalFilter(value) {
         this.filter = value;
 
-        this.items = this.itemsOrig.filter((item) => {
+        this.items = this.itemsOrig.filter((item: any) => {
             return item.id.toLowerCase().includes(value.toLowerCase());
         });
     }
 
-    trackItem(index, item: Item) {
+    trackItem(index, item: any) {
         return item ? item.id : undefined;
     }
 
     updateItems() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
         });
 
         // ensure 'change' will be triggered
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
     }
 
     updateLabel() {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
-                this.textSelected = this.items.find(item => {
+                this.textSelected = this.items.find((item: any) => {
                     return (item.label.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list

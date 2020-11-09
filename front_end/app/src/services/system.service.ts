@@ -174,7 +174,7 @@ class System extends SystemInterface {
 
     // <added by @gbezyuk for watch component>
     mediaservers: NxMediaServer[] = null
-    resource_types: any[] = null
+    resourceTypes: any[] = null
     // </added by @gbezyuk for watch component>
 
     constructor() {
@@ -227,6 +227,7 @@ class UserManager {
         this.checkPermissions();
     }
 
+    // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
         this.isMine = this.currentUserEmail === email || this.currentUser?.isLocalOwner;
@@ -783,8 +784,13 @@ class ServerManager {
     checkForAnalyticsData(serverId: string) {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
+
+    getStorages(serverId) {
+        return this.mediaserverConnections[serverId].getStorages();
+    }
 }
 
+@Injectable()
 export class NxSystem extends System implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -916,6 +922,7 @@ export class NxSystem extends System implements OnDestroy {
     // End of userManager get functions
 
     // Start of serverManager functions
+    // @ts-ignore
     get servers() {
         return this.serverManager.servers;
     }
@@ -1270,11 +1277,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    updateOrGetSystemStorage<T>(updateParams?: T) {
-        if (updateParams) {
+    updateOrGetSystemStorage<T extends any>(updateParams?: any) {
+        if (!updateParams?.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.mediaserver.getStorages();
+        return this.serverManager.getStorages(updateParams.serverId);
     }
 
     checkForAnalyticsData(serverId: string) {
@@ -1392,15 +1399,15 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     // <added by @gbezyuk to fix auth race condition>
-    auth_promise: Promise<any>
+    authPromise: Promise<any>
     // </added by @gbezyuk to fix auth race condition>
 
     // <changed by @gbezyuk to fix auth race condition>
     ensureSystemAuth(force?) {
         // console.log('ensureSystemAuth', this.id)
-        if (this.auth_promise) {
+        if (this.authPromise) {
             // console.log('in progress')
-            return this.auth_promise;
+            return this.authPromise;
         }
 
         // NOTE@gbezyuk: bad direct dependency
@@ -1409,44 +1416,44 @@ export class NxSystem extends System implements OnDestroy {
             return Promise.resolve(true);
         }
 
-        this.auth_promise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
+        this.authPromise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             if (authKeys.authGet) {
                 this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                 // console.log('new ones are good')
-                this.auth_promise = null;
+                this.authPromise = null;
                 return Promise.resolve(true);
             } else {
                 // console.error('bad system auth response', authKeys)
-                this.auth_promise = null;
+                this.authPromise = null;
                 return Promise.reject(authKeys);
             }
         });
-        return this.auth_promise;
+        return this.authPromise;
     }
     // </changed by @gbezyuk to fix auth race condition>
 
     // <added by @gbezyuk for watch component>
 
-    public getResourceTypes (force: boolean = false) {
+    public getResourceTypes(force: boolean = false) {
         // console.log('getting resource types')
-        if (this.resource_types && !force) {
+        if (this.resourceTypes && !force) {
             // console.log('there are resource types in cache')
-            return Promise.resolve(this.resource_types);
+            return Promise.resolve(this.resourceTypes);
         }
         // TODO: cache invalidation (@gbezyuk)
         // console.log('resource type cache is empty, sending a query')
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getResourceTypes().toPromise()
         ).then(resource_types => {
-            this.resource_types = resource_types;
-            return this.resource_types;
+            this.resourceTypes = resource_types;
+            return this.resourceTypes;
         });
     }
 
-    public getMediaServersAndCameras (force:boolean = false) {
+    public getMediaServersAndCameras(force:boolean = false) {
         if (this.mediaservers && !force) {
-            console.log('using cached mediaservers')
-            return Promise.resolve(this.mediaservers)
+            console.log('using cached mediaservers');
+            return Promise.resolve(this.mediaservers);
         }
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getMediaServersAndCameras().toPromise()
@@ -1461,36 +1468,36 @@ export class NxSystem extends System implements OnDestroy {
                     return response;
                 }
                 // @ts-ignore
-                return this._setMediaServersAndCameras(response.reply)
+                return this._setMediaServersAndCameras(response.reply);
             }
         ).catch(
             response => {
-                console.error('getMediaServersAndCameras failure', response)
+                console.error('getMediaServersAndCameras failure', response);
             }
         );
         // TODO: better error handling
     }
 
-    protected _setMediaServersAndCameras (api_reply) {
+    protected _setMediaServersAndCameras(api_reply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        let mss = api_reply['ec2/getMediaServersEx'] || api_reply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
+        const mss = api_reply['ec2/getMediaServersEx'] || api_reply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
         let cs = api_reply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resource_types => {
-            // console.log('filtering, resource types that we got are', resource_types)
+            // console.log('filtering, resource types that we got are', resourceTypes)
             const desktop_camera_type =
                 resource_types.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
 
-            console.log('desktop_camera_type', desktop_camera_type)
+            console.log('desktop_camera_type', desktop_camera_type);
 
             cs = cs.filter(
                 c =>
-                    c.typeId !== desktop_camera_type.id
-                    && !c.addParams.find(p => p.name === 'ioConfigCapability')
+                    c.typeId !== desktop_camera_type.id &&
+                    !c.addParams.find(p => p.name === 'ioConfigCapability')
             ).map(trim_ids);
             // TODO: map camera data preprocessing here
             // (strip IDs, parse JSON, provide (and maybe check) URLs, etc.)
-            console.log('cameras filtered', cs)
+            console.log('cameras filtered', cs);
 
             // TODO: preprocess servers, too
             // (strip IDs, parse JSON, etc.)
@@ -1499,48 +1506,48 @@ export class NxSystem extends System implements OnDestroy {
                 // keeping cameras inside/under the mediaserver they belong to
                 // cameras: cs.filter(c => c.preferredServerId === ms.id)
                 cameras: cs.filter(c => c.parentId === ms.id)
-            }))
-            console.log('mediaservers filtered', this.mediaservers)
+            }));
+            console.log('mediaservers filtered', this.mediaservers);
             return this.mediaservers;
         });
     }
 
-    public checkCameraThumbnail (cameraId) {
+    public checkCameraThumbnail(cameraId) {
         // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
         return this.ensureSystemAuth().then(
             () => this.mediaserver.checkCameraThumbnail(cameraId)
         );
     }
 
-    public getCameraThumbnailUrl (cameraId, width=68, height=38) {
-        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height)
+    public getCameraThumbnailUrl(cameraId, width = 68, height = 38) {
+        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height);
     }
 
-    public getCameraLiveHlsUrl (cameraId) {
+    public getCameraLiveHlsUrl(cameraId) {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getLiveHlsUrl(cameraId)
         );
     }
 
-    public getHlsUrl (cameraId, position?, resolution='lo') {
+    public getHlsUrl(cameraId, position?, resolution = 'lo') {
         return this.ensureSystemAuth().then(
-            () => position === -1 ?
-            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
-            this.mediaserver.getHlsUrl(cameraId, position, resolution)
+            () => position === -1
+                ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
+                : this.mediaserver.getHlsUrl(cameraId, position, resolution)
         );
     }
 
-    public unsafeGetCameraLiveHlsUrl (cameraId) {
-        return this.mediaserver.getLiveHlsUrl(cameraId)
+    public unsafeGetCameraLiveHlsUrl(cameraId) {
+        return this.mediaserver.getLiveHlsUrl(cameraId);
     }
 
-    public unsafeGetHlsUrl (cameraId, position?, resolution='lo') {
-        return position === -1 ?
-            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
-            this.mediaserver.getHlsUrl(cameraId, position, resolution)
+    public unsafeGetHlsUrl(cameraId, position?, resolution = 'lo') {
+        return position === -1
+            ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
+            : this.mediaserver.getHlsUrl(cameraId, position, resolution);
     }
 
-    public getCameraRecords (cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
+    public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
         // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getRecords(
@@ -1549,21 +1556,21 @@ export class NxSystem extends System implements OnDestroy {
         );
     }
 
-    public getServerTimes (): Promise<Array<ServerTimeInfo>> {
+    public getServerTimes(): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getServerTimes().toPromise().then(
                 r => {
-                    const now = Date.now()
+                    const now = Date.now();
                     // @ts-ignore
                     return r.reply.map(i => ({
-                        vmsTimeOffset: now - parseInt(i.vmsTime),
-                        osTimeOffset: now - parseInt(i.osTime),
-                        serverId: i.serverId.slice(1, i.serverId.length - 1),
-                        timeZoneOffset: parseInt(i.timeZoneOffset),
-                    }))
+                        vmsTimeOffset  : now - parseInt(i.vmsTime),
+                        osTimeOffset   : now - parseInt(i.osTime),
+                        serverId       : i.serverId.slice(1, i.serverId.length - 1),
+                        timeZoneOffset : parseInt(i.timeZoneOffset)
+                    }));
                 }
             )
-        )
+        );
     }
     // </added by @gbezyuk for watch component>
 

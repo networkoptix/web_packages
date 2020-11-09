@@ -249,7 +249,8 @@ CACHES = {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/7',
-        "KEY_PREFIX": "integrations"
+        "KEY_PREFIX": "integrations",
+        "TIMEOUT": REDIS_CACHE['TIMEOUT']
     },
     "menus": {
         "BACKEND": REDIS_CACHE['BACKEND'],
@@ -257,6 +258,13 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/8',
         "KEY_PREFIX": "menus"
+    },
+    "packages": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/9',
+        "KEY_PREFIX": "packages",
+        "TIMEOUT": 60 * 60
     }
 }
 
@@ -654,8 +662,8 @@ DOWNLOADS_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}
 DOWNLOADS_VERSION_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/{{build}}/downloads.json'
 
 MAX_RETRIES = conf['max_retries']
-CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS = 30
-CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS = 45
+CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS = 15
+CLEAR_HISTORY_RECORDS_CREATED_OLDER_THAN_X_DAYS = 30
 CMS_MAX_FILE_SIZE = 9437184
 INTEGRATION_STORE_PAGE = '/integrations'
 

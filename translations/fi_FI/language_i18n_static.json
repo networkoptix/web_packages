@@ -404,7 +404,9 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "DUPLICATE_MEDIASERVER_FOUND": "Jotkin palvelimet ovat olemassa molemmissa järjestelmissä - valituissa ja nykyisissä järjestelmissä.<br>Poista offline- ja yhteensopimattomat palvelimet jokaisesta järjestelmästä ja yritä uudelleen.",
         "EmailAlreadyExists": "Tämä sähköpostiosoite on jo rekisteröity",
-        "FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> ei ole tällä hetkellä saavutettavissa.<br>Yritä uudelleen hetken kuluttua tai ota yhteys <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
+        "FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> on offline-tilassa.",
+        "Connection timed out": "Järjestelmä <strong>{{failedSystem}}</strong> on offline-tilassa.",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
@@ -739,7 +741,8 @@
             "analogencoder": "Analoginen Enkooderi",
             "starter": "Starter",
             "iomodule": "IO Module",
-            "bridge": "Silta"
+            "bridge": "Silta",
+            "serverNotFound": "Server not found"
         },
         "messages": {
             "required": "{{number}} more required",

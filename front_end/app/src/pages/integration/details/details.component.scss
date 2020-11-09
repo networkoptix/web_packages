@@ -1,6 +1,7 @@
 @use '~bootstrap/scss/bootstrap';
 @use '../../../../styles/theme_palette';
 
+
 integration-detail-component {
 
     .integration-details {
@@ -23,4 +24,13 @@ integration-detail-component {
         }
     }
 
+}
+
+#info- {
+    &support-, &developer- {
+        &email, &name, &url, &phone, &terms {
+            word-break    : break-word;
+            hyphens       : auto;
+        }
+    }
 }

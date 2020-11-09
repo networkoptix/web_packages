@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DirectivesModule }             from '../../directives/directives.module';
@@ -14,8 +12,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
@@ -24,9 +20,6 @@ const appRoutes: Routes = [
         NonSupportedBrowserComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NonSupportedBrowserComponent
-    ],
     exports: [
         NonSupportedBrowserComponent
     ]

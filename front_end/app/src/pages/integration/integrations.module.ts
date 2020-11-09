@@ -1,36 +1,30 @@
 import { NgModule }                      from '@angular/core';
 import { CommonModule }                  from '@angular/common';
-import { BrowserModule }                 from '@angular/platform-browser';
-import { UpgradeModule }                 from '@angular/upgrade/static';
 import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-
 import { ComponentsModule }              from '../../components/components.module';
 import { IntegrationsListModule }        from './list/list.module';
-import { IntegrationDetailModule }       from './details/details.module';
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxIntegrationsComponent }       from './integrations.component';
-import { NxIntegrationDetailsComponent } from './details/details.component';
 
 const appRoutes: Routes = [
-    { path: 'integrations', component: NxIntegrationsComponent },
-    { path: 'integrations/:id', component: NxIntegrationDetailsComponent }
+    {
+        path      : '',
+        component : NxIntegrationsComponent
+    }
+
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
         FormsModule,
         IntegrationsListModule,
-        IntegrationDetailModule,
-
         RouterModule.forChild(appRoutes)
     ],
     providers : [],
@@ -38,9 +32,6 @@ const appRoutes: Routes = [
         NxIntegrationsComponent
     ],
     bootstrap : [],
-    entryComponents : [
-        NxIntegrationsComponent
-    ],
     exports: [
         NxIntegrationsComponent
     ]

@@ -19,13 +19,22 @@ from api.helpers.exceptions import APINotFoundException, api_success, require_pa
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
-from cms.models import UserGroupsToAssetPermissions
+from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
+from cms.tasks import get_package_cache_key, make_package
 
 from .integration import INTEGRATION_CACHE
 
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
+PACKAGES_CACHE = PackagesCache()
+
+
+def make_package_name(asset: Asset):
+    file_name = f"{asset.name}.zip"
+    if asset.is_vms:
+        file_name = f"{asset.customizations.first()}.zip"
+    return file_name
 
 
 # Used to get the context and language models
@@ -241,7 +250,8 @@ def review(request):
                     messages.success(request, f"Version {publishing_errors} has been published")
                 INTEGRATION_CACHE.clear_cache()
             else:
-                messages.error(request, f"Cannot publish on this portal")
+                messages.success(request, "Version {} has been published".format(asset_review.version.id))
+            INTEGRATION_CACHE.clear_cache()
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
@@ -467,11 +477,40 @@ def download_package(request, asset_id):
             error_message = f"Asset does not have all required fields filled for version: {version_id}"
         return HttpResponseBadRequest(error_message)
 
-    zipped_data = filldata.get_zip_package(asset, preview, version_id)
-    file_name = f"{asset.name}.zip"
-    if asset.is_vms:
-        file_name = f"{asset.customizations.first()}.zip"
-    return response_attachment(zipped_data, file_name, "application/zip")
+    if asset.is_cloud_portal:
+        cache_key = get_package_cache_key(asset, preview, version_id)
+        package_info = PACKAGES_CACHE.get(cache_key)
+        if not package_info:
+            make_package.apply_async(args=[asset_id, preview, version_id])
+            PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False}
+            return api_success({"msg": "Building the package"})
+        elif package_info.get("is_ready"):
+            return api_success({"msg": "Package is ready"})
+        return api_success({"msg": "Package is not ready"})
+    else:
+        zipped_data = filldata.get_zip_package(asset, preview, version_id)
+        return response_attachment(zipped_data, make_package_name(asset), "application/zip")
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def download_async_package(request, asset_id):
+    asset = Asset.objects.get(id=asset_id)
+    if not request.user.has_perm("cms.can_download_package"):
+        raise PermissionDenied
+
+    version_id = request.GET.get('version_id')
+    preview = 'draft' in request.GET
+
+    cache_key = get_package_cache_key(asset, preview, version_id)
+    package_info = PACKAGES_CACHE.get(cache_key)
+    if not package_info:
+        return api_success({"msg": "No package is being made"})
+    elif not package_info.get("is_ready"):
+        return api_success({"msg": "Package is not ready"})
+    else:
+        zipped_data = PACKAGES_CACHE[cache_key]
+        return response_attachment(zipped_data.get("file"), make_package_name(asset), "application/zip")
 
 
 customization__query_param = openapi.Parameter("customization", openapi.IN_QUERY, type=openapi.TYPE_STRING)

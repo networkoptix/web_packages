@@ -1,5 +1,5 @@
-import { Inject, OnDestroy, Injector }                    from '@angular/core';
-import { DOCUMENT, Location }                             from '@angular/common';
+import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
+import { DOCUMENT, Location }                      from '@angular/common';
 import { Router }                                         from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
@@ -29,6 +29,7 @@ interface IParams<Value = any> {
  * CloudAccount and LocalAccount overrides should maintain same interface
  * as BaseAccount.
  */
+@Injectable()
 export abstract class BaseAccount implements OnDestroy {
     protected CONFIG: IConfig;
     protected LANG: LanguageI18NStaticTypes;
@@ -289,7 +290,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected showLogin() {
         this.loginDialogActive = true;
         return this.dialogs
-            .login(this, true, true).then((result) => {
+            .login(this, true, true).then((result: any) => {
                 this.storageService.loginRegister = true;
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);

@@ -85,14 +85,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     recordingSettings: IRecordingSettings;
 
     motionGridChangeWatcher = new Watcher<boolean>();
-    cameraNameWatcher = new Watcher();
+    cameraNameWatcher: Watcher<string> = new Watcher();
     selectedAspectWatcher = new Watcher();
     selectedRotationWatcher: Watcher<any> = new Watcher();
-    audioEnabledWatcher = new Watcher();
-    recordingWatcher = new Watcher();
+    audioEnabledWatcher: Watcher<boolean> = new Watcher();
+    recordingWatcher: Watcher<boolean> = new Watcher();
     recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
-    selectedFpsWatcher = new Watcher();
-    selectedQualityWatcher = new Watcher();
+    selectedFpsWatcher: Watcher<any> = new Watcher();
+    selectedQualityWatcher: Watcher<any> = new Watcher();
     motionEnabledWatcher: Watcher<string> = new Watcher();
     motionMaskWatcher: Watcher<string> = new Watcher();
 
@@ -488,11 +488,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             if (!this.safeToUpdateRecordingSettings) {
                 return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning()));
             }
+
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
+
             const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
@@ -503,6 +505,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 motionType      : this.motionType,
                 motionMask      : this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
             };
+
             return Promise.all([
                 this.system.updateRecordingSettings(updatedTask, cameraSettings),
                 this.system.updateCameraSettings(cameraSettings.id, {

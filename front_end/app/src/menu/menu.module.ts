@@ -1,7 +1,5 @@
 import { NgModule }              from '@angular/core';
 import { CommonModule }          from '@angular/common';
-import { BrowserModule }         from '@angular/platform-browser';
-import { UpgradeModule }         from '@angular/upgrade/static';
 import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }       from '@ngx-translate/core';
 import { RouterModule }          from '@angular/router';
@@ -20,8 +18,6 @@ import { NxAlertCounter }        from './alert-counter/alert-counter.component';
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         DirectivesModule,
@@ -46,13 +42,6 @@ import { NxAlertCounter }        from './alert-counter/alert-counter.component';
         NxAlertCounter
     ],
     bootstrap: [],
-    entryComponents: [
-        NxMenuComponent,
-        NxLevel1ItemComponent,
-        NxLevel2ItemComponent,
-        NxLevel3ItemComponent,
-        NxAlertCounter
-    ],
     exports: [
         NxMenuComponent,
         NxLevel1ItemComponent,

@@ -1,7 +1,7 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, OnChanges, Output,
-    SimpleChanges, OnInit, EventEmitter
+    LOCALE_ID, Input, Output,
+    OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
@@ -9,14 +9,14 @@ import {
     map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap
 }                                    from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { Watcher, NxApplyService }   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { Watcher, NxApplyService }   from '@services/apply.service';
+import { NxDialogsService }          from '@services/../dialogs/dialogs.service';
+import { NxToastService }            from '@services/../dialogs/toast.service';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_types';
+import { IConfig, NxConfigService }  from '@services/nx-config';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 
 enum MODE {

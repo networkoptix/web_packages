@@ -1,4 +1,5 @@
 import { CloudAccount } from './cloud';
+import { Injectable } from "@angular/core";
 export { Account } from './account';
 
 /**
@@ -6,4 +7,5 @@ export { Account } from './account';
  *
  * This file is updated by the update-account.py script to extend either CloudAccount or LocalAccount.
  */
+@Injectable()
 export class NxAccountService extends CloudAccount {}

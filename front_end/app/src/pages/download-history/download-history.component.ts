@@ -13,6 +13,7 @@ import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { isNumeric }                    from 'rxjs/util/isNumeric';
 import { Subscription }                 from 'rxjs';
 import { filter }                       from 'rxjs/operators';
+import * as isArray                     from 'core-js/features/array/is-array';
 
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../services/nx-config';
@@ -22,7 +23,7 @@ import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 
-import isArray = require('core-js/features/array/is-array');
+
 
 @UntilDestroy({ checkProperties: true })
 @Component({

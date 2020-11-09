@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["es2015", "es2016", "es2017", "dom", "es2018.promise"],
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -31,14 +31,21 @@
       "node"
     ]
   },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
+  "files": [
+    "app/setupJest.ts"
+  ],
   "include": [
     "app/main.ts",
     "app/polyfills.ts"
-],
+  ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
     "ipvd",
-    "health_monitor"
+    "health_monitor",
+    "app/**/*.spec.ts",
+    "app/**/*.test.ts"
   ]
 }

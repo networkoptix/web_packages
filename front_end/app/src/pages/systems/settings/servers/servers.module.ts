@@ -1,28 +1,24 @@
 import { NgModule }                         from '@angular/core';
 import { CommonModule }                     from '@angular/common';
-import { BrowserModule }                    from '@angular/platform-browser';
-import { UpgradeModule }                    from '@angular/upgrade/static';
 import { RouterModule }                     from '@angular/router';
 import { FormsModule }                      from '@angular/forms';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { TranslateModule }                  from '@ngx-translate/core';
 
-import { DirectivesModule }                 from '../../../../directives/directives.module';
-import { ComponentsModule }                 from '../../../../components/components.module';
+import { DirectivesModule }                 from '@directives/directives.module';
+import { ComponentsModule }                 from '@components/components.module';
 import { NxSystemServersComponent }         from './servers.component';
 import { NxSystemStandardServerComponent }  from './standard/server.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
 import { NxSystemStorageComponent }         from './storage/storage.component';
 import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.component';
-import { NxStorageSizeComponent }           from './storage/size/size.component';
+import { NxStorageSizeComponent }           from './storage-advanced/size/size.component';
 import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage.module';
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -43,9 +39,6 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
         NxStorageSizeComponent
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxSystemServersComponent
     ],
     exports: [
         NxSystemServersComponent

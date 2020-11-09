@@ -4,14 +4,12 @@ import {
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 
-import * as moment                  from 'moment';
 import * as uv                      from './utilConstants';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUtilsService {
-
     public static sortASC = true;
     public static sortDESC = false;
     public momentWithLocale
@@ -21,11 +19,18 @@ export class NxUtilsService {
         @Inject(LOCALE_ID) private locale: string,
         @Inject(DOCUMENT) private document: Document
     ) {
-        this.momentWithLocale = moment.locale(locale);
+        import('moment').then(moment => {
+            this.momentWithLocale = moment.locale(locale);
+        });
     }
 
     static cleanId(id: string) {
         return id.replace(/{|}/g, '');
+    }
+
+    static cleanIp(ip: string) {
+        const checkIpv6 = /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;
+        return (ip.match(checkIpv6) || ip.split(':'))[0];
     }
 
     static move<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
@@ -179,7 +184,7 @@ export class NxUtilsService {
     /**
      * Return IPv4 address or IPv6 address if none
      */
-    static formatURL<T extends any>(server: T) {
+    static formatURL<T extends any>(server: any) {
         function ipReducer(result: {ipv6: string[], ipv4: string[]}, currentValue: string) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);
