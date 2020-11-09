@@ -697,12 +697,12 @@ export interface Storage {
     failed:                     any;
     stillHasArchivesPreWarning: any;
     stillHasArchives:           any;
+    failedRemove:               any;
     reservedTooSmallTooltip:    any;
     reservedSystemTooltip:      any;
     serverOffline:              any;
     success:                    any;
     urlPlaceholder:             any;
-    failedRemove:            any;
 }
 
 export interface Modes {
