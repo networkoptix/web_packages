@@ -36,7 +36,7 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
         NxServerLoggerComponent,
         NxSystemStorageComponent,
         NxSystemAdvancedStorageComponent,
-        NxStorageSizeComponent
+        NxStorageSizeComponent,
     ],
     bootstrap: [
     ],

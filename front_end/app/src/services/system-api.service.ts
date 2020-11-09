@@ -323,6 +323,12 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
+    getApiDoc() {
+        // return this.get<JSON>('/static/api.json'); // current API
+        // mock response
+        return this.http.get<JSON>('/static/openapi_v1.json');
+    }
+
     login(login: string, password: string, remember = false): Observable<{data: {account: Account, resultCode: string}}|any> {
         let auth, authPost, authRtsp, nonce, realm;
         return this.getNonce(login).pipe(

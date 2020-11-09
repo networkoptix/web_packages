@@ -557,7 +557,8 @@
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
-        "view": "View cameras"
+        "view": "View cameras",
+        "apiTool": "API testing tool"
     },
     "passwordRequirements": {
         "common": "too common",

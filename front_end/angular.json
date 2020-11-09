@@ -37,18 +37,20 @@
               "app/language_i18n_static.json",
               "app/language_i18n.json",
               "app/language.json",
-              "app/languages.json"
+              "app/languages.json",
+              "app/openapi_v1.json"
             ],
             "styles": [
               "app/styles/main.scss"
+            ],
+            "scripts": [
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "app/src/styles",
                 "app/styles"
               ]
-            },
-            "scripts": []
+            }
           },
           "configurations": {
             "production": {
@@ -70,13 +72,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "7mb"
+                  "maximumWarning": "8mb",
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "180kb",
-                  "maximumError": "200kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "280kb"
                 }
               ]
             },

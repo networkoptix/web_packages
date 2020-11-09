@@ -581,6 +581,7 @@ export interface PageTitles {
     systems:                any;
     template:               any;
     view:                   any;
+    apiTool:                any;
 }
 
 export interface PasswordRequirements {
@@ -1484,6 +1485,7 @@ const typeMap: any = {
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
         { json: "view", js: "view", typ: "any" },
+        { json: "apiTool", js: "apiTool", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },
