@@ -10,7 +10,6 @@ import { NxMenuButtonComponent } from './button.component';
     declarations: [
         NxMenuButtonComponent
     ],
-    entryComponents: [],
     providers      : [],
     exports        : [
         NxMenuButtonComponent

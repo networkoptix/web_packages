@@ -4,14 +4,12 @@ import {
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 
-import * as moment                  from 'moment';
 import * as uv                      from './utilConstants';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUtilsService {
-
     public static sortASC = true;
     public static sortDESC = false;
     public momentWithLocale
@@ -21,7 +19,9 @@ export class NxUtilsService {
         @Inject(LOCALE_ID) private locale: string,
         @Inject(DOCUMENT) private document: Document
     ) {
-        this.momentWithLocale = moment.locale(locale);
+        import('moment').then(moment => {
+            this.momentWithLocale = moment.locale(locale);
+        });
     }
 
     static cleanId(id: string) {
@@ -184,7 +184,7 @@ export class NxUtilsService {
     /**
      * Return IPv4 address or IPv6 address if none
      */
-    static formatURL<T extends any>(server: T) {
+    static formatURL<T extends any>(server: any) {
         function ipReducer(result: {ipv6: string[], ipv4: string[]}, currentValue: string) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);

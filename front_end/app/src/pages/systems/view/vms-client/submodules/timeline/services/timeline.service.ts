@@ -175,10 +175,11 @@ export class TimelineService {
     this._visibleRange.shift(offset)
   }
 
-  protected _scrollAnimationDurationMs = 200
+  protected _scrollAnimationDurationMs = 400
   protected _scrollAnimationStartTime: ms
   protected _initialScrollMs: ms
   protected _targetScrollMs: ms
+  protected _animationStep: int = 0
 
   public get targetScrollMs () {
     return this._targetScrollMs || this.visibleRange.start
@@ -195,28 +196,38 @@ export class TimelineService {
     }
   }
 
+  protected _changeVisibleDurationStart (t: ms) {
+    const duration = this._visibleRange.duration
+    this._visibleRange.start = t
+    this._visibleRange.end = t + duration
+
+    let diff = this._visibleRange.end - this._fullRange.end
+    if (diff > 0) {
+      this._visibleRange.shift(-diff)
+    }
+    diff = this._fullRange.start - this._visibleRange.start
+    if (diff > 0) {
+      this._visibleRange.shift(diff)
+    }
+  }
+
   protected _onAnimationFrame () {
     const now = Date.now()
     const diff = now - this._scrollAnimationStartTime
     if (diff < this._scrollAnimationDurationMs) {
+      this._animationStep ++
       const percentage = diff / this._scrollAnimationDurationMs
       const diffMs = (this._targetScrollMs - this._initialScrollMs)
-      const current = this._initialScrollMs + diffMs * percentage
-      this.stepScrollToStartTime(current)
-      // console.log(
-      //   'animation progress',
-      //   percentage,
-      //   current,
-      //   new Date(current),
-      //   this._scrollAnimationDurationMs,
-      //   this._scrollAnimationStartTime,
-      //   this._initialScrollMs,
-      //   this._targetScrollMs,
-      // )
+      const dMs = Math.round(diffMs * percentage)
+      const current = this._initialScrollMs + dMs
+
+      this._changeVisibleDurationStart(current)
+
       this._emit()
     } else if (this._targetScrollMs) {
-      this.stepScrollToStartTime(this._targetScrollMs, 1.0)
+      this._changeVisibleDurationStart(this._targetScrollMs)
       this._targetScrollMs = undefined
+      this._animationStep = 0
       this._emit()
     }
     requestAnimationFrame(this._onAnimationFrame)

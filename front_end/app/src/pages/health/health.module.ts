@@ -1,7 +1,5 @@
 import { NgModule }               from '@angular/core';
 import { CommonModule }           from '@angular/common';
-import { BrowserModule }          from '@angular/platform-browser';
-import { UpgradeModule }          from '@angular/upgrade/static';
 import { RouterModule, Routes }   from '@angular/router';
 import { FormsModule }            from '@angular/forms';
 import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
@@ -18,15 +16,14 @@ import {
     NxHealthComponent, NxReportViewerComponent, NxSystemAlertsComponent,
     NxSystemMetricsComponent, NxDynamicTableComponent,
     NxDynamicTablePanelComponent, NxSingleEntityComponent,
-    NxImageComponent, NxImageSectionComponent,
-    NxSystemAlertCardComponent, NxUpdateInfoComponent
+    NxImageSectionComponent, NxSystemAlertCardComponent, NxUpdateInfoComponent
 }                                  from './';
 import { DirectivesModule }        from '../../directives/directives.module';
-import { nxConfig }                from '../../services/nx-config/config';
+import { NxHealthLayoutService }   from './health-layout.service';
 
-const appRoutes: Routes = !nxConfig.isLocal ? [
+const appRoutes: Routes = [
     {
-        path      : 'report_viewer',
+        path      : 'report-viewer',
         component : NxReportViewerComponent,
         children  : [
             {
@@ -43,7 +40,7 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
         ]
     },
     {
-        path        : 'systems/:systemId/health',
+        path        : '',
         component   : NxHealthComponent,
         canActivate : [AuthGuard, SystemGuard],
         children    : [
@@ -60,30 +57,11 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
             }
         ]
     }
-] : [
-    {
-        path        : 'health',
-        component   : NxHealthComponent,
-        canActivate : [AuthGuard, SystemGuard],
-        children    : [
-            {
-                path: '', component: NxSystemAlertsComponent, pathMatch: 'full'
-            },
-            {
-                path: 'alerts', component: NxSystemAlertsComponent
-            },
-            {
-                path: ':metric', component: NxSystemMetricsComponent
-            }
-        ]
-    }
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -93,11 +71,10 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
         AngularSvgIconModule.forRoot(),
         NgxFileDropModule,
         PipesModule,
-
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers    : [],
+    providers    : [NxHealthLayoutService],
     declarations : [
         NxHealthComponent,
         NxReportViewerComponent,
@@ -106,27 +83,16 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
         NxDynamicTableComponent,
         NxDynamicTablePanelComponent,
         NxSingleEntityComponent,
-        NxImageComponent,
         NxImageSectionComponent,
         NxSystemAlertCardComponent,
         NxUpdateInfoComponent
     ],
     bootstrap       : [],
-    entryComponents : [
-        NxHealthComponent,
-        NxReportViewerComponent,
-        NxSystemAlertsComponent,
-        NxSystemMetricsComponent,
-        NxImageSectionComponent,
-        NxImageComponent,
-        NxUpdateInfoComponent
-    ],
     exports: [
         NxHealthComponent,
         NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
-        NxImageComponent
     ]
 })
 export class NxHealthModule {

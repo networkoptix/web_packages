@@ -1,18 +1,19 @@
 import {
     Component, ViewEncapsulation,
-    Input, forwardRef
-}                            from '@angular/core';
+    Input, forwardRef, Directive
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { BaseDropdown }              from '../injDropdown';
-import { environment }               from '../../../../environments/environment';
-import { NxUtilsService }            from '../../../services/utils.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService }           from '../../../services/nx-config';
-import { ILanguage, ILanguages }     from '../../../services/nx-cloud-api.types';
+import { environment }               from '@environments/environment';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService }           from '@services/nx-config';
+import { ILanguage, ILanguages }     from '@services/nx-cloud-api.types';
 import { LocalStorageService }       from 'ngx-webstorage';
 
+@Directive()
 class BaseLanguageDropdown extends BaseDropdown {
     @Input() instantReload;
     @Input() instantApply;

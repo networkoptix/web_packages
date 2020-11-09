@@ -1,7 +1,5 @@
 import { NgModule }                         from '@angular/core';
 import { CommonModule }                     from '@angular/common';
-import { BrowserModule }                    from '@angular/platform-browser';
-import { UpgradeModule }                    from '@angular/upgrade/static';
 import { RouterModule }                     from '@angular/router';
 import { FormsModule }                      from '@angular/forms';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
@@ -21,8 +19,6 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -43,9 +39,6 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
         NxStorageSizeComponent,
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxSystemServersComponent
     ],
     exports: [
         NxSystemServersComponent

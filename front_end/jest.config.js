@@ -5,7 +5,7 @@ module.exports = {
     preset: 'jest-preset-angular',
     roots: ['<rootDir>/app/src/'],
     testMatch: ['**/+(*.)+(spec).+(ts)'],
-    setupFiles: ['@angular/localize/init'],
+    setupFiles: [],
     setupFilesAfterEnv: ['<rootDir>/app/setupJest.ts'],
     collectCoverage: true,
     coverageReporters: ['html'],

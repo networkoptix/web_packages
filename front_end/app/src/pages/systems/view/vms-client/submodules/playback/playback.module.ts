@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser'
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core'
 import { ComponentsModule } from '../../../../../../components/components.module';
 
@@ -10,7 +10,7 @@ import services from './services'
   declarations: components,
   exports: components,
   imports: [
-    BrowserModule,
+    CommonModule,
     ComponentsModule,
   ],
   providers: services,

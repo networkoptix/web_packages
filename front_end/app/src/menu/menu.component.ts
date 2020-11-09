@@ -7,10 +7,10 @@ import { fromEvent, SubscriptionLike } from 'rxjs';
 
 import { NxConfigService, IConfig }         from '../services/nx-config';
 import { NxMenuService }                    from './menu.service';
-import { NxLanguageProviderService }        from '../services/nx-language-provider';
-import { NxUtilsService }                   from '../services/utils.service';
-import { ButtonArrowType, NxSearchService } from '../services/search.service';
-import { NxSystem }                         from '../services/system.service';
+import { NxLanguageProviderService }        from '@services/nx-language-provider';
+import { NxUtilsService }                   from '@services/utils.service';
+import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import { NxSystem }                         from '@services/system.service';
 import { LanguageI18NStaticTypes }          from '../../language_i18n_static_types';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { map, startWith }                   from 'rxjs/operators';
@@ -163,9 +163,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         }
 
         if (changes.content.currentValue.selectedSection) {
-            this.systemId = changes.content.currentValue.system.id;
+            this.systemId = changes.content.currentValue.system?.id;
         }
-
     }
 
     ngAfterViewInit() {
@@ -194,7 +193,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         if (this.scrollArea) {
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
-                    const windowHeightFit = this.windowHeight - 40
+                    const windowHeightFit = this.windowHeight - 40;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
                 } else {
@@ -246,7 +245,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.navItems = [];
         if (model.query !== '') {
             setTimeout(() => { // Avoid selection before filter finishes
-                //reset height auto fit
+                // reset height auto fit
                 this.menuHeightFit = '100%';
                 this.scrollHeightFit = '100%';
                 this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
@@ -255,7 +254,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             setTimeout(() => {
                 this.getMenuDimensions();
                 this.resizeMenu();
-            })
+            });
         }
     }
 

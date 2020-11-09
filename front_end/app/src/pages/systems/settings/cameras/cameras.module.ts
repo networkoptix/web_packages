@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouterModule }         from '@angular/router';
 import { FormsModule }          from '@angular/forms';
@@ -10,23 +8,19 @@ import { TranslateModule }      from '@ngx-translate/core';
 
 import { DirectivesModule }         from '../../../../directives/directives.module';
 import { ComponentsModule }         from '../../../../components/components.module';
-import { NxHealthModule }           from '../../../health/health.module';
 import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 import { NxCamerasComponent }       from './cameras.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
-        NxHealthModule
+        AngularSvgIconModule.forRoot()
     ],
     providers: [
     ],
@@ -35,9 +29,6 @@ import { NxCamerasComponent }       from './cameras.component';
         NxMotionDetectionOverlay
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxCamerasComponent
     ],
     exports: [
         NxCamerasComponent

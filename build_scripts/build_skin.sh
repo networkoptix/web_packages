@@ -54,6 +54,7 @@ dir=../skins/$SKIN
 
     echo "Move front_end to destination"
     mv ../front_end/dist $TARGET_DIR/$SKIN/static
+    cp -R $TARGET_DIR/$SKIN/static/scripts/. $TARGET_DIR/$SKIN/static/
 
     echo "Building front_end finished"
 

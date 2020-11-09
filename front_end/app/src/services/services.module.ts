@@ -21,8 +21,6 @@ import { NxAppSourceService }        from './nx-app-source.service';
     ],
     declarations: [
     ],
-    entryComponents: [
-    ],
     providers: [
         NxAppSourceService,
         NxAppStateService,

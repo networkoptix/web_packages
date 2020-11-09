@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule }         from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
@@ -15,8 +13,6 @@ import { NxSystemUsersComponent } from './users.component';
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -31,9 +27,6 @@ import { NxSystemUsersComponent } from './users.component';
         NxSystemUsersComponent
     ],
     bootstrap: [
-    ],
-    entryComponents: [
-        NxSystemUsersComponent
     ],
     exports: [
         NxSystemUsersComponent
