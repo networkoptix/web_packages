@@ -1,17 +1,15 @@
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
-        ${id}=   Create Custom Network    custom${i}    ${i}
-        Sleep    5
-        ${cont name}=   Run Container    ${IMAGE 4.1}    ${LM PORT ${i}}    network=bridge
-        Set Suite Variable    ${cont ${i}}    ${cont name}
-        ${cont id}=   Get Container Id    ${cont ${i}}
-        Set Suite Variable    ${cont id ${i}}    ${cont id}
+        ${server}=   Setup Docker Server
+        Set Suite Variable    ${cont ${i}}    ${server}[name]
+        Set Suite Variable    ${cont id ${i}}    ${server}[id]
+        Set Suite Variable    ${LM PORT ${i}}    ${server}[port]
         ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
         Set Suite Variable    ${server ${i}}    ${server name}
-        ${sys id}=   Create system and attach to cloud    ${LOCALHOST}   ${LM PORT ${i}}    System ${i}    ${LM OWNER}    ${BASE PASSWORD}
+        ${sys id}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${LM PORT ${i}}    System ${i}    ${LM OWNER}    ${BASE PASSWORD}
         Set Suite Variable    ${sys id ${i}}    ${sys id}
-        Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
+        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${i}}   ${LM HOST}
     END
     Sleep    120
     Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
@@ -29,7 +27,7 @@ LM Suite Teardown
         Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys id}
     END
     FOR   ${i}    IN RANGE    1    4
-        Stop Container    ${cont ${i}}    remove=True
+        Delete Docker Server    ${cont ${i}}
     END
     Close All Browsers
 
@@ -37,18 +35,20 @@ LM Test Restart
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
     Run Keyword If    ${status}    Log Out via API
     FOR    ${i}    IN RANGE    1    4
-        Start Container    ${cont ${i}}
+        ${port}=   Start Docker Server    ${cont ${i}}
+        Set Suite Variable    ${LM PORT ${i}}    ${port}
         Sleep    10
-        Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${i}}    ${LM HOST}
+        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${lm port ${i}}    ${LM HOST}
     END
 
 Remove all keys from system
-    [Arguments]    ${server url}    ${server auth}
-    ${licenses}=   Get Licenses    ${server auth}    ${server url}
+    [Arguments]    ${port}    ${name}
+    ${licenses}=   Get Licenses    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}
     FOR    ${lic}    IN    @{licenses}
-        Remove License    ${server auth}    ${server url}    ${lic}[key]
+        Remove License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]
     END
-    Restart Server    ${server url}    ${server auth}
+    ${port}=   Restart Docker Server    ${port}    ${name}    ${CLOUD AUTH}
+    [Return]    ${port}
 
 Open Licenses Page
     Wait Until Element Is Visible    ${LICENSES LINK}
@@ -183,7 +183,7 @@ Get Key Status
 Validate License Info
     [Documentation]   Verify the key's info on server is the same as on cloud
     [Arguments]    ${key}    ${status}=OK    ${server num}=1
-    ${key info}=   Get key info from server    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${server num}}    ${key}
+    ${key info}=   Get key info from server    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${server num}}    ${key}
     ${key params}=   Get Child WebElements    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]
 
     @{supp_params}=   Create List    Status    Server

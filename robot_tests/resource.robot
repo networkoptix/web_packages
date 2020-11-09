@@ -869,3 +869,87 @@ Create Docker Server
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}
+
+Setup Docker Server
+    ${server}=   Create Dictionary
+    Acquire Lock   create_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 4.1_test
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    ${port info}=   Execute Command    docker container port ${id}
+    ${port info}=   Split String    ${port info}    :
+    Set to Dictionary    ${server}    port=${port info}[1]
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   create_server_lock
+    [Return]    ${server}
+
+Delete Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   delete_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker rm -f ${name}
+    ${result}=   Execute Command    docker ps -qaf "name=${name}"
+    Close Connection
+    Release Lock   delete_server_lock
+    Return from Keyword If    "${result}" == "${EMPTY}"    ${True}
+    [Return]    ${False}
+
+Start Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   start_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker start ${name}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   start_server_lock
+    [Return]    ${port info}[1]
+
+Stop Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   stop_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker stop ${name}
+    Close Connection
+    Release Lock   stop_server_lock
+
+Restart Docker Server
+    [Arguments]    ${port}    ${name}    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    Sleep    10
+    Acquire Lock   restart_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   restart_server_lock
+    [Return]    ${port info}[1]
+
+Get container port by name
+    [Arguments]    ${name}
+    Acquire Lock   get_port_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   get_port_lock
+    [Return]    ${port info}[1]
+
+Get container id by name
+    [Arguments]    ${name}
+    Acquire Lock    get_id_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${id}=   Execute Command    docker ps -qaf "name=^${name}"
+    Close Connection
+    Release Lock    get_id_lock
+    [Return]    ${id}
