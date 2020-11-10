@@ -41,7 +41,7 @@ from cloud.logger import downgrade_unauthorized_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
-INSTANCE = os.getenv('INSTANCE_NAME', 'local')
+INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
@@ -192,6 +192,16 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             }
         }
     }
+
+    if '--test-live-db' in sys.argv or '-tld' in sys.argv and INSTANCE not in ('prod', 'stage'):
+        DATABASES['default']['TEST'] = {'NAME': cloud_db['database']}
+
+        MIGRATION_MODULES = {
+            'api': None,
+            'cms': None,
+            'notifications': None,
+            'zapier': None
+        }
 
 REDIS_CACHE = {
     "BACKEND": "django_redis.cache.RedisCache",

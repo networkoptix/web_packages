@@ -820,12 +820,13 @@ class DataStructure(models.Model):
                 content_record = content_record_english
 
         if content_record.exists():
-            if not version_id:
+            if not version_id and draft:
                 content_value = content_record.last().cast_value
             else:  # Here find a datarecord with version_id
                 # which is not more than version_id
                 # filter only accepted content_records
-                content_record = content_record.filter(version_id__lte=version_id)
+                if version_id:
+                    content_record = content_record.filter(version_id__lte=version_id)
                 if not draft:
                     if not asset.is_single_customization and customization_name:
                         new_review_records = content_record.filter(
@@ -837,16 +838,21 @@ class DataStructure(models.Model):
                             version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
                         )
                     # If the version matches take it
-                    version_content_record = content_record.filter(version_id=version_id).last()
+                    version_content_record = None
+                    if version_id:
+                        version_content_record = content_record.filter(version_id=version_id).last()
                     if version_content_record:
                         content_record = version_content_record
                     # Take any record that is accepted
                     elif new_review_records.exists():
                         content_record = new_review_records.last()
-                    # Take any record that has been reviewed
+                    # No record should be used if non are accepted
                     else:
-                        content_record = content_record.last()
+                        content_record = None
+                else:
+                    content_record = content_record.last()
 
+                if content_record:
                     content_value = content_record.cast_value
 
         # if no value or optional and type file - use default value from structure
@@ -861,6 +867,77 @@ class DataStructure(models.Model):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value
+
+    @classmethod
+    def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False, customization_name=None):
+        def fish(data_structures_needed: set, **kwargs):
+            remaining = data_structures_needed.copy()
+            while remaining:
+                fished_records_qs = records.filter(
+                    data_structure__in=remaining, **kwargs
+                ).select_related('data_structure').order_by('-pk')[:len(data_structures_needed) * 3]
+                if not fished_records_qs.count():
+                    return remaining
+                for record in fished_records_qs:
+                    if record.data_structure in remaining:
+                        fished_records[record.data_structure] = record
+                        remaining.discard(record.data_structure)
+                        if not remaining:
+                            return remaining
+            return remaining
+
+        is_accepted = draft is False
+        is_review = draft is True and version_id not in (None, 0)
+        is_draft = draft is True and version_id in (None, 0)
+
+        records = DataRecord.objects.filter(asset=asset)
+        if version_id:
+            records = records.filter(version_id__lte=version_id)
+            if customization_name:
+                records = records.filter(version__assetcustomizationreview__customization__name=customization_name)
+
+        if not draft:
+            records = records.filter(
+                version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+            ).order_by('-version_id')
+        elif version_id:
+            records = records.order_by('-version_id')
+
+        data_structure_set = set(data_structures)
+        translatable_ds_set = {ds for ds in data_structures if ds.translatable}
+        nontranslatable_ds_set = data_structure_set - translatable_ds_set
+        default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+        fished_records = {}
+
+        # Get translatable records
+        if language:
+            translatable_ds_set = fish(translatable_ds_set, language=language)
+        if translatable_ds_set and language != default_lang:
+            translatable_ds_set = fish(translatable_ds_set, language=default_lang)
+        if translatable_ds_set:
+            fish(translatable_ds_set, language__code='en_US')
+
+        # Get nontranslatable records
+        fish(nontranslatable_ds_set)
+
+        final_values = {}
+
+        for ds in data_structure_set:
+            if ds not in fished_records:
+                final_values[ds] = ''
+            else:
+                final_values[ds] = fished_records[ds].cast_value
+
+            if final_values[ds] == '' and (not ds.optional or
+                                           ds.optional and ds.type in [DataStructure.DATA_TYPES.file,
+                                                                       DataStructure.DATA_TYPES.image,
+                                                                       DataStructure.DATA_TYPES.external_file,
+                                                                       DataStructure.DATA_TYPES.external_image,
+                                                                       DataStructure.DATA_TYPES.check_box,
+                                                                       DataStructure.DATA_TYPES.multiselect,
+                                                                       DataStructure.DATA_TYPES.object]):
+                final_values[ds] = DataStructure.cast_value(ds, ds.default)
+        return final_values
 
     def is_protected(self, asset):
         return self.protected and asset.version_id() > 0

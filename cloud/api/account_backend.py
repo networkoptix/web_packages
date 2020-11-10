@@ -21,7 +21,10 @@ def get_ip(request):
     if settings.LOCAL_ENVIRONMENT and not ip:  # When ran locally there is no http_x_forwared_for
         ip = request.META.get('REMOTE_ADDR')
 
-    return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
+    if ip:
+        return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
+    else:
+        return ''
 
 
 class AccountBackend(ModelBackend):

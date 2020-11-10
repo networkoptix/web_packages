@@ -346,7 +346,10 @@ class AssetAdmin(CMSAdmin):
                     extra_context = {}
                 extra_context['search_var'] = SEARCH_VAR
                 response = super(AssetAdmin, self).changelist_view(request, extra_context)
-                filters_dict[request.path_info] = request.META['QUERY_STRING']
+                if request.META['QUERY_STRING'] != 'e=1':
+                    filters_dict[request.path_info] = request.META['QUERY_STRING']
+                else:
+                    filters_dict[request.path_info] = ''
                 caches['filters'].set(request.user.id, filters_dict)
                 return response
             except Exception as exception:
