@@ -16,6 +16,7 @@ import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
+import { ApplyGuard }                from '@guards/applyGuard';
 
 const lazyRoutes: Routes = [
     {
@@ -128,6 +129,7 @@ const lazyRoutes: Routes = [
     declarations: [
     ],
     providers: [
+        ApplyGuard
     ],
     exports: [
         DownloadModule,

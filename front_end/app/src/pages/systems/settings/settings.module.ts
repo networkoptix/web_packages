@@ -100,7 +100,6 @@ export const cloudSettingsRoutes: Routes = [
         RouterModule.forChild(cloudSettingsRoutes)
     ],
     providers: [
-        ApplyGuard,
         NxSettingsService
     ],
     declarations: [
