@@ -72,7 +72,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         }
 
         return this.cloudApi
-            .account().toPromise()
+            .account(true).toPromise()
             .then((account: Account|any) => {
                 this.account = account;
                 return account;
@@ -162,11 +162,11 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                         .finally(() => {
                             setTimeout(() => this.window.location.reload());
                         });
+                } else {
+                    setTimeout(() => {
+                        this.window.location.reload();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.window.location.reload();
-                });
             });
     }
 
