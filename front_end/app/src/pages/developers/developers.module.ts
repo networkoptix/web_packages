@@ -13,11 +13,13 @@ import { MenuModule }               from '../../menu';
 import { NxAboutComponent }         from './about/about.component';
 import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
+import { DevelopersGuard }          from '../../routeGuards';
 
 const appRoutes: Routes = [
     {
         path      : '',
         component : NxAboutComponent,
+        canActivate : [DevelopersGuard],
         children  : [
             {
                 path     : 'knowledge-base',

@@ -1,12 +1,17 @@
 <!-- Templates -->
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
 <ng-template #toolBlock let-tool="tool">
-    <div class="card hoverable tool-card" [routerLink]="tool.url">
+    <div class="card hoverable tool-card" (click)="headerService.handleNav({url: tool.url, new_window: tool.newWindow})">
         <header>
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tool.icon"></svg-icon>
+            <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.devTools + tool.icon"></svg-icon>
         </header>
         <div class="tool-detail">
             <h3>{{tool.title}}</h3>
-            <p>{{tool.asset.shortDescription}}</p>
+            <p>{{tool.asset?.shortDescription}}</p>
         </div>
     </div>
 </ng-template>
@@ -20,9 +25,9 @@
 </ng-template>
 <!-- End of Templates -->
 
-<ng-container *ngIf="devToolsNode.nodes">
-    <section *ngIf="devToolsNode.title;else blocks" class="dev-tools">
-        <h2 class="heading-link" [routerLink]="devToolsNode.url">{{devToolsNode.title}}</h2>
+<ng-container *ngIf="devToolsNode; else preloader">
+    <section *ngIf="title; else blocks" class="dev-tools">
+        <h2 class="heading-link" [routerLink]="devToolsNode.url">{{title}}</h2>
         <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
     </section>
 </ng-container>

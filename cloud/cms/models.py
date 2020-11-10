@@ -25,6 +25,27 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
+class MenuCache:
+    def __init__(self):
+        self.cache = caches['menus']
+
+    def __getitem__(self, key):
+        return self.cache.get(key, None)
+
+    def __setitem__(self, key, menu):
+        from cms.controllers.documentation import DOC_CACHE
+        DOC_CACHE.clear_cache()
+        self.cache.set(key, menu)
+
+    def clear_cache(self):
+        from cms.controllers.documentation import DOC_CACHE
+        self.cache.clear()
+        DOC_CACHE.clear_cache()
+
+
+MENU_CACHE = MenuCache()
+
+
 def create_default_permission_group(asset):
     if not (asset.is_cloud_portal or asset.is_integration):
         return None
@@ -138,6 +159,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
+                'developers_enabled': asset.read_global_value("%DEVELOPERS_ENABLED%"),
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
@@ -176,12 +198,28 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def get_cached_menu(customization_name):
-    menu_cache = caches['menus']
-    menu_customization = menu_cache.get(customization_name, None)
+def check_user_menu_permissions(nodes, user):
+    for i in reversed(range(len(nodes))):
+        node = nodes[i]
+        permissions = node.get('permissions', [])
+        for permission_codename in permissions:
+            if not (user and UserGroupsToAssetPermissions.check_customization_permission(user, settings.CUSTOMIZATION, permission_codename)):
+                del nodes[i]
+                break
+        else:
+            node.pop('permissions', None)
+            check_user_menu_permissions(node.get('nodes', []), user)
+
+
+def get_cached_menu(customization_name, name=None, user=None):
+    menu_customization = MENU_CACHE[customization_name]
     if menu_customization is None:
         menu_customization = Menu.generate_menus(customization_name)
-        menu_cache.set(customization_name, menu_customization)
+        MENU_CACHE[customization_name] = menu_customization
+    for menu_name, menu in menu_customization.items():
+        check_user_menu_permissions(menu, user)
+    if name:
+        return menu_customization[name]
     return menu_customization
 
 
@@ -252,7 +290,8 @@ class Customization(models.Model):
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
-            ('access_integration_store', 'Can access the integration store')
+            ('access_integration_store', 'Can access the integration store'),
+            ('access_developers', 'Can see Developers pages')
         )
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
@@ -312,7 +351,8 @@ class AssetType(models.Model):
                           (2, "integration", "Integration"),
                           (3, "other", "Other"),
                           (4, "article", "Article"),
-                          (5, "agreement", "Agreement"))
+                          (5, "agreement", "Agreement"),
+                          (6, "documentation", "Documentation Page"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -323,6 +363,10 @@ class AssetType(models.Model):
         if self.name:
             return f"{self.name} - {AssetType.ASSET_TYPES[self.type]}"
         return AssetType.ASSET_TYPES[self.type]
+
+    @classmethod
+    def get_model_by_type(cls, asset_type):
+        return cls.objects.get(name='', type=asset_type)
 
     @staticmethod
     def get_type_by_name(name):
@@ -398,6 +442,10 @@ class Asset(models.Model):
     @property
     def is_article(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.article)
+
+    @property
+    def is_documentation(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.documentation)
 
     @property
     def is_cloud_portal(self):
@@ -665,6 +713,32 @@ class ContextTemplate(models.Model):
 
 
 class DataStructure(models.Model):
+    """
+    META SETTINGS
+    meta_settings are additional options, usually for validation
+
+    background: Image background class in CMS (Ex: white, black, light, dark, transparent)
+    brand_vars: Show brand variables button in context edit form (true or false)
+    char_limit: Character limit
+    format: File format (ex: png)
+    height: Image height
+    height_ge: Image height, greater than or eqal to
+    height_le: Image height, less than or equal to
+    options: choices for selects, multiselects, checkboxes
+    regex: Regular expression for a text field
+    size: File size limit in MB
+
+    # Represent properties in tiny.init method, "tiny_forced_root_block" sets property "forced_root_block"
+    tiny_paste_word_valid_elements": Comma-separated list of tags that can be pasted from external word processors ("br,p,h1,h2")
+    tiny_paste_retain_style_properties": CSS styles that can be interpreted from word processors ("font-weight,text-decoration")
+    tiny_forced_root_block: Default tag to wrap text nodes or non block elements (ex: "p", "div", false)
+
+    width: Image width
+    width_ge: Image width, greater than or equal to
+    width_le: Image width, less than or equal to
+
+    """
+
     class Meta:
         permissions = (
             ("edit_advanced", "Can edit advanced DataStructures"),
@@ -1259,8 +1333,11 @@ class Menu(models.Model):
         nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
         nodes_to_attr = 'nodes_list'
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
-        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order'), to_attr=nodes_to_attr),
-                      models.Prefetch(enabled_lookup, to_attr='enabled_list')]
+        permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
+        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order').select_related('asset', 'asset__asset_type'),
+                                      to_attr=nodes_to_attr),
+                      models.Prefetch(enabled_lookup, to_attr='enabled_list'),
+                      models.Prefetch(permission_lookup)]
         child_prefetches = tuple()
         if depth < max_depth:
             child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)
@@ -1279,10 +1356,90 @@ class Menu(models.Model):
 
     @classmethod
     def cache_all_customizations(cls, **kwargs):
-        menus_cache = caches['menus']
         structures = cls.generate_menus()
         for customization, structure in structures.items():
-            menus_cache.set(customization, structure)
+            MENU_CACHE[customization] = structure
+
+    def to_dict(self):
+        def get_nodes(nodes_list):
+            nodes = []
+            for node in nodes_list:
+                node_dict = {
+                    'name': node.name,
+                    'url' : node.url,
+                    'asset': node.asset.name if node.asset else None,
+                    'asset_type': node.asset.asset_type.type if node.asset else None,
+                    'new_window': node.new_window,
+                    'icon': node.icon,
+                    'available': [customization.name for customization in node.available.all()],
+                    'enabled': [customization.name for customization in node.enabled.all()],
+                    'authentication': node.authentication,
+                    'condition': node.condition,
+                    'permissions': [permission.codename for permission in node.permissions.all()],
+                    'order': node.order,
+                    'is_global': node.is_global,
+                    'touched': node.touched,
+                    'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
+                }
+
+                nodes.append(node_dict)
+            return nodes
+
+        menu = next(menu for menu in Menu.get_prefetched_menus() if menu.id == self.id)
+        menu_dict = {
+            'name': menu.name,
+            'depth': menu.depth,
+            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else []
+        }
+
+        return menu_dict
+
+    def from_dict(self, menu_dict):
+        def set_nodes(nodes_list, parent):
+            for node in nodes_list:
+                if isinstance(parent, Menu):
+                    parent_type = 'parent_menu'
+                else:
+                    parent_type = 'parent_node'
+                node_obj = MenuNode.objects.filter(name=node['name'], **{parent_type: parent}).first()
+                if not node_obj:
+                    node_obj = MenuNode()
+                node_obj.name = node['name']
+                node_obj.url = node['url']
+                node_obj.new_window = node['new_window']
+                node_obj.icon = node['icon']
+                node_obj.authentication = node['authentication']
+                node_obj.condition = node['condition']
+                node_obj.order = node['order']
+                node_obj.is_global = node['is_global']
+                node_obj.touched = node['touched']
+                node_obj.__setattr__(parent_type, parent)
+                node_obj.save()
+
+                node_obj.available.set(list(Customization.objects.filter(name__in=node['available'])))
+                node_obj.enabled.set(list(Customization.objects.filter(name__in=node['enabled'])))
+                node_obj.permissions.set(list(Permission.objects.filter(codename__in=node['permissions'])))
+
+                if node['asset']:
+                    if node_obj.is_global:
+                        asset_customizations = Customization.objects.all()
+                    else:
+                        asset_customizations = node_obj.available.all()
+                    asset = Asset.objects.filter(name=node['asset'], asset_type__type=node['asset_type']).first()
+                    if not asset:
+                        asset_type = AssetType.objects.filter(type=node['asset_type'], name='').order_by('pk').first()
+                        asset = Asset.objects.create(name=node['asset'], asset_type=asset_type)
+                        asset.customizations.set(list(asset_customizations))
+                    node_obj.asset = asset
+                    node_obj.save()
+
+                if node['nodes']:
+                    set_nodes(node['nodes'], node_obj)
+
+        self.depth = menu_dict['depth']
+        self.save()
+        if menu_dict['nodes']:
+            set_nodes(menu_dict.get('nodes', []), self)
 
 
 class MenuNode(models.Model):
@@ -1290,14 +1447,15 @@ class MenuNode(models.Model):
                            (1, "logged_in", "Logged In"),
                            (2, "both", "Both"))
     name = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=255)
     url = models.CharField(max_length=2048, blank=True)
+    asset = models.ForeignKey(Asset, null=True, blank=True, on_delete=models.CASCADE)
     new_window = models.BooleanField(default=False)
     icon = models.CharField(blank=True, max_length=255)
     available = models.ManyToManyField(Customization, blank=True, related_name='available_nodes')
     enabled = models.ManyToManyField(Customization, blank=True, related_name='enabled_nodes')
     authentication = models.IntegerField(choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
     condition = models.CharField(blank=True, max_length=255)
+    permissions = models.ManyToManyField(Permission, default=None, blank=True)
     order = models.IntegerField(default=0)
     is_global = models.BooleanField(default=True, verbose_name='Global')
     parent_menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
@@ -1311,13 +1469,15 @@ class MenuNode(models.Model):
         node_structure = {
             'name': cloud_portal_asset.replace_global_values(self.name, global_contexts_dict),
             'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
+            'asset_id': self.asset.id if self.asset else None,
+            'asset_type': AssetType.ASSET_TYPES[self.asset.asset_type.type] if self.asset else None,
             'new_window': self.new_window,
             'icon': self.icon,
+            'permissions': list(self.permissions.values_list('codename', flat=True)),
             'authentication': self.AUTH_CHOICES[self.authentication],
             'order': self.order
         }
-        node_structure['display_name'] = cloud_portal_asset.replace_global_values(
-            self.display_name, global_contexts_dict) if self.display_name else node_structure['name']
+        node_structure['display_name'] = node_structure['name']
 
         if depth < max_depth:
             nodes = self.nodes_list
@@ -1325,7 +1485,8 @@ class MenuNode(models.Model):
                 node_list = []
                 for node in nodes:
                     if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
-                            (not node.condition or global_contexts_dict.get(node.condition, False)):
+                            (not node.condition or global_contexts_dict.get(node.condition, False)) and \
+                            (not node.asset or node.asset.version_id(customization.name) != 0):
                         node_list.append(node.process_node(
                             cloud_portal_asset, customization, global_contexts_dict, depth + 1, max_depth
                         ))

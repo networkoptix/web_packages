@@ -1,15 +1,22 @@
 import base64
-import json
 import codecs
+from io import BytesIO
+import json
+import logging
 import os
 import re
-import logging
+import requests
+import uuid
 from zipfile import ZipFile
 
+from django.conf import settings
+from django.core.files.base import ContentFile
+
+from cms.controllers.documentation import DOC_CACHE
 from cms.controllers.generate_structure import templatify_json
-from cms.controllers.modify_db import save_unrevisioned_records
+from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
-    Menu
+    Menu, AssetCustomizationReview
 
 logger = logging.getLogger(__name__)
 
@@ -108,13 +115,18 @@ def read_structure_json(filename):
 def process_node(node_obj, node_struct):
     if not node_obj.touched:
         node_obj.name = node_struct['name']
-        node_obj.display_name = node_struct.get('display_name', '')
         node_obj.url = node_struct.get('url', '')
         node_obj.new_window = node_struct.get('new_window', False)
         node_obj.condition = node_struct.get('condition', '')
         node_obj.authentication = MenuNode.AUTH_CHOICES.__getattr__(node_struct.get('authentication', 'both'))
         node_obj.icon = node_struct.get('icon', '')
-        node_obj.order = node_struct.get('order', 0)
+        if node_struct.get('asset', False) and not node_obj.asset:
+            asset_type = AssetType.objects.filter(
+                type=AssetType.ASSET_TYPES.__getattr__(node_struct.get('asset_type', 'documentation')), name=''
+            ).order_by('pk').first()
+            asset = Asset.objects.create(name=node_obj.name, asset_type=asset_type)
+            asset.customizations.set(Customization.objects.all())
+            node_obj.asset = asset
         node_obj.save(touched=False)
 
         enabled = node_struct.get('enabled', False)
@@ -126,7 +138,8 @@ def process_node(node_obj, node_struct):
     for inner_node_structure in node_struct.get('nodes', []):
         inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
         if not inner_node_obj:
-            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True)
+            last_node = node_obj.nodes.order_by('id').last()
+            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
         process_node(inner_node_obj, inner_node_structure)
 
 
@@ -144,7 +157,8 @@ def read_menu_structure(filename):
             for node_structure in menu.get('nodes', []):
                 node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
                 if not node_obj:
-                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True)
+                    last_node = menu_obj.nodes.order_by('id').last()
+                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
                 process_node(node_obj, node_structure)
     Menu.cache_all_customizations()
 
@@ -449,13 +463,54 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.save()
 
 
+def external_file_to_content_file(url):
+    file_content = requests.get(url).content
+    filename = url.split('/')[-1]
+    return ContentFile(file_content, name=filename)
+
+
 def update_asset_by_json(asset, asset_json, user):
+    def sub_image_sources(match_obj):
+        file_id = str(uuid.uuid4())
+        files[file_id] = external_file_to_content_file(match_obj[1])
+        return f'src="{{image_import:{file_id}}}"'
+
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
         context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
         data_records = {}
+        files = {}
         for ds in context["values"]:
-            if DataStructure.get_type_by_name(ds["type"]) not in [DataStructure.DATA_TYPES.file,
-                                                                  DataStructure.DATA_TYPES.image]:
-                data_records[ds["name"]] = ds["value"]
-        save_unrevisioned_records(asset, None, None, context_model.datastructure_set.all(), data_records, {}, user)
+            ds_obj = context_model.datastructure_set.filter(name=ds['name']).first()
+            if ds_obj:
+                ds_type = DataStructure.get_type_by_name(ds['type'])
+                if ds_type not in [DataStructure.DATA_TYPES.file,
+                                   DataStructure.DATA_TYPES.image]:
+                    if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                        files[ds['name']] = external_file_to_content_file(ds['value'])
+                    elif ds_type == DataStructure.DATA_TYPES.html and ds_obj.meta_settings.get('upload_data_images', False):
+                        ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                    data_records[ds["name"]] = ds["value"]
+        save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
+
+
+def import_assets_from_json(assets_list, user, publish=False):
+    for asset_dict in assets_list:
+        asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
+        asset_obj = Asset.objects.filter(name=asset_dict['name'], asset_type=asset_type).first()
+        if not asset_obj:
+            asset_obj = Asset.objects.create(name=asset_dict['name'], asset_type=asset_type)
+            asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+        update_asset_by_json(asset_obj, asset_dict, user)
+
+        if publish:
+            # Send for review
+            send_version_for_review(asset_obj, user)
+            asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
+
+            # Accept review
+            for customization in asset_obj.customizations.all():
+                review = AssetCustomizationReview.objects.filter(version__asset=asset_obj, customization=customization).last()
+                update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+            if asset_obj.is_documentation:
+                DOC_CACHE.clear_cache()

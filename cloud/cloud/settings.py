@@ -41,6 +41,7 @@ from cloud.logger import downgrade_unauthorized_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+INSTANCE = os.getenv('INSTANCE_NAME', 'local')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
@@ -65,6 +66,7 @@ if not CUSTOMIZATION:
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (
+        os.path.join(STATIC_LOCATION, 'common/static'),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
     )
@@ -91,6 +93,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
 
     'drf_yasg',
 
@@ -163,6 +166,8 @@ TEMPLATES = [
     },
 ]
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 WSGI_APPLICATION = 'cloud.wsgi.application'
 
 # Database
@@ -230,14 +235,16 @@ CACHES = {
     "push_authentication": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "TIMEOUT": 60 * 60 * 24,  # 1 day
         "LOCATION": REDIS_CACHE['LOCATION'] + '/4',
-        "TIMEOUT": 60 * 60 * 24  # 1 day
+        "KEY_PREFIX": "push_authentication"
     },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
         "OPTIONS": REDIS_CACHE['OPTIONS'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/5'
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/5',
+        "KEY_PREFIX": "push_config"
     },
     "global": {
         "BACKEND": REDIS_CACHE['BACKEND'],
@@ -265,6 +272,13 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/9',
         "KEY_PREFIX": "packages",
         "TIMEOUT": 60 * 60
+    },
+    "documentation": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 24 * 60 * 60,  # 1 day
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/10',
+        "KEY_PREFIX": 'documentation'
     }
 }
 
@@ -403,6 +417,8 @@ EMAIL_HOST_PASSWORD = conf['smtp']['password']
 EMAIL_PORT = conf['smtp']['port']
 EMAIL_USE_TLS = conf['smtp']['tls']
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
 
 # Package Settings
 
@@ -440,6 +456,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.DataStructure',
                    'cms.models.ExternalFile',
                    'cms.models.Language',
+                   'cms.models.MenuNode',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
@@ -536,6 +553,9 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     'MAX_RETRIES': 3,
     'RETRY_INTERVAL': 20
 }
+
+TINYMCE_JS_URL = STATIC_URL + 'tinymce/js/tinymce/tinymce_min.js'
+TINYMCE_JS_ROOT = STATIC_ROOT + 'tinymce/js/tinymce'
 
 
 NPM_ROOT_PATH = BASE_DIR

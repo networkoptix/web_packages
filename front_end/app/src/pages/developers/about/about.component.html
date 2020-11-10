@@ -1,19 +1,28 @@
 <ng-template #preloader>
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
+<ng-template #intro let-intro="intro">
+    <div class="about-heading">
+        <h1>{{intro.title}}</h1>
+        <p *ngFor="let block of intro.asset.blocks || []" [innerHTML]="block.contentHTML || ''"></p>
+    </div>
+</ng-template>
 <ng-container *ngIf="headerService.currentLocation.path === '/developers'">
     <ng-container *ngIf="aboutStructure;else preloader">
-        <div class="about-heading">
-            <h1>{{aboutStructure.intro.title}}</h1>
-            <p *ngFor="let block of aboutStructure.intro.asset.blocks || []" [innerHTML]="block.contentHTML || ''"></p>
-        </div>
-        <nx-capabilities 
-            [capabilitiesNode]="aboutStructure.whatsPossible"
-            [supportedTechNode]="aboutStructure.supportedTech"></nx-capabilities>
-        <nx-get-started [getStartedNode]="aboutStructure.getStarted"></nx-get-started>
-        <nx-dev-tools [devToolsNode]="aboutStructure.devTools"></nx-dev-tools>
-        <nx-integrations [integrationsNode]="aboutStructure.integrations"></nx-integrations>
-        <nx-support [supportNode]="aboutStructure.support"></nx-support>
+        <ng-container *ngFor="let node of aboutStructure" [ngSwitch]="node.template">
+            <ng-container *ngSwitchCase="aboutCases.INTRO">
+                <ng-container *ngTemplateOutlet="intro;context:{intro:node.node}"></ng-container>
+            </ng-container>
+            <nx-capabilities *ngSwitchCase="aboutCases.CAPABILITIES" [capabilitiesNode]="node.node"></nx-capabilities>
+            <nx-get-started *ngSwitchCase="aboutCases.GET_STARTED" [getStartedNode]="node.node"></nx-get-started>
+            <nx-dev-tools *ngSwitchCase="aboutCases.DEV_TOOLS" 
+                [devToolsNode]="node.node"
+                [title]="node.node.displayName || node.node.title || node.node.asset.title"
+            ></nx-dev-tools>
+            <nx-integrations *ngSwitchCase="aboutCases.INTEGRATIONS" [integrationsNode]="node.node"></nx-integrations>
+            <nx-support *ngSwitchCase="aboutCases.SUPPORT" [supportNode]="node.node"></nx-support>
+            <nx-supported-tech *ngSwitchCase="aboutCases.SUPPORTED_TECH" [supportedTechNode]="node.node"></nx-supported-tech>
+        </ng-container>
     </ng-container>
 </ng-container>
 <router-outlet></router-outlet>

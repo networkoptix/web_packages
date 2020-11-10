@@ -1,5 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
+@use '~bootstrap/scss/bootstrap';
 
 .about-heading {
     padding: 60px 16px;
@@ -7,10 +8,17 @@
     align-items: center;
     flex-direction: column;
     color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        padding: 44px 16px 16px 16px;
+    }
     & > h1 {
         font-family: $font-family-light;
         font-size: 64px !important;
         text-align: center;
+        @include bootstrap.media-breakpoint-down(xs) {
+            font-family: $font-family-medium !important;
+            font-size: 24px !important;
+        }
     }
     & > p {
         @include typography.regular14;

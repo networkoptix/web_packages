@@ -50,6 +50,7 @@ def get_settings_from_cache():
         'copyrightYear': customization_cache.get('copyright_year', ''),
         'companyName': customization_cache.get('company_name', ''),
         'companyLink': customization_cache.get('company_link', ''),
+        'developersEnabled': customization_cache.get('developers_enabled', False),
         'feedbackEnabled': customization_cache.get('feedback_enabled', False),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
@@ -71,7 +72,6 @@ def get_settings_from_cache():
         'pushConfig': customization_cache.get('push_config', {}),
         'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
         'trialLicenseKey': customization_cache.get('trial_license_key', ''),
-        'menus': get_cached_menu(settings.CUSTOMIZATION)
     }
 
 
@@ -325,6 +325,7 @@ def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
         del settings_object['version_id']
+    settings_object['menus'] = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
 
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
@@ -333,6 +334,10 @@ def get_settings(request):
     if not settings_object.get('integrationStoreEnabled') and \
             UserGroupsToAssetPermissions.user_has_beta_access(request.user):
         settings_object['integrationStoreEnabled'] = True
+    if not settings_object.get('developersEnabled', False) and \
+            UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
+        settings_object['developersEnabled'] = True
     return Response(settings_object)
 
 

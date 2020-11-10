@@ -8,6 +8,7 @@ from notifications.views import send
 
 urlpatterns = [
     url(r'^account-autocomplete/$', account.AccountAutocomplete.as_view(), name='account-autocomplete',),
+    url(r'^permission-autocomplete/$', account.PermissionsAutocomplete.as_view(), name='permission-autocomplete',),
     url(r'^utils/visitedKey/?$',                utils.visited_key),
     url(r'^utils/language/?$',                  utils.language),
     url(r'^utils/downloads/history$',           utils.downloads_history),

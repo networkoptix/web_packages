@@ -99,8 +99,8 @@ export interface Common {
     resolution:                 Resolution;
     general:                    any;
     inaccessibleFeatureMessage: any;
+    morePlugins:                any;
     searchCamPlaceholder:       any;
-    server:                     any;
     system:                     any;
     systemHasNoCameras:         any;
     systemHasNoCamerasMessage:  any;
@@ -117,6 +117,7 @@ export interface Common {
     vendor:                     any;
     model:                      any;
     ip:                         any;
+    server:                     any;
     os:                         any;
     version:                    any;
     voiceCommands:              VoiceCommands;
@@ -1048,8 +1049,8 @@ const typeMap: any = {
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "any" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
+        { json: "morePlugins", js: "morePlugins", typ: "any" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "any" },
-        { json: "server", js: "server", typ: "any" },
         { json: "system", js: "system", typ: "any" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "any" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "any" },
@@ -1066,6 +1067,7 @@ const typeMap: any = {
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "model", js: "model", typ: "any" },
         { json: "ip", js: "ip", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
         { json: "os", js: "os", typ: "any" },
         { json: "version", js: "version", typ: "any" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },

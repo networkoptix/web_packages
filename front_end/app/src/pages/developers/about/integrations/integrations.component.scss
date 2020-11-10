@@ -2,6 +2,11 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '~bootstrap/scss/bootstrap';
 
+$tablet-breakpoint: 609px;
+$large-tablet-breakpoint: 1049px;
+$desktop-breakpoint: 1265px;
+$large-desktop-breakpoint: 1477px;
+
 .heading-link {
     @include typography.regular24;
     cursor: pointer;
@@ -15,16 +20,25 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 96px auto 0 auto;
-    padding: 0 16px;
+    margin: 36px auto 0 auto;
+    padding: 0;
     color: $dark10;
 
+    @media screen and (min-width: $tablet-breakpoint) {
+        padding: 0 8px;
+        margin-top: 96px !important;
+    }
+
     &-wrapper {
-        width: 100%;
         display: flex;
-        justify-content: stretch;
+        
+        justify-content: center;
         flex-direction: row;
-        margin: 0 -16px -16px 0;
+        margin: 0 -1rem -1rem 0;
+        width: calc(100% - 1rem);
+        @media screen and (min-width: $tablet-breakpoint) {
+            width: 100%;
+        }
     }
 
     button {
@@ -36,73 +50,110 @@
     display: flex;
     flex-direction: column;
     flex: 1 0 275px;
-    padding: 16px;
+    padding: 1rem;
+
+    @media screen and (min-width: $tablet-breakpoint) {
+        max-width: 275px;
+    }
 
     p {
-        line-height: 16px;
-        margin-bottom: 16px;
+        line-height: 1rem;
+        margin-bottom: 1rem;
     }
 }
 
-.integrations-block {
-    flex: 0 1 100%;
-    padding: 16px;
-
-    @media screen and (max-width: 600px) {
-        margin: 56px -32px 56px -16px !important;
-        border-radius: 0 !important;
-    }
-}
-
-.info-block, .integrations-block {
-    margin: 0 16px 16px 0;
+.info-block{
+    margin: 0 1rem 1rem 0;
     h3 {
         @include typography.medium15;
-        margin-bottom: 16px;
     }
+}
+
+.integrations-block{
+    position: relative;
+    margin: 56px 0 1rem 0;
+    width: 100%;
+    max-width: 1200px;
+    @media screen and (min-width: $tablet-breakpoint) {
+        margin: 0 1rem 1rem 0;
+    }
+
+    h3 {
+        @include typography.medium15;
+    }
+
+    .store-button {
+        margin: 0 auto 20px 20px
+    }
+}
+
+.preloader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light1;
 }
 
 .integrations-blocks-wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 0 -48px -48px 0;
-    & > div {
-        cursor: pointer;
-        margin: 0 64px 64px 0;
-        width: 80px;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 4px;
+    margin: 20px;
+
+    @media screen and (min-width: $tablet-breakpoint) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (min-width: $large-tablet-breakpoint) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (min-width: $desktop-breakpoint) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media screen and (min-width: $large-desktop-breakpoint) {
+        grid-template-columns: repeat(5, 1fr);
     }
 
 }
 
 .integration-block {
-    svg-icon > svg {
-        width: 80px;
-        height: 80px;
-    }
-    p {
-        text-align: center;
-        font-size: 14px;
-        line-height: 16px;
-    }
-}
-
-.more-integrations {
+    cursor: pointer;
+    position: relative;
+    height: 72px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80px;
-    width: 80px;
-    border-radius: 15px;
-    border: solid 2px $light4;
-    p {
-        word-spacing: 80px;
-        text-align: center;
-        line-height: 15px;
-        margin-bottom: 0;
-        b {
-            font-size: 24px;
-            line-height: 28px;
+    border: 1px solid $light4;
+    background-color: $additional_light1;
+    &:hover {
+        background-color: $additional_light2;
+    }
+    img {
+        max-height: 54px;
+        max-width: calc(100% - 24px);
+    }
+}
+
+.integrations-block {
+    @media screen and (max-width: $tablet-breakpoint) {
+        width: 100%;
+    }
+    & > h3 {
+        margin: 20px 20px 0 20px;
+    }
+}
+
+.more-span- {
+    @for $start from 1 through 5 {
+        &#{$start} {
+            grid-column: -#{$start + 1} / -1;
         }
     }
 }

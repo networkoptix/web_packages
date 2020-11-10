@@ -4,8 +4,6 @@
 
 {% block extrahead %}
     {{ block.super }}
-    <script>window.$ = django.jQuery;</script>
-    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'split.js/dist/split.min.js' %}"></script>
 {% endblock %}
 {% block content_title %}

@@ -1,0 +1,63 @@
+<style>
+    .field-{{ widget.field_name }}, .field-{{ widget.field_name }} * {
+        overflow: visible;
+        color: unset;
+    }
+
+    .field-{{ widget.field_name }} .btn-group:not(.open) > ul.dropdown-menu {
+        display: none;
+    }
+
+    .field-{{ widget.field_name }} .dropdown-menu > .active > a {
+        background-image: none;
+    }
+
+    .field-{{ widget.field_name }} .dropdown-menu > li > a > label {
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: 1.6;
+    }
+
+    .field-{{ widget.field_name }} .dropdown-menu > li > a > label:after {
+        content: none;
+    }
+
+    .field-{{ widget.field_name }} .dropdown-menu > li > a > label input[type="checkbox"] {
+        margin-top: 3px;
+    }
+</style>
+
+{% include 'django/forms/widgets/select.html' %}
+
+<script>
+
+    (function ($) {
+        function {{ widget.field_name }}AddHandler() {
+            setTimeout(function () {
+                const selects = $('.field-{{ widget.field_name }} select.multiselect').not('select.initialized, .djn-empty-form *');
+                selects.multiselect({{ widget.options_json | safe }});
+                selects.addClass('initialized');
+                {{ widget.field_name }}bindAddHandlers();
+            });
+        }
+
+        function {{ widget.field_name }}bindAddHandlers() {
+            $('.add-handler').each(function(key, el) {
+                const events = $._data(el).events;
+                if (!events || !events.click || !events.click.find(clickEvent => clickEvent.handler.name === '{{ widget.field_name }}AddHandler')) {
+                    $(el).click({{ widget.field_name }}AddHandler);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const select = $('#{{ widget.attrs.id }}');
+            const nonEmptySelect = select.not('.djn-empty-form *');
+            select.addClass('multiselect');
+            nonEmptySelect.multiselect({{ widget.options_json | safe }});
+            nonEmptySelect.addClass('initialized');
+            {{ widget.field_name }}bindAddHandlers();
+        });
+    })(django.jQuery);
+</script>

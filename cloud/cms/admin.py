@@ -6,14 +6,14 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, path
 from django.utils.html import format_html
 
 import nested_admin
 
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
-from cms.views.asset import page_editor, review
+from cms.views.asset import page_editor, review, response_attachment
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -856,28 +856,40 @@ class ContributorAgreementAdmin(CMSAdmin):
             return format_html('<a href="{}">Review</a>', link)
 
 
-class MenuNodeInline(nested_admin.NestedTabularInline):
+class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabularInline):
     model = MenuNode
+    form = MenuNodeInlineForm
     # Hack to force inlines checking. Inlines are actually populated by get_inline_instances below
     inlines = [None]
     sortable_field_name = 'order'
     extra = 0
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
-    fields = ('name', 'display_name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'enabled_ro', 'is_global')
-    readonly_fields = ('enabled_ro', 'is_global')
+    fields = ('name', 'asset', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'permissions', 'enabled', 'is_global', 'preview')
+    readonly_fields = ('is_global', 'preview')
 
     def __init__(self, *args, **kwargs):
         self.depth = kwargs.pop('depth', 1)
         self.total_depth = kwargs.pop('total_depth', 1)
+        self.chosen_customization = kwargs.pop('customization', 'all')
+        self.user_customizations = kwargs.pop('user_customizations', [])
         super().__init__(*args, **kwargs)
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        formset.form.current_customization = self.chosen_customization
+        formset.form.user_customizations = self.user_customizations
+        return formset
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by('order')
 
     def get_inline_instances(self, request, obj=None):
         if self.depth < self.total_depth:
-            return [MenuNodeInline(self.model, self.admin_site, depth=self.depth + 1, total_depth=self.total_depth)]
+            return [MenuNodeInline(
+                self.model, self.admin_site, depth=self.depth + 1, total_depth=self.total_depth,
+                customization=self.chosen_customization, user_customizations=self.user_customizations
+            )]
         return []
 
     def enabled_ro(self, obj):
@@ -886,10 +898,39 @@ class MenuNodeInline(nested_admin.NestedTabularInline):
         return ''
     enabled_ro.short_description = 'Enable / Disable'
 
+    def preview(self, obj):
+        if obj:
+            if obj.url:
+                obj_url = obj.url
+                if not obj_url.startswith('http') and not obj_url.startswith('/'):
+                    obj_url = '/' + obj_url
+                return format_html(f'<a href="{obj_url}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+            elif obj.asset:
+                return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+        return ''
+
 
 @admin.register(Menu)
 class MenuAdmin(nested_admin.NestedModelAdmin):
     list_display = ('name', 'depth')
+    form = MenuChangeForm
+
+    class Media:
+        js = ('js/menuChange.js',)
+
+    def get_fields(self, request, obj=None):
+        fields = [field for field in super().get_fields(request, obj)]
+        if not (obj and obj.pk):
+            fields.remove('customization_view')
+        return fields
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        self.chosen_customization = request.GET.get('customization', 'all')
+        if self.chosen_customization != 'all':
+            self.chosen_customization = Customization.objects.filter(
+                name=self.chosen_customization, name__in=request.user.customizations
+            ).first() or 'all'
+        return super().change_view(request, object_id, form_url, extra_context)
 
     def get_inline_instances(self, request, obj=None):
         # This serves two purposes:
@@ -898,26 +939,83 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if obj and obj.pk:
             obj_orig = Menu.objects.get(pk=obj.pk)
             if obj_orig.depth > 0:
-                return [MenuNodeInline(self.model, self.admin_site, depth=1, total_depth=obj_orig.depth)]
+                return [MenuNodeInline(
+                    self.model, self.admin_site, depth=1, total_depth=obj_orig.depth,
+                    customization=self.chosen_customization, user_customizations=request.user.customizations
+                )]
         return []
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        if obj and obj.pk:
+            form.user_customizations = request.user.customizations
+            form.current_customization = self.chosen_customization
+        return form
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        transaction.on_commit(Menu.cache_all_customizations)
+        transaction.on_commit(MENU_CACHE.clear_cache)
+
+    def response_change(self, request, obj):
+        response = super().response_change(request, obj)
+        if '_continue' in request.POST:
+            return redirect(f'{request.path}?{request.META.get("QUERY_STRING")}')
+        return response
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('port/', self.admin_site.admin_view(self.menu_porting), name='menu_porting'),
+        ]
+        return my_urls + urls
+
+    def menu_porting(self, request):
+        form_export = None
+        form_import = None
+        if request.method == "POST":
+            if 'export' in request.POST:
+                form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
+                if form_export.is_valid():
+                    data = form_export.cleaned_data
+                    menu_obj = data['menu']
+                    content = json.dumps(menu_obj.to_dict(), ensure_ascii=False, indent=4, separators=(',', ': '))
+                    return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+            elif 'import' in request.POST:
+                form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
+                if form_import.is_valid():
+                    data = form_import.cleaned_data
+                    menu = data['menu']
+                    menu.from_dict(json.load(request.FILES['file']))
+                    messages.success(request, 'Successfully imported menu')
+
+        if not form_export:
+            form_export = MenuPortForm(port_type='export')
+        if not form_import:
+            form_import = MenuPortForm(port_type='import')
+
+        return render(request, 'cms/menu_porting.html',
+                      {'formExport': form_export,
+                       'formImport': form_import,
+                       'user': request.user,
+                       'has_permission': admin.site.has_permission(request),
+                       'site_url': admin.site.site_url,
+                       'site_header': admin.site.site_header,
+                       'site_title': admin.site.site_title,
+                       'title': 'Export/Import Menus'})
 
 
 @admin.register(MenuNode)
 class MenuNodeAdmin(CMSAdmin):
-    list_display = ('name', 'display_name')
+    list_display = ('name',)
     form = MenuNodeChangeForm
-    fields = ('name', 'display_name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available', 'enabled')
+    fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available', 'enabled')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        transaction.on_commit(Menu.cache_all_customizations)
+        transaction.on_commit(MENU_CACHE.clear_cache)
 
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()

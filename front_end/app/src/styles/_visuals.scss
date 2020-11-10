@@ -7,6 +7,10 @@
     background-color : rgba(theme_variables.$yellow_main, 0.5);
 }
 
+.brand-text {
+    color: theme_variables.$brand_core !important;
+}
+
 .ellipsis {
     overflow      : hidden;
     text-overflow : ellipsis;

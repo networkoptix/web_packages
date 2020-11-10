@@ -223,6 +223,35 @@ img.light {
 .djn-table td {
     padding: 8px;
 }
+.inline-related .collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+}
+
+.inline-related .toggle-collapse {
+    padding-top: 10px !important;
+    cursor: pointer;
+}
+
+.inline-related .toggle-collapse:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e259"
+}
+
+.inline-related .toggle-collapse.collapsed:after {
+    content: "\e258";
+}
+
+.inline-related .djn-drag-handler {
+    margin-top: 4px;
+}
+
+.inline-related td {
+    padding-top: 6px !important;
+    padding-bottom: 2px !important;
+}
+
 
 .enable-all-button {
     display: block;

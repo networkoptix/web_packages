@@ -25,6 +25,7 @@ export interface BaseConfig {
     downloads: Downloads;
     healthMonitoring: HealthMonitoring;
     icons: Icons;
+    images: Images;
     // TODO Need to double check this type, object in config but accessed as array in integrations.component.ts
     // This is on line 107
     integration: Integration | any;
@@ -145,6 +146,7 @@ export interface ClientMode {
 }
 
 export interface CloudCapabilities {
+    developersEnabled: string,
     feedbackEnabled: string;
     healthMonitor?: string;
     healthMonitorCacheTimeout?: number;
@@ -326,11 +328,18 @@ export interface Bps {
 export interface Icons {
     default: string;
     platforms: Platform[];
+    devTools: string;
+    backgrounds: string;
     dir: string;
     dirButtons: string;
     dirNonStandard: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
+}
+
+export interface Images {
+    dir: string;
+    dirDevelopers: string;
 }
 
 export interface Platform {

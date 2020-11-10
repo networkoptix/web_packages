@@ -1,5 +1,6 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
+@use '~bootstrap/scss/bootstrap';
 
 .heading-link {
     cursor: pointer;
@@ -17,6 +18,9 @@
     padding: 0 16px;
     max-width: 896px;
     color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-bottom: 24px !important;
+    }
 }
 
 .detail-blocks {
@@ -24,6 +28,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin: 8px -16px 0 0;
+    }
 }
 
 .capability-card {
@@ -32,13 +39,20 @@
     min-width: 275px;
     margin: 0 16px 16px 0;
     cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 4px 8px 0 rgba(199, 199, 199, 0.2);
+    }
+    &:active {
+        box-shadow: 0 0 14px 0 rgba(199, 199, 199, 0.5);
+    }
     & header {
+        background-repeat: repeat;
         display: flex;
         flex-direction: column;
         justify-content: stretch;
         padding: 16px;
         min-height: 114px;
-        background-size: cover;
         & > svg-icon > svg {
             height: 30px;
             & > .st0{
@@ -48,8 +62,8 @@
             }
         }
         & > .intro-line {
-            @include typography.regular14;
-            color: rgba($light1, 0.5);
+            @include typography.medium14;
+            color: rgba($light1, 0.5) !important;
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
@@ -57,58 +71,12 @@
             margin-bottom: 3px;
         }
         & > h3 {
-            @include typography.regular20;
-            color: $light1;
+            @include typography.medium24;
+            color: $light1 !important;
             margin: 0;
         }
     }
     & > .capability-detail {
         padding: 16px;
-    }
-}
-
-.supported-tech {
-    background: $light1;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 52px 16px 64px 16px;
-    color: $dark10;
-
-    .heading-link {
-        margin-bottom: 10px;
-    }
-
-    .tech-wrapper {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin: 48px -72px -12px 16px;
-        
-        & > .tech-block {
-            margin: 0 78px 78px 0;
-            cursor: pointer;
-            & > svg-icon > svg {
-                height: 60px;
-            }
-        }
-    }
-
-    .language-wrapper {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin: 0 8px -8px 16px;
-
-        & > .language-block {
-            margin: 0 8px 8px 0;
-            background: $light4;
-            color: $light16;
-            padding: 3px 8px;
-            cursor: pointer;
-            & > svg-icon > svg {
-                height: 60px;
-            }
-        }
     }
 }

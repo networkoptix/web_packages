@@ -166,11 +166,17 @@ export const nxConfig: IConfig = {
             { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
             { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
         ],
+        devTools              : '/static/images/icons/dev_tools/',
+        backgrounds           : '/static/images/icons/backgrounds/',
         dir                   : '/static/images/icons/standard/',
         dirButtons            : '/static/images/icons/buttons/',
         dirNonStandard        : '/static/images/icons/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
         dirSectionPlaceholder : '/static/images/placeholders/section/'
+    },
+    images: {
+        dir           : '/static/images/',
+        dirDevelopers : '/static/images/developers/'
     },
     integration: {
         adminLink            : '/admin/cms/asset/%ID%/pages/',
@@ -355,6 +361,7 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
+        developersEnabled         : '',
         feedbackEnabled           : '',
         healthMonitor             : '',
         integrationStore          : '',

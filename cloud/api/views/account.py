@@ -4,6 +4,7 @@ import logging
 
 import django
 from django.conf import settings
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -418,3 +419,18 @@ class AccountAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(email__istartswith=self.q)
         return qs
+
+
+class PermissionsAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_superuser:
+            return Permission.objects.none()
+
+        qs = Permission.objects.all()
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+        return qs
+
+    def get_selected_result_label(self, item):
+        return item.name

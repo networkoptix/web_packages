@@ -1,5 +1,5 @@
 import { Injectable }               from '@angular/core';
-import { HttpClient, HttpHeaders }  from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -69,7 +69,11 @@ export class NxCloudApiService {
     }
 
     getIntegrations() {
-        return this.http.get<t.Integration>(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
+    }
+
+    getIntegrationsCount() {
+        return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/integration_count');
     }
 
     getIntegrationBy(id: number, status: string) {
@@ -341,14 +345,20 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number, tags?: string | number}) {
+    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number, tags?: string | number}, state?: string) {
         let endpoint = '';
+        const params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             endpoint = `/${assetIdOrSearchObject}`;
+            if (state) {
+                params.set('state', state);
+            }
         } else if (assetIdOrSearchObject?.query || assetIdOrSearchObject?.tags) {
             endpoint = `?filter=${assetIdOrSearchObject.query}&tags=${assetIdOrSearchObject.tags}&page=${assetIdOrSearchObject.page || 1}`;
+            params.set('filter', `${assetIdOrSearchObject.query}`);
+            params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }
-        const route = `${this.CONFIG.apiBase}/documentation${endpoint}`;
+        const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route);
     }

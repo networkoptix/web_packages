@@ -3,7 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.html import format_html
 from django.contrib import admin
@@ -17,13 +17,13 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
-from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
+from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
 from cms.tasks import get_package_cache_key, make_package
 
-from .integration import INTEGRATION_CACHE
+from ..controllers.documentation import DOC_CACHE
 
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
@@ -131,6 +131,11 @@ def context_editor_action(request, asset, context_id, language_code):
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
             add_upload_error_messages(request, "Asset error for {}. {}", asset_errors)
         else:
+            # To cache documentation and verify that html body can be parsed correctly
+            if asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                documentation.generate_doc_json(
+                    [asset], language=language, draft=preview or save_draft, review=send_review
+                )
             if preview:
                 if asset.can_preview_on_portal:
                     if asset.is_dirty:
@@ -248,13 +253,14 @@ def review(request):
                     messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
                 else:
                     messages.success(request, f"Version {publishing_errors} has been published")
-                INTEGRATION_CACHE.clear_cache()
             else:
                 messages.success(request, "Version {} has been published".format(asset_review.version.id))
             INTEGRATION_CACHE.clear_cache()
         else:
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
+            if asset.is_documentation:
+                DOC_CACHE.clear_cache()
 
     elif revoke and can_publish:
         if asset.is_cloud_portal and not asset.can_preview_on_portal:
@@ -336,7 +342,7 @@ def asset_settings(request, asset_id):
     asset = Asset.objects.get(pk=asset_id)
     form = None
     if request.method == "POST":
-        form = AssetSettingsForm(request.POST, request.FILES)
+        form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
         if not form.is_valid():
             form = None
 
@@ -345,15 +351,20 @@ def asset_settings(request, asset_id):
         generate_json = action == 'generate_json'
         merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
-        create_records_by_json = action == 'create_records_by_json'
+        update_asset_by_json = action == 'update_asset_by_json'
+        import_assets_from_json = action in ('import_assets_from_json', 'import_assets_from_json_publish')
+        import_assets_from_json_publish = action == 'import_assets_from_json_publish'
         update_content = action == 'update_content'
 
         file = request.FILES["file"]
 
         if file.name.endswith('json'):
-            if create_records_by_json:
+            if update_asset_by_json:
                 structure.update_asset_by_json(asset, json.load(file)[0], request.user)
                 messages.success(request, "Content updated")
+            elif import_assets_from_json:
+                structure.import_assets_from_json(json.load(file), request.user, publish=import_assets_from_json_publish)
+                messages.success(request, "Assets imported")
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             else:
@@ -389,7 +400,7 @@ def asset_settings(request, asset_id):
                 }[item[0]]
                 messages.add_message(request, log_type, item[1])
     else:
-        form = AssetSettingsForm()
+        form = AssetSettingsForm(user=request.user)
 
     return render(request, 'cms/asset_settings.html',
                   {'asset': asset,
@@ -422,6 +433,23 @@ def download_current_structure(request, asset_id):
             content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
         return response_attachment(content, file_name, 'application')
     return HttpResponseBadRequest("Asset not given or found")
+
+
+@require_http_methods(["GET"])
+@permission_required('cms.change_asset')
+def download_all_asset_structures(request, asset_type):
+    assets = Asset.objects.filter(asset_type__type=asset_type)
+    data = []
+    for asset in assets:
+        if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
+            continue
+        asset_dict = generate_structure.from_database(asset, True)[0]
+        asset_dict['name'] = asset.name
+        asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
+        data.append(asset_dict)
+    content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+    file_name = "structure.json"
+    return response_attachment(content, file_name, 'application')
 
 
 @require_http_methods(["GET"])
@@ -542,3 +570,51 @@ def get_asset_ids_by_asset_type(request):
         asset_ids = asset_ids.filter(customizations__name__in=[customization])
 
     return api_success(asset_ids)
+
+
+class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_staff:
+            return Asset.objects.none()
+
+        qs = Asset.objects.filter(
+            asset_type__type__in=[AssetType.ASSET_TYPES.documentation, AssetType.ASSET_TYPES.integration]
+        )
+        if not self.request.user.is_superuser:
+            qs = qs.filter(customization__name__in=self.request.user.customizations_with_permission('cms.publish_version'))
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        return qs
+
+    def create_object(self, text):
+        doc_type = AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation, name='').order_by('pk').first()
+        params = {
+            'asset_type': doc_type,
+            self.create_field: text
+        }
+        asset, created = self.get_queryset().get_or_create(**params)
+        if created:
+            asset.customizations.set(Customization.objects.all())
+        return asset
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_asset_state(request, asset_id):
+    require_params(request, ('customization',))
+    customization = request.GET.get('customization')
+    asset = get_object_or_404(Asset, id=asset_id, customizations__name=customization)
+    if not request.user.is_superuser and not (
+            UserGroupsToAssetPermissions.check_customization_publish(request.user) and
+            UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
+    ):
+        raise APIException('Cannot access state for this asset')
+
+    state = 'Draft'
+    latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
+    if latest_review:
+        state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+
+    return api_success({'state': state})

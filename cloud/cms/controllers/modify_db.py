@@ -1,5 +1,6 @@
 from datetime import datetime
 import base64
+from io import BytesIO
 import json
 import re
 import uuid
@@ -7,19 +8,24 @@ import hashlib
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
+from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
 
+from cms.controllers.documentation import DOC_CACHE
 from cms.controllers.filldata import fill_content
 from api.models import Account
 from cms.models import *
+from cms.views.integration import INTEGRATION_CACHE
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
     AssetCustomizationReview.REVIEW_STATES.pending].lower()
 GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
+DATA_IMG_SRC_REGEX = re.compile(r'src="data:image/.*?;base64,(.*?)"')
+IMPORT_IMG_SRC_REGEX = re.compile(r'src="{image_import:(.*?)}"')
 
 
 def update_draft_state(review_id, target_state, user):
@@ -275,6 +281,40 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 has_error = True
         return True
 
+    def process_html():
+        def upload_image(content_file):
+            md5 = hashlib.md5()
+            for chunk in content_file.chunks():
+                md5.update(chunk)
+
+            ext_file = ExternalFile(data_structure=data_structure, asset=asset)
+            ext_file.save()
+
+            ext_file.file = content_file
+            ext_file.md5 = md5.hexdigest()
+            ext_file.size = content_file.size
+            ext_file.save()
+
+            return f'src="{ext_file.file.url}"'
+
+        def upload_data_image_match(match_obj):
+            byte_image = base64.b64decode(match_obj[1] + '===')
+            pil_image = Image.open(BytesIO(byte_image))
+            content_file = ContentFile(
+                byte_image, name=f'{data_structure.name}-{str(uuid.uuid4())}.' + pil_image.format.lower()
+            )
+            return upload_image(content_file)
+
+        def upload_imported_image(match_obj):
+            content_file = request_files[match_obj[1]]
+            return upload_image(content_file)
+
+        nonlocal new_record_value
+        if data_structure.meta_settings.get('upload_data_images', False):
+            new_record_value = DATA_IMG_SRC_REGEX.sub(upload_data_image_match, new_record_value)
+            new_record_value = IMPORT_IMG_SRC_REGEX.sub(upload_imported_image, new_record_value)
+        return True
+
     def check_optional():
         nonlocal new_record_value
         # If the data structure is not optional and has no value use the default.
@@ -295,13 +335,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
     upload_errors = []
     # Only process non-translatable data structures if language is default.
-    process_nontranslatable = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language == language
+    default_language = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language
+    process_nontranslatable = default_language == language
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None
-        if context.translatable:
+        if context and context.translatable:
             if data_structure.translatable:
-                ds_language = language
+                ds_language = language or default_language
             elif not process_nontranslatable:
                 continue
 
@@ -349,6 +390,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             if not process_object_or_array():
+                continue
+        elif data_structure.type == DataStructure.DATA_TYPES.html:
+            if not process_other() or not process_html():
                 continue
         elif not process_other():
             continue
@@ -445,15 +489,18 @@ def remove_unused_records(asset):
 
 
 def generate_preview_link(context=None, asset=None, state=""):
+    params = urlencode({'state': state, 'id': asset.id})
     if asset:
         if asset.is_integration:
             return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
         elif asset.is_article:
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
             article_url = article_url.value if article_url else "tmp_url"
-            return f'/content/{article_url}?' + urlencode({'state': state, 'id': asset.id})
+            return f'/content/{article_url}?{params}'
         elif asset.is_agreement:
-            return '/agreement?' + urlencode({'state': state, 'id': asset.id})
+            return f'/agreement?{params}'
+        elif asset.is_documentation:
+            return f'/developers/knowledge-base/{asset.id}?{params}'
 
     return f"{context.url}?preview=true" if context and context.url else None
 
@@ -478,6 +525,11 @@ def publish_latest_version(asset, review_id, user, state=None):
 
     if not publish_errors and asset.can_preview_on_portal:
         fill_content(asset, preview=False, incremental=True)
+
+    if asset.is_cloud_portal:
+        MENU_CACHE.clear_cache()
+        INTEGRATION_CACHE.clear_cache()
+    DOC_CACHE.clear_cache()
     return publish_errors
 
 
@@ -547,7 +599,7 @@ def get_records_for_version(asset, version, customization):
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}
     context_preview_links = {'whole_preview': generate_preview_link(
-        None, asset, 'review'
+        None, asset, 'pending'
     )}
     used_data_structures = set()
 
@@ -564,7 +616,7 @@ def get_records_for_version(asset, version, customization):
             contexts[context_name] = [record]
             if asset.asset_type.type != AssetType.ASSET_TYPES.integration:
                 context_preview_links[context_name] = generate_preview_link(
-                    record.data_structure.context, asset, 'review'
+                    record.data_structure.context, asset, 'pending'
                 )
     return contexts, context_preview_links
 
