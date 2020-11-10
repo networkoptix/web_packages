@@ -189,7 +189,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             [this.systemNameWatcher],
             this.processService.createProcess(() => {
                 if (this.systemNameWatcher.changed) {
-                    return this.cloudApiService.renameSystem(this.system.id, this.systemName)
+                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName)
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
                         }).catch(() => {
