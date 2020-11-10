@@ -192,6 +192,8 @@ function local_build() {
     BUILD_DIR=~/Desktop/build
     REPO=$PWD
 
+    export IS_LOCAL=true
+
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
     [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules
     pushd $BUILD_DIR
