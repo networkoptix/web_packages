@@ -985,6 +985,10 @@ export class NxSystemAPI {
                 return this.post('/api/mergeSystems', data).toPromise();
             });
     }
+
+    renameSystem(_, systemName: string) {
+        return this.get('/api/systemSettings', { systemName }).toPromise();
+    }
 }
 
 @Injectable({
