@@ -19,6 +19,10 @@ import { QuicklinkStrategy }         from 'ngx-quicklink';
 
 const lazyRoutes: Routes = [
     {
+        path         : 'api-tool',
+        loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+    },
+    {
         path         : 'systems/:systemId/view',
         loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },
