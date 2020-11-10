@@ -10,9 +10,10 @@ import {
 import { ActivatedRoute }                   from '@angular/router';
 import { Location }                         from '@angular/common';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
-import { Subscription, SubscriptionLike }   from 'rxjs';
+import {
+    Subscription, SubscriptionLike, Subject
+}                                           from 'rxjs';
 import { debounceTime }                     from 'rxjs/operators';
-import { Subject }                          from 'rxjs/Subject';
 import { isArray }                          from 'rxjs/internal-compatibility';
 
 import { NxLanguageProviderService }        from '../../services/nx-language-provider';

@@ -24,6 +24,7 @@ from cms.permissions import IsSuperuser
 from cms.tasks import get_package_cache_key, make_package
 
 from ..controllers.documentation import DOC_CACHE
+from ..views.integration import INTEGRATION_CACHE
 
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
