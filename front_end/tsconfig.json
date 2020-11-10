@@ -21,7 +21,8 @@
       "@pages/*": ["src/pages/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@app/*": ["*"]
     },
     "typeRoots": [
       "node_modules/@types"
@@ -45,6 +46,7 @@
     "node_modules",
     "ipvd",
     "health_monitor",
-    "app/**/*.spec.ts"
+    "app/**/*.spec.ts",
+    "app/**/*.test.ts"
   ]
 }

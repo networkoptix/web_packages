@@ -11,7 +11,7 @@ import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {
-    plugin: any = {};
+    plugin: any;
 
     CONFIG: IConfig;
 

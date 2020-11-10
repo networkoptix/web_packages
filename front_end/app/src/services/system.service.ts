@@ -785,6 +785,10 @@ class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
+    getApiDoc(serverId: string) {
+        return this.mediaserverConnections[serverId].getApiDoc();
+    }
+
     getStorages(serverId) {
         return this.mediaserverConnections[serverId].getStorages();
     }
@@ -1005,6 +1009,12 @@ export class NxSystem extends System implements OnDestroy {
             this.cloudApi
         );
     }
+
+    getServerApiDoc(serverId: string) {
+        return this.serverManager
+            .getApiDoc(serverId).toPromise()
+            .catch(err => Promise.reject(err));
+    };
 
     updateSystemAuth(force?: boolean) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update

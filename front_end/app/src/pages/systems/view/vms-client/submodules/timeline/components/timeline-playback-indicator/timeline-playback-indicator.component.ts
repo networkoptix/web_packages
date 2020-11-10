@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service'
 import PlaybackService from '../../../playback/services/playback.service'
 import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState'
@@ -35,6 +35,13 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
   ) {
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
+  }
+
+  @HostListener('click', ['$event'])
+  onClick (e) {
+    if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
+      this.timeline.jumpScrollTo(this.playback.state.currentTime - Math.round(this.timeline.visibleRange.duration / 2), true)
+    }
   }
 
   public ngOnInit (): void {

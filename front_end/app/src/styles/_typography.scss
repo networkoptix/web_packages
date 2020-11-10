@@ -152,6 +152,10 @@ h1 > .label {
     @include font-source($font-family-medium, $font-size-base, $font-color-medium);
 }
 
+@mixin medium13nocolor {
+    @include font-source($font-family-medium, $font-size-base);
+}
+
 @mixin light13 {
     @include font-source($font-family-light, $font-size-base, $font-color-light);
 }
@@ -182,6 +186,10 @@ h1 > .label {
 
 @mixin light11 {
     @include font-source($font-family-light, $font-size-ssm, $font-color-light);
+}
+
+@mixin bold13 {
+    @include font-source($font-family-bold, $font-size-base, $font-color-medium);
 }
 
 p {

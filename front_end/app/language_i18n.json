@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "API tool": "API tool",
     "AUTHENTICATION REQUIRED": "AUTHENTICATION REQUIRED",
     "Access Level": "Access Level",
     "Access level": "Access level",
@@ -272,6 +273,7 @@
     "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "Tags",
     "Take system name and settings from": "Take system name and settings from",
+    "Tel:": "Tel:",
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only to the cameras selected for public use, and assigned only the minimum required viewing permissions. This \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only to the cameras selected for public use, and assigned only the minimum required viewing permissions. This \"Public User\" should not have system-wide access of any kind.",
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.",

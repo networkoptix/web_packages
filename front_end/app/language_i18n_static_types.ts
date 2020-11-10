@@ -450,17 +450,16 @@ export interface HeaderLabels {
 }
 
 export interface LanguageI18NStaticTypesIntegration {
-    "Access Control":     any;
-    Connector:            any;
-    "Data Analytics":     any;
-    Drone:                any;
-    "Health Monitor":     any;
-    Storage:              any;
-    myIntegrationsLabel:  any;
-    phoneNumberWithLabel: any;
-    requirements:         any;
-    testedVersionLabel:   any;
-    testedVersionsLabel:  any;
+    "Access Control":    any;
+    Connector:           any;
+    "Data Analytics":    any;
+    Drone:               any;
+    "Health Monitor":    any;
+    Storage:             any;
+    myIntegrationsLabel: any;
+    requirements:        any;
+    testedVersionLabel:  any;
+    testedVersionsLabel: any;
 }
 
 export interface Ipvd {
@@ -582,6 +581,7 @@ export interface PageTitles {
     systems:                any;
     template:               any;
     view:                   any;
+    apiTool:                any;
 }
 
 export interface PasswordRequirements {
@@ -1369,7 +1369,6 @@ const typeMap: any = {
         { json: "Health Monitor", js: "Health Monitor", typ: "any" },
         { json: "Storage", js: "Storage", typ: "any" },
         { json: "myIntegrationsLabel", js: "myIntegrationsLabel", typ: "any" },
-        { json: "phoneNumberWithLabel", js: "phoneNumberWithLabel", typ: "any" },
         { json: "requirements", js: "requirements", typ: "any" },
         { json: "testedVersionLabel", js: "testedVersionLabel", typ: "any" },
         { json: "testedVersionsLabel", js: "testedVersionsLabel", typ: "any" },
@@ -1486,6 +1485,7 @@ const typeMap: any = {
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
         { json: "view", js: "view", typ: "any" },
+        { json: "apiTool", js: "apiTool", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },
