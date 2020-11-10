@@ -5,8 +5,9 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { Observable, of }         from 'rxjs';
+import { of }         from 'rxjs';
 import { share }      from 'rxjs/operators';
 
 import { NxUriCacheService } from './uri-cache.service';

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "Nx_ VMS API",
+    "title": "Nx VMS API",
     "version": "1.0.0"
   },
   "servers": [
