@@ -75,8 +75,8 @@ ${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
 ${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
-${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account']
-${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
+${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
+${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
 ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
