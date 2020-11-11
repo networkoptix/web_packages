@@ -137,7 +137,7 @@ export class NxSystemStorageComponent implements OnInit {
         if (this.system?.currentServerNotBusy && this.system?.servers?.length && this.serverId) {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                this.system.updateOrGetSystemStorage(),
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }),
                 this.system.getRecordStats()
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
                 .subscribe(results => {

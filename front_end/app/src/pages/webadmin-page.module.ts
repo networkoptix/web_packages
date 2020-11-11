@@ -10,6 +10,7 @@ import { Nx503Module }               from './503/503.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
+import { AuthGuard }                 from '@guards/authGuard';
 
 const lazyRoutes: Routes = [
     {
@@ -59,7 +60,8 @@ const lazyRoutes: Routes = [
     declarations: [
     ],
     providers: [
-        ApplyGuard
+        ApplyGuard,
+        AuthGuard
     ],
     exports: [
         NonSupportedBrowserModule,

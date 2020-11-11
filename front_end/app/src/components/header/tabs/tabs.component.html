@@ -1,3 +1,3 @@
 <li class="tab-link"[ngClass]="{active: headerService.currentLocation.path === node.url}">
-    <a class="pl-3 pr-3 d-block w-100 h-100" [routerLink]="node.url" (click)="headerService.handleNav(node)" [innerText]="node.display_name"></a>
+    <a class="pl-3 pr-3 d-block w-100 h-100" (click)="headerService.handleNav(node)" [innerText]="node.display_name"></a>
 </li>
