@@ -18,6 +18,7 @@ import VideoManagementSystemService from '../../vms/services/vms.service'
 import { VMS_MODE } from '../../vms/datatypes/VmsState'
 
 import TimelineService from '../../timeline/services/timeline.service'
+import { IRecord } from '../../vms/datatypes/ICamera'
 
 
 @Injectable({
@@ -279,9 +280,9 @@ export class PlaybackService {
   private _jumpOverTheGapIfNeeded () {
     if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
       const state = this._state as ArchivePlaybackState
-      // TODO: optimize
-      if (!this.vms.selectedCamera.archive.find(r => r.start <= state.currentTime && r.end >= state.currentTime)) {
-        const nextChunk = this.vms.selectedCamera.archive.find(r => r.start >= state.currentTime)
+
+      if (!_isThereRecord(this.vms.selectedCamera.archive, state.currentTime)) {
+        const nextChunk = _getNextRecord(this.vms.selectedCamera.archive, state.currentTime)
         if (nextChunk) {
           const wasVisible = !this.isBeyondVisibleRange
 
@@ -305,6 +306,47 @@ export class PlaybackService {
       }
     }
   }
+
+}
+
+function _isThereRecord (archive: Array<IRecord>, t: ms): boolean {
+  let l = 0, r = archive.length - 1
+  while (l < r) {
+    const m = l + Math.floor((r - l) / 2)
+    const rec = archive[m]
+    if (rec.start <= t && rec.end >= t) {
+      return true
+    }
+    if (rec.start > t) {
+      r = (m < r) ? m : (r - 1)
+    } else {
+      l = (m > l) ? m : (l + 1)
+    }
+  }
+  return false
+
+  // naive linear search approach
+  // return !!archive.find(r => r.start <= t && r.end >= t)
+}
+
+function _getNextRecord (archive: Array<IRecord>, t: ms): IRecord {
+  let l = 0, r = archive.length - 1
+  while (l < r) {
+    const m = l + Math.floor((r - l) / 2)
+    const rec = archive[m]
+    const prevRec = m > 0 ? archive[m - 1] : null
+    if (rec.start >= t && (!prevRec || prevRec.end <= t )) {
+      return rec
+    }
+    if (rec.start > t) {
+      r = (m < r) ? m : (r - 1)
+    } else {
+      l = (m > l) ? m : (l + 1)
+    }
+  }
+  return null
+  // naive linear search approach
+  // return archive.find(r => r.start >= t)
 }
 
 export default PlaybackService
