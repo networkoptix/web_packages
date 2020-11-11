@@ -179,7 +179,6 @@ Server name changed via API updates on cloud
     ${split}=   Split String    ${loc}    separator=/servers/%7B
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1 name changed
     Reload Page
-    Select Camera By Name    server 1 name changed
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..   
     
     Log    Reset the name to server 1
@@ -427,28 +426,29 @@ Custom User does not have Access
     [Setup]    Log in to user and system    ${custom}    ${sysId1}
     Element Should not be Visible    ${SERVERS LINK}
 
-Tab order is correct for online system
-    [Tags]    C69882    threaded
-    Verify on Servers Page
-    Press Keys    None    TAB
-    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 1")]/../..
-    Press Keys    None    TAB
-    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 2")]/../..
-    Verify Server Buttons Are Enabled
-    @{tab items}=   Create List
-    ...    ${SERVER DETAILED INFO BUTTON}
-    ...    ${RENAME SERVER BUTTON}
-    ...    ${RESTART SERVER BUTTON} 
-    ...    ${PORT INPUT}
-    ...    ${FOOTER ABOUT LINK}
-    ...    ${DOWNLOAD LINK}
-    ...    ${FOOTER INTEGRATIONS LINK}
-    ...    ${FOOTER SUPPORT LINK} 
-    ...    ${FOOTER TERMS LINK}
-    ...    ${FOOTER PRIVACY LINK} 
-    ...    ${FOOTER SUPPORTED DEVICES LINK}  
-
-    FOR    ${element}    IN    @{tab items}
-        Press Keys    None    TAB
-        Element Should Be Focused    ${element}
-    END
+# This is probably deprecated by the new left menu search.
+#Tab order is correct for online system
+#    [Tags]    C69882    threaded
+#    Verify on Servers Page
+#    Press Keys    None    TAB
+#    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 1")]/../..
+#    Press Keys    None    TAB
+#    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 2")]/../..
+#    Verify Server Buttons Are Enabled
+#    @{tab items}=   Create List
+#    ...    ${SERVER DETAILED INFO BUTTON}
+#    ...    ${RENAME SERVER BUTTON}
+#    ...    ${RESTART SERVER BUTTON} 
+#    ...    ${PORT INPUT}
+#    ...    ${FOOTER ABOUT LINK}
+#    ...    ${DOWNLOAD LINK}
+#    ...    ${FOOTER INTEGRATIONS LINK}
+#    ...    ${FOOTER SUPPORT LINK} 
+#    ...    ${FOOTER TERMS LINK}
+#    ...    ${FOOTER PRIVACY LINK} 
+#    ...    ${FOOTER SUPPORTED DEVICES LINK}  
+#
+#    FOR    ${element}    IN    @{tab items}
+#        Press Keys    None    TAB
+#        Element Should Be Focused    ${element}
+#    END
