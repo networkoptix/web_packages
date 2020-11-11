@@ -73,7 +73,7 @@ ${SYSTEMS GRID}                       //nx-drop-menu//li[contains(@class, 'syste
 ${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
 
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
-${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
+${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']

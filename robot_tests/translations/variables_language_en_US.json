@@ -361,7 +361,7 @@
     "IP TEXT"                              :    "IP",
     "OS TEXT"                              :    "OS",
     "VERSION TEXT"                         :    "Version",
-    "PORT TOO LOW TEXT"                    :    "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+    "PORT TOO LOW TEXT"                    :    "Port numbers less than 1024 are restricted. Server may become inaccessible.",
     "SERVER RESTARTED TEXT"                :    "Server has successfully restarted.",
     "HOURS TEXT"                           :    "hours",
     "MINUTES TEXT"                         :    "minutes",
