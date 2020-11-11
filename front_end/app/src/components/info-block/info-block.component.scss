@@ -73,10 +73,10 @@
                 align-items: flex-end;
                 line-height: 16px;
                 &.error {
-                    color: $red_l2;
+                    color: $red_l2 !important;
                 }
                 &.warning {
-                    color: $yellow_d1;
+                    color: $yellow_d1 !important;
                 }
             }
         }

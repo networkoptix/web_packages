@@ -33,8 +33,7 @@ import VmsClientVmsModule from './vms-client/submodules/vms/vms.module'
         RouterModule.forChild(routes)
     ],
     providers: [
-        ApplyGuard,
-        CookieService,
+        CookieService
     ],
     declarations: [
         NxSystemViewIndexPageComponent,

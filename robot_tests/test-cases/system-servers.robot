@@ -177,10 +177,10 @@ Server name changed via API updates on cloud
     @{auth}=    Create List    ${owner}    ${BASE PASSWORD}
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-    ${split[1]}=   Replace String    ${split[1]}    %7D    ${EMPTY}
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1 name changed
     Reload Page
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Select Camera By Name    server 1 name changed
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..   
     
     Log    Reset the name to server 1
     Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
@@ -311,10 +311,10 @@ Admin cannot change port via API
     [Tags]    C70927    threaded
     Verify on Servers Page
     ${loc}=   Get Location
-    ${split}=   Split String    ${loc}    separator=/servers/%7B
-    ${split[1]}=   Replace String    ${split[1]}    %7D    ${EMPTY}
+    ${split}=   Split String    ${loc}    separator=/servers/
+    #${split[1]}=   Replace String    ${split[1]}    %7D    ${EMPTY}
     @{auth}=    Create List    ${admin}    ${BASE PASSWORD}
-    ${resp}=   Change server port via API    ${auth}    https://${sysId1}.relay.vmsproxy.hdw.mx    7777    {${split[1]}}
+    ${resp}=   Change server port via API    ${auth}    https://${sysId1}.relay.vmsproxy.hdw.mx    7777    ${split[1]}
     Should Be Equal As Strings    ${resp.status_code}    403
 
 Check status

@@ -16,8 +16,13 @@ import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
+import { ApplyGuard }                from '@guards/applyGuard';
 
 const lazyRoutes: Routes = [
+    {
+        path         : 'api-tool',
+        loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+    },
     {
         path         : 'systems/:systemId/view',
         loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
@@ -124,6 +129,7 @@ const lazyRoutes: Routes = [
     declarations: [
     ],
     providers: [
+        ApplyGuard
     ],
     exports: [
         DownloadModule,

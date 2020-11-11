@@ -88,9 +88,7 @@ export const localSettingsRoutes: Routes = [
         RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],
-    providers: [
-        ApplyGuard
-    ],
+    providers: [],
     declarations: [
     ],
     bootstrap: [
