@@ -347,7 +347,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
          * Note: alarm levels are sorted alphabetically
          */
         const alarmTypes: any = Object.values(this.healthService.manifest).filter((resource: any) => {
-            return resource.id !== 'systems' && resource.name in this.healthService.values;
+            return resource.id !== 'systems' && resource.id in this.healthService.values;
         }).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
