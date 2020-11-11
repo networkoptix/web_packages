@@ -146,6 +146,10 @@ Should prompt log user out if he visits restore password link from email
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
 
     ${code}=   Get Restore Code and Open the Link    ${email}
+    Click Button    ${LOGGED IN CLOSE BUTTON}
+    Wait Until Element Is Not Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Go To    ${url}/restore_password/${code}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
 
     Go To    ${url}/restore_password/${code}

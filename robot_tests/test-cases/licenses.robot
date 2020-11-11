@@ -3,7 +3,7 @@ Resource    ../resource.robot
 Suite Setup    LM Suite Set Up
 Test Teardown    Run Keyword If Test Failed    LM Test Restart
 Suite Teardown    LM Suite Teardown
-Force Tags    Licenses
+Force Tags    Threaded    Licenses
 
 *** Test Cases ***
 License Management availability for different users
@@ -15,18 +15,18 @@ License Management availability for different users
     Wait Until Elements Are Visible
     ...    ${SYSTEM ADMINISTRATION LINK}
     ...    ${LICENSES LINK}
-    ...    ${SYSTEM STORAGE LINK}
+#    ...    ${SYSTEM STORAGE LINK}
 
-    # Check the Licnses menu link position
-    ${menu links}=   Get WebElements    ${MENU LEVEL 3 LINK}
-    ${links text}=   Create List
-    ${exp links text}=   Create List    General    Licenses    Cloud Storage
-
-    FOR    ${link}    IN    @{menu links}
-        ${text}=   Get Text    ${link}
-        Append To List    ${links text}    ${text}
-    END
-    Lists Should Be Equal    ${links text}    ${exp links text}
+    # Check the Licnses menu link position - not in 20.1 yet
+#    ${menu links}=   Get WebElements    ${MENU LEVEL 3 LINK}
+#    ${links text}=   Create List
+#    ${exp links text}=   Create List    General    Licenses    Cloud Storage
+#
+#    FOR    ${link}    IN    @{menu links}
+#        ${text}=   Get Text    ${link}
+#        Append To List    ${links text}    ${text}
+#    END
+#    Lists Should Be Equal    ${links text}    ${exp links text}
 
     Open Licenses Page
     Validate Licenses Page    trial left=True
@@ -49,14 +49,15 @@ License Management availability for different users
 License Management availability for offline system
     [Tags]    C76533
     Log In    ${LM OWNER}    ${BASE PASSWORD}
-    Stop Container    ${cont 1}    # Get the server offline
+    Stop Docker Server    ${cont 1}    # Get the server offline
     Go To    ${ENV}/systems/${sys id 1}
     Open Licenses Page
     Wait Until Elements Are Visible
     ...    ${THIS PAGE CANNOT BE LOADED}
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
-    Start Container    ${cont 1}
+    ${port}=   Start Docker Server    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Sleep    30
     Log Out
 
@@ -140,7 +141,7 @@ Input validation errors
     Log    C76538: License already activated in this system
     ${key}=   Generate Licenses
     Activate Key    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
     Activate Key    ${key}    success=False    error text=${LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT}
     Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
@@ -159,8 +160,8 @@ Input validation errors
 
     Log    C76540: License is already activated in another system
     ${key}=   Generate Licenses
-    Activate License     ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
-    ${hwid}=   Get HWID    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    Activate License     ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
+    ${hwid}=   Get HWID    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
     ${error text}=   Replace String    ${LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT}    %HWID%    ${hwid}
     Activate Key    ${key}    success=False    error text=${error text}
     Input Text    ${LICENSE KEY INPUT}    1234-1234-1234-1234
@@ -169,8 +170,8 @@ Input validation errors
 
     Log    C76541: Only one starter license is allowed per system
     ${starter 1}=   Generate Licenses    license_type=starter
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${starter 1}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${starter 1}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${starter 1}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${starter 1}
     Should Be True    ${activated}
     ${starter 2}=   Generate Licenses    license_type=starter
     Activate Key    ${starter 2}    success=False    error text=${ONLY ONE STARTER LICENSE ALLOWED TEXT}
@@ -182,14 +183,15 @@ Input validation errors
 
 Server response errors: Failed to get response from license server
     [Tags]    C76544    server_errors
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
 
-    Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    http://example.com/
+    Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    http://example.com/
     ${key}=   Generate Licenses
 
     Activate Key    ${key}    success=False
@@ -197,12 +199,13 @@ Server response errors: Failed to get response from license server
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Change License Portal Host    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${LM HOST}
+    Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${LM HOST}
     Log Out
 
 Server response errors: License key is expired
     [Tags]    server_errors
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -216,33 +219,36 @@ Server response errors: License key is expired
 
 Server response errors: Media server becomes offline during license activation
     [Tags]    C76545    server_errors
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
 
-    Stop Container    ${cont 1}
+    Stop Docker Server    ${cont 1}
     ${key}=   Generate Licenses
     Activate Key    ${key}    success=False
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Container    ${cont 1}
+    ${port}=   Start Docker Server    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log Out
 
 Server response errors: Server offline(System has two servers)
     [Tags]    C76532    C76542    server_errors
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    Stop Container    ${cont 3}
+    Stop Docker Server    ${cont 3}
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -260,13 +266,15 @@ Server response errors: Server offline(System has two servers)
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Container    ${cont 3}
+    ${port}=   Start Docker Server    ${cont 3}
+    Set Suite Variable    ${LM PORT 3}    ${port}
     Log Out
 
 Successful scenarios
     [Tags]    C76531    C76548    C76549    C76554    success
     Log    Test Set Up
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -280,7 +288,7 @@ Successful scenarios
     Log    Step 2
     ${key}=   Generate Licenses    n_cameras=20
     Activate Key    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${EMPTY}
@@ -300,7 +308,7 @@ Successful scenarios
     ${exp ts}=   Get Current Date    time_zone=UTC    increment=365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    license_type=analogencoder     n_cameras=16    fixed_expiration_ts=${exp ts}
     Activate Key    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${EMPTY}
@@ -333,7 +341,8 @@ Successful scenarios
 
 License Details Block: Purchase permanent keys
     [Tags]    C76532    C76550    C76557    C76561    C76562    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -348,7 +357,7 @@ License Details Block: Purchase permanent keys
         ${key}=   Generate Licenses    license_type=${type}    n_cameras=${rand}
         ${k}=   Evaluate    ${n}%2+2
         Activate Key    ${key}    server name=${server ${k}}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT ${k}}    ${key}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${k}}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
         Validate Summary Record    ${LIC TYPES}[${type}]    ${rand}    ${rand}
@@ -360,7 +369,8 @@ License Details Block: Purchase permanent keys
 
 License Details Block: SAAS keys
     [Tags]    C76560    C76561    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -373,7 +383,7 @@ License Details Block: SAAS keys
         ${exp ts}=   Get Current Date    time_zone=UTC    increment=${rand}d    result_format=datetime
         ${key}=   Generate Licenses    order_type=saas    license_type=${type}    n_cameras=${rand}    fixed_expiration_ts=${exp ts}
         Activate Key    ${key}    server name=${server 2}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
         Validate Licenses Page    several servers=True    trial left=True    clean=False
         Validate Summary Record    ${LIC TYPES}[${type}]    ${rand}    ${rand}
@@ -384,7 +394,8 @@ License Details Block: SAAS keys
 
 License Details Block: Video Wall licenses
     [Tags]    C76561    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -393,7 +404,7 @@ License Details Block: Video Wall licenses
 
     ${demo vw}=   Generate Licenses    order_type=demo    license_type=videowall    n_cameras=17    trial_days=60
     Activate Key    ${demo vw}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo vw}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${demo vw}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    Video Wall    17    17
@@ -403,7 +414,8 @@ License Details Block: Video Wall licenses
 
 License Details Block: License with date within 30 days
     [Tags]    C76565    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -415,14 +427,14 @@ License Details Block: License with date within 30 days
     ${exp ts}=   Add Time To Date    ${exp ts}    23:59:59    result_format=datetime
     ${saas}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
     Activate Key    ${saas}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${saas}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${saas}
     Should Be True    ${activated}
     Validate License Info    ${saas}    server num=2
     Wait Until Element Has Style    //header[h4="${saas}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    rgba(43, 56, 63, 1)
 
     ${demo}=   Generate Licenses    order_type=demo    trial_days=29
     Activate Key    ${demo}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${demo}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${demo}
     Should Be True    ${activated}
     Validate License Info    ${demo}    server num=2
     Wait Until Element Has Style    //header[h4="${demo}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Expires")]    color    ${ERROR COLOR WITH OPACITY}
@@ -431,7 +443,8 @@ License Details Block: License with date within 30 days
 
 License Details Block: Deactivated license
     [Tags]    C76566    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -441,20 +454,20 @@ License Details Block: Deactivated license
     ${key}=   Generate Licenses
     FOR    ${i}    IN RANGE    3
         Activate Key    ${key}    server name=${server 2}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
         Should Be True    ${activated}
         Validate License Info    ${key}    server num=2
         Deactivate Licenses    ${key}
-        Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
-        Sleep    10
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+        ${port}=   Restart Docker Server    ${LM PORT 2}    ${cont 2}    ${CLOUD AUTH}
+        Set Suite Variable    ${LM PORT 2}    ${port}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
         Should Not Be True    ${activated}
         Reload Page
         Validate Licenses Page    several servers=True    trial left=True
         Wait Until Element Is Not Visible    //header[h4="${key}"]
     END
     Activate Key    ${key}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate License Info    ${key}    server num=2
@@ -464,7 +477,8 @@ License Details Block: Deactivated license
 
 License Details Block: License with expired status
     [Tags]    C76563    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -473,12 +487,12 @@ License Details Block: License with expired status
 
     ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
-    ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}
-    Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}    ${hwids[1]}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${key}
+    ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}
+    Add License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}    ${hwids[1]}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${key}
     Should Be True    ${activated}
-    Restart Server    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
-    Sleep    10
+    ${port}=   Restart Docker Server    ${LM PORT 2}    ${cont 2}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
 
@@ -487,7 +501,8 @@ License Details Block: License with expired status
 
 License Details Block: License with error status
     [Tags]    C76564    details
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -496,9 +511,9 @@ License Details Block: License with error status
 
     ${key}=   Generate Licenses
     Activate Key    ${key}    server name=${server 3}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 3}    ${key}
     Should Be True    ${activated}
-    Stop Container    ${cont 3}
+    Stop Docker Server    ${cont 3}
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -508,7 +523,8 @@ License Details Block: License with error status
     ${status}=   Get Key Status    ${key}
     Should Be Equal As Strings    ${status}    Error
 
-    Start Container    ${cont 3}
+    ${port}=   Start Docker Server    ${cont 3}
+    Set Suite Variable    ${LM PORT 3}    ${port}
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -517,7 +533,8 @@ License Details Block: License with error status
 
 License Summary Block: Server goes offline
     [Tags]    C76567    C76631    summary
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 2}  ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 2}    ${cont 2}
+    Set Suite Variable    ${LM PORT 2}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 2}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -530,10 +547,10 @@ License Summary Block: Server goes offline
     ${pro on}=   Generate Licenses    license_type=digital    n_cameras=${num online}
     ${pro off}=   Generate Licenses    license_type=digital    n_cameras=${num offline}
     Activate Key    ${pro on}    server name=${server 2}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 2}    ${pro on}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 2}    ${pro on}
     Should Be True    ${activated}
     Activate Key    ${pro off}    server name=${server 3}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 3}    ${pro off}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 3}    ${pro off}
     Should Be True    ${activated}
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -541,20 +558,21 @@ License Summary Block: Server goes offline
     Validate License Info    ${pro on}    server num=2
     Validate License Info    ${pro off}    server num=3
 
-    Stop Container    ${cont 3}
+    Stop Docker Server    ${cont 3}
     Sleep    30
     Reload Page
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
 
-    Start Container    ${cont 3}
+    ${port}=   Start Docker Server    ${cont 3}
+    Set Suite Variable    ${LM PORT 3}    ${port}
     Log Out
 
 License Summary Block: License key is expired
     [Tags]    C76567    C76632    summary
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}  ${CLOUD AUTH}
-
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -563,19 +581,19 @@ License Summary Block: License key is expired
 
     ${num good}=   Evaluate    random.randint(10, 100)
     ${pur vw}=   Generate Licenses    license_type=videowall    n_cameras=${num good}
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur vw}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur vw}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${pur vw}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${pur vw}
     Should Be True    ${activated}
 
     ${num expired}=   Evaluate    random.randint(10, 100)
     ${total}=   Evaluate    ${num good}+${num expired}
     ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
     ${saas vw}=   Generate Licenses    order_type=saas    license_type=videowall    n_cameras=${num expired}    fixed_expiration_ts=${exp ts}
-    ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}
-    Add License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas vw}    ${hwids[1]}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas vw}
-    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
-    Sleep    10
+    ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}
+    Add License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${saas vw}    ${hwids[1]}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${saas vw}
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
 
     Reload Page
     Validate Licenses Page    trial left=True    clean=False
@@ -593,7 +611,8 @@ License Summary Block: License key is expired
 VMS integration
     [Documentation]    Validate information on cloud for license keys activated/deactivated/removed in client
     [Tags]    C76568    C76569    C76570    vms
-    Remove all keys from system    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}
+    ${port}=   Remove all keys from system    ${LM PORT 1}    ${cont 1}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Log In    ${LM OWNER}    ${BASE PASSWORD}
     Go To    ${ENV}/systems/${sys id 1}
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -611,10 +630,11 @@ VMS integration
         Set To Dictionary    ${types counter}    ${type}=${rand}
         Log    ${types counter}[${type}]
         ${pur}=   Generate Licenses    order_type=purchase    license_type=${type}    n_cameras=${rand}
-        Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${pur}
+        Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${pur}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${pur}
         Should Be True    ${activated}
-        Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+        ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+        Set Suite Variable    ${LM PORT 1}    ${port}
         Reload Page
         Validate Licenses Page    trial left=True    clean=False
         # Verify licenses' summary records are updated correctly
@@ -634,13 +654,14 @@ VMS integration
         ${exp ts}=   Get Current Date    time_zone=UTC    increment=${rand}d    result_format=datetime
         ${saas}=   Generate Licenses    order_type=saas    license_type=${type}    n_cameras=${rand}    fixed_expiration_ts=${exp ts}
         ${demo}=   Generate Licenses    order_type=demo    license_type=${type}    n_cameras=${rand}    trial_days=${rand}
-        Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas}
-        Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${demo}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${saas}
+        Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${saas}
+        Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${demo}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${saas}
         Should Be True    ${activated}
-        ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${demo}
+        ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${demo}
         Should Be True    ${activated}
-        Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+        ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+        Set Suite Variable    ${LM PORT 1}    ${port}
         Reload Page
 
         Validate Licenses Page    trial left=True    clean=False
@@ -655,11 +676,12 @@ VMS integration
     ${demo vw}=   Generate Licenses    order_type=demo    license_type=videowall    n_cameras=${rand}    trial_days=${rand}
     ${n}=   Evaluate    ${types counter}[videowall]+${rand}
     Set To Dictionary    ${types counter}    videowall=${n}
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${demo vw}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${demo vw}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${demo vw}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${demo vw}
     Should Be True    ${activated}
 
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
 
     Validate Licenses Page    trial left=True    clean=False
@@ -667,11 +689,12 @@ VMS integration
     Validate License Info    ${demo vw}
 
     Log    Trial license is displayed correctly, summary is updated correctly
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${TRIAL LICENSE}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${TRIAL LICENSE}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${TRIAL LICENSE}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${TRIAL LICENSE}
     Should Be True    ${activated}
 
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False
@@ -682,17 +705,19 @@ VMS integration
     ${rand}=   Evaluate    random.randint(10, 100)
     ${key}=   Generate Licenses    n_cameras=${rand}
     ${n}=   Evaluate    ${types counter}[digital]+${rand}
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
     Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${n}    ${n}
     Validate License Info    ${key}
 
     Deactivate Licenses    ${key}
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False
@@ -700,17 +725,19 @@ VMS integration
     Wait Until Element Is Not Visible    //header[h4="${key}"]
 
     Log    C76570: Remove license
-    Activate License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
-    ${activated}=   License Is Activated    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
+    Activate License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
+    ${activated}=   License Is Activated    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
     Should Be True    ${activated}
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
     Validate Licenses Page    trial left=False    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${n}    ${n}
     Validate License Info    ${key}
 
-    Remove License    ${CLOUD AUTH}    ${LOCALHOST}:${LM PORT 1}    ${key}
-    Slow    Restart Server    ${LOCALHOST}:${LM PORT 1}    ${CLOUD AUTH}    timeout=10
+    Remove License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT 1}    ${key}
+    ${port}=   Restart Docker Server    ${LM PORT 1}    ${cont 1}    ${CLOUD AUTH}
+    Set Suite Variable    ${LM PORT 1}    ${port}
     Reload Page
 
     Validate Licenses Page    trial left=False    clean=False

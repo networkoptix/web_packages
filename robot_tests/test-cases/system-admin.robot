@@ -282,7 +282,6 @@ Disconnect dialog interface checks
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
     Click Element    ${DISCONNECT FORM CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
-    Reload Page
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
 
     Log    Step 3
@@ -290,7 +289,6 @@ Disconnect dialog interface checks
     Validate Disconnect Form
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
-    Reload Page
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
 
     Log    Step 4
@@ -298,6 +296,8 @@ Disconnect dialog interface checks
     Validate Disconnect Form
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
     Wait Until Element Is Visible    ${PASSWORD IS REQUIRED}
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    rgba(240, 44, 44, 1)
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    rgb(240, 44, 44)
 
     Log    Step 5
     Input Text    ${DISCONNECT PASSWORD INPUT}    khgwearfgak

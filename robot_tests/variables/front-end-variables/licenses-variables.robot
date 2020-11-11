@@ -1,7 +1,7 @@
 *** Variables ***
-${LM PORT 1}      7755
-${LM PORT 2}      7756
-${LM PORT 3}      7757
+#${LM PORT 1}      7755
+#${LM PORT 2}      7756
+#${LM PORT 3}      7757
 ${LM HOST}        http://nxlicensed.test.hdw.mx
 ${LM OWNER}       licautotests+owner@gmail.com
 ${LM PASSWORD}    qweasd123
