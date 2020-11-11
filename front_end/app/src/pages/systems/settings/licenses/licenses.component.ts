@@ -153,7 +153,7 @@ export class NxSystemLicensesComponent implements OnInit {
             license.required += item.info.required;
         } else {
             this.licenseSummaries.push({
-                type       : item.info.type,
+                type       : typeof item.info.type === 'function' ? item.info.type() : item.info.type,
                 count      : parseInt(item.info.count) || 0,
                 countAvail : avail,
                 required   : item.info.required
