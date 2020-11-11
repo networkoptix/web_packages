@@ -217,7 +217,7 @@ export class NxCloudApiService {
         this.cacheService.addToCache(endpoint);
         let headers = new HttpHeaders();
         if (forceUpdate) {
-            headers = headers.set('reset-cache', 'true');
+            headers = headers.set('reset-cache', 'reset');
         }
         return this.http.get<Account>(endpoint, { headers });
     }

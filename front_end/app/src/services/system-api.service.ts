@@ -272,7 +272,7 @@ export class NxSystemAPI {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
-            customHeaders = { 'reset-cache': 'true' };
+            customHeaders = { 'reset-cache': 'reset' };
         }
         if (this.currentUser) { // We have user - return him right away
             return Promise.resolve(this.currentUser);
@@ -907,7 +907,7 @@ export class NxSystemAPI {
         if (forceUpdate || !this.cacheService.addedToCache(`${this.urlBase}${endpoint}`) || stale) {
             this.cacheService.addToCache(`${this.urlBase}${endpoint}`);
             this.healthService.lastUpdate = Date.now();
-            headers['reset-cache'] = true;
+            headers['reset-cache'] = 'reset';
         }
 
         return this.get(endpoint, {}, headers);
