@@ -44,7 +44,7 @@ export class NxRegisterComponent implements OnInit {
         };
 
         this.LANG = this.language.translations;
-        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register?.();
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
     constructor(configService: NxConfigService,
