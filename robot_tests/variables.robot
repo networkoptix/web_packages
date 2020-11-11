@@ -219,7 +219,6 @@ ${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="delet
 
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
-${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL CHANGES BUTTON TEXT}')]
 ${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
 ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
@@ -279,11 +278,11 @@ ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'
 ${DISABLED}                           \[@disabled]
 
 #Password badges
-${PASSWORD BADGE}                     //nx-tag//div[contains(@class,"badge")]
-${PASSWORD IS WEAK BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
-${PASSWORD IS FAIR BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
-${PASSWORD IS GOOD BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
-${PASSWORD INCORRECT BADGE}           //nx-tag//div[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
+${PASSWORD BADGE}                     //nx-tag//a[contains(@class,"badge")]
+${PASSWORD IS WEAK BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
+${PASSWORD IS FAIR BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
+${PASSWORD IS GOOD BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD INCORRECT BADGE}           //nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]

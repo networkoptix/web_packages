@@ -64,6 +64,7 @@ Open page anonymously
     [Arguments]    ${url}    ${title}
     Go To    ${url}
     Location should be    ${url}
+    Sleep   3
     Title should be    ${title}
 
 Set Chrome Options
