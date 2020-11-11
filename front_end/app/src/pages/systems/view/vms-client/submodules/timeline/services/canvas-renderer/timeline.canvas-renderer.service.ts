@@ -17,6 +17,9 @@ export class TimelineCanvasRendererService {
   }
 
   public render (ctx: CanvasRenderingContext2D) {
+    // // @ts-ignore
+    // console.log('render', this.timeline._canvasGeometry, this.timeline.canvasGeometry)
+
     ctx.clearRect(0, 0, this.timeline.canvasGeometry.width, this.timeline.canvasGeometry.height)
     this.rulerRenderer.render(ctx)
     this.recordsRenderer.render(ctx)

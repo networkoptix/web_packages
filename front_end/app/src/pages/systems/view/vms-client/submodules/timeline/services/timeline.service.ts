@@ -7,6 +7,8 @@ import cfg from './timeline.config'
 import { config } from 'process'
 
 
+// let ts_id = 0
+
 export interface TimelineServiceStatus {
   fullRange: TimeRange,
   visibleRange: TimeRange,
@@ -31,9 +33,13 @@ export class TimelineService {
   protected _subject = new Subject<TimelineServiceStatus>()
   protected _canvasGeometryUpdateRequested: boolean = true
 
+  // public readonly id: number
+
   public constructor () {
     this._onAnimationFrame = this._onAnimationFrame.bind(this)
     requestAnimationFrame(this._onAnimationFrame)
+    // this.id = (ts_id++)
+    // console.log('constructor called', this.id, this)
   }
 
   public get canvasGeometryUpdateRequested () {
@@ -78,6 +84,7 @@ export class TimelineService {
   }
 
   public reset (start: ms, end: ms): void {
+    // console.log('RESET', start, end)
     this._fullRange.start = start
     this._fullRange.end = end
     this._visibleRange.start = start
@@ -98,6 +105,7 @@ export class TimelineService {
   }
 
   public setCanvasGeometry (width: px, height: px, dpr: int): void {
+    // console.log(this.id, 'setCanvasGeometry', width, height, dpr)
     this._canvasGeometry.width = width
     this._canvasGeometry.height = height
     this._canvasGeometry.dpr = dpr
@@ -106,6 +114,7 @@ export class TimelineService {
   }
 
   public get msPerCanvasPx (): float {
+    // console.log(this.id, 'msPerCanvasPx', this._visibleRange.duration, this._canvasGeometry.width)
     return this._visibleRange.duration / this._canvasGeometry.width
   }
 

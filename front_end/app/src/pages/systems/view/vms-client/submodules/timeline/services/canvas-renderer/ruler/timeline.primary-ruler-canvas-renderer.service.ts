@@ -100,7 +100,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
     if (this._haveIntervalsChanged(intervals)) {
       const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals)
-      console.log('intervals changed', this._prevIntervals, intervals, intervalDiffDict)
+      // console.log('intervals changed', this._prevIntervals, intervals, intervalDiffDict)
       Object.keys(intervalDiffDict).map(k => {
         const v = intervalDiffDict[k]
         if (v.length) {

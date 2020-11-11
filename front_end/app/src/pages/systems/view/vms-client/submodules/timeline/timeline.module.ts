@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common'
   imports: [
     CommonModule,
   ],
-  providers: export_services
+  providers: [], // export_services
 })
 export class VmsClientTimelineModule {
 }

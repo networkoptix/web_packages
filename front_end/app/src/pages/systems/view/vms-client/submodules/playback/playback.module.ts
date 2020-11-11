@@ -13,7 +13,7 @@ import services from './services'
     CommonModule,
     ComponentsModule,
   ],
-  providers: services,
+  providers: [] // services,
 })
 export class VmsClientPlaybackModule {
 }

@@ -5,8 +5,8 @@ import TimelineSelectionService from './timeline.selection.service'
 
 
 export default [
-  TimelineService,
-  TimelineExtendToNowService,
-  TimelineRecordsService,
-  TimelineSelectionService,
+  // TimelineService,
+  // TimelineExtendToNowService,
+  // TimelineRecordsService,
+  // TimelineSelectionService,
 ]

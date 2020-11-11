@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
     MediaServerList,
   ],
   providers: [
-    VideoManagementSystemService,
+    // VideoManagementSystemService,
   ]
 })
 export class VmsClientVmsModule {
