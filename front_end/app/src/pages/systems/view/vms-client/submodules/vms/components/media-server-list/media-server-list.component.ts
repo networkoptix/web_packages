@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service'
 import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service'
 import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
 import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
+import ICamera from '../../datatypes/ICamera'
 
 
 @Component({
@@ -50,16 +51,19 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
         this._mediaservers = s.mediaServers
+        const cameraComparator = (c1: ICamera, c2: ICamera) => {
+          const n1 = c1.name.toLocaleLowerCase()
+          const n2 = c2.name.toLocaleLowerCase()
+          return n1 > n2 ? +1 : n1 < n2 ? -1 : 0
+        }
         this._mediaservers.sort((ms1, ms2) => {
-          const cameraComparator = (c1, c2) =>
-            c1.name > c2.name ? +1 : c1.name < c2.name ? -1 : 0
-          ms1.cameras.sort(cameraComparator)
-          ms2.cameras.sort(cameraComparator)
-          return ms1.name > ms2.name
-            ? +1
-            : ms1.name < ms2.name
-              ? -1
-              : 0
+          const n1 = ms1.name.toLocaleLowerCase()
+          const n2 = ms2.name.toLocaleLowerCase()
+          return n1 > n2 ? +1 : n1 < n2 ? -1 : 0
+        })
+        this._mediaservers.map(ms => {
+          ms.cameras.sort(cameraComparator)
+          ms.cameras.sort(cameraComparator)
         })
     }
     this._resetServersVisibility()
