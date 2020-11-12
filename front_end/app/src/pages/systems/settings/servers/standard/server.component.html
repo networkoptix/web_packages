@@ -36,9 +36,25 @@
     <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded">
         <nx-block header-style="extended">
             <header>
-                <div class="header-top-bar d-flex flex-column flex-lg-row align-items-start justify-content-between">
-                    <div class="header-title d-flex flex-column flex-lg-row align-items-start">
-                        <h2>{{ selectedServer.name }}</h2>
+                <div class="header-top-bar">
+                    <div class="header-title">
+                        <h2 *ngIf="renameDisabled; else editableTitle" class="system-name mb-2">{{serverName}}</h2>
+                        <ng-template #editableTitle >
+                            <div class="d-flex align-items-center mb-2" [ngClass]="{ 'edit-mode': editMode }">
+                                <div class="header-title">
+                                    <h2 NxEditable
+                                        #editTitle
+                                        [(content)]="serverName"
+                                        (contentChange)="handleNameChange($event)"
+                                        (blur)="handleBlur()"
+                                        (focus)="handleFocus()"
+                                        id="editable-title"></h2>
+                                </div>
+                                <div class="edit-button" [ngClass]="{ 'd-none' : editMode }" (click)="editTitle.focus()">
+                                    <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                                </div>
+                            </div>
+                        </ng-template>
                         <span
                                 class="ml-0 ml-lg-2 mt-2 mt-lg-1"
                             *ngIf="selectedServer.internalStatus"
@@ -46,14 +62,14 @@
                                 tag: true,
                                 offline: serverOffline,
                                 online: selectedServer.internalStatus === CONFIG.servers.status.restarting
-                                    || selectedServer.internalStatus === CONFIG.servers.status.reseting,
+                                    || selectedServer.internalStatus === CONFIG.servers.status.resetting,
                                 checking: checking
                             }">
                             {{ selectedServer.shownStatus }}
                         </span>
                     </div>
-                    <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
-                        <button class="server-buttons pr-0 pl-0 pl-lg-3 mt-2 mt-lg-0"
+                    <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
+                        <button class="server-buttons"
                             *ngIf="serverOffline"
                             (click)="checkStatus()">
                             <span [ngClass]="{ 'animate-rotation': checking }">
@@ -62,7 +78,7 @@
                             </span>
                             <span class="ml-1" translate>Check Status</span>
                         </button>
-                        <button *ngIf="canSeeInfo" class="server-buttons pr-0 pl-0 pl-lg-3 mt-2 mt-lg-0"
+                        <button *ngIf="canSeeInfo" class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
                                 <span>
@@ -71,7 +87,7 @@
                                 </span>
                                 <span class="ml-1" translate>Detailed Info</span>
                         </button>
-                        <button *ngIf="canSeeInfo" class="server-buttons pr-0"
+                        <button *ngIf="canSeeInfo" class="server-buttons"
                                 routerLink="/api-tool/{{system.id}}/{{parsedServerId}}">
                                 <span>
                                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
@@ -80,7 +96,7 @@
                             <span class="ml-1" translate>API tool</span>
                         </button>
                     </div>
-                </div>
+                <!-- </div> -->
                 <div class="col-6 col-lg-4">
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>

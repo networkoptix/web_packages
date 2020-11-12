@@ -165,7 +165,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     setServer(): void {
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
-        this.serverName = this.selectedServer.name;
+        this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);

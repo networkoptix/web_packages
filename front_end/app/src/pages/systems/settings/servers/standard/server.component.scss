@@ -1,8 +1,14 @@
+
 @use '../../../../../styles/typography';
 @use '../../../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
+
+.edit-mode {
+    width: 100%;
+
+    & #editable-title {
+        width: 100%;
+    }
+}
 
 .server-info {
     font-family : typography.$font-family-regular;
@@ -12,12 +18,14 @@
         display: flex;
         align-items: center;
         .header-title {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
             h2 {
                 font-family : typography.$font-family-regular;
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;
-                display : contents;
             }
             .tag {
                 @include typography.medium11;
@@ -37,63 +45,48 @@
                 background-color: $light16 !important;
             }
         }
-        .section-server-buttons {
-            @include media-breakpoint-up(lg) {
-                height      : 32px;
-                align-items : center !important;
-            }
-
-            .server-buttons {
-                &:hover {
-                    color : $dark15;
-
-                    svg-icon {
-                        svg {
-                            g, path {
-                                fill : $dark15 !important;
-                            }
-                        }
-                    }
-                }
-
-                @include typography.regular13;
-                background-color : inherit;
-                color            : $light16;
-                display          : flex;
-                align-items      : center;
-                white-space      : nowrap;
-                height           : 20px;
-
+        .server-buttons {
+            &:hover {
+                color: $dark15;
                 svg-icon {
                     svg {
-                        height : 20px;
-
                         g, path {
-                            fill : $light16 !important;
+                            fill: $dark15 !important;
                         }
                     }
                 }
-
-                .animate-rotation {
-                    animation-name            : rotate;
-                    animation-duration        : 1.8s;
-                    animation-iteration-count : infinite;
-                    transform-origin          : 50% 50%;
-                }
-
-                @keyframes rotate {
-                    0% {
-                        transform : rotate(0deg);
-                    }
-                    100% {
-                        transform : rotate(360deg);
+            }
+            @include typography.regular13;
+            background-color: inherit;
+            color: $light16;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            svg-icon {
+                svg {
+                    height: 20px;
+                    g, path {
+                        fill: $light16 !important;
                     }
                 }
-
-                a {
-                    text-decoration : none;
-                    color           : inherit;
+            }
+            .animate-rotation {
+                animation-name: rotate;
+                animation-duration: 1.8s;
+                animation-iteration-count: infinite;
+                transform-origin: 50% 50%;
+            }
+            @keyframes rotate {
+                0% {
+                    transform: rotate(0deg);
                 }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
             }
         }
     }
@@ -129,28 +122,27 @@
             }
         }
     }
-
-    .server-settings {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: min-content auto;
-        align-items: center;
-        .text-column {
-            text-align: right;
-        }
-        .port-input {
-            height: 30px;
-            width: 80px;
-            border-radius: 2px;
-            border: 1px solid $light6;
-            &:disabled {
-                background-color: $light2;
-                border: 1px solid $light4;
-            }
-        }
-        nx-select {
-            width: 240px;
-        }
-    }
 }
 
+.server-settings {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    .text-column {
+        text-align: right;
+    }
+    .port-input {
+        height: 30px;
+        width: 80px;
+        border-radius: 2px;
+        border: 1px solid $light6;
+        &:disabled {
+            background-color: $light2;
+            border: 1px solid $light4;
+        }
+    }
+    nx-select {
+        width: 240px;
+    }
+}
