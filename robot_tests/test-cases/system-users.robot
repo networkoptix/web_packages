@@ -136,7 +136,7 @@ Owner / user can unlink offline System from Cloud / Account
     Log    C41898: Step 1
     Go To    ${url}/systems/${sysId2}
     Log In    ${user email}    ${password}    button=None
-    Wait Until Element Is Visible    ${SYSTEM OFFLINE}
+    Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
     Disconnect from my account
     Log out
 
@@ -177,7 +177,7 @@ Should display same user data as user provided during registration
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
     Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Should display same user data as shown in user account
     [Tags]    email    C41573    C41842
@@ -191,7 +191,7 @@ Should display same user data as shown in user account
 #click link containing user's email
     Select user in Users List    ${random email}
 #verify name displayed
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Share button - opens dialog
     [Tags]    C41888
@@ -384,7 +384,8 @@ Share with registered user works and sends him notification
     Verify In System    usertest1
     ${random email}    Register and activate account with random email    mark     hamil    ${password}
     Share To    ${random email}    ${ADMIN TEXT}
-
+    # Might not be necessary after CLOUD-6113
+    Sleep   3
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
@@ -671,7 +672,7 @@ Administrator can add, disable and enable Viewer
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
+    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //nx-section//span[contains(text(),'${VIEWER TEXT}')]
 
     Log     Step 4
     Log Out

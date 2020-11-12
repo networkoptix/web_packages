@@ -133,7 +133,7 @@ ${LEFT MENU LEVEL3 USER2 EXT}         ${LEFT MENU LEVEL3 USER2}//span[contains(@
 ${LEFT MENU LEVEL1 SERVERS}           ${LEFT MENU}//nx-level-1-item/a[@id='servers']
 
 #In system settings
-${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
+${SYSTEM NAME}                        //div[@class="header-title"]/h2[@id="editable-title"]
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
