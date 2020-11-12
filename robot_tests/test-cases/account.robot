@@ -239,7 +239,7 @@ Change first and last name shows in system
     Log In    ${owner}    ${password}    button=None
     Go To Users List
     Select User in Users List   ${live viewer}
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'nameChanged nameChanged')]
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
     Log Out
     Go To    ${url}/account
     Log In    ${live viewer}    ${password}    button=None
