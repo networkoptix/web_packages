@@ -35,11 +35,21 @@ Connect System To Cloud - Client
 
     Go To    ${ENV}/systems
     Log In    ${email vms}    ${password}    validate=${False}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT FROM NX}
+    ...    ${RENAME SYSTEM}
+    ...    ${MERGE BUTTON SYSTEM}
+    ...    ${SYSTEM GENERAL LINK}
+    ...    ${CAMERAS LINK}
+    ...    ${USERS LIST LINK}
+    ...    ${SERVERS LINK}
+    ...    //span[@class="system-owner"]//span[contains(text(), "${YOU TEXT}")]
+    ...    //form[@id="systemSettingsForm"]
+    ...    //form[@id="securitySettingsForm"]
     Log Out
 
-Log in to VMS as cloud owner
-    [Tags]    C30825    vms
+API call to server with cloud credentials
+    [Tags]    vms
     ${auth}=    Create List    ${email vms}    ${password}
     Get Users    ${auth}    https://${system vms}[ip]:${system vms}[port]
 

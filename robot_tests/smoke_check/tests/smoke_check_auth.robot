@@ -15,12 +15,12 @@ Auth Suite Setup
 
 *** Test Cases ***
 Log in and Log out as Existing User
-    [Tags]    T169283    T169276    auth
+    [Tags]    C30450    C30442    auth
     Log In    ${email auth}    ${password}
     Log Out
 
 Create Account
-    [Tags]    T169275    auth
+    [Tags]    C30440    auth
     ${random email}=    Get Random Email    ${email base}
 
     Log    Step 1: Fill and send Create account form

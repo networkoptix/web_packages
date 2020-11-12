@@ -1,4 +1,5 @@
 *** Variables ***
+${GENERAL LINK}    //a[@id="genaral"]//span[contains(text(), "${GENERAL TEXT}")]
 ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}    //nx-checkbox[@name="autoDiscoveryEnabled"]
 ${ENABLE AUTO DISCOVERY CHECKBOX REAL}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      //nx-checkbox[@name="statisticsAllowed"]

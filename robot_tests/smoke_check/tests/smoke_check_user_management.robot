@@ -228,13 +228,6 @@ Client - Delete cloud user
     Remove User    ${local auth}    https://${system users}[ip]:${system users}[port]    ${new user data}[id]
     Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
 
-    ${auth}=   Create List    ${email users}    ${password}
-    Log    Verify user is deleted from cloud
-    ${cloud users}=   Get Cloud System Users    ${auth}    ${system users}[cloud id]
-    FOR    ${obj}    IN    @{cloud users}
-        Dictionary Should Not Contain Value    ${obj}    ${new cloud user}
-    END
-
     Log   Verify user is not in the users list
     Go To    ${ENV}/systems/${system users}[cloud id]
     Log In    ${email users}    ${password}    validate=${False}    button=None
@@ -242,6 +235,14 @@ Client - Delete cloud user
     Click Link    ${USERS LIST LINK}
     Elements Should Not Be Visible    ${USERS LIST}//span[@class="user" and text()='${new cloud user}']
     Log Out
+
+    ${auth}=   Create List    ${email users}    ${password}
+    Log    Verify user is deleted from cloud - API
+    ${cloud users}=   Get Cloud System Users    ${auth}    ${system users}[cloud id]
+    FOR    ${obj}    IN    @{cloud users}
+        Dictionary Should Not Contain Value    ${obj}    ${new cloud user}
+    END
+
 
 Client - Share to registered user
     [Tags]    C30446    C30651    users

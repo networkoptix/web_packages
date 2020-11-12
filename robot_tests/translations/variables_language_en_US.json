@@ -212,6 +212,7 @@
     "NOTHING FOUND"                        :    "Nothing Found",
 
     "OK TEXT"                              :    "OK",
+    "GENERAL TEXT"                         :    "General",
     "LOGIN TEXT"                           :    "Login",
     "PASSWORD TEXT"                        :    "Password",
     "MERGE ENTER SERVER ADDRESS TEXT"      :    "Enter server address",

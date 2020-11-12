@@ -204,6 +204,7 @@ ${WINDOWS TAB}                        //a[@id="windows"]
 ${LINUX TAB}                          //a[@id="linux"]
 ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
+${SDK TAB}                            //a[@id="sdk"]
 
 #History
 ${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='${RELEASES TAB TEXT}']/..
