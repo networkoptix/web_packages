@@ -1,0 +1,98 @@
+{
+    "type": "documentation",
+    "can_preview": true,
+    "single_customization": false,
+    "contexts": [
+      {
+        "name": "content",
+        "label": "Content",
+        "description": "Page's content",
+        "translatable": true,
+        "values": [
+          {
+            "name": "title",
+            "label": "Title",
+            "value": "",
+            "description": "This will be used as the title of the page",
+            "type": "text",
+            "optional": false
+          },
+          {
+            "name": "url",
+            "label": "URL",
+            "value": "",
+            "description": "URL to access the page",
+            "type": "text",
+            "optional": true,
+            "advanced": true,
+            "unique": true,
+            "translatable": false,
+            "meta": {
+              "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
+            }
+          },
+          {
+            "label": "Tags",
+            "name": "tags",
+            "description": "",
+            "advanced": false,
+            "optional": true,
+            "type": "multiselect",
+            "translatable": false,
+            "meta": {
+              "options": [
+                {
+                  "id": "docker",
+                  "label": "Docker"
+                }, {
+                  "id": "api",
+                  "label": "API"
+                }
+              ]
+            }
+          },
+          {
+            "name": "shortDescription",
+            "label": "Short Description",
+            "value": "",
+            "description": "Short description that is used on page previews",
+            "type": "long_text",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "name": "body",
+            "label": "Body",
+            "value": "",
+            "description": "HTML that will be used as the content of the page",
+            "type": "html",
+            "optional": false,
+            "meta": {
+              "tiny_paste_word_valid_elements": "span,b,strong,i,u,em,br,ol,ul,li,p,h1,h2,h3,h4,h5,h6",
+              "tiny_paste_retain_style_properties": "font-weight,text-decoration",
+              "tiny_forced_root_block": false,
+              "upload_data_images": true
+            }
+          },
+          {
+            "name": "styling",
+            "label": "Styling",
+            "value": "",
+            "description": "CSS applied to html body",
+            "type": "long_text",
+            "advanced": true,
+            "optional": true
+          },
+          {
+            "name": "script",
+            "label": "Script",
+            "value": "",
+            "description": "Javascript to run with html body",
+            "type": "long_text",
+            "advanced": true,
+            "optional": true
+          }
+        ]
+      }
+    ]
+  }

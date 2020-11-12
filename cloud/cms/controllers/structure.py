@@ -1,6 +1,6 @@
 import base64
-import codecs
 from io import BytesIO
+import glob
 import json
 import logging
 import os
@@ -103,13 +103,37 @@ def update_from_object(asset_type_structure, asset_type=None, preserve_files=Fal
             order += 1
 
 
-def read_structure_json(filename):
-    with codecs.open(filename, 'r', 'utf-8') as file_descriptor:
-        cms_structure = json.load(file_descriptor)
-        for asset_type_structure in cms_structure:
-            asset_type_type = AssetType.get_type_by_name(asset_type_structure["type"])
-            asset_type = find_or_add_asset_type(asset_type_type)
-            update_from_object(asset_type_structure, asset_type)
+def merge_structures(existing, new):
+    if 'contexts' not in existing and 'contexts' in new:
+        existing['contexts'] = []
+    existing['contexts'] += new['contexts']
+
+    # Handle remaining values
+    for key, val in new.items():
+        if key not in existing:
+            existing[key] = val
+
+
+def read_structure_files():
+    cms_structure = []
+    for filename in glob.glob('cms/structures/*_structure.json'):
+        with open(filename, 'r', encoding='utf-8') as file_descriptor:
+            new_struct = json.load(file_descriptor)
+            existing_struct = next((struct for struct in cms_structure if struct['type'] == new_struct['type']), None)
+            if existing_struct:
+                merge_structures(existing_struct, new_struct)
+            else:
+                cms_structure.append(new_struct)
+
+    return cms_structure
+
+
+def read_structure_json():
+    cms_structure = read_structure_files()
+    for asset_type_structure in cms_structure:
+        asset_type_type = AssetType.get_type_by_name(asset_type_structure["type"])
+        asset_type = find_or_add_asset_type(asset_type_type)
+        update_from_object(asset_type_structure, asset_type)
 
 
 def process_node(node_obj, node_struct):

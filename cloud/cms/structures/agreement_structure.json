@@ -1,0 +1,40 @@
+{
+    "type": "agreement",
+    "can_preview": true,
+    "single_customization": false,
+    "contexts": [
+      {
+        "name": "content",
+        "label": "Content",
+        "description": "Agreement content",
+        "values": [
+          {
+            "name": "title",
+            "label": "Title",
+            "value": "",
+            "description": "This will be used as the title of the agreement",
+            "type": "text",
+            "optional": false
+          },
+          {
+            "name": "comment",
+            "label": "Comment",
+            "value": "",
+            "description": "Internal comments",
+            "type": "long_text",
+            "optional": true,
+            "advanced": true,
+            "public": false
+          },
+          {
+            "name": "text",
+            "label": "Text",
+            "value": "",
+            "description": "HTML that will be used on the agreement's page",
+            "type": "html",
+            "optional": false
+          }
+        ]
+      }
+    ]
+  }

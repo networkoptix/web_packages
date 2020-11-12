@@ -160,7 +160,7 @@ class Command(BaseCommand):
             default_customization.languages.add(Language.by_code('en_US'))
             default_customization.save()
 
-        structure.read_structure_json('cms/cms_structure.json')
+        structure.read_structure_json()
         read_structure(asset_type)
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
