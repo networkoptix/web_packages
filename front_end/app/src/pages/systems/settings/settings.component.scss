@@ -1,7 +1,7 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as variables;
 @use '../../../styles/buttons' as buttons;
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 nx-block {
 	.user-email,

@@ -1,6 +1,6 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 .heading-link {
     cursor: pointer;

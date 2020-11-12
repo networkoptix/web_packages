@@ -1,5 +1,5 @@
 @use "../../../../styles/theme_variables" as *;
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 .main-button {
     margin-right: 26px;
