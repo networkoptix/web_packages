@@ -2,6 +2,8 @@
 
     .server-list {
         padding: 0 8px;
+        height : calc(100vh - 92px);
+        overflow: auto;
 
         .server {
             width: 100%;

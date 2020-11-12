@@ -50,6 +50,17 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
         this._mediaservers = s.mediaServers
+        this._mediaservers.sort((ms1, ms2) => {
+          const cameraComparator = (c1, c2) =>
+            c1.name > c2.name ? +1 : c1.name < c2.name ? -1 : 0
+          ms1.cameras.sort(cameraComparator)
+          ms2.cameras.sort(cameraComparator)
+          return ms1.name > ms2.name
+            ? +1
+            : ms1.name < ms2.name
+              ? -1
+              : 0
+        })
     }
     this._resetServersVisibility()
     this.updateFilteredList(this.token)
