@@ -13,6 +13,7 @@ import Camera from '../../vms-client/submodules/vms/datatypes/Camera'
 import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import { ms } from '../../vms-client/utils/type-aliases'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
+import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 
 
 @Component({
@@ -25,6 +26,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   protected _state: VmsState
   protected _vmsStateSubscription: Subscription
   protected _routerParamsSubscription: Subscription
+  protected _uxStateSubscription: Subscription
 
   public systemId: string
   public system: NxSystem
@@ -33,9 +35,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   public initializedWithError: boolean = false
 
   public handleSidebarTogglingEarClick () {
-    this.$self.classList.toggle('sidebarShown')
-    setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+    this.ux.isSidebarShown = !this.ux.state.isSidebarShown
   }
+
+
 
   public get $self (): HTMLElement {
     return this.self.nativeElement as HTMLElement
@@ -55,20 +58,33 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected systemService: NxSystemService,
     protected vms: VideoManagementSystemService,
     protected timeline: TimelineService,
+    protected ux: WebClientUxService,
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
     this._onRouteChange = this._onRouteChange.bind(this)
+    this._onUxStateChange = this._onUxStateChange.bind(this)
   }
 
   public ngOnInit(): void {
     this.vms.reset()
     this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange)
     this._routerParamsSubscription = this.route.params.subscribe(this._onRouteChange)
+    this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
   }
 
   public ngOnDestroy (): void {
     this._vmsStateSubscription.unsubscribe()
     this._routerParamsSubscription.unsubscribe()
+    this._uxStateSubscription.unsubscribe()
+  }
+
+  protected _onUxStateChange (s: WebclientUxState) {
+    if (s.isSidebarShown) {
+      this.$self.classList.add('sidebarShown')
+    } else {
+      this.$self.classList.remove('sidebarShown')
+    }
+    setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
   }
 
   protected _onVmsSubjectChange (s: VmsState) {

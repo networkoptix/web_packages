@@ -12,6 +12,7 @@ import PlaybackService from '../../vms-client/submodules/playback/services/playb
 import { Subscription } from 'rxjs'
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
 import FpsMeterService from '@services/fps-meter.service'
+import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 
 export type PlaybackQuality = 'auto' | 'low' | 'high'
 
@@ -28,9 +29,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
-    protected _animationFrameRequestHandler: number
+    protected _uxStateSubscription: Subscription
 
-    public isFullScreen: boolean = false
+    protected _animationFrameRequestHandler: number
 
     public settingsShown: boolean = false
     public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
@@ -44,14 +45,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       public timeline: TimelineService,
       public timelineExtendToNow: TimelineExtendToNowService,
       protected fpsMeter: FpsMeterService,
+      protected ux: WebClientUxService,
     ) {
       this._onRouteChange = this._onRouteChange.bind(this)
       this._onVmsStateChange = this._onVmsStateChange.bind(this)
       this._onAnimationFrame = this._onAnimationFrame.bind(this)
+      this._onUxStateChange = this._onUxStateChange.bind(this)
     }
 
     public handleControlsTogglingEarClick () {
-      this.$self.classList.toggle('controls-shown')
+      this.ux.isTimelineShown = !this.ux.state.isTimelineShown
     }
 
     public get $self (): HTMLElement {
@@ -61,23 +64,59 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public ngOnInit (): void {
       this._routeSubscription = this.route.params.subscribe(this._onRouteChange)
       this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
+      this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
+
       this._animationFrameRequestHandler =
         requestAnimationFrame(this._onAnimationFrame)
 
       document.addEventListener('fullscreenchange', e => {
-        this.isFullScreen = !this.isFullScreen
+        // console.log('fullscreenchange', e, document.fullscreenElement)
+        if (this.ux.state.isFullScreen !== !!document.fullscreenElement) {
+          this.ux.isFullScreen = !!document.fullscreenElement
+        }
       })
     }
 
     public ngAfterViewInit () {
       this.$self.classList.add('controls-shown')
       this.fpsMeter.install()
+      this.ux.isFullScreen = !!document.fullscreenElement
     }
 
     public ngOnDestroy (): void {
       this._routeSubscription.unsubscribe()
       this._vmsStateSubscription.unsubscribe()
+      this._uxStateSubscription.unsubscribe()
+
       cancelAnimationFrame(this._animationFrameRequestHandler)
+    }
+
+    protected _onUxStateChange (s: WebclientUxState) {
+      // console.log('change')
+      if (s.isTimelineShown) {
+        this.$self.classList.add('controls-shown')
+      } else {
+        this.$self.classList.remove('controls-shown')
+      }
+      // setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+
+      // don't try going fullscreen until the document is ready
+      if (document.readyState !== 'complete') {
+        // console.log('not ready')
+        return
+      }
+
+      setTimeout(() => {
+        if (s.isFullScreen && !document.fullscreenElement) {
+          // console.log('+')
+          this.self.nativeElement.parentElement.requestFullscreen()
+          this.self.nativeElement.classList.add('is-full-screen')
+        } else if (!s.isFullScreen && !!document.fullscreenElement) {
+          // console.log('-')
+          document.exitFullscreen()
+          this.self.nativeElement.classList.remove('is-full-screen')
+        }
+      }, 0)
     }
 
     protected _onRouteChange (params) {
@@ -133,13 +172,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public toggleFullScreen () {
-      if (this.isFullScreen) {
-        document.exitFullscreen()
-        this.self.nativeElement.classList.remove('is-full-screen')
-      } else {
-        this.self.nativeElement.parentElement.requestFullscreen()
-        this.self.nativeElement.classList.add('is-full-screen')
-      }
+      this.ux.isFullScreen = !document.fullscreenElement
     }
 
     public toggleSettings () {
