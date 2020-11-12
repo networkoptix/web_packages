@@ -868,7 +868,10 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
     extra = 0
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
-    fields = ('name', 'asset', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'permissions', 'enabled', 'is_global', 'preview')
+    fields = (
+        'name', 'asset', 'related_assets', 'next_item', 'url', 'new_window', 'icon', 'order', 'condition',
+        'authentication', 'permissions', 'enabled', 'is_global', 'preview'
+    )
     readonly_fields = ('is_global', 'preview')
 
     def __init__(self, *args, **kwargs):

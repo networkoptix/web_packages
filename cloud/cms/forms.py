@@ -450,6 +450,12 @@ class MenuNodeInlineForm(forms.ModelForm):
                     'data-minimum-input-length': 2
                 }
             ),
+            'related_assets': autocomplete.ModelSelect2Multiple(
+                url='asset_autocomplete', attrs={
+                    'data-placeholder': 'Select related articles',
+                    'data-minimum-input-length': 2
+                }
+            ),
             'asset': autocomplete.ModelSelect2(
                 url='asset_autocomplete', attrs={
                     'data-placeholder': 'Select article',

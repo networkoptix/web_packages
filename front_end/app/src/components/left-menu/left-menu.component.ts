@@ -7,6 +7,11 @@ import { UntilDestroy }                                   from '@ngneat/until-de
 import { NxMenusService, MenuNode }                       from '../../services/menus.service';
 import { IConfig, NxConfigService }                       from '../../services/nx-config';
 
+export interface RelatedLinks {
+    type: string,
+    nodes: MenuNodeWithParent[]
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-left-menu[menuName]',
@@ -20,7 +25,7 @@ export class NxLeftMenuComponent implements OnInit {
     @Input() showDefault = true;
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
-    @Output() relatedLinks = new EventEmitter<MenuNodeWithParent[]>()
+    @Output() relatedLinks = new EventEmitter<RelatedLinks>()
 
     CONFIG: IConfig;
     menuNodes: MenuNodeWithParent[] = [];
@@ -60,13 +65,25 @@ export class NxLeftMenuComponent implements OnInit {
                 updateActiveRoutes(node.parentNode);
             }
         };
-        const findActiveNode = (nodes: MenuNodeWithParent[]) => {
+        const relatedNodes = [];
+        const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = url, action:string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.url === url) {
-                    updateActiveRoutes(node);
-                    this.relatedLinks.emit(node.parentNode?.nodes || []);
+                if (node.url === targetUrl) {
+                    if (action === 'update') {
+                        updateActiveRoutes(node);
+                        if (node.next_item) {
+                            this.relatedLinks.emit({ type: 'next', nodes: node.parentNode?.nodes || [] });
+                        } else {
+                            node.related_asset_ids.forEach(id => {
+                                findActiveNode(this.menuNodes, this.baseRoute + id, 'findRelated');
+                            });
+                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes });
+                        }
+                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url)) {
+                        relatedNodes.push(node);
+                    }
                 } else if (node.nodes?.length) {
-                    findActiveNode(node.nodes);
+                    findActiveNode(node.nodes, targetUrl, action);
                 }
             };
             nodes.forEach(checkNode);

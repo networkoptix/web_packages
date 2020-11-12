@@ -116,6 +116,10 @@
         color: $dark17 !important;
         letter-spacing: 0.64px;
     }
+
+    a {
+        display: block;
+    }
 }
 
 ::ng-deep .article-content {

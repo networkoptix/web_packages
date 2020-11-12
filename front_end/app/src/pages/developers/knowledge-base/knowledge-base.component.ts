@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { BehaviorSubject, timer, combineLatest } from 'rxjs';
-import { MenuNodeWithParent } from '../../../components/left-menu/left-menu.component';
+import { MenuNodeWithParent, RelatedLinks } from '../../../components/left-menu/left-menu.component';
 import { NxMenusService, MenuNode } from '../../../services/menus.service';
 import { SearchFilter, SearchTag } from '../../../components/search/search.component';
 
@@ -31,24 +31,30 @@ export class NxKnowledgeBaseComponent implements OnInit {
     searchResults$ = new BehaviorSubject([]);
     searchQuery$ = new BehaviorSubject({ query: '', tags: ' '});
     assetId$ = new BehaviorSubject('');
-    relatedLinks$ = new BehaviorSubject<MenuNodeWithParent[]>([]);
+    relatedLinks$ = new BehaviorSubject<RelatedLinks>({ type: '', nodes: [] });
     relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
         map(this.filterRelatedLinks)
     );
 
-    filterRelatedLinks([assetId, nodes]: [string, MenuNodeWithParent[]]) {
-        const currentIndex = nodes.findIndex(({ asset_id: id }) => `${id}` === assetId);
-        if (currentIndex === (nodes.length - 1)) {
-            return [];
+    filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
+        if (relatedLinks.type === 'next') {
+            const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => `${id}` === assetId);
+            if (currentIndex === (relatedLinks.nodes.length - 1)) {
+                return [];
+            } else {
+                return [relatedLinks.nodes[currentIndex + 1]];
+            }
+        } else if (relatedLinks.type === 'related') {
+            return relatedLinks.nodes;
         } else {
-            return [nodes[currentIndex + 1]];
+            return [];
         }
     }
 
     updateSearchQuery({ query, tags }) {
         const filteredTags = (tags || []).reduce(
             (joined, tag) => tag.value ? joined + `${tag.id},` : joined, ''
-        )
+        );
         if (this.searchQuery$.value.query === query && this.searchQuery$.value.tags === filteredTags) {
             return;
         };

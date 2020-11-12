@@ -100,7 +100,7 @@
                     </ng-container>
                     <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
-                        <h4>RELATED TOPICS</h4>
+                        <h4>{{ (relatedLinks$ | async).type === 'next' ? 'NEXT ARTICLE:' : 'RELATED TOPICS' }}</h4>
                         <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url">
                             {{link.display_name || link.name}}
                         </a>

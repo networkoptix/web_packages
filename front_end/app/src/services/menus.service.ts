@@ -33,7 +33,9 @@ export class MenuNode {
         public display_name = name,
         public new_window = false,
         currentRoute = false,
-        public asset_id = null
+        public asset_id = null,
+        public related_asset_ids = [],
+        public next_item = false
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

@@ -62,6 +62,15 @@ function setup_cms(){
     popd
 }
 
+function dump_db(){
+    printf "Dumping db\n"
+    FILENAME=dump-"$(date +%Y-%m-%d-%H-%M)"
+    echo $FILENAME
+    mkdir -p ./etc/dumps
+    mysqldump -h 0.0.0.0 --port=3306 -uroot --all-databases --column-statistics=0 > ./etc/dumps/"$FILENAME".sql
+    printf "DB was saved to %s/etc/dumps/%s.sql\n\n" "$PWD" "$FILENAME"
+}
+
 function setup_db(){
     SQL_COUNT=`ls -1q etc/*.sql | wc -l`
     if [[ ${SQL_COUNT} -eq 1 ]]; then
@@ -350,6 +359,9 @@ do
          start_https_tunnel)
             start_https_tunnel
             ;;
+         dump_db)
+            dump_db
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -358,6 +370,7 @@ do
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
             echo 'login_db - Login to docker db'
+            echo 'dump_db - Dump database to sql file in etc/dumps'
             echo 'rebuild_frontend - Rebuilds the frontend and runs readstructure and filldata commands'
             echo 'set_cloud_instance - Sets the cloud instance env. Usage "source ./cloud_helper.sh set_cloud_instance $instance".'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'

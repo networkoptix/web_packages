@@ -1411,10 +1411,12 @@ class Menu(models.Model):
         nodes_to_attr = 'nodes_list'
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
         permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
+        related_assets_lookup = f'{parent_node_lookup}__{nodes_to_attr}__related_assets' if depth > 1 else f'{nodes_to_attr}__related_assets'
         prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order').select_related('asset', 'asset__asset_type'),
                                       to_attr=nodes_to_attr),
                       models.Prefetch(enabled_lookup, to_attr='enabled_list'),
-                      models.Prefetch(permission_lookup)]
+                      models.Prefetch(permission_lookup),
+                      models.Prefetch(related_assets_lookup)]
         child_prefetches = tuple()
         if depth < max_depth:
             child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)
@@ -1446,6 +1448,8 @@ class Menu(models.Model):
                     'url' : node.url,
                     'asset': node.asset.name if node.asset else None,
                     'asset_type': node.asset.asset_type.type if node.asset else None,
+                    'related_assets': [(asset.name, asset.asset_type.type) for asset in node.related_assets.all()],
+                    'next_item': node.next_item,
                     'new_window': node.new_window,
                     'icon': node.icon,
                     'available': [customization.name for customization in node.available.all()],
@@ -1472,6 +1476,14 @@ class Menu(models.Model):
         return menu_dict
 
     def from_dict(self, menu_dict):
+        def find_or_create_asset(name, asset_type, customizations):
+            asset = Asset.objects.filter(name=name, asset_type__type=asset_type).first()
+            if not asset:
+                asset_type = AssetType.objects.filter(type=asset_type, name='').order_by('pk').first()
+                asset = Asset.objects.create(name=name, asset_type=asset_type)
+                asset.customizations.set(list(customizations))
+            return asset
+
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
                 if isinstance(parent, Menu):
@@ -1483,6 +1495,7 @@ class Menu(models.Model):
                     node_obj = MenuNode()
                 node_obj.name = node['name']
                 node_obj.url = node['url']
+                node_obj.next_item = node['next_item']
                 node_obj.new_window = node['new_window']
                 node_obj.icon = node['icon']
                 node_obj.authentication = node['authentication']
@@ -1497,18 +1510,15 @@ class Menu(models.Model):
                 node_obj.enabled.set(list(Customization.objects.filter(name__in=node['enabled'])))
                 node_obj.permissions.set(list(Permission.objects.filter(codename__in=node['permissions'])))
 
+                if node_obj.is_global:
+                    asset_customizations = Customization.objects.all()
+                else:
+                    asset_customizations = node_obj.available.all()
                 if node['asset']:
-                    if node_obj.is_global:
-                        asset_customizations = Customization.objects.all()
-                    else:
-                        asset_customizations = node_obj.available.all()
-                    asset = Asset.objects.filter(name=node['asset'], asset_type__type=node['asset_type']).first()
-                    if not asset:
-                        asset_type = AssetType.objects.filter(type=node['asset_type'], name='').order_by('pk').first()
-                        asset = Asset.objects.create(name=node['asset'], asset_type=asset_type)
-                        asset.customizations.set(list(asset_customizations))
-                    node_obj.asset = asset
+                    node_obj.asset = find_or_create_asset(node['asset'], node['asset_type'], asset_customizations)
                     node_obj.save()
+                for asset, asset_type in node.get('related_assets', []):
+                    node_obj.related_assets.add(find_or_create_asset(asset, asset_type , asset_customizations))
 
                 if node['nodes']:
                     set_nodes(node['nodes'], node_obj)
@@ -1525,7 +1535,9 @@ class MenuNode(models.Model):
                            (2, "both", "Both"))
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=2048, blank=True)
-    asset = models.ForeignKey(Asset, null=True, blank=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+    related_assets = models.ManyToManyField(Asset, default=None, blank=True, related_name='nodes_related')
+    next_item = models.BooleanField(default=False, verbose_name='Link to next')
     new_window = models.BooleanField(default=False)
     icon = models.CharField(blank=True, max_length=255)
     available = models.ManyToManyField(Customization, blank=True, related_name='available_nodes')
@@ -1548,6 +1560,8 @@ class MenuNode(models.Model):
             'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
             'asset_id': self.asset.id if self.asset else None,
             'asset_type': AssetType.ASSET_TYPES[self.asset.asset_type.type] if self.asset else None,
+            'related_asset_ids': [asset.id for asset in self.related_assets.all()],
+            'next_item': self.next_item,
             'new_window': self.new_window,
             'icon': self.icon,
             'permissions': list(self.permissions.values_list('codename', flat=True)),
