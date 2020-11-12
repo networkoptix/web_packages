@@ -8,9 +8,10 @@ Suite Teardown   Close Browser
 *** Keywords ***
 Auth Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email auth}=   Get Random Email    ${email base}
-    Register And Activate Account    SmokeCheck    Auth    ${email auth}    ${password}
-    Set Suite Variable    ${email auth}    ${email auth}
+    ${email}=   Get Random Email    ${email base}
+    Run Keyword If     'nxvms' not in $env    Run Keywords
+       ...    Register And Activate Account    SmokeCheck    Auth    ${email}    ${password}    AND
+       ...    Set Suite Variable    ${email auth}    ${email}
 
 *** Test Cases ***
 Log in and Log out as Existing User
@@ -27,10 +28,12 @@ Create Account
     Validate Register Success
 
     Log    Step 2: Check email with Activation link
-    ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${random email}    activate_account
+    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${random email}    ${email password}    activate
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${random email}    activate_account
 
     Log    Step 3: Click on Activation link
-    Go To    ${ENV}/activate/${code}
+    Run Keyword If    'nxvms' in $env    Go To    ${link}
+       ...    ELSE    Go To    ${ENV}/activate/${code}
     Validate Activation Success
 
     Log    Step 4: Log in

@@ -511,14 +511,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.system.updateCameraSettings(cameraSettings.id, {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
-            ]);
-        }).then(_ => {
-            this.applyService.reset();
-            return this.system.getCameras().then(res => {
-                this.setCamera();
-                this.toggleMotionGrid();
-                this.settingsService.system = this.system;
-                return res;
+            ]).then(_ => {
+                return this.system.getCameras().then(res => {
+                    this.setCamera();
+                    this.toggleMotionGrid();
+                    this.settingsService.system = this.system;
+                    return res;
+                });
             });
         });
     }
@@ -686,6 +685,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     setCamera = (forceUpdate = false) => {
+        this.applyService.hardReset();
         this.applyService.setVisible(false);
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera?.id && !forceUpdate) {
             return;

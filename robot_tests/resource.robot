@@ -64,6 +64,7 @@ Open page anonymously
     [Arguments]    ${url}    ${title}
     Go To    ${url}
     Location should be    ${url}
+    Sleep   3
     Title should be    ${title}
 
 Set Chrome Options
@@ -798,12 +799,23 @@ Delete All Local Users
 Check Password Badge
     [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
-    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${new focus}
+    Mouse Over    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
 
-Move focus and check badge
+    Run Keyword If    '''${pass}''' in ${weak passwords}    Move focus and check badge disappears    ${PASSWORD IS WEAK BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge disappears    ${PASSWORD INCORRECT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge stays   ${PASSWORD IS FAIR BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge stays   ${PASSWORD IS GOOD BADGE}    ${new focus}
+
+Move focus and check badge disappears
+    [Arguments]    ${badge}    ${new focus}
+    Element Should Be Visible    ${badge}
+    Click Element    ${new focus}
+    Wait Until Element Is Not Visible    ${badge}
+
+Move focus and check badge stays
     [Arguments]    ${badge}    ${new focus}
     Element Should Be Visible    ${badge}
     Click Element    ${new focus}
@@ -869,3 +881,87 @@ Create Docker Server
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}
+
+Setup Docker Server
+    ${server}=   Create Dictionary
+    Acquire Lock   create_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 4.1_test
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    ${port info}=   Execute Command    docker container port ${id}
+    ${port info}=   Split String    ${port info}    :
+    Set to Dictionary    ${server}    port=${port info}[1]
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   create_server_lock
+    [Return]    ${server}
+
+Delete Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   delete_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker rm -f ${name}
+    ${result}=   Execute Command    docker ps -qaf "name=${name}"
+    Close Connection
+    Release Lock   delete_server_lock
+    Return from Keyword If    "${result}" == "${EMPTY}"    ${True}
+    [Return]    ${False}
+
+Start Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   start_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker start ${name}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   start_server_lock
+    [Return]    ${port info}[1]
+
+Stop Docker Server
+    [Arguments]    ${name}
+    Acquire Lock   stop_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker stop ${name}
+    Close Connection
+    Release Lock   stop_server_lock
+
+Restart Docker Server
+    [Arguments]    ${port}    ${name}    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    Sleep    10
+    Acquire Lock   restart_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   restart_server_lock
+    [Return]    ${port info}[1]
+
+Get container port by name
+    [Arguments]    ${name}
+    Acquire Lock   get_port_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   get_port_lock
+    [Return]    ${port info}[1]
+
+Get container id by name
+    [Arguments]    ${name}
+    Acquire Lock    get_id_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${id}=   Execute Command    docker ps -qaf "name=^${name}"
+    Close Connection
+    Release Lock    get_id_lock
+    [Return]    ${id}

@@ -69,7 +69,7 @@ Can be accessed via dropdown or direct link
     Location Should Be    ${url}/account/password
     Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
     Go To    ${url}
-    Wait Until Element Is Visible    ${AUTO TESTS TITLE}
+    #Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Elements Are Visible    ${CHANGE PASSWORD BUTTON DROPDOWN}    ${ACCOUNT SETTINGS BUTTON}    ${LOG OUT BUTTON}
@@ -96,6 +96,7 @@ password is actually changed, so login works with new password
     Sleep    1
     Wait Until Elements Are Visible   ${CHANGE PASSWORD BUTTON}    ${CANCEL PASSWORD CHANGES BUTTON}
     Click Button    ${CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Not Visible    ${CANCEL PASSWORD CHANGES BUTTON}    ${CHANGE PASSWORD BUTTON}
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out
     Go To    ${url}/account/password

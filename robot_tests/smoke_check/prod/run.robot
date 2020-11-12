@@ -159,7 +159,6 @@ Add and delete users
     Should be True    ${is deleted}
 
 Activate licenses on portal
-    Pass Execution If    'nxvms' in $url    Not yet on prod
     Go To    ${URL}/systems/${system 1}[id]
     Log In    ${email base}    ${password}    validate=False    button=None
     Wait Until Elements Are Visible
@@ -185,8 +184,8 @@ Activate licenses on portal
 Disconnect system from cloud
     ${disconnect data}=   Disconnect    ${URL}    ${email base}    ${password}    ${system 1}[id]
     Should be equal as strings    ${disconnect data}[resultCode]    ok
-    Slow    Restart Server    https://${system 1}[ip]:${system 1}[port]    ${local auth}    timeout=10
-    Wait until keyword succeeds    5x    2s    Ping Server    https://${system 1}[ip]:${system 1}[port]    ${local auth}
+    Restart Server    https://${system 1}[ip]:${system 1}[port]    ${local auth}
+    Wait until keyword succeeds    5x    10s    Ping Server    https://${system 1}[ip]:${system 1}[port]    ${local auth}
 
     ${settings}=   Get System Settings From Server    ${local auth}    https://${system 1}[ip]:${system 1}[port]
     Should be equal as strings    ${settings}[cloudSystemID]    ${EMPTY}

@@ -88,7 +88,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const deactivationsRemaining = this.CONFIG.licenseDeactivations - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [
-                new InfoBlockLine(this.LANG.license.info.type(), info.type),
+                new InfoBlockLine(this.LANG.license.info.type(), typeof info.type === 'function' ? info.type() : info.type),
                 new InfoBlockLine(this.LANG.license.info.channels(), info.count),
                 new InfoBlockLine(
                     this.LANG.license.info.server(),

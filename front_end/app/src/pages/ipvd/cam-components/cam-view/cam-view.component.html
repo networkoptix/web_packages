@@ -25,7 +25,7 @@
             </div>
             <div class="active-camera-info" *ngFor="let setting of camera">
                 <div class="row">
-                    <div class="col-7">{{ setting.title() }}</div>
+                    <div class="col-7">{{ setting.title }}</div>
                     <div class="col-5">
                         <nx-bool-icon
                             *ngIf="!setting.secondaryParam"

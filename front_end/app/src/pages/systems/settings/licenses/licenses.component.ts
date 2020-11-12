@@ -140,7 +140,8 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private addLicenseSummary(item) {
         // for license summary block
-        const license = this.licenseSummaries.find(ls => ls.type === item.info.type);
+        const type = typeof item.info.type === 'function' ? item.info.type() : item.info.type;
+        const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;
         if (item.info.serverStatus !== this.LANG.license.info.online() || item.info.expired) {
@@ -153,7 +154,7 @@ export class NxSystemLicensesComponent implements OnInit {
             license.required += item.info.required;
         } else {
             this.licenseSummaries.push({
-                type       : typeof item.info.type === 'function' ? item.info.type() : item.info.type,
+                type,
                 count      : parseInt(item.info.count) || 0,
                 countAvail : avail,
                 required   : item.info.required

@@ -3,20 +3,26 @@ Resource         ../smoke_check_resource.robot
 
 Suite Setup      Account Suite Setup
 Test Teardown    Run Keyword if Test Failed    Account Test Restart
-Suite Teardown   Close Browser
+Suite Teardown   Account Suite Teardown
 
 *** Keywords ***
 Account Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email acc}=   Get Random Email    ${email base}
-    Register And Activate Account    SmokeCheck    Acc    ${email acc}    ${password}
-    Set Suite Variable    ${email acc}    ${email acc}
+    ${email}=   Get Random Email    ${email base}
+    Run Keyword If     'nxvms' not in $env    Run Keywords
+       ...    Register And Activate Account    SmokeCheck    Acc    ${email}    ${password}    AND
+       ...    Set Suite Variable    ${email acc}    ${email}
+
+Account Suite Teardown
+    ${restored}=   Run keyword and return status    Change Password    ${ENV}    ${email acc}    ${restored password}    ${password}
+    Close Browser
 
 Account Test Restart
+    ${changed}=   Run keyword and return status    Change Password    ${ENV}    ${email acc}    ${new password}    ${password}
     ${restored}=   Run keyword and return status    Change Password    ${ENV}    ${email acc}    ${restored password}    ${password}
-    ${changed}=   Run keyword and return status    Change Password    ${ENV}    ${email acc}    ${restored password}    ${password}
     Set Account Language    ${ENV}    ${email acc}    ${password}
     Set Account Name    ${ENV}    ${email acc}    ${password}    SmokeCheck    Acc
+    Common Restart Logout    ${ENV}
 
 *** Test Cases ***
 Change Account Settings
@@ -103,11 +109,13 @@ Restore Password
     Wait Until Location Contains    restore_password/sent
 
     Log    Step 3: Check email inbox
-
-    ${code}=   Get Code From Email    ${ENV}    ${cloud auth}    ${email acc}    restore_password
+    ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email acc}    ${email password}    restore_password
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${email acc}    restore_password
 
     Log    Step 4: Click on Restore Password button
-    Go To    ${ENV}/restore_password/${code}
+    Run Keyword If    'nxvms' in $env    Go To    ${link}
+       ...    ELSE    Go To    ${ENV}/restore_password/${code}
+
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${RESET PASSWORD OK BUTTON}
 
     Log    Step 5: Reset Password and validate success
