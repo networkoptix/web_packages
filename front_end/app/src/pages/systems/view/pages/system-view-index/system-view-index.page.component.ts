@@ -76,20 +76,22 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   protected _onRouteChange (params) {
-    if (params.systemId) {
-      this.systemId = params.systemId
+    // if (params.systemId) {
+      this.systemId = params.systemId || null
       this.system = undefined
       this.initialized = false
       this.initializedWithError = false
       this._initSystem()
-    }
+    // }
   }
 
   protected _initSystem () {
     this.vms.reset()
     this.accountService.get().then(account => {
       // @ts-ignore -- TODO: Need to handle account not being available
-      this.system = this.systemService.createSystem(account.email, this.systemId)
+      this.system = this.systemId
+        ? this.systemService.createSystem(account.email, this.systemId)
+        : this.systemService.createSystem(account.email, null, 'localhost') // for the case of the webclient (TODO: check!)
       return this.system.getMediaServersAndCameras()
     }).then(mediaServers => {
       return this.system.getServerTimes().then(
