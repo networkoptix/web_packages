@@ -67,7 +67,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             return account;
         } catch (err) {
             if (!this.loginDialogActive) {
-                return this.showLogin().then(() => <false> false);
+                return this.showLogin().then(() => undefined);
             }
         }
     }
