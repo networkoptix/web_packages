@@ -1414,15 +1414,12 @@ export class NxSystem extends System implements OnDestroy {
 
     // <changed by @gbezyuk to fix auth race condition>
     ensureSystemAuth(force?) {
+        if (this.CONFIG.isLocal) return Promise.resolve()
+
         // console.log('ensureSystemAuth', this.id)
         if (this.authPromise) {
             // console.log('in progress')
             return this.authPromise;
-        }
-
-        if (!this.id) {
-            // console.log('web-admin case')
-            return Promise.resolve(true);
         }
 
         // NOTE@gbezyuk: bad direct dependency
