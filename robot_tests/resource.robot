@@ -429,7 +429,7 @@ Remove User Permissions
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element Is Visible    ${REMOVE BUTTON}
     Click Button    ${REMOVE BUTTON}
-    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
+#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
     Wait Until Element Is Not Visible    ${User In List}
 
 Select user in Users List

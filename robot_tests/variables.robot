@@ -56,6 +56,7 @@ ${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BU
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
 ${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${LOGO LINK}                          //header//a[@href='/']
+${LOGO IMG}                           //header//a//img[contains(@src, "static/images/logo.png")]
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
@@ -207,6 +208,7 @@ ${ARM TAB}                            //a[@id="arm"]
 ${SDK TAB}                            //a[@id="sdk"]
 
 #History
+${RELEASE NOTES HEADER}               //h1[contains(text(), "${RELEASE NOTES TEXT}")]
 ${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='${RELEASES TAB TEXT}']/..
 ${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='${PATCHES TAB TEXT}']/..
 ${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='${BETAS TAB TEXT}']/..

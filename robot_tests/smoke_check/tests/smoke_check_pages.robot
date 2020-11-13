@@ -13,6 +13,7 @@ About
     Wait Until Location Contains    /content/about
     Wait Until Elements Are Visible
     ...    ${LOGO LINK}
+    ...    ${WELCOME CAPTION}
     ...    //landing-display-component
     ...    ${CREATE ACCOUNT BODY}
 
@@ -50,12 +51,34 @@ Download Page
     ${url}=   Get Element Attribute    ${PLAY STORE DOWNLOAD BUTTON}    href
     Should Be Equal As Strings    ${url}    ${PLAY STORE LINK}
 
+Download History
+    [Tags]    C81199    pages
+    Wait Until Element Is Visible    ${DOWNLOAD LINK}
+    CLick Link    ${DOWNLOAD LINK}
+    Wait Until Element Is Not Visible    ${RELEASE HISTORY BUTTON}
+    Log In    ${email pages}    ${password}
+    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
+    Click Link    ${RELEASE HISTORY BUTTON}
+    Wait Until Location Is    ${ENV}/downloads/releases
+    Wait Until Elements Are Visible
+    ...    ${RELEASE NOTES HEADER}
+    ...    ${PATCHES TAB}
+    ...    ${RELEASES TAB}
+    ...    ${BETAS TAB}
+    ${url}=   Get Element Attribute    //li[contains(text(), "Ubuntu x64 - Client installer")]/a    href
+    Run keyword and continue on failure    Check File Exists    ${url}
+    Click Link    ${PATCHES TAB}
+    ${url}=   Get Element Attribute    //li[contains(text(), "Windows x64 - Client & Server")]/a    href
+    Run keyword and continue on failure    Check File Exists    ${url}
+    Click Link    ${BETAS TAB}
+    ${url}=   Get Element Attribute    //li[contains(text(), "Mac OS - Client installer")]/a    href
+    Run keyword and continue on failure    Check File Exists    ${url}
+
 Terms
     [Tags]    C30824    pages
     Wait Until Element Is Visible    ${FOOTER TERMS LINK}
     ${terms url}=   Get Element Attribute    ${FOOTER TERMS LINK}    href
     Should Contain    ${terms url}    eula
-    ${terms target}=   Get Element Attribute    ${FOOTER TERMS LINK}    target
 
 Support
     [Tags]    C30823    pages
@@ -82,7 +105,7 @@ Integrations
     ...    AND    Click Link    ${FOOTER INTEGRATIONS LINK}
     ...    AND    Wait Until Location Contains    /integrations
     ...    AND    Wait Until Elements Are Visible
-                  ...    ${LOGO LINK}
+                  ...    ${LOGO IMG}
                   ...    ${INTEGRATIONS SEARCH}
                   ...    ${INTEGRATIONS SEARCH FILTER}
                   ...    ${INTEGRATIONS CATALOG}
@@ -93,7 +116,7 @@ Supported Devices
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Contains    ipvd
     Wait Until Elements Are Visible
-    ...    ${LOGO LINK}
+    ...    ${LOGO IMG}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANUFACTURERS PANE}

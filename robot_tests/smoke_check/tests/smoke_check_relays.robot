@@ -30,36 +30,29 @@ Relays Suite Teardown
 
 *** Test Cases ***
 Frankfurt
-    Create Digest Session    Ping Server session    https://${system fr}[cloud id].${relays}[fr]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+    Ping Server    https://${system fr}[cloud id].${relays}[fr]    ${auth}
+    Log    relay-fr: /api/ping works
 
 New York
-    Create Digest Session    Ping Server session    https://${system ny}[cloud id].${relays}[ny]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+    ${setting}=   Get System Settings    ${auth}    https://${system ny}[cloud id].${relays}[ny]
+    Log Many    relay-ny: /ec2/getSettings works  ${setting}
 
 Los Angeles
-    Create Digest Session    Ping Server session    https://${system la}[cloud id].${relays}[la]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+    ${cameras}=   Get Cameras    ${auth}    https://${system la}[cloud id].${relays}[la]
+    Log Many    relay-la: /ec2/getCamerasEx works   ${cameras}
 
 Sydney
-    Create Digest Session    Ping Server session    https://${system sy}[cloud id].${relays}[sy]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+    Disable Stat Reports    ${auth}    https://${system sy}[cloud id].${relays}[sy]
+    Log    relay-sy: /api/systemSettings works
 
 Singapore
-    Create Digest Session    Ping Server session    https://${system si}[cloud id].${relays}[si]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+    ${licenses}=   Get Licenses    ${auth}    https://${system si}[cloud id].${relays}[si]
+    Log Many    relay-si: /ec2/getLicenses works   ${licenses}
 
-Cheboksary
-    Create Digest Session    Ping Server session    https://${system ch}[cloud id].${relays}[ch]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+Ch
+    ${HWIDs}=   Get Server HWIDs    ${auth}    https://${system ch}[cloud id].${relays}[ch]
+    Log Many    relay-ch: /api/getHardwareIds works    ${HWIDs}
 
-Chicago
-    Create Digest Session    Ping Server session    https://${system chi}[cloud id].${relays}[chi]    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Ping Server session    /api/ping    timeout=10
-    Should Be Equal As Numbers    ${resp.status_code}    200
+Chi
+    ${users}=   Get Users    ${auth}    https://${system chi}[cloud id].${relays}[chi]
+    Log Many    relay-chi: /ec2/getUsers works    ${users}

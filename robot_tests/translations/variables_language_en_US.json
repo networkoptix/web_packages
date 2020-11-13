@@ -286,6 +286,7 @@
     "REGISTER TITLE TEXT"                  :    "Create account in",
     "DOWNLOAD TITLE TEXT"                  :    "Download %VMS_NAME%",
     "DOWNLOADS HEADER TEXT"				   :	"Download",
+    "RELEASE NOTES TEXT"                   :    "Release notes",
     "RELEASE HISTORY TITLE TEXT"           :    "Release history",
     "IPVD TITLE TEXT"                      :    "Supported Devices",
     "SYSTEMS TITLE TEXT"                   :    "Systems",

@@ -31,9 +31,12 @@ Users Suite Teardown
     Release Lock    teardown_lock
     Close Browser
 
+    # Delete generated users
+    ${deleted}=   Run keyword and return status    Delete Account    ${ENV}    ${new portal user}    ${password}
+
 *** Test Cases ***
 Portal - Share to not registered user
-    [Tags]    C30445    C30648    users
+    [Tags]    C30447    C30648    users
 
     Go To    ${ENV}/systems/${system users}[cloud id]
     Log In    ${email users}    ${password}    validate=${False}    button=None
@@ -158,7 +161,7 @@ Portal - Share to registered user
     END
 
 Client - Share to not registered user
-    [Tags]    C30445    C30651    users
+    [Tags]    C30447    C30651    users
 
     ${new cloud user}=    Get Random Email    ${base email}
     Set Suite Variable    ${new cloud user}
@@ -196,9 +199,9 @@ Client - Share to not registered user
     Slow    Input Text    ${REGISTER FIRST NAME INPUT}    SmokeCheck    timeout=0.1
     Slow    Input Text    ${REGISTER LAST NAME INPUT}    NewCloudUser    timeout=0.1
     Slow    Input Text    ${REGISTER PASSWORD INPUT}    ${password}    timeout=0.1
-    Run keyword and ignore error    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick unchecked    ${EMPTY}
+    Run keyword and continue on failure    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick unchecked    ${EMPTY}
     Slow    Click Element     ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    timeout=0.1
-    Run keyword and ignore error    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick checked    ${EMPTY}
+    Run keyword and continue on failure    Wait until element has style    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/span    tick checked    ${EMPTY}
     Slow    Click Button    ${CREATE ACCOUNT BUTTON}    timeout=0.1
 
     Log   Step 5: Validate the System page and verify the user information and rights are as expected
@@ -223,7 +226,7 @@ Client - Share to not registered user
     Log Out
 
 Client - Delete cloud user
-    [Tags]    C30447    C30660    users
+    [Tags]    C30727    C30660    users
     Log    Step 1: Delete user
     Remove User    ${local auth}    https://${system users}[ip]:${system users}[port]    ${new user data}[id]
     Restart Server    https://${system users}[ip]:${system users}[port]    ${local auth}
@@ -245,7 +248,7 @@ Client - Delete cloud user
 
 
 Client - Share to registered user
-    [Tags]    C30446    C30651    users
+    [Tags]    C30448    C30651    users
     ${email}=    Get Random Email    ${email base}
     Run Keyword If    'nxvms' not in $env    Run Keywords
         ...    Register And Activate Account    SmokeCheck    ExistingUser2    ${email}    ${password}    AND
