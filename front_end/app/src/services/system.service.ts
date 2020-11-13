@@ -1420,6 +1420,11 @@ export class NxSystem extends System implements OnDestroy {
             return this.authPromise;
         }
 
+        if (!this.id) {
+            // console.log('web-admin case')
+            return Promise.resolve(true);
+        }
+
         // NOTE@gbezyuk: bad direct dependency
         if (!force && this.mediaserver.authGet) { // no need to update
             // console.log('no need', this.mediaserver.authGet)
@@ -1461,8 +1466,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     public getMediaServersAndCameras(force:boolean = false) {
+        // console.log('getMediaServersAndCameras enter')
         if (this.mediaservers && !force) {
-            console.log('using cached mediaservers');
+            // console.log('using cached mediaservers');
             return Promise.resolve(this.mediaservers);
         }
         return this.ensureSystemAuth().then(
