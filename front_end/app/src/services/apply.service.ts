@@ -281,7 +281,9 @@ export class NxApplyService {
         this.applyFunctions = [saveFunction];
         this.applyFunction = this.processService.createProcess(
             this.runProcesses,
-            {}).then(
+            {
+                ignoreError: true
+            },
             (res) => {
                 this.reset();
                 return res;

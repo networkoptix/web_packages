@@ -148,7 +148,7 @@ button, .btn {
 .btn.btn-menu {
     height           : 28px;
     color            : $dark9;
-    border           : 1px solid $light10;
+    border           : 1px solid $light10 !important;
     background-color : transparent;
     max-width        : 180px;
     display          : flex;

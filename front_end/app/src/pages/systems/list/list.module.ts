@@ -9,6 +9,7 @@ import { DirectivesModule }       from '../../../directives/directives.module';
 import { ComponentsModule }       from '../../../components/components.module';
 import { AuthGuard }              from '../../../routeGuards';
 import { NxSystemsListComponent } from './list.component';
+import { NxNoSystemsComponent }   from '../no-systems/no-systems.component';
 
 const appRoutes: Routes = [
     {
@@ -30,12 +31,14 @@ const appRoutes: Routes = [
     providers: [
     ],
     declarations: [
-        NxSystemsListComponent
+        NxSystemsListComponent,
+        NxNoSystemsComponent
     ],
     bootstrap: [
     ],
     exports: [
-        NxSystemsListComponent
+        NxSystemsListComponent,
+        NxNoSystemsComponent
     ]
 })
 export class NxSystemsListModule {

@@ -129,7 +129,7 @@ export class LoginWebadminModalContent implements OnInit {
                     this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
                 }
             }
-        }).then((result) => {
+        }, (result) => {
             if (this.CONFIG.isLocal) {
                 return this.activeModal.close(result);
             }

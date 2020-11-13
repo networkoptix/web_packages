@@ -34,6 +34,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     account: Account;
     pass: any = {};
     hideErrors = true;
+    weakPassword = false;
 
     changePassword: Process;
 
@@ -118,11 +119,13 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     }
 
     setPassword(password) {
+        this.hideErrors = true;
         this.pass.password = password;
         this.watchers.password.value = password;
     }
 
     setNewPassword(newPassword) {
+        this.hideErrors = true;
         this.pass.newPassword = newPassword;
         this.watchers.newPassword.value = newPassword;
     }

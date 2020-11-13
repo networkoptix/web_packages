@@ -94,6 +94,7 @@ export class MessageModalContent implements OnInit {
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
+
         if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
             this.title = NxLanguageProviderService.translate(title, { asset: this.data.asset });
         } else {
@@ -102,7 +103,7 @@ export class MessageModalContent implements OnInit {
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
                 value : subject,
-                name  : this.LANG.dialogs.message.subject[subject]().replace('{{asset}}', this.data.asset)
+                name  : NxLanguageProviderService.translate(this.LANG.dialogs.message.subject[subject], { asset: this.data.asset })
             };
         });
 

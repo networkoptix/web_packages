@@ -4,7 +4,6 @@ import { RouterModule, Routes }      from '@angular/router';
 import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }           from '@ngx-translate/core';
 import { ComponentsModule }          from '@components/components.module';
-import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
 import {
     ApplyGuard, AuthGuard, SystemGuard
 }                                    from '../../../routeGuards';
@@ -103,14 +102,12 @@ export const cloudSettingsRoutes: Routes = [
         NxSettingsService
     ],
     declarations: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
+        NxSystemSettingsComponent
     ],
     bootstrap: [
     ],
     exports: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
+        NxSystemSettingsComponent
     ]
 })
 export class NxSettingsModule {

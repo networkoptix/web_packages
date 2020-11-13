@@ -34,11 +34,15 @@ const appRoutes: Routes = [
     ],
     providers : [],
     declarations : [
-        NxIntegrationDetailsComponent
+        NxIntegrationDetailsComponent,
+        NxSetupComponent,
+        NxOverviewComponent
     ],
     bootstrap : [],
-    exports: [
-        NxIntegrationDetailsComponent
+    exports   : [
+        NxIntegrationDetailsComponent,
+        NxSetupComponent,
+        NxOverviewComponent
     ]
 })
 export class IntegrationDetailModule {
