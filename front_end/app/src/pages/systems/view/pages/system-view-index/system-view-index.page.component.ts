@@ -15,6 +15,7 @@ import { ms } from '../../vms-client/utils/type-aliases'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 import { exception } from 'console'
+import { NxConfigService, IConfig } from '@services/nx-config'
 
 
 @Component({
@@ -31,6 +32,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
   public systemId: string
   public system: NxSystem
+
+  protected CONFIG: IConfig;
 
   public initialized: boolean = false
   public initializedWithError: boolean = false
@@ -60,7 +63,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected vms: VideoManagementSystemService,
     protected timeline: TimelineService,
     protected ux: WebClientUxService,
+    configService: NxConfigService,
   ) {
+    this.CONFIG = configService.getConfig();
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
     this._onRouteChange = this._onRouteChange.bind(this)
     this._onUxStateChange = this._onUxStateChange.bind(this)
@@ -112,19 +117,27 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   protected _initSystem () {
     this.vms.reset()
     // console.log('initSystem entered')
-    this.accountService.get().then(account => {
-      // console.log('got account', account)
-      if (!account) {
-        // console.log('account', account)
-        return
-      }
-      // console.log('systemId is', this.systemId)
-      this.system = this.systemId
-        ? this.systemService.createSystem(account.email, this.systemId)
-        : this.systemService.createSystem(account.email, null, null) // for the case of the webclient (TODO: check!)
-      // console.log('system created', this.system)
-      return this.system.getMediaServersAndCameras()
-    }).then(mediaServers => {
+
+    const createSystem = () => {
+      return this.accountService.get().then(account => {
+        if (!account) {
+          console.warn('accountService returned no account')
+          return Promise.reject()
+        }
+        if (this.CONFIG.isLocal) {
+          this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+          console.log('local system created', this.system)
+          return Promise.resolve()
+        } else {
+          this.system = this.systemService.createSystem(account.email, this.systemId)
+          return Promise.resolve()
+        }
+      })
+    }
+
+    createSystem()
+    .then(() => this.system.getMediaServersAndCameras())
+    .then(mediaServers => {
       return this.system.getServerTimes().then(
         (serverTimeInfos: Array<ServerTimeInfo>) => {
           serverTimeInfos.map(sti => {

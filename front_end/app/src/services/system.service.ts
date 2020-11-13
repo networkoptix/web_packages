@@ -1471,9 +1471,12 @@ export class NxSystem extends System implements OnDestroy {
             // console.log('using cached mediaservers');
             return Promise.resolve(this.mediaservers);
         }
+
+        // return this.mediaserver.getMediaServersAndCameras().toPromise().then( // simpler version, for debug
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getMediaServersAndCameras().toPromise()
         ).then(
+
             // @ts-ignore
             response => {
                 // console.log('GMSAC', response)
