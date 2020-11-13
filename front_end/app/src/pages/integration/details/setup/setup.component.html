@@ -5,7 +5,7 @@
         <nx-external-video [src]="plugin.instructions.instructionVideo"></nx-external-video>
     </nx-section>
     <nx-section *ngIf="plugin.instructions.screenshots">
-        <nx-carousel [screenshots]="plugin.instructions.screenshots"></nx-carousel>
+        <nx-carousel type="Setup" [screenshots]="plugin.instructions.screenshots"></nx-carousel>
     </nx-section>
 
     <nx-section>
