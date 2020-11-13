@@ -560,7 +560,7 @@ BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
-UPDATE_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/updates.json'
+UPDATE_JSON = 'https://updates.networkoptix.com/updates.json'
 DOWNLOADS_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/downloads.json'
 DOWNLOADS_VERSION_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/{{build}}/downloads.json'
 
