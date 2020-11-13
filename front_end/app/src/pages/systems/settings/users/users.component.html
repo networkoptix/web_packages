@@ -35,7 +35,7 @@
                             <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
                         </div>
                         <div class="edit-button" [ngClass]="{ 'd-none': editMode }" (click)="editTitle.focus()">
-                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                            <img alt="pencil icon button to edit username" [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
                         </div>
                     </div>
                 </ng-template>

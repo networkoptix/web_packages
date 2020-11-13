@@ -4,7 +4,7 @@
 <ng-template #navIcon>
     <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
         <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
-            <img src="{{CONFIG.previewPath}}/static/images/logo.png">
+            <img [alt]="CONFIG.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
         </a>
     </div>
 </ng-template>

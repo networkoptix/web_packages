@@ -10,7 +10,7 @@
         </nx-section>
 
         <nx-section *ngIf="plugin.overview.screenshots">
-            <nx-carousel [screenshots]="plugin.overview.screenshots"></nx-carousel>
+            <nx-carousel type="Overview" [screenshots]="plugin.overview.screenshots"></nx-carousel>
         </nx-section>
     </ng-container>
 </nx-block>

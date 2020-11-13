@@ -351,6 +351,7 @@ Edit User Permissions In Systems
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
     Select user in Users List    ${user email address}
+    Sleep    3
     Change User Permissions    ${permissions}
     Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
     Wait Until Element Is Visible    ${ACCOUNT SAVE}
@@ -458,7 +459,7 @@ Check For Alert Dismissable
 Verify In System
     [arguments]    ${system name}
     Go to System Administration
-    Wait Until Element Is Visible    //h2[contains(@class,"system-name") and contains(text(), '${system name}')]
+    Wait Until Element Is Visible    //h2[@id="editable-title" and contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration

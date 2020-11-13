@@ -81,7 +81,7 @@ export interface AboutNode {
     url: string;
     icon: string;
     newWindow?: boolean;
-    nodes?: AboutNode[]
+    nodes?: AboutNode[];
 }
 
 export interface AboutAsset {

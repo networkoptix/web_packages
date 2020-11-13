@@ -130,7 +130,7 @@
                                         </div>
                                         <div class="d-flex">
                                             <ng-container *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons; first as isFirst">
-                                                <img [src]="icon.src" [title]="icon.name" [ngClass]="{'ml-0': isFirst}">
+                                                <img [alt]="'icon of ' + icon.name" [src]="icon.src" [title]="icon.name" [ngClass]="{'ml-0': isFirst}">
                                             </ng-container>
                                         </div>
                                     </div>

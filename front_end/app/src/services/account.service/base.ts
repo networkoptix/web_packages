@@ -52,7 +52,7 @@ export abstract class BaseAccount implements OnDestroy {
 
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean): void;
-    abstract get(forceUpdate?: boolean): Promise<Account | false>;
+    abstract get(forceUpdate?: boolean): Promise<Account>;
     abstract login(email: string, password: string, remember: boolean): any;
     abstract logout(doNotRedirect?: boolean): void;
     abstract requireLogin(): Promise<any>;
@@ -304,7 +304,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     protected async handleAuthKeyLogin(auth: string) {
-        const account: Account|boolean = await this.get();
+        const account: Account = await this.get();
         try {
             const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
             if (!account) {

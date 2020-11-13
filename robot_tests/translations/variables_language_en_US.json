@@ -22,7 +22,7 @@
     "RESTARTING"                           :    "restarting...",
     "RESET TO DEFAULTS TEXT"               :    "Reset to Defaults",
     "DETAILED INFO TEXT"                   :    "Detailed Info",
-    "DISCONNECT MODAL WARNING TEXT"        :    "You will not be able to log into this system anymore.",
+    "DISCONNECT MODAL WARNING TEXT"        :    "You will not be able to access this System anymore.",
     "SUCCESSFULLY DISCONNECTED"            :    "System is successfully disconnected from %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT"               :    "Account is already activated or confirmation code is incorrect",
     "AUTOTESTS OFFLINE TEXT"               :    "offline",
