@@ -166,7 +166,7 @@ On another page in the header navigation, header should show that page’s name
     ${main button text}=                   Get Text                       ${SYSTEMS DROPDOWN}/span
     ${active tab text}                     Get Text                       ${HEADER ACTIVE TAB}
     Should be Equal As Strings             ${main button text}            For Developers
-    Should be Equal As Strings             ${active tab text}             Knowledge Base
+    Should be Equal As Strings             ${active tab text}             Knowledgebase
 
 Different page widths and header interaction while anonymous
     [Tags]                                 Threadable

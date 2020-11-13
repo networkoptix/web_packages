@@ -20,15 +20,15 @@ ${IPVD ADV FILTERS DROPDOWN MENU}     ${DROPDOWN MENU}
 ${IPVD ADV FILTERS DROPDOWN MENU ITEMS}    ${DROPDOWN MENU ITEMS}
 #IPVD Advanced Filters Features
 ${IPVD ADV FEATURES}                  ${IPVD ADV FILTERS}//div/label[text()='Features']/..
-${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..
-${IPVD ADV FEATURES 2-WAY AUDIO}      ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}')]/..
-${IPVD ADV FEATURES PTZ}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE PTZ}') and not(contains(text(),'${IPVD ADV FEATURE ADV PTZ}'))]/..
-${IPVD ADV FEATURES ADV PTZ}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE ADV PTZ}')]/..
-${IPVD ADV FEATURES FISHEYE}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE FISHEYE}')]/..
-${IPVD ADV FEATURES MOTION}           ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MOTION}')]/..
-${IPVD ADV FEATURES I/O}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE I/O}')]/..
-${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE H.265}')]/..
-${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
+${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..
+${IPVD ADV FEATURES 2-WAY AUDIO}      ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}')]/..
+${IPVD ADV FEATURES PTZ}              ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE PTZ}') and not(contains(text(),'${IPVD ADV FEATURE ADV PTZ}'))]/..
+${IPVD ADV FEATURES ADV PTZ}          ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE ADV PTZ}')]/..
+${IPVD ADV FEATURES FISHEYE}          ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE FISHEYE}')]/..
+${IPVD ADV FEATURES MOTION}           ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE MOTION}')]/..
+${IPVD ADV FEATURES I/O}              ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE I/O}')]/..
+${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE H.265}')]/..
+${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
 ${IPVD ADV FEATURES CLOSE BUTTON}     //span[contains(@class,'close-button')]
 #IPVD Manufacturers
 ${IPVD MANUFACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
@@ -36,16 +36,16 @@ ${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[contains(@cl
 ${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices
 ${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
-${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
-${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
-${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..
-${IPVD DEVS FILTER CAMERAS WITH AUDIO}        ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH AUDIO}')]/..
-${IPVD DEVS FILTER H.265 CAMERAS}             ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER H.265 CAMERAS}')]/..
-${IPVD DEVS FILTER ENCODERS}                  ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER ENCODERS}')]/..
-${IPVD DEVS FILTER 2-WAY AUDIO DEVICES}       ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER 2-WAY AUDIO DEVICES}')]/..
-${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER MULTI-SENSOR CAMERAS}')]/..
-${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
-${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
+${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
+${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH AUDIO}        ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER CAMERAS WITH AUDIO}')]/..
+${IPVD DEVS FILTER H.265 CAMERAS}             ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER H.265 CAMERAS}')]/..
+${IPVD DEVS FILTER ENCODERS}                  ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER ENCODERS}')]/..
+${IPVD DEVS FILTER 2-WAY AUDIO DEVICES}       ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER 2-WAY AUDIO DEVICES}')]/..
+${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER MULTI-SENSOR CAMERAS}')]/..
+${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
+${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
 ${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]

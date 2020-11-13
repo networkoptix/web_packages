@@ -84,7 +84,7 @@ ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-se
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
 ${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]
 ${CREATE ACCOUNT HEADER}              //header//a[@href='/register']
-${CREATE ACCOUNT BODY}                //nx-app//a[@href='/register']
+${CREATE ACCOUNT BODY}                //div[@class="jumbotron"]//a[@href='/register']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 

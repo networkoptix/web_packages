@@ -476,6 +476,7 @@ Camera Info panel
     Validate on IPVD Page
     IPVD Text Search    PNM-9080VQ
     IPVD Select Device from Table by Row Number
+    Sleep    1
     ${current url}=   Get Location
     Should be equal as strings    ${current url}    ${ENV}/ipvd?search=PNM-9080VQ&camera=PNM-9080VQ
     ${camera class}=   Get Element Attribute    ${IPVD TABLE FIRST ITEM}    class
