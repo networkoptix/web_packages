@@ -188,7 +188,16 @@ $border-color: #cdd7dc;
     justify-content: center;
     text-transform: uppercase;
     background: $player-background;
-    color: $header-foreground;
+    color: #cdd7dc;
+    font-size: 40px;
+
+    > svg {
+      width: 50%;
+    }
+
+    > span {
+      margin-top: 1em;
+    }
   }
 
   > .controls {

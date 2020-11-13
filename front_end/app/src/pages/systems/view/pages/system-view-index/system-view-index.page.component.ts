@@ -14,6 +14,7 @@ import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/
 import { ms } from '../../vms-client/utils/type-aliases'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
+import { exception } from 'console'
 
 
 @Component({
@@ -91,12 +92,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._state = s
   }
 
+  protected _setInitializationState (initialized, initializedWithError) {
+    // console.log('_setInitializationState', initialized, initializedWithError)
+    this.initialized = initialized
+    this.$self.classList[initialized ? 'add' : 'remove']('initialized')
+    this.initializedWithError = initializedWithError
+    this.$self.classList[initializedWithError ? 'add' : 'remove']('initialization-error')
+  }
+
   protected _onRouteChange (params) {
     // if (params.systemId) {
       this.systemId = params.systemId || null
       this.system = undefined
-      this.initialized = false
-      this.initializedWithError = false
+      this._setInitializationState(false, false)
       this._initSystem()
     // }
   }
@@ -182,20 +190,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
           ))
         })))
-        this.initialized = true
         console.log(`system ${this.system.id} view initialized`)
+        this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {
           this._tryToRedirectToCamera()
         }
 
-        this.$self.classList.add('sidebarShown')
         setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
       })
     }).catch(e => {
       console.warn(`system ${this.system.id} view initialization failed`, e)
-      this.initialized = true
-      this.initializedWithError = true
+      this._setInitializationState(true, true)
     })
   }
 
