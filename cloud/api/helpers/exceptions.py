@@ -4,6 +4,7 @@ import json
 import time
 import traceback
 
+from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
@@ -50,6 +51,7 @@ class ErrorCodes(Enum):
     invalid_nonce = 'invalidNonce'
     service_unavailable = 'serviceUnavailable'
     unknown_error = 'unknownError'
+    unsupported_media_type = 'unsupportedMediaType'
 
     response_serialization_error = 'responseSerializationError'
     deserialization_error = 'deserializationError'
@@ -70,7 +72,8 @@ class ErrorCodes(Enum):
                     ErrorCodes.forbidden,
                     ErrorCodes.invalid_nonce,
                     ErrorCodes.wrong_code,
-                    ErrorCodes.wrong_parameters):
+                    ErrorCodes.wrong_parameters,
+                    ErrorCodes.unsupported_media_type):
             return logging.WARNING
         return logging.ERROR
 
@@ -85,11 +88,15 @@ def api_success(data=None, status_code=status.HTTP_200_OK):
 
 def require_params(request, params_list):
     error_data = {}
-    for param in params_list:
-        if request.method == "POST" and (param not in request.data or request.data[param] == ''):
-            error_data[param] = ['This field is required.']
-        elif request.method == "GET" and (param not in request.GET):
-            error_data[param] = ['This field is required.']
+    try:
+        for param in params_list:
+            if request.method == "POST" and (param not in request.data or request.data[param] == ''):
+                error_data[param] = ['This field is required.']
+            elif request.method == "GET" and (param not in request.GET):
+                error_data[param] = ['This field is required.']
+    # Files with xml content type break when accessing data
+    except UnsupportedMediaType as e:
+        raise APIRequestException(e.detail, ErrorCodes.unsupported_media_type)
 
     if error_data:
         raise APIRequestException('Parameters are missing', ErrorCodes.wrong_parameters,
@@ -311,7 +318,11 @@ def log_error(request, error, log_level):
 
     if isinstance(request, Request):
         page_url = request.build_absolute_uri()
-        request_data = request.data
+        try:
+            request_data = request.data
+        # Files with xml content type break when accessing data
+        except UnsupportedMediaType:
+            request_data = {}
         ip = get_client_ip(request)
         if not isinstance(request.user, AnonymousUser):
             user_name = request.user.email
