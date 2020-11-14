@@ -50,6 +50,8 @@ Server Settings Suite Setup
     ${server id 1}=   Get Server Id    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
     ${server id 2}=   Get Server Id    https://${QA BURBANK IP}:${port2[0]}    ${server auth}    server 2
     ${server id 3}=   Get Server Id    https://${QA BURBANK IP}:${port3[0]}    ${server auth}    server 3
+    Set Suite Variable    ${server id 1}    ${server id 1}
+    Set Suite Variable    ${server id 2}    ${server id 2}
 
     Change server name via API    ${auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
     Change server name via API    ${auth}    server 2    ${server id 2}    https://${QA BURBANK IP}:${port2[0]}
@@ -177,12 +179,13 @@ Server name changed via API updates on cloud
     @{auth}=    Create List    ${owner}    ${BASE PASSWORD}
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-    Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1 name changed
+    Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 2 name changed
     Reload Page
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..   
+    Select Server By Name    server 1 name changed
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 2 name changed")]/..   
     
-    Log    Reset the name to server 1
-    Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
+    Log    Reset the name to server 2
+    Change server name via API    ${auth}    server 2    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
     
 Restart close button works
     [Tags]    C70968    threaded
@@ -349,7 +352,7 @@ Detailed info 1 server
 Detailed info 2 servers
     [Tags]    C70923    threaded
     Verify on Servers Page
-    Select Server By Name    server 2
+    Select Server By Name    server 1
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
     ${loc}=    Get Location
@@ -357,7 +360,7 @@ Detailed info 2 servers
     Wait Until Location Contains    ${ENV}/systems/${sysId1}/health/servers
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 2")]
+    Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
 
 Offline system 1 server settings
     [Tags]    C70950    threaded
