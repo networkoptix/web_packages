@@ -129,8 +129,7 @@
                                 {% endwith %}
                             {% endfor %}
                             </div>
-
-                            {% if partial_preview and show_iframe_preview %}
+                            {% if partial_preview and show_iframe_preview and context_preview_links|dict_key:context_name %}
                             <div id="right_{{ forloop.counter }}" class="split right">
                                 <iframe class="inlineFrame" src="{{ context_preview_links|dict_key:context_name }}&adminPreview=true"></iframe>
                             </div>
