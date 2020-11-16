@@ -19,7 +19,7 @@ import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
 import { NxProcessService, Process }            from '@services/process.service';
 import { NxUriService }                         from '@services/uri.service';
 import { NxApplyService, Watcher }              from '@services/apply.service';
-import { NxToastService }                       from '@dialogs/toast.service'
+import { NxToastService }                       from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { WINDOW }                               from '@services/window-provider';
 
@@ -154,26 +154,21 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
-    initProcesses(): void {
-        this.editUser = this.processService.createProcess(() => {
+    initProcesses() {
+        this.editUser = this.processService.createProcess(async() => {
             const user = this.selectedUser;
             if (!user.name || this.locked[user.email]) {
                 return Promise.reject();
             }
             this.locked[user.email] = true;
-            return this.system.saveUser(user, user.role).then(() => {
-                return this.system.getUsers(true);
-            }).then(() => {
-                this.locked[user.email] = false;
-            });
+            await this.system.saveUser(user, user.role);
+            await this.system.getUsers(true);
+            this.locked[user.email] = false;
+            this.applyService.hardReset();
+            this.setUser();
+            this.applyService.reset();
         }, {
             ignoreError: true
-        }).then(() => {
-            setTimeout(() => {
-                this.applyService.hardReset();
-                this.setUser();
-                this.applyService.reset();
-            });
         });
     }
 
