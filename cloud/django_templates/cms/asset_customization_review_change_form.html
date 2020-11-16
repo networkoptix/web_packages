@@ -72,7 +72,7 @@
                         <div>
                             {% with context_url=records.0.data_structure.context.url %}
                                 {{ context_name }}
-                                {% if partial_preview %}
+                                {% if partial_preview and context_preview_links|dict_key:context_name %}
                                     <a class="float-right preview" href="{% url 'preview' %}"
                                        value="{{records.0.data_structure.context.id}}">Preview</a>
                                 {% endif %}
