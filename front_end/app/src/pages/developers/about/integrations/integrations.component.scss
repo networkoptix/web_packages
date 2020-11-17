@@ -50,7 +50,7 @@ $large-desktop-breakpoint: 1477px;
     display: flex;
     flex-direction: column;
     flex: 1 0 275px;
-    padding: 1rem;
+    padding: 1.25rem;
 
     @media screen and (min-width: $tablet-breakpoint) {
         max-width: 275px;
@@ -109,18 +109,9 @@ $large-desktop-breakpoint: 1477px;
         grid-template-columns: repeat(2, 1fr);
     }
 
-    @media screen and (min-width: $large-tablet-breakpoint) {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
     @media screen and (min-width: $desktop-breakpoint) {
         grid-template-columns: repeat(4, 1fr);
     }
-
-    @media screen and (min-width: $large-desktop-breakpoint) {
-        grid-template-columns: repeat(5, 1fr);
-    }
-
 }
 
 .integration-block {
@@ -150,9 +141,15 @@ $large-desktop-breakpoint: 1477px;
     }
 }
 
-.more-span- {
+.more-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        margin: 0 !important;
+    }
     @for $start from 1 through 5 {
-        &#{$start} {
+        &-#{$start} {
             grid-column: -#{$start + 1} / -1;
         }
     }

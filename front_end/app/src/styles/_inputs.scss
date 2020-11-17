@@ -137,4 +137,14 @@ input.hide-errors {
     padding          : $padding-base-vertical $padding-input-horizontal !important;
     @include mixins.placeholder ();
 
+    &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
+        border-color : $error !important;
+        color        : $error !important;
+
+        + .input-group-addon {
+            border-color     : transparent;
+            background-color : transparent;
+        }
+    }
+
 }

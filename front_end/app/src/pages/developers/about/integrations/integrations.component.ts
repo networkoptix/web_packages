@@ -51,28 +51,33 @@ export class NxIntegrationsComponent implements OnInit {
         const more = { url: '/integrations' };
         const getPluginsToShow = () => {
             switch (true) {
-                case (this.currentWindowWidth > 1476):
-                    return 9;
-                case (this.currentWindowWidth > 1264):
-                    return 7;
                 case (this.currentWindowWidth > 1048):
-                    return 5;
+                    return { maxPlugins: 7, perRow: 4 };
+                // case (this.currentWindowWidth > 1048):
+                //     return { maxPlugins: 5, perRow: 3 };
                 default:
-                    return 3;
+                    return { maxPlugins: 3, perRow: 2 };
             }
         };
-        const maxPlugins = getPluginsToShow();
+        const { maxPlugins, perRow } = getPluginsToShow();
         const show = Math.min(allPlugins.length, maxPlugins);
         const translatedCount = this.sanitizer.bypassSecurityTrustHtml(NxLanguageProviderService.translate(
             this.LANG.common.morePlugins,
             {
                 count    : this.pluginCount - show,
-                startTag : '<strong style="font-size: 20px; display: block; text-align: center;">',
+                startTag : '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
                 endTag   : '</strong>'
             }
         ));
         const plugins = allPlugins.slice(0, show);
-        return { plugins, more, translatedCount, moreStart: `more-span${plugins.length - maxPlugins - 1}` };
+        const getColSpan = (numPlugins: number, maxPlugins: number, perRow: number) => {
+            let variant = numPlugins - maxPlugins - 1;
+            while (Math.abs(variant) > perRow) {
+                variant += perRow;
+            }
+            return variant;
+        };
+        return { plugins, more, translatedCount, moreStart: `more-span more-span${getColSpan(plugins.length, maxPlugins, perRow)}` };
     }
 
     navigate(url: string) {

@@ -27,6 +27,7 @@ export class NxApplyComponent {
     @Input() form: NgForm;
     @Input() submitFn: () => any = () => null;
     @Input() showSectionWarning = false;
+    @Input() showDiscard = false;
 
     show = false;
     applyVisible = false;
