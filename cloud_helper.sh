@@ -202,6 +202,7 @@ function local_build() {
     REPO=$PWD
 
     export IS_LOCAL=true
+    [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
     [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules

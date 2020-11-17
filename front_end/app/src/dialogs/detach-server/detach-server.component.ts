@@ -48,16 +48,16 @@ export class DetachServerModalContent {
                             this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
                             return res;
                         }
-                        return this.system.removeMediaserver(this.serverId).toPromise();
+                        this.system.currentServerNotBusy = true;
+                        this.activeModal.close('success');
+                        options.classname = this.CONFIG.toast.success;
+                        this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
+                        window.location.reload();
+                        // may need to remove & update system eventually
+                        // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
+                        // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
+                        // return this.system.update().subscribe()
                     })
-                    .then(() => this.system.update()
-                        .subscribe(() => {
-                            this.system.currentServerNotBusy = true;
-                            this.activeModal.close('success');
-                            options.classname = this.CONFIG.toast.success;
-                            this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
-                        })
-                    )
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
                         this.toastService.show(this.LANG.servers.detachSystemFailed(), options);

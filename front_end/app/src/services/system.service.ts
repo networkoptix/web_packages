@@ -766,8 +766,8 @@ class ServerManager {
         return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
     }
 
-    removeMediaserver(serverId: string) {
-        return this.mediaserver.removeMediaserver(serverId);
+    removeMediaserver(anotherServerId: string, serverIdToRemove: string) {
+        return this.mediaserverConnections[anotherServerId].removeResource(serverIdToRemove);
     }
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
@@ -1363,8 +1363,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.detachFromSystem(serverId, currentPassword);
     }
 
-    removeMediaserver(serverId: string) {
-        return this.serverManager.removeMediaserver(serverId);
+    removeMediaserver(anotherServerId: string, currentServerId: string) {
+        return this.serverManager.removeMediaserver(anotherServerId, currentServerId);
     }
 
     restoreFactorySettings(serverId: string, currentPassword: string) {

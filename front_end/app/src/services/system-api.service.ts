@@ -207,7 +207,7 @@ export class NxSystemAPI {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
-            headers = headers.set('X-Server-guid', this.serverId);
+            headers = headers.set('X-Server-Guid', this.serverId);
         }
         if (environment.isLocal) {
             headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
@@ -620,8 +620,8 @@ export class NxSystemAPI {
     }
 
     // will put in response type when we start using
-    removeMediaserver(serverId: string) {
-        return this.post('/ec2/removeResource', { id: serverId });
+    removeResource(id: string) {
+        return this.post('/ec2/removeResource', { id });
     }
 
     restoreFactorySettings(currentPassword: string) {

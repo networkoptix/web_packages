@@ -156,7 +156,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.setServer();
         }
 
-        if (changes.storages?.currentValue) {
+        if (changes?.storages?.currentValue) {
             this.parseStorages();
         }
     }

@@ -6,6 +6,7 @@ import { delayWhen, retryWhen, map } from 'rxjs/operators';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -15,10 +16,10 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls  : []
 })
 export class ResetServerModalContent {
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() serverName: string;
-    @Input() serverId;
-    @Input() closable;
+    @Input() serverId: string;
+    @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -38,47 +39,57 @@ export class ResetServerModalContent {
 
     ngOnInit() {
         this.resetServer = this.processService
-            .createProcess(() => {
+            .createProcess(async() => {
                 const options = {
                     classname : this.CONFIG.toast.warning,
                     autohide  : true,
                     delay     : this.CONFIG.alertTimeout
                 };
-                return this.system.restoreFactorySettings(this.serverId, this.password).toPromise().then(res => {
-                    this.activeModal.close();
-                    let initialRuntimeId;
-                    this.system.getModuleInfo(this.serverId).toPromise().then(res => {
-                        initialRuntimeId = res.reply.runtimeId;
-                        this.system.restartServer(this.serverId).then(() => {
-                            const serverSubscription = this.system.getModuleInfo(this.serverId)
-                                .pipe(
-                                    map((res: any) => {
-                                        if (res.reply.id !== this.serverId) {
-                                            throw Error('server id should be the same');
-                                        }
-                                        if (res.reply.runtimeId === initialRuntimeId) {
-                                            throw Error('runtime id should be different after restart');
-                                        }
-                                    }),
-                                    retryWhen(errors =>
-                                        errors.pipe(delayWhen(() =>
-                                            timer(4000)
-                                        ))
-                                    )
+                const handleResetFailError = (from: string, error) => {
+                    console.error(`Error in reset-server dialog from ${from}:`, error);
+                    this.toastService.show(this.LANG.servers.resetFailed?.(), options);
+                };
+                await this.system.restoreFactorySettings(this.serverId, this.password).toPromise()
+                    .catch(err => handleResetFailError('restoreFactorySettings', err));
+                const moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise()
+                    .catch(err => handleResetFailError('getModuleInfo', err));
+                const { runtimeId: initialRuntimeId } = moduleInfo.reply;
+                return this.system.restartServer(this.serverId)
+                    .then(() => {
+                        const serverSubscription = this.system.getModuleInfo(this.serverId)
+                            .pipe(
+                                map((res: any) => {
+                                    if (res.reply.id !== this.serverId) {
+                                        throw Error('server id should be the same');
+                                    }
+                                    if (res.reply.runtimeId === initialRuntimeId) {
+                                        throw Error('runtime id should be different after restart');
+                                    }
+                                }),
+                                retryWhen(errors =>
+                                    errors.pipe(delayWhen(() =>
+                                        timer(4000)
+                                    ))
                                 )
-                                .subscribe(() => {
+                            )
+                            .subscribe(
+                                () => {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
+                                    this.activeModal.close();
                                     const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful?.(), { serverName: this.serverName });
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
-                                });
-                        })
-                            .catch(() => this.toastService.show(this.LANG.servers.restartFailed?.(), options));
-                    });
-                })
-                    .catch(() => this.toastService.show(this.LANG.servers.resetFailed?.(), options));
+                                },
+                                err => {
+                                    console.error('error in reset-server dialog', err);
+                                    this.system.currentServerNotBusy = true;
+                                    return handleResetFailError('getModule post restart', err);
+                                }
+                            );
+                    })
+                    .catch(err => handleResetFailError('restartServer', err));
             }, { successMessage: this.LANG.servers.beginReset?.() });
     }
 

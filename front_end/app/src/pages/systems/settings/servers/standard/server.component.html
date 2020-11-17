@@ -117,12 +117,12 @@
                             class="btn btn-default"
                             (click)="detachServer()"
                             [disabled]="detachDisabled || serverUnavailable"
-                            *ngIf="system.servers.length > 1 && betaMode"
+                            *ngIf="(CONFG.isLocal || betaMode) && system.servers.length > 1"
                         >
                             <span class="ellipsis" translate>Detach from the System</span>
                         </button>
                         <button
-                            *ngIf="betaMode"
+                            *ngIf="CONFIG.isLocal || betaMode"
                             class="btn btn-default"
                             (click)="resetServer()"
                             [disabled]="resetDisabled || serverUnavailable"
