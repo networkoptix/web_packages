@@ -482,7 +482,7 @@
         "PTZ cameras": "PTZ-Kameras",
         "camera": "Kamera",
         "count": "Anzahl",
-        "disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
+        "disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -575,7 +575,7 @@
             "message": {
                 "dependingOnSize": "Abhängig von der Größe der Datenbank kann dies mehrere Stunden dauern.",
                 "untilFinished": "Bis die Zusammenführung abgeschlossen ist, können Sie sich bei diesem System anmelden und Videos ansehen, aber keine Einstellungen ändern.",
-                "whenFinished": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"{{systemName}}}\" verfügbar, und dieses System wird gelöscht."
+                "whenFinished": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"{{systemName}}\" verfügbar, und dieses System wird gelöscht."
             }
         },
         "server": {
@@ -641,7 +641,7 @@
         "successRename": "Servername gespeichert."
     },
     "system": {
-        "MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}}</strong>\" verfügbar, und dieses System wird gelöscht.",
+        "MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}</strong>\" verfügbar, und dieses System wird gelöscht.",
         "mergeUnknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
