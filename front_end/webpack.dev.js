@@ -121,7 +121,8 @@ module.exports = merge(common, {
             cert : fs.readFileSync('ssl_keys/server.crt').toString()
         },
         historyApiFallback: {
-            index: '/'
+            index: '/',
+            disableDotRule: true
         }
     },
     plugins: [

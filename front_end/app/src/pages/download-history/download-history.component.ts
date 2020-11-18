@@ -155,7 +155,18 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
             this.routeParam = params.type;
 
             this.routeParam = this.routeParam || this.releases;
-            if (isNumeric(this.routeParam)) {
+            /*
+                (?:(?:\d*\.){2,3})?\d+(?: \w\d+)?
+                This pattern looks for version, build, and in some cases R|H + number
+                looks for the following patterns
+                12345            - Build number (old way the rest are new)
+                20.1.12345       - Mobile build with full version
+                20.1.1.12345     - Desktop build with full version
+                12345 R10        - Meta build with release
+                20.1.12345 R10   - Mobile meta build with release
+                20.1.1.12345 R10 - Desktop Meta build with release
+             */
+            if (/(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?/.test(this.routeParam)) {
                 this.build = this.routeParam;
             } else {
                 this.section = this.routeParam;
