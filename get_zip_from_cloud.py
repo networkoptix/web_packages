@@ -1,9 +1,12 @@
 import argparse
+import logging
 import os
 import re
 import requests
 import shutil
 from concurrent.futures import ThreadPoolExecutor
+
+logger = logging.getLogger(__name__)
 
 FETCH_BY_TYPE = 'type'
 FETCH_BY_ID = 'id'
@@ -13,18 +16,22 @@ FILE_NAME_PATTERN = re.compile("filename=(.+).zip")
 
 def download_package(session, instance, product_type, product_id):
     with session.get(f"{instance}/admin/cms/package/{product_id}/", stream=True) as fs:
-        fs.raise_for_status()
-        package_name = re.findall(FILE_NAME_PATTERN, fs.headers.get("Content-Disposition", ""))
-        package_name = f"{package_name[0] if len(package_name) else 'package'}"
+        try:
+            fs.raise_for_status()
+            package_name = re.findall(FILE_NAME_PATTERN, fs.headers.get("Content-Disposition", ""))
+            package_name = f"{package_name[0] if len(package_name) else 'package'}"
 
-        if product_type == 'vms':
-            package_dir = f"customization_pack-{package_name}"
-            if not os.path.exists(package_dir):
-                os.makedirs(package_dir)
-            package_name = f"{package_dir}/package"
+            if product_type == 'vms':
+                package_dir = f"customization_pack-{package_name}"
+                if not os.path.exists(package_dir):
+                    os.makedirs(package_dir)
+                package_name = f"{package_dir}/package"
 
-        with open(f"{package_name}.zip", "wb") as f:
-            shutil.copyfileobj(fs.raw, f)
+            with open(f"{package_name}.zip", "wb") as f:
+                shutil.copyfileobj(fs.raw, f)
+        except requests.exceptions.HTTPError as e:
+            logger.error(fs.json())
+            raise e
 
 
 def download_packages(session, instance, product_type, product_ids):
@@ -95,7 +102,7 @@ def main():
         # Get all of the products of a specific product_type
         if args.command == FETCH_BY_TYPE:
             query = f"?type={args.type}&name={args.name}&customization={args.customization}"
-            url = f"{args.instance}/admin/cms/get_product_ids/{query}"
+            url = f"{args.instance}/admin/cms/get_asset_ids/{query}"
             res = session.get(url)
             product_ids = res.json()
         else:

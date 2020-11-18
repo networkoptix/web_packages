@@ -14,7 +14,7 @@ from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 
 from cloud.debug import timer
-from api.helpers.exceptions import APIForbiddenException
+from api.helpers.exceptions import APIForbiddenException, APIInternalException, ErrorCodes
 
 import logging
 logger = logging.getLogger(__name__)
@@ -478,6 +478,7 @@ def zip_context(zip_file, asset, context, language_code,
                 zip_file.writestr(name, data)
             except binascii.Error as e:
                 logger.error(f'{file_structure.name} had the following Exception {str(e)}')
+                return True
 
 
 def get_zip_package(asset, preview=True, version_id=None, add_root=True):
@@ -488,13 +489,18 @@ def get_zip_package(asset, preview=True, version_id=None, add_root=True):
     languages = asset.languages_list
 
     for context in asset.asset_type.context_set.all():
+        errors = False
         if context.translatable:
             for language_code in languages:
-                zip_context(zip_file, asset, context, language_code,
-                            preview, version_id, global_contexts, add_root)
+                errors = zip_context(zip_file, asset, context, language_code,
+                                     preview, version_id, global_contexts, add_root)
         else:
-            zip_context(zip_file, asset, context, None,
-                        preview, version_id, global_contexts, add_root)
+            errors = zip_context(zip_file, asset, context, None,
+                                 preview, version_id, global_contexts, add_root)
+        if errors:
+            zip_file.close()
+            raise APIInternalException(f'Error generating package. Some files are missing. Stopped at {context.name}',
+                                       error_code=ErrorCodes.db_error)
 
     # Mark the files as having been created on Windows so that
     # Unix permissions are not inferred as 0000
