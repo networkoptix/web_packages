@@ -225,13 +225,13 @@ ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
-${DOWNLOAD WINDOWS VMS LINK}          //div[@id="windows-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD WINDOWS VMS LINK}          //a[contains(@class, "download-button")]
 ${DOWNLOAD WINDOWS VMS TEXT}          ${DOWNLOAD WINDOWS VMS LINK}//div[contains(text(),"Windows x64 - Client installer")]
-${DOWNLOAD LINUX VMS LINK}            //div[@id="linux-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD LINUX VMS LINK}            //a[contains(@class, "download-button")]
 ${DOWNLOAD LINUX VMS TEXT}            ${DOWNLOAD LINUX VMS LINK}//div[contains(text(),"Ubuntu x64 - Client installer")]
-${DOWNLOAD MAC OS VMS LINK}           //div[@id="macos-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD MAC OS VMS LINK}           //a[contains(@class, "download-button")]
 ${DOWNLOAD MAC OS VMS TEXT}           ${DOWNLOAD MAC OS VMS LINK}//div[contains(text(),"Mac OS - Client installer")]
-${DOWNLOAD ARM VMS LINK}              //div[@id="arm-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD ARM VMS LINK}              //a[contains(@class, "download-button")]
 ${DOWNLOAD ARM VMS TEXT}              ${DOWNLOAD ARM VMS LINK}//div[contains(text(),"ARM") and contains(text(),"Client")]
 
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
