@@ -152,22 +152,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
-        // return this.system.getCameraRecords(cid, 0, now, 1e10).then(ar => {
-        //   // console.log('got camera archive range', cid, ar)
-        //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-        //     // console.log('empty archive')
-        //   } else try {
-        //     const reply = ar.reply[0]
-        //     archiveRanges[cid] = {
-        //       start: parseInt(reply.startTimeMs),
-        //       end: parseInt(reply.startTimeMs) + parseInt(reply.durationMs) || now,
-        //     }
-        //     archives[cid] = ar.reply.map(r => new SimpleTimeRange(r.startTimeMs, r.startTimeMs + r.durationMs))
-        //     // console.log('non-empty archive', cid, archiveRanges[cid], ar)
-        //   } catch (e) {
-        //     console.warn(e, 'caught while requesting camera archive ranges')
-        //   }
-        // })
         return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
           // console.log('got camera archive range', cid, ar)
           if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
@@ -193,7 +177,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.preferredServerId,
             c.name,
             c.url,
-            c.status as CAMERA_STATUS,
+            (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
             archiveRanges[c.id],
             archives[c.id],
             c.status === 'Recording' || c.status === 'Live' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
@@ -211,6 +195,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
 
         setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+
       })
     }).catch(e => {
       console.warn(`system ${this.system.id} view initialization failed`, e)

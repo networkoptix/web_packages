@@ -522,6 +522,9 @@ class ServerManager {
                 if (!res) {
                     return Promise.reject(new Error(`Request to server has failed ${res}`));
                 }
+                if (!res.sort) {
+                    console.log('!SORT', res)
+                }
                 this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
                 return this.servers;
             });
