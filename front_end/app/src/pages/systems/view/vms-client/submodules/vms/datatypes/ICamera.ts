@@ -73,6 +73,7 @@ export interface ICamera {
 
   getArchiveVideoUrl (t: ms),
   getRecords (startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
+  setRecords (range: ISimpleTimeRange, records: CameraArchive)
 }
 
 export default ICamera

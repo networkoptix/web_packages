@@ -72,6 +72,17 @@ export class VideoManagementSystemService {
     this._emit()
   }
 
+  public setCameraRecords (cameraId: string, range, records) {
+    if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
+      this._state.mediaServers.map(ms => {
+        const c = ms.cameras.find(c => c.id === cameraId)
+        if (c) {
+          c.setRecords(range, records)
+        }
+      })
+    }
+  }
+
   public setTestMediaServers () {
     this.setMediaServers('test', testMediaServers)
   }

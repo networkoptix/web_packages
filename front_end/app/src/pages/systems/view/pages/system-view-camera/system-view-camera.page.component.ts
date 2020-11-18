@@ -7,12 +7,13 @@ import { CookieService } from 'ngx-cookie-service'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service'
 import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
-import ICamera from '../../vms-client/submodules/vms/datatypes/ICamera'
+import ICamera, { SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import PlaybackService from '../../vms-client/submodules/playback/services/playback.service'
 import { Subscription } from 'rxjs'
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
 import FpsMeterService from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
+import { NxConfigService, IConfig } from '../../../../../services/nx-config'
 
 export type PlaybackQuality = 'auto' | 'low' | 'high'
 
@@ -26,6 +27,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public id: string
     public camera: ICamera
+    public system: NxSystem
+
+    protected CONFIG: IConfig;
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
@@ -46,7 +50,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       public timelineExtendToNow: TimelineExtendToNowService,
       protected fpsMeter: FpsMeterService,
       protected ux: WebClientUxService,
+      protected accountService: NxAccountService,
+      protected systemService: NxSystemService,
+      configService: NxConfigService,
     ) {
+      this.CONFIG = configService.getConfig();
       this._onRouteChange = this._onRouteChange.bind(this)
       this._onVmsStateChange = this._onVmsStateChange.bind(this)
       this._onAnimationFrame = this._onAnimationFrame.bind(this)
@@ -74,6 +82,50 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.ux.state.isFullScreen !== !!document.fullscreenElement) {
           this.ux.isFullScreen = !!document.fullscreenElement
         }
+      })
+
+      this._getRecords()
+    }
+
+    protected _getRecords () {
+      console.log('_getRecords', this.id)
+
+      const createSystem = () => {
+        return this.accountService.get().then(account => {
+          if (!account) {
+            console.warn('accountService returned no account')
+            return Promise.reject()
+          }
+          if (this.CONFIG.isLocal) {
+            this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+            console.log('local system created', this.system)
+            return Promise.resolve()
+          } else {
+            this.system = this.systemService.createSystem(account.email, this.vms.systemId)
+            return Promise.resolve()
+          }
+        })
+      }
+
+      const now = Date.now()
+      createSystem().then(() => {
+        this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
+            console.log('got camera archive range', this.id, ar)
+            if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+              console.log('empty archive')
+            } else try {
+              const range = new SimpleTimeRange(
+                parseInt(ar.reply[0].startTimeMs),
+                parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
+              )
+              const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
+              console.log('non-empty archive', this.id, range, archive)
+              this.vms.setCameraRecords(this.id, range, archive)
+              this._initSelectedCamera()
+            } catch (e) {
+              console.warn(e, 'caught while requesting camera archive ranges')
+            }
+          })
       })
     }
 
@@ -122,6 +174,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _onRouteChange (params) {
       this.id = params['cameraId'];
       this.vms.selectCamera(this.id)
+      this._getRecords()
     }
 
     protected _onVmsStateChange (s: VmsState) {
