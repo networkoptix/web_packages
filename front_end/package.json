@@ -7,7 +7,7 @@
         "@angular/common": "9.0.4",
         "@angular/compiler": "9.0.4",
         "@angular/core": "9.0.4",
-        "@angular/fire": "6.0.3",
+        "@angular/fire": "5.4.2",
         "@angular/forms": "9.0.4",
         "@angular/localize": "9.0.4",
         "@angular/platform-browser": "9.0.4",
@@ -30,7 +30,7 @@
         "angular2-csv": "0.2.9",
         "bootstrap": "4.4.1",
         "core-js": "3.6.4",
-        "firebase": "7.24.0",
+        "firebase": "8.0.2",
         "hls.js": "0.14.13",
         "jquery": "3.4.1",
         "jquery-mousewheel": "3.1.13",
@@ -46,6 +46,7 @@
         "ngx-mask": "^9.0.0",
         "ngx-order-pipe": "2.0.1",
         "ngx-store": "2.1.0",
+        "ngx-window-token": "3.0.0",
         "popper.js": "1.15.0",
         "rangeslider.js": "2.3.2",
         "resize-observer-polyfill": "^1.5.1",
@@ -54,7 +55,7 @@
         "screenfull": "5.0.2",
         "underscore": "1.9.1",
         "what-input": "5.2.7",
-        "zone.js": "0.10.2"
+        "zone.js": "0.10.3"
     },
     "devDependencies": {
         "@angular-builders/jest": "9.0.0",
