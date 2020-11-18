@@ -273,7 +273,7 @@
     "FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT": "%SYSTEM% is currently unreachable.",
     "FAILED TO MERGE TRY AGAIN TEXT"       :    "Try again in a few moments or contact support.",
     "FAILED TO MERGE SERVER NOT FOUND TEXT":    "No server found",
-    "CHECKING TEXT"                        :    "Checking...",
+    "CHECKING TEXT"                        :    "checking...",
     "NEXT TEXT"                            :    "Next",
     "TAKE SYSTEM NAME AND SETTINGS TEXT"   :    "Take system name and settings from",
     "YOU ARE ABOUT TO MERGE TEXT"          :    "You are about to merge systems %SYSTEM1% and %SYSTEM2%.",

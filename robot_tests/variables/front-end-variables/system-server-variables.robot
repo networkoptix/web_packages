@@ -84,7 +84,7 @@ ${CLOUD STORAGE INFO BLOCK}         //nx-cloud-storage/nx-block//h2[contains(tex
 
 ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
 ${OFFLINE BADGE}                    //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
-${CHECKING BADGE}                   //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
+${CHECKING BADGE}                   //nx-server-component//h4//span[contains(text(),"${CHECKING TEXT}")]
 
 # ADVANCED
 # Storage Locations Block

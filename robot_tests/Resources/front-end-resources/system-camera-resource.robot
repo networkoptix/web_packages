@@ -74,12 +74,6 @@ Audio Enabled Should Be
     ${current state}=   Get Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input
     Should Be Equal    "${expected state}"    "${current state}"
 
-Rename Camera
-    [Arguments]    ${name}
-    Click Element    ${EDITABLE TITLE}
-    Sleep    1
-    Input Content Editable Text    ${EDITABLE TITLE}    ${name}
-
 Camera Name Should Be
     [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
     ${cameras}=   Get Cameras    ${auth}    ${server url}

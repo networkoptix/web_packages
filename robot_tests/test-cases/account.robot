@@ -199,7 +199,7 @@ First name is required
     Click Element    ${ACCOUNT LAST NAME}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
@@ -217,7 +217,7 @@ Last name is required
     Click Element    ${ACCOUNT FIRST NAME}
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    Wait Until Element Is Visible    ${LAST NAME IS REQUIRED}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
@@ -329,8 +329,10 @@ Language is changeable on the account page
         ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
-        Sleep    1
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    //nx-apply//nx-process-button//button
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Wait Until Element is Visible    ${ACCOUNT SAVE}
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Click Button    ${ACCOUNT SAVE}
         Sleep    1    #to allow the system to change languages
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"  
         ...    Wait Until Element is Visible    //header/span[text()='${info text}']

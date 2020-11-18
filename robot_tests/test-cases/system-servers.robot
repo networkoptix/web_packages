@@ -111,81 +111,51 @@ Server Settings Test Setup
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Run Keyword If    ${verify}==${True}    Verify on Servers Page    timeout=95
+    Capture Page Screenshot
 
 *** Test Cases ***
-Rename server close button works
-    [Tags]    C70960    threaded
-    ${current server name}=   Get Text    ${SERVER NAME}
-    Verify Server Buttons Are Enabled
-    Click Button    ${RENAME SERVER BUTTON}
-    Verify Rename Dialog
-    Input Text    ${RENAME SERVER INPUT}    server 1 name changed
-    Click Button    ${RENAME CLOSE BUTTON}
-    Wait Until Element Is Not Visible    ${RENAME SERVER FORM}
-    Wait Until Element Contains    ${SERVER NAME}    ${current server name}
-
-Rename server cancel button works
-    [Tags]    C70960    threaded
-    ${current server name}=   Get Text    ${SERVER NAME}
-    Verify Server Buttons Are Enabled
-    Click Button    ${RENAME SERVER BUTTON}
-    Verify Rename Dialog
-    Input Text    ${RENAME SERVER INPUT}    server 1 name changed
-    Click Button    ${RENAME CANCEL BUTTON}
-    Wait Until Element Is Not Visible    ${RENAME SERVER FORM}
-    Element Text Should Be    ${SERVER NAME}    ${current server name}
-
-Rename server pressing ESC works
-    [Tags]    C70960    threaded
-    ${current server name}=   Get Text    ${SERVER NAME}
-    Verify Server Buttons Are Enabled
-    Click Button    ${RENAME SERVER BUTTON}
-    Verify Rename Dialog
-    Input Text    ${RENAME SERVER INPUT}    server 1 name changed
-    Press Keys    None    ESC
-    Wait Until Element Is Not Visible    ${RENAME SERVER FORM}
-    Element Text Should Be    ${SERVER NAME}    ${current server name}
-
 Rename server requires a name
     [Tags]    C70960    threaded
     Verify Server Buttons Are Enabled
-    Click Button    ${RENAME SERVER BUTTON}
-    Verify Rename Dialog
-    Delete All Text    ${RENAME SERVER INPUT}
-    Click Button    ${RENAME SAVE BUTTON}
-    Wait Until Element is Visible    ${RENAME ERROR TEXT}
-    Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
+    Rename System or Hardware    ${EMPTY}
+    Wait Until Element Is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Element Text Should Be    ${SERVER NAME}    server 1
 
 Server name can be changed
     [Tags]    C71000    threaded
+    Select Server By Name    server 1
     Verify Server Buttons Are Enabled
-    Click Button    ${RENAME SERVER BUTTON}
-    Verify Rename Dialog
-    Input Text    ${RENAME SERVER INPUT}    server 1 name changed
-    Click Button    ${RENAME SAVE BUTTON}
-    Check for Alert    ${SERVER NAME SAVED}
+    Capture Page Screenshot
+    Rename System or Hardware    server 1 name changed
+    Click Button    ${SYSTEM SAVE}
+    Capture Page Screenshot
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-    Select Server By Name    server 1 name changed
     Reload Page 
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
 
     Log    Reset the name to server 1
-    Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 1
+    Change server name via API    ${server auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
+    Reload Page
+    Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
+    capture page screenshot
 
 Server name changed via API updates on cloud
     [Tags]    C70961    threaded
     Verify on Servers Page
+    Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     @{auth}=    Create List    ${owner}    ${BASE PASSWORD}
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-    Rename Server    https://${QA BURBANK IP}:${port1[0]}    ${server auth}    server 2 name changed
+    Change server name via API    ${server auth}    server 1 name changed    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
+    Sleep    1
     Reload Page
     Select Server By Name    server 1 name changed
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 2 name changed")]/..   
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..   
     
-    Log    Reset the name to server 2
-    Change server name via API    ${auth}    server 2    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
+    Log    Reset the name to server 1
+    Change server name via API    ${auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port1[0]}
     
 Restart close button works
     [Tags]    C70968    threaded
@@ -253,7 +223,8 @@ Port field validation
     Delete All Text    ${PORT INPUT}
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}   
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Sleep    1
     ${after port}=    Get Value    ${PORT INPUT}
     Should Be Equal As Integers    ${before port}    ${after port}
     Log    Step 2
@@ -301,6 +272,7 @@ Change port
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
+    Sleep    1
     @{auth}=    Create List    ${owner}    ${BASE PASSWORD}
     Get Cameras    ${auth}    http://${QA BURBANK IP}:${port1}[1]
     Change Port To    7001
@@ -387,10 +359,8 @@ Offline two servers
     [Tags]    C70955    threaded
     Select Server By Name    server 2
     Verify on Servers Page
-    Wait Until Elements are Visible    ${CHECK STATUS BUTTON}    ${OFFLINE BADGE}
-    Wait Until Element has Style    ${OFFLINE BADGE}    text-transform    uppercase
+    Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${PORT INPUT}
-    Element Should be Disabled    ${RENAME SERVER BUTTON}
     Element Should be Disabled    ${RESTART SERVER BUTTON}
     Element Should Not be Visible    ${SYSTEM NAME OFFLINE}
 
@@ -407,7 +377,6 @@ Admin has Access
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Element Should Be Disabled    ${PORT INPUT}
-    Element Should Be Disabled    ${RENAME SERVER BUTTON}
 
 Viewer does not have Access
     [Tags]    C69853    threaded

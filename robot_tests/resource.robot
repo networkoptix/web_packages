@@ -176,12 +176,12 @@ Validate Log Out
 
 Log Out No Language
     Wait Until Page Does Not Contain Element    ${BACKDROP}
-    Wait Until Page Contains Element    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Wait Until Page Contains Element    ${LOG OUT BUTTON}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Sleep    .05    #Ubuntu was clicking too soon
     Click Button    ${ACCOUNT DROPDOWN}
-    Wait Until Element Is Visible    //li[contains(@class, 'collapse-first')]//li[2]/a
-    Click Link    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Wait Until Element Is Visible    ${LOG OUT BUTTON}
+    Click Link    ${LOG OUT BUTTON}
     Validate Log Out
 
 Validate on Register Page
@@ -344,6 +344,12 @@ Share To
     ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
+
+Rename System or hardware
+    [Arguments]    ${name}
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${name}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
