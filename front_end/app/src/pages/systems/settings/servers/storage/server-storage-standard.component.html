@@ -5,7 +5,7 @@
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
 </nx-section-placeholder>
 
-<nx-block type="my-3 storage-info" *ngIf="!loading && (storage$ | async).length">
+<nx-block type="mb-3 storage-info" *ngIf="!loading && (storage$ | async).length">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
