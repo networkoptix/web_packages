@@ -49,6 +49,8 @@
                             </span>
                             <span class="ml-1" translate>Check Status</span>
                         </button>
+                    <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
+                    <div class="d-flex pb-2">
                         <button *ngIf="canSeeInfo" class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
@@ -67,6 +69,7 @@
                             <span class="ml-1" translate>API tool</span>
                         </button>
                     </div>
+                </div>
                 <div class="col-6 col-lg-4">
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
