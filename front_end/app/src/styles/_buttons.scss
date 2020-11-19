@@ -58,14 +58,14 @@ button, .btn {
     font-family      : $font-family-medium;
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color : $light !important;
+        background-color : $light5 !important;
         box-shadow       : inset 0 -1px 0 0 $light8;
     }
 
     &:active,
     &.active {
         background-color : $light6 !important;
-        box-shadow       : inset 0 1px 0 0 $light8 !important;
+        box-shadow       : inset 0 1px 0 0 $light9 !important;
     }
 }
 

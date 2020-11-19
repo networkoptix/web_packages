@@ -108,18 +108,15 @@ button, select, .form-control{
   }
 
   &:hover{
-    background-color: $button_l1;
-    border-color: $button_l1;
-    border-bottom-color:$button_d1;
+    background-color: $light5;
+    box-shadow: inset 0 -1px 0 0 $light8;
   }
 
   &:active,
   &.active {
-    background-color: $button_d1;
-    border-color: $button_d1;
-    border-top-color: $button_d3;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    background-color: $light6;
+    box-shadow: inset 0 1px 0 0 $light9;
+    -webkit-box-shadow: inset 0 1px 0 0 $light9;
   }
 
   &.disabled,
