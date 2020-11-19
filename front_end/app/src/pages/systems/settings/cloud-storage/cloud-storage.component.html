@@ -1,7 +1,7 @@
 <!-- Initial State -->
 <nx-pre-loader *ngIf="cloudStorageStateLoading"></nx-pre-loader>
 
-<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mt-3 mb-3" header-style="{{ layoutSimple ? 'hidden': '' }}">
+<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mb-3" header-style="{{ layoutSimple ? 'hidden': '' }}">
     <header><h4 translate>Cloud Storage</h4></header>
     <div class="header-svg">
         <svg-icon nx-add-svg-src *ngIf="!layoutSimple" [src]="CONFIG.icons.dir + 'city.svg'"></svg-icon>
