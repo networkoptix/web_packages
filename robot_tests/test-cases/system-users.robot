@@ -717,14 +717,13 @@ Cloud Owner Can Change Local User Login
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
 	    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
-        Click Button    ${ACCOUNT SAVE}
-        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        # Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        # Click Button    ${ACCOUNT SAVE}
+        # Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Wait Until Element is Visible    //span[text()="${new login}"]
-	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
@@ -778,8 +777,7 @@ Cloud Owner Can Change Local User Permissions
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         ${new permission} =    Change Permission Level for Local User     ${user}    ${owner}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
@@ -802,8 +800,7 @@ Cloud Owner Can Change Local User Password
     FOR    ${user}    IN    @{local users}
         Log    Change password for ${user}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
@@ -834,9 +831,9 @@ Cloud owner can enable/disable local user (positive)
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # switching focus
     Click Element    //span[text()="Local+viewer"]
-    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
     Click Element    //span[text()="local+advancedviewer"]
-    ${name} =    Get Text    //h2[@class="user-email"]
+    ${name} =    Get Text    ${EDITABLE TITLE}
     @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
@@ -848,7 +845,7 @@ Cloud owner can enable/disable local user (positive)
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Page Should Not Contain Element   ${USER DISABLED MSG}
-    ${name} =    Get Text    //h2[@class="user-email"]
+    ${name} =    Get Text    ${EDITABLE TITLE}
     @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
@@ -949,7 +946,10 @@ Unsaved changes are not sent to the server
     Sleep    .1
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    Input Text    ${LOCAL USER LOGIN}    C76241
+    # Click Element    ${EDITABLE TITLE}
+    # Sleep    1
+    # Input Content Editable Text    ${EDITABLE TITLE}    C76241
+    # Sleep    30
     Input Text    ${LOCAL USER NAME}    C76241
     Input Text    ${LOCAL USER EMAIL}    C76241
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
@@ -964,7 +964,7 @@ Unsaved changes are not sent to the server
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
     Page Should Not Contain Element   ${USER DISABLED MSG}
-    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
     Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
 	
@@ -982,22 +982,24 @@ Local User Login Field Cannot Be Left Blank
     Click Element    //span[text()="Local+advancedViewer"]
     
     Log    Step 2
-    Wait Until Element is Visible     ${LOCAL USER LOGIN}    
-    Input Text    ${LOCAL USER LOGIN}    ${EMPTY}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Click Button     ${ACCOUNT SAVE} 
+    Wait Until Element is Visible     ${EDITABLE TITLE}   
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${EMPTY}
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Click Button     ${ACCOUNT SAVE} 
     Page Should Contain    ${LOGIN IS REQUIRED TEXT}
-    Page Should Contain Element   ${ACCOUNT SAVE} 
-    Page Should Contain Element   ${ACCOUNT CANCEL}
-    Element Style Should Be    ${LOCAL USER LOGIN}    border-color    ${ERROR COLOR} 
+    # Page Should Contain Element   ${ACCOUNT SAVE} 
+    # Page Should Contain Element   ${ACCOUNT CANCEL}
+    Element Style Should Be    ${EDITABLE TITLE}     border-color    ${ERROR COLOR}
     
     Log    Step 3
     @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
     Lists Should Be Equal     ${check info}    ${locals}
 
     Log    Step 4
-    Click Button     ${ACCOUNT CANCEL} 
-    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
+    Click Element    //label[@for="permissionsSelect"] 
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
     
     Log    Step 5
     @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
@@ -1116,10 +1118,10 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # switching focus
     Click Element    //span[text()="Local+viewer"]
-    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${GREYED OUT TEXT COLOR}
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
     Click Element    //span[text()="local+advancedviewer"]
     Log    Step 4
-    ${name} =    Get Text    //h2[@class="user-email"]
+    ${name} =    Get Text    ${EDITABLE TITLE}
     @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
@@ -1133,7 +1135,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     Log    Step 6
-    ${name} =    Get Text    //h2[@class="user-email"]
+    ${name} =    Get Text    ${EDITABLE TITLE}
     @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
@@ -1149,7 +1151,7 @@ Cloud administrator can change local user password (positive)
     Log    Step 1
     Click Element    //span[text()="Local+advancedViewer"]
     Wait Until Elements Are Visible
-    ...    ${LOCAL USER LOGIN}
+    ...    ${EDITABLE TITLE}
     
     Log    Step 2
     Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -1264,13 +1266,13 @@ Changes made in thick client appear on cloud portal
     Element Should Not Be Visible     //span[text()="${owner}"]//preceding-sibling::${LOCAL USER ICON}
     Click Element    //span[text()="Local+newApiUser"]
     Wait Until Elements Are Visible
-    ...    ${LOCAL USER LOGIN}
+    ...    ${EDITABLE TITLE}
     ...    ${LOCAL USER NAME}
     ...    ${LOCAL USER EMAIL}    
     ...    ${DISABLE USER SWITCH}
     ...    ${LOCAL USER DELETE BUTTON}
     ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
-    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+newApiUser
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+newApiUser
     Wait Until Textfield Contains    ${LOCAL USER NAME}    New Api
     Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
     Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]    
@@ -1300,7 +1302,7 @@ Local user list is not available for offline system
     END   
     Log    Step 3
     ${results}    Execute Command    docker container stop usertest2
-    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    31
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    65
     Reload Page   
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Not Visible   //span[text()="Local+${user}"]

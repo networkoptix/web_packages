@@ -202,7 +202,7 @@ ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='fi
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-process-button/following-sibling::button[@type="button"]
+${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="button"]
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
@@ -327,7 +327,7 @@ ${COMMON PASSWORD}      qweasd123
 @{INCORRECT PASSWORDS}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
 #Local User in System Users
-${LOCAL USER LOGIN}                  //input[@id='name']
+${LOCAL USER LOGIN}                  //h2[@class='user-email']
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]

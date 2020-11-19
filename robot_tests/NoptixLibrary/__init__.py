@@ -89,7 +89,7 @@ class NoptixLibrary(object):
         locator = seleniumlib.find_element(locator)
         # locator = self.convert_locator_to_webelement(locator)
         logger.info("windows")
-        timeout = time.time() + 5
+        timeout = time.time() + 3
         locator.send_keys(Keys.END)
         while time.time() < timeout:
             locator.send_keys(Keys.BACKSPACE)
