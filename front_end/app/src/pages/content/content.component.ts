@@ -93,9 +93,8 @@ export class NxContentComponent implements OnInit {
         this.accountService.get().then(account => {
             if (account) {
                 this.account = account;
-                this.subscribeParams();
             }
-        });
+        }).finally(() => this.subscribeParams());
     }
 
     subscribeParams() {
