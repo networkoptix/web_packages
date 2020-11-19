@@ -4,7 +4,7 @@ Validate Alerts Page
     ...    ${HM ALERTS PAGE LINK}
     ...    ${HM SYSTEM PAGE LINK}
     ...    ${HM SERVERS PAGE LINK}
-    ...    ${HM CAMERAS PAGE LINK}
+    #...    ${HM CAMERAS PAGE LINK}
     ...    ${HM INTERFACES PAGE LINK}
     ...    ${HM REFRESH REPORT}
     ...    ${HM DOWNLOAD FULL REPORT}
