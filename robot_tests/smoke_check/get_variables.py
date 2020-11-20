@@ -1,6 +1,7 @@
 
 CLOUD_HOSTS = {
     "test": ["https://cloud-test.hdw.mx", "http://cloud-test.hdw.mx"],
+    "test2": ["https://test2.cloud.hdw.mx", "http://test2.cloud.hdw.mx"],
     "dev2": ["https://dev2.cloud.hdw.mx", "http://dev2.cloud.hdw.mx"],
     "stage": ["https://stage.nxvms.com", "http://stage.nxvms.com"],
     "prod": ["https://nxvms.com", "http://nxvms.com"]

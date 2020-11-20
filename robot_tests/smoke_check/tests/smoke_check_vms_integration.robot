@@ -35,11 +35,21 @@ Connect System To Cloud - Client
 
     Go To    ${ENV}/systems
     Log In    ${email vms}    ${password}    validate=${False}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT FROM NX}
+    ...    ${RENAME SYSTEM}
+    ...    ${MERGE BUTTON SYSTEM}
+    ...    ${SYSTEM GENERAL LINK}
+    ...    ${CAMERAS LINK}
+    ...    ${USERS LIST LINK}
+    ...    ${SERVERS LINK}
+    ...    //span[@class="system-owner"]//span[contains(text(), "${YOU TEXT}")]
+    ...    //form[@id="systemSettingsForm"]
+    ...    //form[@id="securitySettingsForm"]
     Log Out
 
-Log in to VMS as cloud owner
-    [Tags]    C30825    vms
+API call to server with cloud credentials
+    [Tags]    vms
     ${auth}=    Create List    ${email vms}    ${password}
     Get Users    ${auth}    https://${system vms}[ip]:${system vms}[port]
 
@@ -69,7 +79,12 @@ Disconnect System From Cloud - Portal
 
     Log    Step 1: Click on Disconnect from Nx button
     Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT PASSWORD INPUT}     ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT PASSWORD INPUT}
+    ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+    ...    ${DISCONNECT FORM CANCEL BUTTON}
+    ...    ${DISCONNECT FORM CLOSE BUTTON}
+    ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
 
     Log    Step 2: Click on Disconnect button
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
@@ -86,7 +101,8 @@ Disconnect System From Cloud - Portal
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FROM NX}
-    Run Keyword and Ignore Error    Wait Until Element Is Visible    ${SYSTEM IS SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Check For Alert    ${SYSTEM IS SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
     Log    Step 5: Verify System is not connected to cloud
     Restart Server    https://${system vms}[ip]:${system vms}[port]    ${local auth}
@@ -114,5 +130,5 @@ Disconnect System From Cloud - Client
 
     Go To    ${ENV}/systems/
     Wait Until Elements Are Not Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}
-    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+    Run keyword and continue on failure    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Log Out

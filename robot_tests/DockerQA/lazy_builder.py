@@ -16,6 +16,7 @@ for root, dirs, files in os.walk("."):
 cloud_hosts = {
     'prod': 'nxvms.com',
     'test': 'cloud-test.hdw.mx',
+    'test2': 'test2.cloud.hdw.mx',
     'stage': 'stage.nxvms.com',
     'dev2': 'dev2.cloud.hdw.mx'
 }

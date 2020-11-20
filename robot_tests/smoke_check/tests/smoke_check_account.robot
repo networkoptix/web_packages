@@ -48,8 +48,11 @@ Change Account Settings
     Click Element    //span[@lang="ru_RU"]/following-sibling::span[contains(text(),"Русский")]
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     Click Button    ${ACCOUNT SAVE}
-    Run keyword and ignore error    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Run keyword and ignore error    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+#    Translations don't work
+#    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+#    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Check For Alert    Ваша учетная запись успешно сохранена
+    Wait Until Element Is Visible    //nx-apply//div[contains(text(), 'Нет несохраненных изменений')]
     Wait Until Elements Are Not Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
 
     ${current language}=   Get Element Attribute    ${ACCOUNT LANGUAGE DROPDOWN}/span[@class="lang-sm"]    lang
@@ -75,7 +78,6 @@ Change Password
     Wait Until Element Is Visible   ${CHANGE PASSWORD LEFT MENU LINK}
     Click Element   ${CHANGE PASSWORD LEFT MENU LINK}
     Wait Until Location Contains    /account/password
-    Go To    ${ENV}/account/password
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     Slow    Input Text    ${CURRENT PASSWORD INPUT}    ${password}    timeout=0.1
@@ -97,7 +99,7 @@ Change Password
 Restore Password
     [Tags]    C30725    acc
 
-    Log    Step 1:
+    Log    Step 1
     Click Element    ${LOG IN NAV BAR}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${FORGOT PASSWORD}
     Input Text    ${EMAIL INPUT}    ${email acc}
@@ -106,6 +108,7 @@ Restore Password
 
     Log    Step2: Click on "Reset Password" button
     Click Button    ${RESET PASSWORD BUTTON}
+    Wait Until Element Is Visible    //span[contains(text(), "${RESET EMAIL SENT MESSAGE TEXT}")]
     Wait Until Location Contains    restore_password/sent
 
     Log    Step 3: Check email inbox
@@ -121,8 +124,8 @@ Restore Password
     Log    Step 5: Reset Password and validate success
     Slow    Input Text    ${RESET PASSWORD INPUT}    ${restored password}    timeout=0.1
     Slow    Click Button    ${RESET PASSWORD OK BUTTON}    timeout=0.1
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Wait Until Location Contains    restore_password/success
+    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
 
     Log    Steps 6: Click on "Success Log In" button and validate the form
     Click Link  ${RESET SUCCESS LOG IN LINK}
