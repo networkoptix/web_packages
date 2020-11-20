@@ -99,7 +99,7 @@
                                 <!-- Add settings button -->
                                 <button class="btn btn-text has-icon"
                                         [disabled]="store.status === STATUS.REINDEXING"
-                                        *ngIf="store.storageType !== storageTypes.CLOUD"
+                                        *ngIf="store.hasAction && store.storageType !== storageTypes.CLOUD"
                                         (click)="deleteStorage(store)">
                                     <svg-icon
                                             nx-add-svg-src

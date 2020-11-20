@@ -359,7 +359,7 @@ export class NxSystemStorageComponent implements OnInit {
         storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
             if (isUsedForWriting) {
                 isBackup ? totalBackups++ : totalMains++;
-                if (status !== STORAGE_STATUS.INACCESSIBLE) {
+                if (![STORAGE_STATUS.RESERVED, STORAGE_STATUS.INACCESSIBLE].includes(status)) {
                     isBackup ? status === 0 && onlineBackups++ : onlineMains++;
                 }
             }
@@ -372,7 +372,9 @@ export class NxSystemStorageComponent implements OnInit {
         });
 
         if (onlineMains === 1) {
-            const store = storage.find(({ isBackup, isUsedForWriting }) => !isBackup && isUsedForWriting);
+            const store = storage.find(({ isBackup, isUsedForWriting, status }) => {
+                return isUsedForWriting && ![STORAGE_STATUS.RESERVED, STORAGE_STATUS.INACCESSIBLE].includes(status) && !isBackup;
+            });
             store.mainOnly = true;
         }
         this.mainReindexDisabled = onlineMains === 0 && totalMains > 0;
@@ -408,7 +410,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     getModes(store) {
-        return this.modes.map((mode, index) => ({ ...mode, disabled: store.mainOnly && index }));
+        return this.modes.map((mode, index) => ({ ...mode, disabled: store.mainOnly && Boolean(index) }));
     }
 
     getArchiveSpace(usage, storageId): number {
