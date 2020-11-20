@@ -36,7 +36,10 @@
             <nx-block header-style="extended">
                 <header>
                     <div class="header-top-bar mb-3">
-                        <nx-editable-settings-heading [nameWatcher]="cameraNameWatcher"></nx-editable-settings-heading>
+                        <nx-editable-settings-heading
+                                [nameWatcher]="cameraNameWatcher"
+                                [editEnabled]="system.permissions.isAdmin"
+                        ></nx-editable-settings-heading>
                         <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>
                                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyClass]="true"></svg-icon>

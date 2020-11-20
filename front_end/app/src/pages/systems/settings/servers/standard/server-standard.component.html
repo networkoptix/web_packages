@@ -39,9 +39,9 @@
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar">
-                    <nx-editable-settings-heading 
-                        [nameWatcher]="serverNameWatcher" 
-                        [editEnabled]="!renameDisabled"></nx-editable-settings-heading>
+                    <nx-editable-settings-heading
+                        [nameWatcher]="serverNameWatcher"
+                        [editEnabled]="system.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
                         <button class="server-buttons"
                             *ngIf="serverOffline"
                             (click)="checkStatus()">

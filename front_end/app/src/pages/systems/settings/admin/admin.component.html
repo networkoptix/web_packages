@@ -52,9 +52,9 @@
         <nx-block header-style="extended">
             <header>
                 <div class="d-flex">
-                    <nx-editable-settings-heading 
-                            [nameWatcher]="systemNameWatcher" 
-                            [editEnabled]="!settings.renameDisabled"></nx-editable-settings-heading>
+                    <nx-editable-settings-heading
+                            [nameWatcher]="systemNameWatcher"
+                            [editEnabled]="system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
                 </div>
                 <span class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>

@@ -2,13 +2,6 @@
 @use '../../../../../styles/typography';
 @use '../../../../../../styles/theme_variables' as *;
 
-.edit-mode {
-    width: 100%;
-
-    & #editable-title {
-        width: 100%;
-    }
-}
 
 .server-info {
     font-family : typography.$font-family-regular;

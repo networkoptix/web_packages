@@ -15,7 +15,7 @@
                             [showWarning]="true"
                     ></nx-switch>
                 </div>
-                <div *ngIf="selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">
+                <div *ngIf="!system.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">
                     <h2 class="user-email" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
                         >{{ selectedUser.isCloud ? email.originalValue : selectedUser.name }}</h2>
                     <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
