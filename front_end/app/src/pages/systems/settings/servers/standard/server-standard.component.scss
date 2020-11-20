@@ -17,35 +17,8 @@
     .header-top-bar {
         display: flex;
         align-items: center;
-        .header-title {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            h2 {
-                font-family : typography.$font-family-regular;
-                height: 32px;
-                font-weight: bold;
-                font-size: 24px;
-            }
-            .tag {
-                @include typography.medium11;
-                margin-left: 8px;
-                color: $light1;
-                padding: 4px 8px;
-                text-transform: uppercase;
-                border-radius: 2px;
-            }
-            .online {
-                background-color: typography.$brand_core;
-            }
-            .offline {
-                background-color: $error;
-            }
-            .checking {
-                background-color: $light16 !important;
-            }
-        }
         .server-buttons {
+            flex-shrink: 0;
             &:hover {
                 color: $dark15;
                 svg-icon {

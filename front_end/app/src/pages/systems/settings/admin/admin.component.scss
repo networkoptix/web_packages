@@ -4,24 +4,7 @@
     .system-header-bold {
         font-family: typography.$font-family-bold;
     }
-    .system-name {
-        @include typography.medium24;
-    }
-    .header-title {
-        min-width: 0;
-        h2 {
-            @include typography.medium24;
-            line-height: 40px;
-            height: 40px;
-        }
-    }
-    .edit-button {
-        width: 40px;
-        padding-left: 8px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
+
     .system-owner {
         @include typography.regular13;
     }

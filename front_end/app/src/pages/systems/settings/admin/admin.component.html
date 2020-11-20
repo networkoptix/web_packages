@@ -51,26 +51,11 @@
 
         <nx-block header-style="extended">
             <header>
-                <h2 *ngIf="settings.renameDisabled; else editableTitle" class="system-name mb-2">{{system.info.systemName || system.info.name}}</h2>
-                <ng-template #editableTitle >
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="header-title" [ngClass]="{ 'w-100': editMode }">
-                            <h2 NxEditable
-                                #editTitle
-                                [(content)]="systemName"
-                                (contentChange)="handleNameChange($event)"
-                                (blur)="handleBlur()"
-                                (focus)="handleFocus()"
-                                [hasError]="!systemName || emptyName"
-                                id="editable-title"></h2>
-                            <span *ngIf="!systemName" class="input-error" translate>System name is required</span>
-                            <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
-                        </div>
-                        <div class="edit-button" [ngClass]="{ 'd-none' : editMode }" (click)="editTitle.focus()">
-                            <img alt="pencil icon button to edit system name" [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
-                        </div>
-                    </div>
-                </ng-template>
+                <div class="d-flex">
+                    <nx-editable-settings-heading 
+                            [nameWatcher]="systemNameWatcher" 
+                            [editEnabled]="!settings.renameDisabled"></nx-editable-settings-heading>
+                </div>
                 <span class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>

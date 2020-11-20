@@ -56,6 +56,7 @@ import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dr
 import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
 import { NxInfoBlockComponent }               from './info-block/info-block.component';
 import { NxImageComponent }                   from '@pages/health/table-components/image/image.component';
+import { NxEditableSettingsHeading }          from './editable/settings-heading/editable-settings-heading.component';
 import { QuicklinkModule }                    from 'ngx-quicklink';
 
 @NgModule({
@@ -119,7 +120,8 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxNavDropdownComponent,
         NxOverlayModalComponent,
         NxLeftMenuComponent,
-        NxImageComponent
+        NxImageComponent,
+        NxEditableSettingsHeading
     ],
     providers: [
         NxProcessButtonComponent,
@@ -155,7 +157,8 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxRibbonService,
         NxOverlayModalComponent,
         NxLeftMenuComponent,
-        NxImageComponent
+        NxImageComponent,
+        NxEditableSettingsHeading
     ],
     exports: [
         QuicklinkModule,
@@ -206,7 +209,8 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxNavDropdownComponent,
         NxOverlayModalComponent,
         NxLeftMenuComponent,
-        NxImageComponent
+        NxImageComponent,
+        NxEditableSettingsHeading
     ]
 })
 export class ComponentsModule {
