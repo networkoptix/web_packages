@@ -55,13 +55,21 @@ export class Process {
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    run = () => {
+    run = (successHandler = (_: any) => null, errorHandler = (_: any) => null) => {
         this.processing = true;
         this.error = false;
         this.success = false;
         this.finished = false;
         this.canceled = false;
-        this.caller$.subscribe(this.onSuccess, this.onError, this.onComplete);
+        const chain = (first, second) => (data) => {
+            first(data);
+            second(data);
+        };
+        this.caller$.subscribe(
+            chain(successHandler, this.onSuccess),
+            chain(errorHandler, this.onError),
+            this.onComplete
+        );
         return this;
     }
 
@@ -204,16 +212,14 @@ export class NxProcessService {
         errorHandler: Handler = logError,
         catchHandler: Handler = logError
     ) {
-        if (typeof caller === 'function') {
-            caller = defer(caller);
-        }
+        const _caller = typeof caller === 'function' ? defer(caller) : caller;
         return new Process(
             this.configService,
             this.languageService,
             this.sessionService,
             this.cloudApiService,
             this.toastService,
-            caller,
+            _caller,
             settings,
             successHandler,
             errorHandler,

@@ -248,7 +248,7 @@ export class NxApplyService {
         async(prevPromise, process, index) => {
             return prevPromise.then(prevRes => {
                 return new Promise((resolve, reject) => {
-                    process.run().then((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                    process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
                 }).catch(res => Promise.reject(res));
             }).catch(res => Promise.reject(res));
         }, Promise.resolve()
