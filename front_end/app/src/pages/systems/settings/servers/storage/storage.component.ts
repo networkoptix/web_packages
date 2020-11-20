@@ -1,7 +1,6 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, Output,
-    OnInit, EventEmitter
+    LOCALE_ID, Input, Output, OnInit, EventEmitter
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
@@ -134,7 +133,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
         this.showStorage = false;
 
-        if (this.system?.currentServerNotBusy && this.system?.servers?.length && this.serverId) {
+        if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
                 this.system.updateOrGetSystemStorage({ serverId: this.serverId }),
