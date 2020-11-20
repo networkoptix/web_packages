@@ -6,9 +6,9 @@ import {
     ElementRef, ViewChild, HostListener, Renderer2
 }                                         from '@angular/core';
 import { Router }                         from '@angular/router';
-import { UntilDestroy }                   from '@ngneat/until-destroy';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { delay }                          from 'rxjs/operators';
+import { UntilDestroy }                            from '@ngneat/until-destroy';
+import { Subject, Subscription, SubscriptionLike } from 'rxjs';
+import { debounceTime, delay }                     from 'rxjs/operators';
 
 import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
 import { NxConfigService, IConfig }       from '../../../../services/nx-config';
@@ -75,6 +75,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     revert: any;
     timesElementSet = 0;
 
+    private clicks = new Subject();
+
+    clickSubscription: SubscriptionLike;
     uriSubscription: SubscriptionLike;
     searchViewHeightSubscription: SubscriptionLike;
     windowScrollSubscription: SubscriptionLike;
@@ -202,10 +205,17 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     const camera = this.pagedItems.find((camera) => {
                         return camera.model === this.params.camera;
                     });
-
                     this.setClickedRow(camera);
                 }
             });
+
+        this.clickSubscription = this.clicks.pipe(
+            debounceTime(0) // avoid fast change of selected camera row
+        ).subscribe((element: any) => {
+            this.uri.pageOffset = window.pageYOffset;
+            this.selectedCamera = element.sortKey;
+            this.onRowClick.emit(element);
+        });
     }
 
     ngAfterViewInit(): void {
@@ -412,9 +422,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     setClickedRow(element) {
         if (element) {
-            this.uri.pageOffset = window.pageYOffset;
-            this.selectedCamera = element.sortKey;
-            this.onRowClick.emit(element);
+            this.clicks.next(element);
         } else {
             this.selectedCamera = undefined;
         }

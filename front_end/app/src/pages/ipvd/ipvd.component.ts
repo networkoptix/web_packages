@@ -168,11 +168,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.windowSizeSubscription = this.scrollMechanicsService
             .windowSizeSubject
             .subscribe(() => {
-                if (this.viewContainer && this.viewContainer.nativeElement) {
+                if (this.viewContainer?.nativeElement) {
                     this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
                 }
 
-                if (this.tableContainer && this.tableContainer.nativeElement) {
+                if (this.tableContainer?.nativeElement) {
                     let width = this.tableContainer.nativeElement.clientWidth;
                     width = (this.activeCamera) ? width - 8 : width; /* -gutter */
                     this.scrollMechanicsService.elementTableWidth = width;
@@ -221,7 +221,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.searchContainer && this.searchContainer.nativeElement) {
+        if (this.searchContainer?.nativeElement) {
             this.scrollMechanicsService.searchViewHeight = this.searchContainer.nativeElement.clientHeight;
         }
     }
@@ -400,8 +400,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         // Avoid unnecessary model update
         if (!NxUtilsService.isEqual(this.filterModel, model)) {
             this.filterModel = NxUtilsService.deepCopy(model);
+            this.searchVendor();
         }
-        this.searchVendor();
     }
 
     getIPVDData() {
@@ -552,7 +552,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
             return;
         }
-        this.activeCamera = { ...selectedCamera };
         this.showAll = false;
 
         const queryParams: Params = {};
@@ -560,6 +559,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.uri
             .updateURI(this.uriPath, queryParams)
+            .then(() => {
+                this.activeCamera = { ...selectedCamera };
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -570,7 +572,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.toggleCamview = true;
         setTimeout(() => {
-            if (this.viewContainer) {
+            if (this.viewContainer?.nativeElement && this.tableContainer?.nativeElement) {
                 this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
                 this.scrollMechanicsService.elementTableWidth = this.tableContainer.nativeElement.clientWidth - 8/* -gutter */;
             }

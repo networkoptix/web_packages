@@ -132,7 +132,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.activeCamera) {
+        if (changes.activeCamera.currentValue) {
             this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
             this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;
