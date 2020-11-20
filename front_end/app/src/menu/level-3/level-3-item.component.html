@@ -2,7 +2,8 @@
    [ngClass]="{'selected': selected, 'item-disabled': !isEnabled, 'focus': menuNavItemId === item.id}"
    tabindex="{{ selected ? '-1': undefined }}"
    [id]="item.id"
-   (click)="navigate()"
+   [routerLink]="[itemPath]"
+   [queryParams]="{search: itemSearch}"
     (mouseover)="setNavIdx(item)">
     <div *ngIf="first" class="top-shadow-cover"></div>
     <div class="menu-level-3-content ellipsis">

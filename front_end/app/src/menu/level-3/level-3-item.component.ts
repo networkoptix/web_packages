@@ -2,12 +2,12 @@ import {
     Component, Input, OnInit,
     OnChanges, SimpleChanges, OnDestroy
 } from '@angular/core';
+import { Router }                   from '@angular/router';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 import { SubscriptionLike }         from 'rxjs';
 
 import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxMenuService }            from '../menu.service';
-import { Router }                   from '@angular/router';
+import { NxMenuService }            from '@src/menu';
 
 /* Usage
  */
@@ -28,6 +28,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
 
     itemPath: string;
+    itemSearch: string;
     isEnabled: boolean;
     menuNavItemId: string;
 
@@ -46,6 +47,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit() {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        this.itemSearch = this.item.query?.search;
         this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
 
         this.navItemSubscription = this.menuService.navItemSubject.subscribe(() => {
@@ -62,11 +64,6 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
                 ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
         }
-    }
-
-    navigate() {
-        const path = this.item.query ? `${this.itemPath}?search=${this.item.query.search}` : this.itemPath;
-        this.router.navigate([path]).catch(err => console.error(err));
     }
 
     setNavIdx(item) {
