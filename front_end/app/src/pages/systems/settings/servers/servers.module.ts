@@ -9,10 +9,10 @@ import { TranslateModule }                  from '@ngx-translate/core';
 import { DirectivesModule }                 from '@directives/directives.module';
 import { ComponentsModule }                 from '@components/components.module';
 import { NxSystemServersComponent }         from './servers.component';
-import { NxSystemStandardServerComponent }  from './standard/server.component';
+import { NxSystemStandardServerComponent }  from './standard/server-standard.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
-import { NxSystemStorageComponent }         from './storage/storage.component';
-import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.component';
+import { NxSystemStorageComponent }         from './storage/server-storage-standard.component';
+import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
 import { NxStorageSizeComponent }           from './storage-advanced/size/size.component';
 import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage.module';
 

@@ -792,8 +792,8 @@ class ServerManager {
         return this.mediaserverConnections[serverId].getApiDoc();
     }
 
-    getStorages(serverId) {
-        return this.mediaserverConnections[serverId].getStorages();
+    getStorages(serverId, useCache = false) {
+        return this.mediaserverConnections[serverId].getStorages(useCache);
     }
 }
 
@@ -1282,19 +1282,19 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.removeStorage(updateParams);
     }
 
-    getRecordStats() {
-        return this.mediaserver.getRecordStats();
+    getRecordStats(useCache = false) {
+        return this.mediaserver.getRecordStats(useCache);
     }
 
     getStorages<T>(queryParams?: T) {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    updateOrGetSystemStorage<T extends any>(updateParams?: any) {
+    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false) {
         if (!updateParams?.serverId) {
             return this.mediaserver.updateStorages(updateParams);
         }
-        return this.serverManager.getStorages(updateParams.serverId);
+        return this.serverManager.getStorages(updateParams.serverId, useCache);
     }
 
     checkForAnalyticsData(serverId: string) {
@@ -1379,8 +1379,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
     }
 
-    checkMergeStatus() {
-        return this.mediaserver.checkMergeStatus();
+    checkMergeStatus(forceReload = true) {
+        return this.mediaserver.checkMergeStatus(forceReload);
     }
 
     getPeerSystems() {

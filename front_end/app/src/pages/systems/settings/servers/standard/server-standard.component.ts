@@ -1,12 +1,12 @@
 import {
     Component, OnInit, SimpleChanges, OnChanges,
-    OnDestroy, Input
+    OnDestroy, Input, Output, EventEmitter
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-import { catchError, map }             from 'rxjs/operators';
+import { catchError, map, takeUntil }             from 'rxjs/operators';
 import {
-    of, timer, combineLatest, SubscriptionLike
+    of, timer, combineLatest, SubscriptionLike, Subject
 }                                    from 'rxjs';
 
 import {
@@ -38,8 +38,8 @@ interface DropdownStorage {
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-standard-server-component',
-    templateUrl : 'server.component.html',
-    styleUrls   : ['server.component.scss']
+    templateUrl : 'server-standard.component.html',
+    styleUrls   : ['server-standard.component.scss']
 })
 
 export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
@@ -47,6 +47,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() selectedServer;
     @Input() isOffline: boolean;
     @Input() storages: any;
+    @Output() loaded = new EventEmitter(false);
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -61,7 +62,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serverNameWatcher = new Watcher('');
     previousInputValue: number;
     checking: boolean;
-    serverLoaded = false;
+    _serverLoaded = false;
 
     dropdownStorages: any[] = [];
     saveStorageWatcher = new Watcher<boolean>();
@@ -83,6 +84,17 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     parsedServerId: string;
     serverDetails: InfoBlockSection;
     serversSubscription: SubscriptionLike;
+    checkIfOnlineSubscription: SubscriptionLike;
+    unsub$ = new Subject<string>();
+
+    set serverLoaded(value) {
+        this._serverLoaded = value;
+        this.loaded.emit(value);
+    }
+
+    get serverLoaded() {
+        return this._serverLoaded;
+    }
 
     get serverName() {
         return this.serverNameWatcher.value;
@@ -152,7 +164,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             if (previousValue?.id === currentValue.id) {
                 return;
             }
-            this.serverLoaded = false;
             this.setServer();
         }
 
@@ -161,19 +172,18 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.unsub$.next('unsub');
+    }
 
     setServer(): void {
+        this.serverLoaded = false;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
-
-        this.checkIfOnline(this.selectedServer.id)
-            .catch(error => console.error(error))
-            .finally(() => this.applyService.setVisible(true));
 
         this.renameDisabled = !this.system.permissions.editAdmins;
         this.restartDisabled = !this.system.permissions.isAdmin;
@@ -192,6 +202,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.ipPortWatcher.value = +port;
             this.applyService.reset();
         }
+        this.checkIfOnline(this.selectedServer.id).then(() => {
+            this.serverLoaded = true;
+        });
     }
 
     initForApplyService(): void {
@@ -253,20 +266,18 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     checkIfOnline(serverId) {
-        return this.system.getServers().toPromise()
-            .then(res => {
-                if (res) {
-                    const servers: any[] = Object.entries(res).map(server => server[1]);
-                    this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
-                        ? '' : this.CONFIG.servers.status.offline);
-                    this.serverLoaded = true;
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                this.setStatus(this.CONFIG.servers.status.offline);
-                this.serverLoaded = true;
-            });
+        return this.system.getServers().pipe(takeUntil(this.unsub$)).toPromise().then(res => {
+            if (res) {
+                const servers: any[] = Object.entries(res).map(server => server[1]);
+                this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                    ? '' : this.CONFIG.servers.status.offline);
+                this.applyService.setVisible(true);
+            }
+        }, err => {
+            console.error(err);
+            this.setStatus(this.CONFIG.servers.status.offline);
+            this.applyService.setVisible(true);
+        });
     }
 
     checkStatus() {
@@ -388,7 +399,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)
-                .then(async (closeRes) => {
+                .then(async(closeRes) => {
                     if (closeRes === 'changeOk') {
                         this.selectedStorage = newStorage;
                         this.saveStorageWatcher.originalValue = false;
@@ -476,6 +487,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     highestFreeSpace(storage) {
         return storage.reduce((max, next) => {
             return +max.freeSpace >= +next.freeSpace ? max : next;
-        });
+        }, 0);
     }
 }

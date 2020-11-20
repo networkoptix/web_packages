@@ -14,8 +14,8 @@ import { NxDialogsService }             from '@services/../dialogs/dialogs.servi
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-advanced-storage-component',
-    templateUrl : 'storage.component.html',
-    styleUrls   : ['storage.component.scss']
+    templateUrl : 'server-storage-adv.component.html',
+    styleUrls   : ['server-storage-adv.component.scss']
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
@@ -89,7 +89,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
                     this.watchers = [];
                     return;
                 }
-                this.system.updateOrGetSystemStorage({ serverId: this.serverId }).toPromise().then(response => {
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true).toPromise().then(response => {
                     this.loading = false;
                     this.failedToLoad = false;
                     this.showStorage = (Object.keys(response.reply.storages).length > 0);

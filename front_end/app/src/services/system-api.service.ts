@@ -545,8 +545,8 @@ export class NxSystemAPI {
         return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
     }
 
-    public getStorages() {
-        return this.get<Array<t.GetStorages>>('/api/storageSpace');
+    public getStorages(useCache = false) {
+        return this.get<Array<t.GetStorages>>('/api/storageSpace', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
     }
 
     public getStorageStatus(queryParams) {
@@ -584,8 +584,8 @@ export class NxSystemAPI {
 
     // End of storage
 
-    getRecordStats() {
-        return this.get('/api/recStats');
+    getRecordStats(useCache = false) {
+        return this.get('/api/recStats', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
     }
 
     changePort(port: number) {
@@ -734,13 +734,9 @@ export class NxSystemAPI {
         return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
-    getMediaServers(id?: string, url?: string) {
-        const params = id ? { id: this.cleanId(id) } : {};
-        if (url) {
-            return this.http.get<t.GetMediaServers>(`${url}/ec2/getMediaServersEx`, { params });
-        } else {
-            return this.get<t.GetMediaServers>('/ec2/getMediaServersEx', params);
-        }
+    getMediaServers() {
+        const endpoint = '/ec2/getMediaServersEx';
+        return this.get<t.GetMediaServers>(endpoint, {}, { 'cache-request': 'true' });
     }
 
     getMediaServersAndCameras() {
@@ -957,8 +953,8 @@ export class NxSystemAPI {
         return this.post<t.MergeSystems>('/api/mergeSystems', data);
     }
 
-    checkMergeStatus() {
-        return this.get<t.MergeStatus>('/ec2/mergeStatus');
+    checkMergeStatus(forceReload = true) {
+        return this.get<t.MergeStatus>('/ec2/mergeStatus', {}, { [forceReload ? 'reset-cache' : 'cache-request']: 'true' });
     }
 
     getDigestKeys(adminPassword: string) {

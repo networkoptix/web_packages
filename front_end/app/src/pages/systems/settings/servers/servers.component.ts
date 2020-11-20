@@ -33,6 +33,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     advanced: boolean;
     params: Params;
     isOffline = false;
+    serverLoaded = false;
     emittedStorage: any;
 
     private serverSubscription: Subscription;

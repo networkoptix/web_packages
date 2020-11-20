@@ -5,7 +5,7 @@ import {
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap
+    map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap, debounceTime
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -42,8 +42,8 @@ enum STORAGE_TYPES {
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-storage-component',
-    templateUrl : 'storage.component.html',
-    styleUrls   : ['storage.component.scss']
+    templateUrl : 'server-storage-standard.component.html',
+    styleUrls   : ['server-storage-standard.component.scss']
 })
 export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
@@ -136,8 +136,8 @@ export class NxSystemStorageComponent implements OnInit {
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                this.system.updateOrGetSystemStorage({ serverId: this.serverId }),
-                this.system.getRecordStats()
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true),
+                this.system.getRecordStats(true)
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
@@ -205,12 +205,7 @@ export class NxSystemStorageComponent implements OnInit {
 
                     this.loading = false;
                 });
-            this.systemSubscription = this.system.infoSubject
-                .pipe(
-                    filter(res => res !== undefined),
-                    switchMap(() => this.system.getStorages({ id: this.serverId }))
-                ).subscribe(this.refreshStorages$);
-            this.getSystemStorages();
+            this.system.getStorages({ id: this.serverId }).subscribe(this.refreshStorages$);
         }
     }
 
@@ -298,8 +293,6 @@ export class NxSystemStorageComponent implements OnInit {
             });
             await Promise.all(cameraSettingsToSave);
             await this.system.update();
-            const updatedStorages = await this.system.getStorages({ id: this.serverId }).toPromise();
-            this.refreshStorages$.next(updatedStorages);
             return Promise.resolve();
         } catch (error) {
             console.error('error while setting backup to default settings', error);

@@ -24,8 +24,13 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
         // 1. It's not a GET request
         // 2. If URI is not supposed to be cached
         if (
+            httpRequest.method === 'GET' &&
+            httpRequest.headers.get('cache-request')
+        ) {
+            this.cacheRegistrationService.addToCache(httpRequest.urlWithParams);
+        } else if (
             httpRequest.method !== 'GET' ||
-            !this.cacheRegistrationService.addedToCache(httpRequest.url)
+            !this.cacheRegistrationService.addedToCache(httpRequest.urlWithParams)
         ) {
             return handler.handle(httpRequest);
         }
@@ -34,7 +39,6 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
         if (httpRequest.headers.get('reset-cache')) {
             this.cachedData.delete(httpRequest.urlWithParams);
         }
-
         // Checked if there is cached data for this URI
         const lastResponse = this.cachedData.get(httpRequest.urlWithParams);
         if (lastResponse) {
