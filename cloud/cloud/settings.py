@@ -309,6 +309,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['console']
         },
+        'django.security.csrf': {
+            'level': 'ERROR',
+            'propagate': False,
+            'handlers': ['console']
+        },
         'api.views.utils': {
             'level': LOG_LEVEL,
             'propagate': False,
@@ -329,7 +334,7 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.account_backend': {  # explicitly mention all modules with loogers
+        'api.account_backend': {  # explicitly mention all modules with loggers
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
