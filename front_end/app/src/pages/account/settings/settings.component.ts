@@ -83,18 +83,21 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
 
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {
+                let lang = Promise.resolve();
                 if (this.langCode !== this.account.language) {
                     this.account.language = this.langCode;
                     this.sessionService.language = this.langCode;
-                    return this.cloudApiService
-                        .changeLanguage(this.langCode)
-                        .then(() => {
-                            this.storageService.langChanged = true;
-                            this.languageService.currentLang = this.langCode;
-                            return false;
-                        });
+                    lang = new Promise<any>((resolve) => {
+                        return this.cloudApiService
+                            .changeLanguage(this.langCode)
+                            .then(() => {
+                                this.storageService.langChanged = true;
+                                this.languageService.currentLang = this.langCode;
+                                return resolve(false);
+                            });
+                    });
                 }
-                return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
+                return lang.then(() => this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>);
             }).finally(() => {
                 this.watchers.langCode.originalValue = this.watchers.langCode.value = this.langCode;
                 this.accountService.get(true);
