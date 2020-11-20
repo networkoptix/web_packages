@@ -108,7 +108,7 @@ export class CloudConnectModalContent implements OnInit {
                 return Promise.reject();
             }
 
-            return this.account.connect(this.system.info.systemName, this.auth.email, this.password);
+            return this.account.connect(this.system.info.name, this.auth.email, this.password);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {

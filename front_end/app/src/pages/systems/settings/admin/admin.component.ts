@@ -143,9 +143,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.system = system;
-                this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
+                this.systemNameWatcher.originalValue = this.system.info.name;
                 this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
-                this.pageService.pageTitle = this.system.info.systemName;
+                this.pageService.pageTitle = this.system.info.name;
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -176,7 +176,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.deletingSystem = this.processService.createProcess(
                     () => this.system.deleteFromCurrentAccount(),
                     {
-                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName }),
+                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.name }),
                         errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
                     }
                 ).then(
@@ -234,7 +234,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     handleBlur() {
-        const originalName = this.system.info.name || this.system.info.systemName;
+        const originalName = this.system.info.name;
         this.editMode = false;
 
         if (!this.systemName || this.emptyName) {

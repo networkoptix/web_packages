@@ -55,25 +55,26 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
+    private setupDefaults() {
         this.tabsVisible = false;
         this.canViewRelease = false;
         this.noteTypes = [];
     }
 
-    constructor(configService: NxConfigService,
-                private cloudApiService: NxCloudApiService,
-                private accountService: NxAccountService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                private uriService: NxUriService,
-                @Inject(PLATFORM_ID) private platformId: object
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private cloudApiService: NxCloudApiService,
+        private accountService: NxAccountService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private pageService: NxPageService,
+        private uriService: NxUriService,
+        @Inject(PLATFORM_ID) private platformId: object
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults();
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
 
         if (isPlatformBrowser(this.platformId)) {
             this.routerSubscription = this.router.events
@@ -90,9 +91,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     private getAvailableDownloadTypes(data) {
         this.noteTypes = [];
-        data.forEach((noteType, name) => {
-            if (isArray(noteType) && noteType.length) {
-                this.noteTypes.push(name);
+        Object.keys(data).forEach((key) => {
+            if (isArray(data[key]) && data[key].length) {
+                this.noteTypes.push(key);
             }
         });
 
@@ -103,7 +104,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     private getData() {
-        const data = this.cloudApiService
+        this.cloudApiService
             .getDownloadsHistory(this.build)
             .then((data: any) => {
                 this.linkbase = data.updatesPrefix;

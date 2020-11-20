@@ -60,6 +60,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     containerHeight: number;
     scrollHeightFit: string;
     permHeight: number;
+    menuInit: boolean;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -148,10 +149,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
 
             if (this.selectedLevel1 !== changes.content.currentValue.selectedSection && this.autoFit) {
-                // reset menu height
-                this.menuHeightFit = '';
-                this.scrollHeightFit = '';
+                this.menuInit = true;
+            }
+
+            if (changes.content.currentValue.selectedSection && this.autoFit && this.scrollArea) {
+                if (!this.menuInit) {
+                    return;
+                }
+
                 setTimeout(() => {
+                    this.menuInit = false;
                     this.getMenuDimensions();
                     this.resizeMenu();
                 });
@@ -192,14 +199,13 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     resizeMenu() {
         if (this.autoFit && this.scrollArea) {
+            this.menuHeightFit = '';
+            this.scrollHeightFit = '';
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
                     const windowHeightFit = this.windowHeight - 40;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
-                } else {
-                    this.menuHeightFit = '100%';
-                    this.scrollHeightFit = '100%';
                 }
             });
         }
@@ -244,7 +250,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.menuService.navItemId = undefined;
 
         this.navItems = [];
-        if (model.query !== '') {
+        if (this.searchMode) {
             setTimeout(() => { // Avoid selection before filter finishes
                 // reset height auto fit
                 this.menuHeightFit = '100%';
@@ -252,6 +258,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
             });
         } else {
+            this.menuHeightFit = '';
+            this.scrollHeightFit = '';
             setTimeout(() => {
                 this.getMenuDimensions();
                 this.resizeMenu();
