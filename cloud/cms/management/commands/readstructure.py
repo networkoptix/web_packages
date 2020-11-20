@@ -241,3 +241,5 @@ class Command(BaseCommand):
             'Successfully initiated data structure for CMS'))
 
         caches['deployment'].set(settings.DEPLOYMENT_READY, True)
+        self.stdout.write(self.style.SUCCESS(
+            'Set deployment status to ready'))
