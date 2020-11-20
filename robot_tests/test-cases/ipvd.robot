@@ -27,13 +27,13 @@ IPVD landing page actions
     ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not Be Equal As Numbers  ${num vendors}   0
     Element should contain      ${IPVD DEVICES PANE}//header/span[2]    ${IPVD DEVICES TEXT}    ignore_case=true
-    ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/div
+    ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/a
     Should Be Equal As Numbers  ${num device types}   10
     Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}    ignore_case=true
 
     Log    Step 2 - Validate filtering by manufacturer
     ${vendor}=  Set variable    Axis
-    Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
+    Click Element    ${IPVD MANUFACTURERS PANE}//a[contains(text(), '${vendor}')]
     Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
     Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
@@ -308,33 +308,35 @@ Advanced search
     Go To IPVD Page
     Verify IPVD Advanced Search is Closed
     Click Element    ${IPVD ADV SEARCH BUTTON}
+    Sleep    5
     Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgba(255, 255, 255, 1)
+    Capture Page Screenshot
     Verify IPVD Advanced Search is Open
 
     Log    Step 2
     Click Element    ${IPVD ADV FEATURES PTZ}
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    color
     ...    rgba(255, 255, 255, 1)
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
 
     Log    Step 3
-    Verify Button Arrow Direction   ${IPVD ADV FILTERS MIN RES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    down
     Click Element    ${IPVD ADV FILTERS MIN RES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    up
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    down
     Element Text should be    ${IPVD ADV FILTERS MIN RES}    1080p
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
@@ -344,7 +346,7 @@ Advanced search
     Log    Step 4
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    ${IPVD ADV FILTER MIN RES}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    1080p
 
@@ -359,22 +361,23 @@ Advanced search
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
     Log    Step 6
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    down
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    up
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Hikvision']
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
+    Sleep    30
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    down
     Wait Until Element Contains    ${IPVD ADV FILTERS MFRS}    2 ${IPVD FILTERS SELECTED TEXT}
     Wait Until Element Contains   ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    down
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    up
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE CAMERA}']
     Element Text should be    ${IPVD ADV FILTERS TYPES}    ${IPVD ADV TYPE CAMERA}
@@ -385,7 +388,7 @@ Advanced search
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE DVR}']
     Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    down
     Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
@@ -423,7 +426,7 @@ Advanced search
     Log    Step 12
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be        ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.

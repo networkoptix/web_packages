@@ -209,7 +209,7 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT4 RGB}
-    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    Advanced Search Arrow Should Point    up
     Wait until Element does Not have Class    ${IPVD ADV SEARCH BUTTON}    selected
     Elements should Not be Visible
     # IPVD Advanced Filters
@@ -234,7 +234,7 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    Advanced Search Arrow Should Point    down
     Wait until Element has Class    ${IPVD ADV SEARCH BUTTON}    selected
     Wait until Elements are Visible
     # IPVD Advanced Filters
@@ -260,6 +260,22 @@ Validate Manufacturer More Count
     ${more}=   Remove String Using Regexp    ${more}    \\D
     Should be True    ${more} == ${count}-${IPVD VENDORS SHOWN}
     ...    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
+
+Advanced Search Arrow Should Point
+    [Arguments]    ${expected direction}
+    Sleep    1
+    ${transform value}=   Get Element Style    ${IPVD ADV SEARCH BUTTON}${IPVD arrow}    transform
+    ${observed direction}=   Set Variable If    "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -1, 1.22465e-16, 0, 0, -1.22465e-16, -1, 0, 0, 0, 0, 1)"    down
+    ...    "${transform value}"=="none"    up
+    Should Be Equal    '''${expected direction}'''    '''${observed direction}'''
+
+Filter Arrow Should Point
+    [Arguments]    ${element}    ${expected direction}
+    Sleep    1
+    ${transform value}=   Get Element Style    ${element}${IPVD arrow}    transform
+    ${observed direction}=   Set Variable If    "${transform value}"=="matrix(1, 0, 0, 1, 0, 0)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.934479, 0.356018, 0, 0, -0.356018, 0.934479, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.999087, 0.0427241, 0, 0, -0.0427241, 0.999087, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -1, 1.22465e-16, 0, 0, -1.22465e-16, -1, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.992888, 0.119053, 0, 0, -0.119053, 0.992888, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -0.572517, 0.819893, 0, 0, -0.819893, -0.572517, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.984495, 0.175413, 0, 0, -0.175413, 0.984495, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, 0.191714, 0.981451, 0, 0, -0.981451, 0.191714, 0, 0, 0, 0, 1)" or "${transform value}"=="matrix3d(1, 0, 0, 0, 0, -0.572517, 0.819893, 0, 0, -0.819893, -0.572517, 0, 0, 0, 0, 1)"  up
+    ...    "${transform value}"=="none"    down
+    Should Be Equal    '''${expected direction}'''    '''${observed direction}'''
 
 Open New Browser on Failure
     Close Browser

@@ -10,6 +10,7 @@ ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="
 ${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
+${IPVD ARROW}                         //svg-icon[@data-src="/static/images/icons/standard/arrow_collapse.svg" or @data-src="/static/images/icons/standard/arrow_expand.svg"]
 #IPVD Advanced Filters
 ${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
 ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
