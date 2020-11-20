@@ -29,6 +29,7 @@ h1, h2 {
 
 .old-h12 {
     @include font-source($font-family-light, rem(22px), $font-color-medium);
+    line-height: rem(26px);
 }
 
 h2 {

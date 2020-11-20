@@ -7,7 +7,7 @@
             padding-right : 30px;
             padding-left  : 30px;
         }
-        
+
         .input-overlay-left {
             position    : absolute;
             color       : $light8;
@@ -15,7 +15,7 @@
             display     : flex;
             align-items : center;
         }
-        
+
         .input-overlay-right {
             position    : absolute;
             color       : $light8;
@@ -24,26 +24,23 @@
             align-items : center;
         }
     }
-    
+
     .system-button {
         user-select : none;
         cursor      : pointer;
         overflow    : hidden;
-        
+
         h2 {
             @include mixins.ellipsis;
-            
-            line-height   : 24px;
-            margin-bottom : 2px;
         }
-        
+
         .card-condensed {
             .card-body {
                 display: flex;
                 flex-direction: column;
             }
         }
-        
+
         .user-name {
             font-size     : $h6-font-size;
             line-height   : 16px;
@@ -51,7 +48,7 @@
             margin-bottom : 12px;
         }
     }
-    
+
     .search-block {
         padding-top    : 10px;
         padding-bottom : 10px;
