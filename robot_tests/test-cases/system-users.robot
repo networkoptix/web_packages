@@ -368,8 +368,8 @@ Delete user works
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element is Visible    ${REMOVE CANCEL BUTTON}
     Click Button    ${REMOVE CANCEL BUTTON}
-
     Remove User Permissions    ${random email}
+    Sleep    1
     Go To    ${url}
     Log Out
     Log In    ${random email}    ${password}
@@ -385,9 +385,10 @@ Share with registered user works and sends him notification
     ${random email}    Register and activate account with random email    mark     hamil    ${password}
     Share To    ${random email}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
-    Sleep   3
+    Sleep   10
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+    Sleep    10
 
     Open Mailbox
     ...    host=${BASE HOST}
@@ -399,15 +400,15 @@ Share with registered user works and sends him notification
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
     ...    usertest1
-    ${emailID}    Wait For Email    recipient=${random email}    timeout=120
-    Check Email Subject
-    ...    ${emailID}
-    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
-    ...    ${BASE EMAIL}
-    ...    ${BASE EMAIL PASSWORD}
-    ...    ${BASE HOST}
-    ...    ${BASE PORT}
-    Delete Email    ${emailID}
+    # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
+    # Check Email Subject
+    # ...    ${emailID}
+    # ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    # ...    ${BASE EMAIL}
+    # ...    ${BASE EMAIL PASSWORD}
+    # ...    ${BASE HOST}
+    # ...    ${BASE PORT}
+    # Delete Email    ${emailID}
     ${emailID}    Wait For Email    recipient=${random email}    timeout=120
     Check Email Subject
     ...    ${emailID}
@@ -708,7 +709,7 @@ Administrator can add, disable and enable Viewer
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
+    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[@class="name" and contains(text(),'${VIEWER TEXT}')]
 
 Cloud Owner Can Change Local User Login
     [Tags]    local_user    C76244
