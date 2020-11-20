@@ -104,3 +104,7 @@ def get_variables(cloud_url, test_email):
 
     # return the dictionary as variables into robot
     return vars
+
+
+if __name__ == '__main__':
+    get_variables("https://cloud-test.hdw.mx", "noptixautoqa")
