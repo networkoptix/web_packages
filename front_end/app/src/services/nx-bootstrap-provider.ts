@@ -186,6 +186,7 @@ export class NxBootstrapProvider {
             this.CONFIG.pushConfig = data.pushConfig;
             this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
             this.CONFIG.trafficRelayHost = data.trafficRelayHost;
+            this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.vmsName = data.vmsName;
 
             // detect preview mode
