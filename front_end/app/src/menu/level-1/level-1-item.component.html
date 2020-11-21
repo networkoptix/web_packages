@@ -19,11 +19,14 @@
                               [count]="alert.count" [type]="alert.type"></nx-alert-counter>
         </div>
     </div>
-    <div class="search-results" *ngIf="searchMode">
-        <div class="search-results-label" *ngIf="_toggle">
+
+    <div>
+        <div class="search-results-label" *ngIf="searchMode && _toggle">
             <span translate [translateParams]="{ count: item.level3.length }">result</span>
         </div>
-        <svg-icon [src]="CONFIG.icons.dir + _type + '.svg'"
-                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+        <div class="search-results" *ngIf="searchMode">
+            <svg-icon [src]="CONFIG.icons.dir + _type + '.svg'"
+                      [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+        </div>
     </div>
 </a>

@@ -89,6 +89,7 @@
             }
 
             .search-clear {
+                width       : 36px !important;
                 height      : 32px !important;
                 line-height : 32px !important;
             }
@@ -104,7 +105,7 @@
             cursor      : pointer;
             width       : 40px;
             height      : 40px !important;
-            padding     : 0;
+            padding     : 0 !important;
         }
     }
 
