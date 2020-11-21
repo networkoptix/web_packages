@@ -29,13 +29,13 @@ import angular = require('angular');
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub: any;
-    private build: any;
-    private canViewRelease: boolean;
     readonly releases = 'releases';
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    build: any;
+    canViewRelease: boolean;
     tabsVisible: boolean;
     routeParam: any;
     section: any;

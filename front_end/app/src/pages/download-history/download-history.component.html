@@ -17,7 +17,7 @@
                     <div class="card card-default">
                         <div class="card-body" *ngIf="activeBuilds">
                             <div *ngFor="let release of activeBuilds">
-                                <nx-release [LANG]="LANG" [linkbase]="linkbase" [release]="release"></nx-release>
+                                <nx-release [LANG]="LANG" [build]="build" [linkbase]="linkbase" [release]="release"></nx-release>
                             </div>
                         </div>
                     </div>
