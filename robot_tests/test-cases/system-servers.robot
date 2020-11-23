@@ -185,7 +185,7 @@ Restart server as owner
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Elements are Visible    
-    ...    ${RESTARTING BADGE}
+    ...    ${RESTARTING BANNER}
     ...    ${SYSTEM NAME OFFLINE}
     Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
       
@@ -200,7 +200,7 @@ Restart server as admin
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Elements are Visible    
-    ...    ${RESTARTING BADGE}
+    ...    ${RESTARTING BANNER}
     ...    ${SYSTEM NAME OFFLINE}
     Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
     
@@ -303,10 +303,10 @@ Check status
     ${results}    Execute Command    docker container start servertest2
     Sleep    1
     Click Button    ${CHECK STATUS BUTTON}
-    Wait Until Element is Visible    ${CHECKING BADGE}
-    Wait Until Element Is Not Visible    ${CHECKING BADGE}
+    Wait Until Element is Visible    ${CHECKING BANNER}
+    Wait Until Element Is Not Visible    ${CHECKING BANNER}
     Sleep    1
-    Wait Until Element Is Not Visible    ${OFFLINE BADGE}
+    Wait Until Element Is Not Visible    ${OFFLINE BANNER}
     ${results}    Execute Command    docker container stop servertest2
     Close Connection
 
@@ -357,7 +357,7 @@ Online two servers
     
 Offline two servers
     [Tags]    C70955    threaded
-    Select Server By Name    server 2
+    Select Server By Name    server 1
     Verify on Servers Page
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${PORT INPUT}

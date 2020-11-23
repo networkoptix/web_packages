@@ -7,7 +7,7 @@ ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input[@type="number"]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
-${CHECK STATUS BUTTON}              //header//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
+${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
 ${SERVER DETAILED INFO BUTTON}      //div[contains(@class, "server-info")]//header//button/span[contains(text(),"${DETAILED INFO TEXT}")]/..
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..
@@ -15,7 +15,7 @@ ${RESTART SERVER FORM}              //form[@name="restartServerForm"]
 ${RESTART DIALOG CLOSE BUTTON}      ${RESTART SERVER FORM}//button[contains(@class,"close")]
 ${RESTART DIALOG CANCEL BUTTON}     ${RESTART SERVER FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${RESTART DIALOG RESTART BUTTON}    ${RESTART SERVER FORM}//button[@type="submit"]
-${RESTARTING BADGE}                 //header//span[contains(@class, "tag") and contains(text(),"${RESTARTING}")]
+${RESTARTING BANNER}                //nx-alert-block//span[contains(text(),"${RESTARTING}")]
 ${RESET SERVER TO DEFAULTS}         //nx-section//button/span[contains(text(),"${RESET TO DEFAULTS TEXT}")]/..
 ${RENAME SERVER FORM}               //form[@name="renameServerForm"]
 ${RENAME SAVE BUTTON}               ${RENAME SERVER FORM}//button[contains(text(),"${SAVE BUTTON TEXT}")]
@@ -83,8 +83,8 @@ ${REINDEXING MAIN CANCEL BUTTON}    ${STORAGE REINDEXING BLOCK}//section[@id="re
 ${CLOUD STORAGE INFO BLOCK}         //nx-cloud-storage/nx-block//h2[contains(text(), "${CLOUD STORAGE TITLE}")]/..
 
 ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
-${OFFLINE BADGE}                    //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
-${CHECKING BADGE}                   //nx-server-component//h4//span[contains(text(),"${CHECKING TEXT}")]
+${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
+${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
 
 # ADVANCED
 # Storage Locations Block
