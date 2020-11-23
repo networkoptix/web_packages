@@ -191,3 +191,11 @@
     justify-content: center;
     align-items: center;
 }
+
+input[type=number] {
+    padding: 0 !important;
+}
+
+.arrow-flip {
+    pointer-events: none;
+}

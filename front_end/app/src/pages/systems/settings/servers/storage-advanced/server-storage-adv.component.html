@@ -41,12 +41,17 @@
                                         [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
                                         (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.freeSpace[storage.reservedSpace.uom])"
                                         class="w-50 p-1 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"/>
-                                <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"
-                                        [(ngModel)]="storage.reservedSpace.uom"
-                                        class="form-control input-sm w-50" style="margin-left: -1px; background-color: white; min-width: 58px;">
-                                    <option selected value="GB">GB</option>
-                                    <option value="TB">TB</option>
-                                </select>
+                                <div class="position-relative">
+                                    <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"
+                                            [(ngModel)]="storage.reservedSpace.uom"
+                                            class="form-control input-sm w-50" style="margin-left: -1px; background-color: white; min-width: 58px;">
+                                        <option selected value="GB">GB</option>
+                                        <option value="TB">TB</option>
+                                    </select>
+                                    <div class="arrow-flip">
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+                                    </div>
+                                </div>
                             </td>
                             <td>{{storage.storageType}}</td>
                             <td>

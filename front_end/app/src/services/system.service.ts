@@ -1212,7 +1212,7 @@ export class NxSystem extends System implements OnDestroy {
             this.userManager.deleteUser(this.currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
+        return this.cloudApi.unshare(this.id, this.currentUserEmail);
     }
 
     startPoll() {

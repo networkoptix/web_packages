@@ -10,6 +10,7 @@ import { NxLanguageProviderService }    from '@services/nx-language-provider';
 import { Watcher }                      from '@services/apply.service';
 import { NxProcessService, Process }    from '@services/process.service';
 import { NxDialogsService }             from '@services/../dialogs/dialogs.service';
+import { IConfig, NxConfigService }      from '@services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -22,6 +23,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() serverId: string;
 
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     loading: boolean;
     showStorage: boolean;
@@ -33,11 +35,13 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     constructor(
         languageService: NxLanguageProviderService,
+        configService: NxConfigService,
         @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
         this.LANG = languageService.translations;
+        this.CONFIG = configService.config;
 
         this.showStorage = false;
         this.loading = true;

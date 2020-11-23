@@ -174,13 +174,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             });
                     });
                 this.deletingSystem = this.processService.createProcess(
-                    () => this.system.deleteFromCurrentAccount(),
+                    this.system.deleteFromCurrentAccount(),
                     {
                         successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.name }),
                         errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
-                    }
-                ).then(
-                    () => { this.updateAndGoToSystems(); },
+                    },
+                    this.updateAndGoToSystems,
                     error => error
                 );
             });
@@ -300,8 +299,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateAndGoToSystems() {
-        this.userDisconnectSystem = true;
+    updateAndGoToSystems = () => {
+        // this.userDisconnectSystem = true;
         this.systemsService
             .forceUpdateSystems(this.accountService.email)
             .subscribe(() => {
@@ -326,7 +325,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.buttons.cancel()
             ).then((result) => {
                 if (result === true) {
-                    return this.deletingSystem.run();
+                    return this.deletingSystem.run(this.updateAndGoToSystems);
                 }
             });
         }
