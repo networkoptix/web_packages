@@ -307,7 +307,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || enabled
+            ...mode,
+            id,
+            enabled: this.checkModeEnabled(id)
         }));
     }
 
@@ -615,6 +617,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     preventContext = event => event.preventDefault();
 
+    checkModeEnabled(id, enabled = this.motionEnabled) {
+        return id === 'RT_Always' ||
+        id === 'RT_Never' ||
+        (id === 'RT_MotionAndLowQuality'
+            ? this.selectedCamera.motionLowresEnabled
+            : enabled);
+    }
+
     handleRecordingToggle() {
         if (this.recordingWatcher.originalValue ? this.availableLicenses < 0 : this.availableLicenses <= 0) {
             this.shakeHint = true;
@@ -628,9 +638,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     toggleMode({ name: toggledName, enabled }) {
         if (!enabled) return;
-        this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
-            name, id, enabled, value: name === toggledName ? 2 : 0
-        }));
+        this.recordingModes = this.recordingModes.map(
+            ({ name, id, enabled }) => ({
+                name,
+                id,
+                enabled : this.checkModeEnabled(id, enabled),
+                value   : name === toggledName ? 2 : 0
+            })
+        );
     }
 
     updateMask(maskString) {
@@ -655,7 +670,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionEnabled = true;
         if (updateModes) {
             this.recordingModes = this.recordingModes.map(({ name, id }) => {
-                const enabled = id === 'RT_Always' || this.motionEnabled;
+                const enabled = this.checkModeEnabled(id);
                 const value =  id === 'RT_MotionOnly' ? 2 : 0;
                 return { name, id, enabled, value };
             });

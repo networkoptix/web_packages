@@ -561,6 +561,7 @@ class ServerManager {
                 overrideAr,
                 mediaCapabilities,
                 isAudioSupported: audioSupported,
+                motionStream,
                 ...parsedAddParams
             }: any = addParamsRaw.filter(({ name }) => [
                 'rotation',
@@ -569,7 +570,9 @@ class ServerManager {
                 'isAudioSupported',
                 'supportedMotion',
                 'motionStream',
-                'credentials'
+                'credentials',
+                'hasDualStreaming',
+                'bitrateInfos'
             ].includes(name)).reduce((params, { name, value }) => {
                 params[name] = value;
                 return params;
@@ -586,6 +589,9 @@ class ServerManager {
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
+            const { hasDualStreaming, bitrateInfos } = parsedAddParams;
+            const multiStream = bitrateInfos && JSON.parse(bitrateInfos).streams.length >= 2;
+            const motionLowresEnabled  = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
@@ -598,11 +604,11 @@ class ServerManager {
                         name    : 'motionLowRes',
                         id      : 'RT_MotionAndLowQuality',
                         value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
-                        enabled : motionEnabled
+                        enabled : motionLowresEnabled && motionEnabled
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowresEnabled };
         });
         this.cameras = mappedCameras;
         return mappedCameras;
@@ -1686,6 +1692,7 @@ export interface ICamera {
     groupName: string;
     id: string;
     licenseUsed: boolean;
+    motionLowresEnabled: boolean;
     logicalId: string;
     mac: string;
     manuallyAdded: boolean;
