@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Watcher } from '@services/apply.service';
+import { Component, HostBinding, Input } from '@angular/core';
+import { Watcher }                       from '@services/apply.service';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 
@@ -11,6 +11,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 export class NxEditableSettingsHeading {
     @Input() nameWatcher: Watcher<string>;
     @Input() editEnabled = true;
+    @HostBinding('style.width') width = 'auto'
 
     CONFIG: IConfig;
 
@@ -30,10 +31,12 @@ export class NxEditableSettingsHeading {
 
     handleBlur() {
         this.editMode = false;
+        this.width = 'auto';
         this.handleBlankName();
     }
 
     handleFocus() {
+        this.width = '100%';
         this.editMode = true;
     }
 
