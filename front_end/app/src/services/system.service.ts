@@ -20,6 +20,7 @@ import { PredefinedRole }                  from './nx-config/base-config';
 import { SystemConfigSettings }            from './system-api.types';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { trim_ids } from '../utils/api_response_cleaners';
+import { NxRibbonService } from '@components/ribbon';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -953,11 +954,12 @@ export class NxSystem extends System implements OnDestroy {
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
+        private ribbonService: NxRibbonService,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
         userId?: string,
-        private appState?: NxAppStateService
+        private appState?: NxAppStateService,
     ) {
         super();
 
@@ -1245,6 +1247,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     update = (): Promise<any> => {
+        this.ribbonService.hide();
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.updateSystemServersCameras() : Promise.reject())
@@ -1254,6 +1257,7 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });
@@ -1623,7 +1627,8 @@ export class NxSystemService {
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
-        private appState: NxAppStateService
+        private appState: NxAppStateService,
+        private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -1640,7 +1645,8 @@ export class NxSystemService {
                 this.CONFIG, this.LANG,
                 this.cloudApi, this.systemApiService,
                 this.pollService, this.systemsService,
-                currentUserEmail, systemId, serverId
+                this.ribbonService, currentUserEmail,
+                systemId, serverId
             );
             this.systemsCache[id] = system;
         }
@@ -1659,7 +1665,8 @@ export class NxSystemService {
             this.CONFIG, this.LANG,
             this.cloudApi, this.systemApiService,
             this.pollService, this.systemsService,
-            userEmail, '', '', userId, this.appState);
+            this.ribbonService, userEmail, '', '',
+            userId, this.appState);
         this.system.mediaserver = mediaServer;
         this.system.canMerge = true;
         this.system.update();

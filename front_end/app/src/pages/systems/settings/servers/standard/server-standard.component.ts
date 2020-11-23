@@ -3,8 +3,10 @@ import {
     OnDestroy, Input, Output, EventEmitter
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { catchError, map, takeUntil }             from 'rxjs/operators';
+import {
+    UntilDestroy, untilDestroyed
+}                                    from '@ngneat/until-destroy';
+import { catchError, map }           from 'rxjs/operators';
 import {
     of, timer, combineLatest, SubscriptionLike, Subject
 }                                    from 'rxjs';
@@ -172,9 +174,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
     }
 
-    ngOnDestroy(): void {
-        this.unsub$.next('unsub');
-    }
+    ngOnDestroy() {}
 
     setServer(): void {
         this.serverLoaded = false;
@@ -265,8 +265,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
     }
 
-    checkIfOnline(serverId) {
-        return this.system.getServers().pipe(takeUntil(this.unsub$)).toPromise().then(res => {
+    checkIfOnline = (serverId) => {
+        return this.system.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
             if (res) {
                 const servers: any[] = Object.entries(res).map(server => server[1]);
                 this.setStatus(servers.find(server => server.id === serverId).status === 'Online'

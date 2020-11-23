@@ -132,7 +132,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system = undefined;
                     this.settingsService.system = undefined;
                 }
-                this.ribbonService.hide();
                 this.systemNoAccess = false;
                 this.menuVisible = false;
             } else {
@@ -268,7 +267,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.systemSubscription = this.system.infoSubject
                         .pipe(
                             filter((system: any) => system !== undefined),
-                            tap(({ isOnline }) => this.applyService.isOnline$.next(!!isOnline))
+                            tap(({ isOnline }) => {
+                                this.applyService.isOnline$.next(!!isOnline);
+                                if (isOnline) {
+                                    this.ribbonService.hide();
+                                } else {
+                                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                }
+                            })
                         )
                         .subscribe(() => {
                             // if system is removed while on page, redirects to systems page
@@ -283,10 +289,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             }
                             if (this.system.users) {
                                 this.updateMenu();
-                            }
-                            if (!this.system.isOnline) {
-                                this.ribbonService.hide();
-                                this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                             }
                             if (this.system.canViewInfo()) {
                                 // Makes request to get health, this is used to cache request.

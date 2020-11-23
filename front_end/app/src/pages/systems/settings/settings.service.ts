@@ -1,23 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject }       from 'rxjs';
-import { NxDialogsService }      from '../../../dialogs/dialogs.service';
-import { NxCloudApiService }     from '../../../services/nx-cloud-api';
-import { NxAccountService }      from '../../../services/account.service';
-import { NxUriService }          from '../../../services/uri.service';
+import { NxRibbonService } from '@components/ribbon';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSettingsService implements OnDestroy {
     footerSubject = new BehaviorSubject(false);
-    systemSubject = new BehaviorSubject(undefined);
+    systemSubject = new BehaviorSubject<any>(false);
     selectedSectionSubject = new BehaviorSubject([]);
 
     constructor(
-        private api: NxCloudApiService,
-        private accountService: NxAccountService,
-        private uriService: NxUriService,
-        private dialogs: NxDialogsService
+        private ribbonService: NxRibbonService,
+        private languageService: NxLanguageProviderService
     ) {}
 
     get system() {

@@ -54,7 +54,11 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                this.applyService.isOnline$.next(false);
+                const offline = !this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId).length;
+                if (offline) {
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                }
+                this.applyService.isOnline$.next(!offline);
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(
