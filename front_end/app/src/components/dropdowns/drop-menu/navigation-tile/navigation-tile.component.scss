@@ -59,4 +59,8 @@
         display: inline-block;
         @include ellipsis;
     }
+
+    .st0 {
+        fill: $light13;
+    }
 }
