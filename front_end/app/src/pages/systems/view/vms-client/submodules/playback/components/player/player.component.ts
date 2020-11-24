@@ -148,6 +148,9 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           this.$video.play();
         });
+        hls.on(Hls.Events.FRAG_LOADED, () => {
+          this.playback.handleStarted()
+        })
       } else {
         console.warn('HLS is not supported')
       }
@@ -163,7 +166,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   public videoPlayHandler (e: MediaStreamEvent) {
-    this.playback.handleStarted()
+    // this.playback.handleStarted()
   }
 
   protected _lastTimeUpdateTimeStamp: ms

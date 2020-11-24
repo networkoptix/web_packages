@@ -182,7 +182,7 @@ export class NxCameraHlsPlayer implements OnChanges, OnInit, OnDestroy {
 
         const cameraId = this.camera.id
         const startTime = this.startTime
-        const resolution = this.quality === 'high' ? 'hi' : 'lo'
+        const resolution = this.quality === 'low' ? 'lo' : 'hi'
         this.system.getHlsUrl(cameraId, startTime, resolution).then(
           manifestUrl => {
             console.log(`manifestUrl loaded for camera ${cameraId} and time ${startTime}: ${manifestUrl}`)

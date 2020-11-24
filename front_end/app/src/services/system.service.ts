@@ -1558,7 +1558,7 @@ export class NxSystem extends System implements OnDestroy {
         );
     }
 
-    public getHlsUrl(cameraId, position?, resolution = 'lo') {
+    public getHlsUrl(cameraId, position?, resolution = 'hi') {
         return this.ensureSystemAuth().then(
             () => position === -1
                 ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)

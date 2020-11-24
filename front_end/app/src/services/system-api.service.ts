@@ -929,11 +929,11 @@ export class NxSystemAPI {
         return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}`;
     }
 
-    getLiveHlsUrl(cameraId, resolution = 'lo') {
+    getLiveHlsUrl(cameraId, resolution = 'hi') {
         return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
     }
 
-    getHlsUrl(cameraId, position, resolution = 'lo') {
+    getHlsUrl(cameraId, position, resolution = 'hi') {
         return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
     }
     // </added by @gbezyuk for watch component>
