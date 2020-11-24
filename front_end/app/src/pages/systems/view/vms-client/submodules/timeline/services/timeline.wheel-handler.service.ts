@@ -43,7 +43,7 @@ export class TimelineWheelHandlerService {
   public wheelZoom (delta: int, offset: float) {
     const duration = this.timeline.visibleRange.duration
     const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr
-    const step = 0.01
+    const step = 0.002
     let durationDelta = duration * step * delta
     if (duration - durationDelta < MIN_DURATION) {
         durationDelta = duration - MIN_DURATION
