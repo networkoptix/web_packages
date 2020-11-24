@@ -155,18 +155,35 @@
 
                     &.recording {
                         > .preview:after {
-                        content: '';
-                        position: absolute;
-                        left: 4px;
-                        top: 4px;
-                        width: 10px;
-                        height: 10px;
-                        background: red;
-                        border-radius: 5px;
-                        // background-image: url('../../../../../../images/icons/standard/camera_recording.svg');
-                        // background-position: center center;
-                        // background-size: 100% auto;
-                        // background-repeat: no-repeat;
+                            content: '';
+                            position: absolute;
+                            left: 4px;
+                            top: 4px;
+                            width: 10px;
+                            height: 10px;
+                            background: red;
+                            border-radius: 5px;
+                            // background-image: url('../../../../../../images/icons/standard/camera_recording.svg');
+                            // background-position: center center;
+                            // background-size: 100% auto;
+                            // background-repeat: no-repeat;
+                        }
+                    }
+
+                    &.live {
+                        > .preview:after {
+                            content: '';
+                            position: absolute;
+                            left: 4px;
+                            top: 4px;
+                            width: 10px;
+                            height: 10px;
+                            background: green;
+                            border-radius: 5px;
+                            // background-image: url('../../../../../../images/icons/standard/camera_recording.svg');
+                            // background-position: center center;
+                            // background-size: 100% auto;
+                            // background-repeat: no-repeat;
                         }
                     }
 
