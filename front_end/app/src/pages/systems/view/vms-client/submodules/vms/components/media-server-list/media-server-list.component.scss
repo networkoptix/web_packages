@@ -204,6 +204,20 @@
                         }
                     }
 
+                    &.isScheduleEnabled {
+                        > .preview:after {
+                            content: '';
+                            position: absolute;
+                            left: 4px;
+                            top: 4px;
+                            width: 10px;
+                            height: 10px;
+                            border-radius: 5px;
+                            border: 1px solid red;
+                        }
+                    }
+
+
                 }
             }
         }

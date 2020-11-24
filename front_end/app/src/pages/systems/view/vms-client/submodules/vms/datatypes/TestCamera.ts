@@ -28,6 +28,10 @@ export class TestCamera implements ICamera {
     this._initBirdView()
   }
 
+  public get isScheduleEnabled () {
+    return false
+  }
+
   public get isLive () {
     return this.status === 'Live' || this.status === 'Recording'
   }

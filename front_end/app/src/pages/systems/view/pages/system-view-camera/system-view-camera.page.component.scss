@@ -65,6 +65,7 @@ $border-color: #cdd7dc;
         height: 10px;
         border-radius: 5px;
         background-color: transparent;
+        border: 1px solid transparent;
         transition: all .2s ease-in-out;
       }
     }
@@ -79,6 +80,13 @@ $border-color: #cdd7dc;
         > .glyph {
           background-color: red;
         }
+      }
+    }
+
+    &.isScheduleEnabled {
+      > .glyph {
+        opacity: 1.0;
+        border-color: red;
       }
     }
 

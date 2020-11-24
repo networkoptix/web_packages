@@ -155,6 +155,7 @@ export interface NxCamera {
     name: string;
     url: string;
     status: string; // TODO: enum (@gbezyuk)
+    scheduleEnabled: boolean,
 }
 
 export interface NxMediaServer {

@@ -21,6 +21,7 @@ export class Camera implements ICamera {
     public readonly name: string,
     public readonly url: string,
     public readonly status: CAMERA_STATUS,
+    public readonly isScheduleEnabled: boolean,
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
