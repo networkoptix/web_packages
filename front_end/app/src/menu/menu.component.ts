@@ -152,6 +152,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuInit = true;
             }
 
+            this.selectedLevel1 = changes.content.currentValue.selectedSection;
+            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
+            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+
+            this.transition = false;
+
             if (changes.content.currentValue.selectedSection && this.autoFit && this.scrollArea) {
                 if (!this.menuInit) {
                     return;
@@ -163,12 +169,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
                     this.resizeMenu();
                 });
             }
-
-            this.selectedLevel1 = changes.content.currentValue.selectedSection;
-            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
-            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
-
-            this.transition = false;
         }
 
         if (changes.content.currentValue.selectedSection) {

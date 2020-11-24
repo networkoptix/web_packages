@@ -121,7 +121,7 @@ export class RestartServerModalContent {
                             this.system.currentBusyServerIds.delete(this.serverId);
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
-                            this.toastService.show(this.LANG.servers.restartSuccessful, options);
+                            this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
                             serverSubscription.unsubscribe();
                         });
                 },
