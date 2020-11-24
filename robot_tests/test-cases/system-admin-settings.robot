@@ -18,6 +18,8 @@ ${url}         ${ENV}
 ...    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
 ...    ${ALLOW ONLY SECURE CHECKBOX REAL}
 ...    ${LIMIT SESSION DURATION CHECKBOX REAL}
+${4.0 system}    http://10.1.5.126:7014
+${3.2 system}    http://10.1.5.113:7001
 
 *** Keywords ***
 Restart
@@ -157,7 +159,7 @@ System Settings block is not available for other users
 Cancel changes in System Settings block
     [Tags]    C69738    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    autoDiscoveryEnabled    true
+    Set System Settings via API    autoDiscoveryEnabled    true   
     Set System Settings via API    statisticsAllowed    true
     Set System Settings via API    cameraSettingsOptimization    true
     Log    Step 1
@@ -468,8 +470,8 @@ System Settings block is not available when the system is offline
     [Tags]    C69744    system settings    threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${EDITABLE TITLE}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${PLACEHOLDER ICON}    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
@@ -478,22 +480,40 @@ System Settings block is not available when the system is offline
     
 System settings block view for different System versions
     [Tags]    C69743    system settings    threaded
+    Set System Settings via API    autoDiscoveryEnabled    true    ${4.0 system}
+    Set System Settings via API    statisticsAllowed    true    ${4.0 system}
+    Set System Settings via API    cameraSettingsOptimization    true    ${4.0 system}
     Go To    ${url}/systems/${AUTO TESTS 4.0 SYSTEM ID}
     Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${EDITABLE TITLE}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until System Settings Are Visible
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     Log Out
+    Set System Settings via API    autoDiscoveryEnabled    true
+    Set System Settings via API    statisticsAllowed    true
+    Set System Settings via API    cameraSettingsOptimization    true
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until System Settings Are Visible
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     Log Out
+    Set System Settings via API    autoDiscoveryEnabled    true    ${3.2 system}
+    Set System Settings via API    statisticsAllowed    true    ${3.2 system}
+    Set System Settings via API    cameraSettingsOptimization    true    ${3.2 system}
     Go To    ${url}/systems/${3 DOT 2 SYSTEM ID}
     Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${EDITABLE TITLE}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until System Settings Are Visible
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
 
 
 Security block is not available for other users
@@ -580,6 +600,7 @@ Checking the dependency of security settings checkboxes
     Log    Step 4
     Change Setting Without Saving    ${ALLOW ONLY SECURE CHECKBOX REAL}
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
@@ -678,13 +699,13 @@ Check Limit session duration
     Evaluate System Settings via API    sessionLimitMinutes    1
     
     Log    Step 7
-    Clear Element Text    ${TIME NUMBER INPUT}
-    Input Text    ${TIME NUMBER INPUT}    600
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION HOURS}
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    600  
     Sleep    1
     Click Button     ${SYSTEM SAVE} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}

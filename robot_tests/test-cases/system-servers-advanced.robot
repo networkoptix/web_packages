@@ -22,7 +22,11 @@ Server Settings Test Setup
 *** Test Cases ***
 Advanced server settings availability
     [Tags]    C76558    threaded
-    Log    Step 1 done in Test Setup
+    Log    Step 1
+    Elements Should Not Be Visible
+    ...    @{ADVANCED SETTINGS ALERT BAR}
+    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{LOG SETTINGS BLOCK}
     Log    Step 2
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
@@ -35,6 +39,10 @@ Advanced server settings availability
     Log in to user and system    ${EMAIL ADMIN}   ${ADVANCED SETTINGS SYSTEM ID}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
+    Elements Should Not Be Visible
+    ...    @{ADVANCED SETTINGS ALERT BAR}
+    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{LOG SETTINGS BLOCK}
     ${location} =    Get Location    
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
