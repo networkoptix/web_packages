@@ -37,11 +37,14 @@
 <div class="settings" [ngClass]="{ shown: settingsShown }">
   <div class="section qualitySelection">
     <div class="caption">Quality</div>
-    <div class="options">
-      <div class="option" [ngClass]="{ selected: qualitySelected === 'auto' }" (click)="setQuality('auto')">Auto</div>
-      <div class="option" [ngClass]="{ selected: qualitySelected === 'low' }" (click)="setQuality('low')">Low</div>
-      <!-- <div *ngFor="let q in qualitiesAvailable" class="option" [ngClass]="{ selected: qualitySelected === q }" (click)="setQuality(q)">{{ q }}</div> -->
+    <div class="options" *ngIf="qualitiesAvailable.length else noQualitiesAvailable">
+      <div *ngFor="let q of qualitiesAvailable" class="option" [ngClass]="{ selected: qualitySelected === q }" (click)="setQuality(q)">{{ q }}</div>
     </div>
+    <ng-template #noQualitiesAvailable>
+      <div class="options">
+        <div class="option disabled">N/A</div>
+      </div>
+    </ng-template>
   </div>
 </div>
 

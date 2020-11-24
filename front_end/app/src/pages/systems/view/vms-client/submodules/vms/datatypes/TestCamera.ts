@@ -28,6 +28,10 @@ export class TestCamera implements ICamera {
     this._initBirdView()
   }
 
+  public getLiveVideoUrl () {
+    return this.liveVideoUrl
+  }
+
   public get isScheduleEnabled () {
     return false
   }

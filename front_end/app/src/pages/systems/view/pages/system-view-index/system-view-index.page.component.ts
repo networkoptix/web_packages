@@ -112,6 +112,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     // }
   }
 
+  protected _quality2resolution (q) {
+    if (q === 'high') return 'hi'
+    if (q === 'low') return 'lo'
+    return undefined
+  }
+
   protected _initSystem () {
     this.vms.reset()
     // console.log('initSystem entered')
@@ -170,21 +176,27 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           id: ms.id,
           name: ms.name,
           url: ms.url,
-          cameras: ms.cameras.map(c => new Camera(
-            c.id,
-            c.preferredServerId,
-            c.name,
-            c.url,
-            (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
-            c.scheduleEnabled,
-            new SimpleTimeRange(0, 0), // archiveRanges[c.id],
-            [], // archives[c.id],
-            c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
-            this.system.unsafeGetCameraLiveHlsUrl(c.id),
-            (t: ms) => {
-              return this.system.unsafeGetHlsUrl(c.id, t)
-            }
-          ))
+          cameras: ms.cameras.map(c => {
+            const result = new Camera(
+              c.id,
+              c.preferredServerId,
+              c.name,
+              c.url,
+              (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
+              c.scheduleEnabled,
+              new SimpleTimeRange(0, 0), // archiveRanges[c.id],
+              [], // archives[c.id],
+              c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
+              (quality: string) => {
+                return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))
+              },
+              (t: ms, quality: string) => {
+                return this.system.unsafeGetHlsUrl(c.id, t, this._quality2resolution(quality))
+              }
+            )
+            result.parseAdditionalParams(c.addParams)
+            return result
+          })
         })))
         console.log(`system ${this.system.id} view initialized`)
         this._setInitializationState(true, false)

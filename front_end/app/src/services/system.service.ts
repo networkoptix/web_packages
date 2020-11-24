@@ -149,6 +149,11 @@ export interface ServerTimeInfo {
     timeZoneOffset: number,
 }
 
+interface NameValue {
+    name: string,
+    value: string,
+}
+
 export interface NxCamera {
     id: string;
     preferredServerId: string;
@@ -156,6 +161,7 @@ export interface NxCamera {
     url: string;
     status: string; // TODO: enum (@gbezyuk)
     scheduleEnabled: boolean,
+    addParams: Array<NameValue>,
 }
 
 export interface NxMediaServer {
@@ -1567,8 +1573,8 @@ export class NxSystem extends System implements OnDestroy {
         );
     }
 
-    public unsafeGetCameraLiveHlsUrl(cameraId) {
-        return this.mediaserver.getLiveHlsUrl(cameraId);
+    public unsafeGetCameraLiveHlsUrl(cameraId, resolution = 'hi') {
+        return this.mediaserver.getLiveHlsUrl(cameraId, resolution);
     }
 
     public unsafeGetHlsUrl(cameraId, position?, resolution = 'hi') {

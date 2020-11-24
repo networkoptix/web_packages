@@ -38,7 +38,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _animationFrameRequestHandler: number
 
     public settingsShown: boolean = false
-    public qualitiesAvailable: Array<PlaybackQuality> = [ 'auto', 'low' ]
+    public qualitiesAvailable: Array<PlaybackQuality> = [ ]
     public qualitySelected: PlaybackQuality = 'auto'
 
     constructor (
@@ -85,6 +85,23 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       })
 
       this._getRecords()
+      this._updateQualitiesAvailable()
+    }
+
+    protected _updateQualitiesAvailable () {
+      this.qualitiesAvailable = []
+      if (!this.camera) {
+        return
+      }
+      if (this.camera.hasHlsStream) {
+        this.qualitiesAvailable.push('auto')
+        if (this.camera.hasHighQualityHlsStream) {
+          this.qualitiesAvailable.push('high')
+        }
+        if (this.camera.hasLowQualityHlsStream) {
+          this.qualitiesAvailable.push('low')
+        }
+      }
     }
 
     public getRecordsInProgress: string
@@ -183,6 +200,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.id = params['cameraId'];
       this.vms.selectCamera(this.id)
       this._getRecords()
+      this._updateQualitiesAvailable()
     }
 
     protected _onVmsStateChange (s: VmsState) {
@@ -241,7 +259,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public setQuality (q: PlaybackQuality) {
+      if (this.qualitySelected === q) {
+        return
+      }
       this.qualitySelected = q
+      console.log('quality change', q)
+      this.playback.changeQuality(q)
     }
 
     public onVideoDblClick (_: boolean) {

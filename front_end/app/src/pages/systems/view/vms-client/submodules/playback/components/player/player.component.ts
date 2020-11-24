@@ -74,6 +74,15 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
       case PLAYBACK_MODE.LIVE:
         if (prevState.mode !== this.state.mode) {
           this._startLive()
+        } else {
+          // if (prevState.sourceUrl !== this.state.sourceUrl) {
+          //   // console.log('gotta react on sourceUrl change LIVE',
+          //   //   this.state.sourceUrl.slice(this.state.sourceUrl.indexOf('?') + 1, this.state.sourceUrl.indexOf('?') + 3))
+          //   this.$video.pause()
+          //   this._setPlaybackSource(this.state.sourceUrl)
+          //   this.$video.currentTime = 0
+          //   this.$video.play()
+          // }
         }
         break
       case PLAYBACK_MODE.ARCHIVE:
@@ -85,6 +94,13 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             this.$video.play()
           } else if (!ps.paused && this.state.paused) {
             this.$video.pause()
+          // } else if (prevState.sourceUrl !== this.state.sourceUrl) {
+          //   // console.log('gotta react on sourceUrl change ARCHIVE',
+          //   //   this.state.sourceUrl.slice(this.state.sourceUrl.indexOf('?') + 1, this.state.sourceUrl.indexOf('?') + 3))
+          //   this.$video.pause()
+          //   this._setPlaybackSource(this.state.sourceUrl)
+          //   this.$video.currentTime = 0
+          //   this.$video.play()
           }
         }
         break

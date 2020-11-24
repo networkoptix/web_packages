@@ -144,7 +144,7 @@ $border-color: #cdd7dc;
     position: absolute;
     right: 0;
     top: 40px;
-    height: 80px;
+    // height: 80px;
     width: 160px;
     opacity: 0;
     transition: opacity .2s ease-in-out;
@@ -173,6 +173,10 @@ $border-color: #cdd7dc;
           &:hover,
           &.selected {
             background-color: #39b2ef;
+          }
+          &.disabled {
+            opacity: .2;
+            background-color: transparent !important;
           }
         }
         &.qualitySelection > .option {

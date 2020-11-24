@@ -58,7 +58,8 @@ export class PlaybackService {
 
   public playLive () {
     if (!this.canPlayLive) return
-    this._state = createInitialLiveState(this.vms.selectedCamera.liveVideoUrl)
+    this._state = createInitialLiveState(this.vms.selectedCamera.getLiveVideoUrl(this._state.quality), this._state.quality)
+    console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
@@ -71,12 +72,13 @@ export class PlaybackService {
     if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
       this.stop()
     }
-    this._state = createInitialArchiveState(this.vms.selectedCamera.getArchiveVideoUrl(t), t)
+    this._state = createInitialArchiveState(this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.quality), t, this._state.quality)
+    console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
   public stop () {
-    this._state = createInitialStoppedState()
+    this._state = createInitialStoppedState(this._state.quality)
     this._emit()
   }
 
@@ -305,6 +307,41 @@ export class PlaybackService {
         }
       }
     }
+  }
+
+
+  public changeQuality (q: 'high' | 'low' | 'auto') {
+    if (this._state.quality === q) {
+      return
+    }
+    console.log('changeQuality', this._state.quality, '->', q)
+    this._state.quality = q
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        break
+      case PLAYBACK_MODE.LIVE:
+        this.stop()
+        setTimeout(() => this.playLive(), 0)
+        break
+      case PLAYBACK_MODE.ARCHIVE:
+        const t = this._state.currentTime
+        this.stop()
+        setTimeout(() => this.playArchive(t), 0)
+        break
+    }
+    // if (this.state.mode === PLAYBACK_MODE.STOPPED) {
+    //   return
+    // }
+    // const was = this.state.sourceUrl
+    // this.state.sourceUrl = this.state.sourceUrl
+    //   .replace('?lo', '%QUALITY%').replace('?hi', '%QUALITY%').replace('?', '%QUALITY%')
+    //   .replace('%QUALITY', '?' + (q === 'auto' ? '' : q.slice(0, 2)))
+    // if (was !== this.state.sourceUrl) {
+    //   console.log('playback: changing stream quality, from', was, 'to', this.state.sourceUrl)
+    //   this._emit()
+    // } else {
+    //   console.log('no real source change', this.state.sourceUrl)
+    // }
   }
 
 }

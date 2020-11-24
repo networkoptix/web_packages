@@ -3,6 +3,13 @@ import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICame
 import BirdViewTree from './BirdViewTree'
 
 
+interface NameValue {
+  name: string,
+  value: string,
+}
+
+type MediaStreamInfo = any // TODO!
+
 export class Camera implements ICamera {
 
   protected _birdViewTree: BirdViewTree
@@ -15,6 +22,8 @@ export class Camera implements ICamera {
     return this._archive
   }
 
+  protected _mediaStreams: Array<MediaStreamInfo> = []
+
   constructor (
     public readonly id: string,
     public readonly preferredServerId: string,
@@ -25,10 +34,41 @@ export class Camera implements ICamera {
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
-    public liveVideoUrl: string,
-    public getArchiveVideoUrl: (t: ms) => string,
+    public getLiveVideoUrl: (quality: string) => string,
+    public getArchiveVideoUrl: (t: ms, quality: string) => string,
   ) {
     this._initBirdView()
+  }
+
+  public parseAdditionalParams (ps: Array<NameValue>) {
+    const ms = ps.find(p => p.name === 'mediaStreams')
+    if (ms) {
+      try {
+        this._mediaStreams = JSON.parse(ms.value).streams
+        console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
+      } catch (e) {
+        this._mediaStreams = []
+        console.error('error parsing media streams', this.id, e)
+      }
+    }
+  }
+
+  public get hasHlsStream (): boolean {
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls'))
+  }
+
+  public get hasLowQualityHlsStream (): boolean {
+    if (!this.hasHlsStream) return false
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && this._resolutionIsLow(s.resolution))
+  }
+
+  public get hasHighQualityHlsStream (): boolean {
+    if (!this.hasHlsStream) return false
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && !this._resolutionIsLow(s.resolution))
+  }
+
+  protected _resolutionIsLow(s: string): boolean {
+    return s.split('x').map(r => parseInt(r)).reduce((acc, v) => acc > v ? acc = v : acc, Infinity) < 1000
   }
 
   public get isLive () {
