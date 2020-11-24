@@ -26,7 +26,8 @@ $border-color: #cdd7dc;
     > .controls {
       bottom: 0px;
     }
-    > player {
+    > player,
+    > .no-player-message {
       height: calc(100vh - 48px - 100px);
     }
 
@@ -175,13 +176,16 @@ $border-color: #cdd7dc;
 
   > player {
     flex-grow: 1;
+    flex-shrink: 0;
     background-color: $player-background;
     transition: height .2s ease-in-out;
     height: calc(100vh - 48px);
     transition: height .2s ease-in-out;
   }
   > .no-player-message {
+    height: calc(100vh - 48px);
     flex-grow: 1;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
