@@ -32,6 +32,18 @@ export class TestCamera implements ICamera {
     return this.liveVideoUrl
   }
 
+  public get hasHlsStream () {
+    return true
+  }
+
+  public get hasLowQualityHlsStream () {
+    return true
+  }
+
+  public get hasHighQualityHlsStream () {
+    return true
+  }
+
   public get isScheduleEnabled () {
     return false
   }
