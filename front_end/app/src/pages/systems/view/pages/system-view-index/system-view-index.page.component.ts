@@ -42,8 +42,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this.ux.isSidebarShown = !this.ux.state.isSidebarShown
   }
 
-
-
   public get $self (): HTMLElement {
     return this.self.nativeElement as HTMLElement
   }
@@ -152,21 +150,21 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
-        return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
-          // console.log('got camera archive range', cid, ar)
-          if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-            // console.log('empty archive')
-          } else try {
-            archiveRanges[cid] = new SimpleTimeRange(
-              parseInt(ar.reply[0].startTimeMs),
-              parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
-            )
-            archives[cid] = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
-            console.log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
-          } catch (e) {
-            console.warn(e, 'caught while requesting camera archive ranges')
-          }
-        })
+        // return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
+        //   // console.log('got camera archive range', cid, ar)
+        //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+        //     // console.log('empty archive')
+        //   } else try {
+        //     archiveRanges[cid] = new SimpleTimeRange(
+        //       parseInt(ar.reply[0].startTimeMs),
+        //       parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
+        //     )
+        //     archives[cid] = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
+        //     console.log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
+        //   } catch (e) {
+        //     console.warn(e, 'caught while requesting camera archive ranges')
+        //   }
+        // })
       })).then(() => {
         this.vms.setMediaServers(this.systemId, mediaServers.map(ms => ({
           id: ms.id,
@@ -178,8 +176,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.name,
             c.url,
             (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
-            archiveRanges[c.id],
-            archives[c.id],
+            new SimpleTimeRange(0, 0), // archiveRanges[c.id],
+            [], // archives[c.id],
             c.status === 'Recording' || c.status === 'Live' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
             this.system.unsafeGetCameraLiveHlsUrl(c.id),
             (t: ms) => {

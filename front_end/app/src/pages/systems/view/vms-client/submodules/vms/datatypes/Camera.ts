@@ -7,34 +7,27 @@ export class Camera implements ICamera {
 
   protected _birdViewTree: BirdViewTree
 
+  public get archiveRange () {
+    return this._archiveRange
+  }
+
+  public get archive () {
+    return this._archive
+  }
+
   constructor (
     public readonly id: string,
     public readonly preferredServerId: string,
     public readonly name: string,
     public readonly url: string,
     public readonly status: CAMERA_STATUS,
-    public readonly archiveRange: ISimpleTimeRange,
-    public readonly archive: CameraArchive = [],
+    protected _archiveRange: ISimpleTimeRange,
+    protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
     public liveVideoUrl: string,
     public getArchiveVideoUrl: (t: ms) => string,
   ) {
-    this._birdViewTree = new BirdViewTree(archiveRange, this.archive)
-    // console.log(this.id, 'REAL Camera birdview tree initialized', this.archive.length, this.archive.reduce(
-    //   (acc, r) => {
-    //       if (acc.prev) {
-    //           const gap = r.start - acc.prev.end
-    //           if (gap > acc.maxGap) {
-    //               acc.maxGap = gap
-    //           }
-    //       }
-    //       acc.prev = r
-    //       return acc
-    //   }, {
-    //       prev: null,
-    //       maxGap: 0
-    //   }
-    // ).maxGap) // , this.archive)
+    this._initBirdView()
   }
 
   public get isLive () {
@@ -60,6 +53,16 @@ export class Camera implements ICamera {
   public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
     // console.log('========', new Date(startMs), new Date(endMs))
     return this._birdViewTree.getRecords(startMs, endMs, minGapMs)
+  }
+
+  public setRecords (range: ISimpleTimeRange, archive: CameraArchive) {
+    this._archiveRange = range
+    this._archive = archive
+    this._initBirdView()
+  }
+
+  protected _initBirdView () {
+    this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive)
   }
 }
 
