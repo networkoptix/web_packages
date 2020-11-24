@@ -14,13 +14,14 @@ import { CamViewComponent }     from './cam-components/cam-view/cam-view.compone
 import { CsvButtonComponent }   from './cam-components/csv-button/csv-button.component';
 import { BoolIconComponent }    from './cam-components/bool-icon/bool-icon.component';
 import { IpvdSearchService }    from './ipvd-search.service';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 const appRoutes: Routes = [
     { path: '', component: NxIpvdComponent }
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         NgbModule,
         FormsModule,
@@ -29,7 +30,8 @@ const appRoutes: Routes = [
         DirectivesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        AngularSvgIconModule
     ],
     providers      : [
         IpvdSearchService
