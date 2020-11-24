@@ -151,7 +151,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
           this.$video.play();
         });
         hls.on(Hls.Events.FRAG_LOADED, () => {
-          this.playback.handleStarted()
+          if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
+            if (!this.playback.state.started) {
+              this.playback.handleStarted()
+            }
+          }
         })
       } else {
         console.warn('HLS is not supported')
