@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<player *ngIf="camera && showPlayer else noPlayer"></player>
+<player *ngIf="camera && showPlayer else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
 <ng-template #noPlayer><div class="no-player-message">
   <svg viewBox="0 0 400 200">
     <!-- <g id="Cloud/Placeholders/Offline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> -->

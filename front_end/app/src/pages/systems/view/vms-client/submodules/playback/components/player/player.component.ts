@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import PlaybackService from '../../services/playback.service'
 import { PlaybackState, PLAYBACK_MODE, ArchivePlaybackState, LivePlaybackState } from '../../datatypes/PlaybackState'
 import assertNever from '../../../../utils/assertNever'
@@ -16,6 +16,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild("video") videoView: ElementRef;
   @ViewChild("videoSource") videoSourceView: ElementRef;
+
+  @Output() videoDblClick = new EventEmitter<boolean>();
 
   protected subscription: Subscription
   protected state: PlaybackState
@@ -198,6 +200,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public videoClickHandler (e: MouseEvent) {
+
     if (this.playback.canPause) {
       this.playback.pause()
     } else if (this.playback.canUnpause) {
@@ -207,6 +210,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (this.playback.canPlayLive) {
       this.playback.playLive()
     }
+  }
+
+  public videoDblClickHandler (e: MouseEvent) {
+    this.videoDblClick.emit(true)
   }
 }
 

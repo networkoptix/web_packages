@@ -2,6 +2,7 @@
 <video #video [muted]="true"
   (play)="videoPlayHandler($event)"
   (click)="videoClickHandler($event)"
+  (dblclick)="videoDblClickHandler($event)"
 >
   <source #videoSource src="" type="video/mp4">
 </video>

@@ -235,6 +235,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public setQuality (q: PlaybackQuality) {
       this.qualitySelected = q
     }
+
+    public onVideoDblClick (_: boolean) {
+      this.toggleFullScreen()
+    }
   }
 // export class NxSystemViewCameraPageComponent implements OnInit {
 
