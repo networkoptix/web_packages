@@ -87,6 +87,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this._getRecords()
     }
 
+    public getRecordsInProgress: string
+
     protected _getRecords () {
       console.log('_getRecords', this.id)
 
@@ -108,6 +110,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
 
       const now = Date.now()
+      if (this.getRecordsInProgress === this.id) {
+        console.log('getRecords ALREADY in progress')
+        return
+      }
+      this.getRecordsInProgress = this.id
       createSystem().then(() => {
         this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
             console.log('got camera archive range', this.id, ar)
@@ -125,6 +132,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             } catch (e) {
               console.warn(e, 'caught while requesting camera archive ranges')
             }
+            this.getRecordsInProgress = undefined
           })
       })
     }
