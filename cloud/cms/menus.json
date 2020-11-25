@@ -8,7 +8,7 @@
         "display_name": "For Developers",
         "url": "",
         "new_window": false,
-        "icon": "",
+        "icon": "developers.svg",
         "authentication": "both",
         "enabled": true,
         "nodes": [
@@ -55,7 +55,7 @@
         "display_name": "Services",
         "url": "",
         "new_window": false,
-        "icon": "",
+        "icon": "services.svg",
         "authentication": "both",
         "enabled": true,
         "nodes": [
@@ -93,7 +93,7 @@
         "display_name": "External Links",
         "url": "",
         "new_window": false,
-        "icon": "",
+        "icon": "external_2.svg",
         "authentication": "both",
         "enabled": true,
         "nodes": [
