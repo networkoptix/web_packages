@@ -199,6 +199,12 @@
         "condition": "%IPVD_ENABLED%",
         "enabled": true,
         "authentication": "both"
+      },
+      {
+        "name": "System Calculator",
+        "url": "http://nx.networkoptix.com/calculator/",
+        "enabled": ["default"],
+        "new_window": true
       }
     ]
   },

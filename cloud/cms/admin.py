@@ -1056,7 +1056,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 class MenuNodeAdmin(CMSAdmin):
     list_display = ('name',)
     form = MenuNodeChangeForm
-    fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available', 'enabled')
+    fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available',
+              'enabled', 'touched')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }

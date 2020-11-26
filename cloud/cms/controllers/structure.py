@@ -154,10 +154,13 @@ def process_node(node_obj, node_struct):
         node_obj.save(touched=False)
 
         enabled = node_struct.get('enabled', False)
-        if enabled and node_obj.is_global:
-            node_obj.enabled.set(Customization.objects.all())
-        else:
-            node_obj.enabled.clear()
+        if node_obj.is_global:
+            if type(enabled) is list:
+                node_obj.enabled.set(Customization.objects.filter(name__in=enabled))
+            elif enabled is True:
+                node_obj.enabled.set(Customization.objects.all())
+            else:
+                node_obj.enabled.clear()
 
     for inner_node_structure in node_struct.get('nodes', []):
         inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
