@@ -38,10 +38,11 @@ def update_draft_state(review_id, target_state, user):
         review.version.accepted_date = datetime.now()
         review.version.save()
 
-    review.state = target_state
-    review.reviewed_by = user
-    review.reviewed_date = datetime.now()
-    review.save()
+    elif target_state == AssetCustomizationReview.REVIEW_STATES.rejected:
+        review.state = target_state
+        review.reviewed_by = user
+        review.reviewed_date = datetime.now()
+        review.save()
 
     review.update_between_published_and_current(user, target_state)
 
