@@ -1364,6 +1364,13 @@ class ContributorAgreement(models.Model):
 class Menu(models.Model):
     name = models.CharField(max_length=255, unique=True)
     depth = models.IntegerField(default=2, blank=True)
+    allow_porting = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
 
     @classmethod
     def generate_menus_for_customization(cls, menus, customization):
@@ -1605,3 +1612,58 @@ class MenuNode(models.Model):
         if not self.touched and touched:
             self.touched = True
         super().save(*args, **kwargs)
+
+
+# Start Zendesk Models
+
+class ZendeskSite(models.Model):
+    customization = models.ForeignKey(Customization, on_delete=models.CASCADE)
+
+
+class ZendeskCategory(models.Model):
+    category_id = models.BigIntegerField(blank=True, null=True)
+    name = models.CharField(max_length=500, blank=True)
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+
+
+class ZendeskSection(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    parent_category = models.ForeignKey(ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
+    parent_section = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    section_id = models.BigIntegerField(blank=True, null=True)
+    position = models.IntegerField(default=0)
+    name = models.CharField(max_length=500, blank=True)
+
+
+class ZendeskArticleLabel(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    label_id = models.BigIntegerField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+
+
+class ZendeskArticle(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    section = models.ForeignKey(ZendeskSection, on_delete=models.CASCADE)
+
+    # ZD article meta properties
+    article_id = models.BigIntegerField(blank=True, null=True)
+    author_id = models.BigIntegerField(blank=True, null=True)
+    comments_disabled = models.BooleanField()
+    created_at = models.CharField(max_length=100, blank=True)
+    draft = models.BooleanField()
+    edited_at = models.CharField(max_length=100, blank=True)
+    html_url = models.CharField(max_length=1000, blank=True)
+    labels = models.ManyToManyField(ZendeskArticleLabel)
+    permission_group_id = models.BigIntegerField(blank=True, null=True)
+    position = models.IntegerField(default=0)
+    promoted = models.BooleanField()
+    title = models.CharField(max_length=500, blank=True)
+    updated_at = models.CharField(max_length=100, blank=True)
+    user_segment_id = models.BigIntegerField(blank=True, null=True)
+
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
+
+# End Zendesk Models

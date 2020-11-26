@@ -13,6 +13,7 @@ import nested_admin
 
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
+from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
 from cms.views.asset import page_editor, review, response_attachment
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
@@ -920,6 +921,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
 class MenuAdmin(nested_admin.NestedModelAdmin):
     list_display = ('name', 'depth')
     form = MenuChangeForm
+    change_form_template = 'cms/menu_change_form.html'
 
     class Media:
         js = ('js/menuChange.js',)
@@ -972,10 +974,50 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('port/', self.admin_site.admin_view(self.menu_porting), name='menu_porting'),
+            path('zendesk_import/', self.admin_site.admin_view(self.zendesk_import), name='zendesk_import')
         ]
         return my_urls + urls
 
+    def zendesk_import(self, request):
+        if not request.user.is_superuser:
+            raise PermissionDenied()
+        if request.method == "POST":
+            form = ZendeskImportForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                if 'import' in request.POST:
+                    subdomain, domain = data['domain'].split('.', 1)
+                    credentials = {'token': data['api_token'], 'email': data['zendesk_email'], 'password': data['zendesk_password']}
+                    # Use fake token to make Zenpy happy
+                    if not (credentials['token'] or data['zendesk_email']):
+                        credentials['token'] = 'xx'
+                    try:
+                        Importer(subdomain=subdomain, domain=domain, user=request.user, creds=credentials).import_knowledgebase(menu=data['menu'], category_name=data['zendesk_category_name'])
+                    except CategoryNotFoundException:
+                        messages.error(request, 'Zendesk category not found')
+                    else:
+                        messages.success(request, 'Successfully imported articles')
+                        return redirect('admin:cms_menu_change', data['menu'].id)
+                elif 'delete' in request.POST:
+                    menu = data['menu']
+                    clean_menu(menu)
+                    messages.success(request, 'Successfully cleaned the menu')
+
+        else:
+            form = ZendeskImportForm()
+
+        return render(request, 'cms/zendesk_import.html',
+                      {'form': form,
+                       'user': request.user,
+                       'has_permission': admin.site.has_permission(request),
+                       'site_url': admin.site.site_url,
+                       'site_header': admin.site.site_header,
+                       'site_title': admin.site.site_title,
+                       'title': 'Export/Import Menus'})
+
     def menu_porting(self, request):
+        if not request.user.is_superuser:
+            raise PermissionDenied()
         form_export = None
         form_import = None
         if request.method == "POST":

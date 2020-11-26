@@ -54,13 +54,13 @@ def get_languages_list():
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
-def generate_branding_variables(datastructure):
+def get_branding_shortcuts():
     cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
                                      asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
 
     brands = [
-        (ds, ds.find_actual_value(asset=cloud_portal))
+        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, ds.find_actual_value(asset=cloud_portal))
         for ds in branding_context.datastructure_set.all()
         if 'shortcut' in ds.meta_settings
     ]
@@ -69,9 +69,12 @@ def generate_branding_variables(datastructure):
         {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
         SpecialStructures.calc_cloud_link(cloud_portal)
     ))
+    return brands
 
+
+def generate_branding_variables(datastructure):
     return render_to_string(
-        'cms/widgets/branding_variables.html', context={'brands': brands, 'datastructure': datastructure}
+        'cms/widgets/branding_variables.html', context={'brands': get_branding_shortcuts(), 'datastructure': datastructure}
     )
 
 
@@ -500,7 +503,10 @@ class MenuNodeInlineForm(forms.ModelForm):
 
 
 class MenuPortForm(forms.Form):
-    menu = forms.ModelChoiceField(queryset=Menu.objects.all())
+    menu = forms.ModelChoiceField(
+        queryset=Menu.objects.filter(allow_porting=True),
+        help_text='Enable "Allow porting" on a menu for it to be available here.'
+    )
 
     def __init__(self, *args, **kwargs):
         port_type = kwargs.pop('port_type', 'export')
@@ -508,3 +514,32 @@ class MenuPortForm(forms.Form):
         self.fields['menu'].label_from_instance = lambda obj: obj.name
         if port_type == 'import':
             self.fields['file'] = forms.FileField()
+
+
+class ZendeskImportForm(forms.Form):
+    menu = forms.ModelChoiceField(
+        queryset=Menu.objects.filter(allow_porting=True),
+        help_text='Enable "Allow porting" on a menu for it to be available here.'
+    )
+    domain = forms.CharField(required=False, help_text='Ex: support.networkoptix.com')
+    zendesk_category_name = forms.CharField(required=False, help_text='Ex: Develop with Nx Meta')
+    api_token = forms.CharField(required=False, help_text='Credentials are optional if zendesk is public')
+    zendesk_email = forms.CharField(required=False)
+    zendesk_password = forms.CharField(required=False, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        if args and 'import' in args[0]:
+            self.importing = True
+        else:
+            self.importing = False
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super().clean()
+        if self.importing:
+            if not data['domain']:
+                raise ValidationError('Domain required if importing')
+
+            if not data['zendesk_category_name']:
+                raise ValidationError('Zendesk Category Name required if importing')
+        return data
