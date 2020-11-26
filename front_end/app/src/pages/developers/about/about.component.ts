@@ -86,7 +86,6 @@ export interface AboutNode {
 
 export interface AboutAsset {
     title: string;
-    tags: string[];
     shortDescription: string;
     blocks: AboutAssetBlock;
 }

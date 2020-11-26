@@ -125,9 +125,6 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['title'] = doc_structures.filter(name='title').first().find_actual_value(
                 asset=doc, language=language, version_id=version, draft=draft or review
             )
-            doc_dict['tags'] = doc_structures.filter(name='tags').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
             doc_dict['shortDescription'] = doc_structures.filter(name='shortDescription').first().find_actual_value(
                 asset=doc, language=language, version_id=version, draft=draft or review
             )

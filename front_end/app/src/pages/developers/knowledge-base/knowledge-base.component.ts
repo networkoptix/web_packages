@@ -29,7 +29,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     pageNode: KnowledgeNode;
     search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
-    searchQuery$ = new BehaviorSubject({ query: '', tags: ' '});
+    searchQuery$ = new BehaviorSubject({ query: '' });
     assetId$ = new BehaviorSubject('');
     relatedLinks$ = new BehaviorSubject<RelatedLinks>({ type: '', nodes: [] });
     relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
@@ -51,19 +51,13 @@ export class NxKnowledgeBaseComponent implements OnInit {
         }
     }
 
-    updateSearchQuery({ query, tags }) {
-        const filteredTags = (tags || []).reduce(
-            (joined, tag) => tag.value ? joined + `${tag.id},` : joined, ''
-        );
-        if (this.searchQuery$.value.query === query && this.searchQuery$.value.tags === filteredTags) {
+    updateSearchQuery({ query }) {
+        if (this.searchQuery$.value.query === query) {
             return;
-        };
+        }
 
-        this.search = {query, ...this.search}
-        this.searchQuery$.next({
-            query: query || '',
-            tags: filteredTags
-        });
+        this.search = { query, ...this.search };
+        this.searchQuery$.next({ query: query || '' });
     }
 
     clearSearch = () => {
@@ -88,8 +82,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         });
     };
 
-    fetchSearchHandler({ query, page, tags }) {
-        return this.cloudApi.getDocumentation({ query, page, tags }).pipe(delay(this.CONFIG.search.debounceTime));
+    fetchSearchHandler({ query, page }) {
+        return this.cloudApi.getDocumentation({ query, page }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -150,20 +144,12 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 return getFirstDoc().pipe(
                     switchMap(firstAsset => {
                         this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId || firstAsset);
-                        this.searchQuery$.next({
-                            query: this.route.snapshot.queryParams.search,
-                            tags: ''
-                            // tags: this.route.snapshot.queryParams.tags 
-                        });
+                        this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
                         const state = this.route.snapshot.queryParamMap.get('state');
                         return this.cloudApi.getDocumentation(this.assetId$.value, state)
                             .pipe(
                                 tap(({ title, blocks, contentHTML, script }) => {
-                                    this.search = {
-                                        ...this.search,
-                                        tags: []
-                                        // tags: tags.map(tag => (this.search.tags || []).find(({id}) => id === tag.id) || {...tag, value: true}),
-                                    };
+                                    this.search = { ...this.search };
                                     this.pageNode = KnowledgeNode.normalHeader(
                                         title,
                                         this.assetId$.value,
@@ -193,11 +179,11 @@ export class NxKnowledgeBaseComponent implements OnInit {
         ).subscribe();
 
         this.searchQuery$.pipe(
-            switchMap(({query, tags}) => {
-                this.searchMode = !!query || !!tags;
+            switchMap(({ query }) => {
+                this.searchMode = !!query;
                 this.searchLoading = this.searchMode;
                 this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({ query, tags, page: this.currentSearchResultPage });
+                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
             })).subscribe((results) => {
             this.totalSearchResultPages = results.totalPages;
             this.searchLoading = false;

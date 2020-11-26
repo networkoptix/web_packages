@@ -32,26 +32,6 @@
             }
           },
           {
-            "label": "Tags",
-            "name": "tags",
-            "description": "",
-            "advanced": false,
-            "optional": true,
-            "type": "multiselect",
-            "translatable": false,
-            "meta": {
-              "options": [
-                {
-                  "id": "docker",
-                  "label": "Docker"
-                }, {
-                  "id": "api",
-                  "label": "API"
-                }
-              ]
-            }
-          },
-          {
             "name": "shortDescription",
             "label": "Short Description",
             "value": "",
