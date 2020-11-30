@@ -7,6 +7,7 @@ import { Subscription }             from 'rxjs';
 import { NxRibbonService }          from './ribbon.service';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { Process }                  from '../../services/process.service';
+import { NxHeaderService } from '@services/nx-header.service';
 
 export interface RibbonAction {
     type: 'link' | 'process-button',
@@ -25,22 +26,28 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     message: string;
     actions: RibbonAction[];
-    showRibbon: boolean;
+    visiblity: boolean;
     type: string;
     updateFunction;
     private ribbonSubscription: Subscription;
 
     private setupDefaults() {
-        this.showRibbon = false;
+        this.visiblity = false;
         this.message = '';
         this.actions = [];
         this.type = '';
         this.updateFunction = '';
     }
 
+    get showRibbon() {
+        return this.visiblity && this.headerService.currentLocation.isSystem &&
+            this.headerService.currentLocation.path !== '/systems';
+    }
+
     constructor(
         configService: NxConfigService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        public headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
         this.setupDefaults();
@@ -51,7 +58,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(context => {
-            this.showRibbon = context.visibility || false;
+            this.visiblity = context.visibility || false;
             this.message = context.message || '';
             this.actions = context.actions || [];
             this.type = context.type || '';

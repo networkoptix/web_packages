@@ -8,7 +8,7 @@ export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
     text: string | Function;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NxRibbonService {
     context = {
         visibility     : false,
