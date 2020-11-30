@@ -32,7 +32,7 @@
     "emailNotFound": "アカウントが存在しません",
     "EmailAlreadyExists": "このEmailは既に登録されています",
     "oldPasswordMistmatch": "パスワードが違います。",
-    "passwordMismatch": "間違ったパスワード",
+    "passwordMismatch": "パスワードが間違っています",
     "cantEditYourself": "自分のアクセス権限を変更することはできません",
     "cantEditAdmin": "このユーザーは管理者権限を持っています",
     "cantOpenClient": "%VMS_NAME% アプリケーションは検出されません。 <a href=\"/download\">ダウンロード</a>",
