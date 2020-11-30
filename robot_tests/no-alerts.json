@@ -165,7 +165,7 @@
                         "description": "RAM used by VMS Server",
                         "display": "panel",
                         "format": "GB",
-                        "id": "serverRamUsage",
+                        "id": "serverRamUsageB",
                         "name": "RAM (VMS Server)"
                     },
                     {
@@ -983,7 +983,7 @@
                             "ramUsageP": 0.3529761940886042,
                             "secondaryStreams": 0,
                             "serverCpuUsageP": 0.0024937655860349127,
-                            "serverRamUsage": 199118848,
+                            "serverRamUsageB": 199118848,
                             "serverRamUsageP": 0.02682047719958754,
                             "threads": 33
                         }
