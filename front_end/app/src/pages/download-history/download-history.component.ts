@@ -1,35 +1,32 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, PLATFORM_ID
-}                                       from '@angular/core';
+}                                    from '@angular/core';
 import {
     ActivatedRoute, ActivationEnd, Router
-}                                       from '@angular/router';
+}                                    from '@angular/router';
 import {
     isPlatformBrowser, TitleCasePipe
-}                                       from '@angular/common';
-import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { isNumeric }                    from 'rxjs/util/isNumeric';
-import { Subscription }                 from 'rxjs';
-import { filter }                       from 'rxjs/operators';
-import * as isArray                     from 'core-js/features/array/is-array';
-
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
-import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
-import { NxUriService }                 from '../../services/uri.service';
-import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
-
-
+}                                    from '@angular/common';
+import { NgbNav, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { filter }                    from 'rxjs/operators';
+import * as isArray                  from 'core-js/features/array/is-array';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxUtilsService }            from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'download-history',
+    selector    : 'download-history',
     templateUrl : 'download-history.component.html',
-    styleUrls : ['download-history.component.scss']
+    styleUrls   : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
@@ -53,7 +50,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
-    public tabs: NgbTabset;
+    public tabs: NgbNav;
 
     private setupDefaults() {
         this.tabsVisible = false;
@@ -135,7 +132,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
             });
     }
 
-    public beforeChange($event: NgbTabChangeEvent) {
+    public beforeChange($event: NgbNavChangeEvent) {
         this.activeBuilds = this.downloadsData[$event.nextId];
         this.pageService.pageTitle = new TitleCasePipe().transform($event.nextId);
 
@@ -151,7 +148,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
             this.routeParam = params.type;
 
             this.routeParam = this.routeParam || this.releases;
-            if (isNumeric(this.routeParam)) {
+            if (NxUtilsService.isNumber(this.routeParam)) {
                 this.build = this.routeParam;
             } else {
                 this.section = this.routeParam;

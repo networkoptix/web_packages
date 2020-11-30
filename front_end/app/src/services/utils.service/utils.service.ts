@@ -279,4 +279,8 @@ export class NxUtilsService {
         const percentage = (numerator / denominator) * 100;
         return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
     };
+
+    static isNumber(n): boolean {
+        return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+    };
 }
