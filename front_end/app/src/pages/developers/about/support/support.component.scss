@@ -122,8 +122,8 @@
     position: absolute;
     max-width: 50%;
     top: 0px;
-    object-fit: cover;
     height: 100%;
+    width: 100%;
     @include bootstrap.media-breakpoint-down(xs) {
         display: none !important;
     }
@@ -132,11 +132,13 @@
 .left-image {
     @extend .support-images;
     left: 0;
-    object-position: left;
 }
 
 .right-image {
     @extend .support-images;
     right: 0;
-    object-position: right;
+}
+
+svg-icon #brand {
+    fill: $brand_core;
 }
