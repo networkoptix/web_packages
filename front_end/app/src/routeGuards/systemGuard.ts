@@ -26,6 +26,10 @@ export class SystemGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        if (!environment.isLocal && state.url === '/health') {
+            // navigate to report viewer if viewing /health route
+            return this.router.navigate(['/health/report-viewer']);
+        }
         const routesChecked = ['users', 'cloud-storage', 'health', 'licenses'];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {

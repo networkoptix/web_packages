@@ -62,8 +62,18 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
-    clamp(input, max, min = 0) {
-        return Math.min(Math.max(input, min), max);
+    clamp(input, storage) {
+        const max = storage.freeSpace[storage.reservedSpace.uom];
+        const current = storage.reservedSpace.unitsInCurrentUom;
+        const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
+        const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
+        if (updated === current && current !== input) {
+            // Force change detection to update input value if model gets out of sync with input
+            storage.reservedSpace.unitsInCurrentUom = 0;
+        }
+        setTimeout(() => {
+            storage.reservedSpace.unitsInCurrentUom = updated;
+        })
     }
 
     resetWatchers() {

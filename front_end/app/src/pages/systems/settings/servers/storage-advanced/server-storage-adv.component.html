@@ -38,8 +38,10 @@
                                         min="0"
                                         [max]="storage.freeSpace[storage.reservedSpace.uom]"
                                         [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
-                                        [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
-                                        (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.freeSpace[storage.reservedSpace.uom])"
+                                        [ngModel]="storage.reservedSpace.unitsInCurrentUom"
+                                        [value]="storage.reservedSpace.unitsInCurrentUom"
+                                        [value]="storage.reservedSpace.unitsInCurrentUom"
+                                        (ngModelChange)="clamp($event, storage)"
                                         class="w-50 p-1 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"/>
                                 <div class="position-relative">
                                     <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"

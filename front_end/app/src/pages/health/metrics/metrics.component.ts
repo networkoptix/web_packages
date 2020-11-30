@@ -96,8 +96,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         if (this.healthService.values === undefined) {
             const { url } = this.router;
-            if (url.includes('report_viewer')) {
-                this.router.navigate(['report_viewer']);
+            if (url.includes('/health/report-viewer')) {
+                this.router.navigate(['/health/report-viewer']);
             }
 
             return;
