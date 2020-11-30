@@ -1,21 +1,22 @@
 import {
-    Component, SimpleChanges,
-    OnDestroy, Input, OnChanges, ViewChild, ViewContainerRef
+    Component,
+    OnDestroy, Input, ViewChild
 } from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
     map, delay, retryWhen, take
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
+import { NgForm }                    from '@angular/forms';
 
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSettingsService }         from '../../settings.service';
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }                 from '../../../../../../language_i18n_static_types';
-import { NxApplyService, SectionWatcher, Watcher } from '../../../../../services/apply.service';
+import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
+import { NxSettingsService }            from '../../settings.service';
+import { NxConfigService, IConfig }     from '../../../../../services/nx-config';
+import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
+import { NxProcessService, Process }    from '../../../../../services/process.service';
+import { NxSystem }                     from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
+import { FormWatcher, NxApplyService }  from '../../../../../services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,20 +25,22 @@ import { NxApplyService, SectionWatcher, Watcher } from '../../../../../services
     styleUrls   : ['advanced.component.scss']
 })
 
-export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
+export class NxSystemAdvancedAdminComponent implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
+    @ViewChild('systemSettingsForm', { static: true }) systemSettingsForm: NgForm
 
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
+    private settingsSubscription: Subscription;
 
     systemSettings: any = {};
+    changedFields = {};
 
-    sectionWatcher: SectionWatcher
+    formWatcher: FormWatcher;
     saveSettings: Process;
-    resetSettings = () => Object.values(this.systemSettings).forEach((watcher: any) => watcher.reset());
 
     constructor(
         configService: NxConfigService,
@@ -51,21 +54,12 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system) {
-            this.init();
-        }
-    }
-
     ngOnDestroy(): void {
     }
 
-    init() {
+    ngOnInit() {
         this.settingsService.footerSubject.next(true);
 
-        if (this.serverSubscription) {
-            this.serverSubscription.unsubscribe();
-        }
         this.serverSubscription = this.system.infoSubject
             .pipe(
                 map((system: any) => {
@@ -87,10 +81,11 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
 
         this.saveSettings = this.processService.createProcess(() => {
             return this.system
-                .updateOrGetSystemSettings(this.settingsToBeSaved())
+                .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
                 .then((response: any) => {
                     this.settingsToBeDisplayedOrUpdated(response.reply.settings);
+                    this.formWatcher.hardReset();
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -113,6 +108,24 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                         });
                 });
         });
+
+        this.formWatcher = this.applyService.createFormWatcher(
+            null,
+            this.systemSettingsForm,
+            this.saveSettings
+        );
+        this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
+        this.settingsSubscription = this.systemSettingsForm.valueChanges.subscribe((values) => {
+            Object.entries(values).forEach(([key, current]) => {
+                const original = this.systemSettings[key];
+                const changed = current !== original;
+                if (changed) {
+                    this.changedFields[key] = current;
+                } else if (key in this.changedFields) {
+                    delete this.changedFields[key];
+                }
+            });
+        });
     }
 
     canSee(key) {
@@ -128,7 +141,11 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
             });
     }
 
-    settingsToBeDisplayedOrUpdated(settings) {
+    getDescription(key) {
+        return this.LANG.settingsConfig[key] ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key]) : key;
+    }
+
+    settingsToBeDisplayedOrUpdated = (settings) => {
         const standardSettingsToExclude = [
             'autoDiscoveryEnabled',
             'statisticsAllowed',
@@ -139,11 +156,10 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
             'sessionLimitMinutes'
         ];
 
-        Object.keys(settings).forEach((key) => {
+        Object.entries(settings).reduce((systemSettings, [key, value]) => {
             if (standardSettingsToExclude.includes(key)) {
-                return;
+                return systemSettings;
             }
-            const value = settings[key];
             if (!this.CONFIG.settingsConfig[key]) {
                 let type = 'text';
                 if (value === true || value === false ||
@@ -153,39 +169,17 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                 this.CONFIG.settingsConfig[key] = { label: key, type: type };
             }
 
-            this.systemSettings[key] = Watcher.extendedWatcherFactory(value, {});
-
             switch (this.CONFIG.settingsConfig[key].type) {
                 case 'number':
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = (value !== '') ? parseInt(value) : '';
+                    systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
                     break;
                 case 'checkbox':
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = (value === 'true');
+                    systemSettings[key] = (value === 'true');
                     break;
                 default:
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = value;
+                    systemSettings[key] = value;
             }
-        });
-
-        this.sectionWatcher = this.applyService.createSectionWatcher(
-            null,
-            this.saveSettings,
-            this.resetSettings,
-            Object.values(this.systemSettings)
-        );
-
-        this.applyService.addWatchersAndFunctionsFromChild([this.sectionWatcher], this.saveSettings, this.resetSettings);
-    }
-
-    settingsToBeSaved() {
-        const serverSettings = {};
-
-        Object.keys(this.systemSettings).forEach((key) => {
-            if (this.systemSettings[key].value !== this.systemSettings[key].originalValue) {
-                serverSettings[key] = this.systemSettings[key].value;
-            }
-        });
-
-        return serverSettings;
+            return systemSettings;
+        }, this.systemSettings);
     }
 }

@@ -55,7 +55,7 @@ export class Process {
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    run = (successHandler = (_: any) => null, errorHandler = (_: any) => null) => {
+    run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
         this.processing = true;
         this.error = false;
         this.success = false;

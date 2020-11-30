@@ -133,6 +133,12 @@ export class FormWatcher {
         });
     }
 
+    hardReset = () => {
+        const { value } = this.valueSubject;
+        Object.assign(this.originalValue, value);
+        this.form.reset(value);
+    }
+
     reset = () => {
         this.form.reset(this.originalValue);
     }
@@ -321,22 +327,24 @@ export class NxApplyService {
 
     createFormWatcher(
         component: ViewContainerRef | null,
-        form: any,
+        form: NgForm,
         saveFunction: Process
     ) {
-        component.clear();
+        component?.clear();
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
-        const applyComponentRef = component.createComponent(compFactory);
-        if (form) {
+        const applyComponentRef = component?.createComponent(compFactory);
+        if (form && applyComponentRef) {
             applyComponentRef.instance.form = form;
         }
-        applyComponentRef.instance.applyVisible = true;
-        applyComponentRef.instance.save = saveFunction;
-        applyComponentRef.instance.discard = () => {
-            Object.keys(this.originalForm).forEach((key) => {
-                form.controls[key].setValue(this.originalForm[key]);
-            });
-        };
+        if (applyComponentRef) {
+            applyComponentRef.instance.applyVisible = true;
+            applyComponentRef.instance.save = saveFunction;
+            applyComponentRef.instance.discard = () => {
+                Object.keys(this.originalForm).forEach((key) => {
+                    form.controls[key].setValue(this.originalForm[key]);
+                });
+            };
+        }
 
         form.valueChanges.subscribe((change) => {
             // Init phase ... it's called during form controls init
@@ -348,10 +356,12 @@ export class NxApplyService {
                 }
                 return;
             }
-            applyComponentRef.instance.show = hasChange;
+            if (applyComponentRef) {
+                applyComponentRef.instance.show = hasChange;
+            }
         });
 
-        return FormWatcher;
+        return new FormWatcher(form);
     }
 
     // ... Breadcrumbs (END) ... TT

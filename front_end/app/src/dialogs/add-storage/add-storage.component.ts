@@ -74,37 +74,13 @@ export class AddStorageModalContent {
 
     ngOnInit() {
         this.storageForm = new FormGroup({
-            url      : new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
-            login    : new FormControl(null, [Validators.required]),
-            password : new FormControl(null, [Validators.required])
+            url: new FormControl(null, [Validators.required, this.validateUrl.bind(this)])
         });
 
         this.storageFormValueSubscription = this.storageForm.valueChanges.subscribe(values => {
-            for (const field in values) {
-                if (values[field]) {
-                    if (['login', 'password'].includes(field)) {
-                        // resets form for just loginPasswordWrong error
-                        if (this.loginChecked || this.passwordChecked) {
-                            const loginErrors = this.storageForm.controls.login.errors;
-                            if (loginErrors?.loginPasswordWrong) {
-                                delete loginErrors.loginPasswordWrong;
-                            }
-                            this.loginChecked = !!loginErrors?.required;
-                            this.storageForm.controls.login.setErrors(loginErrors);
-                            const passwordErrors = this.storageForm.controls.password.errors;
-                            if (passwordErrors?.loginPasswordWrong) {
-                                delete passwordErrors.loginPasswordWrong;
-                            }
-                            this.passwordChecked = !!passwordErrors?.required;
-                            this.storageForm.controls.password.setErrors(passwordErrors);
-                        }
-                    } else if (field === 'url') {
-                        this.urlChecked = false;
-                        this.url = values[field];
-                        this.checkUrlValidity();
-                    }
-                }
-            }
+            this.urlChecked = false;
+            this.url = values.url;
+            this.checkUrlValidity();
         });
 
         const options = {
@@ -115,54 +91,58 @@ export class AddStorageModalContent {
         this.addStorage = this.processService
             .createProcess(() => {
                 const { url, login, password } = this.storageForm.value;
-                const storageExistsOnSystem = !this.alreadyExists && this.systemStorages.find(s => s.url === url.substr(1));
+                const storageExistsOnSystem = !this.alreadyExists && this.systemStorages?.find(s => s.url === url.substr(1));
                 return storageExistsOnSystem ? Promise.reject(Error('alreadyExists'))
                     : this.addStorageProcess(url, login, password);
-            }, { ignoreError: true })
-            .then(
-                (res: any) => {
+            }, { ignoreError: true },
+            (res: any) => {
+                let message = this.LANG.storage.failed();
+                if (res.id) {
+                    options.classname = this.CONFIG.toast.success;
+                    message = this.LANG.storage.success();
+                }
+                this.storageForm.reset();
+                this.activeModal.close(res.id && this.CONFIG.responseOk);
+                this.toastService.show(message, options);
+            },
+            err => {
+                if (err?.message === 'alreadyExists') {
+                    this.alreadyUsed = NxLanguageProviderService.translate(this.LANG.storage.alreadyUsed, { url: this.url });
+                    this.alreadyExists = true;
+                } else if (err?.message === 'WrongAuth') {
+                    this.passwordChecked = true;
+                    this.loginChecked = true;
+                } else {
                     let message = this.LANG.storage.failed();
-                    if (res.id) {
-                        options.classname = this.CONFIG.toast.success;
-                        message = this.LANG.storage.success();
+                    if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
+                        this.system.systemInfo = this.system;
+                        message = this.LANG.storage.serverOffline();
+                    } else if (err?.message === 'WrongPath') {
+                        message = this.LANG.storage.invalidPath();
                     }
                     this.storageForm.reset();
-                    this.activeModal.close(res.id && this.CONFIG.responseOk);
+                    this.activeModal.close();
                     this.toastService.show(message, options);
-                },
-                err => {
-                    if (err?.message === 'alreadyExists') {
-                        this.alreadyUsed = NxLanguageProviderService.translate(this.LANG.storage.alreadyUsed, { url: this.url });
-                        this.alreadyExists = true;
-                    } else if (err?.message === 'WrongAuth') {
-                        this.passwordChecked = true;
-                        this.loginChecked = true;
-                        this.storageForm.controls.password.setErrors({ loginPasswordWrong: true });
-                        this.storageForm.controls.login.setErrors({ loginPasswordWrong: true });
-                    } else {
-                        let message = this.LANG.storage.failed();
-                        if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
-                            this.system.systemInfo = this.system;
-                            message = this.LANG.storage.serverOffline();
-                        }
-                        this.storageForm.reset();
-                        this.activeModal.close();
-                        this.toastService.show(message, options);
-                    }
                 }
+            }
             );
     }
 
     async addStorageProcess(url: string, login: string, password: string) {
         try {
-            const smbShare = `smb://${login}:${password}@${url.substr(2)}`;
+            const credentials = login && password ? `${login}:${password}@` : '';
+            const smbShare = `smb://${credentials}${url.substr(2)}`;
             const { reply } = await this.system.getStorageStatus({ path: smbShare }).toPromise();
             if (!reply) {
                 return Promise.reject(Error('SystemOffline'));
             }
+
+            if (reply.status === 'InitFailed_WrongPath') {
+                return Promise.reject(Error('WrongPath'));
+            }
             // miscellaneous errors from getStorageStatus
-            if (['InitFailed_WrongPath', 'CreateFailed'].includes(reply.status)) {
-                return Promise.reject();
+            if (reply.status === 'CreateFailed') {
+                return Promise.reject(Error(reply.status));
             }
             if (reply.status === 'InitFailed_WrongAuth') {
                 return Promise.reject(Error('WrongAuth'));

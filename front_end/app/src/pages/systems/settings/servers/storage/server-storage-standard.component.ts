@@ -482,12 +482,15 @@ export class NxSystemStorageComponent implements OnInit {
         const setUpdating = (updating?, toUpdate = this.changedModes) => {
             if (!updating) {
                 updatingStores = updatingStores.filter(id => !toUpdate.includes(id));
+                this.changedModes = this.changedModes.filter(id => !updatingStores.includes(id));
+                const storagesWithUpdatedStatus = this.storage$.value.map(store => ({ ...store, updating: updatingStores.includes(store.storageId) }));
+                this.updateStorage(storagesWithUpdatedStatus);
             } else {
                 this.storage$.pipe(first()).subscribe(storage => {
                     const updatedStorage = storage.map((store) => {
                         if (toUpdate.includes(store.storageId)) {
                             store.updating = updating;
-                            updatingStores.push(store);
+                            updatingStores.push(store.storageId);
                         }
                         return store;
                     });
@@ -497,22 +500,43 @@ export class NxSystemStorageComponent implements OnInit {
         };
         setUpdating(true);
         const done$ = new Subject();
-        interval(5000).pipe(takeUntil(done$)).subscribe(curInterval => {
-            if (curInterval >= 6 || !this.changedModes.length) {
-                setUpdating(false, updatingStores);
-                done$.next('done');
-            } else {
-                updatingStores.forEach(({ url: path }) => {
-                    this.system.getStorageStatus({ path }).pipe(takeUntil(done$)).subscribe(({ reply: { storage: { storageStatus, storageId } } }) => {
-                        if (!storageStatus.includes('beingChecked')) {
-                            setUpdating(false, [storageId]);
-                            if (!updatingStores.length) {
-                                done$.next('done');
+
+        // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
+        const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
+        const toUpdateParams = ({ totalSpace, isBackup, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, url, storageType, storageId: id }) => ({
+            addParams : [{ name: 'space', value: `${totalSpace}` }],
+            parentId  : this.serverId,
+            id,
+            isBackup,
+            spaceLimit,
+            storageType,
+            typeId,
+            url,
+            usedForWriting
+        });
+        this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)).subscribe(() => {
+            interval(5000).pipe(takeUntil(done$)).subscribe(curInterval => {
+                if (curInterval >= 6 || !this.changedModes.length) {
+                    setUpdating(false, updatingStores);
+                    done$.next('done');
+                } else {
+                    updatingStores.forEach((id) => {
+                        const path = this.storage$.value.find(({ storageId }) => storageId === id).url;
+                        this.system.getStorageStatus(
+                            { path }
+                        ).pipe(
+                            takeUntil(done$)
+                        ).subscribe(({ reply: { storage: { storageStatus, storageId } } }) => {
+                            if (!storageStatus.includes('beingChecked')) {
+                                setUpdating(false, [storageId]);
+                                if (!updatingStores.length) {
+                                    done$.next('done');
+                                }
                             }
-                        }
+                        });
                     });
-                });
-            }
+                }
+            });
         });
     }
 
@@ -563,7 +587,7 @@ export class NxSystemStorageComponent implements OnInit {
                                 this.init();
                             }
                         }).catch(_ => {
-                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, {url: storage.url}), 'warning');
+                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: storage.url }), 'warning');
                         });
                 }
             });

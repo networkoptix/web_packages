@@ -697,6 +697,7 @@ export interface Storage {
     alreadyUsed:                any;
     deleteExternalStorage:      any;
     failed:                     any;
+    invalidPath:                any;
     stillHasArchivesPreWarning: any;
     stillHasArchives:           any;
     failedRemove:               any;
@@ -1588,6 +1589,7 @@ const typeMap: any = {
         { json: "alreadyUsed", js: "alreadyUsed", typ: "any" },
         { json: "deleteExternalStorage", js: "deleteExternalStorage", typ: "any" },
         { json: "failed", js: "failed", typ: "any" },
+        { json: "invalidPath", js: "invalidPath", typ: "any" },
         { json: "stillHasArchivesPreWarning", js: "stillHasArchivesPreWarning", typ: "any" },
         { json: "stillHasArchives", js: "stillHasArchives", typ: "any" },
         { json: "failedRemove", js: "failedRemove", typ: "any" },

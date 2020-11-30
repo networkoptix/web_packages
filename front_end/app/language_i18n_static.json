@@ -902,6 +902,7 @@
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage" : "Delete External Storage?",
         "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "failedRemove": "Failed to delete external storage {url}",
