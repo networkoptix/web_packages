@@ -111,7 +111,7 @@
                                 <div *ngFor="let platform of plugin.downloadFiles" class="mt-3">
                                     <div *ngIf="platform.name">{{ platform.name}}</div>
                                     <div>
-                                        <a [href]="platform.url"
+                                        <a [href]="platform.url" target="_self"
                                            [attr.rel]="platform.noFollow ? 'nofollow' : ''">{{platform.file}}</a>
                                     </div>
                                 </div>
