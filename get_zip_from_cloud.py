@@ -35,7 +35,7 @@ def download_package(session, instance, asset_type, asset_id):
                 shutil.copyfileobj(fs.raw, f)
             logger.info(f"{thread}:\t{package_name} complete")
         except requests.exceptions.HTTPError as e:
-            logger.error(fs.json())
+            logger.error(fs.text)
             raise e
 
 
