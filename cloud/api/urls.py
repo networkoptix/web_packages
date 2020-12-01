@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^utils/visitedKey/?$',                utils.visited_key),
     url(r'^utils/language/?$',                  utils.language),
     url(r'^utils/downloads/history$',           utils.downloads_history),
-    url(r'^utils/downloads/(?P<build>.+?)$',    utils.download_build),
+    url(r'^utils/downloads/(?P<build>.*)$',    utils.download_build),
     url(r'^utils/downloads/?$',                 utils.downloads),
     url(r'^utils/settings/?$',                  utils.get_settings),
     url(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),

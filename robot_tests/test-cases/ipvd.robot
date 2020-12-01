@@ -513,7 +513,7 @@ Camera Info panel
 
 Export to CSV
     [Tags]     C46930
-    Go To    https://dev2.cloud.hdw.mx/ipvd?vendors=Hanwha%20Techwin%20(Samsung)&resolution=1310720&hardwareTypes=camera,encoder&tags=isTwAudioSupported&search=A&camera=PNF-9010RV
+    Go To    ${ENV}/ipvd?vendors=Hanwha%20Techwin%20(Samsung)&resolution=1310720&hardwareTypes=camera,encoder&tags=isTwAudioSupported&search=A&camera=PNF-9010RV
     Wait until element is visible    ${IPVD EXPORT TO CSV LINK}
     Click Link    ${IPVD EXPORT TO CSV LINK}
     Sleep    5

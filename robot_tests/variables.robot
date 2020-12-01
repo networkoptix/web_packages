@@ -245,8 +245,10 @@ ${WINDOWS TAB}                        //a[@id="windows"]
 ${LINUX TAB}                          //a[@id="linux"]
 ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
+${SDK TAB}                            //a[@id="sdk"]
 
 #History
+${RELEASE NOTES HEADER}               //h1[contains(text(), "${RELEASE NOTES TEXT}")]
 ${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='${RELEASES TAB TEXT}']/..
 ${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='${PATCHES TAB TEXT}']/..
 ${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='${BETAS TAB TEXT}']/..

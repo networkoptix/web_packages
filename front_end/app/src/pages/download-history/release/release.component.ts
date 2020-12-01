@@ -8,6 +8,7 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
     styleUrls : ['release.component.scss']
 })
 export class ReleaseComponent implements OnInit {
+    @Input() build: string;
     @Input() release;
     @Input() LANG: LanguageI18NStaticTypes;
     @Input() linkbase;

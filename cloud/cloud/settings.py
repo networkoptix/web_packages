@@ -346,6 +346,11 @@ LOGGING = {
             'propagate': True,
             'handlers': ['console']
         },
+        'django.security.csrf': {
+            'level': 'ERROR',
+            'propagate': False,
+            'handlers': ['console']
+        },
         'api.views.utils': {
             'level': LOG_LEVEL,
             'propagate': False,
@@ -366,7 +371,7 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.account_backend': {  # explicitly mention all modules with loogers
+        'api.account_backend': {  # explicitly mention all modules with loggers
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
@@ -687,7 +692,7 @@ BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
-UPDATE_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/updates.json'
+UPDATE_JSON = 'https://updates.networkoptix.com/updates.json'
 DOWNLOADS_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/downloads.json'
 DOWNLOADS_VERSION_JSON = 'http://updates.hdwitness.com.s3.amazonaws.com/{{customization}}/{{build}}/downloads.json'
 

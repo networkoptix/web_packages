@@ -10,6 +10,8 @@ def get_variables(cloud_url, test_email):
     if 'nxvms.com' in cloud_url:
         vars["relay"] = 'relay.vmsproxy.com'
         return vars
+    elif 'test2' in cloud_url:
+        return vars
     else:
         vars["relay"] = relay = 'relay.vmsproxy.hdw.mx'
 

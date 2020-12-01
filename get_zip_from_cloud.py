@@ -19,20 +19,24 @@ def download_package(session, instance, asset_type, asset_id):
     thread = threading.current_thread().name
     logger.info(f"{thread}:\tDownloading package for {asset_id}")
     with session.get(f"{instance}/admin/cms/package/{asset_id}/", stream=True) as fs:
-        fs.raise_for_status()
-        package_name = re.findall(FILE_NAME_PATTERN, fs.headers.get("Content-Disposition", ""))
-        package_name = f"{package_name[0] if len(package_name) else 'package'}"
+        try:
+            fs.raise_for_status()
+            package_name = re.findall(FILE_NAME_PATTERN, fs.headers.get("Content-Disposition", ""))
+            package_name = f"{package_name[0] if len(package_name) else 'package'}"
 
-        if asset_type == 'vms':
-            package_dir = f"customization_pack-{package_name}"
-            if not os.path.exists(package_dir):
-                os.makedirs(package_dir)
-            logger.info(f"{thread}:\tSaving package to {package_dir}")
-            package_name = f"{package_dir}/package"
-        logger.info(f"{thread}:\tSaving {package_name}")
-        with open(f"{package_name}.zip", "wb") as f:
-            shutil.copyfileobj(fs.raw, f)
-        logger.info(f"{thread}:\t{package_name} complete")
+            if asset_type == 'vms':
+                package_dir = f"customization_pack-{package_name}"
+                if not os.path.exists(package_dir):
+                    os.makedirs(package_dir)
+                logger.info(f"{thread}:\tSaving package to {package_dir}")
+                package_name = f"{package_dir}/package"
+            logger.info(f"{thread}:\tSaving {package_name}")
+            with open(f"{package_name}.zip", "wb") as f:
+                shutil.copyfileobj(fs.raw, f)
+            logger.info(f"{thread}:\t{package_name} complete")
+        except requests.exceptions.HTTPError as e:
+            logger.error(fs.json())
+            raise e
 
 
 def download_packages(session, instance, asset_type, asset_ids):

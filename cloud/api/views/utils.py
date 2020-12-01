@@ -198,8 +198,18 @@ def download_build(request, build):
         check_customization_permission(request.user, customization, 'api.can_view_release')
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
-
-    if re.search(r'\D+', build):
+    """
+        r'(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?'
+        This pattern looks for version, build, and in some cases R|H + number
+        looks for the following patterns
+        12345            - Build number (old way the rest are new)
+        20.1.12345       - Mobile build with full version
+        20.1.1.12345     - Desktop build with full version
+        12345 R10        - Meta build with release
+        20.1.12345 R10   - Mobile meta build with release
+        20.1.1.12345 R10 - Desktop Meta build with release
+    """
+    if not re.search(r'(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?', build):
         raise APINotFoundException("Invalid build number", ErrorCodes.bad_request)
 
     downloads_url = settings.DOWNLOADS_VERSION_JSON.replace('{{customization}}', customization).\

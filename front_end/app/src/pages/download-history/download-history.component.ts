@@ -20,7 +20,6 @@ import { NxPageService }             from '@services/page.service';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { NxUriService }              from '@services/uri.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxUtilsService }            from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,13 +30,13 @@ import { NxUtilsService }            from '@services/utils.service';
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub;
-    private build;
-    public canViewRelease: boolean;
     readonly releases = 'releases';
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    build;
+    canViewRelease: boolean;
     tabsVisible: boolean;
     routeParam;
     section;
@@ -148,7 +147,18 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
             this.routeParam = params.type;
 
             this.routeParam = this.routeParam || this.releases;
-            if (NxUtilsService.isNumber(this.routeParam)) {
+            /*
+                (?:(?:\d*\.){2,3})?\d+(?: \w\d+)?
+                This pattern looks for version, build, and in some cases R|H + number
+                looks for the following patterns
+                12345            - Build number (old way the rest are new)
+                20.1.12345       - Mobile build with full version
+                20.1.1.12345     - Desktop build with full version
+                12345 R10        - Meta build with release
+                20.1.12345 R10   - Mobile meta build with release
+                20.1.1.12345 R10 - Desktop Meta build with release
+             */
+            if (/(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?/.test(this.routeParam)) {
                 this.build = this.routeParam;
             } else {
                 this.section = this.routeParam;

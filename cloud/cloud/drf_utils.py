@@ -1,3 +1,4 @@
+from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.views import exception_handler
 from api.helpers.exceptions import clean_passwords, handler
 import logging
@@ -13,7 +14,11 @@ def cloud_exception_handler(exc, context):
 
     # If response is not None, it is handled by drf
     if response is not None:
-        request_data = request.data.copy()
+        try:
+            request_data = request.data.copy()
+        # Files with xml content type break when accessing data
+        except UnsupportedMediaType:
+            request_data = {}
         clean_passwords(request_data)
         logger.info(f'Request: {request_data}\n'
                     f'Error: {exc}')
