@@ -13,9 +13,9 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxStorageService }          from '../../services/storage.service';
 
 @Component({
-    selector : 'nx-restore-component',
+    selector    : 'nx-restore-component',
     templateUrl : 'restore.component.html',
-    styleUrls : ['restore.component.scss']
+    styleUrls   : ['restore.component.scss']
 })
 
 export class NxRestoreComponent implements OnInit {
@@ -25,6 +25,7 @@ export class NxRestoreComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+	uriParamEmail: string;
     change: Process;
     restore: Process;
     data;
@@ -35,29 +36,30 @@ export class NxRestoreComponent implements OnInit {
     ready: boolean;
     hideErrors = true;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.restorePassword?.();
+    private setupDefaults() {
+        this.pageService.pageTitle = this.LANG.pageTitles.restorePassword;
 
         this.context = {
             process: ''
         };
     }
 
-    constructor(configService: NxConfigService,
-                private cloudApiService: NxCloudApiService,
-                private accountService: NxAccountService,
-                private processService: NxProcessService,
-                private storageService: NxStorageService,
-                private uriService: NxUriService,
-                private dialogs: NxDialogsService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private cloudApiService: NxCloudApiService,
+        private accountService: NxAccountService,
+        private processService: NxProcessService,
+        private storageService: NxStorageService,
+        private uriService: NxUriService,
+        private dialogs: NxDialogsService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private pageService: NxPageService
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -68,6 +70,7 @@ export class NxRestoreComponent implements OnInit {
 
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
+        this.uriParamEmail = this.route.snapshot.queryParams.email;
 
         // Check session context
         if (this.uriParam !== 'restoring' &&
@@ -77,7 +80,7 @@ export class NxRestoreComponent implements OnInit {
 
         this.data = {
             newPassword : '',
-            email       : this.storageService.email,
+            email       : this.uriParamEmail || this.storageService.email,
             restoreCode : this.uriParamCode
         };
 
