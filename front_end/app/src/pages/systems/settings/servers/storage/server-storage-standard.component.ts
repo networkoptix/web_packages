@@ -190,7 +190,7 @@ export class NxSystemStorageComponent implements OnInit {
                             store.isBackup ? this.backupStorageIds.push(store.storageId)
                                 : this.mainStorageIds.push(store.storageId);
                         }
-                        const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
+                        const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
                         if (store.status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(store.storageType)) {
                             store.hasAction = true;
                             storage.hasAction = true;
