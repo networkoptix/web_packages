@@ -64,6 +64,7 @@ def send(email, msg_type, message, language_code, customization_name):
 
     subject = get_email_title(customization_name, language_code, msg_type)
     subject = pystache.render(subject, {"message": message, "config": config})
+    subject = subject.replace("\n", "")
 
     message_html_template = read_template(customization_name, msg_type, language_code, True)
     message_txt_template = read_template(customization_name, msg_type, language_code, False)
