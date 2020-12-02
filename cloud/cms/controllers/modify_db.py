@@ -501,7 +501,15 @@ def generate_preview_link(context=None, asset=None, state=""):
         elif asset.is_agreement:
             return f'/agreement?{params}'
         elif asset.is_documentation:
-            return f'/developers/knowledge-base/{asset.id}?{params}'
+            for node in asset.nodes.all():
+                menu = node.get_parent()
+                if menu.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]:
+                    url = f'/docs/{menu.base_url}'
+                    if menu.url:
+                        url += f'/{menu.url}'
+                    url += f'/{asset.id}?{params}'
+                    return url
+            return None
 
     return f"{context.url}?preview=true" if context and context.url else None
 

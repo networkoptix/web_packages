@@ -7,6 +7,11 @@ import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
 
+export const DOC_TYPES = {
+    knowledgebase : 'kb',
+    struct        : 'struct'
+};
+
 @Injectable({
     providedIn: 'root'
 })
@@ -345,18 +350,22 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    getDocumentation(assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
-        let endpoint = '';
-        const params = new HttpParams();
+    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
+        let endpoint = `/${type}/${name}`;
+        let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
-            endpoint = `/${assetIdOrSearchObject}`;
-            if (state) {
-                params.set('state', state);
+            const urlAppend = assetIdOrSearchObject ? `/${assetIdOrSearchObject}` : '';
+            if (type === DOC_TYPES.knowledgebase) {
+                endpoint = urlAppend;
+            } else {
+                endpoint += urlAppend;
             }
         } else if (assetIdOrSearchObject?.query) {
-            endpoint = `?filter=${assetIdOrSearchObject.query}&page=${assetIdOrSearchObject.page || 1}`;
-            params.set('filter', `${assetIdOrSearchObject.query}`);
-            params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
+            params = params.set('filter', `${assetIdOrSearchObject.query}`);
+            params = params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
+        }
+        if (state) {
+            params = params.set('state', state);
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);

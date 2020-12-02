@@ -14,15 +14,36 @@ import { NxAboutComponent }         from './about/about.component';
 import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
 import { DevelopersGuard }          from '../../routeGuards';
+import { Nx404Component }           from '../404/404.component';
 
 const appRoutes: Routes = [
     {
-        path      : '',
+        path : '',
+        component: Nx404Component
+    },
+    {
+        path      : ':name',
         component : NxAboutComponent,
         canActivate : [DevelopersGuard],
         children  : [
             {
-                path     : 'knowledge-base',
+                path      : 'dev-tools',
+                component : NxDevToolsComponent,
+                children  : [
+                    {
+                        path      : ':level1',
+                        component : NxDevToolsComponent,
+                        children  : [
+                            {
+                                path      : ':level2',
+                                component : NxDevToolsComponent
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                path     : ':kb-name',
                 children : [
                     {
                         path      : '',
@@ -41,22 +62,6 @@ const appRoutes: Routes = [
                     }
                 ]
             },
-            {
-                path      : 'dev-tools',
-                component : NxDevToolsComponent,
-                children  : [
-                    {
-                        path      : ':level1',
-                        component : NxDevToolsComponent,
-                        children  : [
-                            {
-                                path      : ':level2',
-                                component : NxDevToolsComponent
-                            }
-                        ]
-                    }
-                ]
-            }
         ]
     }
 ];

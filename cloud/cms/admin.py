@@ -1069,3 +1069,10 @@ class MenuNodeAdmin(CMSAdmin):
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()
         return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))
+
+
+admin.site.register(ZendeskSite, CMSAdmin)
+admin.site.register(ZendeskCategory, CMSAdmin)
+admin.site.register(ZendeskSection, CMSAdmin)
+admin.site.register(ZendeskArticle, CMSAdmin)
+admin.site.register(ZendeskArticleLabel, CMSAdmin)

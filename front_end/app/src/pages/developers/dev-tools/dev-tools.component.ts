@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxAccountService } from '../../../services/account.service';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { NxCloudApiService, DOC_TYPES } from '../../../services/nx-cloud-api';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { AboutNode } from '../about/about.component';
@@ -14,18 +14,19 @@ import { takeWhile } from 'rxjs/operators';
     templateUrl : 'dev-tools.component.html',
     styleUrls   : ['dev-tools.component.scss']
 })
-export class NxDevToolsComponent {
+export class NxDevToolsComponent implements OnInit {
     @Input() devToolsNode: Partial<AboutNode>;
     @Input() title: string;
 
     CONFIG: IConfig;
+    menuName = '';
 
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
         private accountService: NxAccountService,
-        private router: Router
+        private route: ActivatedRoute
     ) {
         this.CONFIG = configService.config;
         if (!this.devToolsNode) {
@@ -48,7 +49,7 @@ export class NxDevToolsComponent {
                 icon,
                 newWindow
             });
-            this.cloudApi.getDocumentation('developer_tools')
+            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct)
                 .pipe(takeWhile(_ => !this.devToolsNode))
                 .subscribe(devTools => {
                     this.devToolsNode = {
@@ -57,4 +58,12 @@ export class NxDevToolsComponent {
                 });
         }
     }
-};
+
+    ngOnInit() {
+        let snapshot = this.route.snapshot;
+        while (!snapshot.paramMap.get('name')) {
+            snapshot = snapshot.parent;
+        }
+        this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
+    }
+}

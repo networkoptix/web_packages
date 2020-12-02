@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 import { BehaviorSubject }  from 'rxjs';
 
-import { NxCloudApiService }    from '../../../services/nx-cloud-api';
+import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
 import { NxHeaderService }      from '../../../services/nx-header.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IConfig, NxConfigService } from '../../../services/nx-config';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -25,8 +27,11 @@ export class NxAboutComponent {
     @Input() heading: string = 'Develop with %CLOUD_NAME%';
     @Input() lead: string = '%CLOUD_NAME% is an extensible IP Video Development Platform created for software developers who want to create new Powered-by-%VMS_NAME% products and scalable integrations.'
 
+    CONFIG: IConfig;
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
+    baseName = '';
+    menuName = '';
 
     get aboutStructure() {
         return this.aboutStructure$.value;
@@ -36,14 +41,24 @@ export class NxAboutComponent {
         this.aboutStructure$.next(value);
     }
 
-    constructor(private cloudApi: NxCloudApiService, public headerService: NxHeaderService) {
-        this.cloudApi.getDocumentation('about_page').subscribe(about => {
+    constructor(
+        private cloudApi: NxCloudApiService,
+        public headerService: NxHeaderService,
+        private route: ActivatedRoute,
+        public router: Router,
+        configService: NxConfigService
+    ) {
+        this.CONFIG = configService.config;
+        this.baseName = this.route.snapshot.paramMap.get('name');
+        this.menuName = this.CONFIG.docMenuMap[this.baseName][''];
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '').subscribe(about => {
             const mapToAboutNode = ({
                 name,
                 display_name: displayName,
                 asset_id: assetId,
                 new_window: newWindow,
                 asset,
+                assetKB,
                 url,
                 icon,
                 nodes
@@ -52,7 +67,7 @@ export class NxAboutComponent {
                     title       : displayName || name || asset.title,
                     displayName : displayName || name,
                     nodes       : nodes && nodes.map(mapToAboutNode),
-                    url         : url || `/developers/knowledge-base/${assetId}`,
+                    url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
                     assetId,
                     asset,
                     icon,

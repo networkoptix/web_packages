@@ -53,7 +53,7 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./sandbox/sandbox.module').then(m => m.SandboxModule)
     },
     {
-        path         : 'developers',
+        path         : 'docs',
         loadChildren : () => import('./developers/developers.module').then(m => m.NxDevelopersModule)
     },
     {

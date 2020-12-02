@@ -52,6 +52,7 @@ class Importer:
         self.zen_client = Zenpy(domain=domain, subdomain=subdomain, **creds)
         self.menu = None
         self.customization = None
+        self.all_customizations = Customization.objects.all()
         self.category_name = None
         self.category = None
         self.all_sections = None
@@ -86,8 +87,8 @@ class Importer:
     def _article_save_records(self, article, asset):
         def sub_image_sources(match_obj):
             file_id = str(uuid.uuid4())
-            files[file_id] = external_file_to_content_file(match_obj[1])
-            return f'src="{{image_import:{file_id}}}"'
+            files[file_id] = external_file_to_content_file(match_obj[2])
+            return f'{match_obj[1]}src="{{image_import:{file_id}}}"'
 
         context_model = Context.objects.get(asset_type=self.asset_type, name='content')
         data_records = {
@@ -95,9 +96,27 @@ class Importer:
             'body': substitute_branding(self.branding, article.body),
         }
         files = {}
-        data_records['body'] = re.sub(r'<img(!>)*?src="(.*?)"', sub_image_sources, data_records['body'])
+        data_records['body'] = re.sub(r'(<img[^>]*?)src="(.*?)"', sub_image_sources, data_records['body'])
         save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records,
                                   files, self.user)
+
+    def _update_zendesk_article(self, article, zd_article):
+        zd_article.author_id=article.author_id
+        zd_article.comments_disabled=article.comments_disabled
+        zd_article.draft=article.draft
+        zd_article.edited_at=article.edited_at
+        zd_article.html_url=article.html_url,
+        zd_article.permission_group_id=article.permission_group_id
+        zd_article.position=article.position
+        zd_article.promoted=article.promoted
+        zd_article.title=article.title
+        zd_article.updated_at=article.updated_at
+        zd_article.user_segment_id=article.user_segment_id
+        zd_article.save()
+        labels = []
+        for label_name in article.label_names:
+            labels.append(ZendeskArticleLabel.objects.get_or_create(name=label_name, site=self.site)[0])
+        zd_article.labels.set(labels)
 
     def _create_zendesk_article(self, article, asset, section, menu_node):
         zd_article = ZendeskArticle.objects.create(
@@ -115,32 +134,47 @@ class Importer:
     def _create_zendesk_sections(self, sections, parent_section=None, parent_menu_node=None):
         for section in sections:
             section_object = section['object']
-            menu_node = MenuNode(
-                name=substitute_branding(self.branding, section_object.name), order=section['object'].position
-            )
+            name = substitute_branding(self.branding, section_object.name)
+
             if parent_menu_node:
-                menu_node.parent_node = parent_menu_node
+                menu_node, created = MenuNode.objects.get_or_create(name=name, parent_node=parent_menu_node)
             else:
-                menu_node.parent_menu = self.menu
+                menu_node, created = MenuNode.objects.get_or_create(name=name, parent_menu=self.menu)
+            menu_node.order = section['object'].position
             menu_node.save()
-            menu_node.enabled.set([self.customization])
-            zd_section = ZendeskSection.objects.create(
-                name=section_object.name, position=section_object.position, parent_category=self.category,
-                site=self.site, menu_node=menu_node, parent_section=parent_section
-            )
+            if created:
+                menu_node.enabled.set(self.all_customizations)
+            zd_section = ZendeskSection.objects.get_or_create(
+                section_id=section_object.id, parent_category=self.category, site=self.site, menu_node=menu_node,
+                parent_section=parent_section
+            )[0]
+            zd_section.name = section_object.name
+            zd_section.position = section_object.position
+            zd_section.save()
 
             for article in section['articles']:
-                article_asset = Asset.objects.create(
-                    asset_type=self.asset_type, name=substitute_branding(self.branding, article.title)
+                article_menu_node, article_node_created = MenuNode.objects.get_or_create(
+                    name=substitute_branding(self.branding, article.title), parent_node=menu_node,
                 )
-                article_asset.customizations.set([self.customization])
-                article_menu_node = MenuNode.objects.create(
-                    name=substitute_branding(self.branding, article.name), parent_node=menu_node,
-                    asset=article_asset, order=article.position
-                )
-                article_menu_node.enabled.set([self.customization])
-                self._article_save_records(article, article_asset)
-                self._create_zendesk_article(article, article_asset, zd_section, article_menu_node)
+                article_menu_node.order = article.position
+                article_menu_node.save()
+                if article_node_created or not article_menu_node.asset:
+                    article_menu_node.enabled.set(self.all_customizations)
+                    article_asset = Asset.objects.create(
+                        asset_type=self.asset_type, name=substitute_branding(self.branding, article.title)
+                    )
+                    article_asset.customizations.set(self.all_customizations)
+                    article_menu_node.asset = article_asset
+                    article_menu_node.save()
+                zd_article = ZendeskArticle.objects.filter(
+                    section=zd_section, article_id=article.id, asset=article_menu_node.asset
+                ).first()
+                if not zd_article:
+                    self._create_zendesk_article(article, article_menu_node.asset, zd_section, article_menu_node)
+                else:
+                    self._update_zendesk_article(article, zd_article)
+
+                self._article_save_records(article, article_menu_node.asset)
 
             self._create_zendesk_sections(
                 section['sections'], parent_section=zd_section, parent_menu_node=menu_node
@@ -153,7 +187,7 @@ class Importer:
         self.site = ZendeskSite.objects.get_or_create(customization=self.customization)[0]
         self.branding = generate_branding_dict()
         struct = self._pull_category_from_zendesk()
-        self.category = ZendeskCategory.objects.create(
+        self.category = ZendeskCategory.objects.get_or_create(
             site=self.site, menu=menu, name=struct['category'].name, category_id=struct['category'].id
-        )
+        )[0]
         self._create_zendesk_sections(struct['sections'])

@@ -83,7 +83,7 @@ export class NxMenusService implements OnDestroy {
     }
 
     getMenu = (name: string, withCurrentSystem = false) => {
-        let menu = this.menusStructure?.[name] ?? [];
+        let menu = this.menusStructure?.[name.toLowerCase()] ?? [];
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu = [this.currentSystemNode$.value, ...menu];
         };

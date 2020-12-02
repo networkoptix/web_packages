@@ -52,6 +52,7 @@ export interface BaseConfig {
     localSystemId: string;
     company: Company;
     dynamicMenus: MenuStructure;
+    docMenuMap: DocMenuMap;
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,
@@ -88,6 +89,12 @@ export interface FooterItem {
 
 export interface MenuStructure {
     [key: string]: MenuNode[]
+}
+
+export interface DocMenuMap {
+    [key: string]: {
+        [key: string]: string
+    }
 }
 
 export interface Capabilities {

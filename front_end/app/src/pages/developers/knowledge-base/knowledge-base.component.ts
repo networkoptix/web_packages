@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Renderer2, Inject, ViewChild, ElementRef } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { NxCloudApiService, DOC_TYPES } from '../../../services/nx-cloud-api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
 import { NxHeaderService } from '../../../services/nx-header.service';
@@ -26,6 +26,9 @@ export class NxKnowledgeBaseComponent implements OnInit {
     loading = true;
     searchMode = false;
     searchLoading = false;
+    basePath = '';
+    menuName = '';
+    kbName = '';
     pageNode: KnowledgeNode;
     search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
@@ -83,7 +86,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     };
 
     fetchSearchHandler({ query, page }) {
-        return this.cloudApi.getDocumentation({ query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+        return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -100,7 +103,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
 
     prefetchDocument(assetId) {
         console.info(`%cPrefetching document ${assetId}`, 'color:blue;font-size:1.5rem;padding: .75rem 4rem; background-color:gray');
-        this.cloudApi.getDocumentation(assetId).subscribe(document => {
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).subscribe(document => {
             console.info(
                 `%cSuccessfully prefetched document: \n%c${document.title}`,
                 'color:green;font-size:1.25rem',
@@ -131,13 +134,23 @@ export class NxKnowledgeBaseComponent implements OnInit {
     }
 
     ngOnInit() {
+        let snapshot = this.route.snapshot;
+        while (!snapshot.paramMap.get('kb-name')) {
+            snapshot = snapshot.parent;
+        }
+        this.kbName = snapshot.paramMap.get('kb-name') || this.kbName;
+        while (!snapshot.paramMap.get('name')) {
+            snapshot = snapshot.parent;
+        }
+        this.basePath = snapshot.paramMap.get('name');
+        this.menuName = this.CONFIG.docMenuMap[this.basePath][this.kbName];
         this.route.url.pipe(
             switchMap(urlSegment => {
                 this.loading = true;
                 this.clearSearch();
                 const getFirstDoc = () => {
                     const traverseToFirst = (nodes: MenuNode[]): string => nodes[0].asset_id || traverseToFirst(nodes[0].nodes);
-                    return this.menusService.getMenu('Knowledgebase').pipe(
+                    return this.menusService.getMenu(this.menuName).pipe(
                         map(menu => traverseToFirst(menu))
                     );
                 };
@@ -146,7 +159,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
                         this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId || firstAsset);
                         this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
                         const state = this.route.snapshot.queryParamMap.get('state');
-                        return this.cloudApi.getDocumentation(this.assetId$.value, state)
+                        return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
                             .pipe(
                                 tap(({ title, blocks, contentHTML, script }) => {
                                     this.search = { ...this.search };

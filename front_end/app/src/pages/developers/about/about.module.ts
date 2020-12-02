@@ -20,7 +20,7 @@ import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
 
 const appRoutes: Routes = [
     {
-        path      : '',
+        path      : ':name',
         component : NxAboutComponent
     }
 ];

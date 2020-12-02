@@ -30,12 +30,12 @@ class MenuCache:
         self.cache = caches['menus']
 
     def __getitem__(self, key):
-        return self.cache.get(key, None)
+        return self.cache.get(key.lower(), None)
 
     def __setitem__(self, key, menu):
         from cms.controllers.documentation import DOC_CACHE
         DOC_CACHE.clear_cache()
-        self.cache.set(key, menu)
+        self.cache.set(key.lower(), menu)
 
     def clear_cache(self):
         from cms.controllers.documentation import DOC_CACHE
@@ -211,15 +211,35 @@ def check_user_menu_permissions(nodes, user):
             check_user_menu_permissions(node.get('nodes', []), user)
 
 
-def get_cached_menu(customization_name, name=None, user=None):
+def cached_doc_menu_map(customization_name, refresh=False):
+    cache_key = f'{customization_name}-doc-dir'
+    menu_map = MENU_CACHE[cache_key]
+    if refresh or not menu_map:
+        menu_map = {}
+        for menu in Menu.objects.filter(type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
+            if menu.base_url not in menu_map:
+                menu_map[menu.base_url] = {}
+            if menu.url not in menu_map[menu.base_url]:
+                menu_map[menu.base_url][menu.url] = menu.name
+
+        MENU_CACHE[cache_key] = menu_map
+    return menu_map
+
+
+def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
     menu_customization = MENU_CACHE[customization_name]
     if menu_customization is None:
         menu_customization = Menu.generate_menus(customization_name)
         MENU_CACHE[customization_name] = menu_customization
+        cached_doc_menu_map(customization_name, refresh=True)
     for menu_name, menu in menu_customization.items():
-        check_user_menu_permissions(menu, user)
+        check_user_menu_permissions(menu['nodes'], user)
     if name:
-        return menu_customization[name]
+        menu = menu_customization.get(name.lower(), None)
+        if menu and menu['type'] == menu_type:
+            return menu
+        else:
+            return None
     return menu_customization
 
 
@@ -1362,8 +1382,15 @@ class ContributorAgreement(models.Model):
 
 
 class Menu(models.Model):
+    MENU_TYPES = Choices((0, "generic", "Generic"),
+                         (1, "docs_struct", "Documentation Structure"),
+                         (2, "docs_knowledgebase", "Documentation Knowledgebase"))
+
     name = models.CharField(max_length=255, unique=True)
     depth = models.IntegerField(default=2, blank=True)
+    base_url = models.CharField(blank=True, max_length=255, help_text='Ex: developers')
+    url = models.CharField(blank=True, max_length=255, help_text='Ex: knowledgebase')
+    type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
 
     def __str__(self):
@@ -1380,7 +1407,11 @@ class Menu(models.Model):
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal_asset)
         structures = {}
         for menu in menus:
-            structures[menu.name] = menu.generate_structure(cloud_portal_asset, customization, global_contexts_dict)
+            structures[menu.name.lower()] = {
+                'nodes': menu.generate_structure(cloud_portal_asset, customization, global_contexts_dict),
+                'type': menu.type,
+                'base_url': menu.base_url
+            }
         return customization, structures
 
     @classmethod
