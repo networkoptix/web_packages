@@ -276,6 +276,10 @@ Register and activate account with random email
     Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    act=${act}
     [Return]    ${email}
 
+Disconnect all systems from account
+    [Arguments]    ${systems list}
+    FOR    ${sys}    IN    @{system}
+
 # Replaced with "Restore password using API"
 Restore password
     [arguments]    ${email}

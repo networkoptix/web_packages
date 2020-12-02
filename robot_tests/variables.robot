@@ -63,7 +63,7 @@ ${SYSTEM NAME HEADING}                //nx-system-admin-component//div[contains(
 ${HEADER TAB WRAPPER}                 //nx-header/header//div[contains(@class, 'tab-wrapper')]
 ${HEADER TAB BUTTONS}                 ${HEADER TAB WRAPPER}/nx-header-tabs
 ${HEADER TAB DROPDOWN}                ${HEADER TAB WRAPPER}/nx-nav-dropdown
-${HEADER ACTIVE TAB}                  ${HEADER TAB WRAPPER}//li[@class='tab-link active']/a
+${HEADER ACTIVE TAB}                  ${HEADER TAB WRAPPER}//li[contains(@class, 'tab-link active')]/a
 ${HEADER LANGUAGE DROPDOWN}           //header//nx-header-language-select
 ${SYSTEMS DROPDOWN}                   //nx-header//button[@id='systemsDropdown']
 ${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]

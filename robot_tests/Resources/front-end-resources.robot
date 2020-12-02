@@ -1,5 +1,6 @@
 *** Settings ***
 Resource     front-end-resources/health-monitor-resource.robot
+Resource     front-end-resources/header-resource.robot
 Resource     front-end-resources/system-server-resource.robot
 Resource     front-end-resources/system-camera-resource.robot
 Resource     front-end-resources/ipvd-resource.robot
