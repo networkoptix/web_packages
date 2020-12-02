@@ -29,8 +29,8 @@
                         <span [innerHTML]="item.name"></span>
                     </a>
                     <ng-template #disabledItem>
-                        <a class="dropdown-item inset" (click)="show = false">
-                            <span class="text-muted" [innerHTML]="item.name"></span>
+                        <a class="dropdown-item inset disabled" (click)="show = false">
+                            <span class="disabled" [innerHTML]="item.name"></span>
                         </a>
                     </ng-template>
                 </ng-template>

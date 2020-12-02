@@ -67,7 +67,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     _serverLoaded = false;
 
     dropdownStorages: any[] = [];
-    saveStorageWatcher = new Watcher<boolean>();
+    saveStorageWatcher = new Watcher<boolean>(false);
     systemStorageChosen = false;
     currentAnalyticsDbId: any;
     selectedStorage: Partial<DropdownStorage>;
@@ -144,7 +144,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
             this.saveSettings,
-            () => this.applyService.reset()
+            () => {
+                this.applyService.reset();
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
+            }
         );
 
         this.applyService.setVisible(false);
@@ -439,8 +442,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.storages = this.storages.filter(store => store.storageType === 'local' && store.isWritable);
         this.dropdownStorages = this.storages
             .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
-                const selected = this.selectedStorage ? this.selectedStorage.id === storageId
-                    : this.currentAnalyticsDbId === storageId;
+                const selected = this.currentAnalyticsDbId === storageId;
                 return {
                     name        : url,
                     isOnline,

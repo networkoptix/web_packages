@@ -212,3 +212,11 @@ svg-icon.archive-warning {
 .animate-rotation {
     @include rotate;
 }
+
+svg-icon:not(.animate-rotation) .st0 {
+    display: block;
+}
+
+.changing {
+    padding: 0 16px;
+}

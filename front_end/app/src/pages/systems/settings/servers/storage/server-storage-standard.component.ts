@@ -1,6 +1,6 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, Output, OnInit, EventEmitter
+    LOCALE_ID, Input, Output, OnInit, EventEmitter, SimpleChanges
 }                                                from '@angular/core';
 import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
@@ -65,15 +65,14 @@ export class NxSystemStorageComponent implements OnInit {
     percentMainDone = 0;
     reindexingBackup = false;
     percentBackupDone = 0;
+    onlineMains = 0;
+    onlineBackups = 0;
     storage$ = new BehaviorSubject<any[] | any>([]);
     refreshStorages$ = new Subject<any>();
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
 
     doesMainExist = false;
-    doesBackupExist = false;
-    mainReindexDisabled = false;
-    backupReindexDisabled = false;
     customSettings = false;
     shouldSaveDefaultSettings = false;
     isBackupOn: Watcher<boolean> = new Watcher();
@@ -105,7 +104,7 @@ export class NxSystemStorageComponent implements OnInit {
         private toastService: NxToastService,
         private processService: NxProcessService,
         private applyService: NxApplyService,
-        @Inject(LOCALE_ID) private locale: string,
+        @Inject(LOCALE_ID) public locale: string,
         private uriService: NxUriService
     ) {
         this.LANG = languageService.translations;
@@ -125,6 +124,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.storageEmit.emit();
         this.calcDDWidth();
         this.init();
     }
@@ -150,6 +150,7 @@ export class NxSystemStorageComponent implements OnInit {
                     const storage = results.storage || [];
 
                     storage.hasAction = false;
+                    storage.freeSpace = results.storeInfo.reduce((total, { freeSpace }) => total + parseInt(freeSpace), 0);
                     storage.forEach((store, idx) => {
                         this.modeWatchers[store.id] = new Watcher(this.selectMode(store).value);
                         const storeInfo = results.storeInfo.find((info) => {
@@ -172,8 +173,10 @@ export class NxSystemStorageComponent implements OnInit {
                                 if (store.storageStatus.includes('tooSmall')) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
-                                }
-                                if (!store.storageStatus.includes('tooSmall') && store.storageStatus.includes('system')) {
+                                } else if (
+                                    store.storageStatus.includes('system') &&
+                                    store.freeSpace < (storage.freeSpace / 6)
+                                ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
                                 }
@@ -346,16 +349,16 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     updateStorage(storage) {
-        let onlineBackups = 0;
+        this.onlineBackups = 0;
+        this.onlineMains = 0;
         let totalBackups = 0;
-        let onlineMains = 0;
         let totalMains = 0;
         let isUpdating = false;
         storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
             if (isUsedForWriting) {
                 isBackup ? totalBackups++ : totalMains++;
                 if (![STORAGE_STATUS.RESERVED, STORAGE_STATUS.INACCESSIBLE].includes(status)) {
-                    isBackup ? status === 0 && onlineBackups++ : onlineMains++;
+                    isBackup ? status === 0 && this.onlineBackups++ : this.onlineMains++;
                 }
             }
 
@@ -366,19 +369,14 @@ export class NxSystemStorageComponent implements OnInit {
             hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
-        if (onlineMains === 1) {
+        if (this.onlineMains === 1) {
             const store = storage.find(({ isBackup, isUsedForWriting, status }) => {
                 return isUsedForWriting && ![STORAGE_STATUS.RESERVED, STORAGE_STATUS.INACCESSIBLE].includes(status) && !isBackup;
             });
             store.mainOnly = true;
         }
-        this.mainReindexDisabled = onlineMains === 0 && totalMains > 0;
-        this.backupReindexDisabled = onlineBackups === 0 && totalBackups > 0;
         this.doesMainExist = Boolean(totalMains);
-        // gets rid of backup archive section if changing from backup to main
-        // waits until finished changing modes when changing from main to backup
-        this.doesBackupExist = Boolean(totalBackups) && !isUpdating;
-        if (this.doesBackupExist) {
+        if (this.doesModeExist('modeBackup')) {
             this.checkArchiveState();
         } else {
             this.isBackupOn.value = false;
@@ -397,15 +395,29 @@ export class NxSystemStorageComponent implements OnInit {
 
         const sortedStorage = storage.sort(sortByTypeAndUrl);
         this.storage$.next(sortedStorage);
-        this.storageEmit.emit(sortedStorage);
+        this.storageEmit.emit(sortedStorage || []);
     }
 
     getIconSrc(store) {
         return `${this.CONFIG.icons.dir}${store.updating ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
 
+    doesModeExist = (mode: 'modeBackup' | 'modeMain') => {
+        return Object.values(this.modeWatchers).reduce((prev, { value }) => prev || value === mode, false);
+    }
+
+    modeReindexDisabled = (mode: 'modeBackup' | 'modeMain') => {
+        const noStorages = !this.doesModeExist(mode);
+        const noOnlineStorages = !(mode === 'modeBackup' ? this.onlineBackups : this.onlineMains);
+        return noStorages || noOnlineStorages;
+    }
+
     getModes(store) {
-        return this.modes.map((mode, index) => ({ ...mode, disabled: store.mainOnly && Boolean(index) }));
+        const countMains = Object.values(this.modeWatchers).reduce((prev, { value }) => value === 'modeMain' ? prev + 1 : prev, 0);
+        const isMain = this.modeWatchers[store.storageId].value === 'modeMain';
+        const checkType = mode => !(store.storageType === 'local' && mode.value === 'modeNotInUse' || !mode.value);
+        const checkDisabled = mode => ({ ...mode, disabled: isMain && mode.value !== 'modeMain' && countMains <= 1 });
+        return this.modes.filter(checkType).map(checkDisabled);
     }
 
     getArchiveSpace(usage, storageId): number {
@@ -475,7 +487,9 @@ export class NxSystemStorageComponent implements OnInit {
                 this.updateStorage(storage);
             });
         }
-        const showWarn = Object.values(this.modeWatchers).some(({ changed, value }) => value === 'modeNotInUse' && changed);
+
+        const hasArchive = id => !!this.storage$.value.find(({ storageId }) => id === storageId)?.archiveSpace;
+        const showWarn = Object.entries(this.modeWatchers).some(([id, { changed, value }]) => value === 'modeNotInUse' && changed && hasArchive(id));
         this.applyService.setWarn(showWarn ? this.LANG.storage.stillHasArchivesPreWarning?.() : '');
     }
 

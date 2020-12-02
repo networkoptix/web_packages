@@ -77,13 +77,13 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
             return;
         }
 
-        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.reservedSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
+        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
         this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
         this.used = this.toFriendlyBytes(usedSpace);
         this.usedPercentage = this.toPercentageOfTotal(usedSpace);
-        this.available = this.toFriendlyBytes(this.store.freeSpace);
+        this.available = this.toFriendlyBytes(this.store.freeSpace - this.store.reservedSpace);
         this.availPercentage = 100 - this.reservedPercentage;
 
         this.archive = '&mdash;';
