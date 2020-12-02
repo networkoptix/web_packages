@@ -138,7 +138,7 @@ export class NxSystemStorageComponent implements OnInit {
                 this.refreshStorages$,
                 this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true),
                 this.system.getRecordStats(true)
-            ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply.storages, usage: results[2] })))
+            ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages, usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
                         console.error(results.storage.message);
@@ -302,7 +302,9 @@ export class NxSystemStorageComponent implements OnInit {
     turnOffBackup = async() => {
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
-        if (backupControlRes?.reply.state !== 'BackupState_None') {
+
+        // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
+        if (backupControlRes && backupControlRes.reply.state !== 'BackupState_None') {
             await this.system.updateOrGetBackupControl(this.serverId, 'stop');
         }
         return Promise.resolve();

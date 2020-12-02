@@ -734,9 +734,9 @@ export class NxSystemAPI {
         return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
-    getMediaServers() {
+    getMediaServers(useCache) {
         const endpoint = '/ec2/getMediaServersEx';
-        return this.get<t.GetMediaServers>(endpoint, {}, { 'cache-request': 'true' });
+        return this.get<t.GetMediaServers>(endpoint, {}, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
     }
 
     getMediaServersAndCameras() {

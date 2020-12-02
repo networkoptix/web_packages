@@ -133,13 +133,13 @@
         <div>
             <div class="radio-group">
                 <nx-radio name="firstSystem" [value]="system" tabindex="0" autofocus #primaryRadio
-                    [label]="system.name || system.info && system.info.systemName"
+                    [label]="system.name || system.info && system.info.name"
                     componentId="firstSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
             </div>
             <div class="radio-group">
                 <nx-radio name="secondSystem" [value]="targetSystem" tabindex="0"
-                    [label]="targetSystem.name || targetSystem.info && targetSystem.info.systemName"
+                    [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
                     componentId="secondSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
             </div>
@@ -159,7 +159,7 @@
 <form *ngIf="machine.currentState === 'confirmMerge'" #confirmMergeForm="ngForm" name="confirmMergeForm">
     <div class="modal-body">
         <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
-                primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.systemName,
+                primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
                 secondarySystem: secondaryName
             }"></p>
         <div *ngIf="tooManyServers">

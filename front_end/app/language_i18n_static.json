@@ -282,6 +282,7 @@
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {targetSystem} system.",

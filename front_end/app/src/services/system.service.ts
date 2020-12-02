@@ -524,15 +524,17 @@ class ServerManager {
     }
 
     getServers(servers?) {
+        return this.getForceServers(true, servers);
+    }
+
+    getForceServers(useCache, servers?) {
         if (!servers) {
-            const serverSubscription = this.mediaserver.getMediaServers();
+            const serverSubscription = this.mediaserver.getMediaServers(useCache);
             serverSubscription.subscribe((res: any) => {
                 if (!res) {
                     return Promise.reject(new Error(`Request to server has failed ${res}`));
                 }
-                if (!res.sort) {
-                    console.log('!SORT', res)
-                }
+
                 this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
                 return this.servers;
             });
@@ -585,7 +587,7 @@ class ServerManager {
                 params[name] = value;
                 return params;
             }, {});
-            const parentName = this.servers.find(server => server.id === parentId).name;
+            const parentName = this.servers.find(server => server.id === parentId)?.name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
@@ -627,7 +629,7 @@ class ServerManager {
     }
 
     setServerUserSettings(serverId: string, params: { [key: string]: string }) {
-        this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
+        return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
     updateSettings(resourceId: string, params: IParams) {
@@ -1352,6 +1354,10 @@ export class NxSystem extends System implements OnDestroy {
 
     getServers() {
         return this.serverManager.getServers();
+    }
+
+    getForceServers() {
+        return this.serverManager.getForceServers(false);
     }
 
     getModuleInfo(serverId?: string) {

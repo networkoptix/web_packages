@@ -163,10 +163,15 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
         if (changes.selectedServer?.currentValue) {
             const { currentValue, previousValue } = changes.selectedServer;
-            if (previousValue?.id === currentValue.id) {
-                return;
+            if (previousValue) {
+                // remove added properties
+                delete previousValue.internalStatus;
+                delete previousValue.shownStatus;
             }
-            this.setServer();
+
+            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+                this.setServer();
+            }
         }
 
         if (changes?.storages?.currentValue) {
@@ -290,7 +295,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         // adding time to avoid server status flashing "Checking..." if system is offline
         this.serversSubscription = combineLatest(
             timer(this.CONFIG.servers.minLoaderTime),
-            this.system.getServers()
+            this.system.getForceServers()
                 .pipe(
                     catchError(err => {
                         console.error(err);

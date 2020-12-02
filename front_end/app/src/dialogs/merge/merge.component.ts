@@ -1,23 +1,21 @@
 import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef
-}                                      from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService }            from '@ngx-translate/core';
-import { timer }                       from 'rxjs';
-
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }    from '../../services/nx-config';
-import { NxAccountService }            from '../../services/account.service';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { NxRibbonService }             from '../../components/ribbon';
-import { NxProcessService, Process }   from '../../services/process.service';
-import { NxSystemService }             from '../../services/system.service';
-import { NxSystemsService }            from '../../services/systems.service';
-import { NxUtilsService }              from '../../services/utils.service';
-import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
-import StateMachine                    from './stateMachine';
-import { State }                       from './stateForMergeDialog';
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService }          from '@ngx-translate/core';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxAccountService }          from '@services/account.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystemService }           from '@services/system.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxRibbonService }           from '@components/ribbon';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import StateMachine                  from './stateMachine';
+import { State }                     from './stateForMergeDialog';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -81,7 +79,7 @@ export class MergeModalContent {
     readonly systemOfflineUrl: string = 'systemOfflineUrl';
     readonly unknownError: string = 'unknownError';
 
-    machine = new StateMachine(this.checkMerge, State);
+    machine: StateMachine;
 
     @ViewChild('checkMergeDropdown') mergeDropdown: any;
     @ViewChild('serverUrlInput') serverUrlInput: any;
@@ -109,6 +107,7 @@ export class MergeModalContent {
     }
 
     ngOnInit() {
+        this.machine = new StateMachine(this.checkMerge, State);
         this.init();
     }
 
@@ -723,15 +722,17 @@ export class MergeModalContent {
     insertErrorMessages() {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
-            const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
-                ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
-                : error;
-            errorText[error] = NxLanguageProviderService.translate(
-                this.LANG.dialogs.merge[parsedError], {
-                    primarySystem   : this.primaryName,
-                    targetSystem    : this.secondaryName,
-                    secondarySystem : this.secondaryName
-                });
+            if (Object.prototype.hasOwnProperty.call(errorText, error)) {
+                const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
+                    ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
+                    : error;
+                errorText[error] = NxLanguageProviderService.translate(
+                    this.LANG.dialogs.merge[parsedError], {
+                        primarySystem   : this.primaryName,
+                        targetSystem    : this.secondaryName,
+                        secondarySystem : this.secondaryName
+                    });
+            }
         }
     }
 
@@ -774,7 +775,7 @@ export class MergeModalContent {
             systemName = system.systemName;
             status = ` (${system.name}, ${NxUtilsService.cleanIp(system.remoteAddresses[0])}:${system.port}) ${status}`;
         } else {
-            systemName = system.name || system.info.systemName;
+            systemName = system.name || system.info?.name;
         }
 
         // HTML required for dropdown list
@@ -884,9 +885,13 @@ export class MergeModalContent {
     clearTemplate() {
         const { store } = this.machine;
         for (const state in store) {
-            const { template } = store[state];
-            for (const key in template) {
-                template[key] = '';
+            if (Object.prototype.hasOwnProperty.call(store, state)) {
+                const { template } = store[state];
+                for (const key in template) {
+                    if (Object.prototype.hasOwnProperty.call(template, key)) {
+                        template[key] = '';
+                    }
+                }
             }
         }
     }
@@ -895,7 +900,7 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = this.primarySystem.name || this.primarySystem.info && this.primarySystem.info.systemName;
+        this.primaryName = this.primarySystem.name || this.primarySystem.info.name;
     }
 
     getSecondaryName() {
