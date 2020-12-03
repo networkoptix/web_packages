@@ -402,7 +402,7 @@ export class MergeModalContent {
                         }
                         const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
                         this.updateShow(
-                            this.targetSystem.systemName || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
+                            this.targetSystem.systemName || this.targetSystem.name || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
                             { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
                         );
                     }
@@ -775,7 +775,7 @@ export class MergeModalContent {
             systemName = system.systemName;
             status = ` (${system.name}, ${NxUtilsService.cleanIp(system.remoteAddresses[0])}:${system.port}) ${status}`;
         } else {
-            systemName = system.name || system.info?.name;
+            systemName = system.name;
         }
 
         // HTML required for dropdown list
@@ -900,13 +900,12 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = this.primarySystem.name || this.primarySystem.info.name;
+        this.primaryName = this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name;
     }
 
     getSecondaryName() {
-        let name: string = this.secondarySystem.systemName ||
-            this.secondarySystem.name ||
-            this.secondarySystem.info && this.secondarySystem.info.name;
+        let name: string = this.secondarySystem.systemName || this.secondarySystem.name ||
+            this.secondarySystem?.info.systemName || this.secondarySystem?.info.name;
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }

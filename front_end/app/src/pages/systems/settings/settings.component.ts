@@ -22,7 +22,6 @@ import { NxSystemsService }          from '@services/systems.service';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxUtilsService }            from '@services/utils.service';
 import { NxUriService }              from '@services/uri.service';
-import { NxRibbonService }           from '@components/ribbon';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
@@ -102,7 +101,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private uriService: NxUriService,
         private menuService: NxMenuService,
-        private ribbonService: NxRibbonService,
         private router: Router,
         private scrollMechanicsService: NxScrollMechanicsService,
         private applyService: NxApplyService,
@@ -240,7 +238,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.system) {
             this.system.stopPoll();
         }
-        this.ribbonService.hide();
+        this.system.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }
 
@@ -270,9 +268,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             tap(({ isOnline }) => {
                                 this.applyService.isOnline$.next(!!isOnline);
                                 if (isOnline) {
-                                    this.ribbonService.hide();
+                                    this.system.ribbonService.hide();
                                 } else {
-                                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                    this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                                 }
                             })
                         )
@@ -331,7 +329,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.checkMergeSubscription = this.system.checkMergeStatus(false)
             .subscribe(res => {
                 this.secondaryMerge = false;
-                this.ribbonService.hide();
+                this.system.ribbonService.hide();
                 let ribbonText: string;
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
@@ -356,7 +354,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
 
                 if (ribbonText) {
-                    this.ribbonService.show(ribbonText, [], 'alert');
+                    this.system.ribbonService.show(ribbonText, [], 'alert');
                 }
 
                 setTimeout(() => {
