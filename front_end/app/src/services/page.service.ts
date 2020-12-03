@@ -33,6 +33,10 @@ export class NxPageService {
         this.title.setTitle(txt);
     }
 
+	public set pageDescription(content: string) {
+        this.meta.updateTag({ name: 'description', content: content });
+    }
+
     public set pageTitleRemoveHyphen(title: any) {
         if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default?.()) {
             const txt = (typeof title === 'function') ? title() : title;

@@ -82,7 +82,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {
-                // @ts-ignore
                 if (results.params.id) {
                     this.integrationService.setIntegrationPlugin({});
 
@@ -113,7 +112,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                             }]
                     };
 
-                    // @ts-ignore
                     this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
                         .subscribe(result => {
                             if (result.length) {
@@ -161,6 +159,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     );
                                 }
 
+                                this.pageService.pageTitle = `${this.plugin.information.name} - ${this.CONFIG.cloudName}`;
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
                         }).add(() => {

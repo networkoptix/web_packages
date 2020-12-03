@@ -32,6 +32,7 @@ export interface LanguageI18NStaticTypes {
     ipvdDisclaimer:        any;
     menu:                  Menu;
     pageTitles:            PageTitles;
+    pageDescriptions:      PageDescriptions;
     passwordRequirements:  PasswordRequirements;
     placeholderTexts:      PlaceholderTexts;
     pleaseSelect:          any;
@@ -557,6 +558,10 @@ export interface MenuTitles {
     users:                any;
 }
 
+export interface PageDescriptions {
+    integrations: string;
+}
+
 export interface PageTitles {
     about:                  any;
     account:                any;
@@ -989,6 +994,7 @@ const typeMap: any = {
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
         { json: "menu", js: "menu", typ: r("Menu") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
+        { json: "pageDescriptions", js: "pageDescriptions", typ: r("PageDescriptions") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
         { json: "placeholderTexts", js: "placeholderTexts", typ: r("PlaceholderTexts") },
         { json: "pleaseSelect", js: "pleaseSelect", typ: "any" },
@@ -1462,6 +1468,9 @@ const typeMap: any = {
         { json: "general", js: "general", typ: "any" },
         { json: "licenses", js: "licenses", typ: "any" },
         { json: "users", js: "users", typ: "any" },
+    ], false),
+    "PageDescriptions": o([
+        { json: "integrations", js: "integrations", typ: "" },
     ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },
