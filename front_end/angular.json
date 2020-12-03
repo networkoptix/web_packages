@@ -38,7 +38,8 @@
               "app/language_i18n.json",
               "app/language.json",
               "app/languages.json",
-              "app/openapi_v1.json"
+              "app/openapi_v1.json",
+              "app/robots.txt"
             ],
             "styles": [
               "app/styles/main.scss"
