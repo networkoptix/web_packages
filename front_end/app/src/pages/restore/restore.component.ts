@@ -7,10 +7,11 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { LocalStorageService }       from 'ngx-store';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxAccountService }          from '../../services/account.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxSessionService }          from '../../services/session.service';
 
 @Component({
     selector    : 'nx-restore-component',
@@ -34,6 +35,7 @@ export class NxRestoreComponent implements OnInit {
     changeSuccess: any;
     context: any;
     ready: boolean;
+    uriParamLogout: string;
 
     private setupDefaults() {
         this.pageService.pageTitle = this.LANG.pageTitles.restorePassword;
@@ -46,6 +48,7 @@ export class NxRestoreComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
@@ -58,10 +61,19 @@ export class NxRestoreComponent implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.uriParamLogout = this.route.snapshot.queryParams.logout;
+        if (this.uriParamLogout !== undefined) {
+            if (this.sessionService.loginState) {
+                await this.accountService.logout(true);
+            }
+            this.localStorage.remove('email');
+        }
+
         this.ready = false;
         // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
         // updateURI causes component to be re-created
