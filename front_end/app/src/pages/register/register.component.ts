@@ -151,7 +151,7 @@ export class NxRegisterComponent implements OnInit {
                 portalError: this.LANG.errorCodes.brokenAccount?.()
             },
             holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantRegisterPrefix?.()
+            errorPrefix : ''
         })
             .then((response) => {
                 if (response.resultCode === 'alreadyExists') {
