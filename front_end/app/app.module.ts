@@ -1,57 +1,58 @@
-import { APP_INITIALIZER, NgModule }                                 from '@angular/core';
-import { BrowserModule, Title }                                      from '@angular/platform-browser';
-import { BrowserAnimationsModule }                                   from '@angular/platform-browser/animations';
+import { APP_INITIALIZER, NgModule }           from '@angular/core';
+import { BrowserModule, Title }                from '@angular/platform-browser';
+import { BrowserAnimationsModule }             from '@angular/platform-browser/animations';
 import {
-    Location, PathLocationStrategy, HashLocationStrategy, LocationStrategy, CommonModule, DatePipe
-}                                                                    from '@angular/common';
-import { RouterModule }                                              from '@angular/router';
-import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule }                          from '@angular/forms';
-import { AngularFireModule, FIREBASE_OPTIONS }                   from '@angular/fire';
-import { AngularFireMessagingModule }                                from '@angular/fire/messaging';
-import { LayoutModule }                                              from '@angular/cdk/layout';
-
-import { InputTrimModule }                    from 'ng2-trim-directive';
-import { NgbToast, NgbModal }                 from '@ng-bootstrap/ng-bootstrap';
-import { OrderModule }                        from 'ngx-order-pipe';
-import { DeviceDetectorModule }               from 'ngx-device-detector';
-import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
-import { NgxMaskModule, IConfig }             from 'ngx-mask';
+    Location, PathLocationStrategy,
+    HashLocationStrategy, LocationStrategy,
+    CommonModule, DatePipe
+}                                              from '@angular/common';
 import {
-    TranslateMessageFormatCompiler, MESSAGE_FORMAT_CONFIG
-}                                             from 'ngx-translate-messageformat-compiler';
-import { CookieService }                      from 'ngx-cookie-service';
-import { NgxWebstorageModule }                from 'ngx-webstorage';
-
-import { environment }                        from './environments/environment';
-import { AppComponent }                       from './app.component';
-import { ComponentsModule }                   from './src/components/components.module';
-import { DialogsModule }                      from './src/dialogs/dialogs.module';
-import { DirectivesModule }                   from './src/directives/directives.module';
-import { PipesModule }                        from './src/pipes/pipes.module';
-import { initializeApp }                      from './src/pages/push-notifications/push-notifications.module';
+    HttpClientModule, HttpClientXsrfModule,
+    HTTP_INTERCEPTORS
+}                                              from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule }    from '@angular/forms';
+import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire';
+import { AngularFireMessagingModule }          from '@angular/fire/messaging';
+import { LayoutModule }                        from '@angular/cdk/layout';
+import { InputTrimModule }                     from 'ng2-trim-directive';
+import { NgbToast, NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+import { OrderModule }                         from 'ngx-order-pipe';
+import { DeviceDetectorModule }                from 'ngx-device-detector';
+import { TranslateCompiler, TranslateModule }  from '@ngx-translate/core';
+import { NgxMaskModule, IConfig }              from 'ngx-mask';
+import {
+    TranslateMessageFormatCompiler,
+    MESSAGE_FORMAT_CONFIG
+}                                              from 'ngx-translate-messageformat-compiler';
+import { CookieService }                       from 'ngx-cookie-service';
+import { NgxWebstorageModule }                 from 'ngx-webstorage';
+import { environment }                         from '@environments/environment';
+import { AppComponent }                        from './app.component';
+import { ComponentsModule }                    from '@components/components.module';
+import { DialogsModule }                       from '@dialogs/dialogs.module';
+import { DirectivesModule }                    from '@directives/directives.module';
+import { PipesModule }                         from '@src/pipes/pipes.module';
+import { initializeApp }                       from '@pages/push-notifications/push-notifications.module';
 import {
     AuthGuard, SystemGuard, DevelopersGuard
-}                                             from './src/routeGuards';
-import { NxConfigService }                    from './src/services/nx-config';
-import { ServiceModule }                      from './src/services/services.module';
-import { WINDOWS_PROVIDERS }                  from './src/services/window-provider';
-import { MenuModule }                         from './src/menu';
-import { NxBootstrapProvider }                from './src/services/nx-bootstrap-provider';
-import { WebadminPageModule }                 from './src/pages/webadmin-page.module';
-import { PagesModule }                        from './src/pages/pages.module';
-import { NxUriCacheService }                  from './src/services/uri-cache.service';
-import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
-import { LocalSystemStatusInterceptor }       from './src/services/local-system-status-interceptor.service';
-
-import { FpsMeterService }                      from './src/services/fps-meter.service';
+}                                              from './src/routeGuards';
+import { NxConfigService }                     from '@services/nx-config';
+import { ServiceModule }                       from '@services/services.module';
+import { WINDOWS_PROVIDERS }                   from '@services/window-provider';
+import { MenuModule }                          from '@src/menu';
+import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
+import { WebadminPageModule }                  from '@pages/webadmin-page.module';
+import { PagesModule }                         from '@pages/pages.module';
+import { NxUriCacheService }                   from '@services/uri-cache.service';
+import { NxUriCachingInterceptor }             from '@services/uri-cache-interceptor.service';
+import { LocalSystemStatusInterceptor }        from '@services/local-system-status-interceptor.service';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
 }
-// @ts-ignore
-export const options: Partial<IConfig> | (() => Partial<IConfig>);
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
     imports: [
@@ -119,8 +120,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
-        FpsMeterService,
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
     ],
     declarations: [
         AppComponent
