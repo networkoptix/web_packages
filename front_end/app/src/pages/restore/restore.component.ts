@@ -1,7 +1,6 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
@@ -9,6 +8,7 @@ import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUriService }              from '../../services/uri.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxStorageService }          from '../../services/storage.service';
 
@@ -35,6 +35,7 @@ export class NxRestoreComponent implements OnInit {
     context;
     ready: boolean;
     hideErrors = true;
+    uriParamLogout: string;
 
     private setupDefaults() {
         this.pageService.pageTitle = this.LANG.pageTitles.restorePassword;
@@ -47,6 +48,7 @@ export class NxRestoreComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
@@ -59,10 +61,19 @@ export class NxRestoreComponent implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.uriParamLogout = this.route.snapshot.queryParams.logout;
+        if (this.uriParamLogout !== undefined) {
+            if (this.sessionService.loginState) {
+                await this.accountService.logout(true);
+            }
+            this.localStorage.remove('email');
+        }
+
         this.ready = false;
         // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
         // updateURI causes component to be re-created

@@ -22,6 +22,7 @@ import { NxStorageService }          from '../../services/storage.service';
 export class NxRegisterComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
+    uriParamLogout: string;
     uriParam: string;
     accountInfo: any = {};
     register: Process;
@@ -43,25 +44,28 @@ export class NxRegisterComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.translations;
         this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
-    constructor(configService: NxConfigService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private uriService: NxUriService,
-                private urlProtocol: NxUrlProtocolService,
-                private route: ActivatedRoute,
-                private storageService: NxStorageService,
-                public accountService: NxAccountService,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private router: Router
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private sessionService: NxSessionService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private uriService: NxUriService,
+        private urlProtocol: NxUrlProtocolService,
+        private route: ActivatedRoute,
+        private storageService: NxStorageService,
+        public accountService: NxAccountService,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private router: Router
     ) {
-        this.setupDefaults();
+        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
+
+        this.setupDefaults();
     }
 
     login() {
@@ -73,7 +77,15 @@ export class NxRegisterComponent implements OnInit {
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
+        this.uriParamLogout = this.route.snapshot.queryParams.logout;
+        if (this.uriParamLogout !== undefined) {
+            if (this.sessionService.loginState) {
+                await this.accountService.logout(true);
+            }
+            this.localStorage.remove('email');
+        }
+
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
         this.context.process = this.storageService.regProcess;
         this.uriParam = this.route.snapshot.data.uriParam;
