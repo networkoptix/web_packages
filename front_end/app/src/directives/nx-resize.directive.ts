@@ -1,7 +1,9 @@
 import {
-    Directive, ElementRef, EventEmitter, Output, OnDestroy
-}                       from '@angular/core';
-import ResizeObserver   from 'resize-observer-polyfill';
+    Directive, ElementRef,
+    EventEmitter, Output,
+    OnDestroy
+}                     from '@angular/core';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const entriesMap = new WeakMap();
 
@@ -19,7 +21,9 @@ export class NxResizeObserver implements OnDestroy {
     @Output()
     resize = new EventEmitter();
 
-    constructor(private el: ElementRef) {
+    constructor(
+        private el: ElementRef
+    ) {
         const target = this.el.nativeElement;
         entriesMap.set(target, this);
         observer.observe(target);
