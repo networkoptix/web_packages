@@ -473,7 +473,7 @@ class MenuNodeInlineForm(forms.ModelForm):
         self.fields['asset'].widget.get_related_url = lambda *_: reverse('admin:pages', kwargs={'asset_id': '__fk__'})
         self.fields['permissions'].label_from_instance = lambda obj: obj.name
         if self.current_customization == 'all':
-            self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations)
+            self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
             self.fields['enabled'].widget.can_add_related = False
         else:
             enabled = False
