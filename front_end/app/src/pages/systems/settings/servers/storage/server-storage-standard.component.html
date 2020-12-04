@@ -1,5 +1,5 @@
 <nx-section-placeholder
-        *ngIf="!loading && !showStorage"
+        *ngIf="!loading && !(storage$ | async).length"
         svgFileName="system_settings_placeholder"
         width="64"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
@@ -41,7 +41,7 @@
                     <tbody>
                         <tr class="table-row-spacer" [ngClass]="{'hasAction' : (storage$ | async).hasAction}"></tr>
                         <tr *ngFor="let store of (storage$ | async); let row=index">
-                            <td [ngClass]="{'disabled-label' : store.status != STATUS.IN_USE || store.updating }"
+                            <td [ngClass]="{'disabled-label' : checkDisabled(store) }"
                                 (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
                                         nx-add-svg-src
@@ -119,18 +119,17 @@
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="!loading && (storage$ | async) && doesModeExist('modeBackup')" type="mb-3">
+<nx-block *ngIf="!loading && (backupLocations$ | async)" type="mb-3">
     <header>
         <div class="header-top-bar">
             <nx-switch
-                [ngModel]="isBackupOn.value"
-                (ngModelChange)="updateBackupState($event)"
+                [(ngModel)]="backupState"
                 componentId="archive-backup"
             ></nx-switch>
             <h4 class="ml-2" translate>Archive Backup</h4>
         </div>
     </header>
-    <nx-section *ngIf="isBackupOn.value">
+    <nx-section *ngIf="backupState$ | async">
         <div class="archive-backup-container">
             <ng-container *ngIf="customSettings; else defaultMessage">
                 <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>

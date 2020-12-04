@@ -23,8 +23,8 @@ export class AddStorageModalContent {
     @Input() system: NxSystem;
     @Input() serverId: string;
     @Input() storage: any[];
-    @Input() systemStorages: any[];
     @Input() closable: boolean;
+    @Input() updateStorage: () => Promise<any>;
     storageForm: FormGroup;
 
     LANG: LanguageI18NStaticTypes;
@@ -89,11 +89,16 @@ export class AddStorageModalContent {
             delay     : this.CONFIG.alertTimeout
         };
         this.addStorage = this.processService
-            .createProcess(() => {
+            .createProcess(async() => {
                 const { url, login, password } = this.storageForm.value;
-                const storageExistsOnSystem = !this.alreadyExists && this.systemStorages?.find(s => s.url === url.substr(1));
-                return storageExistsOnSystem ? Promise.reject(Error('alreadyExists'))
-                    : this.addStorageProcess(url, login, password);
+                const systemStorages = (await this.system.getStorages().toPromise()) || [];
+                const storageExistsOnSystem = this.alreadyExists || systemStorages.find((s) => s.url.replace('smb:', '') === url);
+                if (storageExistsOnSystem) {
+                    return Promise.reject(Error('alreadyExists'));
+                }
+                const id = await this.addStorageProcess(url, login, password);
+                await this.updateStorage();
+                return id;
             }, { ignoreError: true },
             (res: any) => {
                 let message = this.LANG.storage.failed();

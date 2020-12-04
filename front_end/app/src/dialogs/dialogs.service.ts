@@ -225,7 +225,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(system: NxSystem, serverId: string, storage: any[], systemStorages: any[]) {
+    addStorage(system: NxSystem, serverId: string, storage: any[], updateStorage) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -235,7 +235,7 @@ export class NxDialogsService {
             system,
             serverId,
             storage,
-            systemStorages,
+            updateStorage,
             closable: true
         };
 

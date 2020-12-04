@@ -1,11 +1,13 @@
 import {
     Component, Inject, ViewContainerRef,
-    LOCALE_ID, Input, Output, OnInit, EventEmitter, SimpleChanges
-}                                                from '@angular/core';
-import { UntilDestroy }                          from '@ngneat/until-destroy';
-import { Subscription, interval, combineLatest, BehaviorSubject, Subject, defer } from 'rxjs';
+    LOCALE_ID, Input, Output, OnInit, EventEmitter
+}                                    from '@angular/core';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
-    map, first, takeUntil, delay, retryWhen, filter, distinctUntilChanged, switchMap, debounceTime
+    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer
+}                                    from 'rxjs';
+import {
+    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -36,6 +38,7 @@ enum STORAGE_TYPES {
     LOCAL = 'local',
     USB = 'usb',
     NETWORK = 'smb',
+    SYSTEM_NETWORK = 'network',
     CLOUD = 'cloud'
 }
 
@@ -56,42 +59,46 @@ export class NxSystemStorageComponent implements OnInit {
     storageTypes = STORAGE_TYPES
 
     loading: boolean;
-    showStorage: boolean;
-    systemSubscription: Subscription;
-    storageSubscription: Subscription;
-    systemStorageSubscription: Subscription;
-    systemStorages: any;
     reindexingMain = false;
     percentMainDone = 0;
     reindexingBackup = false;
     percentBackupDone = 0;
     onlineMains = 0;
     onlineBackups = 0;
+    changedModes: string[] = [];
+    customSettings = false;
+
     storage$ = new BehaviorSubject<any[] | any>([]);
+    triggerUpdate$ = new Subject<any>();
     refreshStorages$ = new Subject<any>();
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
 
-    doesMainExist = false;
-    customSettings = false;
-    shouldSaveDefaultSettings = false;
-    isBackupOn: Watcher<boolean> = new Watcher();
-    watchers: Watcher<any>[] = [this.isBackupOn];
-    modeWatchers: {[key: string]: Watcher<any>} = {};
-    changedModes: string[] = [];
-
-    ddWidth: number;
-    modes: any;
-    modeSelected: any;
-    STATUS: any;
-    reindexingMainSubscription: Subscription;
-    reindexingBackupSubscription: Subscription;
     dropdownOffsetCalc$ = combineLatest([
         this.dropdownOffset$.pipe(distinctUntilChanged()),
         this.scrollOffset$.pipe(distinctUntilChanged())
     ]).pipe(
         map(([offset, scroll]) => offset - scroll + 22) // margin offset
     )
+
+    backupLocations$ = this.storage$.pipe(
+        map(storage => storage.reduce(
+            (hasBackup, { storageId }) => hasBackup ||
+            [this.modeWatchers[storageId].originalValue, this.modeWatchers[storageId].value].includes('modeBackup'),
+            false
+        )))
+
+    isBackupOn = new Watcher(false);
+    modeWatchers: {[key: string]: Watcher<any>} = {};
+
+    ddWidth: number;
+    modes: any;
+    STATUS = STORAGE_STATUS
+
+    reindexingMainSubscription: Subscription;
+    reindexingBackupSubscription: Subscription;
+    triggerUpdateSubscription: Subscription;
+    storageSubscription: Subscription;
 
     mainStorageIds: string[] = [];
     backupStorageIds: string[] = [];
@@ -110,7 +117,6 @@ export class NxSystemStorageComponent implements OnInit {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
         this.viewContainerRef = viewContainerRef;
-        this.showStorage = false;
         this.loading = true;
 
         this.modes = [
@@ -119,8 +125,6 @@ export class NxSystemStorageComponent implements OnInit {
             { name: 'horizontal', value: '' },
             { name: this.LANG.storage.modes.notInUse(), value: 'modeNotInUse' }
         ];
-
-        this.STATUS = STORAGE_STATUS;
     }
 
     ngOnInit() {
@@ -129,23 +133,29 @@ export class NxSystemStorageComponent implements OnInit {
         this.init();
     }
 
-    init() {
-        this.loading = true;
-        this.showStorage = false;
+    ngOnChanges(changes) {
+        if (!changes.serverId.firstChange) {
+            this.loading = true;
+            this.storageEmit.emit();
+            this.triggerUpdate$.next('update');
+        }
+    }
+
+    init = (reInit = false) => {
+        this.loading = !reInit;
 
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
                 this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true),
                 this.system.getRecordStats(true)
-            ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages, usage: results[2] })))
+            ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
                         console.error(results.storage.message);
                         this.loading = false;
                         return;
                     }
-                    this.modeWatchers = {};
 
                     const storage = results.storage || [];
 
@@ -199,30 +209,41 @@ export class NxSystemStorageComponent implements OnInit {
                             storage.hasAction = true;
                         }
 
+                        if (!store.storageType) {
+                            store.storageType = STORAGE_TYPES.NETWORK;
+                        }
+
                         storage[idx] = { ...store };
                     });
 
-                    this.showStorage = (Object.keys(storage).length > 0);
                     this.setupWatchers();
                     this.updateStorage(storage);
+                    this.updateCustom();
 
                     this.loading = false;
                 });
-            this.system.getStorages({ id: this.serverId }).subscribe(this.refreshStorages$);
+            this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
+                startWith('trigger'),
+                switchMap(() => this.system.getStorages({ id: this.serverId })),
+                tap(this.refreshStorages$)
+            ).subscribe();
+            return this.refreshStorages$.toPromise();
         }
     }
 
-    setupWatchers() {
-        const watchers = [this.isBackupOn];
+    setupWatchers = () => {
         const modeWatchers = Object.entries(this.modeWatchers);
         const resetWatchers = () => {
-            this.shouldSaveDefaultSettings = false;
-            watchers.forEach(watcher => watcher.reset());
+            this.isBackupOn.reset();
+            this.backupState = this.isBackupOn.originalValue;
             const storage = this.storage$.value;
             this.changedModes = [];
             modeWatchers.forEach(([id, watcher]) => {
                 watcher.reset();
                 const store = storage.find(({ storageId }) => storageId === id);
+                if (!store) {
+                    return;
+                };
                 store.isUsedForWriting = true;
                 store.isBackup = false;
                 switch (watcher.originalValue) {
@@ -240,17 +261,16 @@ export class NxSystemStorageComponent implements OnInit {
 
         const saveSettings: Process = this.processService.createProcess(() => {
             return Promise.all([
-                this.isBackupOn.value && this.shouldSaveDefaultSettings
-                    ? this.setDefaultBackupSettings()
-                    : !this.isBackupOn.value
-                        ? this.turnOffBackup()
-                        : Promise.resolve(),
+                this.isBackupOn.originalValue !== this.isBackupOn.value
+                    ? Promise.resolve()
+                    : this.backupState
+                        ? this.setDefaultBackupSettings()
+                        : this.turnOffBackup(),
                 this.handleModeUpdate()
             ]);
         });
-
         this.applyService.addWatchersAndFunctionsFromChild(
-            [...watchers, ...modeWatchers.map(([_, watcher]) => watcher)],
+            [this.isBackupOn, ...modeWatchers.map(([_, watcher]) => watcher)],
             saveSettings,
             resetWatchers
         );
@@ -278,6 +298,12 @@ export class NxSystemStorageComponent implements OnInit {
         }
     }
 
+    updateCustom = () => {
+        return this.doesCurrentServerHaveDefaultSettings().then(hasDefault => {
+            this.customSettings = !hasDefault && this.isBackupOn.originalValue;
+        });
+    }
+
     setDefaultBackupSettings = async() => {
         try {
             await this.system.updateOrGetBackupControl(this.serverId, 'start');
@@ -296,6 +322,9 @@ export class NxSystemStorageComponent implements OnInit {
             });
             await Promise.all(cameraSettingsToSave);
             await this.system.update();
+            this.customSettings = false;
+            this.backupState = true;
+            this.isBackupOn.originalValue = true;
             return Promise.resolve();
         } catch (error) {
             console.error('error while setting backup to default settings', error);
@@ -310,7 +339,8 @@ export class NxSystemStorageComponent implements OnInit {
         if (backupControlRes && backupControlRes.reply.state !== 'BackupState_None') {
             await this.system.updateOrGetBackupControl(this.serverId, 'stop');
         }
-        return Promise.resolve();
+        this.backupState = false;
+        this.isBackupOn.originalValue = false;
     }
 
     checkIfBackupEnabled(server: any) {
@@ -320,32 +350,13 @@ export class NxSystemStorageComponent implements OnInit {
         );
     }
 
-    checkArchiveState() {
-        let isBackupForCurrentServerEnabled = false;
-        let isBackupForAnyServersEnabled = false;
-        this.system.servers.forEach(server => {
-            if (server.id === this.serverId) {
-                isBackupForCurrentServerEnabled = this.checkIfBackupEnabled(server);
-                if (isBackupForCurrentServerEnabled) {
-                    isBackupForAnyServersEnabled = true;
-                }
-            } else if (!isBackupForAnyServersEnabled) {
-                isBackupForAnyServersEnabled = this.checkIfBackupEnabled(server);
-            }
-        });
-
-        if (isBackupForCurrentServerEnabled) {
-            this.isBackupOn.value = true;
-            this.customSettings = !this.doesCurrentServerHaveDefaultSettings();
-        } else {
-            this.isBackupOn.value = false;
-            this.customSettings = false;
-            if (!isBackupForAnyServersEnabled) this.isBackupOn.value = true;
-            // if no server in system has backup settings on, should trigger apply service
-            if (this.isBackupOn.value) {
-                this.shouldSaveDefaultSettings = true;
-            }
-        }
+    checkArchiveState = () => {
+        return this.system.servers.reduce(
+            (enabled, { id, backupType, backupDuration }) => enabled ||
+                id === this.serverId &&
+                backupType === 'BackupRealTime' ||
+                (backupType === 'BackupSchedule' && backupDuration > 0),
+            false);
     }
 
     updateStorage(storage) {
@@ -365,7 +376,7 @@ export class NxSystemStorageComponent implements OnInit {
             if (updating) {
                 isUpdating = true;
             };
-            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.USB, STORAGE_TYPES.CLOUD];
+            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
             hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
         });
 
@@ -375,18 +386,15 @@ export class NxSystemStorageComponent implements OnInit {
             });
             store.mainOnly = true;
         }
-        this.doesMainExist = Boolean(totalMains);
-        if (this.doesModeExist('modeBackup')) {
-            this.checkArchiveState();
-        } else {
-            this.isBackupOn.value = false;
-        }
+        this.isBackupOn.originalValue = this.doesModeExist('modeBackup') && this.checkArchiveState();
+        this.backupState = this.isBackupOn.originalValue;
+
         const sortByTypeAndUrl = (
             { storageType: aType, url: aUrl },
             { storageType: bType, url: bUrl }
         ) => {
-            const { LOCAL, USB, NETWORK, CLOUD } = STORAGE_TYPES;
-            const typeOrder = [LOCAL, USB, NETWORK, CLOUD];
+            const { LOCAL, USB, NETWORK, SYSTEM_NETWORK, CLOUD } = STORAGE_TYPES;
+            const typeOrder = [LOCAL, USB, SYSTEM_NETWORK, NETWORK, CLOUD];
             if (aType === bType) {
                 return aUrl < bUrl ? -1 : 1;
             }
@@ -433,18 +441,6 @@ export class NxSystemStorageComponent implements OnInit {
         return aggregateSpace;
     }
 
-    getSystemStorages() {
-        this.systemStorageSubscription = this.system.getStorages()
-            .subscribe(results => {
-                if (results.name === 'TimeoutError') {
-                    console.error(results.storage.message);
-                    this.loading = false;
-                    return;
-                }
-                this.systemStorages = results || [];
-            });
-    }
-
     selectMode(store) {
         if (!store.isUsedForWriting && !store.usedForWriting) {
             return this.modes[MODE.NOT_IN_USE];
@@ -462,6 +458,8 @@ export class NxSystemStorageComponent implements OnInit {
     handleScroll(event) {
         this.scrollOffset$.next(event.target.scrollLeft);
     }
+
+    checkDisabled = store => store.status !== STORAGE_STATUS.IN_USE || store.updating || this.selectMode(store).value === 'modeNotInUse'
 
     changeMode(
         { isBackup, storageId: id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
@@ -495,6 +493,9 @@ export class NxSystemStorageComponent implements OnInit {
 
     handleModeUpdate = () => {
         let updatingStores = [];
+        if (!this.changedModes.length) {
+            return Promise.resolve();
+        }
         const setUpdating = (updating?, toUpdate = this.changedModes) => {
             if (!updating) {
                 updatingStores = updatingStores.filter(id => !toUpdate.includes(id));
@@ -519,8 +520,8 @@ export class NxSystemStorageComponent implements OnInit {
 
         // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
         const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
-        const toUpdateParams = ({ totalSpace, isBackup, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, url, storageType, storageId: id }) => ({
-            addParams : [{ name: 'space', value: `${totalSpace}` }],
+        const toUpdateParams = ({ totalSpace, isBackup, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, url, storageType, storageId: id, addParams }) => ({
+            addParams : totalSpace || addParams.space ? [{ name: 'space', value: `${totalSpace || addParams.space}` }] : [],
             parentId  : this.serverId,
             id,
             isBackup,
@@ -554,6 +555,7 @@ export class NxSystemStorageComponent implements OnInit {
                 }
             });
         });
+        return done$.toPromise();
     }
 
     calcDDWidth() {
@@ -600,7 +602,7 @@ export class NxSystemStorageComponent implements OnInit {
                         .removeStorage({ id: storage.storageId }).toPromise()
                         .then((response) => {
                             if (response.id) {
-                                this.init();
+                                this.triggerUpdate$.next('update');
                             }
                         }).catch(_ => {
                             this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: storage.url }), 'warning');
@@ -609,13 +611,15 @@ export class NxSystemStorageComponent implements OnInit {
             });
     }
 
-    updateBackupState(value) {
+    backupState$ = new BehaviorSubject(false)
+
+    get backupState() {
+        return this.backupState$.value;
+    }
+
+    set backupState(value) {
+        this.backupState$.next(value);
         this.isBackupOn.value = value;
-        if (value) {
-            this.checkArchiveState();
-        } else {
-            this.shouldSaveDefaultSettings = false;
-        }
     }
 
     resetBackupToDefault() {
@@ -623,12 +627,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     addExternalStorage() {
-        return this.dialogs.addStorage(this.system, this.serverId, this.storage$.value, this.systemStorages)
-            .then(res => {
-                if (res === this.CONFIG.responseOk) {
-                    this.init();
-                }
-            });
+        return this.dialogs.addStorage(this.system, this.serverId, this.storage$.value, () => this.triggerUpdate$.next('update'));
     }
 
     reindexStorage(type: 'main' | 'backup') {

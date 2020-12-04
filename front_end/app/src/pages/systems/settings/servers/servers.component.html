@@ -7,15 +7,15 @@
 >
 </nx-standard-server-component>
 
+<nx-server-storage-component
+    *ngIf="!isOffline && system && selectedServer"
+    [system]="system"
+    (storageEmit)="updateStorage($event)"
+    [serverId]="selectedServer?.id"
+>
+</nx-server-storage-component>
+
 <ng-container *ngIf="serverLoaded && system && selectedServer?.id">
-
-    <nx-server-storage-component
-        [system]="system"
-        (storageEmit)="updateStorage($event)"
-        [serverId]="selectedServer?.id"
-    >
-    </nx-server-storage-component>
-
     <nx-cloud-storage
         *ngIf="!CONFIG.isLocal && system?.canUserViewCloudStorage()"
         layout="simple"
