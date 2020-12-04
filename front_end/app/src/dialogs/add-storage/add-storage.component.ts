@@ -153,7 +153,7 @@ export class AddStorageModalContent {
                 return Promise.reject(Error('WrongAuth'));
             }
             if (reply.status.toLowerCase() === this.CONFIG.responseOk && reply.storage.isWritable) {
-                return this.system.saveStorage({ parentId: this.serverId, url: smbShare }).toPromise();
+                return this.system.saveStorage({ parentId: this.serverId, url: smbShare, storageType: 'smb' }).toPromise();
             }
             return Promise.reject();
         } catch (error) {

@@ -8,10 +8,10 @@
 </nx-standard-server-component>
 
 <nx-server-storage-component
-    *ngIf="!isOffline && system && selectedServer"
+    *ngIf="!isOffline && system && (serverId$ | async)"
     [system]="system"
     (storageEmit)="updateStorage($event)"
-    [serverId]="selectedServer?.id"
+    [serverId]="serverId$ | async"
 >
 </nx-server-storage-component>
 

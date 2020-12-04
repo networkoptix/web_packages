@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angula
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy }                  from '@ngneat/until-destroy';
-import { Subscription }                  from 'rxjs';
+import { BehaviorSubject, Subscription }                  from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
@@ -29,6 +29,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     system: NxSystem;
     serverIdFromParams;
     selectedServer;
+    serverId$ = new BehaviorSubject('')
 
     advanced: boolean;
     params: Params;
@@ -180,6 +181,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             }
             this.selectedServer = server;
             this.menuService.detail = this.selectedServer.id;
+            if (this.selectedServer.id !== this.serverId$.value) {
+                this.serverId$.next('');
+                setTimeout(() => {
+                    this.serverId$.next(this.selectedServer.id);
+                });
+            }
         }
     }
 

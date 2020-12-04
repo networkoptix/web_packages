@@ -625,7 +625,7 @@ class ServerManager {
     }
 
     setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string }) {
-        this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
+        return this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
     }
 
     setServerUserSettings(serverId: string, params: { [key: string]: string }) {
@@ -810,6 +810,10 @@ class ServerManager {
 
     getStorages(serverId, useCache = false) {
         return this.mediaserverConnections[serverId].getStorages(useCache);
+    }
+
+    getRecordStats(serverId, useCache = false) {
+        return this.mediaserverConnections[serverId].getRecordStats(useCache);
     }
 }
 
@@ -1301,8 +1305,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.removeStorage(updateParams);
     }
 
-    getRecordStats(useCache = false) {
-        return this.mediaserver.getRecordStats(useCache);
+    getRecordStats(serverId, useCache = false) {
+        return this.serverManager.getRecordStats(serverId, useCache);
     }
 
     getStorages<T>(queryParams?: T) {
