@@ -145,11 +145,10 @@ export class NxBootstrapProvider {
                 name: companyName
             };
 
-            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = data;
+            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = data;
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
-                healthMonitor,
                 integrationStore: integrationStoreEnabled,
                 publicDownloads,
                 publicReleases,

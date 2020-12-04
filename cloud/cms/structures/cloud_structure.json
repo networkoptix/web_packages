@@ -695,16 +695,6 @@
             "fieldset": "Features"
           },
           {
-            "label": "Enable health monitoring",
-            "name": "%HM_ENABLED%",
-            "description": "Allows users to see the health monitoring tab in the header. If disabled, it will only be shown if the system supports it.",
-            "type": "check_box",
-            "value": false,
-            "optional": true,
-            "advanced": true,
-            "fieldset": "Features"
-          },
-          {
             "label": "Enable developers pages",
             "name": "%DEVELOPERS_ENABLED%",
             "description": "Enable For Developers pages. If disabled, it will only be shown to users with permission to see it",

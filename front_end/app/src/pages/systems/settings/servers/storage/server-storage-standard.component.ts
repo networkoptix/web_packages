@@ -756,9 +756,6 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     get canSeeInfo() {
-        return (this.CONFIG.cloudCapabilities.healthMonitoring ||
-            this.system.info.capabilities &&
-            this.system.info.capabilities.vms_metrics) &&
-            this.system.canViewInfo();
+        return this.system.info.capabilities && this.system.info.capabilities.vms_metrics && this.system.canViewInfo();
     }
 }
