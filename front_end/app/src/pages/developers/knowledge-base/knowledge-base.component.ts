@@ -10,6 +10,13 @@ import { MenuNodeWithParent, RelatedLinks } from '../../../components/left-menu/
 import { NxMenusService, MenuNode } from '../../../services/menus.service';
 import { SearchFilter, SearchTag } from '../../../components/search/search.component';
 
+export enum CardClasses {
+    NORMAL='text',
+    CONTENT='content',
+    SIDE='side',
+    ARTICLE='article'
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-knowledge-base',
@@ -38,6 +45,10 @@ export class NxKnowledgeBaseComponent implements OnInit {
     relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
         map(this.filterRelatedLinks)
     );
+
+    get CardClasses() {
+        return CardClasses;
+    }
 
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (relatedLinks.type === 'next') {
@@ -167,11 +178,15 @@ export class NxKnowledgeBaseComponent implements OnInit {
                                         title,
                                         this.assetId$.value,
                                         contentHTML,
-                                        blocks.map(({ contentHTML, title }) => KnowledgeNode.normalHeader(
-                                            title,
-                                            '',
-                                            contentHTML
-                                        )),
+                                        CardClasses.NORMAL,
+                                        blocks.map(({ contentHTML, title, type }) => {
+                                            return KnowledgeNode.normalHeader(
+                                                title,
+                                                '',
+                                                contentHTML,
+                                                type
+                                            );
+                                        }),
                                         script
                                     );
                                     this.loading = false;
@@ -205,12 +220,6 @@ export class NxKnowledgeBaseComponent implements OnInit {
     };
 };
 
-export enum CardClasses {
-    NORMAL='normal',
-    SIDE='side',
-    ARTICLE='article'
-}
-
 export class KnowledgeNode {
     private constructor(
         public title: string,
@@ -228,6 +237,7 @@ export class KnowledgeNode {
         title: string,
         url: string,
         content: string,
+        cardClass = CardClasses.NORMAL,
         nodes: KnowledgeNode[] = [],
         script = ''
     ) {
@@ -237,7 +247,7 @@ export class KnowledgeNode {
             content,
             nodes,
             script,
-            CardClasses.NORMAL
+            cardClass
         );
     }
 

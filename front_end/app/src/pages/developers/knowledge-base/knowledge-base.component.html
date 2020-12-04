@@ -12,15 +12,21 @@
     </div>
 </ng-template>
 
-<ng-template #outlinedCard let-node="node">
-    <nx-block type="mt-3">
-        <header>{{node.title}}</header>
-        <nx-section>
-            <h2>{{node.title}}</h2>
-            <div [innerHTML]="node.content | safe:'html'"></div>
-        </nx-section>
-    </nx-block>
+<ng-template #contentCard let-node="node">
+    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
+        <div [innerHTML]="node.content | safe:'html'" class="article-content"></div>
+    </div>
 </ng-template>
+
+<!--<ng-template #outlinedCard let-node="node">-->
+<!--    <nx-block type="mt-3">-->
+<!--        <header>{{node.title}}</header>-->
+<!--        <nx-section>-->
+<!--            <h2>{{node.title}}</h2>-->
+<!--            <div [innerHTML]="node.content | safe:'html'"></div>-->
+<!--        </nx-section>-->
+<!--    </nx-block>-->
+<!--</ng-template>-->
 
 <ng-template #sideCard let-node="node">
     <nx-block type="mt-3" header-style="side">
@@ -96,7 +102,9 @@
                 </ng-container>
                 <ng-template #displayContent>
                     <ng-container *ngFor="let node of pageNode.nodes">
-                        <ng-container *ngTemplateOutlet="node.cardClass === 'normal' ? normalCard : sideCard;context{node:node}"></ng-container>
+                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
+                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
+                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node}"></ng-container>
                     </ng-container>
                     <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">

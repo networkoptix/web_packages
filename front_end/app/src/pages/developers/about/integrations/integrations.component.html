@@ -6,7 +6,7 @@
 
 <ng-template #integrationsBlocks>
     <div *ngIf="integrationsDetails() as integrations" class="card integrations-block">
-        <h3 translate>Examples of Plugin</h3>
+        <h3 translate>Examples of Integrations</h3>
         <div class="integrations-blocks-wrapper">
             <ng-container *ngFor="let integration of integrations.plugins">
                 <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>

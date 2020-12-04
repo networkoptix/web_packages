@@ -1408,7 +1408,7 @@ class Menu(models.Model):
         structures = {}
         for menu in menus:
             structures[menu.name.lower()] = {
-                'nodes': menu.generate_structure(cloud_portal_asset, customization, global_contexts_dict),
+                'nodes': MenuNode.generate_node_structure(menu.nodes_list, cloud_portal_asset, customization, global_contexts_dict, max_depth=menu.depth),
                 'type': menu.type,
                 'base_url': menu.base_url
             }
@@ -1460,16 +1460,6 @@ class Menu(models.Model):
             child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)
 
         return (*prefetches, *child_prefetches)
-
-    def generate_structure(self, cloud_portal_asset, customization, global_contexts_dict):
-        structure = []
-        for node in self.nodes_list:
-            if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
-                    (not node.condition or global_contexts_dict.get(node.condition, False)):
-                structure.append(node.process_node(
-                    cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=self.depth
-                ))
-        return structure
 
     @classmethod
     def cache_all_customizations(cls, **kwargs):
@@ -1592,36 +1582,36 @@ class MenuNode(models.Model):
     def __str__(self):
         return f'Item: {self.name}'
 
-    def process_node(self, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
-        node_structure = {
-            'name': cloud_portal_asset.replace_global_values(self.name, global_contexts_dict),
-            'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
-            'asset_id': self.asset.id if self.asset else None,
-            'asset_type': AssetType.ASSET_TYPES[self.asset.asset_type.type] if self.asset else None,
-            'related_asset_ids': [asset.id for asset in self.related_assets.all()],
-            'next_item': self.next_item,
-            'new_window': self.new_window,
-            'icon': self.icon,
-            'permissions': list(self.permissions.values_list('codename', flat=True)),
-            'authentication': self.AUTH_CHOICES[self.authentication],
-            'order': self.order
-        }
-        node_structure['display_name'] = node_structure['name']
+    @staticmethod
+    def generate_node_structure(nodes, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
+        nodes_structure = []
+        for node in nodes:
+            enabled = next((cust for cust in node.enabled_list if cust.id == customization.id), False)
+            condition_met = not node.condition or global_contexts_dict.get(node.condition, False)
+            asset_accepted = not node.asset or node.asset.version_id(customization.name) != 0
+            if enabled and condition_met and asset_accepted:
+                node_structure = {
+                    'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
+                    'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
+                    'asset_id': node.asset.id if node.asset else None,
+                    'asset_type': AssetType.ASSET_TYPES[node.asset.asset_type.type] if node.asset else None,
+                    'related_asset_ids': [asset.id for asset in node.related_assets.all()],
+                    'next_item': node.next_item,
+                    'new_window': node.new_window,
+                    'icon': node.icon,
+                    'permissions': list(node.permissions.values_list('codename', flat=True)),
+                    'authentication': node.AUTH_CHOICES[node.authentication],
+                    'order': node.order
+                }
+                node_structure['display_name'] = node_structure['name']
 
-        if depth < max_depth:
-            nodes = self.nodes_list
-            if nodes:
-                node_list = []
-                for node in nodes:
-                    if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
-                            (not node.condition or global_contexts_dict.get(node.condition, False)) and \
-                            (not node.asset or node.asset.version_id(customization.name) != 0):
-                        node_list.append(node.process_node(
-                            cloud_portal_asset, customization, global_contexts_dict, depth + 1, max_depth
-                        ))
-                if node_list:
-                    node_structure['nodes'] = node_list
-        return node_structure
+                if depth < max_depth and node.nodes_list:
+                    node_structure['nodes'] = node.generate_node_structure(
+                        node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
+                        max_depth=max_depth
+                    )
+                nodes_structure.append(node_structure)
+        return nodes_structure
 
     @classmethod
     def enable_global(cls, cloud_portal_asset):

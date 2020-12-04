@@ -147,7 +147,7 @@
         },
         "general": "General",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more plugins...} one{#{endTag} more plugin...} other{#{endTag} more plugins...}}",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Search",
         "system": "system",
         "systemHasNoCameras": "No Cameras",

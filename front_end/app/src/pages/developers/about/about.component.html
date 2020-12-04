@@ -4,7 +4,9 @@
 <ng-template #intro let-intro="intro">
     <div class="about-heading">
         <h1>{{intro.title}}</h1>
-        <p *ngFor="let block of intro.asset.blocks || []" [innerHTML]="block.contentHTML || ''"></p>
+        <ng-container *ngIf="intro.asset">
+            <p *ngFor="let block of intro.asset.blocks || []" [innerHTML]="block.contentHTML || ''"></p>
+        </ng-container>
     </div>
 </ng-template>
 <ng-container *ngIf="router.url === '/docs/' + baseName">
