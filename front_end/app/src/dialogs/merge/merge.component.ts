@@ -773,7 +773,11 @@ export class MergeModalContent {
         let systemName: string;
         if (system.systemName) {
             systemName = system.systemName;
-            status = ` (${system.name}, ${NxUtilsService.cleanIp(system.remoteAddresses[0])}:${system.port}) ${status}`;
+            // finds first valid ipv4/ipv6 address
+            const firstValidIp = system.remoteAddresses.find(addy => {
+                return addy.split('.')[0].length <= 4 || addy.split(':')[0].length <= 4;
+            }) || system.remoteAddresses[0];
+            status = ` (${system.name}, ${NxUtilsService.cleanIp(firstValidIp)}:${system.port}) ${status}`;
         } else {
             systemName = system.name;
         }

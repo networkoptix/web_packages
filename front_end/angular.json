@@ -155,23 +155,6 @@
             "browserTarget": "front-end:build"
           }
         },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "no-cache": true,
-            "main": "app/test.ts",
-            "polyfills": "app/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "app/images"
-            ],
-            "styles": [
-              "app/styles.scss"
-            ],
-            "scripts": []
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {

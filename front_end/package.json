@@ -128,15 +128,5 @@
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.11.0"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": [
-      "<rootDir>/app/setupJest.ts"
-    ],
-    "transform": {
-      "^.+\\.(ts|html)$": "<rootDir>/node_modules/jest-preset-angular/preprocessor.js",
-      "^.+\\.js$": "babel-jest"
-    }
   }
 }

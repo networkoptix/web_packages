@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { describe, expect, jest } from '@jest/globals';
+import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { By } from '@angular/platform-browser';
@@ -52,7 +52,7 @@ describe('NxGenericDropdown', () => {
         },
     ]
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         const translateSpy = { translations: {
             pleaseSelect: () => "Please select..."
         }};
@@ -93,8 +93,8 @@ describe('NxGenericDropdown', () => {
 
     it('should have one disabled item', () => {
         fixture.detectChanges();
-        const items = el.queryAll(By.css('.text-muted'));
-        expect(items.length).toBe(1);
+        const items = el.queryAll(By.css('.disabled'));
+        expect(items.length).toBe(2);
     });
 
     it('should NOT have ellipsis-mr class if NOT merge or ellipsisMargin', () => {

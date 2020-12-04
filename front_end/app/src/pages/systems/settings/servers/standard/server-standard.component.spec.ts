@@ -2,7 +2,7 @@ import { async }          from '@angular/core/testing';
 import { HttpClient }     from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-import { NxSystemStandardServerComponent } from './server.component';
+import { NxSystemStandardServerComponent } from './server-standard.component';
 import { NxConfigService }                 from '../../../../../services/nx-config';
 import { NxLanguageProviderService }       from '../../../../../services/nx-language-provider';
 import { NxProcessService }                from '../../../../../services/process.service';
