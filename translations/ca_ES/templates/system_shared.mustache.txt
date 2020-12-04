@@ -1,11 +1,11 @@
 Hola, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) ha compartit l'accés al sistema de gestió de vídeo "{{message.system_name}}" amb tu.
+{{message.sharer_name}} ({{message.sharer_email}}) ha compartit l'accés al sistema de gestió de vídeo "{{message.system_name}}" amb vós.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You have been granted access to video management system "{{message.system_name}}".
+Se us ha atorgat accés al sistema de gestió de vídeo "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Veure a %CLOUD_NAME% Portal: {{config.portal_url}}/ sistemes /{{message.system_id}}
+Veure al portal de %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}
