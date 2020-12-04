@@ -559,7 +559,7 @@ export interface MenuTitles {
 }
 
 export interface PageDescriptions {
-    integrations: string;
+    integrations: any;
 }
 
 export interface PageTitles {

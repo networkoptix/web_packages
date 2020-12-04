@@ -1,17 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxStorageService }          from '../../services/storage.service';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxUrlProtocolService }      from '@services/url-protocol.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { NxSessionService }          from '@services/session.service';
 
 @Component({
     selector    : 'nx-register-component',
@@ -83,7 +84,7 @@ export class NxRegisterComponent implements OnInit {
             if (this.sessionService.loginState) {
                 await this.accountService.logout(true);
             }
-            this.localStorage.remove('email');
+            this.sessionService.email = '';
         }
 
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS

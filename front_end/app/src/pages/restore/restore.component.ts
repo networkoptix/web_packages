@@ -1,16 +1,17 @@
 import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUriService }              from '../../services/uri.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxStorageService }          from '../../services/storage.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { NxSessionService }          from '@services/session.service';
 
 @Component({
     selector    : 'nx-restore-component',
@@ -25,7 +26,7 @@ export class NxRestoreComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-	uriParamEmail: string;
+    uriParamEmail: string;
     change: Process;
     restore: Process;
     data;
@@ -71,7 +72,7 @@ export class NxRestoreComponent implements OnInit {
             if (this.sessionService.loginState) {
                 await this.accountService.logout(true);
             }
-            this.localStorage.remove('email');
+            this.sessionService.email = '';
         }
 
         this.ready = false;

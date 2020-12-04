@@ -33,7 +33,7 @@ export class NxPageService {
         this.title.setTitle(txt);
     }
 
-	public set pageDescription(content: string) {
+	public set pageDescription(content: any) {
         this.meta.updateTag({ name: 'description', content: content });
     }
 
