@@ -7,7 +7,7 @@
     <div class="card hoverable tool-card" (click)="headerService.handleNav({url: tool.url, new_window: tool.newWindow})">
         <header>
             <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.devTools + tool.icon"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + tool.icon"></svg-icon>
         </header>
         <div class="tool-detail">
             <h3>{{tool.title}}</h3>
