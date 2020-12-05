@@ -1109,7 +1109,10 @@
             "description": "Describe to the users what was changed/fixed/added in this release.",
             "placeholder": "<h2>ChangedList</h2><ul><li>Added some features</li><li>Removed some features</li></ul>",
             "type": "html",
-            "optional": true
+            "optional": true,
+            "meta": {
+              "brand_vars": true
+            }
           },
           {
             "name": "internalNotes",

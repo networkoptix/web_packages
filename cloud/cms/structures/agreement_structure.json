@@ -32,7 +32,10 @@
             "value": "",
             "description": "HTML that will be used on the agreement's page",
             "type": "html",
-            "optional": false
+            "optional": false,
+            "meta": {
+              "brand_vars": true
+            }
           }
         ]
       }
