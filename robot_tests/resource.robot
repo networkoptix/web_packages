@@ -881,10 +881,10 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}
+    [Arguments]    ${name}     ${image}=4.1_test
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d --name ${name} --restart always -p 7001 4.1_test
+    ${results}    Execute Command    docker run -d --name ${name} --restart always -p 7001 ${image}
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}

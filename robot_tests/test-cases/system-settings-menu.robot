@@ -1,10 +1,11 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-#Test Setup        Restart
+Suite Setup       System Settings Menu Suite Setup
+Test Setup        Restart
 #Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Close All Browsers
-Force Tags        system
+#Suite Teardown    Close All Browsers
+Suite Teardown    System Settings Menu Suite Tear Down
+Force Tags        system    left-menu    threaded
 
 *** Variables ***
 ${email}                ${EMAIL OWNER}
@@ -20,6 +21,8 @@ ${or criteria}          s|a
 *** Keywords ***
 Restart
     Common Restart Logout    ${url}
+    Log in to user and system    ${owner}      ${sysId0}
+    @{local users} =   Reset Local Users    ${auth}    https://${QA BURBANK IP}:${port0} 
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -29,20 +32,91 @@ Reset DB and Open New Browser On Failure
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
     Open Browser and go to URL    ${url}
+    
+System Settings Menu Suite Setup
+    FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
+        ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+        Set Suite Variable    ${${account}}          ${random email}
+    END
+
+    @{system names} =    Create List    
+    ...    ${AUTO TESTS}
+    ...    ${AUTO TESTS 2}
+    ...    Auto Tests 3
+       
+    @{auth}=    Create List    ${owner}    ${password}
+    Set Suite Variable    ${auth}    ${auth}   
+     
+    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    Set Suite Variable     ${random}    ${random}
+    
+    @{server auth}=   Create List    admin    qweasd 123
+    
+    FOR    ${n}    IN RANGE    3
+        ${port} =    Create Docker Server    system-menu${n}-${random}    4.3
+        Set Suite Variable    ${port${n}}    ${port[0]}
+        Sleep     10
+        Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
+        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${owner}    ${BASE PASSWORD}
+        Set Suite Variable    ${sysId${n}}    ${sysId}
+        Sleep    10
+        Close Connection
+    END
+    
+    ${SUITE AUTO TESTS USERS} =    Create Dictionary
+    ...    ${viewer}=viewer
+    ...    ${adv viewer}=advancedViewer
+    ...    ${live viewer}=liveViewer
+    ...    ${not owner}=viewer
+    ...    ${admin}=cloudAdmin
+    ...    ${custom}=custom
+
+    Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS} 
+    
+    FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
+        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
+    END
+    
+    Open Browser and go to URL    ${url}
+    Log in to user and system    ${owner}      ${sysId0}
+    
+    FOR    ${system}    IN    ${sysId0}    ${sysId1}    ${sysId2}
+        Go To    ${ENV}/systems/${system}
+        Wait Until Element is Visible    ${SERVERS LINK}
+        Click Link    ${SERVERS LINK}
+        Verify on Servers Page    timeout=95
+    END
+    
+    
+    Merge Systems    ${auth}    ${sysId0}    ${sysId1}
+    Go To    ${ENV}/systems/${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=150
+    Merge Systems    ${auth}    ${sysId0}    ${sysId2} 
+    Go To    ${ENV}/systems/${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=150
+    
+System Settings Menu Suite Tear Down  
+    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop system-menu0-${random} system-menu1-${random} system-menu2-${random}
+    ${results}    Execute Command    docker container rm system-menu0-${random} system-menu1-${random} system-menu2-${random}
+    Close Connection
+    Close All Browsers
 
 *** Test Cases ***
 Should login as "viewer" and should have no ability to "search" in left menu
-    Log in                                      ${EMAIL AUTO TESTS ANCHOR}      ${password}
+    Common Restart Logout    ${url}
+    Log in to user and system    ${viewer}      ${sysId0}
     Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Does Not Contain Element    ${LEFT MENU SEARCH INPUT}
-    Restart
-
-Should show system settings with left menu
-    [Tags]    system settings    left_menu    threaded
-    Log in to Auto Tests System         ${EMAIL OWNER}
-    Wait Until Page Contains Element    ${LEFT MENU}
-
+    
 Should have selected LEVEL-1 node (check specs)
+    Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Contains Element    ${LEFT MENU LEVEL1 ADMIN}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR LIGHT5 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       color               ${COLOR DARK9 RGB}
@@ -53,12 +127,15 @@ Should have selected LEVEL-1 node (check specs)
     Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ICON}        color               ${COLOR DARK9 RGB}
 
 Should have LEVEL-3 node (check specs)
+    Wait Until Page Contains Element            ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL1 USERS}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 USERS}       background-color    ${COLOR ALIGHT3 RGB}
     Click Element                       ${LEFT MENU LEVEL1 USERS}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR ALIGHT2 RGB}
 
 Should have LEVEL-3 selected node (check specs)
+    Go To Users List
+    Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Contains Element    ${LEFT MENU LEVEL3 USER1}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       background-color    ${COLOR LIGHT16 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       color               ${COLOR LIGHT1 RGB}
@@ -68,27 +145,35 @@ Should have LEVEL-3 selected node (check specs)
     Wait Until Element Contains Style   ${LEFT MENU LEVEL3 USER1}       font-family         ${FONT MEDIUM}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1 EXT}   color               ${COLOR LIGHT1 RGB}
 
-Should have LEVEL-3 selected node (check specs - hover)
+Should have LEVEL-3 selected node (check specs - hover) 
+    Go To Users List
+    Wait Until Page Contains Element            ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL3 USER1}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       background-color    ${COLOR LIGHT16 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       color               ${COLOR LIGHT1 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1 EXT}   color               ${COLOR LIGHT1 RGB}
 
 Should have LEVEL-3 not selected node (check specs)
+    Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT5 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
 
 Should have LEVEL-3 not selected node (check specs - hover)
+    Go To Users List
+    Wait Until Page Contains Element            ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL3 USER2}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT6 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
 
 Should have search component
+    Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU SEARCH INPUT}
 
 Should have search component (check specs)
+    Go To Users List
+    Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR TRANSPARENT RGB}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       color               ${COLOR DARK9 RGB}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       height              ${SEARCH HEIGHT}
@@ -98,19 +183,26 @@ Should have search component (check specs)
     Wait Until Element Contains Style   ${LEFT MENU SEARCH INPUT}       font-family         ${FONT REGULAR}
 
 Shoud allow search input chars
+    Go To Users List
+    Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR LIGHT1 RGB}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       color               ${COLOR DARK9 RGB}
 
-Should have button "CLEAR" for search
+Should have button CLEAR for search
+    Wait Until Page Contains Element            ${LEFT MENU}
+    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Page Contains Element    ${LEFT MENU SEARCH CLEAR}
     Wait Until Element Has Style        ${LEFT MENU SEARCH CLEAR}       height              ${SEARCH HEIGHT}
 
 Should clear search input
+    Wait Until Page Contains Element            ${LEFT MENU}
+    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
     Textfield Should Contain            ${LEFT MENU SEARCH INPUT}       ${EMPTY}
 
-Should display "Nothing found"
+Should display Nothing found
+    Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${impossible search}
     ${count}=    Get Element Count      ${LEFT MENU}/div[contains(@class,'nx-menu')]/div
     Should Be True  ${count} == 1
@@ -118,6 +210,7 @@ Should display "Nothing found"
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
 Should hide menu buttons on search
+    Wait Until Page Contains Element            ${LEFT MENU}  
     Click Element                       ${LEFT MENU LEVEL1 USERS}
     Wait Until Page Contains Element    ${LEFT MENU BUTTONS}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
@@ -125,26 +218,32 @@ Should hide menu buttons on search
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
 Should perform search with single criteria
+    Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     ${matches} =    Get WebElements     ${LEFT MENU SEARCH MATCHES}
     FOR    ${match}    IN    @{matches}
-        Element Text Should Be          ${match}    ${simple criteria}    ignore_case=True
+        ${text} =    Get Text    ${match}
+        Run Keyword Unless    '${text}' == '${EMPTY}'  
+        ...    Should Be Equal As Strings    ${text}    ${simple criteria}    ignore_case=True
     END
 
 Should perform search with 'AND' criteria
+    Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${and criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Check if Match AND Criteria         ${LEFT MENU MATCHES CONTENT}    ${and criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
 Should perform search with 'OR' criteria
+    Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Check if Match OR Criteria          ${LEFT MENU MATCHES CONTENT}    ${or criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
 Should navigate with up/down arrows when search criteria is entered
+    Wait Until Page Contains Element            ${LEFT MENU}
     Click Element                       ${LEFT MENU LEVEL1 ADMIN}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
@@ -162,8 +261,48 @@ Should navigate with up/down arrows when search criteria is entered
     Log     Keyboard focus should move to next item
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     background-color    ${COLOR LIGHT8 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     color               ${COLOR DARK9 RGB}
-
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
+# Should show system settings with left menu with 18 systems
+    # [Tags]    system settings    left_menu    threaded
+    # Log in to user and system    ${owner large}    ${sysId0}
+    # # @{local users} =    Local User Start   ${owner large}    ${auth}    https://${QA BURBANK IP}:${port0}    ${sysId0}
+    # @{local users} =   Reset Local Users    ${auth}    https://${QA BURBANK IP}:${port0} 
+    # Wait Until Page Contains Element    ${LEFT MENU}
+    # Verify Menu Developers Test
+    # Verify Number of Systems in Menu Correct    15
+    # Click Button    ${SYSTEMS DROPDOWN}
+    # Wait Until Element Is Visible    //*[contains(text(),"+ 3 Systems")]
+    # Click Element   //*[contains(text(),"+ 3 Systems")]
+    # Wait Until Elements Are Visible
+    # ...    ${SYSTEMS SEARCH INPUT}
+    # ...    ${ACCOUNT DROPDOWN}
+    # ...    ${SYSTEMS TILE}
+    # ...    ${AUTO TESTS TITLE}
+    # ...    ${AUTO TESTS USER}
+    # ...    ${AUTO TESTS OPEN NX}
+    # Verify Number of System Tiles Correct    18    
+    # Click Element   //*[text()="Auto Tests")]
+    # Wait Until Element Is Visible    ${EDITABLE TITLE}
+    # Navigate to All The Systems and Verify
+    
 
-
+# Should show system settings with left menu with 5 systems
+    # [Tags]    system settings    left_menu    threaded
+    # Log in to user and system    ${owner middle}    ${sysId18}
+    # # @{local users} =    Local User Start   ${owner middle}    ${auth middle}    https://${QA BURBANK IP}:${port18}    ${sysId18}
+    # @{local users} =   Reset Local Users    ${auth middle}    https://${QA BURBANK IP}:${port18}
+    # Wait Until Page Contains Element    ${LEFT MENU}
+    # Verify Menu Developers Test
+    # Verify Number of Systems in Menu Correct    5
+    # Navigate to All The Systems and Verify
+    
+# Should show system settings with left menu with 1 system
+    # [Tags]    system settings    left_menu    threaded
+    # Log in to user and system    ${owner one}    ${sysId23}
+    # # @{local users} =    Local User Start   ${owner one}     ${auth one}    https://${QA BURBANK IP}:${port23}    ${sysId23}
+    # @{local users} =   Reset Local Users    ${auth one}    https://${QA BURBANK IP}:${port23}
+    # Wait Until Page Contains Element    ${LEFT MENU}
+    # Verify Menu Developers Test
+    # Verify Number of Systems in Menu Correct    0
+    # Navigate to All The Systems and Verify
