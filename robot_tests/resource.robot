@@ -23,8 +23,8 @@ Library      pabot.PabotLib
 ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
-@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3
-@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3     --headless
+@{chrome_arguments}    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -890,11 +890,12 @@ Create Docker Server
     [Return]    ${port1}
 
 Setup Docker Server
+    [Arguments]    ${image}=4.1_test
     ${server}=   Create Dictionary
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 4.1_test
+    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     ${port info}=   Execute Command    docker container port ${id}

@@ -18,6 +18,15 @@ Merge Systems
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+Merge Systems Local
+    [Documentation]    Merge two systems via server commands
+    [Arguments]    ${primary auth}    ${secondary auth}    ${primary url}    ${secondary url}
+    ${data}=   Create Dictionary    currentPassword=${BASE PASSWORD}    url=https://${secondary auth}@${secondary url}
+    Create Digest Session    local merge session    ${primary url}    auth=${primary auth}    disable_warnings=1
+    ${resp}=   Post Request    local merge session    /api/mergeSystems    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
     &{data}=   Create Dictionary    name=${name}    customization=${customization}

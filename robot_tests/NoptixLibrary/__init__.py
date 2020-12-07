@@ -578,6 +578,7 @@ class NoptixLibrary(object):
 
     def get_tiles_to_show(self, systemCount, maxSystems):
         return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
+        
     def check_grid_size(self, gridSize, tileSize, columns):
         return gridSize > (tileSize * columns)
 

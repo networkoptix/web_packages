@@ -15,20 +15,20 @@ ${url}         ${ENV}
 
 *** Keywords ***
 System Admin Suite Setup
-    ${owner}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    ${viewer}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    ${adv viewer}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    ${owner}=          Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    ${viewer}=         Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    ${adv viewer}=     Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     ${live viewer}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    ${not owner}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    ${admin}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    ${custom}=    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    Set Suite Variable    ${owner}          ${owner}
-    Set Suite Variable    ${viewer}          ${viewer}
-    Set Suite Variable    ${adv viewer}          ${adv viewer}
-    Set Suite Variable    ${live viewer}          ${live viewer}
-    Set Suite Variable    ${not owner}          ${not owner}
-    Set Suite Variable    ${admin}          ${admin}
-    Set Suite Variable    ${custom}          ${custom}
+    ${not owner}=      Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    ${admin}=          Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    ${custom}=         Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    Set Suite Variable    ${owner}         ${owner}
+    Set Suite Variable    ${viewer}        ${viewer}
+    Set Suite Variable    ${adv viewer}    ${adv viewer}
+    Set Suite Variable    ${live viewer}   ${live viewer}
+    Set Suite Variable    ${not owner}     ${not owner}
+    Set Suite Variable    ${admin}         ${admin}
+    Set Suite Variable    ${custom}        ${custom}
     
     ${owner email} =    Set Variable    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${owner}")]
      Set Suite Variable    ${owner email}          ${owner email}
