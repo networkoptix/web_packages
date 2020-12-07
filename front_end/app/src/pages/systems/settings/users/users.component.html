@@ -25,7 +25,7 @@
                         <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
                                 #editTitle
-                                [(content)]="localUserName" 
+                                [(content)]="localUserName"
                                 (contentChange)="handleNameChange($event)"
                                 (blur)="handleBlur()"
                                 (focus)="handleFocus()"
@@ -94,15 +94,14 @@
                     </div>
                 </form>
             </nx-section>
-            <nx-section *ngIf="(selectedUser.isCloud && selectedUser.isMe)
-                || selectedUser.canBeEdited">
+            <nx-section *ngIf="(selectedUser.isCloud && selectedUser.isMe) || selectedUser.canBeEdited || selectedUser.isLocalOwner">
                 <div *ngIf="!CONFIG.isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
                         id="accountSettingsButton"
                         (click)="routeToAccountSettings()"
                         translate>Account Settings</button>
                 </div>
-                <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited"
+                <div *ngIf="!selectedUser.isCloud && (selectedUser.canBeEdited || selectedUser.isLocalOwner)"
                     class="float-left">
                     <button class="btn btn-default" (click)="changePassword()" translate>Change Password</button>
                 </div>

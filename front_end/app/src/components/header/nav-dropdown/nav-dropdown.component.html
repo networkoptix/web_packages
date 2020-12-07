@@ -22,6 +22,7 @@
         [nxArrowNav]="show">
         <li *ngFor="let node of nodes | async" class="dropdown-item-container">
             <a class="dropdown-item inset"
+               *ngIf="!node.new_window"
                [ngClass]="{ 'selected': node.url === path}"
                (click)="headerService.handleNav(node);hide()">
                <span>{{node.name}}</span></a>

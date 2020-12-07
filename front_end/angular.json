@@ -144,6 +144,7 @@
               "browserTarget": "front-end:build:production"
             },
             "webadmin": {
+              "port": 9001,
               "browserTarget": "front-end:build:webadmin"
             }
           }

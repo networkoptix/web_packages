@@ -43,7 +43,6 @@ interface DropdownStorage {
     templateUrl : 'server-standard.component.html',
     styleUrls   : ['server-standard.component.scss']
 })
-
 export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer;
@@ -496,4 +495,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             return +max.freeSpace >= +next.freeSpace ? max : next;
         }, 0);
     }
+
+    // Breadcrumbs for beta swagger navigation:
+    // routerLink="/api-tool/{{system.id}}/{{parsedServerId}}
 }

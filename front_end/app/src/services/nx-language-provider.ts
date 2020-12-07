@@ -75,6 +75,7 @@ export class NxLanguageProviderService {
 
     loadLanguage() {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
+
         return (environment.isLocal
             ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
             : this.cloudApiService.getLanguage()).toPromise();
@@ -103,7 +104,8 @@ export class NxLanguageProviderService {
     }
 
     public set currentLang(language: string) {
-        if (language === this.translate.currentLang) {
+        // avoid undefined "language"
+        if (!language || language === this.translate.currentLang) {
             return;
         }
         this.translate.currentLang = language;
