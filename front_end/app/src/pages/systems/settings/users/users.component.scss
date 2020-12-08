@@ -2,23 +2,24 @@
 @use '../../../../styles/mixins';
 @use '../../../../../styles/theme_variables' as *;
 
-.user-email {
-    @include mixins.ellipsis;
-    font-family : $font-family-medium;
-    line-height: 1.2;
-}
-
 .user-name {
     @include mixins.ellipsis;
     @include typography.regular13;
 }
 
+.heading-style {
+    font-family: $font-family-medium;
+    line-height: 40px;
+    vertical-align: middle;
+    height: 40px;
+    font-size: 24px;
+}
+
 .header-title {
-    min-width: 0;
+    text-align: left !important;
+    position: relative;
     h2 {
-        @include typography.medium24;
-        line-height: 26px;
-        height: 26px;
+        @extend .heading-style;
     }
 }
 
@@ -61,4 +62,12 @@
         background-color: $light2;
         border: 1px solid $light6;
     }
+}
+
+.edit-padding {
+    padding-left: 6px !important;
+}
+
+.user-status-switch-wrappper {
+    padding-top: 10px;
 }

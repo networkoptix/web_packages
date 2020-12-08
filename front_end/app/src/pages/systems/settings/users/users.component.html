@@ -4,8 +4,8 @@
     <div class="col-12">
         <nx-block *ngIf="selectedUser" header-style="extended">
             <header>
-                <div class="float-right d-flex">
-                    <span *ngIf="!selectedUser.isEnabled"
+                <div class="float-right d-flex user-status-switch-wrappper">
+                    <span *ngIf="!selectedUser.isEnabled && !editMode"
                           class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
                           translate>User disabled</span>
                     <nx-switch *ngIf="systemAvailable && selectedUser.canBeEdited && !editMode"
@@ -16,7 +16,7 @@
                     ></nx-switch>
                 </div>
                 <div *ngIf="!system.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">
-                    <h2 class="user-email" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
+                    <h2 class="heading-style" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
                         >{{ selectedUser.isCloud ? email.originalValue : selectedUser.name }}</h2>
                     <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
                 </div>
@@ -25,6 +25,7 @@
                         <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
                                 #editTitle
+                                [ngClass]="{'edit-padding': editMode}"
                                 [(content)]="localUserName"
                                 (contentChange)="handleNameChange($event)"
                                 (blur)="handleBlur()"

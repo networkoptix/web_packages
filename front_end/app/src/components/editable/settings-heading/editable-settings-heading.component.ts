@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { Watcher }                       from '@services/apply.service';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -12,6 +12,7 @@ export class NxEditableSettingsHeading {
     @Input() nameWatcher: Watcher<string>;
     @Input() editEnabled = true;
     @HostBinding('style.width') width = 'auto'
+    @Output() editModeState = new EventEmitter()
 
     CONFIG: IConfig;
 
@@ -31,6 +32,7 @@ export class NxEditableSettingsHeading {
 
     handleBlur() {
         this.editMode = false;
+        this.editModeState.emit(false);
         this.width = 'auto';
         this.handleBlankName();
     }
@@ -38,6 +40,7 @@ export class NxEditableSettingsHeading {
     handleFocus() {
         this.width = '100%';
         this.editMode = true;
+        this.editModeState.emit(true);
     }
 
     handleBlankName() {

@@ -43,9 +43,10 @@
                 <div class="header-top-bar">
                     <nx-editable-settings-heading
                         [nameWatcher]="serverNameWatcher"
+                        (editModeState)="editMode = $event"
                         [editEnabled]="system.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
                     <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
-                    <div class="d-flex pb-2">
+                    <div *ngIf="!editMode" class="d-flex pb-2">
                         <button *ngIf="canSeeInfo" class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">

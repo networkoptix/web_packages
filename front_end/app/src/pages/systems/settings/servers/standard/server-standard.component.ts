@@ -56,7 +56,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serverIdFromParams;
 
     editMode = false;
-    emptyName = false;
 
     saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
@@ -310,23 +309,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 }
                 this.checking = false;
             });
-    }
-
-    handleBlur() {
-        const originalName = this.selectedServer.name;
-        this.editMode = false;
-
-        if (!this.serverName || this.emptyName) {
-            this.serverName = originalName;
-        }
-    }
-
-    handleFocus() {
-        this.editMode = true;
-    }
-
-    handleNameChange(newName) {
-        this.emptyName = /^\s+$/.test(newName);
     }
 
     restartServer() {
