@@ -588,6 +588,10 @@ export class NxSystemAPI {
         return this.get('/api/recStats', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
     }
 
+    getServerStats(useCache = false) {
+        return this.get<t.NormalResponse<any>>('/api/metrics/values', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
+    }
+
     changePort(port: number) {
         return this.configureServer({ port }).catch(err => Promise.reject(err));
     }

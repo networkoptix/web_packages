@@ -20,6 +20,7 @@ import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_
 import { IConfig, NxConfigService }  from '@services/nx-config';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 import { ChangedIdReturned } from '@services/system-api.types';
+import { NxUtilsService } from '@services/utils.service';
 
 enum MODE {
     MAIN = 0,
@@ -151,7 +152,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
                 this.system.updateOrGetSystemStorage({ serverId: this.serverId }),
-                this.system.getRecordStats(this.serverId, true)
+                this.refreshStorages$.pipe(switchMap(() => this.system.getServerStats(this.serverId)))
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
@@ -162,8 +163,24 @@ export class NxSystemStorageComponent implements OnInit {
 
                     const storage = results.storage || [];
 
+                    results.storeInfo.forEach(({ storageId, url, ...storeInfo }) => {
+                        const noStore = !storage.find(({ id }) => id === storageId);
+                        if (noStore) {
+                            storage.push({
+                                ...storeInfo,
+                                status        : STORAGE_STATUS.RESERVED,
+                                storageId     : storageId === '{00000000-0000-0000-0000-000000000000}' ? url : storageId,
+                                storageStatus : 'removable',
+                                url
+                            });
+                        }
+                    });
+
                     storage.hasAction = false;
-                    storage.freeSpace = results.storeInfo.reduce((total, { freeSpace }) => total + parseInt(freeSpace), 0);
+                    storage.freeSpace = results.storeInfo.reduce(
+                        (total, { freeSpace, isBackup, isUsedForWriting }) => total + (!isBackup && isUsedForWriting ? parseInt(freeSpace) : 0),
+                        0
+                    );
                     storage.forEach((store, idx) => {
                         this.modeWatchers[store.id] = new Watcher(this.selectMode(store).value);
                         const storeInfo = results.storeInfo.find((info) => {
@@ -175,15 +192,17 @@ export class NxSystemStorageComponent implements OnInit {
                         if (storeInfo) {
                             store = { ...storeInfo };
                         }
-
                         if (store.freeSpace) {
-                            store.archiveSpace = this.getArchiveSpace(results.usage.reply, store.storageId);
-
+                            store.archiveSpace = results.usage.reply.storages[NxUtilsService.cleanId(store.storageId)]?.space?.mediaSpaceB || 0;
                             store.status = STORAGE_STATUS.IN_USE; // default
                             store.statusTooltip = '';
 
                             if (store.isOnline) {
-                                if (store.storageStatus.includes('tooSmall')) {
+                                if (
+                                    store.storageStatus.includes('tooSmall') ||
+                                    store.storageStatus.includes('removable') &&
+                                    store.freeSpace < (storage.freeSpace / 6)
+                                ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
                                 } else if (
@@ -453,20 +472,7 @@ export class NxSystemStorageComponent implements OnInit {
 
     checkArchiveWarning(store) {
         const { value, originalValue } = this.modeWatchers[store.id || store.storageId];
-        return value === MODE.NOT_IN_USE && originalValue === MODE.NOT_IN_USE && store.archiveSpace;
-    }
-
-    getArchiveSpace(usage, storageId): number {
-        let aggregateSpace = 0;
-        usage.forEach((chunk) => {
-            chunk.recordedBytesPerStorage.forEach((storage) => {
-                if (storage.key === storageId) {
-                    aggregateSpace += parseInt(storage.value);
-                }
-            });
-        });
-
-        return aggregateSpace;
+        return [value, originalValue].every(state => state === 'modeNotInUse') && store.archiveSpace;
     }
 
     selectMode(store) {

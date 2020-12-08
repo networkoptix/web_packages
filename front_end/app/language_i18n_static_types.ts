@@ -305,10 +305,10 @@ export interface DialogsMerge {
     serverVersionNew:           any;
     systemOffline:              any;
     systemOfflineUrl:           any;
-    systemVersionsNotMatch:     any;
     systemsIncompatible:        any;
     systemVersionOld:           any;
     systemVersionNew:           any;
+    systemVersionsNotMatch:     any;
     urlEmpty:                   any;
     urlNotValid:                any;
     unknownError:               any;
@@ -1243,10 +1243,10 @@ const typeMap: any = {
         { json: "serverVersionNew", js: "serverVersionNew", typ: "any" },
         { json: "systemOffline", js: "systemOffline", typ: "any" },
         { json: "systemOfflineUrl", js: "systemOfflineUrl", typ: "any" },
-        { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "any" },
         { json: "systemsIncompatible", js: "systemsIncompatible", typ: "any" },
         { json: "systemVersionOld", js: "systemVersionOld", typ: "any" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "any" },
+        { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "any" },
         { json: "urlEmpty", js: "urlEmpty", typ: "any" },
         { json: "urlNotValid", js: "urlNotValid", typ: "any" },
         { json: "unknownError", js: "unknownError", typ: "any" },
@@ -1470,7 +1470,7 @@ const typeMap: any = {
         { json: "users", js: "users", typ: "any" },
     ], false),
     "PageDescriptions": o([
-        { json: "integrations", js: "integrations", typ: "" },
+        { json: "integrations", js: "integrations", typ: "any" },
     ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },

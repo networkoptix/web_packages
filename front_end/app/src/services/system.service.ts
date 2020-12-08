@@ -815,6 +815,10 @@ class ServerManager {
     getRecordStats(serverId, useCache = false) {
         return this.mediaserverConnections[serverId].getRecordStats(useCache);
     }
+
+    getServerStats(serverId, useCache = false) {
+        return this.mediaserverConnections[serverId].getServerStats(useCache);
+    }
 }
 
 @Injectable()
@@ -1303,6 +1307,10 @@ export class NxSystem extends System implements OnDestroy {
 
     removeStorage<T>(updateParams?: T) {
         return this.mediaserver.removeStorage(updateParams);
+    }
+
+    getServerStats(serverId, useCache = false) {
+        return this.serverManager.getServerStats(serverId, useCache);
     }
 
     getRecordStats(serverId, useCache = false) {

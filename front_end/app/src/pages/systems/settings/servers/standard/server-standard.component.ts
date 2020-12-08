@@ -171,7 +171,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 delete previousValue.shownStatus;
             }
 
-            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+            if (currentValue.id !== previousValue?.id) {
                 this.setServer();
             }
         }
@@ -205,9 +205,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         ]);
 
         if (!this.applyService.locked) {
-            this.applyService.hardReset();
-            this.ipPortWatcher.value = +port;
-            this.applyService.reset();
+            this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
         this.checkIfOnline(this.selectedServer.id).then(() => {
             this.serverLoaded = true;
