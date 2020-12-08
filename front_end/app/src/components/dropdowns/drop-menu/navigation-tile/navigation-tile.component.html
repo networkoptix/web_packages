@@ -14,11 +14,15 @@
         <ng-container *ngFor="let link of node.nodes" >
             <li class="nav-links"
                 [style.padding-right.px]="link.new_window || link.icon ? 25 : 5" 
-                [ngClass]="{'active': headerService.currentLocation.path === link.url }"
-                (click)="headerService.handleNav(link)">
-                <span>
+                [ngClass]="{'active': headerService.currentLocation.path === link.url }">
+                <ng-template #internalLink>
+                    <a [routerLink]="link.url">
+                        {{link.name}}
+                    </a>
+                </ng-template>
+                <a *ngIf="link.new_window; else internalLink" [href]="link.url" target="_blank">
                     {{link.name}}
-                </span>
+                </a>
                 <svg-icon *ngIf="link.new_window || link.icon" 
                     [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
                     [svgStyle]="{

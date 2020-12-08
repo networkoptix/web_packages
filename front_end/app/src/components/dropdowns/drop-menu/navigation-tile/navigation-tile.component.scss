@@ -55,8 +55,10 @@
     &:active {
         @extend .active;
     }
-    & > span {
+    & > a {
         display: inline-block;
+        color: inherit !important;
+        text-decoration: inherit !important;
         @include ellipsis;
     }
 
