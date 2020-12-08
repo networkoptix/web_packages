@@ -475,12 +475,16 @@ class MenuNodeInlineForm(forms.ModelForm):
         if self.current_customization == 'all':
             self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
             self.fields['enabled'].widget.can_add_related = False
+            self.fields['enabled'].help_text = 'Choose which customizations this menu item should be enabled in'
         else:
             enabled = False
             if self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
                 enabled = True
             self.fields['enabled'] = forms.BooleanField(required=False)
             self.initial['enabled'] = enabled
+
+        self.fields['permissions'].help_text = 'Choose which permissions are required to see this menu item'
+        self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
 
     def clean_enabled(self):
         if self.instance.pk:
