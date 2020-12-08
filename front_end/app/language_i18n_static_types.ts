@@ -562,6 +562,10 @@ export interface PageDescriptions {
     integrations: any;
 }
 
+export interface PageDescriptions {
+    integrations: string;
+}
+
 export interface PageTitles {
     about:                  any;
     account:                any;
@@ -1471,6 +1475,9 @@ const typeMap: any = {
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
+    ], false),
+    "PageDescriptions": o([
+        { json: "integrations", js: "integrations", typ: "" },
     ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },
