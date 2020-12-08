@@ -69,10 +69,10 @@
         "accountSavedSuccess": "El compte s'ha desat correctament",
         "accountSettings": "Configuració del compte",
         "activationLinkSent": "S'ha enviat l'enllaç d'activació",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "L'acord s'ha acceptat",
         "changePassword": "Canvia la contrasenya",
         "newPasswordLabel": "Contrasenya nova",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "La contrasenya s'ha desat correctament",
         "saveChanges": "Desa"
     },
     "activeActions": {
@@ -97,11 +97,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Compte creat",
+                "message": "El missatge de confirmació amb l'enllaç d'activació s'envia a {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Compte activat correctament"
             }
         },
         "cameraLinks": {
@@ -129,25 +129,25 @@
             "unauthorized": "Es requereix autenticació"
         },
         "chromeCastWarning": "Chromecast utilitza molts recursos i pot causar problemes al servidor.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "recordingSettingsWarning": "Actualitzeu els paràmetres de configuració d'enregistrament que faltin.",
+        "disableMotionWarning": "El mode d'enregistrament es canviarà a \"Enregistra sempre\"",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Enregistra sempre",
+            "motion": "Enregistra només el moviment",
+            "motionLowRes": "Moviment + baixa resolució"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "– Valors diferents –",
             "auto": "Auto",
-            "best": "Best",
+            "best": "Millor",
             "high": "Alta",
-            "medium": "Medium",
+            "medium": "Mitja",
             "low": "Baixa"
         },
         "general": "General",
         "searchCamPlaceholder": "Cerca",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Sense càmeres",
+        "systemHasNoCamerasMessage": "No hi ha càmeres a les quals pugueu accedir dins del sistema. <br><br>Connecteu algunes càmeres a la xarxa local del servidor per fer-les visibles o demaneu a l'administrador del sistema que canviï el vostre nivell d'accés.",
         "systemNewVersion": "Actualitzeu el vostre sistema",
         "systemNewVersionMessage": "La versió actual és incompatible amb aquesta funció. Actualitzeu els servidors a l'última versió per utilitzar aquesta funció.",
         "systemNoAlerts": "Cap avís",
@@ -157,14 +157,14 @@
         "systemServerError": "Error intern del servidor",
         "systemServerErrorMessage": "S'ha produït un error, torneu a intentar-ho més tard. Si el problema continua, poseu-vos en contacte amb l'equip de suport.",
         "systemUnreachable": "NO ES POT ACCEDIR AL SISTEMA",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "El sistema està desconnectat i, per tant, la informació no és accessible.",
         "unknown": "Desconegut",
-        "vendor": "Vendor",
+        "vendor": "Proveïdor",
         "model": "Model",
-        "ip": "IP Address",
-        "server": "Server",
-        "os": "OS",
-        "version": "Version",
+        "ip": "Adreça IP",
+        "server": "Servidor",
+        "os": "SO",
+        "version": "Versió",
         "voiceCommands": {
             "clear search": "esborra la cerca",
             "collapse all servers": "replega tots els servidors",
@@ -179,17 +179,17 @@
             "stop listening": "deixa d'escoltar",
             "view": "view + [camera name]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Esteu veient un informe obsolet."
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Aquest email ja s'ha registrat al sistema %systemName%"
         },
         "buttons": {
             "cancel": "Cancel·la",
             "createAccount": "Crea un compte nou",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Suprimeix",
+            "deleteAccount": "Suprimeix el compte",
             "download": "Descarrega %VMS_NAME%",
             "logoutAuthorised": "Tanca la sessió",
             "ok": "D'acord",
@@ -198,97 +198,97 @@
             "stayLoggedIn": "Segueix connectat"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Emmagatzematge al núvol",
+            "enableStorage": "Activa l'emmagatzematge al núvol",
+            "otherSystem": "Un altre sistema...",
+            "initial": "Us oferim {{compCapacity}} d'emmagatzematge gratuït al núvol per sistema per començar.",
+            "available": "La ubicació d'emmagatzematge al núvol està disponible per a tots els servidors d'aquest sistema. Podeu gestionar-la mitjançant el client d'escriptori {{vmsName}}.",
+            "camera": "càmera",
+            "cameras": "càmeres",
             "usageLabels": {
-                "currentRecordings": "Current recordings",
-                "whenFullyUsed": "When fully used",
-                "amountUsed": "Amount used",
-                "archiveFrom": "Archive from",
-                "recordingBitrate": "Recording Bitrate",
-                "delayFromLive": "Delay from live"
+                "currentRecordings": "Enregistraments actuals",
+                "whenFullyUsed": "Quan s'utilitza completament",
+                "amountUsed": "Quantitat utilitzada",
+                "archiveFrom": "Arxiu de",
+                "recordingBitrate": "Taxa de bits d'enregistrament",
+                "delayFromLive": "Retard respecte de directe"
             },
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "L'emmagatzematge al núvol s'ha eliminat correctament del sistema",
+                "errorPrefix": "S'ha produït un error en eliminar l'emmagatzematge al núvol"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "No es pot activar l'emmagatzematge al núvol",
+                "message": "Ja s'ha afegit un total de <volume> d'emmagatzematge al núvol i no en podeu afegir més. <br/><br/>Podeu suprimir emmagatzematge d'un altre sistema o moure'l a aquest. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "No es pot desconnectar el sistema de %CLOUD_NAME%",
+                "message": "Aquest sistema té emmagatzematge al núvol amb alguns arxius. <br/><br/>L'emmagatzematge al núvol s'ha de suprimir manualment abans de desconnectar el sistema de %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Mou l'emmagatzematge al núvol",
+                "success": "L'emmagatzematge s'ha mogut correctament",
+                "errorPrefix": "S'ha produït un error en moure l'emmagatzematge al núvol",
+                "notFound": "No s'ha trobat l'emmagatzematge. És possible que un altre usuari hagi mogut o eliminat l'emmagatzematge",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "L'emmagatzematge al núvol no es pot moure a sistemes desconnectats."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Emmagatzematge al núvol activat",
+                "errorPrefix": "S'ha produït un error en activar l'emmagatzematge al núvol"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Només podeu moure l'emmagatzematge al núvol entre sistemes dels quals sou propietari. <br/><br/>Connecteu un sistema a %CLOUD_NAME% utilitzant el vostre compte al núvol per poder-hi moure emmagatzematge al núvol."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Introduïu la contrasenya del compte del propietari a <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Contrasenya incorrecta per a l'usuari d'administració local",
+            "checking": "Comprovant...",
             "commonText": "No s'han pogut combinar els sistemes <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connecteu el sistema que voleu combinar amb aquest a <strong>{{cloudName}}</strong> o combineu-lo localment utilitzant el client <strong>{{vmsName}}</strong>.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "El sistema seleccionat i l'actual estan connectats a %CLOUD_NAME% i tenen propietaris diferents. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
+            "duplicateServers": "<p class=\"mb-2\">Sembla que un servidor s'enumera tant al sistema seleccionat com al sistema actual.</p><p>Elimineu els servidors desconnectats i incompatibles de cada sistema i torneu-ho a intentar.</p>",
+            "enterSystemAddressTitle": "Introduïu l'adreça de qualsevol servidor situat al sistema que vulgueu combinar amb aquest.",
+            "mergeConfirmation": "<p class=\"mb-0\">Esteu a punt de combinar els sistemes <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>.</p><p>La configuració i el nom es prendran del <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Combina el sistema actual amb",
             "mergeFailedTitle": "S'ha produït un error en la combinació de sistemes",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "noServerFound": "No s'ha trobat cap servidor",
+            "newSystemDisplayName": "Sistema nou",
+            "otherSystem": "Un altre sistema...",
+            "ownerCanMergeText": "Només podeu combinar sistemes dels quals sigueu propietari",
             "passwordRequired": "La contrasenya és obligatòria",
             "passwordWrong": "Contrasenya incorrecta",
             "primaryCannotMerge": "El sistema {{targetSystem}} té una versió de programari més recent que és incompatible amb el sistema actual. Actualitzeu el sistema actual a l'<a href=\"/download\" target=\"_blank\" translate>última compilació</a> per combinar-lo amb el sistema {{targetSystem}}.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "El sistema {{primarySystem}} està desconnectat i no es pot combinar amb el sistema {{targetSystem}}",
+            "primarySystemUnavailable": "Actualment no es pot accedir al sistema {{primarySystem}}. Torneu-ho a intentar d'aquí a uns quants minuts o poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Us recomanem que consulteu amb",
                 "b_support": "suport",
                 "c_proceeding": "abans de continuar."
             },
             "secondaryCannotMerge": "El sistema {{targetSystem}} té una versió de programari més antiga que és incompatible amb el sistema actual. Actualitzeu {{targetSystem}} a l'<a href=\"/download\" target=\"_blank\" translate>última compilació</a> per combinar-lo amb el sistema actual.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "secondarySystemUnavailable": "Actualment no es pot accedir al sistema {{targetSystem}}. Torneu-ho a intentar d'aquí a uns quants minuts o poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
+            "serverAtUrl": "servidor a {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">No es pot accedir al sistema {{targetSystem}}.</p><p>Assegureu-vos que el servidor especificat està connectat i torneu-ho a intentar.</p>",
+            "serverNotYours": "Aquest sistema està connectat a %CLOUD_NAME%, però té un propietari diferent. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
+            "systemOffline": "El sistema {{targetSystem}} està desconnectat i no es pot combinar amb el sistema actual",
+            "systemOfflineUrl": "{{targetSystem}} és inaccessible.",
+            "systemsIncompatible": "Aquest servidor té una versió de programari incompatible. Actualitzeu tots dos sistemes a l'<a href=\"/download\" target=\"_blank\" translate>última compilació</a>.",
+            "systemVersionsNotMatch": "Els sistemes tenen diferents versions de programari. Actualitzeu tots dos sistemes a l'<a href=\"/download\" target=\"_blank\" translate>última compilació</a>.",
+            "urlEmpty": "Introduïu l'adreça del servidor",
+            "urlNotValid": "Introduïu una URL vàlida",
+            "unknownError": "S'ha produït un error desconegut. Actualitzeu la pàgina i torneu-ho a intentar. Si el problema continua, poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
+            "warning": "Hi haurà més de <strong>{{maxServers}}</strong> servidors al sistema combinat."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "storageSettingsSaved": "S'ha desat la configuració d'emmagatzematge.",
+            "storageSettingsNotSaved": "No s'ha pogut desar la configuració d'emmagatzematge.",
+            "settingsSaved": "Configuració desada.",
+            "settingsNotSaved": "No s'ha pogut desar la configuració.",
+            "logLevelsSaved": "Nivells de registre desats.",
+            "logLevelsNotSaved": "No s'han pogut desar els nivells de registre.",
             "failedToSend": "No s'ha pogut enviar el missatge.",
             "placeholders": {
                 "feedback": "Assegureu-vos d'incloure el model i el fabricant de la càmera..."
@@ -309,23 +309,23 @@
         },
         "removeSystem": {
             "action": "Desconnecta",
-            "message": "You will not be able to log into this system anymore.",
-            "title": "Disconnect System from your Account?"
+            "message": "Ja no podreu iniciar sessió en aquest sistema.",
+            "title": "Voleu desconnectar el sistema del vostre compte?"
         },
         "titles": {
             "error": "Error",
-            "success": "Success",
+            "success": "Correcte",
             "changeAccount": "Ja heu iniciat la sessió com {email}",
-            "deleteUser": "Delete user?",
+            "deleteUser": "Voleu eliminar l'usuari?",
             "loggedFromOtherAccount": "Iniciareu la sessió amb un altre compte",
             "noClientDetected": "Instal·leu %VMS_NAME% per veure el vostre sistema",
             "removeUser": "Voleu suprimir l'usuari?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "Voleu separar el servidor \"{{ title }}\" del sistema actual?",
+            "serversReset": "Voleu restablir els valors predeterminats del servidor \"{{ title }}\"?",
+            "serversRestart": "Voleu reiniciar el servidor \"{{ title }}\"?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."
         }
     },
     "downloads": {
@@ -401,25 +401,25 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Aquest sistema està connectat a %CLOUD_NAME%, però té un propietari diferent. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
         "DUPLICATE_MEDIASERVER_FOUND": "Alguns servidors existeixen als dos sistemes, al seleccionat i a l'actual.<br>Elimineu servidors desconnectats i incompatibles de cada sistema i proveu-ho de nou.",
         "EmailAlreadyExists": "Aquest Email ja està registrat",
         "FAIL": "El sistema <strong>{{failedSystem}}</strong> està desconnectat.",
         "Connection timed out": "El sistema <strong>{{failedSystem}}</strong> està desconnectat.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "Bad Gateway": "Actualment no es pot accedir al sistema <strong>{{failedSystem}}</strong>.<br>Torneu-ho a intentar d'aquí a uns quants minuts o poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
+        "INCOMPATIBLE": "Els sistemes tenen diferents versions de programari. Actualitzeu tots dos sistemes a l'<a href=\"/download\">última compilació</a>.",
+        "cloud_systems_have_different_owners": "Aquest sistema està connectat a %CLOUD_NAME%, però té un propietari diferent. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Sembla que un servidor s'enumera tant al sistema seleccionat com al sistema actual.</p><p>Elimineu els servidors desconnectats i incompatibles de cada sistema i torneu-ho a intentar.</p>",
+        "fail": "{{failedSystem}} és inaccessible.",
+        "incompatible": "Aquest servidor té una versió de programari incompatible. Actualitzeu tots dos sistemes a l'última compilació per combinar-los.",
+        "unknown_error": "S'ha produït un error desconegut. Actualitzeu la pàgina i torneu-ho a intentar. Si el problema continua, poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
         "accountAlreadyActivated": "Aquest compte ja està activat",
         "accountBlocked": "Aquest compte està bloquejat temporalment. Torneu a intentar-ho d'aquí a uns quants minuts.",
         "accountNotActivated": "Aquest compte encara no està activat. <a href=\"/activate\">Torna a enviar l'enllaç d'activació</a>",
         "alreadyExists": "Aquest compte ja existeix",
         "brokenAccount": "S'ha produït un problema inesperat amb el compte. <a href=\"/restore_password\">Restaura el compte</a>",
         "cantActivatePrefix": "No es pot activar el compte",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "No es permet afegir el vostre propi email",
         "cantChangeAccountPrefix": "No es poden desar els canvis",
         "cantChangePasswordPrefix": "No es pot desar la contrasenya",
         "cantDisconnectSystemPrefix": "No es pot eliminar el sistema",
@@ -435,7 +435,7 @@
         "cantSharePrefix": "No es pot compartir el sistema",
         "cantUnshareWithMeSystemPrefix": "No es pot eliminar el sistema",
         "emailNotFound": "El compte no existeix.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "No es pot accedir a cap sistema mitjançant aquest enllaç. Això pot passar quan s'ha desconnectat un sistema de %CLOUD_NAME%, s'ha revocat l'accés a aquest sistema o si heu iniciat la sessió al compte incorrecte.",
         "forbidden": "No teniu permisos per realitzar aquesta acció",
         "lostConnection": "S'ha perdut la connexió amb {{systemName}}",
         "mergedSystemIsOffline": "El sistema <strong>{{failedSystem}}</strong> està desconnectat.",
@@ -445,18 +445,18 @@
         "oldPasswordMistmatch": "La contrasenya actual és incorrecta.",
         "oldSafariNotSupported": "Les versions de Safari anteriors a la 10 no són compatibles",
         "passwordMismatch": "Contrasenya incorrecta",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "Actualment no es pot accedir a {{failedSystem}}. Torneu-ho a intentar d'aquí a uns quants minuts o poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
         "thisSystem": "el sistema",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "S'ha produït un error inesperat",
         "unknownMergeError": "Error desconegut. Podeu provar d'actualitzar la pàgina i tornar a intentar-ho. Si el problema continua, poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
         "wrongAuthCode": "El codi ha vençut o és incorrecte",
         "wrongCode": "El compte ja està activat o el codi de confirmació és incorrecte",
         "wrongCodeRestore": "El codi de confirmació ja s'ha utilitzat o és incorrecte",
         "wrongParameters": "Alguns paràmetres del formulari són incorrectes",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "No s'ha pogut activar la llicència. Torneu-ho a intentar o poseu-vos en contacte amb el servei de suport.",
+        "licenseTimeout": "No s'ha pogut activar la llicència perquè s'ha esgotat el temps d'espera per a la connexió. Assegureu-vos que el servidor està connectat i torneu-ho a intentar.",
+        "licenseServerError": "No s'ha pogut activar la llicència. El servidor de llicències no ha respost. Torneu-ho a intentar o poseu-vos en contacte amb el servei de suport.",
+        "networkConnection": "No es pot connectar a {{cloudName}}, comproveu la connexió de xarxa."
     },
     "integration": {
         "Access Control": "Control d'accés",
@@ -495,31 +495,31 @@
         "isAptzSupported": "PTZ avançat",
         "isAptzSupportedShort": "PTZ avan.",
         "isAudioSupported": "Àudio",
-        "isDualStreamingSupported": "Dual Streaming",
+        "isDualStreamingSupported": "Transmissió dual",
         "isFisheye": "Ull de peix",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Motion Detection",
+        "isMdSupported": "Detecció de moviment",
         "isMultiSensor": "Multisensors",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "Àudio bidireccional",
+        "maxFps": "FPS (màx.)",
+        "maxResolution": "Resolució (màx.)",
         "model": "Model",
         "multiSensorCamera": "Càmera multisensors",
         "other": "Altres",
         "primaryCodec": "Còdec",
         "resolutionArea": "Àrea",
-        "sndResolution": "Secondary Stream",
+        "sndResolution": "Flux secundari",
         "topXByVolume": "{{value}} superiors per volum:",
         "vendor": "Fabricant"
     },
     "menu": {
         "titles": {
-            "cameras": "Cameras",
+            "cameras": "Càmeres",
             "systemAdministration": "Administració del sistema",
             "general": "General",
-            "licenses": "Licenses",
+            "licenses": "Llicències",
             "users": "Usuaris"
         }
     },
@@ -534,7 +534,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Descarrega %VMS_NAME%",
         "downloadPlatform": "Descarrega %VMS_NAME% per a ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "No s'ha pogut accedir al sistema",
         "integrations": "Integracions",
         "login": "Inicia la sessió",
         "pageNotFound": "No s'ha trobat la pàgina",
@@ -567,42 +567,42 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "No es pot carregar la pàgina",
+            "message": "Assegureu-vos que els servidors estan connectats i torneu-ho a intentar."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Aquest sistema s'està combinant amb {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Segons la mida de la base de dades, pot trigar fins i tot diverses hores.",
+                "untilFinished": "Fins que no s'enllesteixi la combinació, podeu iniciar sessió en aquest sistema i veure vídeos, però no podeu canviar cap configuració.",
+                "whenFinished": "Quan la combinació s'enllesteixi, tots els usuaris i les càmeres d'aquest sistema estaran disponibles al sistema {{systemName}} i aquest sistema se suprimirà."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "El servidor no és accessible",
+            "message": "El sistema està desconnectat i, per tant, els servidors no són accessibles."
         }
     },
     "pleaseSelect": "Seleccioneu...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Trobareu la política de privacitat de {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aquí</a>. La política de privacitat de %COMPANY_NAME%, que inclou instruccions per retirar el vostre consentiment, està disponible <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a>.",
+        "ipvd": "En enviar aquest formulari, accepteu que %COMPANY_NAME% us contacti.\nTrobareu la política de privacitat de %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a>, així com les instruccions per retirar el vostre consentiment."
     },
     "registration": {
         "agreement": "Accepto els <a href=\"/content/eula\" target=\"_blank\">Termes i condicions</a> i la <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de privacitat</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "s'està combinant amb aquest sistema",
+            "mayTake": "Segons la mida de la base de dades, pot trigar fins i tot diverses hores."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "S'està enllestint la combinació de sistemes",
         "integration": {
             "backToEditText": "Torna a les interfícies d'edició",
             "previewRibbon": "Aquesta pàgina és una previsualització dels últims canvis i no coincideix amb la versió disponible públicament."
         },
         "systemOffline": "El sistema està desconnectat. És possible que alguns paràmetres no estiguin disponibles.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Aquest sistema està actualment en una operació de combinació."
     },
     "search": {
         "Any": "Qualsevol",
@@ -620,34 +620,34 @@
         "vendors": "Fabricants"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
-        "serverOffline": "Server is offline.",
-        "servers": "Servers",
+        "beginDetach": "El servidor s'està separant",
+        "beginReset": "El servidor s'està restablint.",
+        "detachSystemFailed": "No s'ha pogut separar el servidor del sistema. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
+        "detachSystemSuccess": "El servidor s'ha separat correctament del sistema.",
+        "portWarning": "Els números de port inferiors a 1024 estan restringits. El servidor pot tornar-se inaccessible.",
+        "removeMediaserverFailed": "No s'ha pogut eliminar el servidor del sistema.",
+        "resetFailed": "No s'ha pogut restablir el servidor. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
+        "resetSuccessful": "S'han restablert els valors predeterminats del servidor {{ serverName }}.",
+        "restartFailed": "S'ha produït un error en reiniciar el servidor.",
+        "restartSuccessful": "El servidor s'ha reiniciat correctament.",
+        "serverOffline": "El servidor està desconnectat.",
+        "servers": "Servidors",
         "status": {
-            "checking": "checking...",
+            "checking": "comprovant...",
             "offline": "desconnectat",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "restablint...",
+            "restarting": "reiniciant..."
         },
-        "successRename": "Server name saved."
+        "successRename": "S'ha desat el nom del servidor."
     },
     "system": {
         "MERGE_FINISHES": "Quan la combinació s'enllesteixi, tots els usuaris i les càmeres d'aquest sistema estaran disponibles al sistema <strong>{{targetSystemName}}</strong> i aquest sistema se suprimirà.",
         "mergeUnknownName": "Nom desconegut del sistema (causat per la combinació al núvol)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "No es pot carregar la configuració de seguretat.",
+            "notAbleToLoadSystem": "No es pot carregar la configuració del sistema.",
+            "notAbleToLoadStorageInfo": "No es pot carregar la informació d'emmagatzematge.",
             "sessionLimitDuration": {
                 "hours": "hores",
                 "minutes": "minuts"
@@ -661,34 +661,34 @@
             "unavailable": "No es pot accedir al sistema"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Suprimeix l'usuari",
+            "localDelete": "Suprimeix l'usuari"
         },
         "yourSystem": "Sistema",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Cap",
+                "help": "(registre desactivat)"
             },
             "error": {
                 "text": "Error",
-                "help": "(log errors only)"
+                "help": "(només registre d'errors)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Avís",
+                "help": "(registre d'avisos i errors)"
             },
             "info": {
-                "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "text": "Informació",
+                "help": "(registre d'avisos, errors i tots els missatges)"
             },
             "debug": {
                 "text": "Depuració",
-                "help": "(log every System message and debug information)"
+                "help": "(registre de tots els missatges del sistema i la informació de depuració)"
             },
             "verbose": {
                 "text": "Verbose",
-                "help": "(log all information available)"
+                "help": "(registre de tota la informació disponible)"
             }
         }
     },
@@ -711,7 +711,7 @@
             },
             "merge": {
                 "failed": "S'ha produït un error en la combinació de sistemes",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "S'ha enllestit la combinació dels sistemes {{primaryName}} i {{secondaryName}}"
             },
             "rename": {
                 "success": "S'ha desat el nom del sistema"
@@ -721,129 +721,129 @@
     "license": {
         "info": {
             "type": "Tipus",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "Canals",
+            "server": "Servidor",
+            "hwid": "ID de maquinari",
+            "status": "Estat",
+            "expires": "Venç",
+            "time": "Temporal",
+            "deactivations": "Desactivació restant",
+            "trial": "Prova",
+            "online": "Connectat",
             "error": "Error",
-            "expired": "Expired",
+            "expired": "Vençut",
             "ok": "D'acord",
             "digital": "Professional",
-            "analog": "Analog",
+            "analog": "Analògic",
             "edge": "Edge",
             "vmax": "VMAX",
             "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "analogencoder": "Codificador analògic",
+            "starter": "Inicial",
+            "iomodule": "Mòdul I/O",
             "bridge": "Bridge",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "No s'ha trobat el servidor"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} més obligatoris",
+            "activated": "Clau de llicència activada",
+            "inuse": "La clau de llicència ja s'ha activat i s'ha enllaçat al servidor amb ID de maquinari {{hwid}} en un altre sistema",
+            "trialActivated": "S'ha activat la llicència de prova. A partir d'avui podeu enregistrar fins a 4 càmeres durant 30 dies."
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "Tipus d'FS locals addicionals",
+        "autoDiscoveryResponseEnabled": "Resposta de descobriment automàtic",
+        "crossdomainEnabled": "Múltiples dominis",
+        "defaultExportVideoCodec": "Còdec de vídeo d'exportació predeterminat",
+        "defaultVideoCodec": "Còdec de vídeo predeterminat",
+        "downloaderPeers": "Peers del descarregador",
+        "lastMergeMasterId": "Última combinació masterId",
+        "lastMergeSlaveId": "Última combinació slaveId",
+        "ldapSearchTimeoutS": "Temps d'espera de cerca LDAP (segons)",
+        "licenseServer": "Servidor de llicències",
+        "lowQualityScreenVideoCodec": "Còdec de vídeo de pantalla de baixa qualitat",
+        "maxP2pAllClientsSizeBytes": "P2P màxim totes les mides de bytes dels clients",
+        "maxRtpRetryCount": "Recompte de reintents RTP màxim",
+        "metadataStorageChangePolicy": "Política de canvis d'emmagatzematge de metadades",
+        "pushNotificationsLanguage": "Idioma de notificacions automàtiques",
+        "resourceFileUri": "URI de l'arxiu de recurs",
+        "sessionLimitMinutes": "Límit de la sessió (minuts)",
+        "specificFeatures": "Característiques específiques",
         "systemName": "Nom del sistema",
-        "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
-        "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
-        "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
+        "webSocketEnabled": "Sòcols web",
+        "arecontRtspEnabled": "Arecont RTSP activat",
+        "auditTrailEnabled": "Pista d'auditoria activada",
+        "auditTrailPeriodDays": "Dies del període de pista d'auditoria",
+        "autoDiscoveryEnabled": "Activa el descobriment automàtic de dispositius",
+        "autoUpdateThumbnails": "Actualitza automàticament les miniatures",
+        "backupNewCamerasByDefault": "Fes una còpia de seguretat de les càmeres noves de forma predeterminada",
+        "backupQualities": "Qualitats de la còpia de seguretat",
+        "cameraSettingsOptimization": "Permet l'optimització de la configuració del dispositiu",
+        "clientStatisticsSettingsUrl": "URL relativa de les estadístiques del client",
+        "cloudAccountName": "Compte de propietari al núvol",
+        "cloudConnectRelayingEnabled": "Activa la retransmissió per a la connexió al núvol",
+        "cloudConnectUdpHolePunchingEnabled": "Activa la perforació de forats UDP per a la connexió al núvol",
+        "cloudHost": "Amfitrió al núvol",
+        "cloudSystemID": "ID del sistema al núvol",
+        "disabledVendors": "Proveïdors desactivats",
+        "ec2AliveUpdateIntervalSec": "Interval d'actualització del sistema actiu (segons)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Temps d'espera de manteniment de connexió (segons)",
+        "ec2KeepAliveProbeCount": "Sondes de manteniment de connexió (segons)",
+        "emailFrom": "Remitent",
+        "emailSignature": "Signatura d'Email",
+        "emailSupportEmail": "Email de suport",
+        "enableEdgeRecording": "Activa l'enregistrament en origen",
+        "eventLogPeriodDays": "Període de registre d'esdeveniments (dies)",
+        "ldapAdminDn": "DN d'administrador LDAP",
+        "ldapSearchBase": "Base de cerca LDAP",
+        "ldapSearchFilter": "Filtre de cerca LDAP",
+        "ldapUri": "URI LDAP",
+        "localSystemId": "ID del sistema local",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Diferència màxima entre l'hora sincronitzada i l'hora d'Internet (mil·lisegons)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Diferència màxima entre l'hora sincronitzada i l'hora local (mil·lisegons)",
+        "maxP2pQueueSizeBytes": "Mida màxima de la cua P2P (bytes)",
+        "maxRecordQueueSizeBytes": "Mida màxima de la cua de registres (bytes)",
+        "maxRecordQueueSizeElements": "Mida màxima de la cua de registres (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Fils màxims de sincronització de l'arxiu remot",
+        "maxRtspConnectDurationSeconds": "Durada màxima de connexió RTSP en segons",
+        "maxSceneItems": "Nombre màxim d'elements d'escena (0 significa predeterminat)",
+        "proxyConnectTimeoutSec": "Temps d'espera de la connexió del servidor intermediari (segons)",
+        "rtpTimeoutMs": "Temps d'espera RTP (mil·lisegons)",
+        "sequentialFlirOnvifSearcherEnabled": "Utilitza el cercador Flir Onvif seqüencial",
+        "serverDiscoveryPingTimeoutSec": "Temps d'espera de descobriment de servidors",
+        "smtpConnectionType": "Tipus de connexió SMTP",
+        "smtpHost": "Amfitrió SMTP",
+        "smtpPort": "Port SMTP",
         "smtpSimple": "SMTP simple",
-        "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "smtpTimeout": "Temps d'espera SMTP",
+        "smtpUser": "Usuari SMTP",
+        "statisticsAllowed": "Envia estadístiques d'ús anònimes i informes d'errors",
+        "statisticsReportLastNumber": "Informe d'estadístiques: últim número",
+        "statisticsReportLastTime": "Informe d'estadístiques: última vegada",
+        "statisticsReportLastVersion": "Informe d'estadístiques: última versió",
+        "statisticsReportServerApi": "API del servidor d'estadístiques",
+        "statisticsReportTimeCycle": "Interval de l'informe d'estadístiques",
+        "statisticsReportUpdateDelay": "Informe d'estadístiques: retard d'actualització",
+        "synchronizeTimeWithInternet": "Sincronitza l'hora amb Internet",
         "SystemName": "Nom del sistema",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
-        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "takeCameraOwnershipWithoutLock": "Adopta la propietat de les càmeres sense bloquejar",
+        "timeSynchronizationEnabled": "Sincronització d'hora activada",
+        "primaryTimeServer": "Servidor de sincronització d'hora principal",
+        "osTimeChangeCheckPeriodMs": "Període de comprovació de canvi d'hora del sistema operatiu",
+        "syncTimeExchangePeriod": "Interval de sincronització d'hora de sincronització per a sol·licituds de xarxa",
+        "syncTimeEpsilon": "Hora de sincronització epsilon. El valor nou no s'aplica si l'hora delta és inferior a epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Fils màxims de sincronització de l'arxiu de la càmera portable",
+        "updateNotificationsEnabled": "Notificacions d'actualització activades",
+        "upnpPortMappingEnabled": "Mapatge de ports UPNP activat",
+        "useTextEmailFormat": "Envia correus electrònics de text pla",
+        "useWindowsEmailLineFeed": "Utilitza el salt de línia de Windows en els correus electrònics",
+        "trafficEncryptionForced": "Força el xifratge del trànsit",
+        "videoTrafficEncryptionForced": "Força el xifratge del trànsit de vídeo",
+        "updateStatus": "Estat de l'actualització",
+        "watermarkSettings": "Configuració de la filigrana",
+        "maxWebMTranscoders": "Quantitat màxima de connexions WEBM per al servidor. Chrome obre dues connexions alhora i després tanca la primera. Per tant, es recomana establir un valor >= 2 en aquest paràmetre.",
+        "maxEventLogRecords": "Registres d'esdeveniments màxims que es mantenen a la base de dades. La quantitat real de registres no eliminats pot ser fins a un 20% superior al valor especificat.",
+        "forceLiveCacheForPrimaryStream": "Si cal emmagatzemar alguns segments per al flux principal. Valors: \"sí\" - sempre activat (pot utilitzar molta memòria RAM), \"no\" - sempre desactivat excepte quan la reproducció ho requereixi (per exemple, HLS), \"automàtic\" - similar a \"no\", però activat quan millora el experiència d'usuari (per exemple, quan algun connector d'Analytics està funcionant a la càmera)."
     }
 }
