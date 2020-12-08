@@ -968,6 +968,14 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                 )]
         return []
 
+    def save_formset(self, request, form, formset, change):
+        super().save_formset(request, form, formset, change)
+        objs = [obj for obj, fields in formset.changed_objects]
+        objs.extend(formset.new_objects)
+        for obj in objs:
+            if obj.asset:
+                obj.asset.customizations.set(obj.enabled.all())
+
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         if obj and obj.pk:

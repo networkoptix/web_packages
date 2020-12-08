@@ -476,10 +476,17 @@ class MenuNodeInlineForm(forms.ModelForm):
             self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
             self.fields['enabled'].widget.can_add_related = False
             self.fields['enabled'].help_text = 'Choose which customizations this menu item should be enabled in'
+            if self.instance.asset:
+                self.initial['enabled'] = self.instance.asset.customizations.all() & self.fields['enabled'].queryset
         else:
             enabled = False
-            if self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
+            if self.instance.asset:
+                enabled = self.instance.asset.customizations.filter(
+                    id=self.current_customization.id
+                ).exists()
+            elif self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
                 enabled = True
+
             self.fields['enabled'] = forms.BooleanField(required=False)
             self.initial['enabled'] = enabled
 
@@ -487,7 +494,9 @@ class MenuNodeInlineForm(forms.ModelForm):
         self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
 
     def clean_enabled(self):
-        if self.instance.pk:
+        if self.cleaned_data['asset']:
+            old_enabled = set(self.cleaned_data['asset'].customizations.all().values_list('name', flat=True))
+        elif self.instance.pk:
             old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))
         else:
             old_enabled = set()

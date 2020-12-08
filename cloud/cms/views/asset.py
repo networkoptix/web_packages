@@ -603,10 +603,10 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
 
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
-def get_asset_state(request, asset_id):
+def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
-    asset = get_object_or_404(Asset, id=asset_id, customizations__name=customization)
+    asset = get_object_or_404(Asset, id=asset_id)
     if not request.user.is_superuser and not (
             UserGroupsToAssetPermissions.check_customization_publish(request.user) and
             UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
@@ -614,8 +614,12 @@ def get_asset_state(request, asset_id):
         raise APIException('Cannot access state for this asset')
 
     state = 'Draft'
-    latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
-    if latest_review:
-        state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+    if customization and customization != 'all':
+        latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
+        if latest_review:
+            state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+    else:
+        state = None
 
-    return api_success({'state': state})
+    enabled_customizations_dict = {cust.id: cust.name for cust in asset.customizations.filter(name__in=request.user.customizations)}
+    return api_success({'state': state, 'customizations': enabled_customizations_dict})
