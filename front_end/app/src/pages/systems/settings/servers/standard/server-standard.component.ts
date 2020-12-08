@@ -6,10 +6,10 @@ import { ActivatedRoute }            from '@angular/router';
 import {
     UntilDestroy, untilDestroyed
 }                                    from '@ngneat/until-destroy';
-import { catchError, map }           from 'rxjs/operators';
 import {
-    of, timer, combineLatest, SubscriptionLike, Subject
+    of, SubscriptionLike, Subject
 }                                    from 'rxjs';
+import { catchError }                from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
@@ -171,7 +171,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             }
 
             if (currentValue.id !== previousValue?.id) {
-                this.setServer();
+                // TODO: Cleanup and fix code to remove use of setTimeout. ExpressionChangedAfterItHasBeenCheckedError
+                setTimeout(() => this.setServer());
             }
         }
 
@@ -292,17 +293,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.serversSubscription.unsubscribe();
         }
         // adding time to avoid server status flashing "Checking..." if system is offline
-        this.serversSubscription = combineLatest(
-            timer(this.CONFIG.servers.minLoaderTime),
-            this.system.getForceServers()
-                .pipe(
-                    catchError(err => {
-                        console.error(err);
-                        return of(false);
-                    })))
+        // TODO: Check spec for time
+        this.serversSubscription = this.system.getForceServers()
             .pipe(
-                map(x => x[1])
-            )
+                catchError(err => {
+                    console.error(err);
+                    return of(false);
+                }))
             .subscribe(result => {
                 if (result) {
                     const servers: any[] = Object.entries(result).map(server => server[1]);

@@ -149,9 +149,10 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
 
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
+            const isOnline = this.system.servers.find(server => server.id === this.serverId).status === 'Online';
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                this.system.updateOrGetSystemStorage({ serverId: this.serverId }),
+                isOnline ? this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true) : Promise.resolve({ reply: { storages: [] } }),
                 this.refreshStorages$.pipe(switchMap(() => this.system.getServerStats(this.serverId)))
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
                 .subscribe(results => {

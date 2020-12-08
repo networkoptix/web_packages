@@ -4,6 +4,7 @@ import {
 }                                from 'rxjs';
 import { flatMap, tap }          from 'rxjs/operators';
 
+import { environment } from '@environments/environment';
 import { NxConfigService, IConfig }        from './nx-config';
 import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
@@ -18,7 +19,7 @@ import { NxUtilsService }                  from './utils.service';
 import { NxAppStateService }               from './nx-app-state.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { SystemConfigSettings }            from './system-api.types';
-import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { trim_ids } from '../utils/api_response_cleaners';
 import { NxRibbonService } from '@components/ribbon';
 
@@ -492,14 +493,18 @@ class ServerManager {
     initSystemMediaServers() {
         if (this.servers.length) {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
+                const unauthorizedCallback = environment.isLocal
+                    ? () => Promise.resolve()
+                    : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                        this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                        return Promise.resolve(true);
+                    });
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
                         this.systemId,
-                        server.id, () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                            return Promise.resolve(true);
-                        })
+                        server.id,
+                        unauthorizedCallback
                     );
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
