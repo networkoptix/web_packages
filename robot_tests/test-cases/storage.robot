@@ -1,9 +1,9 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
-Test Teardown     Common Restart Logout    ${url}
-Suite Teardown    Close All Browsers
+Suite Setup       Storage Suite Setup
+#Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
+#Test Teardown     Common Restart Logout    ${url}
+Suite Teardown    Storage Suite Teardown
 Force Tags        system
 
 *** Variables ***
@@ -11,6 +11,7 @@ ${email}       qaburbank@gmail.com
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
+${storage string}    ${EMPTY}
 
 *** Keywords ***
 Server Settings Test Setup
@@ -19,7 +20,97 @@ Server Settings Test Setup
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
 
+Storage Suite Setup
+    FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
+        ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+        Set Suite Variable    ${${account}}          ${random email}
+    END
+
+    @{system names} =    Create List    
+    ...    ${AUTO TESTS}
+    ...    ${AUTO TESTS 2}
+    ...    Auto Tests 3
+       
+    @{auth}=    Create List    ${owner}    ${password}
+    Set Suite Variable    ${auth}    ${auth}   
+     
+    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    Set Suite Variable     ${random}    ${random}
+    
+    @{server auth}=   Create List    admin    qweasd 123
+    
+    FOR    ${n}    IN RANGE    5
+        Open Connection    ${QA BURBANK IP}
+        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+        ${results}    Execute Command     dd if=/dev/zero of=disk${n}-${random}.img bs=1M count=12000    sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     mkfs -t ext4 disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}    
+        ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     mount -t auto -o loop disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
+        ${storage string} =    Catenate    ${storage string}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}  
+        Close Connection         
+    END
+    
+    ${storage string} =    Get Substring    ${storage string}    1
+        
+    FOR    ${n}    IN RANGE    1
+        ${port} =    Create Docker Server    storage${n}-${random}    4.1_test    ${storage string}    
+        Set Suite Variable    ${port${n}}    ${port[0]}
+        Sleep     10
+        Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
+        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${owner}    ${BASE PASSWORD}
+        Set Suite Variable    ${sysId${n}}    ${sysId}
+        Sleep    10
+        Close Connection
+    END
+    
+    ${SUITE AUTO TESTS USERS} =    Create Dictionary
+    ...    ${viewer}=viewer
+    ...    ${adv viewer}=advancedViewer
+    ...    ${live viewer}=liveViewer
+    ...    ${not owner}=viewer
+    ...    ${admin}=cloudAdmin
+    ...    ${custom}=custom
+
+    Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS} 
+    
+    FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
+        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
+    END
+    
+    Open Browser and go to URL    ${url}
+
+Storage Suite Teardown
+    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop storage0-${random} 
+    ${results}    Execute Command    docker container rm sorage0-${random} 
+    Close Connection
+    FOR    ${n}    IN RANGE    5
+        Open Connection    ${QA BURBANK IP}
+        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+        ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     rm disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     rm -d disk${n}-${random}/     sudo=True    sudo_password=${QA BURBANK PASS}
+        Close Connection
+    END 
+    Close All Browsers
+        
 *** Test Cases ***
+Verify Storage
+    [Tags]    alex_storage    
+    Log in to user and system    ${owner}      ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=95
+    Wait Until Elements Are Visible
+    ...    //span[contains(text(),"disk0") and @class="ellipsis"]
+    ...    //span[contains(text(),"disk1") and @class="ellipsis"]
+    ...    //span[contains(text(),"disk2") and @class="ellipsis"]
+    ...    //span[contains(text(),"disk3") and @class="ellipsis"]
+    ...    //span[contains(text(),"disk4") and @class="ellipsis"]
+    Capture Page Screenshot
+    
 # Analytics DB Storage Dropdown Warning Shows FUTURE (a system storage needs to be chosen)
 #     Verify on Servers Page
 #     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
