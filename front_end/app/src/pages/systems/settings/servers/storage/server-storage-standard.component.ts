@@ -4,7 +4,7 @@ import {
 }                                    from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
-    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer, of
+    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                    from 'rxjs';
 import {
     map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap
@@ -68,6 +68,7 @@ export class NxSystemStorageComponent implements OnInit {
     onlineMains = 0;
     onlineBackups = 0;
     changedModes: string[] = [];
+    updatingModes: string[] = [];
     customSettings = false;
     systemHasBackupsOn = false;
 
@@ -76,6 +77,7 @@ export class NxSystemStorageComponent implements OnInit {
     refreshStorages$ = new Subject<any>();
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
+    cancelPolling$ = new Subject<string>();
 
     dropdownOffsetCalc$ = combineLatest([
         this.dropdownOffset$.pipe(distinctUntilChanged()),
@@ -86,8 +88,8 @@ export class NxSystemStorageComponent implements OnInit {
 
     backupLocations$ = this.storage$.pipe(
         map(storage => storage.reduce(
-            (hasBackup, { storageId }) => hasBackup ||
-            this.modeWatchers[storageId]?.value === 'modeBackup',
+            (hasBackup, { storageId, status }) => !status && (hasBackup ||
+            this.modeWatchers[this.normalizeId(storageId)]?.value === 'modeBackup'),
             false
         ))
     )
@@ -164,14 +166,16 @@ export class NxSystemStorageComponent implements OnInit {
 
                     const storage = results.storage || [];
 
-                    results.storeInfo.forEach(({ storageId, url, ...storeInfo }) => {
-                        const noStore = !storage.find(({ id }) => id === storageId);
+                    results.storeInfo.forEach(({ storageId: originalStorageId, url, id: originalId, ...storeInfo }) => {
+                        const id = this.normalizeId(originalStorageId || originalId);
+                        const storageId = id === '{00000000-0000-0000-0000-000000000000}' ? url : id;
+                        const noStore = !storage.find(({ id, storageId: curStorageId }) => this.normalizeId(curStorageId || id) === storageId);
                         if (noStore) {
                             storage.push({
                                 ...storeInfo,
                                 status        : STORAGE_STATUS.RESERVED,
-                                storageId     : storageId === '{00000000-0000-0000-0000-000000000000}' ? url : storageId,
                                 storageStatus : 'removable',
+                                storageId,
                                 url
                             });
                         }
@@ -183,9 +187,15 @@ export class NxSystemStorageComponent implements OnInit {
                         0
                     );
                     storage.forEach((store, idx) => {
-                        this.modeWatchers[store.id] = new Watcher(this.selectMode(store).value);
+                        const storageId = store.id || store.storageId;
+                        const mode = this.selectMode(store)?.value || 'modeNotInUse';
+                        if (!this.modeWatchers[this.normalizeId(storageId)]) {
+                            this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode);
+                        } else {
+                            this.modeWatchers[this.normalizeId(storageId)].value = mode;
+                        }
                         const storeInfo = results.storeInfo.find((info) => {
-                            if (store.id === info.storageId) {
+                            if (storageId === info.storageId) {
                                 return info;
                             }
                         });
@@ -194,7 +204,7 @@ export class NxSystemStorageComponent implements OnInit {
                             store = { ...storeInfo };
                         }
                         if (store.freeSpace) {
-                            store.archiveSpace = results.usage.reply.storages[NxUtilsService.cleanId(store.storageId)]?.space?.mediaSpaceB || 0;
+                            store.archiveSpace = results.usage.reply.storages[NxUtilsService.cleanId(store.storageId || store.id)]?.space?.mediaSpaceB || 0;
                             store.status = STORAGE_STATUS.IN_USE; // default
                             store.statusTooltip = '';
 
@@ -202,13 +212,14 @@ export class NxSystemStorageComponent implements OnInit {
                                 if (
                                     store.storageStatus.includes('tooSmall') ||
                                     store.storageStatus.includes('removable') &&
-                                    store.freeSpace < (storage.freeSpace / 6)
+                                    store.totalSpace < (storage.freeSpace / 6) ||
+                                    !store.isWritable
                                 ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
                                 } else if (
                                     store.storageStatus.includes('system') &&
-                                    store.freeSpace < (storage.freeSpace / 6)
+                                    store.totalSpace < (storage.freeSpace / 6)
                                 ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
@@ -228,15 +239,14 @@ export class NxSystemStorageComponent implements OnInit {
                         }
                         const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
                         if (store.status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(store.storageType)) {
-                            store.hasAction = true;
-                            storage.hasAction = true;
+                            storage.hasAction = store.hasAction = true;
                         }
 
                         storage[idx] = { ...store };
                     });
 
                     this.setupWatchers();
-                    this.updateStorage(storage);
+                    this.updateStorage(storage, true);
                     this.updateCustom();
                 });
             this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
@@ -245,7 +255,7 @@ export class NxSystemStorageComponent implements OnInit {
                 tap(this.refreshStorages$)
             ).subscribe(() => {
                 this.system.getStorages().subscribe(storages => {
-                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup }) => hasBackup || isBackup, false);
+                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup, status }) => hasBackup || isBackup && !status, false);
                 });
             });
             return this.refreshStorages$.toPromise();
@@ -277,18 +287,32 @@ export class NxSystemStorageComponent implements OnInit {
                         break;
                 }
             });
-            this.storage$.next(storage);
+            this.updateStorage(storage);
         };
 
         const saveSettings: Process = this.processService.createProcess(() => {
+            let backupSaveState: 'StopFail' | 'StartFail';
             return Promise.all([
-                this.isBackupOn.originalValue !== this.isBackupOn.value
+                this.isBackupOn.originalValue === this.backupState
                     ? Promise.resolve()
                     : this.backupState
-                        ? this.setDefaultBackupSettings()
-                        : this.turnOffBackup(),
+                        ? this.setDefaultBackupSettings().catch(err => {
+                            console.error(err);
+                            backupSaveState = 'StartFail';
+                        })
+                        : this.turnOffBackup().catch(err => {
+                            console.error(err);
+                            backupSaveState = 'StopFail';
+                        }),
                 this.handleModeUpdate()
-            ]);
+            ]).then(res => {
+                if (backupSaveState) {
+                    const backup = backupSaveState === 'StartFail';
+                    this.isBackupOn.originalValue = this.backupState = !backup;
+                    this.isBackupOn.value = backup;
+                }
+                return res;
+            });
         });
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.isBackupOn, ...modeWatchers.map(([_, watcher]) => watcher)],
@@ -326,54 +350,51 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     setDefaultBackupSettings = async() => {
-        try {
-            await this.system.updateOrGetBackupControl(this.serverId, 'start');
-            await this.system.updateOrGetSystemSettings({
-                backupNewCamerasByDefault: true, backupQualities: 'CameraBackupDefault'
-            }).toPromise();
-            await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
-            await this.system.initSystemMediaServers();
-            const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
-                if (camera.backupType !== 'CameraBackupDefault') {
-                    let retries = 5;
-                    const update = () => {
-                        if (retries < 5) {
-                            console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
-                        }
-                        retries--;
-                        return this.system.setCameraUserSettings(
-                            this.serverId, camera.id,
-                            { backupType: 'CameraBackupDefault' }
-                        ).catch(() => retries ? update() : console.error('failed to save camera.id'));
-                    };
-                    cameras.push(update);
-                }
-                return cameras;
-            }, [] as (() => Promise<ChangedIdReturned>)[]);
-            await of(...cameraSettingsToSave).pipe(
-                bufferCount(30),
-                concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
-            ).toPromise();
-            await this.system.update();
-            this.customSettings = false;
-            this.backupState = true;
-            this.isBackupOn.originalValue = true;
-            return Promise.resolve();
-        } catch (error) {
-            console.error('error while setting backup to default settings', error);
-        }
+        await this.system.updateOrGetBackupControl(this.serverId, 'start');
+        await this.system.updateOrGetSystemSettings({
+            backupNewCamerasByDefault: true, backupQualities: 'CameraBackupDefault'
+        }).toPromise();
+        await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
+        await this.system.initSystemMediaServers();
+        const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
+            if (camera.backupType !== 'CameraBackupDefault') {
+                let retries = 5;
+                const update = () => {
+                    if (retries < 5) {
+                        console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
+                    }
+                    retries--;
+                    return this.system.setCameraUserSettings(
+                        this.serverId, camera.id,
+                        { backupType: 'CameraBackupDefault' }
+                    ).catch(() => retries ? update() : console.error('failed to save camera.id'));
+                };
+                cameras.push(update);
+            }
+            return cameras;
+        }, [] as (() => Promise<ChangedIdReturned>)[]);
+        await of(...cameraSettingsToSave).pipe(
+            bufferCount(30),
+            concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
+        ).toPromise();
+        await this.system.update();
+        this.customSettings = false;
+        this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = true;
+        return Promise.resolve();
     }
 
     turnOffBackup = async() => {
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
 
+        const state = backupControlRes && backupControlRes.reply?.state;
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
-        if (backupControlRes && backupControlRes.reply.state !== 'BackupState_None') {
+        if (state !== 'BackupState_None') {
             await this.system.updateOrGetBackupControl(this.serverId, 'stop');
         }
-        this.backupState = false;
-        this.isBackupOn.originalValue = false;
+        if (state) {
+            this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = false;
+        }
     }
 
     checkIfBackupEnabled(server: any) {
@@ -392,25 +413,26 @@ export class NxSystemStorageComponent implements OnInit {
             false);
     }
 
-    updateStorage(storage) {
+    updateStorage(storage, updateBackupState = false) {
         this.onlineBackups = 0;
         this.onlineMains = 0;
-        let totalBackups = 0;
-        let totalMains = 0;
         let isUpdating = false;
         storage.forEach(({ isBackup, isUsedForWriting, status, updating, hasAction, storageType }) => {
-            if (isUsedForWriting) {
-                isBackup ? totalBackups++ : totalMains++;
-                if (![STORAGE_STATUS.RESERVED, STORAGE_STATUS.INACCESSIBLE].includes(status)) {
-                    isBackup ? status === 0 && this.onlineBackups++ : this.onlineMains++;
-                }
+            if (isUsedForWriting && status === STORAGE_STATUS.IN_USE) {
+                if (isBackup) {
+                    this.onlineBackups++;
+                } else {
+                    this.onlineMains++;
+                };
             }
 
             if (updating) {
                 isUpdating = true;
             };
-            const hasActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
-            hasAction = status === STORAGE_STATUS.INACCESSIBLE || hasActions.includes(storageType) || true;
+
+            const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
+            hasAction = status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType);
+            storage.hasAction = storage.hasAction || hasAction;
         });
 
         if (this.onlineMains === 1) {
@@ -419,8 +441,11 @@ export class NxSystemStorageComponent implements OnInit {
             });
             store.mainOnly = true;
         }
-        this.isBackupOn.originalValue = this.doesModeExist('modeBackup') && this.checkArchiveState();
-        this.backupState = this.isBackupOn.originalValue;
+
+        if (updateBackupState) {
+            this.isBackupOn.originalValue = this.doesModeExist('modeBackup') && this.checkArchiveState();
+            this.backupState = this.isBackupOn.originalValue;
+        }
 
         const sortByTypeAndUrl = (
             { storageType: aType, url: aUrl },
@@ -449,6 +474,8 @@ export class NxSystemStorageComponent implements OnInit {
         });
     }
 
+    normalizeId = (id) => `{${NxUtilsService.cleanId(id || '')}}`
+
     getIconSrc(store) {
         return `${this.CONFIG.icons.dir}${store.updating ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
@@ -465,14 +492,14 @@ export class NxSystemStorageComponent implements OnInit {
 
     getModes(store) {
         const countMains = Object.values(this.modeWatchers).reduce((prev, { value }) => value === 'modeMain' ? prev + 1 : prev, 0);
-        const isMain = this.modeWatchers[store.storageId].value === 'modeMain';
+        const isMain = this.modeWatchers[this.normalizeId(store.storageId || store.id)]?.value === 'modeMain';
         const checkType = mode => !(store.storageType === 'local' && mode.value === 'modeNotInUse' || !mode.value);
         const checkDisabled = mode => ({ ...mode, disabled: isMain && mode.value !== 'modeMain' && countMains <= 1 });
         return this.modes.filter(checkType).map(checkDisabled);
     }
 
     checkArchiveWarning(store) {
-        const { value, originalValue } = this.modeWatchers[store.id || store.storageId];
+        const { value, originalValue } = this.modeWatchers[this.normalizeId(store.id || store.storageId)];
         return [value, originalValue].every(state => state === 'modeNotInUse') && store.archiveSpace;
     }
 
@@ -497,9 +524,10 @@ export class NxSystemStorageComponent implements OnInit {
     checkDisabled = store => store.status !== STORAGE_STATUS.IN_USE || store.updating || this.selectMode(store).value === 'modeNotInUse'
 
     changeMode(
-        { isBackup, storageId: id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
+        { isBackup, storageId, id: _id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
         selected
     ) {
+        const id = this.normalizeId(storageId || _id);
         const updateParams = {
             id, isBackup, url, spaceLimit, usedForWriting, parentId: this.serverId, storageType
         };
@@ -511,7 +539,7 @@ export class NxSystemStorageComponent implements OnInit {
         if (checkChanged(selected)) {
             updateParams.isBackup = selected.value === 'modeBackup';
             updateParams.usedForWriting = selected.value !== 'modeNotInUse';
-            this.modeWatchers[id].value = selected.value;
+            this.modeWatchers[this.normalizeId(id)].value = selected.value;
             this.changedModes = [...this.changedModes, id];
             this.storage$.pipe(first()).subscribe(storage => {
                 const store = storage.find(({ storageId }) => storageId === id);
@@ -527,31 +555,39 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     handleModeUpdate = () => {
-        let updatingStores = [];
-        if (!this.changedModes.length) {
-            return Promise.resolve();
-        }
-        const setUpdating = (updating?, toUpdate = this.changedModes) => {
+        let storagesWithUpdatedStatus: any = this.storage$.value;
+        const modesChanged = [...this.updatingModes, ...this.changedModes].length;
+        const setUpdating = (updating?, toUpdate = [...this.changedModes, this.updatingModes]) => {
             if (!updating) {
-                updatingStores = updatingStores.filter(id => !toUpdate.includes(id));
-                this.changedModes = this.changedModes.filter(id => !updatingStores.includes(id));
-                const storagesWithUpdatedStatus = this.storage$.value.map(store => ({ ...store, updating: updatingStores.includes(store.storageId) }));
-                this.updateStorage(storagesWithUpdatedStatus);
+                this.updatingModes = this.updatingModes.filter(id => !toUpdate.includes(id));
+                storagesWithUpdatedStatus = storagesWithUpdatedStatus.map(store => ({ ...store, updating: this.updatingModes.includes(store.storageId) }));
             } else {
+                this.changedModes = [];
                 this.storage$.pipe(first()).subscribe(storage => {
-                    const updatedStorage = storage.map((store) => {
+                    storagesWithUpdatedStatus = storage.map((store) => {
                         if (toUpdate.includes(store.storageId)) {
                             store.updating = updating;
-                            updatingStores.push(store.storageId);
+                            this.updatingModes.push(store.storageId);
                         }
                         return store;
                     });
-                    this.updateStorage(updatedStorage);
                 });
             }
+            storagesWithUpdatedStatus.forEach(({ storageId, isBackup, isUsedForWriting, status, storageType, hasAction }) => {
+                const updatedValue = !isUsedForWriting ? 'modeNotInUse' : isBackup ? 'modeBackup' : 'modeMain';
+                this.modeWatchers[storageId].originalValue = updatedValue;
+                const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
+                if (status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType)) {
+                    hasAction = true;
+                    storagesWithUpdatedStatus.hasAction = storagesWithUpdatedStatus.hasAction || hasAction;
+                }
+            });
+            this.updateStorage(storagesWithUpdatedStatus);
+            this.applyService.reset();
         };
-        setUpdating(true);
-        const done$ = new Subject();
+        if (modesChanged) {
+            setUpdating(true);
+        }
 
         // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
         const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
@@ -566,33 +602,41 @@ export class NxSystemStorageComponent implements OnInit {
             url,
             usedForWriting
         });
-        this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)).subscribe(() => {
-            interval(5000).pipe(takeUntil(done$)).subscribe(curInterval => {
-                if (curInterval >= 6 || !this.changedModes.length) {
-                    setUpdating(false, updatingStores);
-                    this.triggerUpdate$.next('update');
-                    done$.next('done');
+        this.cancelPolling$.next('cancel existing polls');
+        of(modesChanged).pipe(
+            switchMap((changed) => !changed ? of('stop') : this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)))
+        ).subscribe((action) => {
+            if (action === 'stop') {
+                this.cancelPolling$.next('stopped');
+            }
+            const recheck$ = new BehaviorSubject(1);
+            recheck$.pipe(
+                takeUntil(this.cancelPolling$)
+            ).subscribe(curInterval => {
+                if (curInterval >= 15 || !this.updatingModes.length) {
+                    setUpdating(false, this.updatingModes);
+                    this.updateStorage(storagesWithUpdatedStatus);
+                    this.updatingModes = [];
+                    this.cancelPolling$.next('time ran out');
                 } else {
-                    updatingStores.forEach((id) => {
-                        const path = this.storage$.value.find(({ storageId }) => storageId === id).url;
-                        this.system.getStorageStatus(
-                            { path }
-                        ).pipe(
-                            takeUntil(done$)
-                        ).subscribe(({ reply: { storage: { storageStatus, storageId } } }) => {
-                            if (!storageStatus.includes('beingChecked')) {
-                                setUpdating(false, [storageId]);
-                                if (!updatingStores.length) {
-                                    this.triggerUpdate$.next('update');
-                                    done$.next('done');
+                    this.system.updateOrGetSystemStorage({ serverId: this.serverId })
+                        .pipe(takeUntil(this.cancelPolling$)).subscribe(({ reply: { storages } }) => {
+                            this.updatingModes.forEach((id) => {
+                                const { storageStatus } = storages.find(({ storageId }) => id === storageId);
+                                if (!storageStatus.includes('beingChecked')) {
+                                    setUpdating(false, [id]);
+                                    if (!this.updatingModes.length) {
+                                        this.updateStorage(storagesWithUpdatedStatus);
+                                        this.cancelPolling$.next('all modes changed');
+                                    }
                                 }
-                            }
+                            });
+                            timer(1500).subscribe(() => recheck$.next(recheck$.value + 1));
                         });
-                    });
                 }
             });
         });
-        return done$.toPromise();
+        return Promise.resolve();
     }
 
     calcDDWidth() {
@@ -639,10 +683,13 @@ export class NxSystemStorageComponent implements OnInit {
                         .removeStorage({ id: storage.storageId || storage.id }).toPromise()
                         .then((response) => {
                             if (response.id) {
-                                this.triggerUpdate$.next('update');
+                                this.updateStorage(this.storage$.value.filter(({ id }) => id !== response.id));
+                                this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: storage.url }), 'success');
+                            } else {
+                                throw new Error('failed to remove storage');
                             }
                         }).catch(_ => {
-                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: storage.url }), 'warning');
+                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: storage.url }), 'danger');
                         });
                 }
             });
@@ -684,7 +731,7 @@ export class NxSystemStorageComponent implements OnInit {
             }
             return store;
         });
-        this.storage$.next(storages);
+        this.updateStorage(storages);
     }
 
     reindexing(type: number, action: string) {

@@ -33,6 +33,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     systemSubscription: Subscription;
 
     totalSpaceLabel: string;
+    totalSpaceTooltip: string;
     reserved: string;
     reservedPercentage: number;
     used: string;
@@ -78,7 +79,8 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
-        this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
+        this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace, false) || '&mdash;';
+        this.totalSpaceTooltip = this.toFriendlyBytes(this.store.totalSpace);
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
         this.used = this.toFriendlyBytes(usedSpace);
@@ -103,9 +105,28 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         return Math.round((size / this.store.totalSpace) * 100);
     }
 
-    toFriendlyBytes(bits, gbTb?: 'GB' | 'TB') {
+    toFriendlyBytes(bits, fractionGb = true) {
+        if (!+bits) {
+            return '&mdash;';
+        }
         const { locale } = this;
-        return NxUtilsService.fromBits(bits, { locale, roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824 });
+        const gbBits = 1073741824;
+        const roundTo = bits < gbBits / 2 ? gbBits / 1024 : gbBits / (fractionGb ? 10 : 1);
+        const friendlySize = NxUtilsService.fromBits(bits, { locale, roundTo });
+        if (friendlySize === '0 B') {
+            return '< 1 MB';
+        }
+
+        if (!fractionGb) {
+            return friendlySize;
+        }
+
+        const [size, units] = friendlySize.split(' ');
+        const fixed = {
+            GB : 1,
+            TB : 2
+        };
+        return `${parseFloat(size).toFixed(fixed[units])} ${units}`;
     }
 
     ngOnDestroy() {

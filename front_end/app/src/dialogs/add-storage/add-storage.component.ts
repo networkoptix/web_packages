@@ -62,7 +62,9 @@ export class AddStorageModalContent {
     }
 
     validateUrl = (control: FormControl): { [key: string]: any } | null => {
-        const alreadyExistingUrl = this.storage.find(s => s.url === control.value?.substr(1));
+        const systemNetworkStorage = control.value?.substr(1);
+        const smbStorage = `smb:${control.value}`;
+        const alreadyExistingUrl = this.storage.find(({ url }) => url === systemNetworkStorage || url === smbStorage);
         if (alreadyExistingUrl) {
             return { alreadyExists: true };
         }
@@ -84,7 +86,7 @@ export class AddStorageModalContent {
         });
 
         const options = {
-            classname : this.CONFIG.toast.warning,
+            classname : this.CONFIG.toast.danger,
             autohide  : true,
             delay     : this.CONFIG.alertTimeout
         };

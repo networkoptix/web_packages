@@ -562,10 +562,6 @@ export interface PageDescriptions {
     integrations: any;
 }
 
-export interface PageDescriptions {
-    integrations: string;
-}
-
 export interface PageTitles {
     about:                  any;
     account:                any;
@@ -710,6 +706,7 @@ export interface Storage {
     invalidPath:                any;
     stillHasArchivesPreWarning: any;
     stillHasArchives:           any;
+    storageDeleted:             any;
     failedRemove:               any;
     reservedTooSmallTooltip:    any;
     reservedSystemTooltip:      any;
@@ -1476,9 +1473,6 @@ const typeMap: any = {
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
     ], false),
-    "PageDescriptions": o([
-        { json: "integrations", js: "integrations", typ: "" },
-    ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },
         { json: "account", js: "account", typ: "any" },
@@ -1610,6 +1604,7 @@ const typeMap: any = {
         { json: "invalidPath", js: "invalidPath", typ: "any" },
         { json: "stillHasArchivesPreWarning", js: "stillHasArchivesPreWarning", typ: "any" },
         { json: "stillHasArchives", js: "stillHasArchives", typ: "any" },
+        { json: "storageDeleted", js: "storageDeleted", typ: "any" },
         { json: "failedRemove", js: "failedRemove", typ: "any" },
         { json: "reservedTooSmallTooltip", js: "reservedTooSmallTooltip", typ: "any" },
         { json: "reservedSystemTooltip", js: "reservedSystemTooltip", typ: "any" },

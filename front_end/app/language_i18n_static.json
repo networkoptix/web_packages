@@ -912,6 +912,7 @@
         "invalidPath": "Invalid storage path.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
         "failedRemove": "Failed to delete external storage {url}",
         "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
