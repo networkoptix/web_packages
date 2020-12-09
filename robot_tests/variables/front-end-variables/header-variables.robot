@@ -62,5 +62,6 @@ ${EXTRA SYSTEM TILE}           ${DROPDOWN SYSTEMS GRID}/nx-additional-systems-ti
 # Services menu items
 &{downloads}    title=${DOWNLOADS TEXT}    url=${ENV}/download
 &{ipvd}    title=${IPVD TITLE TEXT}    url=${ENV}/ipvd
-&{health viewer}    title=${HEALTH VIEWER TEXT}    url=${ENV}/health/report-viewer
+&{health viewer}    title=${HEALTH VIEWER TEXT}    url=${ENV}/health-report/viewer
 @{services pages}    ${downloads}    ${ipvd}    ${health viewer}
+

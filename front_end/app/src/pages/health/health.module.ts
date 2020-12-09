@@ -23,7 +23,7 @@ import { NxHealthLayoutService }   from './health-layout.service';
 
 const appRoutes: Routes = [
     {
-        path      : 'report-viewer',
+        path      : 'viewer',
         component : NxReportViewerComponent,
         children  : [
             {

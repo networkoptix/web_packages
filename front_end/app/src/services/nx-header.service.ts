@@ -73,13 +73,6 @@ export class NxHeaderService {
     }
 
     setLocation(url?) {
-        // Special case - we need to show item which is not part of site navigation
-        // header will use whatever was set w/ currentLocation
-        if (url.startsWith('/health/report-viewer')) {
-            return;
-        }
-        // ************************************************************************
-
         const bestMatch: any = {};
         // Check if system url or go through nodes
         const settingsBase = environment.isLocal ? '/settings' : '/systems';

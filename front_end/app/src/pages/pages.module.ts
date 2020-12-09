@@ -29,7 +29,7 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },
     {
-        path         : 'health',
+        path         : 'health-report',
         loadChildren : () => import('./health/health.module').then(m => m.NxHealthModule)
     },
     {

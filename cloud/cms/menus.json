@@ -80,7 +80,7 @@
           {
             "name": "Health Report Viewer",
             "display_name": "Health Report Viewer",
-            "url": "/health/report-viewer",
+            "url": "/health-report/viewer",
             "new_window": false,
             "icon": "",
             "authentication": "both",

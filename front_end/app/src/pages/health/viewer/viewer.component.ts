@@ -101,7 +101,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.healthService.importedData = false;
         this.menu = {
-            base            : '/health/report-viewer',
+            base            : '/health-report/viewer',
             selectedSection : '', // updated by selectedSectionSubject
             level1          : [
                 {
@@ -499,13 +499,13 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                                 new_window     : false,
                                 nodes          : undefined,
                                 order          : 0,
-                                url            : 'health/report-viewer'
+                                url            : 'health-report/viewer'
                             }
                         ]
                     },
                     order : 1,
                     url   : '',
-                    path  : 'health/report-viewer'
+                    path  : 'health-report/viewer'
                 };
 
                 let time = '-';
