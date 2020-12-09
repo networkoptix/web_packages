@@ -649,7 +649,7 @@
             "notAbleToLoadSystem": "システム設定を読み込めません。",
             "notAbleToLoadStorageInfo": "ストレージ情報を読み込めません。",
             "sessionLimitDuration": {
-                "hours": "時",
+                "hours": "時間",
                 "minutes": "分"
             },
             "warningMessages": {
