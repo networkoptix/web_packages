@@ -6,11 +6,11 @@ import { UntilDestroy }    from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import { BaseDropdown }              from '../injDropdown';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxHeaderService }           from '../../../services/nx-header.service';
-import { NxMenusService, MenuNode }  from '../../../services/menus.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService }           from '@services/nx-config';
+import { NxUriService }              from '@services/uri.service';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { NxMenusService, MenuNode }  from '@services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -95,15 +95,6 @@ export class NxDropMenu extends BaseDropdown {
             const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem);
         });
-    }
-
-    ngOnInit(): void {
-        if (this.systems) {
-            this.systemCounter = this.systems.length;
-            this.systems$.next(this.systems);
-            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-            this.menusService.updateActiveSystemMenu(activeSystem);
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {

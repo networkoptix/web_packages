@@ -9,10 +9,9 @@ import { takeUntil, map }                 from 'rxjs/operators';
 import { WINDOW }                    from './window-provider';
 import { IConfig, NxConfigService }  from './nx-config';
 import { MenuStructure }             from './nx-config/base-config';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService }          from './session.service';
-import { LocalStorageService }       from 'ngx-webstorage';
 
 export enum Auth {
     BOTH='Both',
@@ -60,8 +59,7 @@ export class NxMenusService implements OnDestroy {
         private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window,
-        private localStorageService: LocalStorageService
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -146,6 +144,7 @@ export class NxMenusService implements OnDestroy {
         const { endpoint: { view = false, settings = false, information = false } } = this;
         const name = activeSystem.name || activeSystem.moduleInfo.name;
         const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';
+        const hasAdminAccess = this.CONFIG.accessRoles.adminAccess.includes(activeSystem.accessRole.toLowerCase());
 
         const viewNode = new MenuNode(
             'View',
@@ -158,12 +157,15 @@ export class NxMenusService implements OnDestroy {
         );
         settingsNode.currentRoute = settings;
 
-        const informationNode = new MenuNode(
-            'Information',
-            this.getUrl(activeSystem.id, { information: true })
-        );
-        informationNode.currentRoute = information;
-        const nodes = [viewNode, settingsNode, informationNode];
+        const nodes = [viewNode, settingsNode];
+        if (hasAdminAccess) {
+            const informationNode = new MenuNode(
+                'Information',
+                this.getUrl(activeSystem.id, { information: true })
+            );
+            informationNode.currentRoute = information;
+            nodes.push(informationNode);
+        }
 
         const activeSystemMenu = new MenuNode(
             name,

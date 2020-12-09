@@ -12,21 +12,21 @@ import {
 } from 'rxjs';
 import { map, startWith }            from 'rxjs/operators';
 
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAppStateService }         from '../../services/nx-app-state.service';
-import { NxAccountService }          from '../../services/account.service';
-import { NxSessionService }          from '../../services/session.service';
-import { NxSystemsService }          from '../../services/systems.service';
-import { NxHeaderService }           from '../../services/nx-header.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxMenusService }            from '../../services/menus.service';
-import { WINDOW }                    from '../../services/window-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { environment }               from '../../../environments/environment';
-import { NxBootstrapProvider }       from '../../services/nx-bootstrap-provider';
-import { NxStorageService }          from '../../services/storage.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAppStateService }         from '@services/nx-app-state.service';
+import { NxAccountService }          from '@services/account.service';
+import { NxSessionService }          from '@services/session.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxMenusService }            from '@services/menus.service';
+import { WINDOW }                    from '@services/window-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { environment }               from '@environments/environment';
+import { NxBootstrapProvider }       from '@services/nx-bootstrap-provider';
+import { NxStorageService }          from '@services/storage.service';
 
 class CombinedWidths {
     constructor(
@@ -374,9 +374,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 }
 
                 this.systemId = this.storageService.systemId;
-            if (this.router.url.indexOf('/systems/') === 0) {
-                this.systemId = this.router.url.split('/')[2].split('?')[0];
-            }
+                if (this.router.url.indexOf('/systems/') === 0) {
+                    this.systemId = this.router.url.split('/')[2].split('?')[0];
+                }
 
                 if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
                     this.systemId = this.route.firstChild.snapshot.params.systemId;
