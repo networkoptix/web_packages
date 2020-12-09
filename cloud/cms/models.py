@@ -200,14 +200,25 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 def check_user_menu_permissions(nodes, user):
     for i in reversed(range(len(nodes))):
         node = nodes[i]
-        permissions = node.get('permissions', [])
-        for permission_codename in permissions:
-            if not (user and UserGroupsToAssetPermissions.check_customization_permission(user, settings.CUSTOMIZATION, permission_codename)):
-                del nodes[i]
-                break
+        condition = node.pop('condition', None)
+        condition_met = node.pop('condition_met', False)
+        beta_permission = Customization.BETA_PERMISSION_MAP.get(condition, None)
+        if not condition_met and condition and \
+                not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
+                    user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
+                )):
+            del nodes[i]
         else:
-            node.pop('permissions', None)
-            check_user_menu_permissions(node.get('nodes', []), user)
+            permissions = node.get('permissions', [])
+            for permission_codename in permissions:
+                if not (user and UserGroupsToAssetPermissions.check_customization_permission(
+                        user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
+                )):
+                    del nodes[i]
+                    break
+            else:
+                node.pop('permissions', None)
+                check_user_menu_permissions(node.get('nodes', []), user)
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
@@ -304,6 +315,11 @@ class Language(models.Model):
 
 
 class Customization(models.Model):
+    BETA_PERMISSION_MAP = {
+        '%INTEGRATION_STORE_ENABLED%': 'access_integration_store',
+        '%DEVELOPERS_ENABLED%': 'access_developers'
+    }
+
     class Meta:
         # Used to allow a user to see the customization in list of customizations
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
@@ -1588,7 +1604,7 @@ class MenuNode(models.Model):
             enabled = next((cust for cust in node.enabled_list if cust.id == customization.id), False)
             condition_met = not node.condition or global_contexts_dict.get(node.condition, False)
             asset_accepted = not node.asset or node.asset.version_id(customization.name) != 0
-            if enabled and condition_met and asset_accepted:
+            if enabled and asset_accepted:
                 node_structure = {
                     'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
@@ -1600,7 +1616,9 @@ class MenuNode(models.Model):
                     'icon': node.icon,
                     'permissions': list(node.permissions.values_list('codename', flat=True)),
                     'authentication': node.AUTH_CHOICES[node.authentication],
-                    'order': node.order
+                    'order': node.order,
+                    'condition': node.condition,
+                    'condition_met': condition_met
                 }
                 node_structure['display_name'] = node_structure['name']
 
