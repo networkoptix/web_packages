@@ -153,8 +153,8 @@ Restart server as owner
     ...    ${RESTARTING BANNER}
     Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
     Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container port servertest1
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    docker container port ${cont id 1}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     Set Suite Variable    ${port1}    ${port1}
     Close Connection
@@ -236,7 +236,7 @@ Change port
     [Tags]    C70975
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container port servertest1
+    ${results}    Execute Command    docker container port ${cont id 1}
     Close Connection
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     Set Suite Variable    ${port1}    ${port1}
@@ -244,9 +244,9 @@ Change port
     Verify Server Buttons Are Enabled
     Change Port To    7002
     Sleep    1
-    Get Cameras    ${server auth}    http://${QA BURBANK IP}:${port1}[1]
+    Get Cameras    ${server auth}    http://${QA BURBANK IP}:${port1[1]}
     Change Port To    7001
-    Get Cameras    ${server auth}    https://${QA BURBANK IP}:${port1}[0]
+    Get Cameras    ${server auth}    https://${QA BURBANK IP}:${port1[0]}
 
 # I can validate that the api fails correctly but I can't make it work either.
 # It gives a 200 but does not update. It works correctly in postman.
