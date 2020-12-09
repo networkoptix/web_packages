@@ -742,7 +742,7 @@
             "starter": "Starter",
             "iomodule": "Módulo E/S",
             "bridge": "Bridge",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Servidor no encontrado"
         },
         "messages": {
             "required": "{{number}} más requerido",
