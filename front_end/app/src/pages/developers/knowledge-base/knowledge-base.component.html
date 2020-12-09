@@ -82,7 +82,7 @@
 <!-- End of Search Results Templates -->
 
 <div class="page-wrapper">
-    <nx-left-menu [menuName]="menuName"
+    <nx-left-menu *ngIf="menuName" [menuName]="menuName"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
         [ignoreQuery]="true"

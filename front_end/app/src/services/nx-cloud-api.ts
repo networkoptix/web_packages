@@ -6,6 +6,9 @@ import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
+import { catchError }               from 'rxjs/operators';
+import { Router }                   from '@angular/router';
+import { EMPTY, of }                from 'rxjs';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -21,7 +24,8 @@ export class NxCloudApiService {
     constructor(
         private configService: NxConfigService,
         private http: HttpClient,
-        private cacheService: NxUriCacheService
+        private cacheService: NxUriCacheService,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -369,6 +373,13 @@ export class NxCloudApiService {
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
-        return this.http.get<any>(route);
+        return this.http.get<any>(route).pipe(catchError(error => {
+            if (error.status === 404) {
+                this.router.navigate([this.CONFIG.redirect.page404]);
+                return EMPTY;
+            } else {
+                return of(error);
+            }
+        }));
     }
 }

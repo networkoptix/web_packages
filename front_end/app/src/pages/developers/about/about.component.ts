@@ -50,7 +50,11 @@ export class NxAboutComponent {
     ) {
         this.CONFIG = configService.config;
         this.baseName = this.route.snapshot.paramMap.get('name');
-        this.menuName = this.CONFIG.docMenuMap[this.baseName][''];
+        this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
+        if (!this.menuName) {
+            setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+            return;
+        }
         this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '').subscribe(about => {
             const mapToAboutNode = ({
                 name,
