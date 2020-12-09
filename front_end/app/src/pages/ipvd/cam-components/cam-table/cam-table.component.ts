@@ -213,8 +213,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             debounceTime(0) // avoid fast change of selected camera row
         ).subscribe((element: any) => {
             this.uri.pageOffset = window.pageYOffset;
-            this.selectedCamera = element.sortKey;
-            this.onRowClick.emit(element);
+            if (this.selectedCamera === element.sortKey) {
+                this.onRowClick.emit(element);
+            }
         });
     }
 
@@ -423,6 +424,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     setClickedRow(element) {
         if (element) {
             this.clicks.next(element);
+            this.selectedCamera = element.sortKey;
         } else {
             this.selectedCamera = undefined;
         }

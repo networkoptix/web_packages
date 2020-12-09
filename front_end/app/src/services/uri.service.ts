@@ -86,7 +86,7 @@ export class NxUriService {
 
         // updating "page" param is called in multiple places for different reasons ...
         // avoid multiple unnecessary URI (and model) updates if we update only "page" and it's same  -- TT
-        if (Object.keys(queryParams).length === 1 && queryParams.page === this.route.snapshot.queryParams.page) {
+        if (Object.keys(queryParams).length === 1 && queryParams.page && queryParams.page === this.route.snapshot.queryParams.page) {
             return Promise.resolve();
         }
 

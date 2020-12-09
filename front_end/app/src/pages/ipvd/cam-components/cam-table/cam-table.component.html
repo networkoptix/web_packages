@@ -33,7 +33,7 @@
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let item of pagedItems; trackBy: trackPagedItem"
                             [ngClass]="{'selected': item.sortKey == selectedCamera}"
-                            (click)="setClickedRow(item);">
+                            (mousedown)="setClickedRow(item);">
 
                             <td *ngFor="let p of showParametersFor(item); let first=first" class="text-left">
                                 <a *ngIf="first" [routerLink]="'/ipvd'" [queryParams]="{vendors: item.vendor, camera: item.model || item.value.model}"></a>
