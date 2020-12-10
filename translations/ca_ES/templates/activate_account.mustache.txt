@@ -1,6 +1,6 @@
 Hola, {{message.userFullName}},
 
-  Obriu l'enllaç següent per confirmar l'adreça d'email i activar el compte.
+  Obriu l'enllaç següent per confirmar l'email i activar el compte.
 
 {{config.portal_url}}/activate/{{message.code}}
 
