@@ -7,7 +7,7 @@ import {
     Subscription, interval, combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                    from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap
+    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap, catchError
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -151,10 +151,9 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
 
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
-            const isOnline = this.system.servers.find(server => server.id === this.serverId).status === 'Online';
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                isOnline ? this.system.updateOrGetSystemStorage({ serverId: this.serverId }, true) : Promise.resolve({ reply: { storages: [] } }),
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }).pipe(catchError(() => of({ reply: { storages: [] } }))),
                 this.refreshStorages$.pipe(switchMap(() => this.system.getServerStats(this.serverId)))
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
                 .subscribe(results => {
@@ -603,8 +602,8 @@ export class NxSystemStorageComponent implements OnInit {
             usedForWriting
         });
         this.cancelPolling$.next('cancel existing polls');
-        of(modesChanged).pipe(
-            switchMap((changed) => !changed ? of('stop') : this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)))
+        timer(2500).pipe(
+            switchMap(() => modesChanged ? of('stop') : this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)))
         ).subscribe((action) => {
             if (action === 'stop') {
                 this.cancelPolling$.next('stopped');
