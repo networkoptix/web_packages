@@ -15,7 +15,8 @@ lm = LicenseManagement(LICENSE_HOSTS[host], AUTH)
 
 num_keys = int(input('Enter number of keys: '))
 num_channels = int(input('Enter number of channels: '))
-keys = lm.generate_licenses(n_packs=num_keys, n_cameras=num_channels)
+license_type = input('Enter license type(digital/iomodule/analogencoder/nvr/videowall/starter): ')
+keys = lm.generate_licenses(license_type=license_type, n_packs=num_keys, n_cameras=num_channels)
 
 if type(keys) == str:
     print(keys)
