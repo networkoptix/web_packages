@@ -251,13 +251,12 @@ export class NxSystemStorageComponent implements OnInit {
             this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
                 startWith('trigger'),
                 switchMap(() => this.system.getStorages({ id: this.serverId })),
-                tap(this.refreshStorages$)
-            ).subscribe(() => {
-                this.system.getStorages().subscribe(storages => {
+                tap(this.refreshStorages$),
+                switchMap(() => this.system.getStorages()),
+                tap(storages => {
                     this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup, status }) => hasBackup || isBackup && !status, false);
-                });
-            });
-            return this.refreshStorages$.toPromise();
+                })
+            ).subscribe();
         }
     }
 
@@ -680,9 +679,9 @@ export class NxSystemStorageComponent implements OnInit {
                 if (response === true) {
                     this.system
                         .removeStorage({ id: storage.storageId || storage.id }).toPromise()
-                        .then((response) => {
-                            if (response.id) {
-                                this.updateStorage(this.storage$.value.filter(({ id }) => id !== response.id));
+                        .then(({ id }) => {
+                            if (id) {
+                                this.updateStorage(this.storage$.value.filter(({ storageId }) => storageId !== id));
                                 this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: storage.url }), 'success');
                             } else {
                                 throw new Error('failed to remove storage');

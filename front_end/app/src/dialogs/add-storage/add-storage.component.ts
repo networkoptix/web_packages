@@ -35,7 +35,7 @@ export class AddStorageModalContent {
     addStorage: Process;
     url: string;
     alreadyUsed: string;
-    alreadyExists = false;
+    alreadyCheckedAndExists = false;
     urlChecked = false;
     loginChecked = false;
     passwordChecked = false;
@@ -94,7 +94,7 @@ export class AddStorageModalContent {
             .createProcess(async() => {
                 const { url, login, password } = this.storageForm.value;
                 const systemStorages = (await this.system.getStorages().toPromise()) || [];
-                const storageExistsOnSystem = this.alreadyExists || systemStorages.find((s) => s.url.replace('smb:', '') === url);
+                const storageExistsOnSystem = !this.alreadyCheckedAndExists && systemStorages.find((s) => s.url.replace('smb:', '') === url);
                 if (storageExistsOnSystem) {
                     return Promise.reject(Error('alreadyExists'));
                 }
@@ -115,7 +115,7 @@ export class AddStorageModalContent {
             err => {
                 if (err?.message === 'alreadyExists') {
                     this.alreadyUsed = NxLanguageProviderService.translate(this.LANG.storage.alreadyUsed, { url: this.url });
-                    this.alreadyExists = true;
+                    this.alreadyCheckedAndExists = true;
                 } else if (err?.message === 'WrongAuth') {
                     this.passwordChecked = true;
                     this.loginChecked = true;
@@ -174,7 +174,7 @@ export class AddStorageModalContent {
     }
 
     goBack() {
-        this.alreadyExists = false;
+        this.alreadyCheckedAndExists = false;
     }
 
     close = () => {

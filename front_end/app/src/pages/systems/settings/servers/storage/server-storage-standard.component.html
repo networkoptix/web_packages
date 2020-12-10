@@ -1,11 +1,12 @@
-<nx-section-placeholder
-        *ngIf="!loading && !(storage$ | async).length"
-        svgFileName="system_settings_placeholder"
-        width="64"
-        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
-</nx-section-placeholder>
+<ng-template #noStorages>
+    <nx-section-placeholder
+            svgFileName="system_settings_placeholder"
+            width="64"
+            [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
+    </nx-section-placeholder>
+</ng-template>
 
-<nx-block type="mb-3 storage-info" *ngIf="!loading && (storage$ | async).length">
+<nx-block type="mb-3 storage-info" *ngIf="!loading">
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
@@ -28,7 +29,7 @@
                 role="form"
                 name="storageSettings"
                 novalidate>
-                <table [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
+                <table *ngIf="(storage$ | async).length; else noStorages" [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
                     <thead>
                         <tr>
                             <th>Address</th>

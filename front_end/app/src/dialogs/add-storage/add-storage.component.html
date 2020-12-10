@@ -7,7 +7,7 @@
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-    <div *ngIf="!alreadyExists" class="modal-body">
+    <div *ngIf="!alreadyCheckedAndExists" class="modal-body">
         <div class="form-group">
             <label for="addUrl" translate>URL</label>
             <div class="col-12 px-0 form-component">
@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="alreadyExists" class="modal-body">
+    <div *ngIf="alreadyCheckedAndExists" class="modal-body">
         <p class="mb-2">{{ alreadyUsed }}</p>
         <p class="mb-2" translate>It's not recommended to use one recording location for different servers.</p>
         <p translate>Add this storage anyway?</p>
@@ -60,7 +60,7 @@
             [process]="addStorage"
             [form]="storageProcess"
             [buttonText]="'Add Storage' | translate"></nx-process-button>
-        <button *ngIf="alreadyExists" class="btn btn-default" (click)="goBack()" translate>Back</button>
+        <button *ngIf="alreadyCheckedAndExists" class="btn btn-default" (click)="goBack()" translate>Back</button>
         <nx-cancel-button [process]="addStorage" [discardFn]="close"></nx-cancel-button>
     </div>
 </form>
