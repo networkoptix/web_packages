@@ -169,7 +169,7 @@ Cancel changes in System Settings block
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    Change Setting Without Saving    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+    Change Setting Without Saving    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Log    Step 2
     Click Button    ${SYSTEM CANCEL}
@@ -177,7 +177,7 @@ Cancel changes in System Settings block
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
     Log    Step 3
-    Change Setting Without Saving    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    Change Setting Without Saving    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Log    Step 4
     Click Button    ${SYSTEM CANCEL}
@@ -453,6 +453,7 @@ Security block is available for administrator or owner
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     
@@ -463,6 +464,7 @@ Security block is available for administrator or owner
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     
