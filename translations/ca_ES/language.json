@@ -30,7 +30,7 @@
     "unknownError": "S'ha produït un error inesperat",
     "accountAlreadyActivated": "Aquest compte ja està activat",
     "emailNotFound": "El compte no existeix.",
-    "EmailAlreadyExists": "Aquest Email ja està registrat",
+    "EmailAlreadyExists": "Aquest email ja està registrat",
     "oldPasswordMistmatch": "La contrasenya actual és incorrecta.",
     "passwordMismatch": "Contrasenya incorrecta",
     "cantEditYourself": "No es permet canviar els permisos propis",
