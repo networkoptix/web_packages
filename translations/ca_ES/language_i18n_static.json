@@ -139,7 +139,7 @@
         "resolution": {
             "various": "– Valors diferents –",
             "auto": "Auto",
-            "best": "Millor",
+            "best": "Òptima",
             "high": "Alta",
             "medium": "Mitja",
             "low": "Baixa"
@@ -320,7 +320,7 @@
             "loggedFromOtherAccount": "Iniciareu la sessió amb un altre compte",
             "noClientDetected": "Instal·leu %VMS_NAME% per veure el vostre sistema",
             "removeUser": "Voleu suprimir l'usuari?",
-            "serversDetach": "Voleu separar el servidor \"{{ title }}\" del sistema actual?",
+            "serversDetach": "Voleu desvincular el servidor \"{{ title }}\" del sistema actual?",
             "serversReset": "Voleu restablir els valors predeterminats del servidor \"{{ title }}\"?",
             "serversRestart": "Voleu reiniciar el servidor \"{{ title }}\"?"
         },
@@ -620,10 +620,10 @@
         "vendors": "Fabricants"
     },
     "servers": {
-        "beginDetach": "El servidor s'està separant",
+        "beginDetach": "El servidor s'està desvinculant",
         "beginReset": "El servidor s'està restablint.",
-        "detachSystemFailed": "No s'ha pogut separar el servidor del sistema. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
-        "detachSystemSuccess": "El servidor s'ha separat correctament del sistema.",
+        "detachSystemFailed": "No s'ha pogut desvincular el servidor del sistema. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
+        "detachSystemSuccess": "El servidor s'ha desvinculat correctament del sistema.",
         "portWarning": "Els números de port inferiors a 1024 estan restringits. El servidor pot tornar-se inaccessible.",
         "removeMediaserverFailed": "No s'ha pogut eliminar el servidor del sistema.",
         "resetFailed": "No s'ha pogut restablir el servidor. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
@@ -687,7 +687,7 @@
                 "help": "(registre de tots els missatges del sistema i la informació de depuració)"
             },
             "verbose": {
-                "text": "Verbose",
+                "text": "Verbós",
                 "help": "(registre de tota la informació disponible)"
             }
         }
