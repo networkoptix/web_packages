@@ -323,7 +323,9 @@ export class NxSystemStorageComponent implements OnInit {
                             console.error(err);
                             backupSaveState = 'StopFail';
                         }),
-                this.handleModeUpdate()
+                this.handleModeUpdate().catch(err => {
+                    console.error(err);
+                })
             ]).then(res => {
                 if (backupSaveState) {
                     const backup = backupSaveState === 'StartFail';
