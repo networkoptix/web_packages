@@ -150,13 +150,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.system?.currentValue?.info) {
-            this.canSeeInfo = changes.system.currentValue.info.capabilities?.vms_metrics &&
-                changes.system.currentValue.canViewInfo();
-
-            if (this.canSeeInfo) {
+        if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
                 this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
-            }
         }
 
         if (changes.selectedServer?.currentValue) {
