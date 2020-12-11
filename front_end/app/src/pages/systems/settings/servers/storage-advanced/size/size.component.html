@@ -12,14 +12,14 @@
         [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}"
         [style.width.%]="100"></div>
     <div class="bar used" 
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !usedPercentage}"
         [style.width.%]="usedPercentage"></div>
     <div class="bar archive"
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !archivePercentage}"
         [style.left.%]="usedPercentage"
         [style.width.%]="archivePercentage"></div>
     <div class="bar reserved"
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE}"
+        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !reservedPercentage}"
         [style.right.%]="0"
         [style.width.%]="reservedPercentage"></div>
 </div>

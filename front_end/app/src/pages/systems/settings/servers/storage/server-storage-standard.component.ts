@@ -2,12 +2,12 @@ import {
     Component, Inject, ViewContainerRef,
     LOCALE_ID, Input, Output, OnInit, EventEmitter
 }                                    from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed }              from '@ngneat/until-destroy';
 import {
     Subscription, interval, combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                    from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap, catchError
+    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap, catchError, retry, filter
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -19,13 +19,18 @@ import { NxSystem }                  from '@services/system.service';
 import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_types';
 import { IConfig, NxConfigService }  from '@services/nx-config';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
-import { ChangedIdReturned } from '@services/system-api.types';
-import { NxUtilsService } from '@services/utils.service';
+import { ChangedIdReturned }         from '@services/system-api.types';
+import { NxUtilsService }            from '@services/utils.service';
 
 enum MODE {
     MAIN = 0,
     BACKUP = 1,
     NOT_IN_USE = 3
+}
+
+enum TARGET_STORAGE {
+    BACKUP,
+    MAIN
 }
 
 enum STORAGE_STATUS {
@@ -54,6 +59,7 @@ export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() serverId: string;
     @Output() storageEmit = new EventEmitter<any>();
+    @Output() storageInfoLoaded = new EventEmitter<boolean>();
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -61,6 +67,7 @@ export class NxSystemStorageComponent implements OnInit {
     storageTypes = STORAGE_TYPES
 
     loading: boolean;
+    waitingForStorages = true;
     reindexingMain = false;
     percentMainDone = 0;
     reindexingBackup = false;
@@ -72,6 +79,7 @@ export class NxSystemStorageComponent implements OnInit {
     customSettings = false;
     systemHasBackupsOn = false;
 
+    stopReindex$ = new Subject<TARGET_STORAGE>();
     storage$ = new BehaviorSubject<any[] | any>([]);
     triggerUpdate$ = new Subject<any>();
     refreshStorages$ = new Subject<any>();
@@ -101,8 +109,6 @@ export class NxSystemStorageComponent implements OnInit {
     modes: any;
     STATUS = STORAGE_STATUS
 
-    reindexingMainSubscription: Subscription;
-    reindexingBackupSubscription: Subscription;
     triggerUpdateSubscription: Subscription;
     storageSubscription: Subscription;
 
@@ -149,12 +155,25 @@ export class NxSystemStorageComponent implements OnInit {
 
     init = () => {
         this.loading = true;
+        this.waitingForStorages = true;
+        this.storageInfoLoaded.emit(false);
 
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
+            const empty = { reply: { storages: [] } };
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                this.system.updateOrGetSystemStorage({ serverId: this.serverId }).pipe(catchError(() => of({ reply: { storages: [] } }))),
-                this.refreshStorages$.pipe(switchMap(() => this.system.getServerStats(this.serverId)))
+                this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
+                    tap(() => {
+                        this.waitingForStorages = false;
+                        this.storageInfoLoaded.emit(true);
+                    }),
+                    catchError(() => of(empty)),
+                    startWith(empty)
+                ),
+                this.refreshStorages$.pipe(
+                    switchMap(() => this.system.getServerStats(this.serverId)),
+                    catchError(() => of(empty)),
+                    startWith(empty))
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
                 .subscribe(results => {
                     if (results.storage.name === 'TimeoutError') {
@@ -168,7 +187,7 @@ export class NxSystemStorageComponent implements OnInit {
                     results.storeInfo.forEach(({ storageId: originalStorageId, url, id: originalId, ...storeInfo }) => {
                         const id = this.normalizeId(originalStorageId || originalId);
                         const storageId = id === '{00000000-0000-0000-0000-000000000000}' ? url : id;
-                        const noStore = !storage.find(({ id, storageId: curStorageId }) => this.normalizeId(curStorageId || id) === storageId);
+                        const noStore = !storage.find(({ id, storageId: curStorageId, url }) => this.normalizeId(curStorageId || id) === storageId || url === storageId);
                         if (noStore) {
                             storage.push({
                                 ...storeInfo,
@@ -202,11 +221,10 @@ export class NxSystemStorageComponent implements OnInit {
                         if (storeInfo) {
                             store = { ...storeInfo };
                         }
-                        if (store.freeSpace) {
+                        if (store.totalSpace) {
                             store.archiveSpace = results.usage.reply.storages[NxUtilsService.cleanId(store.storageId || store.id)]?.space?.mediaSpaceB || 0;
                             store.status = STORAGE_STATUS.IN_USE; // default
                             store.statusTooltip = '';
-
                             if (store.isOnline) {
                                 if (
                                     store.storageStatus.includes('tooSmall') ||
@@ -217,6 +235,7 @@ export class NxSystemStorageComponent implements OnInit {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
                                 } else if (
+                                    store.storageId.startsWith('/') ||
                                     store.storageStatus.includes('system') &&
                                     store.totalSpace < (storage.freeSpace / 6)
                                 ) {
@@ -247,6 +266,8 @@ export class NxSystemStorageComponent implements OnInit {
                     this.setupWatchers();
                     this.updateStorage(storage, true);
                     this.updateCustom();
+                    if (this.onlineMains) this.reindexing(TARGET_STORAGE.MAIN);
+                    if (this.onlineBackups) this.reindexing(TARGET_STORAGE.MAIN);
                 });
             this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
                 startWith('trigger'),
@@ -468,11 +489,13 @@ export class NxSystemStorageComponent implements OnInit {
             if (toggled && !this.systemHasBackupsOn) {
                 this.backupState = true;
             }
-            this.storageEmit.emit(sortedStorage || []);
         });
+        this.storageEmit.emit(sortedStorage || []);
     }
 
     normalizeId = (id) => `{${NxUtilsService.cleanId(id || '')}}`
+
+    cleanUrl = NxUtilsService.cleanSmbUrl
 
     getIconSrc(store) {
         return `${this.CONFIG.icons.dir}${store.updating ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
@@ -489,11 +512,9 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     getModes(store) {
-        const countMains = Object.values(this.modeWatchers).reduce((prev, { value }) => value === 'modeMain' ? prev + 1 : prev, 0);
         const isMain = this.modeWatchers[this.normalizeId(store.storageId || store.id)]?.value === 'modeMain';
-        const checkType = mode => !(store.storageType === 'local' && mode.value === 'modeNotInUse' || !mode.value);
-        const checkDisabled = mode => ({ ...mode, disabled: isMain && mode.value !== 'modeMain' && countMains <= 1 });
-        return this.modes.filter(checkType).map(checkDisabled);
+        const checkDisabled = mode => ({ ...mode, disabled: isMain && mode.value !== 'modeMain' && this.onlineMains <= 1 });
+        return this.modes.map(checkDisabled);
     }
 
     checkArchiveWarning(store) {
@@ -561,19 +582,18 @@ export class NxSystemStorageComponent implements OnInit {
                 storagesWithUpdatedStatus = storagesWithUpdatedStatus.map(store => ({ ...store, updating: this.updatingModes.includes(store.storageId) }));
             } else {
                 this.changedModes = [];
-                this.storage$.pipe(first()).subscribe(storage => {
-                    storagesWithUpdatedStatus = storage.map((store) => {
-                        if (toUpdate.includes(store.storageId)) {
-                            store.updating = updating;
-                            this.updatingModes.push(store.storageId);
-                        }
-                        return store;
-                    });
+                storagesWithUpdatedStatus = this.storage$.value.map((store) => {
+                    if (toUpdate.includes(store.storageId)) {
+                        store.updating = updating;
+                        this.updatingModes.push(store.storageId);
+                    }
+                    return store;
                 });
             }
-            storagesWithUpdatedStatus.forEach(({ storageId, isBackup, isUsedForWriting, status, storageType, hasAction }) => {
+            storagesWithUpdatedStatus.forEach(({ storageId, id, url, isBackup, isUsedForWriting, status, storageType, hasAction }) => {
                 const updatedValue = !isUsedForWriting ? 'modeNotInUse' : isBackup ? 'modeBackup' : 'modeMain';
-                this.modeWatchers[storageId].originalValue = updatedValue;
+                const normalizedId = this.normalizeId(storageId || id || url);
+                this.modeWatchers[normalizedId].originalValue = updatedValue;
                 const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
                 if (status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType)) {
                     hasAction = true;
@@ -600,16 +620,21 @@ export class NxSystemStorageComponent implements OnInit {
             url,
             usedForWriting
         });
+        const updatedValues = this.storage$.value.map(toUpdateParams).filter(({ id }) => !id.startsWith('/')); // This handles edge case where storage doesn't have an id
         this.cancelPolling$.next('cancel existing polls');
-        timer(2500).pipe(
-            switchMap(() => modesChanged ? of('stop') : this.system.updateOrGetSystemStorage(this.storage$.value.map(toUpdateParams)))
+        timer(500).pipe(
+            switchMap(() => !modesChanged ? of('stop') : this.system.updateOrGetSystemStorage(updatedValues, false, 60000)),
+            retry(5),
+            takeUntil(this.cancelPolling$),
+            untilDestroyed(this)
         ).subscribe((action) => {
             if (action === 'stop') {
                 this.cancelPolling$.next('stopped');
             }
             const recheck$ = new BehaviorSubject(1);
             recheck$.pipe(
-                takeUntil(this.cancelPolling$)
+                takeUntil(this.cancelPolling$),
+                untilDestroyed(this)
             ).subscribe(curInterval => {
                 if (curInterval >= 15 || !this.updatingModes.length) {
                     setUpdating(false, this.updatingModes);
@@ -617,8 +642,11 @@ export class NxSystemStorageComponent implements OnInit {
                     this.updatingModes = [];
                     this.cancelPolling$.next('time ran out');
                 } else {
-                    this.system.updateOrGetSystemStorage({ serverId: this.serverId })
-                        .pipe(takeUntil(this.cancelPolling$)).subscribe(({ reply: { storages } }) => {
+                    this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000)
+                        .pipe(
+                            takeUntil(this.cancelPolling$),
+                            untilDestroyed(this)
+                        ).subscribe(({ reply: { storages } }) => {
                             this.updatingModes.forEach((id) => {
                                 const { storageStatus } = storages.find(({ storageId }) => id === storageId);
                                 if (!storageStatus.includes('beingChecked')) {
@@ -679,15 +707,15 @@ export class NxSystemStorageComponent implements OnInit {
                 if (response === true) {
                     this.system
                         .removeStorage({ id: storage.storageId || storage.id }).toPromise()
-                        .then(({ id }) => {
-                            if (id) {
-                                this.updateStorage(this.storage$.value.filter(({ storageId }) => storageId !== id));
-                                this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: storage.url }), 'success');
+                        .then((response) => {
+                            if (response.id) {
+                                this.updateStorage(this.storage$.value.filter(({ storageId, id }) => (storageId || id) !== response.id));
+                                this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: this.cleanUrl(storage.url) }), 'success');
                             } else {
                                 throw new Error('failed to remove storage');
                             }
                         }).catch(_ => {
-                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: storage.url }), 'danger');
+                            this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: this.cleanUrl(storage.url) }), 'danger');
                         });
                 }
             });
@@ -713,11 +741,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     reindexStorage(type: 'main' | 'backup') {
-        if (type === 'main') {
-            this.reindexingMainSubscription = this.reindexing(1, 'start');
-        } else {
-            this.reindexingBackupSubscription = this.reindexing(0, 'start');
-        }
+        return this.reindexing(TARGET_STORAGE[type.toUpperCase()], 'start');
     }
 
     updateStorageStatus(type: number, status) {
@@ -732,8 +756,11 @@ export class NxSystemStorageComponent implements OnInit {
         this.updateStorage(storages);
     }
 
-    reindexing(type: number, action: string) {
-        this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
+    reindexing(type: TARGET_STORAGE, action?: string) {
+        const onlyCheck = !action;
+        if (action) {
+            this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
+        }
         const options = {
             classname : this.CONFIG.toast.success,
             autohide  : true,
@@ -750,44 +777,47 @@ export class NxSystemStorageComponent implements OnInit {
                 if (res.reply && res.reply.totalProgress === 0) {
                     action = undefined;
                 }
-                type ? this.percentMainDone = res.reply.totalProgress
-                    : this.percentBackupDone = res.reply.totalProgress;
+                if (type) {
+                    this.percentMainDone = res.reply.totalProgress;
+                    this.reindexingMain = true;
+                    this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
+                } else {
+                    this.percentBackupDone = res.reply.totalProgress;
+                    this.reindexingBackup = true;
+                    this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
+                }
                 throw res;
             })
-        ))
-            .pipe(retryWhen(errors => errors.pipe(delay(1000))))
-            .subscribe(
-                (res: any) => {
-                    if (res.reply.state === 'RebuildState_None') {
-                        this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
-                        message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
-                    }
-                },
-                err => {
-                    console.error(err);
-                    message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`]();
-                    options.classname = this.CONFIG.toast.warning;
+        )).pipe(
+            retryWhen(errors => errors.pipe(delay(1000))),
+            takeUntil(this.stopReindex$.pipe(filter(stopping => stopping === type))),
+            untilDestroyed(this)
+        ).subscribe(
+            (res: any) => {
+                if (res.reply.state === 'RebuildState_None') {
+                    this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
+                    message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
                 }
-            )
-            .add(() => {
-                this.updateStorageStatus(type, STORAGE_STATUS.IN_USE);
-                type ? this.reindexingMainSubscription.unsubscribe()
-                    : this.reindexingBackupSubscription.unsubscribe();
-                this[`reindexing${type ? 'Main' : 'Backup'}`] = false;
+            },
+            err => {
+                console.error(err);
+                message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`]();
+                options.classname = this.CONFIG.toast.warning;
+            }
+        ).add(() => {
+            this.updateStorageStatus(type, STORAGE_STATUS.IN_USE);
+            this[`reindexing${type ? 'Main' : 'Backup'}`] = false;
+            if (message && !onlyCheck) {
                 this.toastService.show(message, options);
-            });
+            }
+        });
     }
 
     cancelIndexing(type: 'main' | 'backup') {
-        if (type === 'main') {
-            this.percentMainDone = 0;
-            this.system.rebuildArchive(this.serverId, 1, 'stop').toPromise();
-            this.reindexingMainSubscription.unsubscribe();
-        } else {
-            this.percentBackupDone = 0;
-            this.system.rebuildArchive(this.serverId, 0, 'stop').toPromise();
-            this.reindexingBackupSubscription.unsubscribe();
-        }
+        const target = TARGET_STORAGE[type.toUpperCase()]
+        this[type === 'main' ? 'percentMainDone' : 'percentBackupDone'] = 0;
+        this.system.rebuildArchive(this.serverId, target, 'stop').toPromise();
+        this.stopReindex$.next(target);
     }
 
     getStorageTypeTooltip(storageType: string) {

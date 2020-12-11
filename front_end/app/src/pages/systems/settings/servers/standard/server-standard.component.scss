@@ -112,3 +112,7 @@
         width: 240px;
     }
 }
+
+nx-select.storages-loading {
+    pointer-events: none !important;
+}

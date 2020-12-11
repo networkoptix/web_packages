@@ -637,7 +637,7 @@ class ServerManager {
         return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
-    updateSettings(resourceId: string, params: IParams) {
+    updateResource(resourceId: string, params: IParams) {
         const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
@@ -813,8 +813,8 @@ class ServerManager {
         return this.mediaserverConnections[serverId].getApiDoc();
     }
 
-    getStorages(serverId, useCache = false) {
-        return this.mediaserverConnections[serverId].getStorages(useCache);
+    getStorages(serverId, useCache = false, customTimeout = 8000) {
+        return this.mediaserverConnections[serverId].getStorages(useCache, customTimeout);
     }
 
     getRecordStats(serverId, useCache = false) {
@@ -1330,11 +1330,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false) {
+    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
         if (!updateParams?.serverId) {
-            return this.mediaserver.updateStorages(updateParams);
+            return this.mediaserver.updateStorages(updateParams, customTimeout);
         }
-        return this.serverManager.getStorages(updateParams.serverId, useCache);
+        return this.serverManager.getStorages(updateParams.serverId, useCache, customTimeout);
     }
 
     checkForAnalyticsData(serverId: string) {
@@ -1353,8 +1353,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getCameras();
     }
 
-    updateCameraSettings(id: string, params: IParams) {
-        return this.serverManager.updateSettings(id, params);
+    updateResource(id: string, params: IParams) {
+        return this.serverManager.updateResource(id, params);
     }
 
     setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string }) {
@@ -1399,10 +1399,6 @@ export class NxSystem extends System implements OnDestroy {
         this.currentServerNotBusy = false;
         return this.serverManager.restartServer(serverId)
             .catch(err => Promise.reject(err));
-    }
-
-    updateServerSettings(serverId: string, params: IParams) {
-        return this.serverManager.updateSettings(serverId, params);
     }
 
     detachFromSystem(serverId: string, currentPassword: string) {

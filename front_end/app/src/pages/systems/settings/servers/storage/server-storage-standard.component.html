@@ -1,8 +1,10 @@
 <ng-template #noStorages>
+    <nx-pre-loader *ngIf="waitingForStorages"></nx-pre-loader>
     <nx-section-placeholder
-            svgFileName="system_settings_placeholder"
-            width="64"
-            [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
+        *ngIf="!waitingForStorages"
+        svgFileName="system_settings_placeholder"
+        width="64"
+        [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
     </nx-section-placeholder>
 </ng-template>
 
@@ -29,7 +31,7 @@
                 role="form"
                 name="storageSettings"
                 novalidate>
-                <table *ngIf="(storage$ | async).length; else noStorages" [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
+                <table *ngIf="(storage$ | async).length && !waitingForStorages; else noStorages" [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
                     <thead>
                         <tr>
                             <th>Address</th>
@@ -51,7 +53,7 @@
                                         [ngbTooltip]="getStorageTypeTooltip(store.storageType)"
                                         [src]="getIconSrc(store)">
                                 </svg-icon>
-                                <span class="ellipsis">{{store.url}}</span>
+                                <span class="ellipsis">{{cleanUrl(store.url)}}</span>
                             </td>
                             <td *ngIf="!store.updating; else changingMode" [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.width.px]="ddWidth" [ngSwitch]="store.status">
                                 <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >

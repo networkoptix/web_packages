@@ -162,7 +162,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get<ResponseType>(url: string, params?: any, customHttpHeaders: IParams<string> = {}) {
+    private get<ResponseType>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -183,7 +183,7 @@ export class NxSystemAPI {
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request)),
-            timeout(8000),
+            timeout(requestTimeout),
             catchError(error => {
                 if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
@@ -193,7 +193,7 @@ export class NxSystemAPI {
         );
     }
 
-    private post<ResponseType>(url: string, data?: any, paramsToAdd = {}) {
+    private post<ResponseType>(url: string, data?: any, paramsToAdd = {}, customTimeout = 8000) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
@@ -214,7 +214,7 @@ export class NxSystemAPI {
         }
         return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
-            timeout(8000)
+            timeout(customTimeout)
         );
     }
 
@@ -545,8 +545,8 @@ export class NxSystemAPI {
         return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
     }
 
-    public getStorages(useCache = false) {
-        return this.get<Array<t.GetStorages>>('/api/storageSpace', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' });
+    public getStorages(useCache = false, customTimeout = 8000) {
+        return this.get<Array<t.GetStorages>>('/api/storageSpace', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' }, customTimeout);
     }
 
     public getStorageStatus(queryParams) {
@@ -561,8 +561,8 @@ export class NxSystemAPI {
         return this.post<any>('/ec2/removeStorage', updateParams);
     }
 
-    updateStorages(updateParams: IParams) {
-        return this.post<any>('/ec2/saveStorages', updateParams);
+    updateStorages(updateParams: IParams, customTimeout = 8000) {
+        return this.post<any>('/ec2/saveStorages', updateParams, {}, customTimeout);
     }
 
     rebuildArchive(type: number, action?: string) {

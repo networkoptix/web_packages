@@ -51,7 +51,6 @@ $stripes : repeating-linear-gradient(
         &.available {
             background-color           : $additional_light1;
             border                     : 1px solid $light3;
-            border-right               : none;
             border-bottom-right-radius : 0;
             border-top-right-radius    : 0;
 

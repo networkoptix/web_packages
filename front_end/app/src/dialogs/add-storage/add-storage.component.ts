@@ -4,7 +4,8 @@ import {
 }                                      from '@angular/forms';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy }                from '@ngneat/until-destroy';
-import { Subscription }                from 'rxjs';
+import { of, Subscription }            from 'rxjs';
+import { switchMap }                   from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -76,7 +77,9 @@ export class AddStorageModalContent {
 
     ngOnInit() {
         this.storageForm = new FormGroup({
-            url: new FormControl(null, [Validators.required, this.validateUrl.bind(this)])
+            url      : new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
+            login    : new FormControl(),
+            password : new FormControl()
         });
 
         this.storageFormValueSubscription = this.storageForm.valueChanges.subscribe(values => {
@@ -137,7 +140,7 @@ export class AddStorageModalContent {
 
     async addStorageProcess(url: string, login: string, password: string) {
         try {
-            const credentials = login && password ? `${login}:${password}@` : '';
+            const credentials = login || password ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@` : '';
             const smbShare = `smb://${credentials}${url.substr(2)}`;
             const { reply } = await this.system.getStorageStatus({ path: smbShare }).toPromise();
             if (!reply) {
@@ -155,7 +158,14 @@ export class AddStorageModalContent {
                 return Promise.reject(Error('WrongAuth'));
             }
             if (reply.status.toLowerCase() === this.CONFIG.responseOk && reply.storage.isWritable) {
-                return this.system.saveStorage({ parentId: this.serverId, url: smbShare, storageType: 'smb' }).toPromise();
+                return this.system.saveStorage({
+                    parentId         : this.serverId,
+                    url              : smbShare,
+                    storageType      : 'smb',
+                    usedForWriting   : true,
+                    isWritable       : true,
+                    isBackup         : false
+                }).toPromise();
             }
             return Promise.reject();
         } catch (error) {

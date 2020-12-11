@@ -7,7 +7,7 @@ import {
     UntilDestroy, untilDestroyed
 }                                    from '@ngneat/until-destroy';
 import {
-    of, SubscriptionLike, Subject
+    of, SubscriptionLike, Subject, Observable
 }                                    from 'rxjs';
 import { catchError }                from 'rxjs/operators';
 
@@ -47,7 +47,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
-    @Input() storages: any;
+    @Input() storages$: Observable<any>;
+    @Input() storageInfoLoaded = false;
     @Output() loaded = new EventEmitter(false);
 
     CONFIG: IConfig;
@@ -56,6 +57,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serverIdFromParams;
 
     editMode = false;
+    storages: any[];
 
     saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
@@ -70,6 +72,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     currentAnalyticsDbId: any;
     selectedStorage: Partial<DropdownStorage>;
     checkingForDataAnalytics = false;
+    storagesLoading = true;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -84,6 +87,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serverDetails: InfoBlockSection;
     serversSubscription: SubscriptionLike;
     checkIfOnlineSubscription: SubscriptionLike;
+    storageSubscription: SubscriptionLike;
     unsub$ = new Subject<string>();
 
     set serverLoaded(value) {
@@ -145,13 +149,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
             }
         );
+        this.parseStorages();
 
         this.applyService.setVisible(false);
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
-                this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
+            this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
         }
 
         if (changes.selectedServer?.currentValue) {
@@ -166,10 +171,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 // TODO: Cleanup and fix code to remove use of setTimeout. ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => this.setServer());
             }
-        }
-
-        if (changes?.storages?.currentValue && changes?.storages?.currentValue.length) {
-            this.parseStorages();
         }
     }
 
@@ -201,6 +202,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
         this.checkIfOnline(this.selectedServer.id).then(() => {
             this.serverLoaded = true;
+            this.applyService.reset();
         });
     }
 
@@ -241,8 +243,15 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     const params = {
                         metadataStorageId: this.selectedStorage.id
                     };
-                    await this.system.updateServerSettings(this.selectedServer.id, params);
-                    await this.system.update();
+                    try {
+                        await this.system.updateResource(this.selectedServer.id, params);
+                        await this.system.update();
+                        this.saveStorageWatcher.value = false;
+                        this.currentAnalyticsDbId = this.selectedStorage.id;
+                    } catch (err) {
+                        console.error(err);
+                        this.saveStorageWatcher.value = true;
+                    }
                 }
             } catch (error) {
                 return Promise.reject(error);
@@ -383,7 +392,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                         const params = {
                             metadataStorageId: this.selectedStorage.id
                         };
-                        await this.system.updateServerSettings(this.selectedServer.id, params);
+                        await this.system.updateResource(this.selectedServer.id, params);
                         await this.system.update();
                     } else if (closeRes === 'error') {
                         const options = {
@@ -405,27 +414,30 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (this.saveStorageWatcher.value === undefined) {
             this.saveStorageWatcher.value = false;
         }
-        this.currentAnalyticsDbId = this.selectedServer.addParams
+        this.currentAnalyticsDbId = this.selectedServer?.addParams
             .find(param => param.name === 'metadataStorageId')?.value;
-        this.storages = this.storages.filter(store => store.storageType === 'local' && store.isWritable);
-        this.dropdownStorages = this.storages
-            .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
-                const selected = this.currentAnalyticsDbId === storageId;
-                return {
-                    name        : url,
-                    isOnline,
-                    isUsedForWriting,
-                    isWritable,
-                    isNotSystem : !storageStatus.includes('system'),
-                    selected,
-                    id          : storageId,
-                    value       : storageId,
-                    freeSpace
-                };
-            });
-        this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
-            this.selectDefaultStorage();
-        this.systemStorageChosen = !this.selectedStorage?.isNotSystem;
+        this.storageSubscription = this.storages$.subscribe(storages => {
+            this.storages = (storages || []).filter(store => store.storageType === 'local' && (store.isWritable || store.isUsedForWriting || store.usedForWriting));
+            this.dropdownStorages = this.storages
+                .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
+                    const selected = this.currentAnalyticsDbId === storageId;
+                    return {
+                        name        : url,
+                        isOnline,
+                        isUsedForWriting,
+                        isWritable,
+                        isNotSystem : !storageStatus?.includes('system'),
+                        selected,
+                        id          : storageId,
+                        value       : storageId,
+                        freeSpace
+                    };
+                });
+            this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
+                this.selectDefaultStorage();
+            this.systemStorageChosen = !this.selectedStorage?.isNotSystem;
+            this.storagesLoading = !this.dropdownStorages.every(({ id }) => id);
+        });
     }
 
     selectDefaultStorage() {

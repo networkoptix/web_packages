@@ -283,4 +283,8 @@ export class NxUtilsService {
     static isNumber(n): boolean {
         return !isNaN(parseFloat(n)) && !isNaN(n - 0);
     };
+
+    static cleanSmbUrl(url: string) {
+        return url.split('@').reverse()[0].replace('smb:/', '');
+    }
 }
