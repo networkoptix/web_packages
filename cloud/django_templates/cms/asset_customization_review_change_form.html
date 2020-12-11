@@ -50,7 +50,11 @@
                                 <a href="{% url 'admin:cms_assetcustomizationreview_change' review.id %}">{{ review.customization | portal_name }}</a>
                                 {% endif %}
                             </td>
-                            <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == 'Accepted' %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
+                            <td>
+                                <span class="label {% if state == 'Rejected' %} label-danger {% elif state == 'Pending' %} label-warning {% elif state == 'Accepted' %} label-success {% else %} label-default{% endif %}">
+                                    {{ state }}
+                                </span>
+                            </td>
                             <td> {{ review.reviewed_by }}</td>
                             <td> {{ review.reviewed_date }}</td>
                             <td> {{ review.notes | linebreaks }}</td>
@@ -163,15 +167,23 @@
         {% if allowed.submit_row %}
             <div class="submit-row">
                 {% if allowed.delete %}
-                <a href="{% url opts|admin_urlname:'delete' object_id %}" class="btn btn-sm btn-danger pull-left">{% trans "Delete" %}</a>
+                <a href="{% url opts|admin_urlname:'delete' object_id %}" class="btn btn-sm btn-danger pull-left"
+                   data-toggle="tooltip" title="Delete review for {{ current_customization_name | portal_name }}">
+                    {% trans "Delete" %}
+                </a>
+
+                <button class="btn btn-sm btn-danger pull-left" style="margin-left: 4px;" type="submit" name="delete_all" data-toggle="tooltip"
+                        title="Delete all reviews">Delete all reviews</button>
                 {% endif %}
 
                 {% if allowed.revoke %}
-                <button class="btn btn-sm btn-danger" type="submit" name="revoke">Revoke Review</button>
+                <button class="btn btn-sm btn-danger" type="submit" name="revoke" data-toggle="tooltip"
+                        title="Revoke for {{ current_customization_name | portal_name }}">Revoke Review</button>
                 {% endif %}
 
                 {% if allowed.force_update %}
-                <button class="btn btn-sm btn-danger" type="submit" name="force_update">Force Update</button>
+                <button class="btn btn-sm btn-danger" type="submit" name="force_update" data-toggle="tooltip"
+                        title="Force Update for {{ current_customization_name | portal_name }}">Force Update</button>
                 {% endif %}
 
                 {% if asset and False %}
@@ -182,8 +194,11 @@
                 {% endif %}
 
                 {% if allowed.reject %}
-                <button class="btn btn-sm btn-danger" data-action="reject" data-name="Reject"
-                        data-toggle="modal" data-target="#addNotes" onclick="return false;">Reject</button>
+                    <button id="rejectButton" class="btn btn-sm btn-danger" data-action="reject" data-name="Reject"
+                            title="Reject for {{ current_customization_name | portal_name }}"
+                            onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('hide')"
+                            data-target="#addNotes" onclick="return false;">Reject
+                    </button>
                 {% endif %}
 
                 {% if allowed.question %}
@@ -192,8 +207,9 @@
                 {% endif %}
 
                 {% if allowed.publish or allowed.accept %}
-                <button class="btn btn-sm btn-success" type="submit" name="publish">
-                        {% if allowed.publish %}Publish{% elif allowed.accept %} Accept {% endif %}
+                <button class="btn btn-sm btn-success" type="submit" name="publish" data-toggle="tooltip"
+                        title="{% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %} for {{ current_customization_name | portal_name }}">
+                        {% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %}
                 </button>
                 {% endif %}
             </div>
@@ -298,6 +314,10 @@
             });
             {% endfor %}
         {% endif %}
+
+    $(document).ready(function() {
+        $('.submit-row [title]').tooltip();
+    });
     </script>
     <script src="{% static 'js/previewFrame.js' %}"></script>
     {% endwith %}

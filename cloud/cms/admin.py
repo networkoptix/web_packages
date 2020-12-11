@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
+from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
@@ -677,11 +678,23 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
+        extra_context['current_customization_name'] = customization_name
         title = f"Changes for {version.asset.name} - Version: {version.id}"
         if not UserGroupsToAssetPermissions.check_customization_access(request.user, customization_name):
             title = f"{title} – {self.state_tag(customization_review.state)}"
 
         extra_context["page_title"] = format_html(title)
+
+        if request.method == 'POST' and 'delete_all' in request.POST or request.POST.get('action', None) == 'delete_selected':
+            if extra_context['allowed']['delete']:
+                response = delete_selected(self, request, version.assetcustomizationreview_set.all())
+                if response:
+                    return response
+                else:
+                    filters = request.GET.get('_changelist_filters', '')
+                    return redirect(reverse('admin:cms_assetcustomizationreview_changelist') + f'?{filters}')
+            else:
+                raise PermissionDenied
         return super(AssetCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
@@ -803,6 +816,8 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         label_type = "label-default"
         if state == AssetCustomizationReview.REVIEW_STATES.rejected:
             label_type = "label-danger"
+        elif state == AssetCustomizationReview.REVIEW_STATES.pending:
+            label_type = "label-warning"
         elif state == AssetCustomizationReview.REVIEW_STATES.accepted:
             label_type = "label-success"
         return f"<span class=\"label {label_type}\">{name}</span>"
