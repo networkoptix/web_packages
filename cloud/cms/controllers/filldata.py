@@ -49,17 +49,38 @@ def target_file(file_name, save_location, language_code, preview):
 
 
 def global_contexts_to_dict(contexts, asset):
-    data_structure_dict = {}
+    data_structures = {}
+    customization = asset.customizations.first()
+    customization_name = customization.name
+    languages = customization.languages.all()
+    version_id = asset.version_id()
     for context in contexts:
-        for data_structure in context.datastructure_set.all():
-            data_structure_dict[data_structure.name] = asset.read_global_value(data_structure.name)
+        if 'universal' not in data_structures:
+            data_structures['universal'] = context.datastructure_set.all()
+        else:
+            data_structures['universal'] |= context.datastructure_set.all()
 
-            # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
-            if context.translatable:
-                for lang in asset.customizations.first().languages.all():
-                    data_structure_dict[f'{data_structure.name}__{lang.code}'] = asset.read_global_value(
-                        data_structure.name, language=lang
-                    )
+        if context.translatable:
+            for lang in languages:
+                if lang.code not in data_structures:
+                    data_structures[lang.code] = context.datastructure_set.all()
+                else:
+                    data_structures[lang.code] |= context.datastructure_set.all()
+
+    universal_vals = DataStructure.find_actual_values(
+        data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
+    )
+    del data_structures['universal']
+    data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+
+    for language in languages:
+        vals = DataStructure.find_actual_values(
+            data_structures[language.code], asset, version_id=version_id, language=language,
+            customization_name=customization_name
+        )
+        # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
+        for ds, value in vals.items():
+            data_structure_dict[f'{ds.name}__{language.code}'] = value
 
     for tag in SPECIAL_STRUCTURES.function_dict:
         data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, asset)
@@ -122,6 +143,10 @@ def process_data_structure(content, tag, data_structure_type, content_value):
 
 def process_context_structure(asset, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
+    values = DataStructure.find_actual_values(
+        context.datastructure_set.all(), asset=asset, language=language, version_id=version_id, draft=preview
+    )
+    values = {ds.id: val for ds, val in values.items()}
 
     for datastructure in context.datastructure_set.all():
         # noinspection PyBroadException
@@ -134,7 +159,7 @@ def process_context_structure(asset, context, content, language,
                 else:
                     content_value = context_dict[datastructure.name]
             else:
-                content_value = datastructure.find_actual_value(asset, language, version_id, draft=preview)
+                content_value = values[datastructure.id]
             # replace marker with value
             if not DataStructure.is_file_or_image(datastructure.type):
                 content = process_data_structure(content, datastructure.name, datastructure.type, content_value)
@@ -477,6 +502,8 @@ def zip_context(zip_file, asset, context, language_code,
         zip_file.writestr(name, data)
     file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
                                                                  DataStructure.DATA_TYPES.file))
+    values = {ds.id: val for ds, val in
+              DataStructure.find_actual_values(file_structures, asset, language, version_id, draft=preview).items()}
     for file_structure in file_structures:
         name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
         if add_root:
@@ -486,7 +513,7 @@ def zip_context(zip_file, asset, context, language_code,
         if name in zip_file.namelist():
             continue
 
-        data = file_structure.find_actual_value(asset, language, version_id, draft=preview)
+        data = values[file_structure.id]
         # Check if there is a data_record otherwise its a placeholder value.
         if data:
             try:

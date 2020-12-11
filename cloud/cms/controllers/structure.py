@@ -261,7 +261,9 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
             name = name.replace(root, "")
 
         # try to find relevant context
-        context = Context.objects.filter(file_path=name, asset_type=asset_type).first()
+        context = Context.objects.filter(
+            file_path=name, asset_type=asset_type
+        ).prefetch_related('datastructure_set').first()
         if context:
             try:
                 file_content = zip_file.read(zip_name).decode("utf-8")
@@ -313,6 +315,8 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
                 context_template_lines = context_template.split("\n")
 
+                current_values = DataStructure.find_actual_values(context.datastructure_set.all(), asset, draft=True)
+                current_values = {ds.id: val for ds, val in current_values.items()}
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
                         continue
@@ -378,7 +382,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                         value = json.loads(value)
 
                     # if there is a value - compare it with latest draft
-                    current_value = structure.find_actual_value(asset, draft=True)
+                    current_value = current_values[structure.id]
                     if value == current_value:
                         continue
 

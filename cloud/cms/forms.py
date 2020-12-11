@@ -58,11 +58,11 @@ def get_branding_shortcuts():
     cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
                                      asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
-
+    brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
+    vals = DataStructure.find_actual_values(brand_structures, asset=cloud_portal)
     brands = [
-        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, ds.find_actual_value(asset=cloud_portal))
-        for ds in branding_context.datastructure_set.all()
-        if 'shortcut' in ds.meta_settings
+        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+        for ds in brand_structures
     ]
 
     brands.append((
@@ -72,9 +72,11 @@ def get_branding_shortcuts():
     return brands
 
 
-def generate_branding_variables(datastructure):
+def generate_branding_variables(datastructure, branding_shortcuts=None):
+    if not branding_shortcuts:
+        branding_shortcuts = get_branding_shortcuts()
     return render_to_string(
-        'cms/widgets/branding_variables.html', context={'brands': get_branding_shortcuts(), 'datastructure': datastructure}
+        'cms/widgets/branding_variables.html', context={'brands': branding_shortcuts, 'datastructure': datastructure}
     )
 
 
@@ -87,6 +89,7 @@ class CustomContextForm(forms.Form):
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
         self.fieldsets = {}
+        self.branding_shortcuts = get_branding_shortcuts()
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -118,7 +121,7 @@ class CustomContextForm(forms.Form):
             if data_structure.meta_settings:
                 ds_description += convert_meta_to_description(data_structure.meta_settings)
                 if 'brand_vars' in data_structure.meta_settings and data_structure.meta_settings['brand_vars']:
-                    ds_description += generate_branding_variables(data_structure)
+                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts)
 
             if data_structure.type == DataStructure.DATA_TYPES.guid:
                 ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \

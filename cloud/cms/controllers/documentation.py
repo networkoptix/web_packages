@@ -70,7 +70,10 @@ def split_blocks(html):
 
 
 def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
-    doc_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation)
+    ds_needed = ('title', 'shortDescription', 'body', 'script', 'styling')
+    doc_structures = DataStructure.objects.filter(
+        context__asset_type__type=AssetType.ASSET_TYPES.documentation, name__in=ds_needed
+    )
     if review:
         state = 'review'
     elif draft:
@@ -120,24 +123,19 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
                 global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
                 global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
+            # Get values of article for this version
+            values = DataStructure.find_actual_values(
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review
+            )
+            values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()
-            # Get values for title and body of article for this version
-            doc_dict['title'] = doc_structures.filter(name='title').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
-            doc_dict['shortDescription'] = doc_structures.filter(name='shortDescription').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
-            doc_dict['blocks'] = doc_structures.filter(name='body').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
-            doc_dict['script'] = doc_structures.filter(name='script').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
+            doc_dict['title'] = values['title']
+            doc_dict['shortDescription'] = values['shortDescription']
+            doc_dict['blocks'] = values['body']
+            doc_dict['script'] = values['script']
+            css = values['styling']
+
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
-            css = doc_structures.filter(name='styling').first().find_actual_value(
-                asset=doc, language=language, version_id=version, draft=draft or review
-            )
             process_global_contexts(cloud_portal, doc_dict, doc.version_id(), False,
                                     global_contexts, global_contexts_dict, language=language)
             doc_dict['version'] = version

@@ -921,10 +921,6 @@ class DataStructure(models.Model):
                             return remaining
             return remaining
 
-        is_accepted = draft is False
-        is_review = draft is True and version_id not in (None, 0)
-        is_draft = draft is True and version_id in (None, 0)
-
         records = DataRecord.objects.filter(asset=asset)
         if version_id:
             records = records.filter(version_id__lte=version_id)

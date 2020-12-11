@@ -45,6 +45,10 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
 
     if not contexts:
         contexts = Context.objects.filter(asset_type__type=INTEGRATION)
+    contexts = contexts.prefetch_related('datastructure_set')
+    data_structures = []
+    for context in contexts:
+        data_structures.extend(list(context.datastructure_set.all()))
 
     cloud_portal = get_cloud_portal_asset()
 
@@ -93,6 +97,11 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                                                              hidden=False)
                     global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
+                records = DataStructure.find_actual_values(
+                    data_structures, asset=integration, version_id=current_version, draft=show_pending or show_drafts,
+                    customization_name=settings.CUSTOMIZATION
+                )
+                records = {ds.id: val for ds, val in records.items()}
                 integration_dict = dict()
                 for context in contexts:
                     # Make context json friendly
@@ -104,10 +113,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                         if not datastructure.public:
                             continue
 
-                        record_value = datastructure.find_actual_value(asset=integration,
-                                                                       version_id=current_version,
-                                                                       draft=show_pending or show_drafts,
-                                                                       customization_name=settings.CUSTOMIZATION)
+                        record_value = records[datastructure.id]
                         if datastructure.type in S3_STRUCTURE_TYPES:
                             record_value = record_value.replace(S3_LINK, REPLACEMENT_LINK)
 
