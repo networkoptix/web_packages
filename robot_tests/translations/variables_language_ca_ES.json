@@ -326,7 +326,7 @@
     "FOUND TEXT": "trobat",
     "MOTION DETECTION DISABLED TEXT": "La detecció de moviment està desactivada",
     "DIFFERENT VALUES TEXT": "– Valors diferents –",
-    "BEST TEXT": "Millor",
+    "BEST TEXT": "Òptima",
     "HIGH TEXT": "Alta",
     "MEDIUM TEXT": "Mitja",
     "LOW TEXT": "Baixa",
@@ -432,5 +432,5 @@
     "WARNING TEXT": "Avís",
     "INFO TEXT": "Informació",
     "DEBUG TEXT": "Depuració",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Verbós"
 }
