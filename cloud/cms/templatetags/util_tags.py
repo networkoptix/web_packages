@@ -13,3 +13,15 @@ def url_replace(request, field, value):
 @register.filter
 def escape_ds_name(name):
     return name.replace('%', '\%')
+
+
+@register.filter
+def trim_prefix(prefix):
+    end = prefix.split('-')[-1]
+    return prefix.rstrip(f'-{end}')
+
+
+# Place breakpoint for debugging values of template context
+@register.filter
+def test_filter(r):
+    return r

@@ -1,5 +1,5 @@
 {% load admin_urlname admin_urlquote from admin_urls %}
-{% load i18n nested_admin static %}
+{% load i18n nested_admin static util_tags %}
 
 {% with inline_admin_formset.formset.is_nested as is_nested %}
 
@@ -54,8 +54,9 @@
             {% endif %}
             <tr class="djn-tr form-row{% if inline_admin_form.original or inline_admin_form.show_url %} has_original{% endif %}">
 
-                <td data-toggle="collapse" class="{% if inline_admin_form.form.inlines %}toggle-collapse collapsed"{% endif %}
+                <td data-toggle="collapse" class="{% if inline_admin_form.form.inlines %}toggle-collapse collapsed{% endif %} {% if inline_admin_form.form.inlines.0.forms|length == 0 %}no-children{% endif %}"
                     data-target="#nested-{{ inline_admin_formset.formset.prefix }}-{% if forloop.last and inline_admin_formset.has_add_permission %}empty{% elif not forloop.last %}{%if is_nested %}{% endif %}{{ inline_admin_form.form|form_index }}{% endif %}">
+                    {% if inline_admin_form.form.inlines %}<span class="nested-counter">{{ inline_admin_form.form.inlines.0.forms|length }}</span>{% endif %}
                 </td>
                 <td class="original{% if inline_admin_formset.opts.sortable_field_name %} is-sortable{% endif %}">
                 {% if inline_admin_formset.opts.sortable_field_name %}
@@ -97,7 +98,7 @@
                     <td class="delete djn-delete-handler {{ inline_admin_formset.handler_classes|join:" " }}">{{ inline_admin_form.deletion_field.field }}</td>
                     {% else %}
                     <td class="delete">
-                        <div><a class="inline-deletelink djn-remove-handler {{ inline_admin_formset.handler_classes|join:" " }}" href="javascript:void(0)">Remove</a></div>
+                        <div><a class="inline-deletelink djn-remove-handler {{ inline_admin_formset.handler_classes|join:" " }}" href="javascript:void(0)" data-parent="nested-{{ inline_admin_formset.formset.prefix|trim_prefix}}">Remove</a></div>
                     </td>
                     {% endif %}
                 {% endif %}
@@ -120,7 +121,8 @@
                     <tr class="add-row">
                         <td></td>
                         <td colspan="{{ inline_admin_form|cell_count }}" class="djn-add-item">
-                            <a href="javascript://" class="add-handler djn-add-handler {{ inline_admin_formset.handler_classes|join:" " }}">{% blocktrans with inline_admin_formset.opts.verbose_name|strip_parent_name:inline_opts.verbose_name|title as verbose_name %}Add another {{ verbose_name }}{% endblocktrans %}</a>
+                            <a href="javascript://" data-parent="nested-{{ inline_admin_formset.formset.prefix|trim_prefix}}"
+                               class="add-handler djn-add-handler {{ inline_admin_formset.handler_classes|join:" " }}">{% blocktrans with inline_admin_formset.opts.verbose_name|strip_parent_name:inline_opts.verbose_name|title as verbose_name %}Add another {{ verbose_name }}{% endblocktrans %}</a>
                         </td>
                     </tr>
                 </tbody>
@@ -135,15 +137,37 @@
 
 </div>
 {% endwith %}{# ends with inline_admin_formset.opts as inline_opts #}
+    {% if not is_nested %}
+        <script>
+            function iterateCounter(srcElement, iterVal) {
+                const parentTrId = $(srcElement).data('parent');
+                const counter = $('#'+ parentTrId ).prev('.form-row').find('.nested-counter')[0];
+                if (counter) {
+                    const count = parseInt(counter.innerText) + iterVal;
+                    counter.innerText = count;
+                    if (count === 0) {
+                        $(counter).parent().addClass('no-children');
+                    } else {
+                        $(counter).parent().removeClass('no-children');
+                    }
+                }
+            }
+
+            $(document).ready(function () {
+                $('.help-tooltip').tooltip('enable');
+                $('.djn-add-handler').click(function () {
+                    iterateCounter(this, 1)
+                    setTimeout(function () {
+                        $('.help-tooltip').tooltip('enable');
+                        $('.djn-remove-handler').off('click').click(function() {
+                            iterateCounter(this, -1)
+                        });
+                    }, 1000);
+                });
+            });
+
+        </script>
+    {% endif %}
 
 {% endwith %}{# ends {% with inline_admin_formset.formset.is_nested as is_nested %} #}
-<script>
-    $(document).ready(function() {
-        $('.help-tooltip').tooltip('enable');
-        $('.djn-add-handler').click(function() {
-            setTimeout(function() {
-                $('.help-tooltip').tooltip('enable');
-            }, 1000);
-        });
-    });
-</script>
+

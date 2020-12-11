@@ -236,7 +236,13 @@ img.light {
 
 .inline-related .toggle-collapse:after {
     font-family: 'Glyphicons Halflings';
-    content: "\e259"
+    content: "\e259";
+    position: absolute;
+    left: 10px;
+}
+
+.inline-related .toggle-collapse.no-children:after {
+    color: lightgray;
 }
 
 .inline-related .toggle-collapse.collapsed:after {
@@ -252,6 +258,10 @@ img.light {
     padding-bottom: 2px !important;
 }
 
+.inline-related .nested-counter {
+    position: relative;
+    padding-left: 23px;
+}
 
 .enable-all-button {
     display: block;

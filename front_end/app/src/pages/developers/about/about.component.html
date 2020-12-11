@@ -4,8 +4,8 @@
 <ng-template #intro let-intro="intro">
     <div class="about-heading">
         <h1>{{intro.title}}</h1>
-        <ng-container *ngIf="intro.asset">
-            <p *ngFor="let block of intro.asset.blocks || []" [innerHTML]="block.contentHTML || ''"></p>
+        <ng-container *ngIf="intro.asset?.shortDescription">
+            <p [innerHTML]="intro.asset.shortDescription || ''"></p>
         </ng-container>
     </div>
 </ng-template>
