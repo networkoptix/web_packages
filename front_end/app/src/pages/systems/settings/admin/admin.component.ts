@@ -350,13 +350,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 const commonErrorMsg = this.LANG.dialogs.merge.commonText()
-                    .replace('{{primarySystem}}', error.primarySystemName)
-                    .replace('{{secondarySystem}}', error.secondarySystemName);
+                    .replace('{primarySystem}', error.primarySystemName)
+                    .replace('{secondarySystem}', error.secondarySystemName);
                 let responseError = this.LANG.errorCodes[error.errorText]() || this.LANG.errorCodes[error.resultCode]();
                 if (!responseError) {
                     responseError = this.LANG.errorCodes.unknownMergeError();
                 } else {
-                    responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
+                    let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                    if (this.CONFIG.cloudHost) {
+                        downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                    }
+                    responseError = responseError.replace('{failedSystem}', error.failedSystemName)
+                        .replace('{downloadHTML}', downloadHTML);
                 }
 
                 // HTML needed for section formatting

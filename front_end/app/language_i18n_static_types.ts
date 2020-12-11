@@ -283,6 +283,7 @@ export interface DialogsMerge {
     differentOwners:            any;
     duplicateServers:           any;
     enterSystemAddressTitle:    any;
+    latestBuild:                any;
     mergeConfirmation:          any;
     mergeSystemsTitle:          any;
     mergeFailedTitle:           any;
@@ -1222,6 +1223,7 @@ const typeMap: any = {
         { json: "differentOwners", js: "differentOwners", typ: "any" },
         { json: "duplicateServers", js: "duplicateServers", typ: "any" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
+        { json: "latestBuild", js: "latestBuild", typ: "any" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "any" },
         { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "any" },

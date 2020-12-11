@@ -25,6 +25,7 @@ import { NxUriService }              from '@services/uri.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
+import { NxRibbonService }           from '@components/ribbon';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 
@@ -104,7 +105,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private router: Router,
         private scrollMechanicsService: NxScrollMechanicsService,
         private applyService: NxApplyService,
-        private appStateService: NxAppStateService
+        private appStateService: NxAppStateService,
+        private ribbonService: NxRibbonService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -282,6 +284,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 !this.CONFIG.isLocal) {
                                 this.uriService.updateURI('/systems');
                             }
+                            console.log('systemIs Available?', this.system.isAvailable);
                             if (this.system.isAvailable) {
                                 this.updateAlert();
                             }
@@ -316,6 +319,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.settingsService.system = this.system;
                     this.systemSubscription = this.system.infoSubject.subscribe(() => {
                         this.systemReady();
+                        this.updateAlert();
                         this.updateMenu();
                     });
                 }
@@ -328,38 +332,44 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.checkMergeSubscription = this.system.checkMergeStatus(false)
             .subscribe(res => {
-                this.secondaryMerge = false;
-                this.system.ribbonService.hide();
-                let ribbonText: string;
                 const { mergeInProgress } = res.reply;
-                const { primary, secondary } = this.systemsService.systemsMerging || {};
-                if (!this.system.isOnline) {
-                    ribbonText = this.LANG.ribbon.systemOffline?.();
-                } else if (primary?.id === this.system.id) {
-                    const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName?.();
-                    if (secondaryName.startsWith('server at ')) {
-                        secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
+                if (this.CONFIG.isLocal) {
+                    if (!mergeInProgress && this.system.isOnline) {
+                        this.ribbonService.hide();
                     }
-                    ribbonText = `<div class="my-1">
-                                        <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
-                                        <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
-                                    </div>`;
-                } else if (secondary?.id === this.system.id) {
-                    this.mergeTargetSystem = this.systemsService.systems
-                        .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName?.() };
-                    this.secondaryMerge = true;
-                } else if (mergeInProgress) {
-                    ribbonText = this.LANG.ribbon.systemsMerging;
-                }
+                } else {
+                    this.secondaryMerge = false;
+                    this.system.ribbonService.hide();
+                    let ribbonText: string;
+                    const { primary, secondary } = this.systemsService.systemsMerging || {};
+                    if (!this.system.isOnline) {
+                        ribbonText = this.LANG.ribbon.systemOffline?.();
+                    } else if (primary?.id === this.system.id) {
+                        const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
+                        let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName?.();
+                        if (secondaryName.startsWith('server at ')) {
+                            secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
+                        }
+                        ribbonText = `<div class="my-1">
+                                            <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
+                                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
+                                        </div>`;
+                    } else if (secondary?.id === this.system.id) {
+                        this.mergeTargetSystem = this.systemsService.systems
+                            .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName?.() };
+                        this.secondaryMerge = true;
+                    } else if (mergeInProgress) {
+                        ribbonText = this.LANG.ribbon.systemsMerging;
+                    }
 
-                if (ribbonText) {
-                    this.system.ribbonService.show(ribbonText, [], 'alert');
-                }
+                    if (ribbonText) {
+                        this.system.ribbonService.show(ribbonText, [], 'alert');
+                    }
 
-                setTimeout(() => {
-                    this.setHeaderHeight();
-                });
+                    setTimeout(() => {
+                        this.setHeaderHeight();
+                    });
+                }
             });
     }
 

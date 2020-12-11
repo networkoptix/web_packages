@@ -170,7 +170,7 @@ export class MergeModalContent {
                         if (targetSystem) {
                             this.systemsService.forceUpdateSystems();
                             const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
-                                this.systems = systems;
+                                this.systems = systems || [];
                                 const updatedTargetSystem = [...this.systems, ...this.peerSystems]
                                     .find(system => system.id === targetSystem.id);
                                 if (updatedTargetSystem) {
@@ -715,6 +715,7 @@ export class MergeModalContent {
         if (this.machine.currentState === this.checkMerge) {
             this.systemsLoaded = false;
             this.processedSystems = [];
+            console.log('serverUlrInput?', this.machine.state.template.serverUrlInputValue);
             this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
         }
     }
@@ -723,6 +724,10 @@ export class MergeModalContent {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
             if (Object.prototype.hasOwnProperty.call(errorText, error)) {
+                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                if (this.CONFIG.cloudHost) {
+                    downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                }
                 const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
                     ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
                     : error;
@@ -730,7 +735,8 @@ export class MergeModalContent {
                     this.LANG.dialogs.merge[parsedError], {
                         primarySystem   : this.primaryName,
                         targetSystem    : this.secondaryName,
-                        secondarySystem : this.secondaryName
+                        secondarySystem : this.secondaryName,
+                        downloadHTML
                     });
             }
         }

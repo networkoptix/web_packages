@@ -91,6 +91,11 @@ export class NxSystemsService implements OnDestroy {
             this.currentUser = userEmail;
         }
 
+        if (this.CONFIG.isLocal) {
+            this.systemsSubject.next([]);
+            return of([]);
+        }
+
         return this.cloudApi.systems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
