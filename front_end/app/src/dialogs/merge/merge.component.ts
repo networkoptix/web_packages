@@ -715,7 +715,6 @@ export class MergeModalContent {
         if (this.machine.currentState === this.checkMerge) {
             this.systemsLoaded = false;
             this.processedSystems = [];
-            console.log('serverUlrInput?', this.machine.state.template.serverUrlInputValue);
             this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
         }
     }
