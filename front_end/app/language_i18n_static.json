@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mine",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Advanced PTZ cameras",
