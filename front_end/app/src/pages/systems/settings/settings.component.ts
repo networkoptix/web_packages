@@ -284,6 +284,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 !this.CONFIG.isLocal) {
                                 this.uriService.updateURI('/systems');
                             }
+                            console.log('systemIs Available?', this.system.isAvailable);
                             if (this.system.isAvailable) {
                                 this.updateAlert();
                             }
