@@ -11,6 +11,7 @@ import { NxConfigService }           from '@services/nx-config';
 import { NxUriService }              from '@services/uri.service';
 import { NxHeaderService }           from '@services/nx-header.service';
 import { NxMenusService, MenuNode }  from '@services/menus.service';
+import { NxAccountService }          from '@services/account.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -43,7 +44,8 @@ export class NxDropMenu extends BaseDropdown {
         configService: NxConfigService,
         private uriService: NxUriService,
         public headerService: NxHeaderService,
-        private menusService: NxMenusService
+        private menusService: NxMenusService,
+        private accountService: NxAccountService
     ) {
         super(languageService, configService);
         this.menusService.currentSystemNode$.subscribe(_ => {
@@ -97,11 +99,14 @@ export class NxDropMenu extends BaseDropdown {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    async ngOnChanges(changes: SimpleChanges) {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
+            const { reply: { isAdmin } }: any = await (this.CONFIG.isLocal
+                ? this.accountService.mediaServerApi.getCurrentUser(true)
+                : Promise.resolve({ reply: { isAdmin: false } }));
             this.systems$.next(changes.systems.currentValue);
             const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-            this.menusService.updateActiveSystemMenu(activeSystem);
+            this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
         }
         this.systemCounter = this.systems && this.systems.length;
     }

@@ -134,6 +134,10 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         });
     }
 
+    loginAllServers(login, password, remember) {
+        return Promise.resolve();
+    }
+
     logout(doNotRedirect = false) {
         this.account = undefined;
 

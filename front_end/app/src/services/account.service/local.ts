@@ -3,6 +3,8 @@ import {
 }                                     from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
+import { forkJoin }                   from "rxjs";
+import { flatMap }                    from "rxjs/internal/operators";
 import { tap, catchError }            from 'rxjs/operators';
 
 import { Exactly }                    from '../utils.service';
@@ -85,11 +87,20 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                 }),
                 tap(res => {
                     this.sessionService.loginState = login;
-                    if (!res.error) {
-                        window.location.reload();
-                    }
                 })
             );
+    }
+
+    loginAllServers(login, password, remember = false) {
+        return this.mediaServerApi.getMediaServers(false).pipe(
+            flatMap((servers) =>
+                forkJoin(servers.map((server) => {
+                    const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
+                    });
+                    return newServer.login(login, password, remember);
+                }))
+            )
+        ).toPromise();
     }
 
     logout(doNotRedirect = false) {

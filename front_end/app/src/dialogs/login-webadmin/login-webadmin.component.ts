@@ -7,12 +7,13 @@ import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
 import { NxModalGenericComponent }   from '../generic/generic.component';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxProcessService }          from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxStorageService }          from '../../services/storage.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxProcessService }          from '@services/process.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -56,7 +57,8 @@ export class LoginWebadminModalContent implements OnInit {
         private renderer: Renderer2,
         private router: Router,
         public activeModal: NgbActiveModal,
-        @Inject(DOCUMENT) private document: any
+        @Inject(DOCUMENT) private document: any,
+        @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -131,7 +133,11 @@ export class LoginWebadminModalContent implements OnInit {
             }
         }, (result) => {
             if (this.CONFIG.isLocal) {
-                return this.activeModal.close(result);
+                return this.account.loginAllServers(this.auth.email, this.password, this.remember)
+                    .then(() => {
+                        this.window.location.reload();
+                        return this.activeModal.close(result);
+                    });
             }
             this.activeModal.close();
             const isRootPath = ['/', ''].includes(this.locationService.path());
@@ -142,11 +148,11 @@ export class LoginWebadminModalContent implements OnInit {
                         .navigate([this.CONFIG.redirect.authorised])
                         .then(() => {
                             // ensure language reload as translations are loaded on page load
-                            window.location.reload();
+                            this.window.location.reload();
                         });
                 } else {
                     // TODO: remove window reload once we separate session state from account service
-                    window.location.reload();
+                    this.window.location.reload();
                 }
             } else if (this.next) {
                 // sanitize this.next
@@ -156,7 +162,7 @@ export class LoginWebadminModalContent implements OnInit {
                     .then(() => {
                         // *** window.location.reload(); // ensure language reload as translations are loaded on page load
                         // *** admin section is not a part of Angular project
-                        window.location.href = this.next;
+                        this.window.location.href = this.next;
                     });
             } else {
                 setTimeout(() => {
@@ -164,7 +170,7 @@ export class LoginWebadminModalContent implements OnInit {
                         .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
                         .then(() => {
                             // ensure language reload as translations are loaded on page load
-                            window.location.reload();
+                            this.window.location.reload();
                         });
                 });
             }
