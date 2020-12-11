@@ -18,9 +18,9 @@ import { NxProcessService }              from '../../../../services/process.serv
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-server-component',
-    templateUrl : 'servers.component.html',
-    styleUrls   : ['servers.component.scss']
+    selector   : 'nx-server-component',
+    templateUrl: 'servers.component.html',
+    styleUrls  : ['servers.component.scss']
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
@@ -98,15 +98,17 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         this.CONFIG.isLocal
                             ? this.system.update()
                             : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).finally(() => {
-                        if (this.system && !this.system.permissions?.editUsers) {
-                            this.uriService
-                                .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
-                                .catch(error => {
-                                    console.error(error);
-                                });
-                        }
-                    });
+                    ).then(() => this.system.getInfoAndPermissions(false)
+                        .catch(err => console.error('system subscription', err)))
+                        .finally(() => {
+                            if (this.system && !this.system.permissions?.editUsers) {
+                                this.uriService
+                                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+                        });
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
@@ -136,7 +138,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+    }
 
     hideAdvancedSettings() {
         const queryParams: Params = {};

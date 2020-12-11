@@ -1063,7 +1063,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canViewInfo() {
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return (this.info.capabilities &&
+            this.info.capabilities.vms_metrics) &&
+            this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
     }
 
     canUserViewCloudStorage() {
@@ -1092,26 +1094,28 @@ export class NxSystem extends System implements OnDestroy {
         };
 
         if (this.CONFIG.isLocal) {
-            return this.mediaserver.getSystemSettings().then(res => {
-                const parsedSettings = parseSettings(res);
-                Object.assign(parsedSettings, this.userManager.currentUser);
-                if (this.info) {
-                    Object.assign(this.info, parsedSettings); // Update
-                } else {
-                    this.info = parsedSettings;
-                }
-                this.id = res.localSystemId;
-                this.mergeInfo = this.info.mergeInfo;
-                this.isOnline = true;
-                this.cloudStorageCapable = false;
+            return this.mediaserver.getSystemSettings()
+                .then(res => {
+                    const parsedSettings = parseSettings(res);
+                    Object.assign(parsedSettings, this.userManager.currentUser);
+                    if (this.info) {
+                        Object.assign(this.info, parsedSettings); // Update
+                    } else {
+                        this.info = parsedSettings;
+                    }
+                    this.id = res.localSystemId;
+                    this.mergeInfo = this.info.mergeInfo;
+                    this.isOnline = true;
+                    this.cloudStorageCapable = false;
 
-                this.getUsers(true)
-                    .then(() => {
-                        this.userManager.ownerEmail = this.info.ownerAccountEmail;
-                        this.userManager.accessRole = this.info.accessRole;
-                        this.userManager.checkPermissions();
-                    });
-            }).catch(err => console.error(err))
+                    this.getUsers(true)
+                        .then(() => {
+                            this.userManager.ownerEmail = this.info.ownerAccountEmail;
+                            this.userManager.accessRole = this.info.accessRole;
+                            this.userManager.checkPermissions();
+                        });
+                })
+                .catch(err => console.error('getInfoAndPermissions: ', err))
                 .finally(() => {
                     return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
                 });

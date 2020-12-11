@@ -79,7 +79,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     portChangeDisabled: boolean;
     serverUnavailable: boolean;
     serverOffline: boolean;
-    canSeeInfo: boolean;
     fullInfoPath: string;
     parsedServerId: string;
     serverDetails: InfoBlockSection;
@@ -115,7 +114,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.serverUnavailable = true;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.section = 'servers';
-        this.canSeeInfo = false;
         this.fullInfoPath = '';
     }
 
@@ -175,7 +173,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             }
         }
 
-        if (changes?.storages?.currentValue) {
+        if (changes?.storages?.currentValue && changes?.storages?.currentValue.length) {
             this.parseStorages();
         }
     }
