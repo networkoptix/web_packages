@@ -77,7 +77,7 @@
     },
     "activeActions": {
         "resetPassword": "Restableix la contrasenya",
-        "sendConfirm": "Torna a enviar l'enllaç d’activació",
+        "sendConfirm": "Torna a enviar l'enllaç d'activació",
         "setNewPassword": "Desa la contrasenya",
         "setNewPasswordLabel": "Contrasenya nova"
     },
@@ -141,7 +141,7 @@
             "auto": "Auto",
             "best": "Òptima",
             "high": "Alta",
-            "medium": "Mitja",
+            "medium": "Mitjana",
             "low": "Baixa"
         },
         "general": "General",
@@ -423,7 +423,7 @@
         "cantChangeAccountPrefix": "No es poden desar els canvis",
         "cantChangePasswordPrefix": "No es pot desar la contrasenya",
         "cantDisconnectSystemPrefix": "No es pot eliminar el sistema",
-        "cantEditAdmin": "Aquest usuari té permisos d’administrador",
+        "cantEditAdmin": "Aquest usuari té permisos d'administrador",
         "cantEditYourself": "No es permet canviar els permisos propis",
         "cantGetSystemInfoPrefix": "La informació del sistema no està disponible",
         "cantGetSystemsListPrefix": "La llista del sistema no està disponible",
@@ -551,15 +551,15 @@
         "view": "Mostra les càmeres"
     },
     "passwordRequirements": {
-        "common": "massa comú",
+        "common": "massa comuna",
         "commonMessage": "Aquesta contrasenya és una de les contrasenyes més populars del món",
         "fair": "suficient",
         "fairMessage": "Utilitzeu números, majúscules i minúscules i caràcters especials per reforçar la contrasenya",
-        "good": "adequat",
-        "minLength": "massa curt",
+        "good": "adequada",
+        "minLength": "massa curta",
         "minLengthMessage": "La contrasenya ha de contenir com a mínim 8 caràcters",
         "missingMessage": "La contrasenya és obligatòria",
-        "required": "incorrecte",
+        "required": "incorrecta",
         "requiredMessage": "Utilitzeu només lletres llatines, números i símbols del teclat, eviteu espais inicials i finals",
         "strongMessage": "Contrasenya segura!",
         "weak": "feble",

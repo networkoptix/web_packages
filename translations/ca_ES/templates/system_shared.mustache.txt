@@ -5,7 +5,7 @@ Hola, {{message.userFullName}}
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Se us ha atorgat accés al sistema de gestió de vídeo "{{message.system_name}}".
+Us han atorgat accés al sistema de gestió de vídeo "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Veure al portal de %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}
+Mostra al portal de %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}

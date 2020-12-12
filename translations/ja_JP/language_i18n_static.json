@@ -142,7 +142,7 @@
             "best": "最高",
             "high": "高い",
             "medium": "標準",
-            "low": "低い"
+            "low": "低"
         },
         "general": "一般",
         "searchCamPlaceholder": "検索",
@@ -406,7 +406,7 @@
         "EmailAlreadyExists": "このEmailは既に登録されています",
         "FAIL": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
         "Connection timed out": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "Bad Gateway": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。両方とも <a href=\"/download\">最新ビルド</a>にアップデートしてください。",
         "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方の下にリストされているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
@@ -742,7 +742,7 @@
             "starter": "スターター",
             "iomodule": "IOモジュール",
             "bridge": "ブリッジ",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "サーバーが見つかりません"
         },
         "messages": {
             "required": "{{number}} 以上必要",

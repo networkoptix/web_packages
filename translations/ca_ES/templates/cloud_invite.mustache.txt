@@ -1,6 +1,6 @@
 Hola,
 
-Heu estat convidat a %CLOUD_NAME%.
+Us han convidat a %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}

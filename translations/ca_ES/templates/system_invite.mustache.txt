@@ -5,8 +5,8 @@ Us donem la benvinguda a %CLOUD_NAME%
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Esteu convidat a unir-vos a %CLOUD_NAME%.
-Se us ha concedit accés a {{message.system_name}}.
+Us han convidat a unir-vos a %CLOUD_NAME%.
+Us han concedit accés a {{message.system_name}}.
 {{/message.sharer_name}}
 
 Registreu-vos i visualitzeu el sistema: {{config.portal_url}}/register/{{message.code}}
