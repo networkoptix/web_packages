@@ -191,7 +191,7 @@ Should display same user data as shown in user account
 #click link containing user's email
     Select user in Users List    ${random email}
 #verify name displayed
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[@class="user-name" and contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Share button - opens dialog
     [Tags]    C41888
@@ -441,15 +441,17 @@ Share with unregistered user - brings them to registration page with code with c
     Log    Step 1
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+    Log in to user and system    ${owner}    ${sysId1}
+    Go To Users List
+    Share To    ${random email}    Administrator
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
 
-    Log in to user and system    ${owner}    ${sysId1}
-    Go To Users List
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    Should Be Empty    ${text}
     Log Out
     
     Log    Step 2
@@ -498,6 +500,9 @@ Share with unregistered user - brings them to registration page with code with c
     Log in to user and system    ${owner}    ${sysId1}
     Go To Users List
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    Click Element    //span[contains(text(),"${random email}")]
+    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
     
 Share System with the same user twice
     [Tags]    C41892
