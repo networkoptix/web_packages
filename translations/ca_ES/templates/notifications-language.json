@@ -3,7 +3,7 @@
     "emailSubject": "Activeu el compte"
   },
   "cloud_invite": {
-    "emailSubject": "Heu estat convidat a %CLOUD_NAME%"
+    "emailSubject": "Us han convidat a %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"

@@ -1,6 +1,6 @@
 {
   "language": "ca_ES",
-  "language_name": "Catalan",
+  "language_name": "Català",
   "cloudName": "%CLOUD_NAME%",
   "errorCodes": {
     "ok": "d'acord",
@@ -8,7 +8,7 @@
     "cantDisconnectSystemPrefix": "No es pot eliminar el sistema",
     "cantUnshareWithMeSystemPrefix": "No es pot eliminar el sistema",
     "cantSharePrefix": "No es pot compartir el sistema",
-    "cantGetUsersListPrefix": "La llista d’usuaris no està disponible",
+    "cantGetUsersListPrefix": "La llista d'usuaris no està disponible",
     "cantGetSystemsListPrefix": "La llista del sistema no està disponible",
     "cantRegisterPrefix": "S'ha produït un error",
     "cantGetSystemInfoPrefix": "La informació del sistema no està disponible",
@@ -23,7 +23,7 @@
     "wrongCodeRestore": "El codi de confirmació ja s'ha utilitzat o és incorrecte",
     "wrongAuthCode": "El codi ha vençut o és incorrecte",
     "forbidden": "No teniu permisos per realitzar aquesta acció",
-    "accountNotActivated": "Aquest compte encara no ha estat activat. <a href=\"/activate\">Enviar enllaç d'activació de nou</a>",
+    "accountNotActivated": "Aquest compte encara no s'ha activat. <a href=\"/activate\">Enviar enllaç d'activació de nou</a>",
     "accountBlocked": "Aquest compte està bloquejat temporalment. Torna-ho a provar d'aquí a uns quants minuts.",
     "notFound": "No s'ha trobat",
     "alreadyExists": "Aquest compte ja existeix",
