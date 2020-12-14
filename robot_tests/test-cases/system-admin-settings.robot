@@ -257,7 +257,7 @@ Moving to a different page after making changes in System Settings without savin
     Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
 
 Changing All Checkboxes Works
-    [Tags]    system settings    C65722    C69740    threaded
+    [Tags]    system settings    C65722    threaded
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
@@ -785,3 +785,35 @@ Security block view for 3 dot 2 System
     Wait Until Elements Are Visible
     ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    
+Changes in System Settings block are displayed in thick client
+    [Tags]    C69740    threaded    system settings 
+    Log    Preconditions
+    Set System Settings via API    autoDiscoveryEnabled    true
+    Set System Settings via API    statisticsAllowed    true
+    Set System Settings via API    cameraSettingsOptimization    true
+    
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled
+    
+    Log    Step 2
+    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled
+    
+    Log    Step 3
+    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed
+    
+    Log    Step 4
+    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed
+    
+    Log    Step 5
+    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization
+    
+    Log    Step 6
+    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization
+    
+    Log    Step 7
+    Changing All Settings    ${SYSTEM SAVE}
+    
+    Log    Step 8
+    Changing All Settings    ${SYSTEM SAVE}
