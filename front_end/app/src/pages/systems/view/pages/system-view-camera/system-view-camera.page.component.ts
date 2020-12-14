@@ -86,6 +86,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
       this._getRecords()
       this._updateQualitiesAvailable()
+
+      this.$self.classList.add('animated')
     }
 
     protected _updateQualitiesAvailable () {
@@ -176,6 +178,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.$self.classList.remove('controls-shown')
       }
       // setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+
+      if (s.isSidebarShown) {
+        this.$self.classList.add('sidebar-shown')
+      } else {
+        this.$self.classList.remove('sidebar-shown')
+      }
 
       // don't try going fullscreen until the document is ready
       if (document.readyState !== 'complete') {

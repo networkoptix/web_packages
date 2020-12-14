@@ -8,12 +8,15 @@ $player-background: black;
 $border-color: #cdd7dc;
 
 :host {
-  width: 100%;
+  width: 100vw;
   height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: absolute;
+  right: 0;
+  top: 0;
   box-sizing: border-box;
+
   transition: all .2s ease-in-out;
 
   &.is-full-screen {
@@ -22,6 +25,10 @@ $border-color: #cdd7dc;
     > player {
       height: 100vh;
     }
+  }
+
+  &.sidebar-shown {
+    width: calc(100vw - 320px);
   }
 
   &.controls-shown {
@@ -192,9 +199,8 @@ $border-color: #cdd7dc;
     flex-grow: 1;
     flex-shrink: 0;
     background-color: $player-background;
-    transition: height .2s ease-in-out;
     height: calc(100vh - 48px);
-    transition: height .2s ease-in-out;
+    transition: all .2s ease-in-out;
   }
   > .offline-message {
     height: calc(100vh - 48px);
@@ -206,6 +212,7 @@ $border-color: #cdd7dc;
     justify-content: center;
     text-transform: uppercase;
     background: $player-background;
+    transition: all .2s ease-in-out;
 
     > svg {
       width: 96px;
@@ -228,7 +235,7 @@ $border-color: #cdd7dc;
   > .controls {
     position: absolute;
     bottom: 0;
-    transition: bottom .2s ease-in-out;
+    transition: all .2s ease-in-out;
     left: 0;
     right: 0;
     height: 100px;

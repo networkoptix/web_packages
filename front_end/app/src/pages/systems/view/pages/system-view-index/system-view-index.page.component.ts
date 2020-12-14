@@ -38,6 +38,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   public initialized: boolean = false
   public initializedWithError: boolean = false
 
+  public animated: boolean = false
+
   public handleSidebarTogglingEarClick () {
     this.ux.isSidebarShown = !this.ux.state.isSidebarShown
   }
@@ -206,6 +208,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
 
         setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
+
+        if (!this.animated) {
+          this.animated = true
+          this.$self.classList.add('animated')
+        }
 
       })
     }).catch(e => {
