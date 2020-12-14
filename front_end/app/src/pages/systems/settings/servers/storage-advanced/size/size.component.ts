@@ -114,7 +114,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     toFriendlyBytes(bits, fractionGb = true) {
-        if (!+bits) {
+        if (!+bits || bits < 0) {
             return '&mdash;';
         }
         const { locale } = this;

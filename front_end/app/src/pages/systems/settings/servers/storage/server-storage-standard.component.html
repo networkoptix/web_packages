@@ -3,7 +3,6 @@
     <nx-section-placeholder
         *ngIf="!waitingForStorages"
         svgFileName="system_settings_placeholder"
-        width="64"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
     </nx-section-placeholder>
 </ng-template>
@@ -25,13 +24,13 @@
     </header>
 
     <nx-section nonPadded>
-        <div class="storage-container">
+        <div class="storage-container" [ngClass]="{'no-storages-sizing': !(storageExcludeDeleted$ | async).length || waitingForStorages}">
             <form class="form form-horizontal"
                 (scroll)="handleScroll($event)"
                 role="form"
                 name="storageSettings"
                 novalidate>
-                <table *ngIf="(storage$ | async).length && !waitingForStorages; else noStorages" [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
+                <table *ngIf="(storageExcludeDeleted$ | async).length && !waitingForStorages; else noStorages" [ngClass]="{'hasAction' : (storage$ | async).hasAction}">
                     <thead>
                         <tr>
                             <th>Address</th>
@@ -43,7 +42,7 @@
 
                     <tbody>
                         <tr class="table-row-spacer" [ngClass]="{'hasAction' : (storage$ | async).hasAction}"></tr>
-                        <tr *ngFor="let store of (storage$ | async); let row=index">
+                        <tr *ngFor="let store of (storageExcludeDeleted$ | async); let row=index">
                             <td [ngClass]="{'disabled-label' : checkDisabled(store) }"
                                 (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
@@ -55,7 +54,7 @@
                                 </svg-icon>
                                 <span class="ellipsis">{{cleanUrl(store.url)}}</span>
                             </td>
-                            <td *ngIf="!store.updating; else changingMode" [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.width.px]="ddWidth" [ngSwitch]="store.status">
+                            <td *ngIf="!store.updating || store.status === STATUS.REINDEXING; else updatingMode" [ngClass]="{'px-0' : store.status === STATUS.IN_USE}" [style.width.px]="ddWidth" [ngSwitch]="store.status">
                                 <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >
                                     <span translate>Reserved</span>
                                     <svg-icon nx-add-svg-src
@@ -69,6 +68,7 @@
                                     </svg-icon>
                                 </div>
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
+                                <div *ngSwitchCase="STATUS.BEING_CHECKED" translate>Checking...</div>
                                 <div *ngSwitchCase="STATUS.REINDEXING" translate>Reindexing...</div>
                                 <div *ngSwitchCase="STATUS.IN_USE" 
                                     class="position-absolute"
@@ -88,10 +88,13 @@
                                     </svg-icon>
                                 </div>
                             </td>
-                            <ng-template #changingMode>
-                                <td [ngClass]="{'px-0' : store.status == STATUS.IN_USE}" [style.width.px]="ddWidth">
+                            <ng-template #updatingMode>
+                                <td [ngClass]="{'px-0' : [STATUS.IN_USE, STATUS.BEING_CHECKED].includes(store.status)}" [style.width.px]="ddWidth">
                                     <div class="disabled-label changing" >
-                                        <span>{{LANG.storage.modes.changing()}}</span>
+                                        <ng-template #beingChecked>
+                                            <span translate>Checking...</span>
+                                        </ng-template>
+                                        <span *ngIf="store.status !== STATUS.BEING_CHECKED; else beingChecked">{{LANG.storage.modes.changing()}}</span>
                                     </div>
                                 </td>
                             </ng-template>
@@ -101,7 +104,8 @@
                             <td *ngIf="(storage$ | async).hasAction" class="d-flex justify-content-end">
                                 <!-- Add settings button -->
                                 <button class="btn btn-text has-icon"
-                                        [disabled]="store.status === STATUS.REINDEXING"
+                                        [disabled]="store.updating || store.status === STATUS.REINDEXING"
+                                        [ngClass]="{'disabled-action': store.updating || store.status === STATUS.REINDEXING}"
                                         *ngIf="store.hasAction && store.storageType !== storageTypes.CLOUD"
                                         (click)="deleteStorage(store)">
                                     <svg-icon
@@ -117,7 +121,7 @@
             </form>
         </div>
     </nx-section>
-    <nx-section>
+    <nx-section *ngIf="!waitingForStorages">
         <button class="btn btn-default" (click)="addExternalStorage()" translate>Add External Storage</button>
     </nx-section>
 </nx-block>
@@ -150,7 +154,7 @@
     </nx-section>
 </nx-block>
 
-<nx-block id="reindex-archive-block" *ngIf="!loading && (storage$ | async).length && (doesModeExist('modeMain') || doesModeExist('modeBackup'))">
+<nx-block id="reindex-archive-block" *ngIf="!loading && (storageExcludeDeleted$ | async).length && (doesModeExist('modeMain') || doesModeExist('modeBackup'))">
     <header>
         <div class="header-top-bar">
             <h4 translate>Reindex Archive</h4>

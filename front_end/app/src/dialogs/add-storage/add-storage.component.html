@@ -36,14 +36,7 @@
                 <input class="form-control col-12"
                     type="text"
                     id="addLogin"
-                    [ngClass]="{'notYetSubmitted': !loginChecked }"
                     formControlName="login"/>
-            </div>
-            <div class="col-12 ml-n2 d-flex">
-                <ng-container *ngIf="loginChecked && getControls('login').errors">
-                    <span *ngIf="getControls('login').errors.required"
-                        class="input-error" translate>Login is required</span>
-                </ng-container>
             </div>
         </div>
         <div class="form-group">
@@ -56,12 +49,8 @@
                     formControlName="password"/>
             </div>
             <div class="col-12 ml-n2 d-flex">
-                <ng-container *ngIf="passwordChecked && getControls('password').errors">
-                    <span *ngIf="getControls('password').errors.loginPasswordWrong"
-                        class="input-error" translate>Login or password is incorrect</span>
-                    <span *ngIf="getControls('password').errors.required"
-                        class="input-error" translate>Password is required</span>
-                </ng-container>
+                <span *ngIf="passwordChecked && loginPasswordWrong"
+                    class="input-error" translate>Login or password is incorrect</span>
             </div>
         </div>
     </div>

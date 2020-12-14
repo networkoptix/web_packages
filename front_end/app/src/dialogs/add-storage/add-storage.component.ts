@@ -38,8 +38,8 @@ export class AddStorageModalContent {
     alreadyUsed: string;
     alreadyCheckedAndExists = false;
     urlChecked = false;
-    loginChecked = false;
     passwordChecked = false;
+    loginPasswordWrong = false;
 
     constructor(
         configService: NxConfigService,
@@ -86,6 +86,7 @@ export class AddStorageModalContent {
             this.urlChecked = false;
             this.url = values.url;
             this.checkUrlValidity();
+            this.passwordChecked = this.loginPasswordWrong = false;
         });
 
         const options = {
@@ -121,7 +122,7 @@ export class AddStorageModalContent {
                     this.alreadyCheckedAndExists = true;
                 } else if (err?.message === 'WrongAuth') {
                     this.passwordChecked = true;
-                    this.loginChecked = true;
+                    this.loginPasswordWrong = true;
                 } else {
                     let message = this.LANG.storage.failed();
                     if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
@@ -139,6 +140,9 @@ export class AddStorageModalContent {
     }
 
     async addStorageProcess(url: string, login: string, password: string) {
+        if (this.loginPasswordWrong) {
+            return Promise.reject(Error('WrongAuth'));
+        }
         try {
             const credentials = login || password ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@` : '';
             const smbShare = `smb://${credentials}${url.substr(2)}`;
@@ -179,7 +183,6 @@ export class AddStorageModalContent {
 
     preSubmit = () => {
         this.urlChecked = true;
-        this.loginChecked = true;
         this.passwordChecked = true;
     }
 

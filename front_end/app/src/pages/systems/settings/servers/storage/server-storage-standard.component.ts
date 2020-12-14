@@ -4,10 +4,12 @@ import {
 }                                    from '@angular/core';
 import { UntilDestroy, untilDestroyed }              from '@ngneat/until-destroy';
 import {
-    Subscription, interval, combineLatest, BehaviorSubject, Subject, defer, of, timer
+    Subscription, combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                    from 'rxjs';
 import {
-    map, first, takeUntil, delay, retryWhen, distinctUntilChanged, switchMap, tap, startWith, pairwise, bufferCount, concatMap, catchError, retry, filter
+    map, first, takeUntil, delay, retryWhen, distinctUntilChanged,
+    switchMap, tap, startWith, pairwise, bufferCount, concatMap,
+    catchError, retry, filter, takeWhile, repeat
 }                                    from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -38,7 +40,8 @@ enum STORAGE_STATUS {
     INACCESSIBLE,
     RESERVED,
     DISABLED,
-    REINDEXING
+    REINDEXING,
+    BEING_CHECKED
 }
 
 enum STORAGE_TYPES {
@@ -76,6 +79,7 @@ export class NxSystemStorageComponent implements OnInit {
     onlineBackups = 0;
     changedModes: string[] = [];
     updatingModes: string[] = [];
+    deletedStorage: string[] = [];
     customSettings = false;
     systemHasBackupsOn = false;
 
@@ -86,6 +90,8 @@ export class NxSystemStorageComponent implements OnInit {
     dropdownOffset$ = new BehaviorSubject(0);
     scrollOffset$ = new BehaviorSubject(0);
     cancelPolling$ = new Subject<string>();
+
+    storageExcludeDeleted$ = this.storage$.pipe(map((storage) => storage.filter(({ storageId }) => !this.deletedStorage.includes(storageId))))
 
     dropdownOffsetCalc$ = combineLatest([
         this.dropdownOffset$.pipe(distinctUntilChanged()),
@@ -162,14 +168,15 @@ export class NxSystemStorageComponent implements OnInit {
             const empty = { reply: { storages: [] } };
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
-                this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
-                    tap(() => {
-                        this.waitingForStorages = false;
-                        this.storageInfoLoaded.emit(true);
-                    }),
-                    catchError(() => of(empty)),
-                    startWith(empty)
-                ),
+                this.refreshStorages$.pipe(
+                    switchMap(() => this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
+                        tap(() => {
+                            this.waitingForStorages = false;
+                            this.storageInfoLoaded.emit(true);
+                        }),
+                        catchError(() => of(empty)),
+                        startWith(empty)
+                    ))),
                 this.refreshStorages$.pipe(
                     switchMap(() => this.system.getServerStats(this.serverId)),
                     catchError(() => of(empty)),
@@ -243,12 +250,12 @@ export class NxSystemStorageComponent implements OnInit {
                                     store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
                                 }
                             } else {
-                                store.status = STORAGE_STATUS.INACCESSIBLE;
-                                storage.hasAction = true;
+                                store.status = STORAGE_STATUS.BEING_CHECKED;
+                                store.updating = true;
                             }
                         } else {
-                            store.status = STORAGE_STATUS.INACCESSIBLE;
-                            storage.hasAction = true;
+                            store.status = STORAGE_STATUS.BEING_CHECKED;
+                            store.updating = true;
                         }
 
                         if (store.status === STORAGE_STATUS.IN_USE && store.isUsedForWriting) {
@@ -279,6 +286,7 @@ export class NxSystemStorageComponent implements OnInit {
                 })
             ).subscribe();
         }
+        this.checkStorages();
     }
 
     setupWatchers = () => {
@@ -452,8 +460,7 @@ export class NxSystemStorageComponent implements OnInit {
             };
 
             const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
-            hasAction = status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType);
-            storage.hasAction = storage.hasAction || hasAction;
+            storage.hasAction = hasAction = status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType);
         });
 
         if (this.onlineMains === 1) {
@@ -542,7 +549,10 @@ export class NxSystemStorageComponent implements OnInit {
         this.scrollOffset$.next(event.target.scrollLeft);
     }
 
-    checkDisabled = store => store.status !== STORAGE_STATUS.IN_USE || store.updating || this.selectMode(store).value === 'modeNotInUse'
+    checkDisabled = store => store.status !== STORAGE_STATUS.REINDEXING &&
+        store.status !== STORAGE_STATUS.IN_USE ||
+        store.updating ||
+        this.selectMode(store).value === 'modeNotInUse'
 
     changeMode(
         { isBackup, storageId, id: _id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
@@ -592,14 +602,13 @@ export class NxSystemStorageComponent implements OnInit {
                     return store;
                 });
             }
-            storagesWithUpdatedStatus.forEach(({ storageId, id, url, isBackup, isUsedForWriting, status, storageType, hasAction }) => {
+            storagesWithUpdatedStatus.forEach(({ storageId, id, url, isBackup, isUsedForWriting, status, storageType, hasAction, updating }) => {
                 const updatedValue = !isUsedForWriting ? 'modeNotInUse' : isBackup ? 'modeBackup' : 'modeMain';
                 const normalizedId = this.normalizeId(storageId || id || url);
                 this.modeWatchers[normalizedId].originalValue = updatedValue;
                 const storagesWithActions = [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD];
                 if (status === STORAGE_STATUS.INACCESSIBLE || storagesWithActions.includes(storageType)) {
-                    hasAction = true;
-                    storagesWithUpdatedStatus.hasAction = storagesWithUpdatedStatus.hasAction || hasAction;
+                    storagesWithUpdatedStatus.hasAction = hasAction = true;
                 }
             });
             this.updateStorage(storagesWithUpdatedStatus);
@@ -667,6 +676,64 @@ export class NxSystemStorageComponent implements OnInit {
         return Promise.resolve();
     }
 
+    checkStorages(maxTimeout = 60000, maxTimesToCheck = 10) {
+        const timesChecked$ = new BehaviorSubject<number>(0);
+        const filterBeingChecked = (storage: any[]) => storage.filter(
+            ({ status, storageStatus }) => status === STORAGE_STATUS.BEING_CHECKED ||
+            storageStatus?.includes('beingChecked')
+        );
+
+        const checkIfStoragesMissing = (beingChecked) => (storageInfo) => {
+            const beingCheckedIds = beingChecked.map(({ storageId }) => storageId);
+            const storageInfoResponseIds = storageInfo.map(({ storageId }) => storageId);
+            return beingCheckedIds.some(beingChecked => !storageInfoResponseIds.includes(beingChecked));
+        };
+
+        const updateChangedStatus = (beingChecked) => (storageInfo) => {
+            timesChecked$.next(timesChecked$.value + 1);
+            const beingCheckedIds = beingChecked.map(({ storageId }) => storageId);
+            const stillBeingChecked = storageInfo.filter(
+                ({ storageStatus }) => storageStatus.includes('beingChecked')
+            ).map(({ storageId }) => storageId);
+            const changed = beingCheckedIds.some(
+                (id) => !stillBeingChecked.includes(id)) ||
+                stillBeingChecked.some(id => !beingCheckedIds.includes(id));
+            console.info(`Times status checked: ${timesChecked$.value}`);
+            if (changed) {
+                this.triggerUpdate$.next('updated status');
+                console.info('Updating storages with changed status...');
+            } else if (timesChecked$.value === maxTimesToCheck) {
+                const storage = this.storage$.value;
+                this.storage$.value.forEach((store) => {
+                    if (beingCheckedIds.includes(store.storageId)) {
+                        store.updating = false;
+                        store.status = STORAGE_STATUS.INACCESSIBLE;
+                        storage.hasAction = store.hasAction = true;
+                    }
+                });
+                this.storage$.next(storage);
+                console.info('Not able to get updated status on remaining storages, setting still pending to inaccessible');
+            }
+        };
+
+        const pollStorageStatus = (beingChecked) => this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, maxTimeout).pipe(
+            map(({ reply: { storages } }) => storages),
+            tap(updateChangedStatus(beingChecked)),
+            map(checkIfStoragesMissing(beingChecked)),
+            takeWhile(storagesMissing => storagesMissing || filterBeingChecked(beingChecked)),
+            repeat(maxTimesToCheck),
+            map(missing => missing ? 'Mediaserver still trying to connect to storages..' : 'Some storages have beingChecked status..'),
+            untilDestroyed(this)
+        );
+
+        this.storage$.pipe(
+            tap(() => timesChecked$.next(0)),
+            map(filterBeingChecked),
+            switchMap(storagesBeingChecked => storagesBeingChecked.length ? pollStorageStatus(storagesBeingChecked) : of('Storages loaded, no storages in beingChecked state.')),
+            untilDestroyed(this)
+        ).subscribe(state => console.info(state));
+    }
+
     calcDDWidth() {
         const modes: {
             [key: string]: string
@@ -699,7 +766,7 @@ export class NxSystemStorageComponent implements OnInit {
 
     deleteStorage(storage) {
         this.dialogs.confirm(
-            storage.url,
+            this.cleanUrl(storage.url),
             this.LANG.storage.deleteExternalStorage(),
             this.LANG.dialogs.buttons.delete(),
             'btn-danger',
@@ -711,6 +778,7 @@ export class NxSystemStorageComponent implements OnInit {
                         .removeStorage({ id: storage.storageId || storage.id }).toPromise()
                         .then((response) => {
                             if (response.id) {
+                                this.deletedStorage.push(response.id);
                                 this.updateStorage(this.storage$.value.filter(({ storageId, id }) => (storageId || id) !== response.id));
                                 this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: this.cleanUrl(storage.url) }), 'success');
                             } else {
@@ -816,7 +884,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     cancelIndexing(type: 'main' | 'backup') {
-        const target = TARGET_STORAGE[type.toUpperCase()]
+        const target = TARGET_STORAGE[type.toUpperCase()];
         this[type === 'main' ? 'percentMainDone' : 'percentBackupDone'] = 0;
         this.system.rebuildArchive(this.serverId, target, 'stop').toPromise();
         this.stopReindex$.next(target);
