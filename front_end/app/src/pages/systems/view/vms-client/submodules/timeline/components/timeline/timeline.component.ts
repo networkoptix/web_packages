@@ -108,11 +108,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
   public canvasClickHandler (e: MouseEvent): void {
     e.stopPropagation()
     e.preventDefault()
-    if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
+    // if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
       const time = this.timeline.domOffsetXtoTime(e.offsetX)
       this.selection.reset()
       this.playback.playArchive(time)
-    }
+    // }
   }
 
   // public canvasMouseDownHandler (e: MouseEvent): void {
