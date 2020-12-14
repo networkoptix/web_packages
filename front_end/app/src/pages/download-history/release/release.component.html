@@ -30,7 +30,7 @@
 
     <ul [ngbCollapse]="!card.expanded">
         <li *ngFor="let file of platform.files">
-            <ng-container>{{file.niceName}}</ng-container>
+            <ng-container>{{file.niceName}}&nbsp;</ng-container>
             <a [href]="linkbase + '/' + build + '/' +file.path">{{file.fileName}}</a>
         </li>
     </ul>
