@@ -349,9 +349,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }
-                const commonErrorMsg = this.LANG.dialogs.merge.commonText()
-                    .replace('{primarySystem}', error.primarySystemName)
-                    .replace('{secondarySystem}', error.secondarySystemName);
+                const commonErrorMsg = NxLanguageProviderService.translate(
+                    this.LANG.dialogs.merge.commonText,
+                    { primarySystem: error.primarySystemName, secondarySystem: error.secondarySystemName }
+                );
                 let responseError = this.LANG.errorCodes[error.errorText]() || this.LANG.errorCodes[error.resultCode]();
                 if (!responseError) {
                     responseError = this.LANG.errorCodes.unknownMergeError();
