@@ -29,7 +29,7 @@ $border-color: #cdd7dc;
       bottom: 0px;
     }
     > player,
-    > .no-player-message {
+    > .offline-message {
       height: calc(100vh - 48px - 100px);
     }
 
@@ -196,7 +196,7 @@ $border-color: #cdd7dc;
     height: calc(100vh - 48px);
     transition: height .2s ease-in-out;
   }
-  > .no-player-message {
+  > .offline-message {
     height: calc(100vh - 48px);
     flex-grow: 1;
     flex-shrink: 0;
@@ -206,15 +206,22 @@ $border-color: #cdd7dc;
     justify-content: center;
     text-transform: uppercase;
     background: $player-background;
-    color: #cdd7dc;
-    font-size: 40px;
 
     > svg {
-      width: 50%;
+      width: 96px;
+      height: 96px;
+      stroke: $light1;
+      opacity: 0.6;
+      stroke-width: 3px;
     }
 
     > span {
-      margin-top: 1em;
+      color: $light1;
+      margin-top: 24px;
+      line-height: 48px;
+      opacity: 0.6;
+      font-size: 40px;
+      font-family : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
   }
 
