@@ -69,10 +69,10 @@ export class NxSystemService {
     }
 
     createLocalSystem(mediaServer: NxSystemAPI, userId: string, userEmail = '') {
-        this.cancelPoll$.next('cancel system polling');
         if (this.system !== undefined) {
             return this.system;
         }
+        this.cancelPoll$.next('cancel system polling');
         this.system = new NxSystem(
             this.CONFIG,
             this.LANG,
