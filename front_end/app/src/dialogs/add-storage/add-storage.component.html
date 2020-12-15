@@ -36,6 +36,7 @@
                 <input class="form-control col-12"
                     type="text"
                     id="addLogin"
+                    [ngClass]="{'login-error': loginPasswordWrong }"
                     formControlName="login"/>
             </div>
         </div>
@@ -45,7 +46,7 @@
                 <input class="form-control col-12"
                     type="password"
                     id="addPassword"
-                    [ngClass]="{'notYetSubmitted': !passwordChecked }"
+                    [ngClass]="{'login-error': loginPasswordWrong }"
                     formControlName="password"/>
             </div>
             <div class="col-12 ml-n2 d-flex">
