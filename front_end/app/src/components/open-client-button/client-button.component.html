@@ -5,6 +5,7 @@
         [actionType]="actionType ? actionType : 'default'"
         [buttonDisabled]="!system.isOnline && system.stateOfHealth !== CONFIG.system.status.online"
         (click)="$event.stopPropagation();"
+        [textOnly]="textOnly"
         [buttonText]="'Open in %VMS_NAME%' | translate"></nx-process-button>
 
     <nx-process-button
@@ -13,5 +14,6 @@
         [actionType]="'primary'"
         [buttonDisabled]="false"
         (click)="$event.stopPropagation();"
+        [textOnly]="textOnly"
         [buttonText]="'Open %VMS_NAME%' | translate"></nx-process-button>
 </ng-container>
