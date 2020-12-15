@@ -14,7 +14,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls    : ['password-tag-validation.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxPasswordTagValidationComponent implements OnChanges {
+export class NxPasswordTagValidationComponent {
     @Input() forElement;
     @Input() value;
 
@@ -31,15 +31,5 @@ export class NxPasswordTagValidationComponent implements OnChanges {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.value) {
-            this.forElement.weak = false;
-            if (this.forElement.errors && !this.forElement.errors.pattern) {
-                const { weak, common, minlength, required } = this.forElement.errors;
-                this.weak = (weak && !common && !minlength) || (common && !minlength && !required) || minlength;
-            }
-        }
     }
 }
