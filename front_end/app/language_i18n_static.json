@@ -745,6 +745,8 @@
             "starter": "Starter",
             "iomodule": "IO Module",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

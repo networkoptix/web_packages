@@ -97,6 +97,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                 if (matchError('License is expired')) {
                                     // Can't activate license: License is expired.
                                     this.licenseForm.controls.licenseKey.setErrors({ expired: true });
+                                } else if (matchError('Only one NVR license')) {
+                                    // Only one NVR license is allowed per System.↵You already have one active NVR license.
+                                    this.licenseForm.controls.licenseKey.setErrors({ nvrError: true });
                                 } else if (matchError('Only one starter license is allowed')) {
                                     // Can't activate license: Only one starter license is allowed per System.
                                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
@@ -104,8 +107,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                     // Can't activate license:  License Key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 } else if ([
-                                        'requires higher software version', 'You are trying to activate a license incompatible with your software.'
-                                    ].some(matchError)
+                                    'requires higher software version', 'You are trying to activate a license incompatible with your software.'
+                                ].some(matchError)
                                 ) {
                                     // Can't activate license: This license type requires higher software version
                                     // Can't activate license: You are trying to activate a license incompatible with your software.
