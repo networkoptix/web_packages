@@ -113,14 +113,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     }
 
     prefetchDocument(assetId) {
-        console.info(`%cPrefetching document ${assetId}`, 'color:blue;font-size:1.5rem;padding: .75rem 4rem; background-color:gray');
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).subscribe(document => {
-            console.info(
-                `%cSuccessfully prefetched document: \n%c${document.title}`,
-                'color:green;font-size:1.25rem',
-                'color:white;font-size:.75rem;padding:0.5rem 0'
-            );
-        });
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).subscribe();
     }
 
     parseResults({ docs }) {
