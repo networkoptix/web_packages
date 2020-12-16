@@ -402,7 +402,7 @@ export class MergeModalContent {
                         }
                         const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
                         this.updateShow(
-                            this.targetSystem.systemName || this.targetSystem.name || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
+                            this.targetSystem.systemName || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
                             { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
                         );
                     }
