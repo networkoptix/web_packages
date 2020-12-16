@@ -277,12 +277,15 @@ Register and activate account with random email
     [Return]    ${email}
 
 Disconnect all systems from account
-    [Arguments]    ${systems list}
-    FOR    ${sys}    IN    @{system}
+    [Arguments]    ${email}     ${password}
+    ${systems}=   Get Account Systems    ${ENV}    ${email}    ${password}
+    FOR    ${sys}    IN    @{systems}
+        Disconnect    ${ENV}    ${email}    ${password}    ${sys}
+    END
 
 # Replaced with "Restore password using API"
 Restore password
-    [arguments]    ${email}
+    [Arguments]    ${email}
     #log in to user to make sure their language is set to the current
     Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
     # Open Browser and go to URL    ${url}
