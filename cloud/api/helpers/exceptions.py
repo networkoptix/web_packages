@@ -52,6 +52,7 @@ class ErrorCodes(Enum):
     service_unavailable = 'serviceUnavailable'
     unknown_error = 'unknownError'
     unsupported_media_type = 'unsupportedMediaType'
+    credentials_removed_permanently = 'credentialsRemovedPermanently'
 
     response_serialization_error = 'responseSerializationError'
     deserialization_error = 'deserializationError'
@@ -73,7 +74,8 @@ class ErrorCodes(Enum):
                     ErrorCodes.invalid_nonce,
                     ErrorCodes.wrong_code,
                     ErrorCodes.wrong_parameters,
-                    ErrorCodes.unsupported_media_type):
+                    ErrorCodes.unsupported_media_type,
+                    ErrorCodes.credentials_removed_permanently):
             return logging.WARNING
         return logging.ERROR
 

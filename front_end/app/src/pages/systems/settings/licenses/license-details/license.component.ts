@@ -113,7 +113,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                     deactivationsRemaining,
                     deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
                     null,
-                    !info.expiration && !info.expired
+                    !info.expiration && !info.expired && info.class !== 'nvr'
                 )
             ]
         );

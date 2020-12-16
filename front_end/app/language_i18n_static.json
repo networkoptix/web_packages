@@ -479,8 +479,8 @@
         "Storage": "Storage",
         "myIntegrationsLabel": "Mine",
         "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested with {vmsName} version:",
-        "testedVersionsLabel": "Tested with {vmsName} versions:"
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Advanced PTZ cameras",
@@ -782,6 +782,8 @@
             "starter": "Starter",
             "iomodule": "IO Module",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {
