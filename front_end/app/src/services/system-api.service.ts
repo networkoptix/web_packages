@@ -605,6 +605,10 @@ export class NxSystemAPI {
         return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', { serverId, [key]: value }).toPromise();
     }
 
+    getAnalyticsEngines() {
+        return this.get('/ec2/getAnalyticsEngines');
+    }
+
     saveCameraUserSettings(cameraId: string, param: { [key: string]: string }) {
         const [key, value] = Object.entries(param)[0];
         return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraId, [key]: value }).toPromise();

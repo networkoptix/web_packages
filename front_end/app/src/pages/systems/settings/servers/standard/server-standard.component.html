@@ -112,7 +112,7 @@
                         [disabled]="portChangeDisabled || serverUnavailable"
                         (change)="onPortChange()"
                     >
-                    <ng-container *ngIf="dropdownStorages.length && (storageInfoLoaded && !storagesLoading) || (!storageInfoLoaded && storagesLoading)">
+                    <ng-container *ngIf="showAnalytics && dropdownStorages.length && (storageInfoLoaded && !storagesLoading) || (!storageInfoLoaded && storagesLoading)">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
                         <nx-select
                             id="system"
@@ -122,7 +122,7 @@
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
                             (onSelected)="changeAnalyticsStorage($event)"></nx-select>
-                        <ng-container *ngIf="systemStorageChosen">
+                        <ng-container *ngIf="systemStorageChosen && !useDefaultAnalyticsStorage">
                             <span></span>
                             <div class="error-label">
                                 <p class="mb-0" translate>Analytics data can take up large amounts of space.</p>

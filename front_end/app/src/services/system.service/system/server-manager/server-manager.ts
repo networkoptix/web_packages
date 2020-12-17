@@ -79,6 +79,10 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
+    getAnalyticsEngines(serverId: string) {
+        return this.mediaserverConnections[serverId].getAnalyticsEngines();
+    }
+
     updateResource(resourceId: string, params: IParams) {
         const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
         return this.mediaserver.setResourceParams(mappedParams).toPromise();

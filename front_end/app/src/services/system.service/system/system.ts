@@ -44,9 +44,6 @@ export class NxSystem extends System {
 
     userManager: UserManager;
     serverManager: ServerManager;
-    cameraManager: CameraManager;
-    storageManager: StorageManager
-
     private _subscribersCount = new BehaviorSubject<number>(0);
 
     activeSubscription: Subscription;
