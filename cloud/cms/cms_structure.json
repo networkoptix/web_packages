@@ -504,7 +504,7 @@
             "label": "Host",
             "name": "%SMTP_HOST%",
             "type": "text",
-            "value": "email-smtp.us-east-1.amazonaws.com",
+            "value": "",
             "description": "Host url for smtp server",
             "advanced": true
           },
@@ -512,7 +512,7 @@
             "label": "User",
             "name": "%SMTP_USER%",
             "type": "text",
-            "value": "AKIAJ3DYMIZMDABS43UA",
+            "value": "",
             "description": "User for smtp server",
             "advanced": true
           },
@@ -520,7 +520,7 @@
             "label": "Password",
             "name": "%SMTP_PASSWORD%",
             "type": "text",
-            "value": "AnC4VkpbBKXPCbik/gBru508QaG8L86uu2cTzTg5yDkI",
+            "value": "",
             "description": "Password smtp server",
             "advanced": true
           },
@@ -528,7 +528,7 @@
             "label": "Port",
             "name": "%SMTP_PORT%",
             "type": "text",
-            "value": "587",
+            "value": "",
             "description": "Port for smtp server",
             "advanced": true
           },
