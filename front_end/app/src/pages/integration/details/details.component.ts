@@ -32,25 +32,27 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     private menuDetailsSubscription: Subscription;
     private routeSubscription: Subscription;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
+    private setupDefaults() {
     }
 
-    constructor(configService: NxConfigService,
-                public sanitizer: DomSanitizer,
-                private router: Router,
-                private route: ActivatedRoute,
-                private integrationService: IntegrationService,
-                private ribbonService: NxRibbonService,
-                // TODO: Use dialog service when it is not being downgraded
-                private dialogs: NxDialogsService,
-                private language: NxLanguageProviderService,
-                private menuService: NxMenuService,
-                private accountService: NxAccountService,
-                private pageService: NxPageService
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        public sanitizer: DomSanitizer,
+        private router: Router,
+        private route: ActivatedRoute,
+        private integrationService: IntegrationService,
+        private ribbonService: NxRibbonService,
+        // TODO: Use dialog service when it is not being downgraded
+        private dialogs: NxDialogsService,
+        private menuService: NxMenuService,
+        private accountService: NxAccountService,
+        private pageService: NxPageService
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -112,7 +114,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     );
                                 }
 
-                                this.pageService.pageTitle = `${this.plugin.information.name} - ${this.CONFIG.cloudName}`;
+                                // this is still 20.1 ... double braces will break translation service in 20.2
+                                // TODO: when merge into 20.2 mod the param notification
+                                this.pageService.pageTitle = this.LANG.pageDescriptions.integrationDetails
+                                    .replace('{{pluginName}}', this.plugin.information.name)
+                                    .replace('{{pluginShortDecr}}', this.CONFIG.vmsName);
+
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
                         }).add(() => {

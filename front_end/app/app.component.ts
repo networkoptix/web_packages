@@ -186,6 +186,8 @@ export class AppComponent {
                 limitation : integrationFilterLimitation
             };
             // @ts-ignore
+            this.CONFIG.integration.seoPageDesc = window.SETTINGS.integrationSeoPageDescription;
+            // @ts-ignore
             if (window.SETTINGS.appTypesForPlatform) {
                 // @ts-ignore
                 Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {

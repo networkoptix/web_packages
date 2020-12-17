@@ -43,6 +43,7 @@ def get_settings_from_cache():
         'footerItems': customization_cache.get('footer_items', []),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
+        'integrationSeoPageDescription': customization_cache.get('integration_seo_page_description', ''),
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
         'healthMonitoringEnabled': customization_cache.get('health_monitoring_enabled', False),
         'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),

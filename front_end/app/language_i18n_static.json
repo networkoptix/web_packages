@@ -535,7 +535,7 @@
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% for ",
         "failedToAccessSystem": "Failed to access system",
-        "integrations": "Integrations",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Page not found",
         "register": "Create account in",
@@ -551,7 +551,9 @@
         "view": "View cameras"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system."
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "too common",
