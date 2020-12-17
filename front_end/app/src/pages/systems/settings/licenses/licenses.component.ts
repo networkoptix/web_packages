@@ -61,7 +61,7 @@ export class NxSystemLicensesComponent implements OnInit {
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system
+                                this.system.serverManager
                                     .initSystemMediaServers()
                                     .catch(error => {
                                         console.error(error);

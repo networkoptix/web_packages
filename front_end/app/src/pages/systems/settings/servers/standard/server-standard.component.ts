@@ -380,7 +380,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (newStorage.id === this.currentAnalyticsDbId) return;
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
-        const analyticsData = await this.system.checkForAnalyticsData(this.selectedServer.id).toPromise();
+        const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)

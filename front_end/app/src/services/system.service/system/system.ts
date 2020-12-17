@@ -4,6 +4,11 @@ import {
 }                               from 'rxjs';
 import { flatMap, takeUntil, tap }   from 'rxjs/operators';
 
+import { ServerManager }    from './server-manager/server-manager';
+import { UserManager }      from './user-manager/user-manager';
+import { CameraManager }    from './camera-manager/camera-manager';
+import { StorageManager }   from './storage-manager/storage-manager';
+
 import { IConfig }                                  from '../../nx-config';
 import { NxCloudApiService }                        from '../../nx-cloud-api';
 import { NxSystemsService, NxSystemWithUserInfo }   from '../../systems.service';
@@ -14,18 +19,34 @@ import { SystemConfigSettings }                     from '../../system-api.types
 import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
 import { trim_ids as trimIds }                      from '../../../utils/api_response_cleaners';
 import { NxRibbonService }                          from '@components/ribbon';
-import { ServerManager }                            from './server-manager/server-manager';
-import { UserManager }                              from './user-manager/user-manager';
 import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
 }                                                   from './system-types';
+
+/**
+ * NxSystem has been largely refactored with a lot of methods being deprecated.
+ *
+ * Most behavior has been moved to manager classes.
+ *
+ * If your IDE shows a method as deprecated that means that is should probably be accessed from a manager class.
+ *
+ * Class methods have been organized with methods that are fine at the top, methods to be refactored and moved in the middle, and deprecated at the end.
+ *
+ * The manager classes to use should be documented on the method.
+ *
+ * TODO: Cleanup references to deprecated methods when you come accross them.
+ * If there are only a few references left to that method, then remove those references and delete the deprecated method.
+ */
 export class NxSystem extends System {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private userManager: UserManager;
-    private serverManager: ServerManager;
+    userManager: UserManager;
+    serverManager: ServerManager;
+    cameraManager: CameraManager;
+    storageManager: StorageManager
+
     private _subscribersCount = new BehaviorSubject<number>(0);
 
     activeSubscription: Subscription;
@@ -83,83 +104,6 @@ export class NxSystem extends System {
         this.infoSubject.next(system);
     }
 
-    // Start of userManger functions
-    get accessRole() {
-        return this.userManager.accessRole || '';
-    }
-
-    get accessRoles() {
-        return this.userManager.accessRoles;
-    }
-
-    get currentUser() {
-        return this.userManager.currentUser;
-    }
-
-    get isAdmin() {
-        return this.userManager.permissions.isAdmin;
-    }
-
-    get isOwner() {
-        return this.userManager.isOwner(this.userManager.currentUser);
-    }
-
-    get isMine() {
-        return this.userManager.isMine;
-    }
-
-    get permissions() {
-        return this.userManager.permissions;
-    }
-
-    get users() {
-        return this.userManager.users;
-    }
-
-    get cameras() {
-        return this.serverManager.cameras;
-    }
-
-    set cameras(newCameras: ICamera[]) {
-        this.serverManager.cameras = newCameras;
-    }
-
-    /**
-     * TODO: Need to update this method once better license information is available from server with details on license types.
-     */
-    getLicenseChannels(): Promise<{ total: number; used: number; available: number; }> {
-        return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
-            const parsedLicenses = licenses.map(this.parseLicense);
-            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
-                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
-            }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
-            const available = total - used;
-            return { total, used, available };
-        });
-    }
-
-    parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {
-        const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
-            const [curKey, curVal] = current.split('=');
-            return { ...parsed, [curKey]: curVal };
-        }, {});
-        return { key, ...parsedBlock };
-    }
-
-    // End of userManager get functions
-    // Start of serverManager functions
-    // @ts-ignore
-    get servers() {
-        return this.serverManager.servers;
-    }
-
-    get moduleInfo() {
-        return this.serverManager.moduleInfo;
-    }
-
-    // End of serverManager functions
     constructor(
         CONFIG: IConfig,
         LANG: LanguageI18NStaticTypes,
@@ -220,7 +164,7 @@ export class NxSystem extends System {
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval).pipe(
-            takeUntil(this.cancelPoll$.pipe(tap(() => console.info(`cancel polling on system ${this.systemInfo.id}`))))
+            takeUntil(this.cancelPoll$)
         );
         this.serverManager = new ServerManager(
             this.mediaserver,
@@ -229,13 +173,15 @@ export class NxSystem extends System {
             this.id,
             this.cloudApi
         );
-    }
 
-    getServerApiDoc(serverId: string) {
-        return this.serverManager
-            .getApiDoc(serverId).toPromise()
-            .catch(err => Promise.reject(err));
-    };
+        this.cameraManager = new CameraManager(
+            this.serverManager
+        );
+
+        this.storageManager = new StorageManager(
+            this.serverManager
+        );
+    }
 
     updateSystemAuth(force?: boolean) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
@@ -359,76 +305,6 @@ export class NxSystem extends System {
         return this.infoPromise;
     }
 
-    getUsersCachedInCloud(): Promise<NxSystemUser[]> {
-        this.isAvailable = false;
-        return this.cloudApi.users(this.id).toPromise().then((data: any) => {
-            if (data && data.resultCode === 'forbidden') {
-                return Promise.reject(data);
-            }
-            data.forEach((user) => {
-                user.isCloud = true;
-                user.permissions = this.userManager.normalizePermissionString(user.customPermissions);
-                user.email = user.accountEmail;
-            });
-            return data;
-        }).catch(err => err);
-    }
-
-    getUsersDataFromTheSystem() {
-        return this.userManager.getUsersDataFromTheSystem();
-    }
-
-    getUsers(reload?): Promise<void> {
-        if (!this.usersPromise || reload) {
-            let usersPromise: Promise<any>;
-            if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
-                usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
-                    this.isAvailable = true;
-                }).catch(() => {
-                    if (this.isAdmin) {
-                        return this.getUsersCachedInCloud().then((users) => {
-                            this.userManager.processUsers(users);
-                            return Promise.resolve();
-                        });
-                    } else {
-                        return Promise.resolve();
-                    }
-                });
-            } else if (this.isAdmin) { // or we get old cached data from the cloud
-                usersPromise = this.getUsersCachedInCloud().then((users) => {
-                    return this.userManager.processUsers(users);
-                });
-            } else {
-                this.isAvailable = false;
-                usersPromise = Promise.resolve();
-            }
-
-            this.usersPromise = usersPromise.then(() => {
-                this.userManager.checkPermissions();
-                // If system is reported to be online - try to get actual users list
-                this.systemInfo = this;
-            }); // Handling promise to satisfy the linter.
-        }
-        return this.usersPromise;
-    }
-
-    saveUser(user: NxSystemUser, role: NxSystemRole) {
-        return this.userManager.saveUser(user, role);
-    }
-
-    deleteUser(removedUser: NxSystemUser) {
-        return this.userManager.deleteUser(removedUser);
-    }
-
-    deleteFromCurrentAccount() {
-        if (this.isAvailable && this.currentUser && !this.currentUser.isAdmin) {
-            // Try to remove me from the system directly
-            this.userManager.deleteUser(this.currentUser);
-        }
-        // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, this.currentUserEmail);
-    }
-
     startPoll() {
         if (this.subscriberCount === 0) {
             if (this.CONFIG.isLocal || this.mediaserver.authGet) {
@@ -464,10 +340,10 @@ export class NxSystem extends System {
         this.ribbonService.hide();
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
-                .then(() => this.isOnline ? this.updateSystemServersCameras() : Promise.reject())
+                .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
                 .then(() => this.getUsers(true))
-                .then(() => this.getServers().toPromise())
-                .then(() => this.getCameras())
+                .then(() => this.serverManager.getServers().toPromise())
+                .then(() => this.cameraManager.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
@@ -477,17 +353,6 @@ export class NxSystem extends System {
                 });
         })).toPromise();
     };
-
-    updateSystemServersCameras() {
-        return this.serverManager.updateSystemServersCameras();
-    }
-
-    filterCamerasFromUserPermissions() {
-        const accessRights: { [resourceId: string]: true; } = this.currentUser.accessRights;
-        if (accessRights && this.cameras) {
-            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
-        }
-    }
 
     updateOrGetSystemSettings(updateParams = {}) {
         return this.mediaserver.updateOrGetSettings(updateParams);
@@ -506,101 +371,8 @@ export class NxSystem extends System {
         return this.mediaserver.removeStorage(updateParams);
     }
 
-    getServerStats(serverId, useCache = false) {
-        return this.serverManager.getServerStats(serverId, useCache);
-    }
-
-    getRecordStats(serverId, useCache = false) {
-        return this.serverManager.getRecordStats(serverId, useCache);
-    }
-
     getStorages<T>(queryParams?: T) {
         return this.mediaserver.getStoragesInfo(queryParams);
-    }
-
-    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
-        if (!updateParams?.serverId) {
-            return this.mediaserver.updateStorages(updateParams, customTimeout);
-        }
-        return this.serverManager.getStorages(updateParams.serverId, useCache, customTimeout);
-    }
-
-    checkForAnalyticsData(serverId: string) {
-        return this.serverManager.checkForAnalyticsData(serverId);
-    }
-
-    initSystemMediaServers() {
-        return this.serverManager.initSystemMediaServers();
-    }
-
-    getPreviewUrl(cameraId: string, time: number, width = 640, height = 480, rotate = 0) {
-        return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
-    }
-
-    getCameras() {
-        return this.serverManager.getCameras();
-    }
-
-    updateResource(id: string, params: IParams) {
-        return this.serverManager.updateResource(id, params);
-    }
-
-    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {
-        return this.serverManager.setCameraUserSettings(serverId, id, params);
-    }
-
-    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
-        return this.serverManager.updateRecordingSettings(updatedTask, cameraSettings);
-    }
-
-    setServerUserSettings(id: string, params: { [key: string]: string; }) {
-        return this.serverManager.setServerUserSettings(id, params);
-    }
-
-    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
-        return this.serverManager.updateOrGetBackupControl(serverId, action);
-    }
-
-    getServers() {
-        return this.serverManager.getServers();
-    }
-
-    getForceServers() {
-        return this.serverManager.getForceServers(false);
-    }
-
-    getModuleInfo(serverId?: string) {
-        return this.serverManager.getModuleInfo(serverId);
-    }
-
-    changeServerPort(port: number, serverId: string) {
-        return this.serverManager.changeServerPort(port, serverId);
-    }
-
-    renameServer(serverId: string, serverName: string) {
-        return this.serverManager.renameServer(serverId, serverName)
-            .then(() => this.update())
-            .catch(err => Promise.reject(err));
-    }
-
-    restartServer(serverId: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.restartServer(serverId)
-            .catch(err => Promise.reject(err));
-    }
-
-    detachFromSystem(serverId: string, currentPassword: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.detachFromSystem(serverId, currentPassword);
-    }
-
-    removeMediaserver(anotherServerId: string, currentServerId: string) {
-        return this.serverManager.removeMediaserver(anotherServerId, currentServerId);
-    }
-
-    restoreFactorySettings(serverId: string, currentPassword: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
@@ -615,14 +387,6 @@ export class NxSystem extends System {
         return this.mediaserver.getPeerSystems();
     }
 
-    logLevel(serverId: string) {
-        return this.serverManager.logLevel(serverId);
-    }
-
-    setLogLevels(serverId: string, loggers: IParams) {
-        return this.serverManager.setLogLevels(serverId, loggers);
-    }
-
     getHardwareIdsOfServers() {
         return this.mediaserver
             .getHardwareIdsOfServers()
@@ -633,10 +397,6 @@ export class NxSystem extends System {
         return this.mediaserver
             .getLicenses()
             .toPromise();
-    }
-
-    activateLicense(serverId, key) {
-        return this.serverManager.activateLicense(serverId, key);
     }
 
     // <added by @gbezyuk to fix auth race condition>
@@ -816,11 +576,380 @@ export class NxSystem extends System {
         );
     }
 
-    // </added by @gbezyuk for watch component>
     /**
-     * Storage server endpoints
+     * Methods and properties below need to be refactored and moved to respective manager classes.
+     *
+     * TODO: Refactor methods to be able to be used from within manager classes.
      */
-    rebuildArchive(serverId: string, type: number, action?: string) {
-        return this.serverManager.rebuildArchive(serverId, type, action);
+
+    /**
+     * TODO: This method needs to be refactored and moved into userManager.
+     * @deprecated Not really deprecated yet but should be soon.
+     */
+    getUsersCachedInCloud(): Promise<NxSystemUser[]> {
+        this.isAvailable = false;
+        return this.cloudApi.users(this.id).toPromise().then((data: any) => {
+            if (data && data.resultCode === 'forbidden') {
+                return Promise.reject(data);
+            }
+            data.forEach((user) => {
+                user.isCloud = true;
+                user.permissions = this.userManager.normalizePermissionString(user.customPermissions);
+                user.email = user.accountEmail;
+            });
+            return data;
+        }).catch(err => err);
+    }
+
+    /**
+     * TODO: This method needs to be refactored and moved into userManager.
+     * @deprecated Not really deprecated yet but should be soon.
+     */
+    getUsers(reload?): Promise<void> {
+        if (!this.usersPromise || reload) {
+            let usersPromise: Promise<any>;
+            if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
+                usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
+                    this.isAvailable = true;
+                }).catch(() => {
+                    if (this.isAdmin) {
+                        return this.getUsersCachedInCloud().then((users) => {
+                            this.userManager.processUsers(users);
+                            return Promise.resolve();
+                        });
+                    } else {
+                        return Promise.resolve();
+                    }
+                });
+            } else if (this.isAdmin) { // or we get old cached data from the cloud
+                usersPromise = this.getUsersCachedInCloud().then((users) => {
+                    return this.userManager.processUsers(users);
+                });
+            } else {
+                this.isAvailable = false;
+                usersPromise = Promise.resolve();
+            }
+
+            this.usersPromise = usersPromise.then(() => {
+                this.userManager.checkPermissions();
+                // If system is reported to be online - try to get actual users list
+                this.systemInfo = this;
+            }); // Handling promise to satisfy the linter.
+        }
+        return this.usersPromise;
+    }
+
+    /**
+     * TODO: This should be refactored to be moved into cameraManager
+     * @deprecated Not really deprecated yet but should be soon.
+     */
+    filterCamerasFromUserPermissions() {
+        const accessRights: { [resourceId: string]: true; } = this.currentUser.accessRights;
+        if (accessRights && this.cameras) {
+            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
+        }
+    }
+
+    /**
+     * TODO: Refactor to allow for accessing straight from serverManager
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
+        if (!updateParams?.serverId) {
+            return this.mediaserver.updateStorages(updateParams, customTimeout);
+        }
+        return this.serverManager.getStorages(updateParams.serverId, useCache, customTimeout);
+    }
+
+    /**
+     * Methods and properties below are deprecated.
+     *
+     * They should instead be accessed from their respective manager classes.
+     *
+     * New code should reference from manager classes.
+     *
+     * TODO: Refactor old code and remove deprecated methods.
+     */
+
+    // Start of deprecated userManger methods
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    getUsersDataFromTheSystem() {
+        return this.userManager.getUsersDataFromTheSystem();
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    saveUser(user: NxSystemUser, role: NxSystemRole) {
+        return this.userManager.saveUser(user, role);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    deleteUser(removedUser: NxSystemUser) {
+        return this.userManager.deleteUser(removedUser);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    deleteFromCurrentAccount() {
+        if (this.isAvailable && this.currentUser && !this.currentUser.isAdmin) {
+            // Try to remove me from the system directly
+            this.userManager.deleteUser(this.currentUser);
+        }
+        // Anyway - send another request to cloud_db to remove my this
+        return this.cloudApi.unshare(this.id, this.currentUserEmail);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get accessRole() {
+        return this.userManager.accessRole || '';
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get accessRoles() {
+        return this.userManager.accessRoles;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get currentUser() {
+        return this.userManager.currentUser;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get isAdmin() {
+        return this.userManager.permissions.isAdmin;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get isOwner() {
+        return this.userManager.isOwner(this.userManager.currentUser);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get isMine() {
+        return this.userManager.isMine;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get permissions() {
+        return this.userManager.permissions;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from userManager instead of directly from system.
+     */
+    get users() {
+        return this.userManager.users;
+    }
+
+    // Start of deprecated cameraManager methods
+
+    /**
+     * @deprecated Property should be refrenced from cameraManager instead of directly for system.
+     */
+    get cameras() {
+        return this.cameraManager.cameras;
+    }
+
+    set cameras(newCameras: ICamera[]) {
+        this.cameraManager.cameras = newCameras;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     */
+    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        return this.cameraManager.updateRecordingSettings(updatedTask, cameraSettings);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     */
+    getCameras() {
+        return this.cameraManager.getCameras();
+    }
+
+    /**
+     * @deprecated Method should be refrenced from cameraManager instead of directly from system.
+     */
+    updateSystemServersCameras() {
+        return this.cameraManager.updateSystemServersCameras();
+    }
+
+    // Start of deprecated serverManager methods
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getPreviewUrl(cameraId: string, time: number, width = 640, height = 480, rotate = 0) {
+        return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
+    }
+
+    updateResource(id: string, params: IParams) {
+        return this.serverManager.updateResource(id, params);
+    }
+
+    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {
+        return this.serverManager.setCameraUserSettings(serverId, id, params);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    setServerUserSettings(id: string, params: { [key: string]: string; }) {
+        return this.serverManager.setServerUserSettings(id, params);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getServers() {
+        return this.serverManager.getServers();
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getForceServers() {
+        return this.serverManager.getForceServers(false);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getModuleInfo(serverId?: string) {
+        return this.serverManager.getModuleInfo(serverId);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    changeServerPort(port: number, serverId: string) {
+        return this.serverManager.changeServerPort(port, serverId);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    renameServer(serverId: string, serverName: string) {
+        return this.serverManager.renameServer(serverId, serverName)
+            .then(() => this.update())
+            .catch(err => Promise.reject(err));
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    restartServer(serverId: string) {
+        this.currentServerNotBusy = false;
+        return this.serverManager.restartServer(serverId)
+            .catch(err => Promise.reject(err));
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    detachFromSystem(serverId: string, currentPassword: string) {
+        this.currentServerNotBusy = false;
+        return this.serverManager.detachFromSystem(serverId, currentPassword);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    removeMediaserver(anotherServerId: string, currentServerId: string) {
+        return this.serverManager.removeMediaserver(anotherServerId, currentServerId);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    restoreFactorySettings(serverId: string, currentPassword: string) {
+        this.currentServerNotBusy = false;
+        return this.serverManager.restoreFactorySettings(serverId, currentPassword);
+    }
+
+    // </added by @gbezyuk for watch component>
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     * TODO: Need to update this method once better license information is available from server with details on license types.
+     */
+    getLicenseChannels(): Promise<{ total: number; used: number; available: number; }> {
+        return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
+            const parsedLicenses = licenses.map(this.serverManager.parseLicense);
+            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
+                const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
+                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
+            }, 0);
+            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const available = total - used;
+            return { total, used, available };
+        });
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    // @ts-ignore
+    get servers() {
+        return this.serverManager.servers;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    get moduleInfo() {
+        return this.serverManager.moduleInfo;
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getServerApiDoc(serverId: string) {
+        return this.serverManager
+            .getApiDoc(serverId).toPromise()
+            .catch(err => Promise.reject(err));
+    };
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    logLevel(serverId: string) {
+        return this.serverManager.logLevel(serverId);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    setLogLevels(serverId: string, loggers: IParams) {
+        return this.serverManager.setLogLevels(serverId, loggers);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    activateLicense(serverId, key) {
+        return this.serverManager.activateLicense(serverId, key);
     }
 }
