@@ -234,6 +234,13 @@ export class NxSystemStorageComponent implements OnInit {
                             store.statusTooltip = '';
                             if (store.isOnline) {
                                 if (
+                                    store.storageId.startsWith('/') ||
+                                    store.storageStatus.includes('system') &&
+                                    store.totalSpace < (storage.freeSpace / 6)
+                                ) {
+                                    store.status = STORAGE_STATUS.RESERVED;
+                                    store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
+                                } else if (
                                     store.storageStatus.includes('tooSmall') ||
                                     store.storageStatus.includes('removable') &&
                                     store.totalSpace < (storage.freeSpace / 6) ||
@@ -241,13 +248,6 @@ export class NxSystemStorageComponent implements OnInit {
                                 ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
-                                } else if (
-                                    store.storageId.startsWith('/') ||
-                                    store.storageStatus.includes('system') &&
-                                    store.totalSpace < (storage.freeSpace / 6)
-                                ) {
-                                    store.status = STORAGE_STATUS.RESERVED;
-                                    store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
                                 }
                             } else {
                                 store.status = STORAGE_STATUS.BEING_CHECKED;
