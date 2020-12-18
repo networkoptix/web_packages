@@ -6,7 +6,8 @@ export interface IAddParamsRaw {
 export type IParsedAddParams = Partial<_ParsedAddParams>;
 
 export interface ICamera {
-    addParams: IAddParamsRaw[];
+    addParams?: IAddParamsRaw[];
+    addParamsRaw?: IAddParamsRaw[]
     parsedAddParams: IParsedAddParams;
     rotation?: number | string;
     overrideAr?: number | string;

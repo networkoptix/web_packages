@@ -20,7 +20,7 @@ import { NxProcessService, Process } from '../../../../../services/process.servi
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../../../menu';
-import { NxSystem }                  from '../../../../../services/system.service';
+import { ICamera, NxSystem }         from '../../../../../services/system.service';
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
@@ -203,13 +203,27 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (!this.applyService.locked) {
             this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
-
+        const checkForPlugins = (cameras: false |ICamera[]) => {
+            if (!cameras) {
+                return false;
+            }
+            const checkCamera = (camera: ICamera) => {
+                const onThisServer = camera.parentId === this.selectedServer.id;
+                const compatibleAnalyticsEngines = JSON.parse(
+                    camera.addParamsRaw.find(({
+                        name
+                    }) => name === 'compatibleAnalyticsEngines')?.value
+                );
+                return onThisServer && compatibleAnalyticsEngines && compatibleAnalyticsEngines.length;
+            };
+            return cameras.reduce((hasEnabled, camera) => hasEnabled || checkCamera(camera), false);
+        };
         this.analyticsSubscription = this.system.serverManager.checkForAnalyticsData(this.selectedServer.id).pipe(
             switchMap((analyticsData) => analyticsData.length
                 ? of(true)
-                : this.system.serverManager.getAnalyticsEngines(this.selectedServer.id)
+                : this.system.cameraManager.getCameras()
             ),
-            map(plugins => !!plugins.length),
+            map(plugins => plugins === true || checkForPlugins(plugins)),
             catchError(err => {
                 console.error(err);
                 return of(false);
