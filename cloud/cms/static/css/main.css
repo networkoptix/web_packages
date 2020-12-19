@@ -277,6 +277,30 @@ img.light {
     min-height: 500px;
 }
 
+#inlineErrorHelper:not(.errorHelperText) {
+    display: none;
+}
+
+.errorHelperText {
+    margin-top: 8px;
+    color: red;
+}
+
+#menuPreviewErrors {
+    float: right;
+    margin-bottom: 16px;
+}
+
+.errorBlock {
+    margin: 8px 16px;
+    padding: 4px 24px;
+    color: white;
+    background: red;
+    border-radius: 4px;
+    text-align: center;
+    border: 2px solid #3f545f;
+}
+
 .split {
     flex-grow: 1;
 }

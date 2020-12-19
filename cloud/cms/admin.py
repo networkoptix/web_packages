@@ -948,6 +948,9 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         return fields
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
+        menu = Menu.objects.get(id=object_id)
+        extra_context = extra_context or {}
+        extra_context['preview_url'] = menu.preview_url
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(

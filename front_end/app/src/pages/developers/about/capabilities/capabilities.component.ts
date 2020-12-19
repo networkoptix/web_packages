@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
+import { WINDOW } from '@services/window-provider';
 
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -15,6 +16,7 @@ export class NxCapabilitiesComponent {
     @Input() capabilitiesNode: AboutNode;
 
     CONFIG: IConfig;
+    errorManager: ErrorStateManager;
 
     getCapabilityBlockStyle(capability: AboutNode) {
         const backgroundColor = capability.icon.split(' ')[2] || '#35464f';
@@ -25,7 +27,27 @@ export class NxCapabilitiesComponent {
         return ({ backgroundColor, backgroundImage });
     }
 
-    constructor(configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window
+    ) {
         this.CONFIG = configService.config;
+        this.errorManager = new ErrorStateManager(this.window);
+    }
+
+    ngOnInit() {
+        const capabilitiesConfig = this.errorManager.buildConfig(
+            ['displayName', 'icon', 'title', 'nodes'],
+            this.errorManager.buildConfig(
+                ['title', 'displayName', 'icon'],
+                null,
+                this.errorManager.buildConfig(
+                    ['title', 'shortDescription', 'blocks']
+                ))
+        );
+        this.errorManager.checkAboutNode(
+            this.capabilitiesNode,
+            capabilitiesConfig
+        );
     }
 };

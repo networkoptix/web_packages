@@ -5,6 +5,8 @@ import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxUtilsService } from '../../../../services/utils.service';
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
+import { ErrorStateManager } from '../error-state/error-state-manager';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -16,9 +18,29 @@ export class NxGetStartedComponent implements OnChanges {
     @Input() getStartedNode: AboutNode;
     CONFIG: IConfig;
     steps: AboutNode;
+    errorManager: ErrorStateManager;
 
-    constructor(configService: NxConfigService, @Inject(DOCUMENT) private document: Document) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window) {
         this.CONFIG = configService.config;
+        this.errorManager = new ErrorStateManager(this.window);
+    }
+
+    ngOnInit() {
+        const capabilitiesConfig = this.errorManager.buildConfig(
+            ['title'],
+            this.errorManager.buildConfig(
+                ['icon', 'url', 'title'],
+                null,
+                this.errorManager.buildConfig(
+                    ['title']
+                )
+            ));
+        this.errorManager.checkAboutNode(
+            this.getStartedNode,
+            capabilitiesConfig
+        );
     }
 
     ngOnChanges(changes: SimpleChanges): void {

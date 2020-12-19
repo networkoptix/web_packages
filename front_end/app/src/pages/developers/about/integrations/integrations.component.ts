@@ -8,6 +8,7 @@ import { AboutNode } from '../about.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { WINDOW } from '@services/window-provider';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -17,6 +18,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;
+
+    errorManager: ErrorStateManager;
 
     currentWindowWidth: number;
     scrollIndex = 0;
@@ -94,6 +97,7 @@ export class NxIntegrationsComponent implements OnInit {
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
+        this.errorManager = new ErrorStateManager(this.window);
         this.cloudApi.getIntegrationsCount().subscribe(data => {
             this.pluginCount = data.count || 0;
         });
@@ -101,5 +105,19 @@ export class NxIntegrationsComponent implements OnInit {
 
     ngOnInit() {
         this.currentWindowWidth = window.innerWidth;
+
+        const integrationsConfig = this.errorManager.buildConfig(
+            ['title', 'url'],
+            this.errorManager.buildConfig(
+                ['title'],
+                null,
+                this.errorManager.buildConfig(
+                    ['title', 'shortDescription', 'blocks']
+                ))
+        );
+        this.errorManager.checkAboutNode(
+            this.integrationsNode,
+            integrationsConfig
+        );
     }
 };

@@ -9,7 +9,7 @@
         </ng-container>
     </div>
 </ng-template>
-<ng-container *ngIf="router.url === '/docs/' + baseName">
+<ng-container *ngIf="path === '/docs/' + baseName">
     <ng-container *ngIf="aboutStructure;else preloader">
         <ng-container *ngFor="let node of aboutStructure" [ngSwitch]="node.template">
             <ng-container *ngSwitchCase="aboutCases.INTRO">

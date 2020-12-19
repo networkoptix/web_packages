@@ -1,3 +1,7 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
 <ng-template #stepBlock let-block="block" let-step="step">
     <div class="detail-wrapper">
         <div class="detail-block" [routerLink]="block.url"
@@ -14,7 +18,7 @@
         </div>
     </div>
 </ng-template>
-<ng-container *ngIf="steps.nodes">
+<ng-container *ngIf="!errorManager.hasErrors;else showError">
     <h2 class="get-started-heading" [routerLink]="steps.url">{{steps.title}}</h2>
     <section class="get-started-section">
         <div class="get-started-blocks">

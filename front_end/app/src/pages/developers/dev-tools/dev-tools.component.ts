@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxAccountService } from '../../../services/account.service';
@@ -7,6 +7,8 @@ import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { AboutNode } from '../about/about.component';
 import { takeWhile } from 'rxjs/operators';
+import { ErrorStateManager } from '../about/error-state/error-state-manager';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -20,15 +22,18 @@ export class NxDevToolsComponent implements OnInit {
 
     CONFIG: IConfig;
     menuName = '';
+    errorManager: ErrorStateManager;
 
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
         private accountService: NxAccountService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
+        this.errorManager = new ErrorStateManager(this.window);
         if (!this.devToolsNode) {
             const mapToDevToolsNode = ({
                 name,
@@ -65,5 +70,16 @@ export class NxDevToolsComponent implements OnInit {
             snapshot = snapshot.parent;
         }
         this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
+
+        const devToolsConfig = this.errorManager.buildConfig(
+            ['title', 'nodes'],
+            this.errorManager.buildConfig(
+                ['title', 'url', 'icon']
+            )
+        );
+        this.errorManager.checkAboutNode(
+            this.devToolsNode as AboutNode,
+            devToolsConfig
+        );
     }
 }

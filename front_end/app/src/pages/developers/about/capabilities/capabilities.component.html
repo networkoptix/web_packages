@@ -1,3 +1,7 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
 <ng-template #capabilityBlock let-capability="capability">
     <div class="card capability-card" [routerLink]="capability.url">
         <header [ngStyle]="getCapabilityBlockStyle(capability)">
@@ -10,7 +14,7 @@
     </div>
 </ng-template>
 
-<section *ngIf="capabilitiesNode.nodes" class="capabilities">
+<section *ngIf="capabilitiesNode.nodes && !errorManager.hasErrors; else showError" class="capabilities">
     <h2 class="heading-link">{{capabilitiesNode.title}}</h2>
     <div class="detail-blocks">
         <ng-container *ngFor="let capability of capabilitiesNode.nodes">

@@ -166,7 +166,7 @@ def find_asset_knowledgebase(asset, base_url):
     return ''
 
 
-def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None):
+def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False):
     for node in parent:
         asset_id = node.get('asset_id', None)
         if asset_id:
@@ -175,8 +175,12 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
             if asset:
                 if asset_type == AssetType.ASSET_TYPES.documentation:
                     docs = generate_doc_json(
-                        [asset], language=language, global_contexts=global_contexts,
-                        global_contexts_dict=global_contexts_dict
+                        [asset],
+                        language=language,
+                        global_contexts=global_contexts,
+                        global_contexts_dict=global_contexts_dict,
+                        draft=draft,
+                        review=review
                     )
                     if docs:
                         node['asset'] = docs[0]
@@ -187,7 +191,12 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                         node['asset'] = integrations[0]
         if node.get('nodes', None):
             prepare_menu_dict(
-                node['nodes'], base_url, language, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict
+                node['nodes'],
+                base_url, language,
+                global_contexts=global_contexts,
+                global_contexts_dict=global_contexts_dict,
+                draft=draft,
+                review=review
             )
 
 
@@ -196,7 +205,8 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
 def menu_to_endpoint(request, name):
     language = get_language_object_from_request(request)
     cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--struct--{name}'
-    menu_dict = DOC_CACHE[cache_id]
+    state = request.GET.get('state', '')
+    menu_dict = not state and DOC_CACHE[cache_id]
     if not menu_dict:
         menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
         if not menu:
@@ -206,6 +216,16 @@ def menu_to_endpoint(request, name):
         cloud_portal = get_cloud_portal_asset()
         global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-        prepare_menu_dict(menu_dict, base_url, language=language, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict)
+        draft = state == 'draft'
+        review = state == 'pending'
+        prepare_menu_dict(
+            menu_dict,
+            base_url,
+            language=language,
+            global_contexts=global_contexts,
+            global_contexts_dict=global_contexts_dict,
+            draft=draft,
+            review=review
+        )
         DOC_CACHE[cache_id] = menu_dict
     return api_success(menu_dict)

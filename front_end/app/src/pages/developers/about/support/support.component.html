@@ -1,4 +1,8 @@
-<div class="support-footer">
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
+<div *ngIf="!errorManager.hasErrors; else showError" class="support-footer">
     <h2 class="support-link"[routerLink]="cleanSupportNode.url">{{cleanSupportNode.title}}</h2>
     <div class="support-wrapper">
         <div class="left-image">
