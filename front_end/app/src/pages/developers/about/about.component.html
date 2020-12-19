@@ -24,6 +24,7 @@
             <nx-integrations *ngSwitchCase="aboutCases.INTEGRATIONS" [integrationsNode]="node.node"></nx-integrations>
             <nx-support *ngSwitchCase="aboutCases.SUPPORT" [supportNode]="node.node"></nx-support>
             <nx-supported-tech *ngSwitchCase="aboutCases.SUPPORTED_TECH" [supportedTechNode]="node.node"></nx-supported-tech>
+            <nx-error-state *ngSwitchDefault [errors]="getInvalidTemplateError(node)"></nx-error-state>
         </ng-container>
     </ng-container>
 </ng-container>

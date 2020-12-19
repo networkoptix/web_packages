@@ -45,6 +45,22 @@ export class NxAboutComponent {
         return this.router.url.split('?')[0];
     }
 
+    getInvalidTemplateError({ template, node: { title } }: {template: string, node: AboutNode}) {
+        const helper = template
+            ? `Template name "${template}" is not a valid template`
+            : 'Template name is required';
+        return {
+            name     : title,
+            [helper] : Object.values(AboutTemplates).reduce((
+                rest, cur, ind, arr
+            ) => `${rest}"${cur}"${
+                arr.length === 1
+                    ? ''
+                    : ind === arr.length - 2 ? ', and ' : ', '}`,
+            'Valid templates are ')
+        };
+    }
+
     constructor(
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
