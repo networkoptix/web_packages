@@ -1,3 +1,7 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
 <ng-template #integrationBlock let-integration="integration">
     <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]" [ngbTooltip]="integration.asset.information.shortDescription">
         <img [src]="integration.asset.information.logo" [alt]="integration.title">
@@ -19,7 +23,7 @@
     </div>
 </ng-template>
 
-<section class="integrations">
+<section *ngIf="!errorManager.hasErrors; else showError" class="integrations">
     <h2 class="heading-link" [routerLink]="integrationsNode.url">{{integrationsNode.title}}</h2>
     <div class="integrations-wrapper">
         <div class="card info-block">

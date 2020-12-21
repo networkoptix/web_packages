@@ -1,4 +1,5 @@
 <nx-standard-server-component
+    *ngIf="system"
     (loaded)="serverLoaded = $event"
     [storageInfoLoaded]="storageInfoLoaded"
     [isOffline]="isOffline"
@@ -9,7 +10,7 @@
 </nx-standard-server-component>
 
 <nx-server-storage-component
-    *ngIf="!isOffline && system && (serverId$ | async)"
+    *ngIf="!isOffline && serverLoaded && system && (serverId$ | async)"
     [system]="system"
     (storageEmit)="updateStorage($event)"
     (storageInfoLoaded)="storageInfoLoaded = $event"

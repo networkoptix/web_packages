@@ -1,4 +1,5 @@
 @use '../../../styles/_theme_variables' as *;
+@use '../../styles/typography';
 @use '../../styles/mixins';
 
 nx-process-button {
@@ -129,5 +130,10 @@ nx-process-button {
             height: 22px !important;
             font-size: 0.8rem;
         }
+    }
+
+    .text-only {
+        @include typography.light13;
+        cursor: pointer;
     }
 }

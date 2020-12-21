@@ -4,6 +4,7 @@ import { UntilDestroy }     from '@ngneat/until-destroy';
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
 import { WINDOW } from '../../../../services/window-provider';
+import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -15,8 +16,33 @@ export class NxSupportedTechComponent {
     @Input() supportedTechNode: AboutNode;
 
     CONFIG: IConfig;
+    errorManager: ErrorStateManager;
 
-    constructor(configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window
+    ) {
         this.CONFIG = configService.config;
+        this.errorManager = new ErrorStateManager(this.window);
+    }
+
+    ngOnInit() {
+        const supportedTechConfig = this.errorManager.buildConfig(
+            ['url', 'title', 'nodes'],
+            [
+                this.errorManager.buildConfig(
+                    ['title'],
+                    this.errorManager.buildConfig(['title', 'url', 'icon'])
+                ),
+                this.errorManager.buildConfig(
+                    ['title'],
+                    this.errorManager.buildConfig(['title', 'url'])
+                )
+            ]
+        );
+        this.errorManager.checkAboutNode(
+            this.supportedTechNode,
+            supportedTechConfig
+        );
     }
 };

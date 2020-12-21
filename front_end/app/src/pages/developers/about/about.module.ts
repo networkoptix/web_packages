@@ -13,6 +13,7 @@ import { NxDevToolsComponent }     from '../dev-tools/dev-tools.component';
 import { NxGetStartedComponent }   from './get-started/get-started.component';
 import { NxIntegrationsComponent } from './integrations/integrations.component';
 import { NxSupportComponent }      from './support/support.component';
+import { NxErrorStateComponent }   from './error-state/error-state.component';
 import {
     NxSupportedTechComponent
 }                                  from './supported-tech/supported-tech.component';
@@ -44,7 +45,9 @@ const appRoutes: Routes = [
         NxGetStartedComponent,
         NxIntegrationsComponent,
         NxSupportComponent,
-        NxAboutComponent
+        NxAboutComponent,
+        NxErrorStateComponent
+
     ],
     bootstrap : [],
     exports: [
@@ -54,7 +57,8 @@ const appRoutes: Routes = [
         NxGetStartedComponent,
         NxIntegrationsComponent,
         NxSupportComponent,
-        NxAboutComponent
+        NxAboutComponent,
+        NxErrorStateComponent
     ]
 })
 export class NxAboutModule {}

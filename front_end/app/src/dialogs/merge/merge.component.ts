@@ -111,106 +111,101 @@ export class MergeModalContent {
         this.init();
     }
 
-    init(targetSystem?, currentUrl?) {
+    async init(targetSystem?, currentUrl?) {
         this.dryRunAvailable = this.system.info.capabilities.merge_systems >= 1;
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
-            return this.getPeerSystems()
-                .then(() => {
-                    return this.user.get().then(account => {
-                        this.account = account;
-                        return Promise.all(
-                            this.systems.map(async system => {
-                                if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
-                                    const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
-                                    try {
-                                        const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
-                                        system.moduleInfo = moduleInfo.reply;
-                                    } catch (err) {
-                                        system.status = 'offline';
-                                        system.stateOfHealth = 'offline';
-                                        console.error(err);
-                                    }
-                                    tempSystemService.stopPoll();
-                                }
-                                if (system.moduleInfo) {
-                                    system.protoVersion = system.moduleInfo.protoVersion;
-                                    system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                                    if (system.moduleInfo.remoteAddresses) {
-                                        system.moduleInfo.remoteAddresses.forEach((addy: string) => {
-                                            const ip = NxUtilsService.cleanIp(addy);
-                                            this.systemUrls[`${ip}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
-                                        });
-                                    }
-                                }
-                            })
-                        );
-                    });
-                })
-                .then(() => {
-                    if (this.systems.length === 0 && this.peerSystems.length === 0) {
-                        this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
-                        this.secondarySystem = this.targetSystem;
-                        this.updateShow('noOtherSystemServerUrl');
-                    } else {
-                        if (this.systems.length) {
-                            this.processedSystems.push(
-                                ...this.makeSelectorList(this.systems),
-                                { name: 'horizontal' }
-                            );
+            await this.system.serverManager.getModuleInfo().toPromise();
+            await this.getPeerSystems();
+            this.account = await this.user.get();
+            await Promise.all(
+                this.systems.map(async system => {
+                    if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
+                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
+                        try {
+                            const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
+                            system.moduleInfo = moduleInfo.reply;
+                        } catch (err) {
+                            system.status = 'offline';
+                            system.stateOfHealth = 'offline';
+                            console.error(err);
                         }
-                        if (this.peerSystems.length) {
-                            this.processedSystems.push(
-                                ...this.makeSelectorList(this.peerSystems),
-                                { name: 'horizontal' }
-                            );
-                        }
-                        this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() });
-                        if (targetSystem) {
-                            this.systemsService.forceUpdateSystems();
-                            const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
-                                this.systems = systems || [];
-                                const updatedTargetSystem = [...this.systems, ...this.peerSystems]
-                                    .find(system => system.id === targetSystem.id);
-                                if (updatedTargetSystem) {
-                                    updatedTargetSystem.value = updatedTargetSystem.id;
-                                }
-                                this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText?.() });
-                                this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
+                        tempSystemService.stopPoll();
+                    }
+                    if (system.moduleInfo) {
+                        system.protoVersion = system.moduleInfo.protoVersion;
+                        system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                        if (system.moduleInfo.remoteAddresses) {
+                            system.moduleInfo.remoteAddresses.forEach((addy: string) => {
+                                const ip = NxUtilsService.cleanIp(addy);
+                                this.systemUrls[`${ip}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
                             });
-                            systemsSubscription.unsubscribe();
-                        } else {
-                            this.targetSystem = this.selectDefaultSystem();
-                            this.secondarySystem = this.targetSystem;
-                            this.getSecondaryName();
-                            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-                            this.systemMergeable = this.checkMergeability(this.targetSystem);
-                            if (this.systemMergeable) {
-                                this.updateShow(
-                                    this.checkMergeError,
-                                    { checkingErrorText: this.systemMergeable }
-                                );
-                            } else {
-                                let show = this.checkMergeDefault;
-                                const templateUpdates: any = {
-                                    helpText       : this.LANG.dialogs.merge.ownerCanMergeText?.(),
-                                    selectedTarget : this.targetSystemDropdown.value
-                                };
-                                if (this.targetSystemDropdown.peer) {
-                                    show = this.serverUrlState;
-                                    templateUpdates.serverUrlInputValue = currentUrl || this.targetSystem.url;
-                                    delete templateUpdates.helpText;
-                                }
-                                this.updateShow(show, templateUpdates);
-                            }
                         }
                     }
-                    this.systemsLoaded = true;
-                    this.systemUpdating = false;
-                    this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
-                    this.initProcesses();
-                });
+                })
+            );
+            if (this.systems.length === 0 && this.peerSystems.length === 0) {
+                this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
+                this.secondarySystem = this.targetSystem;
+                this.updateShow('noOtherSystemServerUrl');
+            } else {
+                if (this.systems.length) {
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.systems),
+                        { name: 'horizontal' }
+                    );
+                }
+                if (this.peerSystems.length) {
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.peerSystems),
+                        { name: 'horizontal' }
+                    );
+                }
+                this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() });
+                if (targetSystem) {
+                    this.systemsService.forceUpdateSystems();
+                    const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
+                        this.systems = systems || [];
+                        const updatedTargetSystem = [...this.systems, ...this.peerSystems]
+                            .find(system => system.id === targetSystem.id);
+                        if (updatedTargetSystem) {
+                            updatedTargetSystem.value = updatedTargetSystem.id;
+                        }
+                        this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText?.() });
+                        this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
+                    });
+                    systemsSubscription.unsubscribe();
+                } else {
+                    this.targetSystem = this.selectDefaultSystem();
+                    this.secondarySystem = this.targetSystem;
+                    this.getSecondaryName();
+                    this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+                    this.systemMergeable = this.checkMergeability(this.targetSystem);
+                    if (this.systemMergeable) {
+                        this.updateShow(
+                            this.checkMergeError,
+                            { checkingErrorText: this.systemMergeable }
+                        );
+                    } else {
+                        let show = this.checkMergeDefault;
+                        const templateUpdates: any = {
+                            helpText       : this.LANG.dialogs.merge.ownerCanMergeText?.(),
+                            selectedTarget : this.targetSystemDropdown.value
+                        };
+                        if (this.targetSystemDropdown.peer) {
+                            show = this.serverUrlState;
+                            templateUpdates.serverUrlInputValue = currentUrl || this.targetSystem.url;
+                            delete templateUpdates.helpText;
+                        }
+                        this.updateShow(show, templateUpdates);
+                    }
+                }
+            }
+            this.systemsLoaded = true;
+            this.systemUpdating = false;
+            this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+            this.initProcesses();
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
         }
@@ -402,7 +397,7 @@ export class MergeModalContent {
                         }
                         const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
                         this.updateShow(
-                            this.targetSystem.systemName || this.targetSystem.name || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
+                            this.targetSystem.systemName || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
                             { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
                         );
                     }
@@ -673,8 +668,8 @@ export class MergeModalContent {
             let systems;
             try {
                 systems = await Promise.all([
-                    this.system.mediaserver.getModuleInfo().toPromise(),
-                    this.targetSystemService.mediaserver.getModuleInfo().toPromise()
+                    this.system.serverManager.getModuleInfo().toPromise(),
+                    this.targetSystemService.serverManager.getModuleInfo().toPromise()
                 ]);
             } catch (err) {
                 if (err.status === 502) {

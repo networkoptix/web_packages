@@ -44,12 +44,6 @@ export class NxLeftMenuComponent implements OnInit {
         public location: Location
     ) {
         this.CONFIG = configService.config;
-        this.mouseLeave$.subscribe(assetId => {
-            console.info(
-                `%cSkipped prefetching document ${assetId}`,
-                'color:white;font-size:1.5rem;padding: .75rem 4rem;background-color:navy'
-            );
-        });
     }
 
     updateActive = (url: string) => {
@@ -108,12 +102,6 @@ export class NxLeftMenuComponent implements OnInit {
 
     prefetchAsset(assetId) {
         if (assetId) {
-            if (this.prefetchedDocuments.includes(assetId)) {
-                return console.info(
-                    `%cLink already prefetched for ${assetId}`,
-                    'color:gray;font-size:1.25rem;padding: .5rem 4rem;background-color:green'
-                );
-            }
             timer(250).pipe(takeUntil(this.mouseLeave$)).subscribe(() => {
                 this.prefetchedDocuments.push(assetId);
                 this.handlePrefetch.emit(assetId);

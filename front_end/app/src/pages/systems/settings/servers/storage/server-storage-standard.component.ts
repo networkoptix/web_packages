@@ -169,7 +169,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.storageSubscription = combineLatest([
                 this.refreshStorages$,
                 this.refreshStorages$.pipe(
-                    switchMap(() => this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
+                    switchMap(() => this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
                         tap(() => {
                             this.waitingForStorages = false;
                             this.storageInfoLoaded.emit(true);
@@ -178,7 +178,7 @@ export class NxSystemStorageComponent implements OnInit {
                         startWith(empty)
                     ))),
                 this.refreshStorages$.pipe(
-                    switchMap(() => this.system.getServerStats(this.serverId)),
+                    switchMap(() => this.system.serverManager.getServerStats(this.serverId)),
                     catchError(() => of(empty)),
                     startWith(empty))
             ]).pipe(map(results => ({ storage: results[0], storeInfo: results[1].reply?.storages || [], usage: results[2] })))
@@ -234,6 +234,13 @@ export class NxSystemStorageComponent implements OnInit {
                             store.statusTooltip = '';
                             if (store.isOnline) {
                                 if (
+                                    store.storageId.startsWith('/') ||
+                                    store.storageStatus.includes('system') &&
+                                    store.totalSpace < (storage.freeSpace / 6)
+                                ) {
+                                    store.status = STORAGE_STATUS.RESERVED;
+                                    store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
+                                } else if (
                                     store.storageStatus.includes('tooSmall') ||
                                     store.storageStatus.includes('removable') &&
                                     store.totalSpace < (storage.freeSpace / 6) ||
@@ -241,13 +248,6 @@ export class NxSystemStorageComponent implements OnInit {
                                 ) {
                                     store.status = STORAGE_STATUS.RESERVED;
                                     store.statusTooltip = this.LANG.storage.reservedTooSmallTooltip();
-                                } else if (
-                                    store.storageId.startsWith('/') ||
-                                    store.storageStatus.includes('system') &&
-                                    store.totalSpace < (storage.freeSpace / 6)
-                                ) {
-                                    store.status = STORAGE_STATUS.RESERVED;
-                                    store.statusTooltip = this.LANG.storage.reservedSystemTooltip();
                                 }
                             } else {
                                 store.status = STORAGE_STATUS.BEING_CHECKED;
@@ -379,12 +379,12 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     setDefaultBackupSettings = async() => {
-        await this.system.updateOrGetBackupControl(this.serverId, 'start');
+        await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
         await this.system.updateOrGetSystemSettings({
             backupNewCamerasByDefault: true, backupQualities: 'CameraBackupDefault'
         }).toPromise();
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
-        await this.system.initSystemMediaServers();
+        await this.system.serverManager.initSystemMediaServers();
         const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
             if (camera.backupType !== 'CameraBackupDefault') {
                 let retries = 5;
@@ -413,13 +413,13 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     turnOffBackup = async() => {
-        await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
-        const backupControlRes: any = await this.system.updateOrGetBackupControl(this.serverId);
+        await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
+        const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId);
 
         const state = backupControlRes && backupControlRes.reply?.state;
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
         if (state !== 'BackupState_None') {
-            await this.system.updateOrGetBackupControl(this.serverId, 'stop');
+            await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
         }
         if (state) {
             this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = false;
@@ -634,7 +634,7 @@ export class NxSystemStorageComponent implements OnInit {
         const updatedValues = this.storage$.value.map(toUpdateParams).filter(({ id }) => !id.startsWith('/')); // This handles edge case where storage doesn't have an id
         this.cancelPolling$.next('cancel existing polls');
         timer(500).pipe(
-            switchMap(() => !modesChanged ? of('stop') : this.system.updateOrGetSystemStorage(updatedValues, false, 60000)),
+            switchMap(() => !modesChanged ? of('stop') : this.system.storageManager.updateOrGetSystemStorage(updatedValues, false, 60000)),
             retry(5),
             takeUntil(this.cancelPolling$),
             untilDestroyed(this)
@@ -653,7 +653,7 @@ export class NxSystemStorageComponent implements OnInit {
                     this.updatingModes = [];
                     this.cancelPolling$.next('time ran out');
                 } else {
-                    this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000)
+                    this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000)
                         .pipe(
                             takeUntil(this.cancelPolling$),
                             untilDestroyed(this)
@@ -716,7 +716,7 @@ export class NxSystemStorageComponent implements OnInit {
             }
         };
 
-        const pollStorageStatus = (beingChecked) => this.system.updateOrGetSystemStorage({ serverId: this.serverId }, false, maxTimeout).pipe(
+        const pollStorageStatus = (beingChecked) => this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, false, maxTimeout).pipe(
             map(({ reply: { storages } }) => storages),
             tap(updateChangedStatus(beingChecked)),
             map(checkIfStoragesMissing(beingChecked)),
@@ -837,7 +837,7 @@ export class NxSystemStorageComponent implements OnInit {
             delay     : this.CONFIG.alertTimeout
         };
         let message: string;
-        return defer(() => this.system.rebuildArchive(this.serverId, type, action).pipe(
+        return defer(() => this.system.storageManager.rebuildArchive(this.serverId, type, action).pipe(
             map((res: any) => {
                 if (res.reply && res.reply.state === 'RebuildState_None') {
                     type ? this.percentMainDone = 1 : this.percentBackupDone = 1;
@@ -886,7 +886,7 @@ export class NxSystemStorageComponent implements OnInit {
     cancelIndexing(type: 'main' | 'backup') {
         const target = TARGET_STORAGE[type.toUpperCase()];
         this[type === 'main' ? 'percentMainDone' : 'percentBackupDone'] = 0;
-        this.system.rebuildArchive(this.serverId, target, 'stop').toPromise();
+        this.system.storageManager.rebuildArchive(this.serverId, target, 'stop').toPromise();
         this.stopReindex$.next(target);
     }
 

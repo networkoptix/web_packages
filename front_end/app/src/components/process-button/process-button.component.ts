@@ -22,6 +22,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() customClass: any = '';
     @Input() customButtonClass: any = '';
     @Input() svg;
+    @Input() textOnly: boolean = false;
 
     buttonClass: string;
     CONFIG: IConfig;
@@ -75,5 +76,11 @@ export class NxProcessButtonComponent implements OnInit {
         } else {
             this.process.run();
         }
+    }
+
+    clickHandler(event) {
+        event.stopPropagation();
+        this.clickFn();
+        this.checkForm();
     }
 }

@@ -172,7 +172,7 @@
                     (click)="reindexingMain = true; reindexStorage('main')"
                     translate>Reindex Main Storage</button>
                 <ng-template #reindexMainProgress>
-                    <section id="reindex-main" class="reindex-section mt-3 mb-2">
+                    <section id="reindex-main" class="reindex-section mt-3" [ngClass]="{'mb-2': doesModeExist('modeBackup')}">
                         <div class="progress-bar-section mr-3">
                             <div class="progress-bar-header mb-1">
                                 <div translate>Reindexing Main Storage...</div>
@@ -199,7 +199,7 @@
                     (click)="reindexingBackup = true; reindexStorage('backup')"
                     translate>Reindex Backup Storage</button>
                 <ng-template #reindexBackupProgress>
-                    <section id="reindex-backup" class="reindex-section mt-3 mb-2">
+                    <section id="reindex-backup" class="reindex-section mt-2">
                         <div class="progress-bar-section mr-3">
                             <div class="progress-bar-header mb-1">
                                 <div translate>Reindexing Backup Storage...</div>

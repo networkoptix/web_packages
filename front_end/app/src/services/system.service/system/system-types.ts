@@ -1,0 +1,195 @@
+import { NxSystemWithUserInfo }     from '../../systems.service';
+
+export * from './camera-manager/camera-manager-types';
+export * from './user-manager/user-manager-types';
+export * from './storage-manager/storage-manager-types';
+
+export interface IParams<Value = any> {
+    [key: string]: Value;
+}
+
+export interface NxSystemServer {
+    addParams: string[];
+    allowAutoRedundancy: boolean;
+    authKey: string;
+    backupBitrate: number;
+    backupDaysOfTheWeek: string;
+    backupDuration: number;
+    backupStart: number;
+    backupType: string;
+    flags: string;
+    id: string;
+    ip: string;
+    maxCameras: number;
+    metadataStorageId: string;
+    name: string;
+    networkAddresses: string;
+    osInfo: string;
+    parentId: string;
+    status: string;
+    storage: any[]; // TODO: Can probably remove
+    systemInfo: string;
+    typeId: string;
+    url: string;
+    version: string;
+}
+/**
+ * This type needs to be defined
+ */
+interface IMergeInfo {
+    [key: string]: any;
+}
+export class SystemInterface {
+    canMerge: boolean;
+    cloudStorageCapable: boolean;
+    id: string;
+    info: Partial<NxSystemWithUserInfo>;
+    isOnline: boolean;
+    mergeInfo: IMergeInfo;
+    stateMessage: string;
+    servers: NxSystemServer[];
+}
+
+export interface ModuleInfo {
+    brand: string;
+    cloudHost: string;
+    cloudSystemId: string;
+    customization: string;
+    ecDbReadOnly: boolean;
+    hwPlatform: string;
+    id: string;
+    localSystemId: string;
+    name: string;
+    osInfo: {
+        platform: string;
+        variant: string;
+        variantVersion: string;
+    };
+    port: number;
+    protoVersion: number;
+    realm?: string;
+    remoteAddresses: string[];
+    runtimeId: string;
+    serverFlags: string;
+    sslAllowed: boolean;
+    status?: string;
+    systemName: string;
+    type: string;
+    version: string;
+}
+// <added by @gbezyuk for watch component>
+export interface ServerTimeInfo {
+    vmsTimeOffset: number;
+    osTimeOffset: number;
+    serverId: string; // supposed to be stripped of {} around the UUID
+    timeZoneOffset: number;
+}
+interface NameValue {
+    name: string;
+    value: string;
+}
+
+export interface NxCamera {
+    id: string;
+    preferredServerId: string;
+    name: string;
+    url: string;
+    status: string; // TODO: enum (@gbezyuk)
+    scheduleEnabled: boolean;
+    addParams: Array<NameValue>;
+}
+
+export interface NxMediaServer {
+    id: string;
+    name: string;
+    url: string;
+
+    timeInfo: ServerTimeInfo;
+
+    // considered obligatory for now, though may change later on (@gbezyuk)
+    cameras: NxCamera[];
+}
+// </added by @gbezyuk for watch component>
+
+export interface Condition {
+    paramId: string;
+    type: string;
+    value: string;
+}
+
+export interface Dependency {
+    conditions: Condition[];
+    id: string;
+    internalRange: string;
+    range: string;
+    type: string;
+    valuesToAddToRange: any[];
+    valuesToRemoveFromRange: any[];
+}
+
+export interface Param {
+    aux: string;
+    availableInOffline: boolean;
+    bindDefaultToMinimum: boolean;
+    compact: boolean;
+    confirmation: string;
+    dataType: string;
+    dependencies: Dependency[];
+    description: string;
+    group: string;
+    id: string;
+    internalRange: string;
+    keepInitialValue: boolean;
+    name: string;
+    notes: string;
+    range: string;
+    readCmd: string;
+    readOnly: boolean;
+    resync: boolean;
+    showRange: boolean;
+    tag: string;
+    unit: string;
+    writeCmd: string;
+}
+
+export interface Group2 {
+    aux: string;
+    description: string;
+    groups: any[];
+    name: string;
+    params: Param[];
+}
+
+export interface Group {
+    aux: string;
+    description: string;
+    groups: Group2[];
+    name: string;
+    params: any[];
+}
+
+export interface CameraAdvancedParams {
+    groups: Group[];
+    name: string;
+    // eslint-disable-next-line camelcase
+    packet_mode: boolean;
+    // eslint-disable-next-line camelcase
+    unique_id: string;
+    version: string;
+}
+
+export class System extends SystemInterface {
+    protected _isAvailable = false;
+    cloudStorageSystemEnabled = false;
+    canMerge = false;
+    id = '';
+    info = undefined;
+    isOnline = false;
+    mergeInfo = undefined;
+    stateMessage = '';
+
+    // <added by @gbezyuk for watch component>
+    mediaservers: NxMediaServer[] = null;
+    resourceTypes: any[] = null;
+    // </added by @gbezyuk for watch component>
+}

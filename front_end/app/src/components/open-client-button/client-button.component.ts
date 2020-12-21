@@ -21,6 +21,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() system;
     @Input() customClass;
     @Input() actionType;
+    @Input() textOnly;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

@@ -537,6 +537,8 @@ export interface Info {
     starter:        any;
     iomodule:       any;
     bridge:         any;
+    nvr:            any;
+    nvrError:       any;
     serverNotFound: any;
 }
 
@@ -1454,6 +1456,8 @@ const typeMap: any = {
         { json: "starter", js: "starter", typ: "any" },
         { json: "iomodule", js: "iomodule", typ: "any" },
         { json: "bridge", js: "bridge", typ: "any" },
+        { json: "nvr", js: "nvr", typ: "any" },
+        { json: "nvrError", js: "nvrError", typ: "any" },
         { json: "serverNotFound", js: "serverNotFound", typ: "any" },
     ], false),
     "Messages": o([

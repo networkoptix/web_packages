@@ -353,17 +353,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.LANG.dialogs.merge.commonText,
                     { primarySystem: error.primarySystemName, secondarySystem: error.secondarySystemName }
                 );
-                let responseError = this.LANG.errorCodes[error.errorText]() || this.LANG.errorCodes[error.resultCode]();
-                if (!responseError) {
-                    responseError = this.LANG.errorCodes.unknownMergeError();
-                } else {
-                    let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
-                    if (this.CONFIG.cloudHost) {
-                        downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
-                    }
-                    responseError = responseError.replace('{failedSystem}', error.failedSystemName)
-                        .replace('{downloadHTML}', downloadHTML);
+
+                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                if (this.CONFIG.cloudHost) {
+                    downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
                 }
+                const responseError = NxLanguageProviderService.translate(
+                    this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode] || this.LANG.errorCodes.unknownMergeError,
+                    {
+                        failedSystem: error.failedSystemName,
+                        downloadHTML
+                    }
+                );
 
                 // HTML needed for section formatting
                 const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';

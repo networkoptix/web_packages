@@ -9,7 +9,7 @@ import {
 import {
     of, SubscriptionLike, Subject, Observable
 }                                    from 'rxjs';
-import { catchError }                from 'rxjs/operators';
+import { catchError, map, switchMap, tap }                from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
@@ -20,7 +20,7 @@ import { NxProcessService, Process } from '../../../../../services/process.servi
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../../../menu';
-import { NxSystem }                  from '../../../../../services/system.service';
+import { ICamera, NxSystem }         from '../../../../../services/system.service';
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
@@ -73,6 +73,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     selectedStorage: Partial<DropdownStorage>;
     checkingForDataAnalytics = false;
     storagesLoading = true;
+    showAnalytics = true;
+    useDefaultAnalyticsStorage = false;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -88,6 +90,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serversSubscription: SubscriptionLike;
     checkIfOnlineSubscription: SubscriptionLike;
     storageSubscription: SubscriptionLike;
+    analyticsSubscription: SubscriptionLike;
     unsub$ = new Subject<string>();
 
     set serverLoaded(value) {
@@ -149,7 +152,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
             }
         );
-        this.parseStorages();
 
         this.applyService.setVisible(false);
     }
@@ -178,6 +180,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     setServer(): void {
         this.serverLoaded = false;
+        this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port } = this.selectedServer;
@@ -200,10 +203,40 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (!this.applyService.locked) {
             this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
-        this.checkIfOnline(this.selectedServer.id).then(() => {
-            this.serverLoaded = true;
-            this.applyService.reset();
-        });
+        const checkForPlugins = (cameras: false |ICamera[]) => {
+            if (!cameras) {
+                return false;
+            }
+            const checkCamera = (camera: ICamera) => {
+                const onThisServer = camera.parentId === this.selectedServer.id;
+                const compatibleAnalyticsEngines = JSON.parse(
+                    camera.addParamsRaw.find(({
+                        name
+                    }) => name === 'compatibleAnalyticsEngines')?.value
+                );
+                return onThisServer && compatibleAnalyticsEngines && compatibleAnalyticsEngines.length;
+            };
+            return cameras.reduce((hasEnabled, camera) => hasEnabled || checkCamera(camera), false);
+        };
+        this.analyticsSubscription = this.system.serverManager.checkForAnalyticsData(this.selectedServer.id).pipe(
+            switchMap((analyticsData) => analyticsData.length
+                ? of(true)
+                : this.system.cameraManager.getCameras()
+            ),
+            map(plugins => plugins === true || checkForPlugins(plugins)),
+            catchError(err => {
+                console.error(err);
+                return of(false);
+            }),
+            tap((showAnalytics) => {
+                this.showAnalytics = showAnalytics;
+                this.checkIfOnline(this.selectedServer.id).then(() => {
+                    this.serverLoaded = true;
+                    this.applyService.reset();
+                });
+                this.parseStorages();
+            })
+        ).subscribe();
     }
 
     initForApplyService(): void {
@@ -380,7 +413,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (newStorage.id === this.currentAnalyticsDbId) return;
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
-        const analyticsData = await this.system.checkForAnalyticsData(this.selectedServer.id).toPromise();
+        const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)
@@ -407,10 +440,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.selectedStorage = newStorage;
             this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
         }
+        const hasMultipleStorages = this.dropdownStorages.length > 1;
+        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
         this.checkingForDataAnalytics = false;
     }
 
     parseStorages() {
+        this.useDefaultAnalyticsStorage = false;
         if (this.saveStorageWatcher.value === undefined) {
             this.saveStorageWatcher.value = false;
         }
@@ -435,7 +471,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 });
             this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
                 this.selectDefaultStorage();
-            this.systemStorageChosen = !this.selectedStorage?.isNotSystem;
+            const hasMultipleStorages = this.dropdownStorages.length > 1;
+            this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage?.isNotSystem && this.currentAnalyticsDbId === this.selectedStorage.id;
             this.storagesLoading = !this.dropdownStorages.every(({ id }) => id);
         });
     }

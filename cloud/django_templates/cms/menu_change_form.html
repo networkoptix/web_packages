@@ -11,3 +11,25 @@
     {% endif %}
     {{ block.super }}
 {% endblock %}
+{% block content %}
+    {{block.super}}
+    {% if preview_url %}
+        <div id="menuPreviewErrors"></div>
+        <iframe class="previewFrame" src="{{ preview_url }}" style="width: 100%; height: 80vh"></iframe>
+    {% endif %}
+    <script>
+        const errorContainer = document.getElementById('menuPreviewErrors');
+        const addError = ({ data }) => {
+            if (typeof data === 'string') {
+                const errorBlock = document.createElement('div');
+                errorBlock.className = 'errorBlock';
+                errorBlock.appendChild(document.createTextNode(data));
+                errorContainer.appendChild(errorBlock);
+                window.errorWatcher.value = true;
+            }
+        }
+
+        window.addEventListener('message', addError);
+    </script>
+
+{% endblock %}

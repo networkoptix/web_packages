@@ -1,6 +1,6 @@
 <!-- Templates -->
-<ng-template #preloader>
-    <nx-pre-loader></nx-pre-loader>
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
 </ng-template>
 
 <ng-template #toolBlock let-tool="tool">
@@ -25,7 +25,7 @@
 </ng-template>
 <!-- End of Templates -->
 
-<ng-container *ngIf="devToolsNode; else preloader">
+<ng-container *ngIf="!errorManager.hasErrors; else showError">
     <section *ngIf="title; else blocks" class="dev-tools">
         <h2 class="heading-link" [routerLink]="devToolsNode.url">{{title}}</h2>
         <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>

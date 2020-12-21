@@ -2,9 +2,9 @@
 Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
 #Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
-#Test Teardown     Common Restart Logout    ${url}
+Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Storage Suite Teardown
-Force Tags        system
+Force Tags        storage
 
 *** Variables ***
 ${email}       qaburbank@gmail.com
@@ -46,22 +46,30 @@ Storage Suite Setup
         ${results}    Execute Command     mkfs -t ext4 disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}    
         ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     mount -t auto -o loop disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
+        Close Connection 
+        Exit For Loop if    ${n} > 3        
         ${storage string} =    Catenate    ${storage string}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}  
-        Close Connection         
     END
     
-    ${storage string} =    Get Substring    ${storage string}    1
-        
-    FOR    ${n}    IN RANGE    1
-        ${port} =    Create Docker Server    storage${n}-${random}    4.1_test    ${storage string}    
-        Set Suite Variable    ${port${n}}    ${port[0]}
-        Sleep     10
-        Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
-        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${owner}    ${BASE PASSWORD}
-        Set Suite Variable    ${sysId${n}}    ${sysId}
-        Sleep    10
-        Close Connection
-    END
+    ${storage string} =    Get Substring    ${storage string}    1     
+
+    ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string}    
+    Set Suite Variable    ${port0}    ${port[0]}
+    Sleep     10
+    Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
+    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
+    Set Suite Variable    ${sysId0}    ${sysId}
+    Sleep    10
+    Close Connection
+    
+    ${port} =    Create Docker Server    storage1-${random}    4.1_test    --mount type=bind,source="/home/qaburbank/disk4-${random}",target=/disk4  
+    Set Suite Variable    ${port1}    ${port[0]}
+    Sleep     10
+    Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
+    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
+    Set Suite Variable    ${sysId1}    ${sysId}
+    Sleep    10
+    Close Connection    
     
     ${SUITE AUTO TESTS USERS} =    Create Dictionary
     ...    ${viewer}=viewer
@@ -77,14 +85,23 @@ Storage Suite Setup
         Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
     END
     
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}
+    
     Open Browser and go to URL    ${url}
+    
+    Verify Storages    ${sysId0}    4
+    Verify Storages    ${sysId1}    1
+    
+    
+    
 
 Storage Suite Teardown
     Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
+    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop storage0-${random} 
-    ${results}    Execute Command    docker container rm sorage0-${random} 
+    ${results}    Execute Command    docker container stop storage0-${random} storage1-${random}
+    ${results}    Execute Command    docker container rm storage0-${random} storage1-${random}
     Close Connection
     FOR    ${n}    IN RANGE    5
         Open Connection    ${QA BURBANK IP}
@@ -94,22 +111,52 @@ Storage Suite Teardown
         ${results}    Execute Command     rm -d disk${n}-${random}/     sudo=True    sudo_password=${QA BURBANK PASS}
         Close Connection
     END 
+    
+    FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}     
+        Delete Account    ${ENV}    ${user email}    ${password}   
+    END
+    
     Close All Browsers
         
-*** Test Cases ***
-Verify Storage
-    [Tags]    alex_storage    
-    Log in to user and system    ${owner}      ${sysId0}
+Verify Storages
+    [Arguments]    ${system}    ${storages number}
+    Log in to user and system    ${owner}     ${system}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
-    Wait Until Elements Are Visible
-    ...    //span[contains(text(),"disk0") and @class="ellipsis"]
-    ...    //span[contains(text(),"disk1") and @class="ellipsis"]
-    ...    //span[contains(text(),"disk2") and @class="ellipsis"]
-    ...    //span[contains(text(),"disk3") and @class="ellipsis"]
-    ...    //span[contains(text(),"disk4") and @class="ellipsis"]
+    Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
+    ${disks} =    Get Element Count    //span[contains(text(),"disk") and @class="ellipsis"]
+    Should be Equal as Numbers    ${disks}    ${storages number} 
     Capture Page Screenshot
+    Log Out
+
+Set Default Storage Config
+    [Arguments]    ${server url}
+    ${storages} =    Get Storages via API    ${server url}
+    ${storages string} =    Convert To String    ${storages}
+    ${storages string} =    Replace String    ${storages string}    '    "
+    ${storages string} =    Replace String    ${storages string}    False    "False"
+    ${storages string} =    Replace String    ${storages string}    True    "True"
+    ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
+    FOR    ${n}    IN RANGE    4
+        ${url} =    Set variable    ${storages dict[${n}]['url']}
+        ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    disk2    disk3    
+        ${backup} =    Run Keyword And Return Status    Should Contain    ${url}    disk1
+        Run Keyword If    ${disabled disk}   Run Keywords    
+        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${FALSE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}    
+        ...    ELSE IF    ${backup}    Run Keywords
+        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup     ${TRUE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}
+        ...    ELSE    Run Keywords    
+        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}    AND
+        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}   
+    END 
+    Save Storages via API    ${storages dict}    ${server url}
+
+*** Test Cases ***
+
+
     
 # Analytics DB Storage Dropdown Warning Shows FUTURE (a system storage needs to be chosen)
 #     Verify on Servers Page
@@ -173,17 +220,25 @@ Verify Storage
 #     Wait Until Element Is Visible    ${STORAGE SYSTEM TOOLTIP}
 
 Storage Location Table Space Legend Tooltip Shows 
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
 
 Backup Option Disabled when only One Main Storage
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE MAIN MODE}
     Click Button      ${STORAGE MAIN MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE BACKUP MENU ITEM}
-    Wait Until Element is Visible    ${STORAGE DROPDOWN}//span[contains(@class, "text-muted")]
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Backup"]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Not in use"]
 
 # Change Storage from Main to Backup FUTURE (need multiple storages for one to be changed to backup)
 #     Verify on Servers Page
@@ -208,6 +263,9 @@ Backup Option Disabled when only One Main Storage
 #     Element Text Should Be    ${NOT IN USE}  Not in use
 
 Add Storage Close button works
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -217,6 +275,9 @@ Add Storage Close button works
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
 Add Storage Cancel button works
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -232,12 +293,18 @@ Add Storage Cancel button works
 #     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
 Detailed Info button works (system has one storage)
+    Log in to user and system    ${owner}     ${sysId1}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
 
 Add External Storage validation
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -289,8 +356,12 @@ Add External Storage validation
 #     ...     ${STORAGE LOCATIONS TABLE}//tbody/tr/td[1]/span[contains(text(), "/ComputerName/FolderName")]
 
 Reindexing Main Archive Tooltip Shows
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE REINDEXING BLOCK}
+    Sleep    2
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
     Wait Until Element Is Visible    ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
 

@@ -512,4 +512,14 @@ Disable Stat Reports
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
-Save Camera Attributes
+Get Storages via API
+    [Arguments]    ${system}
+    Create Digest Session    returnedStorages    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${systemStorages}=   Get Request    returnedStorages   /ec2/getStorages  timeout=10
+    [Return]    ${systemStorages.json()}
+   
+Save Storages via API
+    [Arguments]    ${data}    ${system}
+    Create Digest Session    modifyStorage    ${system}    auth=${AUTO SYS AUTH}    disable_warnings=1
+    ${resp}=   Post Request    modifyStorage    /ec2/saveStorages   json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
