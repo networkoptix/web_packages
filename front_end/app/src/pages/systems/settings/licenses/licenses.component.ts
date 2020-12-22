@@ -25,12 +25,9 @@ export class NxSystemLicensesComponent implements OnInit {
 
     licenses: any;
     licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
-    classMap: any = {};
 
     // Constructor and class initialization methods
     private setupDefaults() {
-        this.classMap = this.LANG.license.info;
-
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
@@ -103,6 +100,8 @@ export class NxSystemLicensesComponent implements OnInit {
             deactivations : '-'
         };
 
+        const dynamicLicense = getDynamicLicense(this);
+
         item.licenseBlock
             .split('\n')
             .map((property) => {
@@ -114,19 +113,19 @@ export class NxSystemLicensesComponent implements OnInit {
         item.info.status = item.info.expired ? this.LANG.license.info.expired() : this.LANG.license.info.ok();
         // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
-            item.info.type = this.LANG.license.info.trial();
+            item.info.type = dynamicLicense.trial.title;
         } else {
             if (item.info.ordertype && item.info.ordertype === 'saas') {
-                item.info.type = this.classMap[item.info.class];
+                item.info.type = dynamicLicense[item.info.class].title;
             } else {
                 // this is complicated as for now it matches desktop client. It will change in 4.2
                 if (item.info.class === 'videowall') {
-                    item.info.type = this.LANG.license.info.videowall();
+                    item.info.type = dynamicLicense[item.info.class].title;
                 } else {
                     if (item.info.expiration) {
-                        item.info.type = this.LANG.license.info.time();
+                        item.info.type = dynamicLicense.time.title;
                     } else {
-                        item.info.type = this.classMap[item.info.class];
+                        item.info.type = dynamicLicense[item.info.class].title;
                     }
                 }
             }
@@ -221,3 +220,26 @@ export class NxSystemLicensesComponent implements OnInit {
             });
     }
 }
+
+export interface DynamicLicense {
+    [key: string]: {
+        title: string;
+        deactivationsAllowed
+    }
+}
+
+export const getDynamicLicense = (
+    instance: {
+        CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes
+    }
+) => instance.CONFIG.licenseTypes.reduce((
+    licenses,
+    { name, deactivationsAllowed, title }
+) => ({
+    ...licenses,
+    [name]: {
+        deactivationsAllowed,
+        title: instance.LANG.license.licenseTypeTitles[title] || title
+    }
+}), {} as DynamicLicense);

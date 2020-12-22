@@ -510,8 +510,9 @@ export interface IpvdFeedback {
 }
 
 export interface License {
-    info:     Info;
-    messages: Messages;
+    licenseTypeTitles: LicenseTypeTitles;
+    info:              Info;
+    messages:          Messages;
 }
 
 export interface Info {
@@ -521,25 +522,28 @@ export interface Info {
     hwid:           any;
     status:         any;
     expires:        any;
-    time:           any;
     deactivations:  any;
-    trial:          any;
     online:         any;
     error:          any;
     expired:        any;
     ok:             any;
-    digital:        any;
-    analog:         any;
-    edge:           any;
-    vmax:           any;
-    videowall:      any;
-    analogencoder:  any;
-    starter:        any;
-    iomodule:       any;
-    bridge:         any;
-    nvr:            any;
     nvrError:       any;
     serverNotFound: any;
+}
+
+export interface LicenseTypeTitles {
+    Time:             any;
+    Trial:            any;
+    Professional:     any;
+    Analog:           any;
+    Edge:             any;
+    VMAX:             any;
+    "Video Wall":     any;
+    "Analog Encoder": any;
+    Starter:          any;
+    "IO Module":      any;
+    Bridge:           any;
+    NVR:              any;
 }
 
 export interface Messages {
@@ -1430,6 +1434,7 @@ const typeMap: any = {
         { json: "c_Info", js: "c_Info", typ: "any" },
     ], false),
     "License": o([
+        { json: "licenseTypeTitles", js: "licenseTypeTitles", typ: r("LicenseTypeTitles") },
         { json: "info", js: "info", typ: r("Info") },
         { json: "messages", js: "messages", typ: r("Messages") },
     ], false),
@@ -1440,25 +1445,27 @@ const typeMap: any = {
         { json: "hwid", js: "hwid", typ: "any" },
         { json: "status", js: "status", typ: "any" },
         { json: "expires", js: "expires", typ: "any" },
-        { json: "time", js: "time", typ: "any" },
         { json: "deactivations", js: "deactivations", typ: "any" },
-        { json: "trial", js: "trial", typ: "any" },
         { json: "online", js: "online", typ: "any" },
         { json: "error", js: "error", typ: "any" },
         { json: "expired", js: "expired", typ: "any" },
         { json: "ok", js: "ok", typ: "any" },
-        { json: "digital", js: "digital", typ: "any" },
-        { json: "analog", js: "analog", typ: "any" },
-        { json: "edge", js: "edge", typ: "any" },
-        { json: "vmax", js: "vmax", typ: "any" },
-        { json: "videowall", js: "videowall", typ: "any" },
-        { json: "analogencoder", js: "analogencoder", typ: "any" },
-        { json: "starter", js: "starter", typ: "any" },
-        { json: "iomodule", js: "iomodule", typ: "any" },
-        { json: "bridge", js: "bridge", typ: "any" },
-        { json: "nvr", js: "nvr", typ: "any" },
         { json: "nvrError", js: "nvrError", typ: "any" },
         { json: "serverNotFound", js: "serverNotFound", typ: "any" },
+    ], false),
+    "LicenseTypeTitles": o([
+        { json: "Time", js: "Time", typ: "any" },
+        { json: "Trial", js: "Trial", typ: "any" },
+        { json: "Professional", js: "Professional", typ: "any" },
+        { json: "Analog", js: "Analog", typ: "any" },
+        { json: "Edge", js: "Edge", typ: "any" },
+        { json: "VMAX", js: "VMAX", typ: "any" },
+        { json: "Video Wall", js: "Video Wall", typ: "any" },
+        { json: "Analog Encoder", js: "Analog Encoder", typ: "any" },
+        { json: "Starter", js: "Starter", typ: "any" },
+        { json: "IO Module", js: "IO Module", typ: "any" },
+        { json: "Bridge", js: "Bridge", typ: "any" },
+        { json: "NVR", js: "NVR", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },

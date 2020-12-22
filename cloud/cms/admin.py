@@ -1096,6 +1096,13 @@ class MenuNodeAdmin(CMSAdmin):
         parent_menu = obj.get_parent()
         return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))
 
+class LicenseTypeAdmin(CMSAdmin):
+    list_display = ('name', 'title', 'deactivations_allowed')
+    list_display_links = ('name', 'title')
+    list_filter = ('deactivations_allowed',)
+
+admin.site.register(LicenseType, LicenseTypeAdmin)
+
 
 admin.site.register(ZendeskSite, CMSAdmin)
 admin.site.register(ZendeskCategory, CMSAdmin)
