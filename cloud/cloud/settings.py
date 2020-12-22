@@ -439,6 +439,7 @@ IP_WHITELISTS = {
 
 AUTH_USER_MODEL = 'api.Account'
 AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
     'api.account_backend.AccountBackend',
 )
 

@@ -116,22 +116,39 @@ def register(request):
                              "remember": remember__body,
                              "timezone": timezone__body
                          },
-                         required=["code"]
-                     ),
-                     responses={'200': account__response})
-@api_view(["POST"])
+                         required=["login", "password"]
+                     ))
+@api_view(['POST'])
 @permission_classes((AllowAny, ))
-def login(request):
+def authenticate(request):
     require_params(request, ('email', 'password'))
-
     email = request.data.get('email').lower()
     password = request.data.get('password')
     ip = get_ip(request)
+    code = Auth.get_code(email, password, ip)
+    return api_success({'code': code})
 
-    token = Auth.get_token(email, password, ip=ip)
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": authorization_code__body,
+                             "remember": remember__body,
+                             "timezone": timezone__body
+                         },
+                         required=["code"]
+                     ),
+                     responses={'200': account__response})
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def login(request):
+    code = request.data.get('code')
+    logger.info('Get token from code')
+    token = Auth.get_access_token(code)
+    logger.info('Validate token and get useremail')
     validate_token = Auth.validate_token(token['access_token'])
-    if email != validate_token['username']:
-        raise APIInternalException("Token does not match email.")
+    email = validate_token['username']
 
     try:
         user = models.Account.objects.get(email=email)
@@ -148,11 +165,6 @@ def login(request):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
-    if 'remember' not in request.data or not request.data['remember']:
-        request.session.set_expiry(0)
-    else:
-        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-
     django.contrib.auth.login(request, user)
     request.session['access_token'] = token['access_token']
     request.session['refresh_token'] = token['refresh_token']
@@ -165,9 +177,7 @@ def login(request):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-
-    serializer = AccountSerializer(user, many=False)
-    return api_success(serializer.data)
+    return api_success(token)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
