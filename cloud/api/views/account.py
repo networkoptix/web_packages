@@ -20,10 +20,10 @@ from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
 
 from api import models
-from api.controllers.cloud_api import Account
+from api.controllers.cloud_api import Account, Auth
 from api.account_backend import AccountManager, get_ip
 from api.helpers.exceptions import (
-    handle_exceptions, APIRequestException, APINotAuthorisedException,
+    APIRequestException, APINotAuthorisedException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session)
 from api.views.account_serializers import (
@@ -45,6 +45,7 @@ activate_code__body = openapi.Schema(description="The code used to activate the 
 restore_code__body = openapi.Schema(description="The code used to restore the password for an account.",
                                     type=openapi.TYPE_STRING)
 
+authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
 code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_STRING)
 
 # Swagger Responses
@@ -120,18 +121,39 @@ def register(request):
                      responses={'200': account__response})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
-def login(request):
-    user = None
-    if 'login' in request.session and 'password' in request.session:
-        email = request.session['login']
-        password = request.session['password']
-        user = django.contrib.auth.authenticate(request=request, username=email, password=password)
+def authenticate(request):
+    require_params(request, ('email', 'password'))
+    email = request.data.get('email').lower()
+    password = request.data.get('password')
+    ip = get_ip(request)
+    code = Auth.get_code(email, password, ip)
+    return api_success({'code': code})
 
-    if user is None:
-        require_params(request, ('email', 'password'))
-        email = request.data['email'].lower()
-        password = request.data['password']
-        user = django.contrib.auth.authenticate(request=request, username=email, password=password)
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": authorization_code__body,
+                             "remember": remember__body,
+                             "timezone": timezone__body
+                         },
+                         required=["code"]
+                     ))
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def login(request):
+    code = request.data.get('code')
+    logger.info('Get token from code')
+    token = Auth.get_access_token(code)
+    logger.info('Validate token and get useremail')
+    validate_token = Auth.validate_token(token['access_token'])
+    email = validate_token['username']
+
+    try:
+        user = models.Account.objects.get(email=email)
+    except models.Account.DoesNotExist:
+        user = None
 
     if user is None:
         # If account was blocked we put it in the session to log the login error
@@ -143,11 +165,6 @@ def login(request):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
-    if 'remember' not in request.data or not request.data['remember']:
-        request.session.set_expiry(0)
-    else:
-        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-
     django.contrib.auth.login(request, user)
 
     # If the user does not have an activated_date set it to the current time
@@ -155,12 +172,10 @@ def login(request):
         user.activated_date = timezone.now()
         user.save()
 
-    set_session_credentials(request, email, password)
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-    serializer = AccountSerializer(user, many=False)
-    return api_success(serializer.data)
+    return api_success(token)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
