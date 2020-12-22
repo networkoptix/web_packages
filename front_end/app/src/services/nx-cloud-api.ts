@@ -299,12 +299,18 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
+    authenticate(email: string, password: string) {
+        return this.http.post<any>(this.CONFIG.apiBase + '/account/authenticate', {
+            email,
+            password
+        }).toPromise();
+    }
+
     @swClear('apiFresh', '/account', true)
-    login(email: string, password: string, remember: boolean) {
+    login(code: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
-            email,
-            password,
+            code,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
