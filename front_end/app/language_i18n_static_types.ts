@@ -277,6 +277,7 @@ export interface UsageLabels {
 
 export interface DialogsMerge {
     adminPasswordTitle:         any;
+    adminPasswordWrong:         any;
     checking:                   any;
     commonText:                 any;
     connectToCloud:             any;
@@ -1223,6 +1224,7 @@ const typeMap: any = {
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },
+        { json: "adminPasswordWrong", js: "adminPasswordWrong", typ: "any" },
         { json: "checking", js: "checking", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
