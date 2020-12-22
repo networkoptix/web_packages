@@ -948,6 +948,9 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         return fields
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
+        menu = Menu.objects.get(id=object_id)
+        extra_context = extra_context or {}
+        extra_context['preview_url'] = menu.preview_url
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(
@@ -1092,6 +1095,13 @@ class MenuNodeAdmin(CMSAdmin):
     def response_change(self, request, obj):
         parent_menu = obj.get_parent()
         return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))
+
+class LicenseTypeAdmin(CMSAdmin):
+    list_display = ('name', 'title', 'deactivations_allowed')
+    list_display_links = ('name', 'title')
+    list_filter = ('deactivations_allowed',)
+
+admin.site.register(LicenseType, LicenseTypeAdmin)
 
 
 admin.site.register(ZendeskSite, CMSAdmin)

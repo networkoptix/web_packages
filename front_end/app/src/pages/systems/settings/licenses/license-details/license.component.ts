@@ -13,6 +13,7 @@ import {
     InfoBlockLine, InfoBlockSection, InfoBlockStyle,
     InfoDetailClass, InfoLineStyle
 } from '../../../../../components/info-block/info-block.component';
+import { getDynamicLicense } from '../licenses.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -82,10 +83,11 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     };
 
     private orderedDetails(info): void {
+        const dynamicLicense = getDynamicLicense(this);
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
         const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
-        const deactivationsRemaining = this.CONFIG.licenseDeactivations - (info.deactivations === '-' ? 0 : info.deactivations);
+        const deactivationsRemaining = dynamicLicense[info.class].deactivationsAllowed - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [
                 new InfoBlockLine(this.LANG.license.info.type(), typeof info.type === 'function' ? info.type() : info.type),

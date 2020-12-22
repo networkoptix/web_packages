@@ -196,5 +196,6 @@ export class NxBootstrapProvider {
         }
         this.CONFIG.dynamicMenus = data?.menus;
         this.CONFIG.docMenuMap = data?.docMenuMap;
+        this.CONFIG.licenseTypes = data?.licenseTypes;
     }
 }

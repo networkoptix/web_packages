@@ -80,16 +80,16 @@ def get_variables(cloud_url, test_email):
                      auth=HTTPDigestAuth("admin", "qweasd 123"),
                      verify=False)
     
-    #get the system id for the 3.2 system and add it to the dictionary
-    r = requests.post(f"{cloud_url}/cdb/system/get",
-                      auth=HTTPDigestAuth(f"{test_email}+3.2anchor@gmail.com", "qweasd 123"),
-                      json={"name": "Auto Tests"})
-    s = r.json()
-    sys_id = s["systems"][0]["id"]
-    vars["3 DOT 2 SYSTEM ID"] = sys_id
-    r = requests.get(f"https://{sys_id}.{relay}/api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null",
-                     auth=HTTPDigestAuth("admin", "qweasd 123"),
-                     verify=False)
+    # #get the system id for the 3.2 system and add it to the dictionary
+    # r = requests.post(f"{cloud_url}/cdb/system/get",
+    #                   auth=HTTPDigestAuth(f"{test_email}+3.2anchor@gmail.com", "qweasd 123"),
+    #                   json={"name": "Auto Tests"})
+    # s = r.json()
+    # sys_id = s["systems"][0]["id"]
+    # vars["3 DOT 2 SYSTEM ID"] = sys_id
+    # r = requests.get(f"https://{sys_id}.{relay}/api/systemSettings?statisticsAllowed=false&statisticsReportTimeCycle=null",
+    #                  auth=HTTPDigestAuth("admin", "qweasd 123"),
+    #                  verify=False)
 
     domain = cloud_url.split('//')[1]
     key = domain.split('.')[0]

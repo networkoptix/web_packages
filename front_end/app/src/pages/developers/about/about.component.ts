@@ -41,6 +41,26 @@ export class NxAboutComponent {
         this.aboutStructure$.next(value);
     }
 
+    get path() {
+        return this.router.url.split('?')[0];
+    }
+
+    getInvalidTemplateError({ template, node: { title } }: {template: string, node: AboutNode}) {
+        const helper = template
+            ? `Template name "${template}" is not a valid template`
+            : 'Template name is required';
+        return {
+            name     : title,
+            [helper] : Object.values(AboutTemplates).reduce((
+                rest, cur, ind, arr
+            ) => `${rest}"${cur}"${
+                arr.length === 1
+                    ? ''
+                    : ind === arr.length - 2 ? ', and ' : ', '}`,
+            'Valid templates are ')
+        };
+    }
+
     constructor(
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
@@ -55,7 +75,8 @@ export class NxAboutComponent {
             setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
             return;
         }
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '').subscribe(about => {
+        const { state } = this.route.snapshot.queryParams;
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(about => {
             const mapToAboutNode = ({
                 name,
                 display_name: displayName,

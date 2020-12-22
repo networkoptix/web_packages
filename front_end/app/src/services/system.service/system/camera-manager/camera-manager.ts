@@ -8,6 +8,7 @@ import {
 
 export class CameraManager {
     servers: NxSystemServer[];
+    cameras: ICamera[];
     moduleInfo: ModuleInfo;
 
     constructor(
@@ -27,8 +28,6 @@ export class CameraManager {
             return Promise.reject(Error(`Request to server has failed ${error}`));
         }
     }
-
-    cameras: ICamera[];
 
     async getCameras(serverTimes?, cameras?) {
         if (!serverTimes || !cameras) {

@@ -34,5 +34,25 @@
     {% if show_save %}
         <button type="submit" class="btn btn-primary" value="{% trans 'Save' %}" name="_save">Save</button>
     {% endif %}
+    <div id="inlineErrorHelper"><strong>Warning:</strong> Stucture contains errors and might not display correctly.</div>
 </div>
+<script>
+    window.errorWatcher = {
+        _value: false,
+        _listener: function(val) {
+            const inlineErrorHelper = document.getElementById('inlineErrorHelper');
+            inlineErrorHelper.className = val ? 'errorHelperText' : ''
+        },
+        set value(val) {
+          this._value = val;
+          this._listener(val);
+        },
+        get value() {
+          return this._value;
+        },
+        registerListener: function(listener) {
+          this._listener = listener;
+        }
+    }
+</script>
 {% endif %}

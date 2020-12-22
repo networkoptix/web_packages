@@ -1,12 +1,11 @@
 *** Variables ***
-${HOST}                               https://10.1.5.115
 ${MERGE BUTTON SYSTEM}                //button[span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled and span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         ${MERGE DIALOG}//form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
 ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
-${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")][1]
+${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")]
 ${MERGE NEXT BUTTON}                  ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${NEXT TEXT}")]
 ${OTHER SYSTEM}                       Other System...
 ${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${MERGE SYSTEMS TEXT}")]
@@ -26,7 +25,7 @@ ${MERGE PASSWORD INCORRECT}           ${MERGE DIALOG}//label[contains(@class, "e
 ${MERGE ENTER SERVER ADDRESS}         ${MERGE DIALOG}//label[contains(text(),"${MERGE ENTER SERVER ADDRESS TEXT}")]
 
 ${MERGE CHECK MERGE FORM}             ${MERGE DIALOG}//form[@name="checkMergeForm"]
-${MERGE SYSTEM DROPDOWN ARROW}        ${MERGE CHECK MERGE FORM}//div[@class="dropdown"]//div[@class="nav-arrow"]
+${MERGE SYSTEM DROPDOWN ARROW}        ${MERGE CHECK MERGE FORM}//div[@class="arrow-flip"]//*[@id="arrow_expand"]/../..
 ${MERGE SYSTEMS MENU}                 ${MERGE CHECK MERGE FORM}//ul[@class="dropdown-menu--list"]
 ${MERGE FORM SERVER URL LABEL}        ${MERGE CHECK MERGE FORM}//label[@for="serverUrl" and contains(text(), "${MERGE SERVER URL TEXT}")]
 ${MERGE FORM SERVER URL INPUT}        ${MERGE CHECK MERGE FORM}//input[@id="serverUrl"]

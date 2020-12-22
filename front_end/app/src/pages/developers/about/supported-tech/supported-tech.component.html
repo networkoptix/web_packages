@@ -1,3 +1,7 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
 <ng-template #techBlock let-tech="tech">
     <div class="tech-block" [title]="tech.title" [routerLink]="tech.url">
         <img [src]="CONFIG.images.dirDevelopers + tech.icon">
@@ -10,7 +14,7 @@
     </div>
 </ng-template>
 
-<section *ngIf="supportedTechNode.nodes" class="supported-tech">
+<section *ngIf="!errorManager.hasErrors; else showError" class="supported-tech">
     <h2 class="heading-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
     <div *ngIf="supportedTechNode.nodes[0].nodes.length" class="tech-wrapper">
         <ng-container *ngFor="let tech of supportedTechNode.nodes[0].nodes">

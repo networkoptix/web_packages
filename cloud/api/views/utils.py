@@ -18,7 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map
+    cached_doc_menu_map, LicenseType 
 
 logger = logging.getLogger(__name__)
 
@@ -338,6 +338,7 @@ def get_settings(request):
     menus = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
     settings_object['menus'] = {k: v['nodes'] for k, v in menus.items()}
     settings_object['docMenuMap'] = cached_doc_menu_map(customization_name=settings.CUSTOMIZATION)
+    settings_object['licenseTypes'] = LicenseType.get_license_types()
 
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:

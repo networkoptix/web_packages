@@ -53,6 +53,7 @@ export interface BaseConfig {
     company: Company;
     dynamicMenus: MenuStructure;
     docMenuMap: DocMenuMap;
+    licenseTypes: LicenseTypes;
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,
@@ -96,6 +97,14 @@ export interface DocMenuMap {
         [key: string]: string
     }
 }
+
+export interface LicenseType {
+    name: string;
+    title: string;
+    deactivationsAllowed: number
+}
+
+export type LicenseTypes = LicenseType[]
 
 export interface Capabilities {
     cloudMerge?: boolean;
