@@ -20,6 +20,8 @@
     }
 
     &.searchable {
+        overflow: auto;
+
         .level-1-container {
             margin-bottom: .5rem;
 

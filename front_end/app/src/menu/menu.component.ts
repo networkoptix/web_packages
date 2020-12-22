@@ -1,7 +1,7 @@
 import {
     Component, ElementRef, HostListener, Input, OnChanges, OnInit,
-    SimpleChanges, ViewChild, ViewEncapsulation
-}                                    from '@angular/core';
+    SimpleChanges, ViewChild, ViewEncapsulation, EventEmitter, Output
+} from '@angular/core';
 import { ActivatedRoute, Router }      from '@angular/router';
 import { fromEvent, SubscriptionLike } from 'rxjs';
 
@@ -32,6 +32,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     @Input() content;
     @Input() searchable;
     @Input() autoFit = false;
+
+    @Output() menuSearchMode = new EventEmitter();
 
     systemId;
     selectedLevel1: string;
@@ -239,6 +241,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     modelChanged(model) {
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
+        this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
         this.menuModel = model;
 
