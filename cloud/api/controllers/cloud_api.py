@@ -661,3 +661,90 @@ class Auth(object):
             "redirect_uri": redirect_uri
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
+
+
+class Auth(object):
+    # Using this for local development
+    auth = HTTPDigestAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
+
+    @staticmethod
+    @validate_response
+    def get_code(email, password, ip=None):
+        headers = {}
+        request = f"{CLOUD_DB_URL}/oauth2/token"
+        params = {
+            "client_id": "cloud_portal",
+            "grant_type": "password",
+            "response_type": "code",
+            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "username": email,
+            "password": password
+        }
+
+        if ip:
+            headers['X-Forwarded-For'] = ip
+
+        return post_wrapper(request, json=params, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def get_token(email, password):
+        request = f"{CLOUD_DB_URL}/oauth2/token"
+        params = {
+            "client_id": "cloud_portal",
+            "grant_type": "password",
+            "response_type": "token",
+            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "username": email,
+            "password": password
+        }
+        return post_wrapper(request, json=params, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def get_access_token(code):
+        request = f"{CLOUD_DB_URL}/oauth2/token"
+        params = {
+            "client_id": "cloud_portal",
+            "grant_type": "authorization_code",
+            "response_type": "token",
+            "code": code
+        }
+        return post_wrapper(request, json=params, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def get_refresh_token(refresh_token):
+        request = f"{CLOUD_DB_URL}/oauth2/token"
+        params = {
+            "grant_type": "refresh_token",
+            "response_type": "token",
+            "refresh_token": refresh_token
+        }
+        return post_wrapper(request, json=params, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def validate_token(access_token):
+        request = f"{CLOUD_DB_URL}/oauth2/token/{access_token}"
+        return post_wrapper(request, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def delete_token(token):
+        request = f"{CLOUD_DB_URL}/oauth2/token/{token}"
+        return delete_wrapper(request, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def delete_users_tokens():
+        request = f"{CLOUD_DB_URL}/oauth2/user/self"
+        return delete_wrapper(request, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    def delete_users_tokens_by_client():
+        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
+        return delete_wrapper(request, auth=Auth.auth)
