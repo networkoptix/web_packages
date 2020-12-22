@@ -5,6 +5,8 @@ import subprocess
 from typing import Any, Union
 
 import docker
+import socket
+from random_open_port import random_port
 import email.header
 import imaplib
 import os
@@ -16,6 +18,7 @@ from datetime import date
 from email.parser import HeaderParser
 from platform import system
 from random import *
+
 from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
@@ -417,29 +420,29 @@ class NoptixLibrary(object):
         if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
-    def create_custom_network(self, network_name, num, internal=False):
-        client = docker.from_env()
-        ipam_pool = docker.types.IPAMPool(
-            subnet=f'192.28.{num}.0/24',
-            iprange=f'192.28.{num}.0/24',
-            gateway=f'192.28.{num}.254'
-        )
-        ipam_config = docker.types.IPAMConfig(
-            pool_configs=[ipam_pool]
-        )
-        net = client.networks.create(
-            f'{network_name}',
-            driver='bridge',
-            ipam=ipam_config,
-            internal=internal
-        )
+    # def create_custom_network(self, network_name, num, internal=False):
+    #     client = docker.from_env()
+    #     ipam_pool = docker.types.IPAMPool(
+    #         subnet=f'192.28.{num}.0/24',
+    #         iprange=f'192.28.{num}.0/24',
+    #         gateway=f'192.28.{num}.254'
+    #     )
+    #     ipam_config = docker.types.IPAMConfig(
+    #         pool_configs=[ipam_pool]
+    #     )
+    #     net = client.networks.create(
+    #         f'{network_name}',
+    #         driver='bridge',
+    #         ipam=ipam_config,
+    #         internal=internal
+    #     )
+    #
+    #     return net.id
 
-        return net.id
-
-    def remove_custom_network(self, network_id):
-        client = docker.from_env()
-        net = client.networks.get(network_id)
-        net.remove()
+    # def remove_custom_network(self, network_id):
+    #     client = docker.from_env()
+    #     net = client.networks.get(network_id)
+    #     net.remove()
 
     def build_image(self, env):
         version = ""
@@ -463,6 +466,26 @@ class NoptixLibrary(object):
         client = docker.from_env()
         image = client.images.get(image_name)
         return image.id
+
+    @staticmethod
+    def get_random_mac():
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
+        return random_mac
+
+    @staticmethod
+    def is_port_in_use(port):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(('localhost', port)) == 0
+
+    @staticmethod
+    def get_random_port():
+        in_use = True
+        while in_use:
+            port = random_port()
+            in_use = NoptixLibrary.is_port_in_use(port)
+        return port
 
     def run_container(self, image_name, port, network='host'):
         prefix = 'AA'

@@ -283,13 +283,13 @@ Get Server Name
     END
 
 Get Server Id
-    #only use for single servers
     [Arguments]    ${system url}    ${system auth}    ${server name}
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
-    log    ${resp.json()}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}[0][id]
+    FOR    ${server}    IN    @{resp.json()}
+        Return From Keyword If    '''${server}[name]''' == '''${server name}'''    ${server}[id]
+    END
 
 Rename Server
     [Arguments]    ${system url}    ${system auth}    ${new name}
@@ -303,7 +303,7 @@ Rename Server
 Remove Resource From System
     [Arguments]    ${system url}    ${system auth}    ${resource id}
     &{data}=   Create Dictionary    id=${resource id}
-    Create Digest Session    Remove Resourcesession    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
+    Create Digest Session    Remove Resource session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Remove Resource session     /ec2/removeResource    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}

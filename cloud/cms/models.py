@@ -1708,3 +1708,16 @@ class ZendeskArticle(models.Model):
     menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
 
 # End Zendesk Models
+
+class LicenseType(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    title = models.CharField(max_length=100, blank=False, null=False)
+    deactivations_allowed = models.PositiveIntegerField(default=3, blank=False, null=False)
+
+    @staticmethod
+    def get_license_types():
+        license_types = list(LicenseType.objects.all().values(
+            'name', 'title', 'deactivations_allowed'))
+        return [{"deactivationsAllowed" if k == 'deactivations_allowed' else k: v
+                for k, v in license.items()}
+                for license in license_types]

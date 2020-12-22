@@ -914,6 +914,55 @@ Setup Docker Server
     Release Lock   create_server_lock
     [Return]    ${server}
 
+Setup Custom Docker Server
+    [Arguments]    ${network}=host    ${image}=4.1_test
+    ${server}=   Create Dictionary
+    ${mac}=   Get Random MAC
+    Acquire Lock   create_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Run Keyword If    '4.0' in $image    Set Local Variable   ${vms}    old
+    ...    ELSE   Set Local Variable    ${vms}    new
+    # Get random available port(sorry)
+    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
+                  ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    Set to Dictionary    ${server}    port=${port}
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   create_server_lock
+    [Return]    ${server}
+
+Create Custom Network
+    [Arguments]    ${name}    ${num}
+    ${driver}=   Set Variable    bridge
+    ${subnet}=   Set Variable    192.28.${num}.0/24
+    ${ip range}=   Set Variable    192.28.${num}.0/24
+    ${gateway}=    Set Variable    192.28.${num}.254
+    ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
+
+    Acquire Lock   create_net_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${net id}=   Execute Command    ${cmd}
+    Close Connection
+    Release Lock   create_net_lock
+    [Return]    ${net id}
+
+Remove Custom Network
+    [Arguments]    ${net id}
+    ${cmd}=   Set Variable    docker network rm ${net id}
+    Acquire Lock   remove_net_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${net id}=   Execute Command    ${cmd}
+    Close Connection
+    Release Lock   remove_net_lock
+    [Return]    ${net id}
+
 Delete Docker Server
     [Arguments]    ${name}
     Acquire Lock   delete_server_lock
@@ -980,3 +1029,17 @@ Get container id by name
     Close Connection
     Release Lock    get_id_lock
     [Return]    ${id}
+
+Get Storages
+    [Arguments]    ${system}
+    ${cauth}=   Create List    admin    qweasd 123
+    Create Session    get_storages    ${system}    auth=${cauth}    disable_warnings=1
+    ${r}=   Get Request    get_storages   /ec2/getStorages  timeout=10
+    [Return]    ${r}
+
+Save Storages
+    [Arguments]    ${url}    ${data}
+    ${cauth}=   Create List    admin    qweasd 123
+    Create Session    save_storages    ${url}    auth=${cauth}    disable_warnings=1
+    ${r}=   Post Request    save_storages   /ec2/saveStorages    json=${data}    timeout=10
+    [Return]    ${r}
