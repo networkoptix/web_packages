@@ -207,15 +207,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             if (!cameras) {
                 return false;
             }
-            const checkCamera = (camera: ICamera) => {
-                const onThisServer = camera.parentId === this.selectedServer.id;
-                const compatibleAnalyticsEngines = JSON.parse(
-                    camera.addParamsRaw.find(({
-                        name
-                    }) => name === 'compatibleAnalyticsEngines')?.value
-                );
-                return onThisServer && compatibleAnalyticsEngines && compatibleAnalyticsEngines.length;
-            };
+
+            const checkCamera = ({
+                addParamsRaw, parentId
+            }: ICamera) => addParamsRaw.find(({
+                name
+            }) => name === 'compatibleAnalyticsEngines' &&
+                    parentId === this.selectedServer.id)?.value !== '[]';
+
             return cameras.reduce((hasEnabled, camera) => hasEnabled || checkCamera(camera), false);
         };
         this.analyticsSubscription = this.system.serverManager.checkForAnalyticsData(this.selectedServer.id).pipe(

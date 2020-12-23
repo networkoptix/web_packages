@@ -32,8 +32,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     showStorage: boolean;
     systemSubscription: Subscription;
 
-    totalSpaceLabel: string;
-    totalSpaceTooltip: string;
+    totalSpace: string;
     reserved: string;
     reservedPercentage: number;
     used: string;
@@ -64,7 +63,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
 
     init() {
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE && !this.store.totalSpace) {
-            this.totalSpaceLabel = '&mdash;';
+            this.totalSpace = '&mdash;';
             this.reserved = '0';
             this.reservedPercentage = 0;
             this.used = '0';
@@ -87,8 +86,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
-        this.totalSpaceLabel = this.toFriendlyBytes(this.store.totalSpace, false) || '&mdash;';
-        this.totalSpaceTooltip = this.toFriendlyBytes(this.store.totalSpace);
+        this.totalSpace = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
         this.used = this.toFriendlyBytes(usedSpace);

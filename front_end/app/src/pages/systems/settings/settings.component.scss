@@ -25,7 +25,7 @@ nx-block {
 	padding-right : 0 !important;
 
   @include bootstrap.media-breakpoint-down(lg) {
-    height: auto !important;
+    height: auto;
     padding-right : 1rem !important;
   }
 
