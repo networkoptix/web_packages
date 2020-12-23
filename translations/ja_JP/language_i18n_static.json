@@ -29,7 +29,7 @@
             "label": "オーナー"
         },
         "Viewer": {
-            "description": "ライブ ビデオとアーカイブを参照できます",
+            "description": "ライブおよび録画映像を参照できます",
             "label": "ビューアー"
         },
         "advancedViewer": {
@@ -61,7 +61,7 @@
             "label": "オーナー"
         },
         "viewer": {
-            "description": "ライブ ビデオとアーカイブを参照できます",
+            "description": "ライブおよび録画映像を参照できます",
             "label": "ビューアー"
         }
     },
