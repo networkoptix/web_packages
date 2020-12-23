@@ -33,7 +33,7 @@
         </nx-alert-block>
     </div>
     <ng-template #preloader>
-        <div class="col-12 placeholder-section">
+        <div *ngIf="!isOffline" class="col-12 placeholder-section">
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>

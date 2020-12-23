@@ -7,7 +7,7 @@
      [closeDelay]="100"
      triggers="hover">
 
-    <div class="total-label" [innerHTML]="totalSpaceLabel"></div>
+    <div class="total-label" [innerHTML]="totalSpace"></div>
     <div class="bar available"
         [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}"
         [style.width.%]="100"></div>
@@ -30,7 +30,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <td class="table-legend-title" translate>Size</td>
-                <td class="table-legend-size" [innerHTML]="totalSpaceTooltip"></td>
+                <td class="table-legend-size" [innerHTML]="totalSpace"></td>
             </tr>
             <tr>
                 <td class=" table-legend-marker">
