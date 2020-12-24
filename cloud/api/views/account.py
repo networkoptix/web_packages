@@ -129,6 +129,21 @@ def authenticate(request):
     return api_success({'code': code})
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": authorization_code__body
+                         },
+                         required=["code"]
+                     ))
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def validate(request):
+    require_params(request, ('token', ))
+    return api_success(Auth.validate_token(request))
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -177,7 +192,7 @@ def login(request):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-    return api_success(token)
+    return api_success(token, cookies=extract_tokens(token))
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
