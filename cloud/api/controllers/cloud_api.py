@@ -162,7 +162,7 @@ class System(object):
             params['customization'] = settings.CUSTOMIZATION
 
         if email and password:
-            auth = HTTPDigestAuth(email, password)
+            auth = HTTPBasicAuth(email, password)
 
         return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth=auth)
 
@@ -414,7 +414,7 @@ class Account(object):
         request = CLOUD_DB_URL + '/account/get'
         auth = None
         if username and password:
-            auth = HTTPDigestAuth(username, password)
+            auth = HTTPBasicAuth(username, password)
         return get_wrapper(request, headers=headers, auth=auth)
 
 
@@ -729,7 +729,7 @@ class Auth(object):
     @validate_response
     def validate_token(access_token):
         request = f"{CLOUD_DB_URL}/oauth2/token/{access_token}"
-        return post_wrapper(request, auth=Auth.auth)
+        return get_wrapper(request, auth=Auth.auth)
 
     @staticmethod
     @validate_response
