@@ -7,14 +7,18 @@ import django
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
+
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.serializers import ValidationError
+from oauth2_provider.decorators import protected_resource
+from oauth2_provider.models import AccessToken
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
@@ -50,6 +54,13 @@ code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_S
 
 # Swagger Responses
 account__response = openapi.Response('Account info.', AccountSerializer)
+
+
+def extract_tokens(token):
+    return {
+        'access_token': token['access_token'],
+        'refresh_token': token['refresh_token']
+    }
 
 
 def set_session_credentials(request, email, password):
@@ -112,9 +123,7 @@ def register(request):
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "login": login__body,
-                             "password": password__body,
-                             "remember": remember__body,
-                             "timezone": timezone__body
+                             "password": password__body
                          },
                          required=["login", "password"]
                      ),
@@ -128,6 +137,21 @@ def authenticate(request):
     ip = get_ip(request)
     code = Auth.get_code(email, password, ip)
     return api_success({'code': code})
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": authorization_code__body
+                         },
+                         required=["code"]
+                     ))
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def validate(request):
+    require_params(request, ('token', ))
+    return api_success(Auth.validate_token(request))
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -165,7 +189,8 @@ def login(request):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
-    django.contrib.auth.login(request, user)
+    expires = datetime.fromtimestamp(int(token['expires_at']) / 1000)
+    AccessToken.objects.create(user=user, token=token['access_token'], expires=expires)
 
     # If the user does not have an activated_date set it to the current time
     if not user.activated_date:
@@ -175,13 +200,15 @@ def login(request):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-    return api_success(token)
+    return api_success(token, cookies=extract_tokens(token))
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
+@protected_resource()
 def logout(request):
+    print(dir(request.headers))
+    AccessToken.objects.filter(token=request.auth).delete()
     kill_session(request)
     return api_success()
 
@@ -206,9 +233,6 @@ def index(request):
         return api_success({'is_authenticated': False})
 
     if request.method == 'GET':
-        # validate credentials in cloud_db
-        # password could be changed, ot temporary link expired
-        Account.get(request.session['login'], request.session['password'])
         # get authorized user here
         serializer = AccountSerializer(request.user, many=False)
         return Response(serializer.data)
@@ -221,8 +245,7 @@ def index(request):
                                       ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
 
-        Account.update(request.session['login'], request.session['password'], request.data['first_name'],
-                       request.data['last_name'])
+        Account.update(request.auth, request.data['first_name'], request.data['last_name'])
         # if not success:
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -233,7 +256,7 @@ def index(request):
                      operation_description="Returns an temporary authkey based on the user's credentials.",
                      responses={"200": "auth_key"})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@protected_resource()
 def auth_key(request):
     data = Account.create_temporary_credentials(request.session['login'], request.session['password'], 'short')
 
@@ -252,7 +275,7 @@ def auth_key(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@protected_resource()
 def delete_user(request):
     require_params(request, ('password',))
     user = request.user
@@ -279,7 +302,7 @@ def delete_user(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
+@protected_resource()
 def change_password(request):
     require_params(request, ('old_password', 'new_password'))
     old_password = request.data['old_password']

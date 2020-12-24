@@ -8,7 +8,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.dispatch import receiver
 
 from api.models import AccountLoginHistory, AccountManager, Account
-from api.controllers.cloud_api import Account as Clouddb_Account
+from api.controllers.cloud_api import Auth
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
 logger = logging.getLogger(__name__)
@@ -27,11 +27,18 @@ def get_ip(request):
         return ''
 
 
+# TODO: Probably dead code.
 class AccountBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None):
         try:
             ip = get_ip(request)
-            user = Clouddb_Account.get(username, password, ip)  # first - check cloud_db
+            auth_type, token = request.META['HTTP_AUTHORIZATION'].split()
+            validate_token = Auth.validate_token(token)
+            user = {
+                'email': validate_token['username']
+            }
+            if username is None:
+                username = user['email']
         except APINotAuthorisedException as exception:
             if request and exception.error_code == ErrorCodes.account_blocked:
                 request.session['account_blocked'] = True

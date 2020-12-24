@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import redirect
 
+from oauth2_provider.decorators import protected_resource
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -253,7 +254,7 @@ def send_notification(request):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@protected_resource()
 def cloud_notification_action(request):
     can_add = request.user.has_perm('notifications.add_cloudnotification')
     can_change = request.user.has_perm('notifications.change_cloudnotification')

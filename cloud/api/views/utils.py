@@ -1,4 +1,3 @@
-import collections
 from math import log2
 import datetime
 import json
@@ -9,6 +8,7 @@ import requests
 from django.core.cache import cache, caches
 from django.conf import settings
 from django.shortcuts import redirect
+from oauth2_provider.decorators import protected_resource
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -220,7 +220,7 @@ def downloads_history(request):
                                            "cloud portal.",
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticated,))
+@protected_resource()
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
