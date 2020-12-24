@@ -80,110 +80,121 @@ def ping():
 class System(object):
     @staticmethod
     @validate_response
-    @lower_case_email
-    def list(email, password, one_customization=True):
-        request = CLOUD_DB_URL + "/system/get"
+    def list(token, one_customization=True):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {}
         if one_customization:
             params['customization'] = settings.CUSTOMIZATION
 
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def get(email, password, system_id):
-        request = CLOUD_DB_URL + "/system/get"
+    def get(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def users(email, password, system_id):
-        request = CLOUD_DB_URL + "/system/getCloudUsers"
+    def users(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f'{CLOUD_DB_URL}/system/getCloudUsers', params=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def share(email, password, system_id, account_email, role):
+    def share(token, system_id, account_email, role):
         account_email = account_email.lower()
-        request = CLOUD_DB_URL + "/system/share"
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id,
             'accountEmail': account_email,
             'accessRole': role
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/system/share', json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def get_nonce(email, password, system_id):
-        request = CLOUD_DB_URL + '/auth/getNonce'
+    def get_nonce(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f'{CLOUD_DB_URL}/auth/getNonce', params=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def rename(email, password, system_id, system_name):
-        request = CLOUD_DB_URL + "/system/rename"
+    def rename(token, system_id, system_name):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id,
             'name': system_name
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/system/rename', json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def access_roles(email, password, system_id):
-        request = CLOUD_DB_URL + "/system/getAccessRoleList"
+    def access_roles(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f'{CLOUD_DB_URL}/system/getAccessRoleList', params=params, headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def unbind(email, password, system_id):
-        request = CLOUD_DB_URL + "/system/unbind"
+    def unbind(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': system_id,
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/system/unbind', json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def bind(email, password, name):
-        request = CLOUD_DB_URL + "/system/bind"
+    def bind(token, name):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         customization = settings.CLOUD_CONNECT['customization']
         params = {
             'name': name,
             'customization': customization
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/system/bind', json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def merge(email, password, master_system_id, slave_system_id):
-        request = CLOUD_DB_URL + "/system/%s/merged_systems/" % master_system_id
+    def merge(token, master_system_id, slave_system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'systemId': slave_system_id
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/system/{master_system_id}/merged_systems/', json=params, headers=headers)
 
 
 class Account(object):
@@ -264,14 +275,16 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def change_password(email, password, new_password):
+    def change_password(token, email, new_password):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         password_ha1, password_ha1_sha256 = Account.encode_password(email, new_password)
         params = {
             'passwordHa1': password_ha1,
             'passwordHa1Sha256': password_ha1_sha256
         }
-        request = CLOUD_DB_URL + '/account/update'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -291,21 +304,19 @@ class Account(object):
             if prolongation_period:
                 params['timeouts']['prolongationPeriod'] = str(prolongation_period)
 
-        request = CLOUD_DB_URL + '/account/createTemporaryCredentials'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/account/createTemporaryCredentials', json=params, auth=HTTPBasicAuth(email, password))
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def reset_password(ip, user_email):
+    def reset_password(ip, email):
         params = {
-            'email': user_email
+            'email': email
         }
         headers = {
             'X-Forwarded-For': ip
         }
-        request = CLOUD_DB_URL + '/account/resetPassword'
-        return post_wrapper(request, json=params, headers=headers)
+        return post_wrapper(f'{CLOUD_DB_URL}/account/resetPassword', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -313,8 +324,7 @@ class Account(object):
         params = {
             'code': code
         }
-        request = CLOUD_DB_URL + '/account/activate'
-        return post_wrapper(request, json=params)
+        return post_wrapper(f'{CLOUD_DB_URL}/account/activate', json=params)
 
     @staticmethod
     @validate_response
@@ -323,38 +333,38 @@ class Account(object):
         params = {
             'email': email
         }
-        request = CLOUD_DB_URL + '/account/reactivate'
-        return post_wrapper(request, json=params)
+        return post_wrapper(f'{CLOUD_DB_URL}/account/reactivate', json=params)
 
     @staticmethod
     @validate_response
     @lower_case_email
     def delete(email, password):
-        request = CLOUD_DB_URL + '/account/self'
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return delete_wrapper(f'{CLOUD_DB_URL}/account/self', auth=HTTPBasicAuth(email, password))
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def update(email, password, first_name, last_name):
+    def update(token, first_name, last_name):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             'fullName': ' '.join((first_name, last_name))
         }
-        request = CLOUD_DB_URL + '/account/update'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def get(email=None, password=None, ip=None):
+    def get(token, ip=None):
         # ip is not always provided here because of Zapier integration.
         # If someone fails to login to many times we don't want to block all requests from Zapier.
-        headers = {}
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         if ip:
             headers['X-Forwarded-For'] = ip
 
         request = CLOUD_DB_URL + '/account/get'
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password), headers=headers)
+        return get_wrapper(request, headers=headers)
 
 
 class Storage(object):
@@ -379,118 +389,131 @@ class Storage(object):
     """
     @staticmethod
     @validate_response
-    @lower_case_email
-    def _delete(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}"
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+    def _delete(token, storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}", headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def _merge(email, password, master_storage_id, slave_storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/"
+    def _merge(token, master_storage_id, slave_storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         body = {
             "slaveStorageId": slave_storage_id
         }
-        return put_wrapper(request, json=body, auth=(HTTPBasicAuth(email, password)))
+        return put_wrapper(f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
-    def _move(email, password, system_id, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/"
+    def _move(token, system_id, storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         body = {
             "id": system_id
         }
-        return put_wrapper(request, json=body, auth=HTTPBasicAuth(email, password))
+        return put_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/systems/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def _remove_from_system(email, password, system_id, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+    def _remove_from_system(token, system_id, storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def create(email, password, system_id, storage_size):
-        request = f"{CLOUD_STORAGES_URL}/"
+    def create(token, system_id, storage_size):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         body = {
             "systems": [system_id],
             "totalSpace": storage_size
         }
-        return put_wrapper(request, json=body, auth=HTTPBasicAuth(email, password))
+        return put_wrapper(f"{CLOUD_STORAGES_URL}/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def delete_from_system(email, password, system_id):
-        storages = Storage.list_system_storages(email, password, system_id)
-        logger.debug(f"Delete storage for system.\tEmail: {email} Password: {password} SystemId: {system_id}")
+    def delete_from_system(token, system_id):
+        storages = Storage.list_system_storages(token, system_id)
+        logger.debug(f"Delete storage for system.\t SystemId: {system_id}")
         for storage in storages:
             storage_id = storage.get('id')
             logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
-            Storage._remove_from_system(email, password, system_id, storage_id)
-            Storage._delete(email, password, storage_id)
+            Storage._remove_from_system(token, system_id, storage_id)
+            Storage._delete(token, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def list_system_storages(email, password, system_id):
-        request = f"{CLOUD_STORAGES_URL}/"
+    def list_system_storages(token, system_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
         params = {
             "system-id": system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(f"{CLOUD_STORAGES_URL}/", params=params, headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def list_cameras(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/cameras"
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password))
+    def list_cameras(token, storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def move(email, password, destination_system_id, source_system_id):
+    def move(token, destination_system_id, source_system_id):
         try:
-            source_storages = Storage.list_system_storages(email, password, source_system_id)
+            source_storages = Storage.list_system_storages(token, source_system_id)
         except APINotFoundException:
             raise APIRequestException('Source System has no storages')
 
         try:
-            destination_storages = Storage.list_system_storages(email, password, destination_system_id)
+            destination_storages = Storage.list_system_storages(token, destination_system_id)
         except APINotFoundException:
             destination_storages = []
 
         if len(destination_storages) == 0:
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(email, password, source_system_id, storage_id)
-                Storage._move(email, password, destination_system_id, storage_id)
+                Storage._remove_from_system(token, source_system_id, storage_id)
+                Storage._move(token, destination_system_id, storage_id)
 
         else:
             destination_storage_id = destination_storages[0]['id']
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(email, password, source_system_id, storage_id)
-                Storage._merge(email, password, destination_storage_id, storage_id)
+                Storage._remove_from_system(token, source_system_id, storage_id)
+                Storage._merge(token, destination_storage_id, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def statistics(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password))
+    def statistics(token, storage_id):
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/statistics", headers=headers)
 
 
 class Auth(object):
     # Using this for local development
-    auth = HTTPDigestAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
+    auth = HTTPBasicAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
 
     @staticmethod
     @validate_response
@@ -554,7 +577,7 @@ class Auth(object):
     @validate_response
     def validate_token(access_token):
         request = f"{CLOUD_DB_URL}/oauth2/token/{access_token}"
-        return post_wrapper(request, auth=Auth.auth)
+        return get_wrapper(request, auth=Auth.auth)
 
     @staticmethod
     @validate_response

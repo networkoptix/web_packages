@@ -81,12 +81,16 @@ class ErrorCodes(Enum):
         return logging.ERROR
 
 
-def api_success(data=None, status_code=status.HTTP_200_OK):
-    if data is not None:
-        return Response(data, status=status_code)
-    return Response({
-                'resultCode': ErrorCodes.ok.value
-            }, status=status_code)
+def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
+    if data is None:
+        data = {
+            'resultCode': ErrorCodes.ok.value
+        }
+    response = Response(data, status=status_code)
+    if cookies is not None:
+        for name, value in cookies.items():
+            response.set_cookie(name, value, httponly=True, secure=True)
+    return response
 
 
 def require_params(request, params_list):
