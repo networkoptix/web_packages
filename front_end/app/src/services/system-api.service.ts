@@ -331,6 +331,7 @@ export class NxSystemAPI {
 
     login(login: string, password: string, remember = false): Observable<{data: {account: Account, resultCode: string}}|any> {
         let auth, authPost, authRtsp, nonce, realm;
+        login = login.toLowerCase();
         return this.getNonce(login).pipe(
             flatMap((response : any) => {
                 nonce = response.reply.nonce;
