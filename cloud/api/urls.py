@@ -20,9 +20,10 @@ urlpatterns = [
 
 
     url(r'^account/activate$',           account.activate),
-    url(r'^account/authenticate$',        account.authenticate),
+    url(r'^account/authenticate$',       account.authenticate),
     url(r'^account/login$',              account.login),
     url(r'^account/logout$',             account.logout),
+    url(r'^account/refresh$',            account.refresh),
     url(r'^account/register$',           account.register),
     url(r'^account/restorePassword$',    account.restore_password),
     url(r'^account/changePassword$',     account.change_password),

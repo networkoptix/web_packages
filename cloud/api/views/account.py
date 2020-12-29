@@ -144,6 +144,30 @@ def validate(request):
     return api_success(Auth.validate_token(request))
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def refresh(request):
+    access_token = request.COOKIES.get('access_token')
+    refresh_token = request.COOKIES.get('refresh_token')
+
+    if access_token:
+        AccessToken.objects.filter(token=access_token).delete()
+
+    if not refresh_token:
+        raise APINotAuthorisedException("Refresh token was not passed or expired.", ErrorCodes.not_authorized)
+
+    token = Auth.get_refresh_token(refresh_token)
+    validate_token = Auth.validate_token(token['access_token'])
+
+    try:
+        user = models.Account.objects.get(email=validate_token['username'])
+    except models.Account.DoesNotExist:
+        raise APINotAuthorisedException("Credentials invalid.")
+    expires = datetime.fromtimestamp(int(token['expires_at']) / 1000)
+    AccessToken.objects.create(user=user, token=token['access_token'], expires=expires)
+    return api_success(token, cookies=extract_tokens(token))
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -159,9 +183,7 @@ def validate(request):
 @permission_classes((AllowAny, ))
 def login(request):
     code = request.data.get('code')
-    logger.info('Get token from code')
     token = Auth.get_access_token(code)
-    logger.info('Validate token and get useremail')
     validate_token = Auth.validate_token(token['access_token'])
     email = validate_token['username']
 
@@ -201,7 +223,7 @@ def login(request):
 def logout(request):
     kill_tokens(request)
     kill_session(request)
-    return api_success()
+    return api_success({}, cookies={'access_token': '', 'refresh_token': ''})
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
