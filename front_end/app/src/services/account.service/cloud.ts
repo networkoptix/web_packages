@@ -100,31 +100,34 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             }
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ error: { resultCode: result.resultCode } });
-        }).then((result: any) => {
-            if (!this.cloudApi.checkResponseHasError(result)) {
-                if (this.CONFIG.isLocal) {
-                    this.account = result;
-                    this.sessionService.loginState = result.email || result.name;
-                }
-                if (this.sessionService.loginState) {
-                    // If the user that logged in matches the current session there's no need to show
-                    // the logout dialog.
-                    if (!this.CONFIG.isLocal && result.email !== this.sessionService.loginState) {
-                        return this.logoutAuthorised();
+        })
+            // If authenticate fails the catch will get it.
+            .then(() => this.get())
+            .then((result: any) => {
+                if (!this.cloudApi.checkResponseHasError(result)) {
+                    if (this.CONFIG.isLocal) {
+                        this.account = result;
+                        this.sessionService.loginState = result.email || result.name;
+                    }
+                    if (this.sessionService.loginState) {
+                        // If the user that logged in matches the current session there's no need to show
+                        // the logout dialog.
+                        if (!this.CONFIG.isLocal && result.email !== this.sessionService.loginState) {
+                            return this.logoutAuthorised();
+                        }
+
+                        return Promise.resolve({
+                            data: {
+                                account    : result,
+                                resultCode : this.CONFIG.responseOk
+                            }
+                        });
                     }
 
-                    return Promise.resolve({
-                        data: {
-                            account    : result,
-                            resultCode : this.CONFIG.responseOk
-                        }
-                    });
-                }
-
-                if (result.email || result.name) { // (result.data.resultCode === L.errorCodes.ok)
-                    this.sessionService.email = result.email;
-                    this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
-                }
+                    if (result.email || result.name) { // (result.data.resultCode === L.errorCodes.ok)
+                        this.sessionService.email = result.email;
+                        this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
+                    }
 
                     return Promise.resolve({
                         data: {
