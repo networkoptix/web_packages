@@ -89,7 +89,10 @@ def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
     response = Response(data, status=status_code)
     if cookies is not None:
         for name, value in cookies.items():
-            response.set_cookie(name, value, httponly=True, secure=True)
+            if value == '':
+                response.delete_cookie(name)
+            else:
+                response.set_cookie(name, value, httponly=True, secure=True)
     return response
 
 
