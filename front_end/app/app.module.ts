@@ -46,9 +46,10 @@ import { PagesModule }                         from '@pages/pages.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
 import { NxUriCachingInterceptor }             from '@src/interceptors/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-system-status-interceptor.service';
-import { CloudUnavailableInterceptor } from '@src/interceptors/cloud-unavailable-interceptor';
+import { CloudUnavailableInterceptor }         from '@src/interceptors/cloud-unavailable-interceptor';
 import { NxSwCacheInterceptor }                from '@src/interceptors/sw-cache-interceptor.interceptor';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { ServiceWorkerModule }                 from '@angular/service-worker';
+import { oauth2Interceptor }                   from '@interceptors/oauth2.interceptor';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -101,12 +102,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CookieService,
         NxUriCacheService,
         {
-            provide: HTTP_INTERCEPTORS,
-            useClass: NxSwCacheInterceptor,
-            multi : true
+            provide  : HTTP_INTERCEPTORS,
+            useClass : NxSwCacheInterceptor,
+            multi    : true
         },
         {
-            provide : HTTP_INTERCEPTORS,
+            provide  : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
             multi    : true
         },
@@ -118,6 +119,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         {
             provide  : HTTP_INTERCEPTORS,
             useClass : LocalSystemStatusInterceptor,
+            multi    : true
+        },
+        {
+            provide  : HTTP_INTERCEPTORS,
+            useClass : oauth2Interceptor,
             multi    : true
         },
         NxConfigService,

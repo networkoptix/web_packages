@@ -3,16 +3,15 @@ import {
     HttpClient, HttpHeaders, HttpParams
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
-import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
-import { EMPTY, of, from }          from 'rxjs';
+import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
-import { MenuNode }                 from './menus.service';
-import { MenuStructure } from '@services/nx-config/base-config';
+import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 
@@ -87,6 +86,7 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
+    _accessToken: BehaviorSubject<string> = new BehaviorSubject(undefined);
     private accountService: any;
     private currentAccount: Account;
     public swBypass = false;
@@ -111,6 +111,14 @@ export class NxCloudApiService {
                 }
             });
         });
+    }
+
+    get accessToken() {
+        return this._accessToken.getValue();
+    }
+
+    set accessToken(value) {
+        this._accessToken.next(value);
     }
 
     getLanguage() {
@@ -313,13 +321,22 @@ export class NxCloudApiService {
             code,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).toPromise();
+        }).pipe(tap((res: any) => {
+            this.accessToken = res.access_token;
+        })).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
+    }
+
+    refreshToken() {
+        return this.http.get<t.CloudResponse>(this.CONFIG.apiBase + '/account/refresh')
+            .pipe(tap((res: any) => {
+                this.accessToken = res.access_token;
+            }));
     }
 
     deleteCloudUser(password) {
