@@ -147,6 +147,7 @@ def validate(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def refresh(request):
+    # Todo: Update this after making 3rd party endpoints.
     access_token = request.COOKIES.get('access_token')
     refresh_token = request.COOKIES.get('refresh_token')
 
@@ -163,9 +164,7 @@ def refresh(request):
         user = models.Account.objects.get(email=validate_token['username'])
     except models.Account.DoesNotExist:
         raise APINotAuthorisedException("Credentials invalid.")
-    expires = datetime.fromtimestamp(int(token['expires_at']) / 1000)
-    AccessToken.objects.create(user=user, token=token['access_token'], expires=expires)
-    return api_success(token, cookies=extract_tokens(token))
+    return api_success(token)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -214,7 +213,9 @@ def login(request):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-    return api_success(token, cookies=extract_tokens(token))
+
+    serializer = AccountSerializer(user, many=False)
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
@@ -223,7 +224,7 @@ def login(request):
 def logout(request):
     kill_tokens(request)
     kill_session(request)
-    return api_success({}, cookies={'access_token': '', 'refresh_token': ''})
+    return api_success()
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,

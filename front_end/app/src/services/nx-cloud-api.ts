@@ -113,14 +113,6 @@ export class NxCloudApiService {
         });
     }
 
-    get accessToken() {
-        return this._accessToken.getValue();
-    }
-
-    set accessToken(value) {
-        this._accessToken.next(value);
-    }
-
     getLanguage() {
         return this.http.get('/api/utils/language');
     }
@@ -321,22 +313,13 @@ export class NxCloudApiService {
             code,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).pipe(tap((res: any) => {
-            this.accessToken = res.access_token;
-        })).toPromise();
+        }).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
-    }
-
-    refreshToken() {
-        return this.http.get<t.CloudResponse>(this.CONFIG.apiBase + '/account/refresh')
-            .pipe(tap((res: any) => {
-                this.accessToken = res.access_token;
-            }));
     }
 
     deleteCloudUser(password) {
