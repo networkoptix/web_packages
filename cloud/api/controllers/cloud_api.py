@@ -669,9 +669,9 @@ class Auth(object):
 
     @staticmethod
     @validate_response
+    @lower_case_email
     def get_code(email, password, ip=None):
         headers = {}
-        request = f"{CLOUD_DB_URL}/oauth2/token"
         params = {
             "client_id": "cloud_portal",
             "grant_type": "password",
@@ -685,12 +685,12 @@ class Auth(object):
         if ip:
             headers['X-Forwarded-For'] = ip
 
-        return post_wrapper(request, json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
+    @lower_case_email
     def get_token(email, password):
-        request = f"{CLOUD_DB_URL}/oauth2/token"
         params = {
             "client_id": "cloud_portal",
             "grant_type": "password",
@@ -700,51 +700,49 @@ class Auth(object):
             "username": email,
             "password": password
         }
-        return post_wrapper(request, json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def get_access_token(code):
-        request = f"{CLOUD_DB_URL}/oauth2/token"
         params = {
             "client_id": "cloud_portal",
             "grant_type": "authorization_code",
             "response_type": "token",
             "code": code
         }
-        return post_wrapper(request, json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def get_refresh_token(refresh_token):
-        request = f"{CLOUD_DB_URL}/oauth2/token"
         params = {
             "grant_type": "refresh_token",
             "response_type": "token",
             "refresh_token": refresh_token
         }
-        return post_wrapper(request, json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def validate_token(access_token):
-        request = f"{CLOUD_DB_URL}/oauth2/token/{access_token}"
-        return get_wrapper(request, auth=Auth.auth)
+        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def delete_token(token):
-        request = f"{CLOUD_DB_URL}/oauth2/token/{token}"
-        return delete_wrapper(request, auth=Auth.auth)
+        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def delete_users_tokens():
+        # TODO: Update with params
         request = f"{CLOUD_DB_URL}/oauth2/user/self"
         return delete_wrapper(request, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     def delete_users_tokens_by_client():
+        # TODO: Update params
         request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
         return delete_wrapper(request, auth=Auth.auth)
