@@ -1,8 +1,8 @@
 import statistics
 
 from django.conf import settings
-from oauth2_provider.decorators import protected_resource
-from rest_framework.decorators import api_view
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
+from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -32,7 +32,7 @@ systemId__body = openapi.Schema(type=openapi.TYPE_STRING)
                          required=["systemId"]
                      ))
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def create(request):
     require_params(request, ['systemId'])
     storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
@@ -41,7 +41,7 @@ def create(request):
     if int(storage_size) < 1:
         raise APIInternalException('Storage size not set.')
 
-    storage_info = cloud_api.Storage.create(request.auth,
+    storage_info = cloud_api.Storage.create(request.session,
                                             request.data.get('systemId'),
                                             storage_size)
     return api_success(storage_info)
@@ -58,7 +58,7 @@ def create(request):
                          required=["systemId"]
                      ))
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def delete(request):
     require_params(request, ['systemId', 'password'])
     cloud_api.Storage.delete_from_system(request.user.email,
@@ -78,10 +78,10 @@ def delete(request):
                          required=["destinationSystemId", "sourceSystemId"]
                      ))
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def move(request):
     require_params(request, ["destinationSystemId", "sourceSystemId"])
-    cloud_api.Storage.move(request.auth,
+    cloud_api.Storage.move(request.session,
                            request.data.get("destinationSystemId"),
                            request.data.get("sourceSystemId"))
     return api_success()
@@ -91,10 +91,10 @@ def move(request):
                      operation_description="Returns the cloud storage usage statistics for a system.",
                      manual_parameters=[systemId__query_params])
 @api_view(['GET'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def usage_stats(request):
     require_params(request, ['systemId'])
-    storages = cloud_api.Storage.list_system_storages(request.auth,
+    storages = cloud_api.Storage.list_system_storages(request.session,
                                                       request.query_params.get('systemId'))
 
     if len(storages) == 0:
