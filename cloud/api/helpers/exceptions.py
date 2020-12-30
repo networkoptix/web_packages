@@ -373,8 +373,8 @@ def log_error(request, error, log_level):
 
 
 def kill_session(request):
-    request.session.pop('login', None)
-    request.session.pop('password', None)
+    request.session.pop('access_token', None)
+    request.session.pop('refresh_token', None)
     request.session.pop('timezone', None)
     request.session.pop('time', None)
     django.contrib.auth.logout(request)

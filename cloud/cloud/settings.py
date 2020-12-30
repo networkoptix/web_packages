@@ -439,7 +439,7 @@ IP_WHITELISTS = {
 
 AUTH_USER_MODEL = 'api.Account'
 AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
+    'api.account_backend.AccountBackend',
 )
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
@@ -549,6 +549,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',

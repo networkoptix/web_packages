@@ -31,7 +31,6 @@ def get_ip(request):
 class AccountBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None):
         try:
-            ip = get_ip(request)
             auth_type, token = request.META['HTTP_AUTHORIZATION'].split()
             validate_token = Auth.validate_token(token)
             user = {
@@ -57,6 +56,8 @@ class AccountBackend(ModelBackend):
             if not AccountManager.is_email_in_portal(user['email']):
                 # so - user is in cloud_db, but not in cloud_portal
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
+        request.session['access_token'] = validate_token['access_token']
+        request.session['refresh_token'] = None
         return Account.objects.get(email=user['email'])
 
     def get_user(self, user_id):

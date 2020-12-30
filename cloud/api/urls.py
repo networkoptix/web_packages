@@ -3,7 +3,7 @@ __author__ = 'noptix'
 from django.conf.urls import url
 from django.conf import settings
 
-from api.views import account, systems, common, utils, robot, storage
+from api.views import account, common, robot, storage, systems, utils
 from notifications.views import send
 
 urlpatterns = [

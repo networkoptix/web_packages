@@ -7,7 +7,6 @@ import django
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
 
 from django.utils import timezone
 from rest_framework.views import APIView
@@ -17,14 +16,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.serializers import ValidationError
-from oauth2_provider.decorators import protected_resource
-from oauth2_provider.models import AccessToken, Application, RefreshToken
+from oauth2_provider.models import AccessToken
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
 
 from api import models
-from api.controllers.cloud_api import Account, Auth
+from api.controllers.cloud_api import Account, Auth, TempLogin
 from api.account_backend import AccountManager, get_ip
 from api.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException,
@@ -63,19 +62,11 @@ def extract_tokens(token):
     }
 
 
-def set_session_credentials(request, email, password):
-    """
-        The user will have temporary credentials that lasts for 2 weeks without usage.
-        During that time the user has to use the credentials at least once to keep the
-        credentials valid for another two weeks. Otherwise the credentials will become
-        invalid and the user will have to login again.
-    """
-    tempCredentials = Account.create_temporary_credentials(email, password,
-                                                           expiration_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-                                                           auto_prolongation_enabled=True,
-                                                           prolongation_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-    request.session['login'] = tempCredentials['login']
-    request.session['password'] = tempCredentials['password']
+def kill_tokens(request):
+    for key in ['access_token', 'refresh_token']:
+        token = request.session.get(key)
+        if token:
+            Auth.delete_token(token)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -157,6 +148,7 @@ def validate(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def refresh(request):
+    # Todo: Update this after making 3rd party endpoints.
     access_token = request.COOKIES.get('access_token')
     refresh_token = request.COOKIES.get('refresh_token')
 
@@ -173,9 +165,7 @@ def refresh(request):
         user = models.Account.objects.get(email=validate_token['username'])
     except models.Account.DoesNotExist:
         raise APINotAuthorisedException("Credentials invalid.")
-    expires = datetime.fromtimestamp(int(token['expires_at']) / 1000)
-    AccessToken.objects.create(user=user, token=token['access_token'], expires=expires)
-    return api_success(token, cookies=extract_tokens(token))
+    return api_success(token)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -211,15 +201,14 @@ def login(request):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
-    expires = datetime.fromtimestamp(int(token['expires_at']) / 1000)
-    access_token = AccessToken.objects.create(user=user, token=token['access_token'], expires=expires)
-    application, created = Application.objects.get_or_create(authorization_grant_type=Application.GRANT_IMPLICIT,
-                                                             client_id='cloud_portal',
-                                                             client_type=Application.CLIENT_CONFIDENTIAL)
-    RefreshToken.objects.create(access_token=access_token,
-                                application=application,
-                                token=token['refresh_token'],
-                                user=user)
+    if 'remember' not in request.data or not request.data['remember']:
+        request.session.set_expiry(0)
+    else:
+        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+
+    django.contrib.auth.login(request, user)
+    request.session['access_token'] = token['access_token']
+    request.session['refresh_token'] = token['refresh_token']
 
     # If the user does not have an activated_date set it to the current time
     if not user.activated_date:
@@ -229,23 +218,18 @@ def login(request):
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
-    return api_success(token, cookies=extract_tokens(token))
+
+    serializer = AccountSerializer(user, many=False)
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def logout(request):
-    access_token = request.auth
-    refresh_token = request.COOKIES.get('refresh_token')
-    if access_token:
-        Auth.delete_token(access_token)
-        AccessToken.objects.filter(token=access_token).delete()
-    if refresh_token:
-        Auth.delete_token(refresh_token)
-        RefreshToken.objects.filter(token=refresh_token).delete()
+    kill_tokens(request)
     kill_session(request)
-    return api_success({}, cookies={'access_token': '', 'refresh_token': ''})
+    return api_success()
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
@@ -291,9 +275,9 @@ def index(request):
                      operation_description="Returns an temporary authkey based on the user's credentials.",
                      responses={"200": "auth_key"})
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def auth_key(request):
-    data = Account.create_temporary_credentials(request.session['login'], request.session['password'], 'short')
+    data = Account.create_temporary_credentials(request.session, credential_type='short')
 
     key = base64.b64encode((data['login'] + ':' + data['password']).encode('utf-8'))
     return api_success({'auth_key': key})
@@ -310,17 +294,18 @@ def auth_key(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def delete_user(request):
     require_params(request, ('password',))
     user = request.user
 
     try:
-        Account.delete(user.email, request.data.get('password'))
+        with TempLogin(user.email, request.data.get('password')) as credentials:
+            Account.delete(credentials)
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
                                   error_data={'password': error.error_data})
-
+    kill_tokens(request)
     kill_session(request)
     user.delete()
     return api_success()
@@ -337,7 +322,7 @@ def delete_user(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def change_password(request):
     require_params(request, ('old_password', 'new_password'))
     old_password = request.data['old_password']
@@ -355,8 +340,6 @@ def change_password(request):
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
                                   error_data={'old_password': error.error_data})
-
-    set_session_credentials(request, request.user.email, new_password)
     return api_success()
 
 
@@ -464,8 +447,7 @@ def restore_password(request):
 @permission_classes((AllowAny, ))
 def check_code_in_portal(request):
     require_params(request, ('code',))
-    code = request.data['code']
-    (temp_password, email) = Account.extract_temp_credentials(code)
+    (temp_password, email) = Account.extract_temp_credentials(request.data['code'])
     email_exists = AccountManager.is_email_in_portal(email)
     return api_success({'emailExists': email_exists})
 
@@ -484,8 +466,7 @@ def check_code_in_portal(request):
 @permission_classes((AllowAny,))
 def check_auth_code(request):
     require_params(request, ('code',))
-    code = request.data['code']
-    (email, temp_password) = Account.extract_temp_credentials(code)
+    (email, temp_password) = Account.extract_temp_credentials(request.data['code'])
     user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
     if user is None:
         raise APINotAuthorisedException("Auth code has expired.", ErrorCodes.not_authorized)
