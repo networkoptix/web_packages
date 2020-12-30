@@ -34,6 +34,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     @Input() autoFit = false;
 
     @Output() menuSearchMode = new EventEmitter();
+    @Output() contentToggle = new EventEmitter();
 
     systemId;
     selectedLevel1: string;
@@ -142,7 +143,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
             if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
                 this.menuService.content = changes.content.currentValue.level1;
             }
-
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.fillerItemsBy(this.menuModel);
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
@@ -240,6 +240,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
+        // clear toggled items
+        this.menuContent.forEach((part, index, arr) => {
+            this.toggleItem(false, index);
+        });
+
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
@@ -307,7 +312,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     toggleItem(state, idx) {
+        // menu have internal state but also is controlled by parent component
+        // so we need to update both states
         this.menuContent[idx].toggle = state;
+        this.contentToggle.emit({ idx, state });
     }
 
     @HostListener('mousemove', ['$event'])

@@ -373,8 +373,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
+    contentToggle(event) {
+        this.content.level1[event.idx].toggle = event.state;
+    }
+
     updateMenu() {
         this.systemNoAccess = false;
+
         this.content.system = this.system;
         if (this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);

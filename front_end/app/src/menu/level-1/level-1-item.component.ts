@@ -21,7 +21,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() item: any = {};
     @Input() selected: boolean;
 
-    @Output() toggle: EventEmitter<any> = new EventEmitter();
+    @Output() toggle: EventEmitter<any> = new EventEmitter<any>();
 
     itemPath: string;
     _toggle: boolean;
@@ -51,6 +51,10 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
         if (changes.searchMode?.currentValue) {
             this._type = changes.searchMode?.currentValue ? 'arrow_collapse' : 'arrow_expand';
+        }
+
+        if (changes.item?.currentValue) {
+            this._toggle = changes.item.currentValue.toggle;
         }
     }
 
