@@ -433,7 +433,11 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             delay     : this.CONFIG.alertTimeout
                         };
                         this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
+                    } else if (closeRes === 'cancel') {
+                        this.selectedStorage = { ...this.selectedStorage };
                     }
+                    this.currentAnalyticsDbId = this.selectedStorage.id;
+                    this.saveStorageWatcher.value = false;
                 });
         } else {
             this.selectedStorage = newStorage;
