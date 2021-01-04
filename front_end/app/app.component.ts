@@ -221,6 +221,10 @@ export class AppComponent {
                 this.CONFIG.previewPath = 'preview';
                 this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
             }
+            // @ts-ignore
+            this.CONFIG.integration.seoPageDesc = window.SETTINGS.integrationSeoPageDescription
+                .replace('%VMS_NAME%', this.CONFIG.vmsName)
+                .replace('%CLOUD_NAME%', this.CONFIG.cloudName);
 
             // (Smart check) Check if page is displayed inside an iframe
             // this.isInIframe = (window.location !== window.parent.location);

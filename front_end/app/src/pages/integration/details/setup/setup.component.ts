@@ -21,7 +21,6 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     private setupDefaults() {
         this.plugin = this.integrationService.getIntegrationPlugin();
         this.menuService.setDetailsSection('how-to-setup');
-
     }
 
     constructor(
@@ -41,7 +40,7 @@ export class NxSetupComponent implements OnInit, OnDestroy {
         // this is still 20.1 ... double braces will break translation service in 20.2
         // TODO: when merge into 20.2 mod the param notification
         this.pageService.pageDescription = this.LANG.pageDescriptions.integrationSetup
-            .replace('{{pluginName}}', this.plugin.name)
+            .replace('{{pluginName}}', this.plugin.information.name)
             .replace('{{pluginShortDecr}}', this.plugin.information.shortDescription);
     }
 
@@ -51,4 +50,3 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     onSubmit() {
     }
 }
-
