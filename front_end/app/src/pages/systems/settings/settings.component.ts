@@ -472,11 +472,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }, { cloudUsers: [], localUsers: [] });
 
                 usersNode.level3 = [];
-                if (localUsers.length > 0) {
-                    usersNode.level3 = [...localUsers];
-                    usersNode.level3.push({ horizontal: true });
+                if (localUsers.length) {
+                    usersNode.level3.push(...localUsers);
+                    if (cloudUsers.length) {
+                        usersNode.level3.push({ horizontal: true });
+                    }
                 }
-                usersNode.level3.push(...cloudUsers);
+                if (cloudUsers.length) {
+                    usersNode.level3.push(...cloudUsers);
+                }
             }
         } else { // remove Users
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
