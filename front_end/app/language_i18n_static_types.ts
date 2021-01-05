@@ -567,7 +567,9 @@ export interface MenuTitles {
 }
 
 export interface PageDescriptions {
-    integrations: any;
+    integrations:       any;
+    integrationSetup:   any;
+    integrationDetails: any;
 }
 
 export interface PageTitles {
@@ -1487,6 +1489,8 @@ const typeMap: any = {
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
+        { json: "integrationSetup", js: "integrationSetup", typ: "any" },
+        { json: "integrationDetails", js: "integrationDetails", typ: "any" },
     ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },

@@ -163,6 +163,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
+                'integration_seo_page_description': asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%"),
                 'integration_store_enabled': integration_store_enabled,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),

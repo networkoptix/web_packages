@@ -27,8 +27,8 @@ require('./scripts/vendor/protocolcheck');
             <nx-header *ngIf="appStateService.ready || CONFIG.isLocal"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
-        <div class="outerContainer" 
-             *ngIf="appStateService.ready" 
+        <div class="outerContainer"
+             *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.heightWithRibbon : appStateService.heightWithoutRibbon }">
             <div class="mainContainer" nxScrollHelper>
                 <router-outlet></router-outlet>

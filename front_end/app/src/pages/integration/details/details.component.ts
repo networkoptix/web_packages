@@ -40,28 +40,30 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     private acceptProcess: Process;
     private account: Account;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
+    private setupDefaults() {
     }
 
-    constructor(configService: NxConfigService,
-                public sanitizer: DomSanitizer,
-                private router: Router,
-                private route: ActivatedRoute,
-                private integrationService: IntegrationService,
-                private ribbonService: NxRibbonService,
-                // TODO: Use dialog service when it is not being downgraded
-                private dialogs: NxDialogsService,
-                private language: NxLanguageProviderService,
-                private menuService: NxMenuService,
-                private accountService: NxAccountService,
-                private pageService: NxPageService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private uriService: NxUriService
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        public sanitizer: DomSanitizer,
+        private router: Router,
+        private route: ActivatedRoute,
+        private integrationService: IntegrationService,
+        private ribbonService: NxRibbonService,
+        // TODO: Use dialog service when it is not being downgraded
+        private dialogs: NxDialogsService,
+        private menuService: NxMenuService,
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private uriService: NxUriService
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -159,7 +161,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     );
                                 }
 
-                                this.pageService.pageTitle = `${this.plugin.information.name} - ${this.CONFIG.cloudName}`;
+                                this.pageService.pageTitle = NxLanguageProviderService.translate(
+                                    this.LANG.pageDescriptions.integrationDetails, {
+                                        PLUGIN_NAME              : this.plugin.information.name,
+                                        PLUGIN_SHORT_DESCRIPTION : this.CONFIG.vmsName
+                                    });
+
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
                         }).add(() => {
