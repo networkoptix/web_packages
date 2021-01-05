@@ -11,7 +11,7 @@ import { NxLanguageProviderService }        from '@services/nx-language-provider
 import { NxUtilsService }                   from '@services/utils.service';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxSystem }                         from '@services/system.service';
-import { LanguageI18NStaticTypes }          from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { map, startWith }                   from 'rxjs/operators';
 
@@ -205,7 +205,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.scrollHeightFit = '';
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
-                    const windowHeightFit = this.windowHeight - 40;
+                    const windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
                 }
