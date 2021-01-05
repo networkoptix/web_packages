@@ -11,7 +11,7 @@ ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{cloud auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
 ${url}         ${ENV}
-
+${image}       4.1_test
 
 *** Keywords ***
 System Admin Suite Setup
@@ -85,7 +85,8 @@ System Admin Suite Tear Down
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     ${results}    Execute Command    docker container stop system-admin-${random} system-admin2-${random} system-admin3-${random}      
-    ${results}    Execute Command    docker container rm system-admin-${random} system-admin2-${random} system-admin3-${random} 
+    ${results}    Execute Command    docker container rm system-admin-${random} system-admin2-${random} system-admin3-${random}
+    Execute Command    docker rm -f ${del cont}
     Close Connection
     Close All Browsers
 
@@ -308,38 +309,38 @@ Disconnect dialog interface checks
     Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    rgba(240, 44, 44, 1)
     Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    rgb(240, 44, 44)
 
-Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020
-    Log    Step 1
-    Log in to user and system    ${owner}    ${sysId1}
-    ${old cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-    Click Button    ${DISCONNECT FROM NX}
-    Validate Disconnect Form
-
-    Log    Step 2
-    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
-    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
-    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
-    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
-
-    # Restarting the server is to let it know the cloud system is unbound
-    Restart Server    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-    Sleep    90
-    ${results}    Execute Command    docker container port system-admin-${random}
-    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    Set Suite Variable    ${port1}    ${port1}
-
-    Log     C47020: checking that system is disconnected from cloud on the server side
-    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
-
-    Log    Step 3
-    FOR    ${user}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}
-        @{user systems}=   Get Account Systems    ${ENV}    ${user}    ${password}
-        Should Not Contain    ${user systems}    ${old cloud system id}
-    END
+#Owner can disconnect System from Cloud
+#    [Tags]    C41883   C47020
+#    Log    Step 1
+#    Log in to user and system    ${owner}    ${sysId1}
+#    ${old cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+#    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+#    Click Button    ${DISCONNECT FROM NX}
+#    Validate Disconnect Form
+#
+#    Log    Step 2
+#    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
+#    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+#    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+#    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
+#    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
+#
+#    # Restarting the server is to let it know the cloud system is unbound
+#    Restart Server    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+#    Sleep    90
+#    ${results}    Execute Command    docker container port system-admin-${random}
+#    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+#    Set Suite Variable    ${port1}    ${port1}
+#
+#    Log     C47020: checking that system is disconnected from cloud on the server side
+#    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+#    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
+#
+#    Log    Step 3
+#    FOR    ${user}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}
+#        @{user systems}=   Get Account Systems    ${ENV}    ${user}    ${password}
+#        Should Not Contain    ${user systems}    ${old cloud system id}
+#    END
 
     # Log    Test teardown: get system and system users back to cloud
     # @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
@@ -382,3 +383,61 @@ Owner can disconnect System from Cloud
     # ...    ${client custom["permissions"]}
     # ...    ${EMAIL CLIENT CUSTOM}    
     # ...    ${client custom["id"]}
+
+
+Owner can disconnect System from Cloud
+    [Tags]    C41883   C47020
+
+    ${owner}=   Register and activate account with random email    System    Owner    ${password}
+    ${viewer}=   Register and activate account with random email    System    Viewer    ${password}
+    ${local auth}=   Create List    admin    ${password}
+    ${cloud auth}=   Create List    ${owner}    ${password}
+
+    ${server}=   Setup Custom Docker Server    network=bridge
+    Set Suite Variable    ${del cont}    ${server}[id]
+    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]    server name=${server}[name]
+    Set To Dictionary    ${system}    cont=${system}[cont]
+    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${password}    ${system}[name]    timeout=1
+
+    ${id}=   Connect System to Cloud    ${local auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${owner}    ${password}
+    Set To Dictionary    ${system}    id=${id}
+
+    Share    ${cloud auth}    ${system}[id]    viewer    ${viewer}
+    ${viewer systems}=   Get Account Systems    ${ENV}    ${viewer}    ${password}
+    Should Contain    ${viewer systems}    ${system}[id]
+
+    Log    Step 1
+    Log in to user and system    ${owner}    ${system}[id]
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Validate Header Button Text    ${system}[name]    systems=False
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+
+    Log    Step 2
+    Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}    timeout=0.1
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
+    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
+    Validate Header Button Text    0
+    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
+    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
+    Log Out
+
+    Log     C47020: checking that system is disconnected from cloud on the server side
+    Restart Server    https://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Sleep    10
+    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
+
+    Log    Step 3
+    ${viewer systems}=   Get Account Systems    ${ENV}    ${viewer}    ${password}
+    Should Not Contain    ${viewer systems}    ${system}[id]
+
+    Log In    ${viewer}    ${password}
+    Wait Until Location Is    ${ENV}/systems
+    Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
+    Validate Header Button Text    0
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
