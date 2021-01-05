@@ -342,7 +342,7 @@ export class NxSystem extends System {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
                 .then(() => this.getUsers(true))
-                .then(() => this.serverManager.getServers().toPromise())
+                .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
@@ -451,7 +451,7 @@ export class NxSystem extends System {
         });
     }
 
-    public getMediaServersAndCameras(force: boolean = false) {
+    public getMediaServersAndCameras(force: boolean = false): any {
         // console.log('getMediaServersAndCameras enter')
         if (this.mediaservers && !force) {
             // console.log('using cached mediaservers');
@@ -478,6 +478,7 @@ export class NxSystem extends System {
         ).catch(
             response => {
                 console.error('getMediaServersAndCameras failure', response);
+                return [];
             }
         );
         // TODO: better error handling

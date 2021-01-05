@@ -93,7 +93,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
 
     loginAllServers(login, password, remember = false) {
         return this.mediaServerApi.getMediaServers(false).pipe(
-            flatMap((servers) =>
+            flatMap((servers: any) =>
                 forkJoin(servers.map((server) => {
                     const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
                     });
