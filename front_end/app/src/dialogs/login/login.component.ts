@@ -13,6 +13,7 @@ import { NxUtilsService }            from '../../services/utils.service';
 import { NxProcessService }          from '../../services/process.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxStorageService }          from '../../services/storage.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @Component({
     selector    : 'ngbd-modal-content',
@@ -60,7 +61,8 @@ export class LoginModalContent implements OnInit {
         private renderer: Renderer2,
         private router: Router,
         public activeModal: NgbActiveModal,
-        @Inject(DOCUMENT) private document: any
+        @Inject(DOCUMENT) private document: any,
+        @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -183,7 +185,7 @@ export class LoginModalContent implements OnInit {
                 // sanitize this.next
                 this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
                 if (this.next.startsWith('/admin')) {
-                    this.router.navigate([this.next]);
+                    this.window.location.href = this.next;
                 } else {
                     this.router
                         .navigate([this.next])
