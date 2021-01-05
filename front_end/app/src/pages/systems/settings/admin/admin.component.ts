@@ -46,7 +46,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     params: Params;
 
     systemNameWatcher = new Watcher('');
-    editMode = false;
     emptyName = false;
 
     advanced: boolean;
@@ -180,7 +179,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             [this.systemNameWatcher],
             this.processService.createProcess(() => {
                 if (this.systemNameWatcher.changed) {
-                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName)
+                    if (/^\s+$/.test(this.systemName) || this.systemName.trim() === this.systemNameWatcher.originalValue) {
+                        this.systemNameWatcher.reset();
+                        return Promise.resolve();
+                    }
+                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
                         }).catch(() => {
@@ -222,23 +225,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system.getInfo(true, false);
                 }
             });
-    }
-
-    handleBlur() {
-        const originalName = this.system.info.systemName || this.system.info.name;
-        this.editMode = false;
-
-        if (!this.systemName || this.emptyName) {
-            this.systemName = originalName;
-        }
-    }
-
-    handleFocus() {
-        this.editMode = true;
-    }
-
-    handleNameChange(newName) {
-        this.emptyName = /^\s+$/.test(newName);
     }
 
     connectLocalToCloud() {
