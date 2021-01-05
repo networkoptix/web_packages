@@ -123,12 +123,10 @@ export class NxServerLoggerComponent implements OnChanges {
             this.system
                 .logLevel(changes.serverId.currentValue)
                 .then(response => {
-                    if (response.name !== 'TimeoutError') {
-                        this.settingsToBeDisplayedOrUpdated(response.reply);
-                    }
+                    this.settingsToBeDisplayedOrUpdated(response.reply);
                     this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
                     this.loading = false;
-                });
+                }).catch(console.error);
         }
     }
 

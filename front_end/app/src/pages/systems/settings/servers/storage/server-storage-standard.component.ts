@@ -283,7 +283,7 @@ export class NxSystemStorageComponent implements OnInit {
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
                 tap(storages => {
-                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup, status }) => hasBackup || isBackup && !status, false);
+                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup }) => hasBackup || isBackup, false);
                 })
             ).subscribe();
         }

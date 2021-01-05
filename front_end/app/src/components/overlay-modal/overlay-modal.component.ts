@@ -99,7 +99,7 @@ export class NxOverlayModalComponent implements OnInit {
             const untilRefresh = this.timeoutUntilRefresh$.value;
 
             if (!this.oneCheckAtATime && untilRefresh < 1) {
-                this.checkIfOnline().then(res => {
+                this.checkIfOnline().then((res: any) => {
                     this.oneCheckAtATime = false;
                     // restarts the interval after checkIfOnline
                     if (!res.ok && this.nextInterval <= 60) {

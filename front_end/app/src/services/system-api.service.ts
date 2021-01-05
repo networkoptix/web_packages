@@ -16,6 +16,7 @@ import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
 import { environment }                         from '@environments/environment';
+import { NxUtilsService } from './utils.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -162,7 +163,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get<ResponseType>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
+    private get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -184,16 +185,15 @@ export class NxSystemAPI {
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(requestTimeout),
-            catchError(error => {
+            tap(undefined, (error) => {
                 if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
-                return of(error);
             })
         );
     }
 
-    private post<ResponseType>(url: string, data?: any, paramsToAdd = {}, customTimeout = 8000) {
+    private post<ResponseType = any>(url: string, data?: any, paramsToAdd = {}, customTimeout = 8000) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
@@ -536,22 +536,42 @@ export class NxSystemAPI {
     }
 
     public updateOrGetSettings(updateParams: Partial<t.Settings>) {
-        return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
+        return this.get<t.NormalResponse<t.SystemSettings>>('/api/systemSettings', updateParams);
     }
 
     /**
      * Start of Storage
      */
     public getStoragesInfo(queryParams) {
-        return this.get<Array<t.GetStorages>>('/ec2/getStorages', queryParams);
+        return this.get<t.GetStorages[]>('/ec2/getStorages', queryParams);
+    }
+
+    public getStorageAnalytics() {
+        const analyticsEndpoint = '/ec2/analyticsLookupObjectTracks?limit=1';
+        const getCamerasEndpoint = `/ec2/getCamerasEx?id=${this.serverId}`;
+        const getServerEndpoint = '/ec2/getMediaServersEx';
+        return this.getRequestAggregator([analyticsEndpoint, getCamerasEndpoint, getServerEndpoint])
+            .pipe(map(({ reply }: any) => {
+                return ({
+                    hasAnalyticsData : !!reply[analyticsEndpoint].length,
+                    hasPlugins       : reply[getCamerasEndpoint].reduce((
+                        hasPlugins, { addParams, parentId }
+                    ) => hasPlugins || addParams.find(({
+                        name
+                    }) => name === 'compatibleAnalyticsEngines' &&
+                            parentId === this.serverId)?.value !== '[]',
+                    false),
+                    metadataStorageId: reply[getServerEndpoint].find(({ id }) => id === this.serverId)?.addParams?.find(({ name }) => name === 'metadataStorageId')?.value
+                });
+            }));
     }
 
     public getStorages(useCache = false, customTimeout = 8000) {
-        return this.get<Array<t.GetStorages>>('/api/storageSpace', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' }, customTimeout);
+        return this.get<t.NormalResponse<any>>('/api/storageSpace', undefined, { [useCache ? 'cache-request' : 'reset-cache']: 'true' }, customTimeout);
     }
 
     public getStorageStatus(queryParams) {
-        return this.get<Array<t.GetStorages>>('/api/storageStatus', queryParams);
+        return this.get<t.NormalResponse<any>>('/api/storageStatus', queryParams);
     }
 
     saveStorage(updateParams: IParams) {
@@ -621,11 +641,11 @@ export class NxSystemAPI {
     }
 
     getModuleInfo() {
-        return this.get<t.ModuleInformation>('/api/moduleInformation');
+        return this.get<t.NormalResponse<t.ModuleInformationReply>>('/api/moduleInformation');
     }
 
     detachFromSystem(currentPassword: string) {
-        return this.post<t.NormalResponse>('/api/detachFromSystem', { currentPassword });
+        return this.post<t.NormalResponse<any>>('/api/detachFromSystem', { currentPassword });
     }
 
     // will put in response type when we start using
@@ -759,7 +779,7 @@ export class NxSystemAPI {
 
     updateSystemServersCameras() {
         const routes = ['/api/moduleInformation', '/ec2/getMediaServersEx', 'ec2/getTimeOfServers', 'ec2/getCamerasEx'];
-        return this.getRequestAggregator<t.NormalResponse<[t.ModuleInformation, t.GetMediaServers, t.SystemTime, t.GetCameras]>>(routes)
+        return this.getRequestAggregator<t.NormalResponse<[t.ModuleInformationReply, t.GetMediaServers, t.SystemTime, t.GetCameras]>>(routes)
             .pipe(map(({ reply }) => {
                 return routes.map(route => {
                     if (['/api/moduleInformation', 'ec2/getTimeOfServers'].includes(route)) {

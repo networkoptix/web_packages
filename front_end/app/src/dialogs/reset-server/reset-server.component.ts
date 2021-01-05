@@ -9,6 +9,7 @@ import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { ModuleInformationReply, NormalResponse } from '@services/system-api.types';
 
 @Component({
     selector   : 'nx-modal-reset-server-content',
@@ -51,8 +52,12 @@ export class ResetServerModalContent {
                 };
                 await this.system.restoreFactorySettings(this.serverId, this.password).toPromise()
                     .catch(err => handleResetFailError('restoreFactorySettings', err));
-                const moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise()
-                    .catch(err => handleResetFailError('getModuleInfo', err));
+                let moduleInfo: NormalResponse<ModuleInformationReply>;
+                try {
+                    moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise();
+                } catch (err) {
+                    handleResetFailError('getModuleInfo', err);
+                }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
                 return this.system.restartServer(this.serverId)
                     .then(() => {

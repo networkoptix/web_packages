@@ -129,7 +129,10 @@ export interface Settings {
     watermarkSettings: string,
     webSocketEnabled: string
 }
-export interface SystemSettings extends NormalResponse<Settings> {};
+
+export interface SystemSettings {
+    settings: Settings
+}
 
 interface SystemTimeReply {
     isTakenFromInternet: boolean,
@@ -169,7 +172,7 @@ export interface ApiConfigure extends NormalResponse<ApiConfigureReply> {};
 
 export interface RestartServer extends NormalResponse<null> {};
 
-interface ModuleInformationReply {
+export interface ModuleInformationReply {
     brand: string,
     cloudHost: string,
     cloudSystemId: string,
@@ -196,7 +199,6 @@ interface ModuleInformationReply {
     type: string,
     version: string
 };
-export interface ModuleInformation extends NormalResponse<ModuleInformationReply> {};
 
 interface LogLevelReply {
     EC2_TRAN: string,
