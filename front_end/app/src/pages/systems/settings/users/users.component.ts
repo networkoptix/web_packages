@@ -134,8 +134,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.applyService
             .initPageWatcher(this.viewContainerRef, this.editUser, () => {
                 this.selectedUser.isEnabled = this.userEnabled.originalValue;
-                this.selectedUser.role = this.userRole.originalValue === 'Custom'
+                const originalRole = this.userRole.originalValue === 'Custom'
                     ? this.currentCustomRole : this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
+                this.setPermission(originalRole);
                 this.applyService.reset();
             },
             [
