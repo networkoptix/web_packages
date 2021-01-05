@@ -187,7 +187,7 @@ export class NxBootstrapProvider {
             this.CONFIG.trafficRelayHost = data.trafficRelayHost;
             this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.vmsName = data.vmsName;
-debugger;
+
             this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription
                 .replace('%VMS_NAME%', this.CONFIG.vmsName)
                 .replace('%CLOUD_NAME%', this.CONFIG.cloudName);
