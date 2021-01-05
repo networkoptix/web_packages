@@ -5,7 +5,7 @@
     "Integrations (β)": "統合 (β)",
     "Privacy": "プライバシー",
     "Support": "サポート",
-    "Supported Devices": "サポートされているデバイス",
+    "Supported Devices": "対応デバイス",
     "Terms": "利用規約",
     "accessRoles": {
         "Administrator": {
@@ -486,9 +486,9 @@
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "feedback": {
-            "a_Please": "これを実行して下さい",
-            "b_Link": "リクエストを送信する",
-            "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
+            "a_Please": "対応デバイスに関するその他の質問/懸念事項については",
+            "b_Link": "リクエストを送信",
+            "c_Info": "してください。"
         },
         "hardwareType": "タイプ",
         "isAnalyticsSupported": "解析",
@@ -542,7 +542,7 @@
         "registerSuccess": "ようこそ",
         "restorePassword": "パスワードリセット",
         "restorePasswordSuccess": "パスワードを保存",
-        "supportedDevices": "サポートされているデバイス",
+        "supportedDevices": "対応デバイス",
         "system": "システム",
         "systemName": "{{systemName}}",
         "systemShare": "共有システム",
@@ -586,7 +586,7 @@
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
         "integration": "{{INTEGRATION_COMPANY}} プライバシーポリシーは<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">こちら</a>にあります。同意を撤回する方法についての説明を含む%COMPANY_NAME%プライバシーポリシーは、<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a>から入手できます。",
-        "ipvd": "このフォームを送信すると、 %COMPANY_NAME%から連絡を受けることにに同意したことになります。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> には、同意を取り消す方法の説明が含まれています。"
+        "ipvd": "このフォームを送信すると、%COMPANY_NAME%から連絡を受けることに同意したことになります。\n<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> の %COMPANY_NAME% プライバシーポリシーには、同意を取り消す方法の説明が含まれています。"
     },
     "registration": {
         "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
