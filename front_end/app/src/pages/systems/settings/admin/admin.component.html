@@ -57,16 +57,14 @@
                             [editEnabled]="system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
                     <nx-client-button *ngIf="!CONFIG.isLocal" [textOnly]="true"></nx-client-button>
                 </div>
-                <span class="system-owner">
+                <span *ngIf="!CONFIG.isLocal" class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
                         <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
-                        <span *ngIf="!system.userManager.isMine && CONFIG.cloudSystemId">
+                        <ng-container *ngIf="!system.userManager.isMine">
                             <span class="system-header-bold">{{system.info.ownerFullName}}</span>
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
-                        </span>
-                        <span *ngIf="!system.userManager.isMine && !CONFIG.cloudSystemId"
-                            class="system-header-bold">admin</span>
+                        </ng-container>
                     </span>
                 </span>
             </header>
