@@ -45,7 +45,7 @@ export class UserManager {
     // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine = this.currentUserEmail === email || this.currentUser?.isLocalOwner;
+        this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;
     }
 
     isAdmin(user: NxSystemRole) {
@@ -178,6 +178,7 @@ export class UserManager {
             user.isMe = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             user.isAdmin = this.isAdmin(user);
             // @ts-ignore: TODO having trouble resolving type for isLocalOwner
+            console.log('isLocalOwner', !user.isCloud, user.name === 'admin', user.name);
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
 
             /**
