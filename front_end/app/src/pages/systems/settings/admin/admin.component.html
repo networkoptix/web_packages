@@ -61,11 +61,13 @@
                 <span class="system-owner" *ngIf="system.permissions.isAdmin">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
-                        <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
-                        <span *ngIf="!system.isMine">
+                        <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
+                        <span *ngIf="!system.userManager.isMine && CONFIG.cloudSystemId">
                             <span class="system-header-bold">{{system.info.ownerFullName}}</span>
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </span>
+                        <span *ngIf="!system.userManager.isMine && !CONFIG.cloudSystemId"
+                            class="system-header-bold">admin</span>
                     </span>
                 </span>
             </header>
