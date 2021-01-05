@@ -992,6 +992,15 @@
                 "optional": false
             },
             {
+                "label": "Page description (SEO)",
+                "name": "%INTEGRATION_SEO_PAGE_DESCRIPTION%",
+                "type": "text",
+                "value": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+                "description": "Page's description for Search Engine Optimization.",
+                "advanced": true,
+                "optional": false
+            },
+            {
                 "label": "Tag Items",
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [
