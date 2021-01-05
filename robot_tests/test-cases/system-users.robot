@@ -10,6 +10,7 @@ Force Tags        system    Threaded
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 @{TMP USERS}
+@{server auth}    admin    qweasd 123
 
 *** Keywords ***
 Setup
@@ -18,29 +19,24 @@ Setup
     @{auth}=    Create List    ${owner}    ${password}
     Set Suite Variable    @{auth}    @{auth}
     Open Browser and go to URL    ${url}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker run -d --name usertest1 --restart always -p 7001 4.1_test
-    ${results}    Execute Command    docker container port usertest1
-    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    Set Suite Variable    ${port1}    ${port1}
-
-    ${results}    Execute Command    docker run -d --name usertest2 --restart always -p 7001 4.1_test
-    ${results}    Execute Command    docker container port usertest2
-    @{port2}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    Set Suite Variable    ${port2}    ${port2}
-
-    @{server auth}=   Create List    admin    qweasd 123
-    Set Suite Variable    @{server auth}    @{server auth}
-    
-    Setup Local System    https://${QA BURBANK IP}:${port1[0]}    ${BASE PASSWORD}    usertest1
-    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1[0]}    usertest1    ${owner}    ${BASE PASSWORD}
+    FOR   ${i}    IN RANGE    1    3
+        ${server}=   Setup Docker Server    image=4.3
+        Set Suite Variable    ${cont ${i}}    ${server}[name]
+        Set Suite Variable    ${cont id ${i}}    ${server}[id]
+        Set Suite Variable    ${port ${i}}    ${server}[port]
+        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
+        Set Suite Variable    ${server name ${i}}    ${server name}
+    END
+    &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}
+    &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${port 2}
+    Setup Local System    https://${QA BURBANK IP}:${server 1['port']}    ${BASE PASSWORD}    usertest1
+    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    usertest1    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId1}    ${sysId1}
     
-    Save User Role    ${server auth}    https://${QA BURBANK IP}:${port1[0]}    Client Custom    NoGlobalPermissions
+    Save User Role    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
 
-    Setup Local System    https://${QA BURBANK IP}:${port2[0]}    ${BASE PASSWORD}    usertest2
-    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2[0]}    usertest2    ${owner}    ${BASE PASSWORD}
+    Setup Local System    https://${QA BURBANK IP}:${server 2['port']}    ${BASE PASSWORD}    usertest2
+    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId2}    ${sysId2}
 
     @{cloud auth}=   Create List    ${owner}    ${password}
@@ -70,7 +66,7 @@ Setup
     Add user to cloud system if not there    ${sysId1}    liveViewer        ${live viewer}      auth=${auth}
     Add user to cloud system if not there    ${sysId1}    viewer            ${client custom}    auth=${auth}    
     
-users Teardown
+Users Teardown
     Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
@@ -131,7 +127,7 @@ Owner / user can unlink offline System from Cloud / Account
     Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user email}
     Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user 2 email}
     # Make the system offline
-    Restore Factory Defaults    https://${QA BURBANK IP}:${port2[0]}    ${auth}
+    Restore Factory Defaults    https://${QA BURBANK IP}:${server 2['port']}    ${auth}
 
     Log    C41898: Step 1
     Go To    ${url}/systems/${sysId2}
@@ -335,7 +331,7 @@ Edit permission works
     Share To    ${random email}    ${ADMIN TEXT}
 
     # Check that the user's role is added correctly in vms
-    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
@@ -346,7 +342,7 @@ Edit permission works
     Check User Permissions    ${random email}    ${VIEWER TEXT}
 
     # Check that the user's role has changed in vms
-    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[viewer]
@@ -494,6 +490,8 @@ Share with unregistered user - brings them to registration page with code with c
     Click Button    ${CREATE ACCOUNT BUTTON}
     # New user gets logged in right away
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    ${SYSTEM NAME}
+    Element Text Should Be    ${SYSTEM NAME}    usertest1
     Log    Step 7 skipped thick client login
     Log    Step 8
     Log Out
@@ -585,7 +583,7 @@ Users should be able to disconnect themselves from cloud
 
 User with client custom settings has access to system
     [Tags]
-    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${port1[0]}    ${auth}
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${auth}
     #FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
     #    Share    ${auth}   ${sysId1}    ${user role}    ${user email}
     #END
@@ -593,12 +591,12 @@ User with client custom settings has access to system
         &{client custom permissions}=   Set Variable If    '''${role["name"]}'''=='''Client Custom'''    ${role}
         Exit For Loop If    '''${role["name"]}'''=='''Client Custom'''
     END
-    ${users}    Get Users    ${server auth}    https://${QA BURBANK IP}:${port1[0]} 
+    ${users}    Get Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']} 
     log    ${users}
     ${user id}=   Get Cloud User Id By Email    ${auth}    ${client custom}    ${sysId1}
     Save User Existing
     ...    ${server auth}
-    ...    https://${QA BURBANK IP}:${port1[0]}
+    ...    https://${QA BURBANK IP}:${server 1['port']}
     ...    ${client custom}
     ...    ${client custom permissions["permissions"]}
     ...    ${client custom}
@@ -718,7 +716,7 @@ Administrator can add, disable and enable Viewer
 
 Cloud Owner Can Change Local User Login
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1}
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
@@ -734,11 +732,11 @@ Cloud Owner Can Change Local User Login
         &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Owner Can Change Local User Full Name
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1}
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
@@ -754,11 +752,11 @@ Cloud Owner Can Change Local User Full Name
         &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Owner Can Change Local User Email
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
@@ -773,12 +771,12 @@ Cloud Owner Can Change Local User Email
         &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Owner Can Change Local User Permissions
     [Tags]    local_user    C76243
     Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
@@ -796,12 +794,12 @@ Cloud Owner Can Change Local User Permissions
         &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=${permissions}[${reverse permission}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Owner Can Change Local User Password
     [Tags]    local_user    C76246
     Log    Same test as testrail "Cloud owner can change local user password (positive)"
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
     FOR    ${user}    IN    @{local users}
         Log    Change password for ${user}
@@ -814,20 +812,20 @@ Cloud Owner Can Change Local User Password
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
         @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${port1[0]}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${port1[0]}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
     END
 
 Cloud owner can change local users' information
     [Tags]    local_user    C76239
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}    ${owner}
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud owner can enable/disable local user (positive)
     [Tags]    C76245    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
@@ -840,7 +838,7 @@ Cloud owner can enable/disable local user (positive)
     Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
     Click Element    //span[text()="local+advancedviewer"]
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${False}
@@ -852,7 +850,7 @@ Cloud owner can enable/disable local user (positive)
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${True}
@@ -861,7 +859,7 @@ Cloud owner can enable/disable local user (positive)
 
 Cloud administrator cannot change local administrator's or owner's information
     [Tags]    local_user    C76240
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${admin}
     FOR    ${user}    IN    @{local users}
@@ -884,15 +882,15 @@ Cloud administrator cannot change local administrator's or owner's information
 
 Local User Removed on Server is Removed From UI
     [Tags]    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     ${user to delete} =    Set Variable    Local+viewer
     FOR    ${user}    IN    @{users}
         ${user id} =    Set Variable If    '${user}[name]' == '${user to delete}'    ${user}[id]
         Run Keyword If    '${user id}' != 'None'    Exit For Loop
     END
-    Remove User    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${user id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
     Reload Page
     Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
     Page Should Not Contain    //span[text()="${user to delete}"]
@@ -900,10 +898,10 @@ Local User Removed on Server is Removed From UI
 Verify Local Users Deleted On Server
     [Tags]    local_user    C76242
     Log    This case performs the same test known in testrail as "Cloud owner can delete any local user (positive)."
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
     Delete All Local Users    //span[contains(text(),"ocal+")]
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     ${deleted user} =    Set Variable    Local
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
@@ -913,14 +911,14 @@ Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user
     Log    Preconditions
     @{locals} =    Create List 
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
-    Delete All Local Users via API    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${locals}
+    Delete All Local Users via API    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
     Log    Step 1
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${owner}
     
 Cloud owner cannot change local owner's information
@@ -937,8 +935,8 @@ Cloud owner cannot change local owner's information
 Unsaved changes are not sent to the server
     [Tags]    C76241    local_user
     Log    Preconditions
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
-    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     Verify In Local Users UI    ${local users}    ${owner}
     
     Log    Step 1
@@ -961,7 +959,7 @@ Unsaved changes are not sent to the server
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     Lists Should Be Equal     ${check info}    ${locals}  
     
     Log    Step 4
@@ -975,13 +973,13 @@ Unsaved changes are not sent to the server
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
 	
 	Log    Step 5
-	@{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+	@{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     Lists Should Be Equal     ${check info}    ${locals}
     
 Local User Login Field Cannot Be Left Blank
     [Tags]    C76248    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
-    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
             
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${owner}
@@ -1000,7 +998,7 @@ Local User Login Field Cannot Be Left Blank
     Element Style Should Be    ${EDITABLE TITLE}     border-color    ${ERROR COLOR}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     Lists Should Be Equal     ${check info}    ${locals}
 
     Log    Step 4
@@ -1008,12 +1006,12 @@ Local User Login Field Cannot Be Left Blank
     Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
     
     Log    Step 5
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     Lists Should Be Equal     ${check info}    ${locals} 
     
 Local User name field can be left blank
     [Tags]    C76249    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${owner}
@@ -1026,7 +1024,7 @@ Local User name field can be left blank
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{check info}
         ${full name} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[fullName]
         Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
@@ -1035,7 +1033,7 @@ Local User name field can be left blank
      
 Local User email field can be left blank
     [Tags]    C76250    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${owner}
@@ -1048,7 +1046,7 @@ Local User email field can be left blank
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{check info}
         ${email field} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[email]
         Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
@@ -1057,7 +1055,7 @@ Local User email field can be left blank
     
 User list is available for owner and administrator
     [Tags]    C76233    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${owner}
     Log Out
@@ -1078,7 +1076,7 @@ User list is not available for advanced viewer & lower
     
 Cloud Administrator Can Delete Local User(positive)
     [Tags]    C76524    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
@@ -1090,7 +1088,7 @@ Cloud Administrator Can Delete Local User(positive)
     Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
     Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
     Log    Step 4
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     ${deleted user} =    Set Variable    Local+advancedViewer
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    "${user}[name]" was found on server
@@ -1099,7 +1097,7 @@ Cloud Administrator Can Delete Local User(positive)
 Cloud administrator can change local user's login permissions, name and email (positive)
     [Tags]    C76526    C76525    local_user
     @{new locals} =    Create List
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
@@ -1107,11 +1105,11 @@ Cloud administrator can change local user's login permissions, name and email (p
     ${new local} =    Modify All Local User Info    advancedViewer    ${admin}
     Append To List    ${new locals}    ${new local}
     Log    Step 4
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${port1[0]}    local user=ocal+advancedviewer    
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}    local user=ocal+advancedviewer    
     
 Cloud administrator can enable/disable any viewer local user (positive)
     [Tags]    C76527    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
@@ -1128,7 +1126,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Click Element    //span[text()="local+advancedviewer"]
     Log    Step 4
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${False}
@@ -1142,7 +1140,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Page Should Not Contain Element   ${USER DISABLED MSG}
     Log    Step 6
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${True}
@@ -1151,7 +1149,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     
 Cloud administrator can change local user password (positive)
     [Tags]    C76530    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
     Verify In Local Users UI    ${local users}    ${admin}
 
     Log    Step 1
@@ -1171,16 +1169,16 @@ Cloud administrator can change local user password (positive)
     
     Log    Step 4
     @{old auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
-    Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${port1[0]}
+    Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
     
     Log    Step 5
     @{new auth} =    Create List    local+advancedviewer     ${ALT PASSWORD}
-    ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${port1[0]}
+    ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
     
 Changes made in thick client appear on cloud portal
     [Tags]    C76251    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${sysId1} 
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+advancedViewer   
         ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
@@ -1192,7 +1190,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 4
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1204,7 +1202,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 5
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1216,7 +1214,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 6
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1228,7 +1226,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 7
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1241,7 +1239,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 8
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1251,13 +1249,13 @@ Changes made in thick client appear on cloud portal
     ...    is cloud=${False}
     Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
     Log    Step 9
-    Remove User    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
     Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
     
     Log    Step 10
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${port1[0]}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
     ...    Local+newApiUser   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1284,18 +1282,18 @@ Changes made in thick client appear on cloud portal
     Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]    
     
     Log    Clean up
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${port1[0]}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+newApiUser   
         ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
         Exit For Loop If    '${id}' != 'None'             
     END
-    Remove User    ${auth}    https://${QA BURBANK IP}:${port1[0]}    ${id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
     
 Local user list is not available for offline system
     [Tags]    C76234    local_user    System-offline
     Log    Preconditions
-    @{local users} =   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${port2[0]}
+    @{local users} =   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}
     Log in to user and system    ${owner}    ${sysId2}
     Go To Users List
     FOR    ${user}    IN    @{local users}

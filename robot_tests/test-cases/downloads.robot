@@ -122,4 +122,3 @@ Check iTunes Store Link
     Go to download page
     ${url}    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href
     Should Be Equal    ${url}    ${ITUNES STORE LINK}
-    Check File Exists    ${url}

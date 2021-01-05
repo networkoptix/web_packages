@@ -309,38 +309,39 @@ Disconnect dialog interface checks
     Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    rgba(240, 44, 44, 1)
     Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    rgb(240, 44, 44)
 
-#Owner can disconnect System from Cloud
-#    [Tags]    C41883   C47020
-#    Log    Step 1
-#    Log in to user and system    ${owner}    ${sysId1}
-#    ${old cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-#    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-#    Click Button    ${DISCONNECT FROM NX}
-#    Validate Disconnect Form
-#
-#    Log    Step 2
-#    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
-#    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
-#    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-#    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
-#    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
-#
-#    # Restarting the server is to let it know the cloud system is unbound
-#    Restart Server    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-#    Sleep    90
-#    ${results}    Execute Command    docker container port system-admin-${random}
-#    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-#    Set Suite Variable    ${port1}    ${port1}
-#
-#    Log     C47020: checking that system is disconnected from cloud on the server side
-#    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
-#    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
-#
-#    Log    Step 3
-#    FOR    ${user}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}
-#        @{user systems}=   Get Account Systems    ${ENV}    ${user}    ${password}
-#        Should Not Contain    ${user systems}    ${old cloud system id}
-#    END
+Owner can disconnect System from Cloud
+    [Tags]    C41883   C47020
+    Log    Step 1
+    Log in to user and system    ${owner}    ${sysId1}
+    ${old cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Page Should Contain Element    ${DROPDOWN SYSTEMS GRID}/nx-system-tile//span[text()="${AUTO TESTS}"]
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+    Log    Step 2
+    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
+    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
+    Run keyword and continue on failure    Wait Until Page Does Not Contain Element    ${DROPDOWN SYSTEMS GRID}/nx-system-tile//span[text()="${AUTO TESTS}"]
+
+    # Restarting the server is to let it know the cloud system is unbound
+    Restart Server    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+    Sleep    90
+    ${results}    Execute Command    docker container port system-admin-${random}
+    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    Set Suite Variable    ${port1}    ${port1}
+
+    Log     C47020: checking that system is disconnected from cloud on the server side
+    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
+    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
+
+    Log    Step 3
+    FOR    ${user}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}
+        @{user systems}=   Get Account Systems    ${ENV}    ${user}    ${password}
+        Should Not Contain    ${user systems}    ${old cloud system id}
+    END
 
     # Log    Test teardown: get system and system users back to cloud
     # @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${port1[0]}    ${AUTO SYS AUTH}
