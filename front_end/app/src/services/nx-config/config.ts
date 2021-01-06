@@ -375,6 +375,8 @@ export const nxConfig: IConfig = {
     cloudHost : '',
     cloudSystemId : '',
     localSystemId : '',
+    localSystemName : '',
+    localServerId : '',
     company   : {
         copyrightYear : '',
         links         : {

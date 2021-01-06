@@ -369,7 +369,9 @@ export class NxSystemAPI {
     }
 
     getSystemSettings() {
-        return this.get<t.Params[]>('/ec2/getSettings').toPromise().then(params => new t.SystemConfigSettings(params));
+        return this.get<t.Params[]>('/ec2/getSettings').toPromise().then(params => {
+            return new t.SystemConfigSettings(params);
+        });
     }
 
     async getSystemCloudInfo() {

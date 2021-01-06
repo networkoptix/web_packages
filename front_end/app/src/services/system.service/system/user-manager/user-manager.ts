@@ -90,7 +90,10 @@ export class UserManager {
                     return user.id !== data.id;
                 });
             })
-            .catch(() => { });
+            .catch(err => {
+                console.info('failed to removed from system directly');
+                console.error(err);
+            });
     }
 
     findAccessRole(user: NxSystemUser) {

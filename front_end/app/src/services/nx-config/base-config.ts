@@ -50,6 +50,8 @@ export interface BaseConfig {
     cloudHost: string;
     cloudSystemId: string;
     localSystemId: string;
+    localSystemName: string;
+    localServerId: string;
     company: Company;
     dynamicMenus: MenuStructure;
     docMenuMap: DocMenuMap;

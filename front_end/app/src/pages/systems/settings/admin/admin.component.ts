@@ -51,7 +51,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     advanced: boolean;
     userDisconnectSystem;
-    deletingSystem: Process;
     currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;
@@ -134,7 +133,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.settingsServiceSubscription) {
             this.settingsServiceSubscription.unsubscribe();
         }
-
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
@@ -146,6 +144,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
                 this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
                 this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -159,28 +158,22 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
+
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
-                        this.settingsSubscription = this.system.updateOrGetSystemSettings()
-                            .subscribe((response: any) => {
-                                if (response.reply) {
-                                    this.settingsForSystem = response.reply.settings;
-                                }
-                            }, (err) => {
-                                this.settingsForSystem = false;
-                                console.error(err);
-                            });
+                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.permissions.isAdmin)) {
+                            this.settingsSubscription = this.system.updateOrGetSystemSettings()
+                                .subscribe((response: any) => {
+                                    if (response.reply) {
+                                        this.settingsForSystem = response.reply.settings;
+                                    }
+                                }, (err) => {
+                                    this.settingsForSystem = false;
+                                    console.error(err);
+                                });
+                        }
                     });
-                this.deletingSystem = this.processService.createProcess(
-                    this.system.deleteFromCurrentAccount(),
-                    {
-                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
-                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
-                    },
-                    this.updateAndGoToSystems,
-                    error => error
-                );
             });
 
         this.applyService.addWatchersAndFunctionsFromChild(
@@ -324,7 +317,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.buttons.cancel()
             ).then((result) => {
                 if (result === true) {
-                    return this.deletingSystem.run(this.updateAndGoToSystems);
+                    return this.system.deleteFromCurrentAccount().subscribe(res => {
+                        this.toastService.show(
+                            this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
+                            { classname: 'success' });
+                    }, err => {
+                        console.error(err);
+                        this.toastService.show(
+                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
+                            { classname: 'danger' }
+                        );
+                    },
+                    this.updateAndGoToSystems
+                    );
                 }
             });
         }

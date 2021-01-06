@@ -230,14 +230,18 @@ export class NxSystem extends System {
         if (this.CONFIG.isLocal) {
             return this.mediaserver.getSystemSettings()
                 .then(res => {
-                    const parsedSettings = parseSettings(res);
+                    let parsedSettings = {};
+                    if (Object.keys(res).length) {
+                        parsedSettings = parseSettings(res);
+                    }
                     Object.assign(parsedSettings, this.userManager.currentUser);
                     if (this.info) {
                         Object.assign(this.info, parsedSettings); // Update
                     } else {
                         this.info = parsedSettings;
                     }
-                    this.id = res.localSystemId;
+                    this.id = this.CONFIG.localSystemId;
+                    this.info.systemName = this.CONFIG.localSystemName;
                     this.mergeInfo = this.info.mergeInfo;
                     this.isOnline = true;
                     this.cloudStorageCapable = false;
@@ -695,16 +699,14 @@ export class NxSystem extends System {
         return this.userManager.deleteUser(removedUser);
     }
 
-    /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
-     */
     deleteFromCurrentAccount() {
-        if (this.isAvailable && this.currentUser && !this.currentUser.isAdmin) {
+        const currentUser = this.userManager.currentUser;
+        if (this.isAvailable && currentUser && !currentUser.isAdmin) {
             // Try to remove me from the system directly
-            this.userManager.deleteUser(this.currentUser);
+            this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, this.currentUserEmail);
+        return this.cloudApi.unshare(this.id, currentUser.email);
     }
 
     /**
