@@ -7,8 +7,10 @@ import { of }             from 'rxjs';
 
 import { environment }                     from '../../../environments/environment';
 import { NxLanguageProviderService }       from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }        from '@services/nx-config';
 import { NxProcessService }                from '../../services/process.service';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 
 @Component({
@@ -24,6 +26,7 @@ export class DisconnectModalContent {
 
     isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     password: string;
     wrongPassword: boolean;
     auth = {
@@ -38,12 +41,15 @@ export class DisconnectModalContent {
 
     constructor(
         language: NxLanguageProviderService,
+        configService: NxConfigService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
+        private toastService: NxToastService
     ) {
         this.LANG = language.translations;
+        this.CONFIG = configService.getConfig();
         this.isLocal = environment.isLocal;
     }
 
@@ -75,11 +81,23 @@ export class DisconnectModalContent {
                     this.renderer.selectRootElement('#password').focus();
                 }
             },
-            successMessage : this.LANG.toastMessage.system.disconnected.success(),
-            errorPrefix    : this.LANG.errorCodes.cantDisconnectSystemPrefix()
-        }).then(() => {
-            this.activeModal.close(true);
-        });
+            errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix()
+        }, res => {
+            if (res.errorString === 'Wrong username or password.') {
+                this.wrongPassword = true;
+                this.auth.password = '';
+
+                this.renderer.selectRootElement('#password').focus();
+            } else {
+                this.activeModal.close(true);
+                const options = {
+                    classname : this.CONFIG.toast.success,
+                    autohide  : true,
+                    delay     : this.CONFIG.alertTimeout
+                };
+                this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
+            }
+        }, err => console.error(err));
     }
 
     close() {

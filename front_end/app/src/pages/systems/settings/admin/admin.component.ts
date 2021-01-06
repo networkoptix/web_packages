@@ -242,11 +242,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
             .then((result) => {
                 if (result) {
-                    this.updateAndGoToSystems();
+                    if (this.CONFIG.isLocal) {
+                        // give the user chance to read the toaster
+                        setTimeout(() => window.location.reload(), 2000);
+                    } else {
+                        this.updateAndGoToSystems();
+                    }
                 }
             });
 
-        if (this.system.isMine) {
+        if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }
