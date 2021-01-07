@@ -746,3 +746,13 @@ class Auth(object):
         # TODO: Update params
         request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
         return delete_wrapper(request, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def register_client(session, description, name, headers=None):
+        params = {
+            "description": description,
+            "name": name
+        }
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
