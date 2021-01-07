@@ -70,6 +70,7 @@ urlpatterns = [
     url(r'^api/', include('cms.urls')),
     url(r'^api/notifications/', include(notifications_urls.public_patterns)),
     url(r'^notifications/', include('notifications.urls')),
+    url(r'^url_patterns/', include('oauth.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^zapier/', include('zapier.urls')),
 
