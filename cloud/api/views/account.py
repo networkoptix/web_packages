@@ -16,7 +16,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.serializers import ValidationError
-from oauth2_provider.models import AccessToken
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -113,75 +112,24 @@ def register(request):
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "login": login__body,
-                             "password": password__body
-                         },
-                         required=["login", "password"]
-                     ),
-                     responses={'200': account__response})
-@api_view(['POST'])
-@permission_classes((AllowAny, ))
-def authenticate(request):
-    require_params(request, ('email', 'password'))
-    email = request.data.get('email').lower()
-    password = request.data.get('password')
-    ip = get_ip(request)
-    code = Auth.get_code(email, password, ip)
-    return api_success({'code': code})
-
-
-@swagger_auto_schema(method="GET",  # auto_schema=None,
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "code": authorization_code__body
-                         },
-                         required=["code"]
-                     ))
-@api_view(['GET'])
-@permission_classes((AllowAny, ))
-def validate(request):
-    require_params(request, ('token', ))
-    return api_success(Auth.validate_token(request))
-
-
-@api_view(['GET'])
-@permission_classes((AllowAny, ))
-def refresh(request):
-    # Todo: Update this after making 3rd party endpoints.
-    access_token = request.COOKIES.get('access_token')
-    refresh_token = request.COOKIES.get('refresh_token')
-
-    if access_token:
-        AccessToken.objects.filter(token=access_token).delete()
-
-    if not refresh_token:
-        raise APINotAuthorisedException("Refresh token was not passed or expired.", ErrorCodes.not_authorized)
-
-    token = Auth.get_refresh_token(refresh_token)
-    validate_token = Auth.validate_token(token['access_token'])
-
-    try:
-        user = models.Account.objects.get(email=validate_token['username'])
-    except models.Account.DoesNotExist:
-        raise APINotAuthorisedException("Credentials invalid.")
-    return api_success(token)
-
-
-@swagger_auto_schema(method="POST",  # auto_schema=None,
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
                              "code": authorization_code__body,
                              "remember": remember__body,
                              "timezone": timezone__body
                          },
                          required=["code"]
-                     ))
+                     ),
+                     responses={'200': account__response})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def login(request):
-    code = request.data.get('code')
+    require_params(request, ('email', 'password'))
+
+    email = request.data.get('email').lower()
+    password = request.data.get('password')
+    ip = get_ip(request)
+
+    code = Auth.get_code(email, password, ip)
+
     token = Auth.get_access_token(code)
     validate_token = Auth.validate_token(token['access_token'])
     email = validate_token['username']

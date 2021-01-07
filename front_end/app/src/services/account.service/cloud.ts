@@ -91,16 +91,10 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         if (this.CONFIG.isLocal) {
             this.requestingLogin = this.mediaServerApi.login(email, password).toPromise();
         } else {
-            this.requestingLogin = this.cloudApi.authenticate(email, password);
+            this.requestingLogin = this.cloudApi.login(email, password, remember);
         }
 
         return this.requestingLogin.then((result: any) => {
-            if (!this.cloudApi.checkResponseHasError(result)) {
-                return this.cloudApi.login(result.code, remember);
-            }
-            // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({ error: { resultCode: result.resultCode } });
-        }).then((result: any) => {
             if (!this.cloudApi.checkResponseHasError(result)) {
                 if (this.CONFIG.isLocal) {
                     this.account = result;

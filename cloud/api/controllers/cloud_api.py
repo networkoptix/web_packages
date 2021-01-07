@@ -32,9 +32,10 @@ def auto_refresh_token(func):
     def _wrapper(session, *args, **kwargs):
         access_token = session.get('access_token')
         refresh_token = session.get('refresh_token')
-        kwargs['headers'] = {
-            'Authorization': f'Bearer {access_token}'
-        }
+        if access_token:
+            kwargs['headers'] = {
+                'Authorization': f'Bearer {access_token}'
+            }
         try:
             res = func(session, *args, **kwargs)
             res.raise_for_status()
@@ -381,14 +382,19 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get(session, ip=None, headers=None):
+    def get(session, username=None, password=None, ip=None, headers=None):
         # ip is not always provided here because of Zapier integration.
         # If someone fails to login to many times we don't want to block all requests from Zapier.
+        if headers is None:
+            headers = {}
         if ip:
             headers['X-Forwarded-For'] = ip
 
         request = CLOUD_DB_URL + '/account/get'
-        return get_wrapper(request, headers=headers)
+        auth = None
+        if username and password:
+            auth = HTTPDigestAuth(username, password)
+        return get_wrapper(request, headers=headers, auth=auth)
 
 
 class Storage(object):
@@ -602,3 +608,13 @@ class Auth(object):
         # TODO: Update params
         request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
         return delete_wrapper(request, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def register_client(session, description, name, headers=None):
+        params = {
+            "description": description,
+            "name": name
+        }
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)

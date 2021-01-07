@@ -300,7 +300,7 @@ export class NxCloudApiService {
     }
 
     authenticate(email: string, password: string) {
-        return this.http.post<any>(this.CONFIG.apiBase + '/account/authenticate', {
+        return this.http.post<any>(this.CONFIG.apiBase + '/oauth/authenticate', {
             email,
             password
         }).toPromise();
@@ -310,7 +310,8 @@ export class NxCloudApiService {
     login(code: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
-            code,
+            email,
+            password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();

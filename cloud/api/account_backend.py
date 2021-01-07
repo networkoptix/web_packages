@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 from api.models import AccountLoginHistory, AccountManager, Account
 from api.controllers.cloud_api import Auth
+from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
 logger = logging.getLogger(__name__)
@@ -31,11 +32,17 @@ def get_ip(request):
 class AccountBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None):
         try:
-            auth_type, token = request.META['HTTP_AUTHORIZATION'].split()
-            validate_token = Auth.validate_token(token)
-            user = {
-                'email': validate_token['username']
-            }
+            auth = request.META.get('HTTP_AUTHORIZATION', '')
+            validate_token = None
+            if auth:
+                auth_type, token = auth.split()
+                validate_token = Auth.validate_token(token)
+                user = {
+                    'email': validate_token['username']
+                }
+            else:
+                ip = get_ip(request)
+                user = Clouddb_Account.get(request.session, username=username, password=password, ip=ip)
             if username is None:
                 username = user['email']
         except APINotAuthorisedException as exception:
@@ -56,8 +63,9 @@ class AccountBackend(ModelBackend):
             if not AccountManager.is_email_in_portal(user['email']):
                 # so - user is in cloud_db, but not in cloud_portal
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
-        request.session['access_token'] = validate_token['access_token']
-        request.session['refresh_token'] = None
+        if validate_token:
+            request.session['access_token'] = validate_token.get('access_token')
+            request.session['refresh_token'] = None
         return Account.objects.get(email=user['email'])
 
     def get_user(self, user_id):
