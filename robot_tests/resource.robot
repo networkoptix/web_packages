@@ -937,6 +937,24 @@ Setup Custom Docker Server
     Release Lock   create_server_lock
     [Return]    ${server}
 
+Setup Docker System
+    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
+    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
+    Set To Dictionary    ${system}    cont=${system}[cont]
+    ${auth}=   Create List    admin    ${base password}
+    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+
+#   Connect system to cloud if email is provided
+    ${mock list}=   Create List
+    Run Keyword If    $cloud_email    Append To List    ${mock list}    1
+    FOR    ${i}    IN    @{mock list}
+        Set To Dictionary    ${system}    owner=${cloud email}
+        ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
+        Set To Dictionary    ${system}    id=${id}
+    END
+    [Return]    ${system}
+
 Create Custom Network
     [Arguments]    ${name}    ${num}
     ${driver}=   Set Variable    bridge

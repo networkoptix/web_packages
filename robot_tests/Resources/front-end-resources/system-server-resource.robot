@@ -17,7 +17,7 @@ Verify Server Buttons Are Enabled
 
 Log in to user and system
     [Arguments]    ${user}    ${system id}    ${verify}=True
-    Log in    ${user}    ${password}
+    Log in    ${user}    ${base password}
     Go To    ${ENV}/systems/${system id}
     #Run Keyword If    '${user}'=='${EMAIL OWNER}' and ${verify}==True    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     #Run Keyword If    '${user}'=='${EMAIL ADMIN}' and ${verify}==True   Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}

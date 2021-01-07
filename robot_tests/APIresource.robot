@@ -291,6 +291,7 @@ Get Server Id
         ${status}=   Run Keyword And Return Status    Should Contain    ${server name}    ${server}[name]
         Return From Keyword If    ${status}    ${server}[id]
     END
+
 Rename Server
     [Arguments]    ${system url}    ${system auth}    ${new name}
     ${old name}=   Get Server Name    ${system url}    ${system auth}
@@ -396,7 +397,13 @@ Check Allow Only Secure Connections
     Create Digest Session    Check HTTPS   ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
     Should Be Equal As Strings    ${resp.status_code}    200
-    
+
+Set System Name
+    [Arguments]    ${server url}    ${auth}    ${new name}
+    Create Digest Session    Rename System Session   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Rename System Session    /api/systemSettings?systemName=${new name}
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Set Camera Attribute
     [Arguments]    ${server url}    ${auth}    ${camera id}    ${attribute}    ${value}
     &{data} =    Create Dictionary
@@ -498,7 +505,7 @@ Change server name via API
     Return From Keyword    ${resp.json()}
 
 Change server port via API
-    [Arguments]    ${auth}    ${server url}    ${new port}    ${server id} 
+    [Arguments]    ${auth}    ${server url}    ${new port}    ${server id}
     &{header}=   Create Dictionary    X-Server-guid=${server id}
     &{data}=   Create Dictionary    port=${new port}
     Create Digest Session    Change Port session    ${server url}    auth=${auth}    disable_warnings=1

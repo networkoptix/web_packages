@@ -10,10 +10,53 @@ Log in to Autotests 2 System
     Run Keyword If    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
 
+System Admin Suite Setup
+    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
+    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
+    Set Suite Variable    ${email noperm}
+    ${cloud auth}=   Create List    ${owner}    ${base password}
+    Set Suite Variable    ${cloud auth}
+    ${system}=   Setup Docker System    cloud email=${owner}
+    Set Suite Variable    ${system}
+
+    ${users}=   Create Dictionary
+    FOR    ${role}    IN    @{permissions.keys()}
+        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
+        Share    ${cloud auth}   ${system}[id]    ${role}    ${email}
+        Set To Dictionary    ${users}    ${role}=${email}
+    END
+    Set Suite Variable    ${users}
+    Sleep    60
+    Open browser and go to URL    ${ENV}
+
+System Admin Suite Tear Down
+    Run keyword and ignore error    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
+    FOR    ${email}    IN   @{users.values()}    ${system}[owner]
+        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+    END
+    Delete Docker Server    ${system}[cont]
+    Close All Browsers
+
+System Admin Test Restart
+    Common Restart Logout    ${ENV}
+    ${auth}=   Create List    admin    ${base password}
+    Run keyword and return status    Rename System    ${auth}    ${system}[id]    ${system}[name]
+
 Open Rename System Dialog
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
 
+Change System Name
+    [Arguments]    ${new name}    ${save}=${True}
+    Click Element    ${SYSTEM NAME}
+    Execute JavaScript    document.getElementById("editable-title").innerHTML = "${new name}";
+    Press Keys    ${SYSTEM NAME}    ENTER
+    Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Run Keyword If    ${save}    Run Keywords
+        ...    Click Button    ${SAVE BUTTON}    AND
+        ...    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
+        ...    Wait until element is visible    ${NO UNSAVED CHANGES}    AND
+        ...    Sleep    1
 
 Settings on page should match settings on server
     Log    Enable auto discovery of cameras and servers

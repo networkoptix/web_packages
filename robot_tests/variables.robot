@@ -115,7 +115,7 @@ ${SYSTEM NAME}                        //div[contains(@class,"header-title")]/h2[
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
-${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
+${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[contains(@class, "edit-button")]
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
