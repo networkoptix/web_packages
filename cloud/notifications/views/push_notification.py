@@ -15,8 +15,9 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
-from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException, clean_passwords
+from api.helpers.exceptions import (
+    api_success, APINotAuthorisedException, APILogicException, clean_passwords
+)
 from api.models import Account
 from cms.models import Asset, AssetType, Customization, get_cloud_portal_asset
 from notifications.tasks import send_push_notification
@@ -58,9 +59,8 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
             request.data['system'] = system
         else:
             try:
-                ip = get_client_ip(request)
                 # System credentials should fail account.get and raise an exception
-                Clouddb_Account.get(user, password, ip)
+                Clouddb_Account.get(request, username=user, password=password)
                 raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
@@ -81,8 +81,7 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
 class CloudAccountBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
         try:
-            ip = get_client_ip(request)
-            clouddb_account = Clouddb_Account.get(user, password, ip)
+            clouddb_account = Clouddb_Account.get(request, username=user, password=password)
         except (APINotAuthorisedException, APILogicException):
             raise exceptions.AuthenticationFailed('Invalid email/password')
 
@@ -97,10 +96,14 @@ class CloudAccountBasicAuthentication(BasicAuthentication):
 class CloudSessionAuthentication(SessionAuthentication):
     def authenticate(self, request=None):
         try:
-            ip = get_client_ip(request)
             account = getattr(request._request, 'user', None)
-            if request.session and 'login' in request.session and 'password' in request.session:
-                clouddb_account = Clouddb_Account.get(request.session['login'], request.session['password'], ip)
+            if request.session and 'access_token' in request.session and 'refresh_token' in request.session:
+                clouddb_account = Clouddb_Account.get(request)
+                credentials = Clouddb_Account.create_temporary_credentials(request)
+                request.session['login'] = credentials['login']
+                request.session['password'] = credentials['password']
+            elif request.session and 'login' in request.session and 'password' in request.session:
+                clouddb_account = Clouddb_Account.get(request, request.session['login'], request.session['password'])
             else:
                 return None
         except APINotAuthorisedException:

@@ -41,8 +41,7 @@ class AccountBackend(ModelBackend):
                     'email': validate_token['username']
                 }
             else:
-                ip = get_ip(request)
-                user = Clouddb_Account.get(request.session, username=username, password=password, ip=ip)
+                user = Clouddb_Account.get(request, username=username, password=password)
             if username is None:
                 username = user['email']
         except APINotAuthorisedException as exception:

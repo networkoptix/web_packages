@@ -41,7 +41,7 @@ def create(request):
     if int(storage_size) < 1:
         raise APIInternalException('Storage size not set.')
 
-    storage_info = cloud_api.Storage.create(request.session,
+    storage_info = cloud_api.Storage.create(request,
                                             request.data.get('systemId'),
                                             storage_size)
     return api_success(storage_info)
@@ -81,7 +81,7 @@ def delete(request):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def move(request):
     require_params(request, ["destinationSystemId", "sourceSystemId"])
-    cloud_api.Storage.move(request.session,
+    cloud_api.Storage.move(request,
                            request.data.get("destinationSystemId"),
                            request.data.get("sourceSystemId"))
     return api_success()
@@ -94,7 +94,7 @@ def move(request):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def usage_stats(request):
     require_params(request, ['systemId'])
-    storages = cloud_api.Storage.list_system_storages(request.session,
+    storages = cloud_api.Storage.list_system_storages(request,
                                                       request.query_params.get('systemId'))
 
     if len(storages) == 0:

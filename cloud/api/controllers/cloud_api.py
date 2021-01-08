@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
-                                    APINotAuthorisedException, APINotFoundException)
+                                    APINotAuthorisedException, APINotFoundException, get_client_ip)
 
 logger = logging.getLogger(__name__)
 
@@ -29,28 +29,40 @@ def lower_case_email(func):
 
 
 def auto_refresh_token(func):
-    def _wrapper(session, *args, **kwargs):
-        access_token = session.get('access_token')
-        refresh_token = session.get('refresh_token')
+    def _wrapper(request, *args, **kwargs):
+        access_token = request.session.get("access_token")
+        refresh_token = request.session.get("refresh_token")
+        ip = get_client_ip(request)
+
+        if "headers" not in kwargs:
+            kwargs["headers"] = {}
+
+        if ip:
+            kwargs["headers"].update({
+                "X-Forwarded-For": ip
+            })
+
         if access_token:
-            kwargs['headers'] = {
-                'Authorization': f'Bearer {access_token}'
-            }
+            kwargs["headers"].update({
+                "Authorization": f"Bearer {access_token}"
+            })
+
         try:
-            res = func(session, *args, **kwargs)
+            res = func(request, *args, **kwargs)
             res.raise_for_status()
             return res
         except requests.exceptions.HTTPError as e:
             if not refresh_token:
                 raise e
-            tokens = Auth.get_refresh_token(refresh_token)
-            access_token = tokens['access_token']
-            session['access_token'] = access_token
-            session['refresh_token'] = tokens['refresh_token']
-            kwargs['headers'] = {
-                'Authorization': f'Bearer {access_token}'
+            tokens = Auth.get_refresh_token(refresh_token, ip=ip)
+            access_token = tokens["access_token"]
+            request.session["access_token"] = access_token
+            request.session["refresh_token"] = tokens["refresh_token"]
+
+            kwargs["headers"] = {
+                "Authorization": f"Bearer {access_token}"
             }
-            return func(session, *args, **kwargs)
+            return func(request, *args, **kwargs)
     return _wrapper
 
 
@@ -76,6 +88,17 @@ class TempLogin:
             'access_token': cls.access_token,
             'refresh_token': cls.refresh_token
         }
+
+
+class Grant:
+    authorization_code = "authorization_code"
+    password = "password"
+    refresh_token = "refresh_token"
+
+
+class ResponseType:
+    code = "code"
+    token = "token"
 
 
 def salt_machine(char_pool=string.ascii_lowercase + string.digits, size=15):
@@ -131,7 +154,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def list(session, one_customization=True, headers=None):
+    def list(request, one_customization=True, headers=None):
         params = {}
         if one_customization:
             params['customization'] = settings.CUSTOMIZATION
@@ -141,7 +164,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get(session, system_id, headers=None):
+    def get(request, system_id, headers=None):
         params = {
             'systemId': system_id
         }
@@ -150,7 +173,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def users(session, system_id, headers=None):
+    def users(request, system_id, headers=None):
         params = {
             'systemId': system_id
         }
@@ -159,7 +182,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def share(session, system_id, account_email, role, headers=None):
+    def share(request, system_id, account_email, role, headers=None):
         account_email = account_email.lower()
         params = {
             'systemId': system_id,
@@ -171,7 +194,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get_nonce(session, system_id, headers=None):
+    def get_nonce(request, system_id, headers=None):
         params = {
             'systemId': system_id
         }
@@ -180,7 +203,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def rename(session, system_id, system_name, headers=None):
+    def rename(request, system_id, system_name, headers=None):
         params = {
             'systemId': system_id,
             'name': system_name
@@ -190,7 +213,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def access_roles(session, system_id, headers=None):
+    def access_roles(request, system_id, headers=None):
         params = {
             'systemId': system_id
         }
@@ -200,7 +223,7 @@ class System(object):
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def unbind(session, system_id, headers=None):
+    def unbind(request, system_id, headers=None):
         params = {
             'systemId': system_id,
         }
@@ -209,7 +232,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def bind(session, name, headers=None):
+    def bind(request, name, headers=None):
         customization = settings.CLOUD_CONNECT['customization']
         params = {
             'name': name,
@@ -220,7 +243,7 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def merge(session, master_system_id, slave_system_id, headers=None):
+    def merge(request, master_system_id, slave_system_id, headers=None):
         params = {
             'systemId': slave_system_id
         }
@@ -306,7 +329,7 @@ class Account(object):
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def change_password(session, email, new_password, headers=None):
+    def change_password(request, email, new_password, headers=None):
         password_ha1, password_ha1_sha256 = Account.encode_password(email, new_password)
         params = {
             'passwordHa1': password_ha1,
@@ -317,7 +340,7 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def create_temporary_credentials(session,
+    def create_temporary_credentials(request,
                                      credential_type=None, expiration_period=None,
                                      auto_prolongation_enabled=None, prolongation_period=None,
                                      headers=None):
@@ -373,7 +396,7 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def update(session, first_name, last_name, headers=None):
+    def update(request, first_name, last_name, headers=None):
         params = {
             'fullName': ' '.join((first_name, last_name))
         }
@@ -382,14 +405,7 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get(session, username=None, password=None, ip=None, headers=None):
-        # ip is not always provided here because of Zapier integration.
-        # If someone fails to login to many times we don't want to block all requests from Zapier.
-        if headers is None:
-            headers = {}
-        if ip:
-            headers['X-Forwarded-For'] = ip
-
+    def get(request, username=None, password=None, headers=None):
         request = CLOUD_DB_URL + '/account/get'
         auth = None
         if username and password:
@@ -420,13 +436,13 @@ class Storage(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def _delete(session, storage_id, headers=None):
+    def _delete(request, storage_id, headers=None):
         return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def _merge(session, master_storage_id, slave_storage_id, headers=None):
+    def _merge(request, master_storage_id, slave_storage_id, headers=None):
         body = {
             "slaveStorageId": slave_storage_id
         }
@@ -435,7 +451,7 @@ class Storage(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def _move(session, system_id, storage_id, headers=None):
+    def _move(request, system_id, storage_id, headers=None):
         body = {
             "id": system_id
         }
@@ -445,14 +461,14 @@ class Storage(object):
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def _remove_from_system(session, system_id, storage_id, headers=None):
+    def _remove_from_system(request, system_id, storage_id, headers=None):
         return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def create(session, system_id, storage_size, headers=None):
+    def create(request, system_id, storage_size, headers=None):
         body = {
             "systems": [system_id],
             "totalSpace": storage_size
@@ -462,21 +478,21 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def delete_from_system(session, system_id):
-        storages = Storage.list_system_storages(session, system_id)
+    def delete_from_system(request, system_id):
+        storages = Storage.list_system_storages(request, system_id)
         logger.debug(f"Delete storage for system.\t SystemId: {system_id}")
         for storage in storages:
             storage_id = storage.get('id')
             logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
-            Storage._remove_from_system(session, system_id, storage_id)
-            Storage._delete(session, storage_id)
+            Storage._remove_from_system(request, system_id, storage_id)
+            Storage._delete(request, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def list_system_storages(session, system_id, headers=None):
+    def list_system_storages(request, system_id, headers=None):
         params = {
             "system-id": system_id
         }
@@ -486,104 +502,124 @@ class Storage(object):
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def list_cameras(session, storage_id, headers=None):
+    def list_cameras(request, storage_id, headers=None):
         return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def move(session, destination_system_id, source_system_id):
+    def move(request, destination_system_id, source_system_id):
         try:
-            source_storages = Storage.list_system_storages(session, source_system_id)
+            source_storages = Storage.list_system_storages(request, source_system_id)
         except APINotFoundException:
             raise APIRequestException('Source System has no storages')
 
         try:
-            destination_storages = Storage.list_system_storages(session, destination_system_id)
+            destination_storages = Storage.list_system_storages(request, destination_system_id)
         except APINotFoundException:
             destination_storages = []
 
         if len(destination_storages) == 0:
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(session, source_system_id, storage_id)
-                Storage._move(session, destination_system_id, storage_id)
+                Storage._remove_from_system(request, source_system_id, storage_id)
+                Storage._move(request, destination_system_id, storage_id)
 
         else:
             destination_storage_id = destination_storages[0]['id']
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(session, source_system_id, storage_id)
-                Storage._merge(session, destination_storage_id, storage_id)
+                Storage._remove_from_system(request, source_system_id, storage_id)
+                Storage._merge(request, destination_storage_id, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response
     @lower_case_email
     @auto_refresh_token
-    def statistics(session, storage_id, headers=None):
+    def statistics(request, storage_id, headers=None):
         return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/statistics", headers=headers)
 
 
 class Auth(object):
+    CLIENT_ID = "cloud_portal"
+    GRANT_TYPE = Grant
+    RESPONSE_TYPE = ResponseType
     # Using this for local development
     auth = HTTPBasicAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
 
     @staticmethod
+    def get_token_helper():
+        pass
+
+    @staticmethod
     @validate_response
     @lower_case_email
-    def get_code(email, password, ip=None):
-        headers = {}
+    def get_code(email="", password="", client_id=CLIENT_ID, grant_type=GRANT_TYPE.password, ip=None, refresh_token=None):
+        headers = {
+            "X-Forwarded-For": ip
+        }
         params = {
-            "client_id": "cloud_portal",
-            "grant_type": "password",
-            "response_type": "code",
+            "client_id": client_id,
+            "grant_type": grant_type,
+            "response_type": Auth.RESPONSE_TYPE.code,
             "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
             "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "username": email,
-            "password": password
         }
 
-        if ip:
-            headers['X-Forwarded-For'] = ip
+        if grant_type == Auth.GRANT_TYPE.password:
+            params.update({
+                "username": email,
+                "password": password
+            })
+        elif grant_type == Auth.GRANT_TYPE.refresh_token:
+            params["refresh_token"] = refresh_token
 
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def get_token(email, password):
+    def get_token(email, password, client_id=CLIENT_ID, ip=None):
+        headers = {
+            "X-Forwarded-For": ip
+        }
         params = {
-            "client_id": "cloud_portal",
-            "grant_type": "password",
-            "response_type": "token",
+            "client_id": client_id,
+            "grant_type": Auth.GRANT_TYPE.password,
+            "response_type": Auth.RESPONSE_TYPE.token,
             "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
             "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
             "username": email,
             "password": password
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
-    def get_access_token(code):
+    def get_access_token(code, ip=None):
+        headers = {
+            "X-Forwarded-For": ip
+        }
         params = {
-            "client_id": "cloud_portal",
-            "grant_type": "authorization_code",
-            "response_type": "token",
+            "grant_type": Auth.GRANT_TYPE.authorization_code,
+            "response_type": Auth.RESPONSE_TYPE.token,
             "code": code
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
-    def get_refresh_token(refresh_token):
+    def get_refresh_token(refresh_token, ip=None):
+        headers = {
+            "X-Forwarded-For": ip
+        }
         params = {
-            "grant_type": "refresh_token",
-            "response_type": "token",
+            "grant_type": Auth.GRANT_TYPE.refresh_token,
+            "response_type": Auth.RESPONSE_TYPE.token,
             "refresh_token": refresh_token
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
@@ -612,7 +648,7 @@ class Auth(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def register_client(session, description, name, headers=None):
+    def register_client(request, description, name, headers=None):
         params = {
             "description": description,
             "name": name

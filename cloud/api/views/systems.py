@@ -39,7 +39,7 @@ user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 @api_view(['GET'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def system(request, system_id):
-    data = cloud_api.System.get(request.session, system_id)
+    data = cloud_api.System.get(request, system_id)
     return api_success(data['systems'])
 
 
@@ -48,7 +48,7 @@ def system(request, system_id):
 @api_view(['GET'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def list_systems(request):
-    data = cloud_api.System.list(request.session)
+    data = cloud_api.System.list(request)
     return api_success(data['systems'])
 
 
@@ -74,7 +74,7 @@ def sharing(request, system_id):
         if not request.user.is_authenticated:
             raise APINotAuthorisedException('User is not authorized', ErrorCodes.not_authorized)
         # get authorized user here
-        data = cloud_api.System.users(request.session, system_id)
+        data = cloud_api.System.users(request, system_id)
         return api_success(data['sharing'])
 
     elif request.method == 'POST':
@@ -88,7 +88,7 @@ def sharing(request, system_id):
         require_params(request, ('user_email', 'role'))
         # 2. share or change sharing
         user_email = request.data['user_email'].lower()
-        data = cloud_api.System.share(request.session, system_id, user_email, request.data['role'])
+        data = cloud_api.System.share(request, system_id, user_email, request.data['role'])
 
         return api_success(data)
 
@@ -114,10 +114,10 @@ def digest(login, password, realm, nonce, method):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_auth(request, system_id):
     # Todo: Add oauth support when servers get it.
-    data = cloud_api.System.get_nonce(request.session, system_id)
+    data = cloud_api.System.get_nonce(request, system_id)
     nonce = data["nonce"]
     realm = settings.CLOUD_CONNECT['password_realm']
-    cred = cloud_api.Account.create_temporary_credentials(request.session,
+    cred = cloud_api.Account.create_temporary_credentials(request,
                                                           expiration_period=0,
                                                           auto_prolongation_enabled=0,
                                                           prolongation_period=0)
@@ -143,7 +143,7 @@ def get_auth(request, system_id):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def rename(request, system_id):
     require_params(request, ('name',))
-    data = cloud_api.System.rename(request.session, system_id, request.data['name'])
+    data = cloud_api.System.rename(request, system_id, request.data['name'])
     return api_success(data)
 
 
@@ -180,7 +180,7 @@ def merge(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def access_roles(request, system_id):
-    data = cloud_api.System.access_roles(request.session, system_id)
+    data = cloud_api.System.access_roles(request, system_id)
     return api_success(data['accessRoles'])
 
 
@@ -203,7 +203,7 @@ def disconnect(request):
 
     try:
         if request.user.is_authenticated:
-            cloud_api.System.unbind(request.session, request.data['system_id'])
+            cloud_api.System.unbind(request, request.data['system_id'])
         else:
             require_params(request, ('email',))
             with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
@@ -234,7 +234,7 @@ def disconnect(request):
 def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
-        data = cloud_api.System.bind(request.session, request.data['system_id'])
+        data = cloud_api.System.bind(request, request.data['system_id'])
         return api_success(data)
 
     require_params(request, ('email', 'password'))
