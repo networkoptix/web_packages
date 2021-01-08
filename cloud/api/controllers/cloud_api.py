@@ -628,29 +628,31 @@ class Auth(object):
 
     @staticmethod
     @validate_response
-    def delete_token(token):
+    @auto_refresh_token
+    def delete_token(request, token):
         return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", auth=Auth.auth)
 
     @staticmethod
     @validate_response
-    def delete_users_tokens():
-        # TODO: Update with params
+    @auto_refresh_token
+    def delete_users_tokens(request, headers=None):
         request = f"{CLOUD_DB_URL}/oauth2/user/self"
-        return delete_wrapper(request, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    def delete_users_tokens_by_client():
-        # TODO: Update params
-        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
-        return delete_wrapper(request, auth=Auth.auth)
+        return delete_wrapper(request, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def register_client(request, description, name, headers=None):
+    def delete_users_tokens_by_client(request, headers=None):
+        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
+        return delete_wrapper(request, headers=headers, auth=Auth.auth)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def register_client(request, description, name, redirect_uri, headers=None):
         params = {
             "description": description,
-            "name": name
+            "name": name,
+            "redirect_uri": redirect_uri
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
