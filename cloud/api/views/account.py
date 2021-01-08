@@ -119,7 +119,7 @@ def register(request):
                          required=["code"]
                      ),
                      responses={'200': account__response})
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes((AllowAny, ))
 def login(request):
     require_params(request, ('email', 'password'))
@@ -128,11 +128,10 @@ def login(request):
     password = request.data.get('password')
     ip = get_ip(request)
 
-    code = Auth.get_code(email, password, ip)
-
-    token = Auth.get_access_token(code)
+    token = Auth.get_token(email, password, ip=ip)
     validate_token = Auth.validate_token(token['access_token'])
-    email = validate_token['username']
+    if email != validate_token['username']:
+        raise APIInternalException("Token does not match email.")
 
     try:
         user = models.Account.objects.get(email=email)
@@ -225,7 +224,7 @@ def index(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def auth_key(request):
-    data = Account.create_temporary_credentials(request.session, credential_type='short')
+    data = Account.create_temporary_credentials(request, credential_type='short')
 
     key = base64.b64encode((data['login'] + ':' + data['password']).encode('utf-8'))
     return api_success({'auth_key': key})
