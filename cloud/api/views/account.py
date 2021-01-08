@@ -118,7 +118,7 @@ def register(request):
                          },
                          required=["code"]
                      ))
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes((AllowAny, ))
 def login(request):
     require_params(request, ('email', 'password'))
@@ -127,11 +127,10 @@ def login(request):
     password = request.data.get('password')
     ip = get_ip(request)
 
-    code = Auth.get_code(email, password, ip)
-
-    token = Auth.get_access_token(code)
+    token = Auth.get_token(email, password, ip=ip)
     validate_token = Auth.validate_token(token['access_token'])
-    email = validate_token['username']
+    if email != validate_token['username']:
+        raise APIInternalException("Token does not match email.")
 
     try:
         user = models.Account.objects.get(email=email)
