@@ -10,10 +10,14 @@ from api.account_backend import get_ip
 from api.controllers.cloud_api import Auth
 from api.helpers.exceptions import require_params, api_success, APIRequestException
 
+access_token__body = openapi.Schema(description="An access token.", type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
-
+client_id__body = openapi.Schema(description="A registered client_id", type=openapi.TYPE_STRING)
+grant_type__body = openapi.Schema(description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
 login__body = openapi.Schema(type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
+response_type__body = openapi.Schema(description="Valid options are code or token", type=openapi.TYPE_STRING)
+token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
 
 
 def get_param(request, name):
@@ -86,6 +90,19 @@ def register_client(request):
     return Auth.register_client(request, description, name)
 
 
+@swagger_auto_schema(methods=["GET", "POST"],  # auto_schema=None,
+                     operation_description="Returns a new access token.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "client_id": client_id__body,
+                             "email": login__body,
+                             "grant_type": grant_type__body,
+                             "password": password__body,
+                             "response_type": response_type__body,
+                         },
+                         required=["grant_type", "response_type"]
+                     ))
 @api_view(["GET", "POST"])
 @permission_classes((AllowAny, ))
 def token(request):
@@ -114,13 +131,30 @@ def token(request):
     raise APIRequestException("Invalid grant_type and response_type combination")
 
 
-@swagger_auto_schema(method="GET",  # auto_schema=None,
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Deletes the token.",
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "code": authorization_code__body
+                             "token": token__body
                          },
-                         required=["code"]
+                         required=["token"]
+                     ))
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope,))
+def revoke_token(request):
+    require_params(request, ("token", ))
+    return Auth.delete_token(request, token.data["token"])
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Validates access token.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "token": access_token__body
+                         },
+                         required=["token"]
                      ))
 @api_view(["GET"])
 @permission_classes((AllowAny, ))
