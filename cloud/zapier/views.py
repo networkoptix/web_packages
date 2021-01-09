@@ -23,6 +23,7 @@ CLOUD_INSTANCE_URL = settings.conf['cloud_portal']['url']
 logger = logging.getLogger(__name__)
 
 
+# Todo: Update zapier auth flow when mediaservers support oauth2 CLOUD-6499
 def zapier_exceptions(func):
     """
     Decorator for api_methods to handle all unhandled exception and return some reasonable response for a client
@@ -204,7 +205,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
 @zapier_exceptions
 def get_systems(request):
     user, email, password = authenticate(request)
-    data = cloud_api.System.list(email, password, False)
+    data = cloud_api.System.list(request, email=email, password=password, one_customization=False)
     zap_list = {'systems': []}
 
     for system in data['systems']:

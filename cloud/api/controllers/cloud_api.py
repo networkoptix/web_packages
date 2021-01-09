@@ -154,12 +154,17 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def list(request, one_customization=True, headers=None):
+    def list(request, email=None, password=None, one_customization=True, headers=None):
+        """Backwards support for digest. Used by push notifications and zapier"""
+        auth = None
         params = {}
         if one_customization:
             params['customization'] = settings.CUSTOMIZATION
 
-        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers)
+        if email and password:
+            auth = HTTPDigestAuth(email, password)
+
+        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -642,8 +647,8 @@ class Auth(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def delete_users_tokens_by_client(request, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
+    def delete_users_tokens_by_client(request, client_id, headers=None):
+        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
         return delete_wrapper(request, headers=headers, auth=Auth.auth)
 
     @staticmethod
