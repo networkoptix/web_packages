@@ -13,9 +13,12 @@ from api.helpers.exceptions import require_params, api_success, APIRequestExcept
 access_token__body = openapi.Schema(description="An access token.", type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
 client_id__body = openapi.Schema(description="A registered client_id", type=openapi.TYPE_STRING)
+description__body = openapi.Schema(description="Who is the client and what is it for.", type=openapi.TYPE_STRING)
 grant_type__body = openapi.Schema(description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
 login__body = openapi.Schema(type=openapi.TYPE_STRING)
+name_body = openapi.Schema(description="The name of the application", type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
+redirect_url__body = openapi.Schema(description="Where the endpoint should redirect to after authorization", type=openapi.TYPE_STRING)
 response_type__body = openapi.Schema(description="Valid options are code or token", type=openapi.TYPE_STRING)
 token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
 
@@ -37,11 +40,15 @@ def set_params_for_redirect(code, state):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Get an authorization code using email and password",
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
+                             "client_id": client_id__body,
                              "login": login__body,
-                             "password": password__body
+                             "password": password__body,
+                             "redirect_url": redirect_url__body,
+                             "response_type": response_type__body
                          },
                          required=["client_id", "email", "password", "redirect_url", "response_type"]
                      ))
@@ -64,6 +71,17 @@ def authenticate(request):
     return redirect(f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
 
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Login using existing session",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "client_id": client_id__body,
+                             "redirect_url": redirect_url__body,
+                             "response_type": response_type__body
+                         },
+                         required=["client_id", "redirect_url", "response_type"]
+                     ))
 @api_view(["GET"])
 @permission_classes((IsAuthenticated, ))
 def authenticate_with_session(request):
@@ -81,6 +99,16 @@ def authenticate_with_session(request):
     return redirect(f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Register 3rd party client apps",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "description": description__body,
+                             "name": name_body
+                         },
+                         required=["description", "name"]
+                     ))
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def register_client(request):

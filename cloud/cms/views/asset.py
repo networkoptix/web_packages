@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-from oauth2_provider.decorators import protected_resource
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAdminUser
@@ -603,7 +603,7 @@ version_id__query_param = openapi.Parameter("version_id", openapi.IN_QUERY, type
                      operation_description="Download data records for a given asset",
                      manual_parameters=[asset_id__route_param, draft__query_param, version_id__query_param])
 @api_view(["GET"])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def download_package(request, asset_id):
     asset = Asset.objects.get(id=asset_id)
     if not request.user.has_perm("cms.can_download_package"):
@@ -642,7 +642,7 @@ def download_package(request, asset_id):
 
 
 @api_view(["GET"])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def download_async_package(request, asset_id):
     asset = Asset.objects.get(id=asset_id)
     if not request.user.has_perm("cms.can_download_package"):
@@ -671,7 +671,7 @@ type__query_param = openapi.Parameter("type", openapi.IN_QUERY, required=True, t
                      operation_description="Returns a list of asset ids based on an asset type.",
                      manual_parameters=[customization__query_param, name__query_param, type__query_param])
 @api_view(["GET"])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_asset_ids_by_asset_type(request):
 
     if not request.user.has_perm("cms.can_download_package"):
@@ -752,7 +752,7 @@ def prepare_asset_info(request, customization, asset, ignore_error = False):
 
 
 @api_view(["GET"])
-@protected_resource()
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
