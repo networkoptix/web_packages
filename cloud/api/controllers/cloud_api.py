@@ -764,8 +764,8 @@ class Auth(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def delete_users_tokens_by_client(request, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/clientId"
+    def delete_users_tokens_by_client(request, client_id, headers=None):
+        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
         return delete_wrapper(request, headers=headers, auth=Auth.auth)
 
     @staticmethod
