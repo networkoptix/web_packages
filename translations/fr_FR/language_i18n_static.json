@@ -406,7 +406,7 @@
         "EmailAlreadyExists": "Courriel déjà enregistré",
         "FAIL": "Système <strong>{{failedSystem}}</strong> hors ligne.",
         "Connection timed out": "Système <strong>{{failedSystem}}</strong> hors ligne.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "Bad Gateway": "Le système <strong>{{failedSystem}}</strong> est actuellement inaccessible. <br>Essayez à nouveau dans quelques instants ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> support</a>.",
         "INCOMPATIBLE": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers la <a href=\"/download\">dernière version</a>.",
         "cloud_systems_have_different_owners": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
@@ -742,7 +742,7 @@
             "starter": "Entrée",
             "iomodule": "Module IO",
             "bridge": "Pont",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Serveur introuvable"
         },
         "messages": {
             "required": "{{number}} autres requis",
