@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Activez votre compte"
+    "emailSubject": "Activer votre compte"
   },
   "cloud_invite": {
     "emailSubject": "Vous avez été invité à %CLOUD_NAME%"
@@ -24,7 +24,7 @@
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} a une nouvelle version à réviser"
   },
   "restore_password": {
-    "emailSubject": "Réinitialisez votre mot de passe"
+    "emailSubject": "Réinitialiser votre mot de passe"
   },
   "system_invite": {
     "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vous invite à %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}} Système vidéo {{{message.system_name}} a été partagé avec vous{{/message.sharer_name}}"
