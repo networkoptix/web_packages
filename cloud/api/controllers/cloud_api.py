@@ -567,9 +567,7 @@ class Auth(object):
         params = {
             "client_id": client_id,
             "grant_type": grant_type,
-            "response_type": Auth.RESPONSE_TYPE.code,
-            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "response_type": Auth.RESPONSE_TYPE.code
         }
 
         if grant_type == Auth.GRANT_TYPE.password:
