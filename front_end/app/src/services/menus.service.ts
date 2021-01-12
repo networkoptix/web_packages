@@ -22,6 +22,7 @@ export enum Auth {
 export class MenuNode {
     public icon?: string;
     public currentRoute?: boolean;
+    public breadcrumbs: MenuNode[];
 
     constructor(
         public name = '',
@@ -89,7 +90,7 @@ export class NxMenusService implements OnDestroy {
             return from([menu]);
         }
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
-            .pipe(map(([login]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT)));
+            .pipe(map(([login]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT).map(this.translateNode())));
     }
 
     filterMenu = (menu: MenuNode[], auth: Auth) => {
@@ -105,14 +106,14 @@ export class NxMenusService implements OnDestroy {
         return menu.reduce(checkNodes, []);
     }
 
-    private translateNode = (lang) => (node: MenuNode) => {
+    private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {
             return;
         }
-        const display_name = this.translate.instant(node.display_name || node.name);
-        const name = this.translate.instant(node.name);
-        const nodes = node.nodes?.map(this.translateNode(lang)) || [];
-        return { ...node, display_name, name, nodes };
+        const display_name = lang ? this.translate.instant(node.display_name || node.name) : node.display_name || node.name;
+        const name = lang ? this.translate.instant(node.name) : node.name;
+        const nodes = node.nodes?.map(this.translateNode(lang, [...breadcrumbs, node])) || [];
+        return { ...node, display_name, name, nodes, breadcrumbs };
     }
 
     getUrl(systemId: string, endpoint = this.endpoint) {

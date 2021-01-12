@@ -1,5 +1,10 @@
+<ng-template #tabDropdown>
+    <nx-nav-dropdown [dropdownNode]="node"></nx-nav-dropdown>
+</ng-template>
+
 <li class="tab-link"
     *ngIf="node && !node.new_window"
     [ngClass]="{active: headerService.currentLocation.path === node.url}">
-    <a class="pl-3 pr-3 d-block w-100 h-100" (click)="headerService.handleNav(node)" [innerText]="node.display_name"></a>
+    <a *ngIf="!node.nodes?.length; else tabDropdown"
+        class="pl-3 pr-3 d-block w-100 h-100" (click)="headerService.handleNav(node)" [innerText]="node.display_name"></a>
 </li>

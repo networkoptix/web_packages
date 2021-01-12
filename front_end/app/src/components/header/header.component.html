@@ -1,12 +1,23 @@
 <!-- Templates used for render and for size calculations -->
 <!-- Views used for both render and calculating element size off screen should use an ng-template-->
-<!-- This will keep off screen calculated sizes consisten with rendered sizes -->
+<!-- This will keep off screen calculated sizes consistent with rendered sizes -->
 <ng-template #navIcon>
     <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
         <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
             <img [alt]="CONFIG.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
         </a>
     </div>
+</ng-template>
+
+<ng-template #breadcrumbLinks let-breadcrumbs="breadcrumbs" let-renderView="renderView">
+        <ng-container *ngFor="let breadcrumb of breadcrumbs;let length = count;let index = index">
+            <div *ngIf="!renderView || index >= (hiddenBreadcrumbs$ | async)" class="breadcrumb-wrapper">
+                <div class="breadcrumb-button">
+                    <a class="pl-3 pr-3 d-block w-100 h-100" (click)="headerService.handleNav(breadcrumb)" [innerText]="breadcrumb.display_name"></a>
+                </div>
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'header_arrow.svg'"></svg-icon>
+            </div>
+        </ng-container>
 </ng-template>
 
 <ng-template #menuTabs>
@@ -46,6 +57,11 @@
         <div class="app-header-left">
             <ng-container *ngTemplateOutlet="navIcon"></ng-container>
             <ul class="nav navbar-nav d-md-flex">
+                <div #breadcrumbWrapper class="d-flex" (resize)="updateBreadcrumbSizes(breadcrumbWrapper)">
+                    <ng-container *ngTemplateOutlet="breadcrumbLinks;context:{
+                        breadcrumbs:filterBreadcrumbs(headerService.currentLocation?.breadcrumbs)
+                    }"></ng-container> 
+                </div>
                 <div class="tab-wrapper" (resize)="tabsWidth$.next($event.width)">
                 <ng-container *ngTemplateOutlet="menuTabs"></ng-container>
                 </div>
@@ -53,7 +69,7 @@
 
         </div>
         <div (resize)="menuTabsCollapsed$.next($event.width)">
-            <nx-nav-dropdown></nx-nav-dropdown>
+            <nx-nav-dropdown [nodeLocation]="headerService.currentLocation"></nx-nav-dropdown>
         </div>
         <div class="app-header-right" (resize)="rightNavWidth$.next($event.width)">
             <ng-container *ngTemplateOutlet="rightNav;context:{showSmall:false}"></ng-container>
@@ -88,15 +104,30 @@
                                 *ngIf="systems?.length || headerService?.nodes?.length"
                                 [endpoint]="active"
                                 [systems]="systems"
-                                [hideArrow]="!headerService.currentLocation.parentNode?.nodes || hideTabsAndDropdown$.value"
-                                [node]="headerService.currentLocation.parentNode">
+                                [hideArrow]="!mainNode || hideTabsAndDropdown$.value"
+                                [node]="mainNode">
                         </nx-header-main-button>
                     </div>
-                    <div  *ngIf="!(hideTabsAndDropdown$ | async)" class="tab-wrapper">
-                        <ng-container *ngIf="!(showTabs$ | async); else menuTabs">
-                            <nx-nav-dropdown></nx-nav-dropdown>
-                        </ng-container>
-                    </div>
+                    <ng-container *ngIf="!(hideTabsAndDropdown$ | async)">
+                        <div *ngIf="filteredBreadcrumbs.length && (hiddenBreadcrumbs$ | async)" class="breadcrumb-wrapper">
+                            <div class="breadcrumb-button collapsed-breadcrumb">
+                                <a class="px-2 d-block w-100 h-100" (click)="headerService.handleNav(filteredBreadcrumbs[hiddenBreadcrumbs$.value - 1])">
+                                    <ng-template #backButton>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_back.svg'" [svgStyle]="{'width.px': 24}"></svg-icon>
+                                    </ng-template>
+                                    <span *ngIf="filteredBreadcrumbs.length !== (hiddenBreadcrumbs$ | async);else backButton">...</span>
+                                </a>
+                            </div>
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'header_arrow.svg'"></svg-icon>
+                        </div>
+                        <ng-container *ngTemplateOutlet="breadcrumbLinks;context:{
+                            breadcrumbs:filteredBreadcrumbs,
+                            renderView: true
+                        }"></ng-container>
+                        <div *ngIf="!(showTabs$ | async); else menuTabs" class="tab-wrapper">
+                            <nx-nav-dropdown [nodeLocation]="headerService.currentLocation"></nx-nav-dropdown>
+                        </div>
+                    </ng-container>
                 </ul>
             </div>
 

@@ -35,7 +35,8 @@ class CombinedWidths {
         public mainButton: number = 0,
         public tabs: number = 0,
         public rightNav: number = 0,
-        public windowWidth: number = 0
+        public windowWidth: number = 0,
+        public breadcrumbWidths: number[] = []
     ) {}
 }
 
@@ -84,6 +85,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     showTabs$ = new BehaviorSubject(true);
     hideTabsAndDropdown$ = new BehaviorSubject(false);
     menuTabsCollapsed$ = new BehaviorSubject(0);
+    hiddenBreadcrumbs$ = new BehaviorSubject(0);
 
     // Observables used for tracking element sizes
     // If additional elements need to be tracked use (resize) directive on those elements to track sizes
@@ -93,6 +95,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     rightNavWidthCollapsed$ = new BehaviorSubject(0);
     tabsWidth$ = new BehaviorSubject(0);
     windowWidth$ = new BehaviorSubject(0);
+    breadcrumbWidth$ = new BehaviorSubject<number[]>([])
     combinedWidths$ = new BehaviorSubject(new CombinedWidths());
 
     getUrlSystemId;
@@ -122,7 +125,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private router: Router,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
-        @Inject(WINDOW) window: Window,
+        @Inject(WINDOW) private window: Window,
         private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
@@ -131,20 +134,28 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.nodes = header;
         });
         // Updates windowWidth$ behavior subject on window resize
-        this.resizeSubscription = fromEvent(window, 'resize').pipe(
+        this.resizeSubscription = fromEvent(this.window, 'resize').pipe(
             map((event: any) => event.target.innerWidth as number),
-            startWith(window.innerWidth)
+            startWith(this.window.innerWidth)
         ).subscribe(width => this.windowWidth$.next(width));
 
         // Combines all tracked element sizes into a flattened observable and updates combinedWidths$ with latest values
-        this.widthSubscription = combineLatest(this.iconWidth$, this.mainButtonWidth$, this.tabsWidth$, this.rightNavWidth$, this.windowWidth$).pipe(
-            map(([icon, mainButton, tabs, rightNav, windowWidth]) => ({
-                totalWidths: icon + mainButton + tabs + rightNav,
+        this.widthSubscription = combineLatest([
+            this.iconWidth$,
+            this.mainButtonWidth$,
+            this.tabsWidth$,
+            this.rightNavWidth$,
+            this.windowWidth$,
+            this.breadcrumbWidth$
+        ]).pipe(
+            map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
+                totalWidths: icon + mainButton + tabs + rightNav + breadcrumbWidths.reduce((a, c) => a + c, 0),
                 icon,
                 mainButton,
                 tabs,
                 rightNav,
-                windowWidth
+                windowWidth,
+                breadcrumbWidths
             }))
         ).subscribe(combinedWidths => this.combinedWidths$.next(combinedWidths));
 
@@ -157,10 +168,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             mainButton,
             tabs,
             rightNav,
-            windowWidth
+            windowWidth,
+            breadcrumbWidths
         }) => {
             const padding: sizes = sizes.SM;
             const nodes = !!headerService.currentLocation.parentNode?.nodes;
+            const breadcrumbs = this.filterBreadcrumbs(headerService.currentLocation?.breadcrumbs);
+            const hiddenBreadcrumbsButtonSize = 40;
 
             // Used to keep track of element total widths at different states of updating the view states
             let navWidth = totalWidths + padding;
@@ -170,12 +184,21 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             let showSmallRightNav = false;
             let showTabs = true;
             let hideTabsAndDropdown = false;
+            let hiddenBreadcrumbs = 0;
 
             // The code below is purposefully kept really imperative and with little abstraction to keep it easy to understand
             // All component views start at largest state and gets toggled to smaller versions in the order that the if statements are ran
             // The navWidth gets updated on each component view state change
             // In cases where a smaller view needs to be used on a component most likely there will be one or more previously checked
             // components where you'll want check if there is now room.
+            if (navWidth > windowWidth && breadcrumbs.length) {
+                navWidth += hiddenBreadcrumbsButtonSize;
+                while (navWidth > windowWidth && hiddenBreadcrumbs < breadcrumbs.length) {
+                    navWidth -= breadcrumbWidths[hiddenBreadcrumbs];
+                    hiddenBreadcrumbs += 1;
+                }
+            }
+
             if (!nodes) {
                 navWidth = navWidth - tabs;
             }
@@ -212,6 +235,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.showSmallRightNav$.next(showSmallRightNav);
             this.showTabs$.next(showTabs);
             this.hideTabsAndDropdown$.next(hideTabsAndDropdown);
+            this.hiddenBreadcrumbs$.next(hiddenBreadcrumbs);
         });
     }
 
@@ -258,6 +282,19 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.system = undefined;
         }
     }
+
+    updateBreadcrumbSizes = (wrapper) => this.breadcrumbWidth$.next(
+        <number[]>Array.from(
+            wrapper.children
+        ).map((
+            element: HTMLElement
+        ) => parseInt(
+            this.window.getComputedStyle(
+                element
+            ).getPropertyValue(
+                'margin-right'
+            )) + element.offsetWidth)
+    )
 
     ngOnDestroy() {}
 
@@ -482,6 +519,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             !this.active.ipvd;
     }
 
+    filterBreadcrumbs(nodes) {
+        return (nodes || []).filter(({ url }) => url);
+    }
+
+    get filteredBreadcrumbs() {
+        return this.filterBreadcrumbs(this.headerService.currentLocation?.breadcrumbs);
+    }
+
     get mainUrl() {
         if (!this.user.email) {
             return '/';
@@ -490,5 +535,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         } else {
             return '/systems';
         }
+    }
+
+    get mainNode() {
+        return this.headerService.currentLocation.parentNode?.breadcrumbs?.[0] || this.headerService.currentLocation.parentNode;
     }
 }

@@ -32,7 +32,7 @@
         background: theme_variables.$dark13;
         border-bottom: 1px solid transparent;
     }
-    & > a {
+    & > * {
         color: theme_variables.$additional_light1 !important;
     }
 }

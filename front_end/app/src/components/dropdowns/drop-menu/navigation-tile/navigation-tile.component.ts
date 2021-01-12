@@ -40,4 +40,11 @@ export class NxNavigationTileComponent {
     }
 
     ngOnDestroy() {}
+
+    checkActive(node) {
+        const { childNode } = this.headerService.currentLocation;
+        const { url } = node;
+        const breadcrumbUrls = (childNode?.breadcrumbs || []).map(({ url }) => url).filter(url => url);
+        return breadcrumbUrls.includes(url);
+    }
 }
