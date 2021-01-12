@@ -580,7 +580,8 @@ if LOCAL_ENVIRONMENT:
     NPM_FINDER_USE_CACHE = False
 NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/*'],
-    'split.js': ['dist/*']
+    'split.js': ['dist/*'],
+    'csstree-validator': ['dist/*']
 }
 
 

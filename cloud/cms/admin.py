@@ -438,8 +438,10 @@ class AssetAdmin(CMSAdmin):
             url(r'^(?P<asset_id>.+?)/pages/$', self.admin_site.admin_view(self.page_list_view), name='pages'),
             url(r'^(?P<asset_id>.+?)/pages/(?P<context_id>.+?)/change/$',
                 self.admin_site.admin_view(self.change_page),
-                name='change_page')
+                name='change_page'),
+            url(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
         ]
+    
         return my_urls + urls
 
     def response_change(self, request, obj):
@@ -463,7 +465,7 @@ class AssetAdmin(CMSAdmin):
     asset_settings.short_description = 'Asset settings'
     asset_settings.allow_tags = True
 
-    def page_list_view(self, request, asset_id=None):
+    def page_list_view(self, request, asset_id=None, custom_preview=None):
         context = {
             'title': 'Edit a page',
             'app_label': self.model._meta.app_label,
@@ -477,14 +479,16 @@ class AssetAdmin(CMSAdmin):
         }
 
         if not context['asset']:
-            raise PermissionDenied()
+            return redirect('/admin/cms/asset/add/?_to_field=id&_popup=1')
 
         if asset_id:
             qs = context['asset'].asset_type.context_set.all()
             exclude_hidden = qs.filter(hidden=False)
             if qs.count() == 1 or not request.user.is_superuser and exclude_hidden.count() == 1:
                 context_id = exclude_hidden.first().id
-                return redirect(reverse('admin:change_page', args=[asset_id, context_id]))
+                params = f'?customPreview={custom_preview}' if custom_preview else ''
+                
+                return redirect(reverse('admin:change_page', args=[asset_id, context_id]) + params)
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = exclude_hidden
 
@@ -895,12 +899,14 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
         self.total_depth = kwargs.pop('total_depth', 1)
         self.chosen_customization = kwargs.pop('customization', 'all')
         self.user_customizations = kwargs.pop('user_customizations', [])
+        self.custom_preview = kwargs.pop('custom_preview')
         super().__init__(*args, **kwargs)
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
         formset.form.current_customization = self.chosen_customization
         formset.form.user_customizations = self.user_customizations
+        formset.form.custom_preview = self.custom_preview
         return formset
 
     def get_queryset(self, request):
@@ -910,7 +916,8 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
         if self.depth < self.total_depth:
             return [MenuNodeInline(
                 self.model, self.admin_site, depth=self.depth + 1, total_depth=self.total_depth,
-                customization=self.chosen_customization, user_customizations=self.user_customizations
+                customization=self.chosen_customization, user_customizations=self.user_customizations,
+                custom_preview=self.custom_preview
             )]
         return []
 
@@ -967,7 +974,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             if obj_orig.depth > 0:
                 return [MenuNodeInline(
                     self.model, self.admin_site, depth=1, total_depth=obj_orig.depth,
-                    customization=self.chosen_customization, user_customizations=request.user.customizations
+                    customization=self.chosen_customization, user_customizations=request.user.customizations,
+                    custom_preview=self.model.preview_url
                 )]
         return []
 

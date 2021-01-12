@@ -6,6 +6,7 @@ from django.db.models import When, Case
 from django.template.loader import render_to_string
 from django.urls import reverse
 from dal import autocomplete
+from urllib.parse import quote
 
 from api.models import Account
 from cms.models import *
@@ -472,8 +473,11 @@ class MenuNodeInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['asset'].widget.can_add_related = False
-        self.fields['asset'].widget.get_related_url = lambda *_: reverse('admin:pages', kwargs={'asset_id': '__fk__'})
+        custom_preview_url = self.instance.parent_menu and quote(self.instance.parent_menu.preview_url)
+        self.fields['asset'].widget.can_add_related = True
+        self.fields['asset'].widget.get_related_url = lambda *_: (
+            reverse('admin:pages_custom_preview', kwargs={'asset_id': '__fk__', 'custom_preview': custom_preview_url}) if custom_preview_url
+            else reverse('admin:pages', kwargs={'asset_id': '__fk__'}))
         self.fields['permissions'].label_from_instance = lambda obj: obj.name
         if self.current_customization == 'all':
             self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
