@@ -188,7 +188,7 @@ export class NxUtilsService {
         function ipReducer(result: {ipv6: string[], ipv4: string[]}, currentValue: string) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);
-            } else {
+            } else if (currentValue) {
                 result.ipv4.push(currentValue);
             }
             return result;
