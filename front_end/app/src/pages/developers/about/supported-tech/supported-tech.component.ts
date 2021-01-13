@@ -5,6 +5,7 @@ import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
 import { WINDOW } from '../../../../services/window-provider';
 import { ErrorStateManager } from '../error-state/error-state-manager';
+import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,6 +20,7 @@ export class NxSupportedTechComponent {
     errorManager: ErrorStateManager;
 
     constructor(
+        public router: Router,
         configService: NxConfigService,
         @Inject(WINDOW) private window: Window
     ) {
@@ -32,11 +34,11 @@ export class NxSupportedTechComponent {
             [
                 this.errorManager.buildConfig(
                     ['title'],
-                    this.errorManager.buildConfig(['title', 'url', 'icon'])
+                    this.errorManager.buildConfig(['title', 'icon'])
                 ),
                 this.errorManager.buildConfig(
                     ['title'],
-                    this.errorManager.buildConfig(['title', 'url'])
+                    this.errorManager.buildConfig(['title'])
                 )
             ]
         );

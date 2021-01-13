@@ -51,7 +51,7 @@ ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${
 ...    ${EMAIL AUTO TESTS ANCHOR}=viewer
 
 &{permissions}
-...    cloudAdmin=GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
+...    cloudAdmin=GlobalAdminPermission
 ...    viewer=GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission
 ...    liveViewer=GlobalAccessAllMediaPermission
 ...    advancedViewer=GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission

@@ -409,6 +409,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+        const hasMultipleStorages = this.dropdownStorages.length > 1;
+        this.systemStorageChosen = hasMultipleStorages && !newStorage.isNotSystem;
         if (newStorage.id === this.currentAnalyticsDbId) return;
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
@@ -432,15 +434,20 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
+                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
                         this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
+                    } else if (closeRes === 'cancel') {
+                        this.selectedStorage = { ...this.selectedStorage };
+                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
                     }
+                    this.currentAnalyticsDbId = this.selectedStorage.id;
+                    this.saveStorageWatcher.value = false;
                 });
         } else {
             this.selectedStorage = newStorage;
             this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
+            this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
         }
-        const hasMultipleStorages = this.dropdownStorages.length > 1;
-        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
         this.checkingForDataAnalytics = false;
     }
 

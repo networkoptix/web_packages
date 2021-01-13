@@ -199,3 +199,18 @@ input[type=number] {
 .arrow-flip {
     pointer-events: none;
 }
+
+.storage-form {
+    overflow-x: scroll !important;
+    table {
+        min-width: 680px !important;
+    }
+}
+
+.reserved-cell {
+    min-width: 20ch !important;
+}
+
+.size-input {
+    width: 100% !important;
+}

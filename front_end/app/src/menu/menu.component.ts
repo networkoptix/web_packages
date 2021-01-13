@@ -11,7 +11,7 @@ import { NxLanguageProviderService }        from '@services/nx-language-provider
 import { NxUtilsService }                   from '@services/utils.service';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxSystem }                         from '@services/system.service';
-import { LanguageI18NStaticTypes }          from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { map, startWith }                   from 'rxjs/operators';
 
@@ -34,6 +34,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     @Input() autoFit = false;
 
     @Output() menuSearchMode = new EventEmitter();
+    @Output() contentToggle = new EventEmitter();
 
     systemId;
     selectedLevel1: string;
@@ -142,7 +143,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
             if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
                 this.menuService.content = changes.content.currentValue.level1;
             }
-
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.fillerItemsBy(this.menuModel);
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
@@ -205,7 +205,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.scrollHeightFit = '';
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
-                    const windowHeightFit = this.windowHeight - 40;
+                    const windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
                 }
@@ -240,6 +240,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
+        // clear toggled items
+        this.menuContent.forEach((part, index, arr) => {
+            this.toggleItem(false, index);
+        });
+
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
@@ -307,7 +312,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     toggleItem(state, idx) {
+        // menu have internal state but also is controlled by parent component
+        // so we need to update both states
         this.menuContent[idx].toggle = state;
+        this.contentToggle.emit({ idx, state });
     }
 
     @HostListener('mousemove', ['$event'])

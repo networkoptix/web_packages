@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, ViewChild }                 from '@angular/core';
+import { Component, ElementRef, Inject, Input, ViewChild }                 from '@angular/core';
 import { BehaviorSubject }           from 'rxjs';
 
 import { BaseDropdown }              from '../../dropdowns/injDropdown';
@@ -16,10 +16,30 @@ import { WINDOW } from '../../../services/window-provider';
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     @ViewChild('dropDownButton') dropDownButton: ElementRef
-    name = new BehaviorSubject('');
-    nodes = new BehaviorSubject<MenuNode[]>([])
-    path = ''
+    @Input() nodeLocation;
+    @Input() dropdownNode;
+    @Input() enableDropdownOnly = false
+
+    name = '';
     offset = 0;
+
+    get path() {
+        return this.nodeLocation?.path || false;
+    }
+
+    get nodes() {
+        const nodes = this.dropdownNode?.nodes || this.nodeLocation?.parentNode?.nodes || this.nodeLocation?.nodes;
+        if (!nodes) {
+            return [];
+        }
+
+        const node = nodes.find(({ url }) => {
+            return url === this.path;
+        });
+        this.name = node?.name || this.dropdownNode.display_name;
+        return nodes;
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
@@ -27,22 +47,6 @@ export class NxNavDropdownComponent extends BaseDropdown {
         @Inject(WINDOW) private window: Window
     ) {
         super(languageService, configService);
-        headerService.currentLocation$.subscribe(({ path, parentNode }) => {
-            this.path = path;
-            const nodes = parentNode?.nodes;
-            if (!nodes) {
-                return;
-            }
-
-            const node = nodes.find(({ url }) => {
-                return url === path;
-            });
-            if (node) {
-                this.name.next(node.name);
-            }
-
-            this.nodes.next(nodes);
-        });
     }
 
     hide() {
@@ -55,6 +59,6 @@ export class NxNavDropdownComponent extends BaseDropdown {
     }
 
     get hideDropdown() {
-        return this.nodes.value.length < 2;
+        return this.nodes.length < 2 && !this.dropdownNode;
     }
 }

@@ -73,7 +73,7 @@ export class NxOverlayModalComponent implements OnInit {
                 system.getInfoAndPermissions().then(() => {
                     this.system = system;
                     this.getServers();
-                    this.serverId = this.system.moduleInfo.id;
+                    this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
                     this.routeSubscription = this.router.events.subscribe(route => {
                         if (route instanceof NavigationEnd) {
                             this.servers.forEach(server => {
@@ -99,7 +99,7 @@ export class NxOverlayModalComponent implements OnInit {
             const untilRefresh = this.timeoutUntilRefresh$.value;
 
             if (!this.oneCheckAtATime && untilRefresh < 1) {
-                this.checkIfOnline().then(res => {
+                this.checkIfOnline().then((res: any) => {
                     this.oneCheckAtATime = false;
                     // restarts the interval after checkIfOnline
                     if (!res.ok && this.nextInterval <= 60) {

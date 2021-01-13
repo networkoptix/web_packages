@@ -45,7 +45,7 @@ export class UserManager {
     // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine = this.currentUserEmail === email || this.currentUser?.isLocalOwner;
+        this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;
     }
 
     isAdmin(user: NxSystemRole) {
@@ -90,7 +90,10 @@ export class UserManager {
                     return user.id !== data.id;
                 });
             })
-            .catch(() => { });
+            .catch(err => {
+                console.info('failed to removed from system directly');
+                console.error(err);
+            });
     }
 
     findAccessRole(user: NxSystemUser) {

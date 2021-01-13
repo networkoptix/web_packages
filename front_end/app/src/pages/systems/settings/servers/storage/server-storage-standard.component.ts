@@ -283,7 +283,7 @@ export class NxSystemStorageComponent implements OnInit {
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
                 tap(storages => {
-                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup, status }) => hasBackup || isBackup && !status, false);
+                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup }) => hasBackup || isBackup, false);
                 })
             ).subscribe();
         }
@@ -370,12 +370,13 @@ export class NxSystemStorageComponent implements OnInit {
             });
         } catch (error) {
             console.error('error while retrieving data checking server for default backup settings', error);
+            return false;
         }
     }
 
     updateCustom = () => {
         return this.doesCurrentServerHaveDefaultSettings().then(hasDefault => {
-            this.customSettings = !hasDefault && this.isBackupOn.originalValue;
+            this.customSettings = !hasDefault;
         });
     }
 
@@ -718,7 +719,7 @@ export class NxSystemStorageComponent implements OnInit {
         };
 
         const pollStorageStatus = (beingChecked) => this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, false, maxTimeout).pipe(
-            map(({ reply: { storages } }) => storages),
+            map(({ reply }) => reply?.storages || []),
             tap(updateChangedStatus(beingChecked)),
             map(checkIfStoragesMissing(beingChecked)),
             takeWhile(storagesMissing => storagesMissing || filterBeingChecked(beingChecked)),

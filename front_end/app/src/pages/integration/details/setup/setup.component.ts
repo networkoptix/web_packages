@@ -4,6 +4,8 @@ import { IntegrationService }           from '../../integration.service';
 import { NxMenuService }                from '../../../../menu';
 import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxPageService }                from '../../../../services/page.service';
+import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
 
 @Component({
     selector    : 'setup-component',
@@ -12,9 +14,10 @@ import { NxPageService }                from '../../../../services/page.service'
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
-    plugin: any = {};
-
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    plugin: any = {};
 
     private setupDefaults() {
         this.plugin = this.integrationService.getIntegrationPlugin();
@@ -23,17 +26,23 @@ export class NxSetupComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
+        language: NxLanguageProviderService,
         private pageService: NxPageService,
         private integrationService: IntegrationService,
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.pageService.pageDescription = this.plugin.instructions.installationInstructions;
+        this.pageService.pageDescription = NxLanguageProviderService.translate(
+            this.LANG.pageDescriptions.integrationSetup, {
+                PLUGIN_NAME              : this.plugin.information.name,
+                PLUGIN_SHORT_DESCRIPTION : this.plugin.information.shortDescription
+            });
     }
 
     ngOnDestroy() {

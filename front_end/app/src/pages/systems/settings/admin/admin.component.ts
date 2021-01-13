@@ -46,12 +46,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     params: Params;
 
     systemNameWatcher = new Watcher('');
-    editMode = false;
     emptyName = false;
 
     advanced: boolean;
     userDisconnectSystem;
-    deletingSystem: Process;
     currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;
@@ -134,7 +132,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.settingsServiceSubscription) {
             this.settingsServiceSubscription.unsubscribe();
         }
-
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
@@ -146,6 +143,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
                 this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
                 this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -159,35 +157,33 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
+
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
-                        this.settingsSubscription = this.system.updateOrGetSystemSettings()
-                            .subscribe((response: any) => {
-                                if (response.reply) {
-                                    this.settingsForSystem = response.reply.settings;
-                                }
-                            }, (err) => {
-                                this.settingsForSystem = false;
-                                console.error(err);
-                            });
+                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.permissions.isAdmin)) {
+                            this.settingsSubscription = this.system.updateOrGetSystemSettings()
+                                .subscribe((response: any) => {
+                                    if (response.reply) {
+                                        this.settingsForSystem = response.reply.settings;
+                                    }
+                                }, (err) => {
+                                    this.settingsForSystem = false;
+                                    console.error(err);
+                                });
+                        }
                     });
-                this.deletingSystem = this.processService.createProcess(
-                    this.system.deleteFromCurrentAccount(),
-                    {
-                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
-                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
-                    },
-                    this.updateAndGoToSystems,
-                    error => error
-                );
             });
 
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.systemNameWatcher],
             this.processService.createProcess(() => {
                 if (this.systemNameWatcher.changed) {
-                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName)
+                    if (/^\s+$/.test(this.systemName) || this.systemName.trim() === this.systemNameWatcher.originalValue) {
+                        this.systemNameWatcher.reset();
+                        return Promise.resolve();
+                    }
+                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
                         }).catch(() => {
@@ -231,23 +227,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    handleBlur() {
-        const originalName = this.system.info.systemName || this.system.info.name;
-        this.editMode = false;
-
-        if (!this.systemName || this.emptyName) {
-            this.systemName = originalName;
-        }
-    }
-
-    handleFocus() {
-        this.editMode = true;
-    }
-
-    handleNameChange(newName) {
-        this.emptyName = /^\s+$/.test(newName);
-    }
-
     connectLocalToCloud() {
         this.dialogs
             .connectLocalToCloud(this.accountService, this.system)
@@ -263,11 +242,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
             .then((result) => {
                 if (result) {
-                    this.updateAndGoToSystems();
+                    if (this.CONFIG.isLocal) {
+                        // give the user chance to read the toaster
+                        setTimeout(() => window.location.reload(), 2000);
+                    } else {
+                        this.updateAndGoToSystems();
+                    }
                 }
             });
 
-        if (this.system.isMine) {
+        if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }
@@ -324,7 +308,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.buttons.cancel()
             ).then((result) => {
                 if (result === true) {
-                    return this.deletingSystem.run(this.updateAndGoToSystems);
+                    return this.system.deleteFromCurrentAccount().subscribe(res => {
+                        this.toastService.show(
+                            this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
+                            { classname: 'success' });
+                    }, err => {
+                        console.error(err);
+                        this.toastService.show(
+                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
+                            { classname: 'danger' }
+                        );
+                    },
+                    this.updateAndGoToSystems
+                    );
                 }
             });
         }

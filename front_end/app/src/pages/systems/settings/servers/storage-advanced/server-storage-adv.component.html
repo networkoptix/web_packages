@@ -12,7 +12,7 @@
                 </nx-section-placeholder>
                 <div *ngIf="!failedToLoad" class="no-storage-placeholder" translate>No main storage drive was selected for writing - video will not be recorded on this server.</div>
             </ng-container>
-            <form *ngIf="!loading" class="form form-horizontal" role="form" name="storageSettings" novalidate>
+            <form *ngIf="!loading" class="form form-horizontal storage-form" role="form" name="storageSettings" novalidate>
                 <table *ngIf="showStorage">
                     <thead>
                         <tr>
@@ -30,7 +30,7 @@
                             <td title="{{storage.url}}">{{storage.url}}</td>
                             <td>{{friendlyBytes( storage.totalSpace )}}</td>
                             <td>{{friendlyBytes( storage.remainingSpace.bits )}}</td>
-                            <td>
+                            <td class="reserved-cell">
                                 <input
                                         type="number"
                                         id="reservedSpace{{ i }}"

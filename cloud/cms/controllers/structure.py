@@ -16,7 +16,7 @@ from cms.controllers.documentation import DOC_CACHE
 from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
-    Menu, AssetCustomizationReview
+    Menu, AssetCustomizationReview, Permission
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +152,7 @@ def process_node(node_obj, node_struct):
             asset.customizations.set(Customization.objects.all())
             node_obj.asset = asset
         node_obj.save(touched=False)
+        node_obj.permissions.set(list(Permission.objects.filter(codename__in=node_struct.get('permissions', []))))
 
         enabled = node_struct.get('enabled', False)
         if node_obj.is_global:

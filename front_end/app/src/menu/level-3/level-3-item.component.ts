@@ -8,6 +8,7 @@ import { SubscriptionLike }         from 'rxjs';
 
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '@src/menu';
+import { isArray }                  from 'rxjs/internal-compatibility';
 
 /* Usage
  */
@@ -58,11 +59,14 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.item) {
+        if (changes.item.currentValue) {
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
 
-            this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
-                ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
+            if (changes.item.currentValue.additionalText) {
+                this.item.additionalText = changes.item.currentValue.additionalText;
+            } else {
+                this.item.additionalText = this.menuService.getAdditionalText(changes.item.currentValue.additionalLabel);
+            }
         }
     }
 

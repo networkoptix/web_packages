@@ -81,7 +81,7 @@
             <input class="form-control" name="adminLogin" disabled value="admin"/>
         </div>
         <div class="form-group"
-            [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
+            [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
@@ -133,13 +133,13 @@
         <div>
             <div class="radio-group">
                 <nx-radio name="firstSystem" [value]="system" tabindex="0" autofocus #primaryRadio
-                    [label]="primaryName"
+                    [label]="system.name || system?.info.name"
                     componentId="firstSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
             </div>
             <div class="radio-group">
                 <nx-radio name="secondSystem" [value]="targetSystem" tabindex="0"
-                    [label]="secondaryName"
+                    [label]="targetSystem.name || targetSystem?.info.name"
                     componentId="secondSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
             </div>
@@ -172,7 +172,7 @@
             </p>
         </div>
         <div class="form-group"
-            [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
+            [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
             <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"

@@ -785,9 +785,9 @@ Get Key from Value
     END
 
 Create Local Users via API
-    [Arguments]    ${auth}    ${server}    ${local users}
+    [Arguments]    ${auth}    ${server}    ${local users}    ${password}
     FOR    ${user}    IN    @{local users}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
+        Save User    ${auth}    ${server}    ${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
     END
     [return]    @{local users}
 
@@ -879,11 +879,12 @@ Log In If Needed
     ...    Validate Log In    ${email}
 
 Register and Activate Generic Users
-    ${admin}=          Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${viewer}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${live viewer}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    ${custom}=         Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    [Arguments]    ${password}=${BASE PASSWORD}
+    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
+    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
+    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
+    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
+    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
     &{generic users}=    Create Dictionary     admin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advViewer=${adv viewer}    custom=${custom}
     [Return]    &{generic users}
 
@@ -935,6 +936,24 @@ Setup Custom Docker Server
     Close Connection
     Release Lock   create_server_lock
     [Return]    ${server}
+
+Setup Docker System
+    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
+    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
+    Set To Dictionary    ${system}    cont=${system}[cont]
+    ${auth}=   Create List    admin    ${base password}
+    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+
+#   Connect system to cloud if email is provided
+    ${mock list}=   Create List
+    Run Keyword If    $cloud_email    Append To List    ${mock list}    1
+    FOR    ${i}    IN    @{mock list}
+        Set To Dictionary    ${system}    owner=${cloud email}
+        ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
+        Set To Dictionary    ${system}    id=${id}
+    END
+    [Return]    ${system}
 
 Create Custom Network
     [Arguments]    ${name}    ${num}

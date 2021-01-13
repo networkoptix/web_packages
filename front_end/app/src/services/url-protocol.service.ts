@@ -53,7 +53,7 @@ export class NxUrlProtocolService {
     }
 
     generateLink(linkSettings: linkSettings = {}) {
-        let settings = {
+        let settings: linkSettings = {
             native           : true,
             from             : 'portal', // client, mobile, portal, webadmin
             context          : undefined,
@@ -70,7 +70,8 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
+        let protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
+        protocol = protocol.replace('%VMS_PROTOCOL%', 'nx-vms');
         const host     = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
@@ -109,7 +110,7 @@ export class NxUrlProtocolService {
             this.accountService
                 .authKey()
                 .then((authKey) => {
-                    linkSettings.auth = !!authKey;
+                    linkSettings.auth = authKey;
                     resolve({
                         link: this.generateLink(linkSettings),
                         authKey
@@ -206,5 +207,5 @@ export interface linkSettings {
     systemId?: string,
     action?: {},
     actionParameters?: {},
-    auth?: boolean
+    auth?: boolean|string|undefined
 }

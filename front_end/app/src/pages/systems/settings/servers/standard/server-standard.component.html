@@ -122,7 +122,7 @@
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
                             (onSelected)="changeAnalyticsStorage($event)"></nx-select>
-                        <ng-container *ngIf="systemStorageChosen && !useDefaultAnalyticsStorage">
+                        <ng-container *ngIf="systemStorageChosen">
                             <span></span>
                             <div class="error-label">
                                 <p class="mb-0" translate>Analytics data can take up large amounts of space.</p>

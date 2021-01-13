@@ -95,4 +95,7 @@ urlpatterns = [
 if settings.LOCAL_ENVIRONMENT:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
 
+if settings.DEBUG:
+    urlpatterns.insert(0, url(r'^profiler/', include('silk.urls')))
+
 handler404 = 'cloud.urls.view_404'

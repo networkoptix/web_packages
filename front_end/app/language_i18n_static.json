@@ -250,6 +250,7 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "Checking...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
@@ -547,7 +548,7 @@
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% for ",
         "failedToAccessSystem": "Failed to access system",
-        "integrations": "Integrations",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Page not found",
         "register": "Create account in",
@@ -563,7 +564,9 @@
         "apiTool": "API testing tool"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system."
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "too common",

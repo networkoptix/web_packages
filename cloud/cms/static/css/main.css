@@ -329,3 +329,22 @@ img.light {
 .sort-links .selected {
     font-weight: bold;
 }
+
+.submit-row, .breadcrumbs, .object-tools {
+    position: sticky;
+    z-index: 10;
+}
+
+.submit-row {
+    bottom: 8px;
+    background: #E1E7EA !important;
+    border: 1px solid #999 !important;
+}
+
+.breadcrumbs{
+    top: 0;
+}
+
+.object-tools {
+    top: 6px;
+}

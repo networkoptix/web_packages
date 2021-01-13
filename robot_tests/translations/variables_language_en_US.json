@@ -152,7 +152,7 @@
     "TERMS AND CONDITIONS ERROR TEXT"      :    "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
     "DISCARD CHANGES BUTTON TEXT"		   :	"Discard",
     "APPLY CHANGES BUTTON TEXT"			   :	"Apply",
-    "DISCARD CHANGES BUTTON TEXT"		   :	"Discard",
+    "CANCEL CHANGES BUTTON TEXT"		   :	"Cancel",
     "APPLY CHANGES QUESTION TEXT"		   :    "Apply changes before leaving this page?",
 
     "THIS LINK IS BROKEN TEXT"             :    "No system can be accessed by this link. This may happen when a system has been disconnected from %PRODUCT_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",

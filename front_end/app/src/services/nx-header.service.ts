@@ -103,24 +103,31 @@ export class NxHeaderService {
             }
         } else {
             bestMatch.isSystem = false;
-            for (let i = 0; i < this.nodes.length; i++) {
-                const parentNode = this.nodes[i];
-                for (let j = 0; j < this.nodes[i].nodes.length; j++) {
-                    const node = parentNode.nodes[j];
-                    if (node.url) {
-                        const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
-                        if (nodeUrl === url || url.startsWith(nodeUrl) && (!bestMatch.path || bestMatch.path.length < nodeUrl.length)) {
-                            bestMatch.path = node.url;
-                            bestMatch.assetId = node.asset_id;
-                            bestMatch.parentNode = parentNode;
-                            bestMatch.childNode = node;
-                            if (nodeUrl === url) {
-                                break;
+
+            const recursivelyFindMatch = (startingNodes) => {
+                const nodes = [...startingNodes];
+                for (let i = 0; i < nodes.length; i++) {
+                    const parentNode = nodes[i];
+                    for (let j = 0; j < nodes[i].nodes.length; j++) {
+                        const node = parentNode.nodes[j];
+                        nodes.push(node);
+                        if (node.url) {
+                            const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
+                            if (nodeUrl === url || url.startsWith(nodeUrl) && (!bestMatch.path || bestMatch.path.length < nodeUrl.length)) {
+                                bestMatch.path = node.url;
+                                bestMatch.assetId = node.asset_id;
+                                bestMatch.parentNode = parentNode;
+                                bestMatch.childNode = node;
+                                bestMatch.breadcrumbs = node.breadcrumbs;
+                                if (nodeUrl === url) {
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
+            };
+            recursivelyFindMatch(this.nodes);
         }
         this.currentLocation = bestMatch;
     }

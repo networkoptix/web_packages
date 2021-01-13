@@ -1,5 +1,6 @@
 <div class="dropdown"
      [ngClass]="{'header-nav-show': show, show: show}"
+     (click)="dropdownNode && headerService.handleNav(dropdownNode)"
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
@@ -8,8 +9,8 @@
         [disabled]="hideDropdown"
         [ngClass]="{'hide-dropdown': hideDropdown}"
         type="button" id="activeSystemDropdown" data-toggle="dropdown">
-        {{name | async}}
-        <div *ngIf="!hideDropdown" id="nav-sub-menu-dropdown" class="arrow-flip">
+        {{name}}
+        <div *ngIf="!hideDropdown" id="nav-sub-menu-dropdown" class="arrow-flip" (click)="dropdownNode && $event.stopPropagation();updateOffset(); show = !show;">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
         </div>
     </button>
@@ -20,7 +21,7 @@
         [style.transform]="'translateX(' + offset + 'px)'"
         aria-labelledby="navLocationDropdown"
         [nxArrowNav]="show">
-        <li *ngFor="let node of nodes | async" class="dropdown-item-container">
+        <li *ngFor="let node of nodes" class="dropdown-item-container">
             <a class="dropdown-item inset"
                *ngIf="!node.new_window"
                [ngClass]="{ 'selected': node.url === path}"

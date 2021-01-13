@@ -177,7 +177,7 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
 
 export const mapStorages = (storages, storageIds) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, isUsedForWriting: ufw, ...storage }) => {
     if (!storageIds.includes(storage.storageId)) {
-        return false;
+        return {};
     }
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
@@ -186,7 +186,7 @@ export const mapStorages = (storages, storageIds) => storages.map(({ freeSpace: 
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
     return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, remainingSpace, watchers: [...reservedSpace.watcher, isUsedForWriting] };
-}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => storage ? ({
+}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => moreWatchers ? ({
     storages : [...storages, storage],
     watchers : [...watchers, ...moreWatchers]
 }) : { storages, watchers }, { storages: [], watchers: [] });

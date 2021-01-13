@@ -57,14 +57,15 @@
                             [editEnabled]="system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
                     <nx-client-button *ngIf="!CONFIG.isLocal" [textOnly]="true"></nx-client-button>
                 </div>
-                <span class="system-owner">
+
+                <span class="system-owner" *ngIf="system.permissions.isAdmin && !CONFIG.isLocal">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
-                        <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
-                        <span *ngIf="!system.isMine">
+                        <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
+                        <ng-container *ngIf="!system.userManager.isMine">
                             <span class="system-header-bold">{{system.info.ownerFullName}}</span>
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
-                        </span>
+                        </ng-container>
                     </span>
                 </span>
             </header>
@@ -96,7 +97,7 @@
                     <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
                         <span class="name" [innerHTML]="updateUserRole()"></span>
                     </span>
-                    <div class="mt-2">
+                    <div class="mt-2" *ngIf="!CONFIG.isLocal || system.permissions.isAdmin">
                         <button [disabled]="settings.disconnectDisabled"
                                 class="btn btn-default"
                                 (click)="delete()" translate>Disconnect from My Account</button>

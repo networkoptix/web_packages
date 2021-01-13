@@ -273,3 +273,55 @@ $header-collapsing-width-1 : 1px;
     padding: 0 !important;
     width: 48px !important;
 }
+
+.breadcrumb-wrapper {
+    margin-right: 20px;
+    margin-top: 0 !important;
+    position: relative;
+    & > svg-icon {
+        position: absolute;
+        right: -18px;
+        width: 20px;
+        top: 3px;
+        bottom: 0;
+        & > svg {
+            vertical-align: top;
+            & > .st0{
+                fill-rule: evenodd;
+                clip-rule: evenodd;
+                fill: $light4;
+            }
+        }
+    }
+}
+
+.breadcrumb-button {
+    cursor: pointer;
+    height: 48px !important;
+    padding: 0 8px;
+    & > a {
+        font-family     : $font-family-medium;
+        color           : $font-color-medium;
+        font-size       : $h6-font-size;
+        text-decoration : none;
+        white-space     : nowrap;
+        line-height     : 48px;
+    }
+    &:hover {
+        background: $light2;
+        border-bottom: 1px solid $light5;
+    }
+    &:active {
+        background: $light3;
+        border-bottom: 1px solid $light6;
+    }
+}
+
+.collapsed-breadcrumb {
+    margin-left: -6px;
+
+    & > a {
+        font-size: 20px;
+        line-height: 42px;
+    }
+}

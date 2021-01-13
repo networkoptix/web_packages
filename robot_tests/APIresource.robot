@@ -20,8 +20,8 @@ Merge Systems
 
 Merge Systems Local
     [Documentation]    Merge two systems via server commands
-    [Arguments]    ${primary auth}    ${secondary auth}    ${primary url}    ${secondary url}
-    ${data}=   Create Dictionary    currentPassword=${BASE PASSWORD}    url=https://${secondary auth}@${secondary url}
+    [Arguments]    ${primary auth}    ${secondary auth}    ${primary url}    ${secondary url}    ${currentPassword}=${BASE PASSWORD}
+    ${data}=   Create Dictionary    currentPassword=${current password}    url=https://${secondary auth}@${secondary url}
     Create Digest Session    local merge session    ${primary url}    auth=${primary auth}    disable_warnings=1
     ${resp}=   Post Request    local merge session    /api/mergeSystems    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -288,7 +288,8 @@ Get Server Id
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     FOR    ${server}    IN    @{resp.json()}
-        Return From Keyword If    '''${server}[name]''' == '''${server name}'''    ${server}[id]
+        ${status}=   Run Keyword And Return Status    Should Contain    ${server name}    ${server}[name]
+        Return From Keyword If    ${status}    ${server}[id]
     END
 
 Rename Server
@@ -396,7 +397,13 @@ Check Allow Only Secure Connections
     Create Digest Session    Check HTTPS   ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
     Should Be Equal As Strings    ${resp.status_code}    200
-    
+
+Set System Name
+    [Arguments]    ${server url}    ${auth}    ${new name}
+    Create Digest Session    Rename System Session   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Rename System Session    /api/systemSettings?systemName=${new name}
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Set Camera Attribute
     [Arguments]    ${server url}    ${auth}    ${camera id}    ${attribute}    ${value}
     &{data} =    Create Dictionary
@@ -441,7 +448,7 @@ Save User
     ...    ${user role id}=${EMPTY}
     ...    ${is enabled}=${True}
     ...    ${is cloud}=${True}
-    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
+    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
@@ -498,7 +505,7 @@ Change server name via API
     Return From Keyword    ${resp.json()}
 
 Change server port via API
-    [Arguments]    ${auth}    ${server url}    ${new port}    ${server id} 
+    [Arguments]    ${auth}    ${server url}    ${new port}    ${server id}
     &{header}=   Create Dictionary    X-Server-guid=${server id}
     &{data}=   Create Dictionary    port=${new port}
     Create Digest Session    Change Port session    ${server url}    auth=${auth}    disable_warnings=1

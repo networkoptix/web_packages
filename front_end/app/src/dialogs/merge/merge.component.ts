@@ -172,6 +172,7 @@ export class MergeModalContent {
                         if (updatedTargetSystem) {
                             updatedTargetSystem.value = updatedTargetSystem.id;
                         }
+                        this.systemMergeable = this.checkMergeability(updatedTargetSystem || targetSystem);
                         this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText?.() });
                         this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
                     });
@@ -294,9 +295,11 @@ export class MergeModalContent {
             }
             this.setSystems();
             this.updateShow(showUpdate, templateUpdates);
-            if (this.machine.state.show.serverUrlInput) {
-                setTimeout(() => { this.serverUrlInputFocus.nativeElement.focus(); });
-            }
+            setTimeout(() => {
+                if (this.machine.state.show.serverUrlInput) {
+                    this.serverUrlInputFocus.nativeElement.focus();
+                }
+            });
         }
     }
 
@@ -612,7 +615,7 @@ export class MergeModalContent {
             this.nonCloudMerge = true;
             if (!this.dryRunAvailable) {
                 this.systemUpdating = true;
-                await this.system.update().toPromise();
+                await this.system.update();
                 this.systemsLoaded = false;
                 this.processedSystems = [];
                 await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);

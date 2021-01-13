@@ -191,7 +191,7 @@ Local User Start
     [Return]    ${local users}
 
 Reset Local Users
-    [Arguments]     ${auth}    ${server}    ${local user}=ocal+
+    [Arguments]     ${auth}    ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
     @{locals} =    Create List 
     @{local users} =    Get Dictionary Keys    ${role names}
     @{users} =    Get Users     ${auth}    ${server}
@@ -202,15 +202,15 @@ Reset Local Users
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    4
     Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
-    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals} 
+    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
     [Return]    ${local users}
-
+   
 Create New Local Users
-    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}
-    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}
+    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}    ${password}
+    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
     ...    ELSE    Run Keywords    
     ...    Delete All Local Users via API    ${auth}    ${server}    ${locals}    AND
-    ...    Create Local Users via API    ${auth}    ${server}    ${local users}
+    ...    Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
 
 Delete All Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}

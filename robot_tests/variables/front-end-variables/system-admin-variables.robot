@@ -1,5 +1,9 @@
 *** Variables ***
-${GENERAL LINK}    //a[@id="genaral"]//span[contains(text(), "${GENERAL TEXT}")]
+${new system name}         Name Changed
+${GENERAL LINK}            //a[@id="genaral"]//span[contains(text(), "${GENERAL TEXT}")]
+${USERS LINK}              //a[@id="users"]
+${SYSTEM SETTINGS FORM}    //form[@id="systemSettingsForm"]
+${SECURITY FORM}           //form[@id="securitySettingsForm"]
 ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}    //nx-checkbox[@name="autoDiscoveryEnabled"]
 ${ENABLE AUTO DISCOVERY CHECKBOX REAL}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      //nx-checkbox[@name="statisticsAllowed"]
@@ -35,13 +39,16 @@ ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//span[conta
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${EMAIL OWNER}")]
 
-${RENAME INPUT}                       //form[@name='renameForm']//input[@id='systemName']
-${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
-${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
+#${RENAME INPUT}                       //form[@name='renameForm']//input[@id='systemName']
+#${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
+#${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
-${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
-${RENAME X BUTTON}                    //form[@name='renameForm']//button[contains(@class,'close')]
-${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
+#${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
+#${RENAME X BUTTON}                    //form[@name='renameForm']//button[contains(@class,'close')]
+#${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
+
+${SAVE BUTTON}                        //nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+${CANCEL BUTTON}                      //nx-cancel-button//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 
 ${ENCRYPTING VIDEO WARNING}           //div[text()='${ENCRYPTING VIDEO WARNING TEXT}'] 
 

@@ -39,10 +39,14 @@ Storage Suite Setup
     
     @{server auth}=   Create List    admin    qweasd 123
     
+    @{size} =    Create List    60000    60000    60000    12000    12000
+
+    #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
+    
     FOR    ${n}    IN RANGE    5
         Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     dd if=/dev/zero of=disk${n}-${random}.img bs=1M count=12000    sudo=True    sudo_password=${QA BURBANK PASS}
+        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
+        ${results}    Execute Command     dd if=/dev/zero of=disk${n}-${random}.img bs=1M count=${size[${n}]}    sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     mkfs -t ext4 disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}    
         ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     mount -t auto -o loop disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
@@ -84,8 +88,9 @@ Storage Suite Setup
     FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
     END
-    
-    Set Default Storage Config    https://${QA BURBANK IP}:${port0}
+    @{disabled} =    Create List    disk2    disk3
+    @{backups} =    Create List    disk1 
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
     
     Open Browser and go to URL    ${url}
     
@@ -131,7 +136,7 @@ Verify Storages
     Log Out
 
 Set Default Storage Config
-    [Arguments]    ${server url}
+    [Arguments]    ${server url}    ${disabled}    ${backups}
     ${storages} =    Get Storages via API    ${server url}
     ${storages string} =    Convert To String    ${storages}
     ${storages string} =    Replace String    ${storages string}    '    "
@@ -140,8 +145,8 @@ Set Default Storage Config
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
     FOR    ${n}    IN RANGE    4
         ${url} =    Set variable    ${storages dict[${n}]['url']}
-        ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    disk2    disk3    
-        ${backup} =    Run Keyword And Return Status    Should Contain    ${url}    disk1
+        ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}    
+        ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
         Run Keyword If    ${disabled disk}   Run Keywords    
         ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${FALSE}    AND
         ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}    
@@ -213,11 +218,16 @@ Set Default Storage Config
 #     # can also check that metadataStorageChangePolicy = 'remove' in /api/systemSettings
 #     Wait Until Element Is Not Visible    ${CHANGE ANALYTICS MODAL}
 
-# Storage Location Table Reserved Tooltip Shows FUTURE (need a reserved type storage - one that's too small)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${STORAGE RESERVED MODE}
-#     Mouse Over    ${STORAGE RESERVED MODE}/following-sibling::svg-icon
-#     Wait Until Element Is Visible    ${STORAGE SYSTEM TOOLTIP}
+# reserved tooltip not seen by selenium
+# Storage Location Table Reserved Tooltip Shows
+    # Log in to user and system    ${owner}     ${sysId0}
+    # Wait Until Element is Visible    ${SERVERS LINK}
+    # Click Link    ${SERVERS LINK}
+    # Verify on Servers Page
+    # Wait Until Element is Visible    ${STORAGE RESERVED MODE}
+    # Sleep    5
+    # Mouse Over    ${STORAGE RESERVED MODE}/following-sibling::svg-icon
+    # Wait Until Element Is Visible    ${STORAGE SYSTEM TOOLTIP}
 
 Storage Location Table Space Legend Tooltip Shows 
     Log in to user and system    ${owner}     ${sysId0}
@@ -240,27 +250,40 @@ Backup Option Disabled when only One Main Storage
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Backup"]
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Not in use"]
 
-# Change Storage from Main to Backup FUTURE (need multiple storages for one to be changed to backup)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${STORAGE MAIN MODE}
-#     Click Button      ${STORAGE MAIN MODE}/parent::button
-#     Wait Until Element is Visible    ${STORAGE BACKUP MENU ITEM}
-#     Click Button      ${STORAGE BACKUP MENU ITEM}
-#     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-#     Wait Until Element is Visible    ${STORAGE BACKUP MODE}
-#     # may need to make this one wait a while?
-#     Element Text Should Be    ${BACKUP}  Backup
+Change Storage from Main to Backup
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List    disk1 
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]
+    Click Button      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Backup")]/parent::a
+    Click Link      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Backup")]/parent::a
+    Wait Until Element is Visible    //button[text()='${SAVE BUTTON TEXT}']
+    Click Button    //button[text()='${SAVE BUTTON TEXT}'] 
+    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]
 
-# Change Storage from Backup to Not in Use FUTURE (need multiple storages; also need to figure out which row it would be in and add that targeting)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${STORAGE BACKUP MODE}
-#     Click Button      ${STORAGE BACKUP MODE}/parent::button
-#     Wait Until Element is Visible    ${STORAGE NOT IN USE MENU ITEM}
-#     Click Button      ${STORAGE NOT IN USE MENU ITEM}
-#     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-#     Wait Until Element is Visible    ${STORAGE NOT IN USE MODE}
-#     # may need to make this one wait a while?
-#     Element Text Should Be    ${NOT IN USE}  Not in use
+Change Storage from Backup to Not in Use 
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List    disk1    disk2 
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]
+    Click Button      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Not in use")]/parent::a
+    Click Link     //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Not in use")]/parent::a 
+    Wait Until Element is Visible    //button[text()='${SAVE BUTTON TEXT}']
+    Click Button    //button[text()='${SAVE BUTTON TEXT}']   
+    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
+    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Not in use")]
+
 
 Add Storage Close button works
     Log in to user and system    ${owner}     ${sysId0}
@@ -286,11 +309,14 @@ Add Storage Cancel button works
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
-# Detailed Info button works (system has multiple storages) FUTURE
-#     Verify on Servers Page
-#     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
-#     Click Button     ${STORAGE INFO BUTTON}
-#     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
+Detailed Info button works system has multiple storages
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible       ${STORAGE INFO BUTTON}
+    Click Button     ${STORAGE INFO BUTTON}
+    Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
 Detailed Info button works (system has one storage)
     Log in to user and system    ${owner}     ${sysId1}
@@ -301,40 +327,40 @@ Detailed Info button works (system has one storage)
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
 
-Add External Storage validation
-    Log in to user and system    ${owner}     ${sysId0}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page
-    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
-    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
-    Click Button    ${STORAGE ADD BUTTON}
-    Verify Add Storage Dialog
-    Log    All Required Check
-    Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements are Visible
-    ...    ${AS MODAL URL INPUT ERROR}
-    ...    ${AS MODAL URL REQUIRED}
-    ...    ${AS MODAL LOGIN INPUT ERROR}
-    ...    ${AS MODAL LOGIN REQUIRED}
-    ...    ${AS MODAL PASSWORD INPUT ERROR}
-    ...    ${AS MODAL PASSWORD REQUIRED}
-    Log    Valid URL check
-    Press Keys     ${AS MODAL URL INPUT}     //ComputerNameNoFolder
-    Wait Until Elements Are Visible
-    ...    ${AS MODAL URL INPUT ERROR}
-    ...    ${AS MODAL URL INVALID}
-    Delete All Text     ${AS MODAL URL INPUT}
-    Press Keys      ${AS MODAL URL INPUT}        //ComputerName/FolderName
-    Wait Until Element is Visible     ${AS MODAL URL NOT INVALID}
-    Log    Invalid login and/or password with non-existent url
-    Press Keys      ${AS MODAL LOGIN INPUT}      pi
-    Press Keys      ${AS MODAL PASSWORD INPUT}     ${password}
-    Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Element is Visible       ${AS FAILED TO ADD TOAST}
-    Wait Until Elements Are Not Visible
-    ...     //nx-modal-add-storage
-    ...     //app-toasts
+# Add External Storage validation FUTURE (need to figure out how to add external storage)
+    # Log in to user and system    ${owner}     ${sysId0}
+    # Wait Until Element is Visible    ${SERVERS LINK}
+    # Click Link    ${SERVERS LINK}
+    # Verify on Servers Page
+    # Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    # Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    # Click Button    ${STORAGE ADD BUTTON}
+    # Verify Add Storage Dialog
+    # Log    All Required Check
+    # Click Button    ${AS MODAL SUBMIT BUTTON}
+    # Wait Until Elements are Visible
+    # ...    ${AS MODAL URL INPUT ERROR}
+    # ...    ${AS MODAL URL REQUIRED}
+    # ...    ${AS MODAL LOGIN INPUT ERROR}
+    # ...    ${AS MODAL LOGIN REQUIRED}
+    # ...    ${AS MODAL PASSWORD INPUT ERROR}
+    # ...    ${AS MODAL PASSWORD REQUIRED}
+    # Log    Valid URL check
+    # Press Keys     ${AS MODAL URL INPUT}     //ComputerNameNoFolder
+    # Wait Until Elements Are Visible
+    # ...    ${AS MODAL URL INPUT ERROR}
+    # ...    ${AS MODAL URL INVALID}
+    # Delete All Text     ${AS MODAL URL INPUT}
+    # Press Keys      ${AS MODAL URL INPUT}        //ComputerName/FolderName
+    # Wait Until Element is Visible     ${AS MODAL URL NOT INVALID}
+    # Log    Invalid login and/or password with non-existent url
+    # Press Keys      ${AS MODAL LOGIN INPUT}      pi
+    # Press Keys      ${AS MODAL PASSWORD INPUT}     ${password}
+    # Click Button    ${AS MODAL SUBMIT BUTTON}
+    # Wait Until Element is Visible       ${AS FAILED TO ADD TOAST}
+    # Wait Until Elements Are Not Visible
+    # ...     //nx-modal-add-storage
+    # ...     //app-toasts
     # Only if valid url input
     # Wait Until Elements are Visible
     # ...     ${AS MODAL PASSWORD INVALID}

@@ -171,6 +171,11 @@ export class ServerManager {
     /**
      * Storage endpoints
      */
+
+    getStorageAnalytics(serverId: string) {
+        return this.mediaserverConnections[serverId].getStorageAnalytics();
+    }
+
     rebuildArchive(serverId: string, type: number, action?: string) {
         return this.mediaserverConnections[serverId].rebuildArchive(type, action);
     }

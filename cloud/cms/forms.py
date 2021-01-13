@@ -1,3 +1,4 @@
+from json.decoder import JSONDecodeError
 from django import forms
 from django.db.models import Q
 from django.core.validators import RegexValidator
@@ -6,6 +7,7 @@ from django.db.models import When, Case
 from django.template.loader import render_to_string
 from django.urls import reverse
 from dal import autocomplete
+from urllib.parse import quote
 
 from api.models import Account
 from cms.models import *
@@ -410,6 +412,8 @@ class ContributorAgreementForm(forms.ModelForm):
 
 class MenuChangeForm(forms.ModelForm):
     customization_view = forms.ChoiceField(required=False, help_text='Make sure to save any changes before changing the view')
+    admin_config = forms.CharField(widget=forms.Textarea,
+        help_text='Configures which fields to display on inline menu nodes. Should be a dict with properties, header, details, and advanced. Each contains an array of fields to show.')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -419,6 +423,37 @@ class MenuChangeForm(forms.ModelForm):
                 customization_choices = (('all', 'All'),) + customization_choices
             self.fields['customization_view'].choices = customization_choices
             self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
+    
+    def clean_admin_config(self):
+        config = self.cleaned_data['admin_config']
+        updated_config = {'header': [], 'details': [], 'advanced': []}
+        invalid_config = 'Invalid config structure:'
+        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'is_global']
+        validation_errors = []
+        try:
+            parsed_config = json.loads(config)
+            for key in dict.keys(updated_config):
+                field_value = parsed_config.get(key, [])
+                is_list = isinstance(field_value, list)
+                non_strings = list(filter(lambda val: not isinstance(val, str), field_value))
+                if is_list and not len(non_strings):
+                    invalid_values = list(filter(lambda field_name: field_name not in valid_fields, field_value))
+                    if len(invalid_values):
+                        for value in invalid_values:
+                            validation_errors += [f'Invalid values for property "{key}": {invalid_values}']
+
+                    updated_config[key] = field_value
+                else:
+                    if invalid_config not in validation_errors:
+                        validation_errors += [invalid_config]
+                    validation_errors += [f'Invalid value type on property "{key}": {field_value}']
+        except JSONDecodeError:
+            validation_errors += ['Invalid JSON format']
+
+        if validation_errors:
+            raise ValidationError(validation_errors)
+
+        return json.dumps(updated_config)
 
 
 class MenuNodeChangeForm(forms.ModelForm):
@@ -472,9 +507,11 @@ class MenuNodeInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['asset'].widget.can_add_related = False
-        self.fields['asset'].widget.get_related_url = lambda *_: reverse('admin:pages', kwargs={'asset_id': '__fk__'})
-        self.fields['permissions'].label_from_instance = lambda obj: obj.name
+        custom_preview_url = self.instance.parent_menu and quote(self.instance.parent_menu.preview_url)
+        self.fields['asset'].widget.can_add_related = True
+        self.fields['asset'].widget.get_related_url = lambda *_: (
+            reverse('admin:pages_custom_preview', kwargs={'asset_id': '__fk__', 'custom_preview': custom_preview_url}) if custom_preview_url
+            else reverse('admin:pages', kwargs={'asset_id': '__fk__'}))
         if self.current_customization == 'all':
             self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
             self.fields['enabled'].widget.can_add_related = False
@@ -492,12 +529,14 @@ class MenuNodeInlineForm(forms.ModelForm):
 
             self.fields['enabled'] = forms.BooleanField(required=False)
             self.initial['enabled'] = enabled
-
-        self.fields['permissions'].help_text = 'Choose which permissions are required to see this menu item'
-        self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
+        if 'permissions' in self.fields:
+            self.fields['permissions'].label_from_instance = lambda obj: obj.name
+            self.fields['permissions'].help_text = 'Choose which permissions are required to see this menu item'
+        if 'related_assets' in self.fields:
+            self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
 
     def clean_enabled(self):
-        if self.cleaned_data['asset']:
+        if self.cleaned_data.get('asset', None):
             old_enabled = set(self.cleaned_data['asset'].customizations.all().values_list('name', flat=True))
         elif self.instance.pk:
             old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))

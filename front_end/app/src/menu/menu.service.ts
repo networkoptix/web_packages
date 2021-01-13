@@ -88,6 +88,16 @@ export class NxMenuService implements OnDestroy {
         return undefined;
     }
 
+    getAdditionalText(label) {
+        if (typeof label === 'function') {
+            return label();
+        } else if (isArray(label)) {
+            return label[0];
+        } else {
+            return label;
+        }
+    }
+
     fillerItemsBy(model) {
         let filteredContent = [];
         if (model.query) {
@@ -98,7 +108,8 @@ export class NxMenuService implements OnDestroy {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
                     node.level3.forEach((item) => {
                         if (item.id) { // skip separators
-                            const additional = (typeof item.additionalLabel === 'function') ? item.additionalLabel() : item.additionalLabel;
+                            const additional: string = this.getAdditionalText(item.additionalLabel);
+
                             let searchAggregate = item.label || '';
                             searchAggregate += (additional) ? ' ' + additional : '';
                             searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
@@ -109,8 +120,9 @@ export class NxMenuService implements OnDestroy {
                                     haveNode.level3 = []; // remove items so we can all only matches
                                 }
                                 const filteredItem = NxUtilsService.deepCopy(item);
-                                filteredItem.additionalLabel = (typeof item.additionalLabel === 'function') ? item.additionalLabel() : item.additionalLabel;
+                                filteredItem.additionalText = additional;
                                 filteredItem.query = { search: model.query };
+
                                 haveNode.level3.push(this.highlighted(filteredItem));
                             }
                         } else {
@@ -154,12 +166,8 @@ export class NxMenuService implements OnDestroy {
             item.label = item.label.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
         }
 
-        if (item.additionalLabel) {
-            if (isArray(item.additionalLabel)) {
-                item.additionalLabel[0] = item.additionalLabel[0].replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
-            } else {
-                item.additionalLabel = item.additionalLabel.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
-            }
+        if (item.additionalText) {
+            item.additionalText = item.additionalText.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
         }
 
         return item;

@@ -277,6 +277,7 @@ export interface UsageLabels {
 
 export interface DialogsMerge {
     adminPasswordTitle:         any;
+    adminPasswordWrong:         any;
     checking:                   any;
     commonText:                 any;
     connectToCloud:             any;
@@ -566,7 +567,9 @@ export interface MenuTitles {
 }
 
 export interface PageDescriptions {
-    integrations: any;
+    integrations:       any;
+    integrationSetup:   any;
+    integrationDetails: any;
 }
 
 export interface PageTitles {
@@ -1223,6 +1226,7 @@ const typeMap: any = {
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },
+        { json: "adminPasswordWrong", js: "adminPasswordWrong", typ: "any" },
         { json: "checking", js: "checking", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
@@ -1485,6 +1489,8 @@ const typeMap: any = {
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
+        { json: "integrationSetup", js: "integrationSetup", typ: "any" },
+        { json: "integrationDetails", js: "integrationDetails", typ: "any" },
     ], false),
     "PageTitles": o([
         { json: "about", js: "about", typ: "any" },
