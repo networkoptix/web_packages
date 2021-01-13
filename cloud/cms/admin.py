@@ -879,7 +879,7 @@ class ContributorAgreementAdmin(CMSAdmin):
             return format_html('<a href="{}">Review</a>', link)
 
 
-class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabularInline):
+class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStackedInline):
     model = MenuNode
     form = MenuNodeInlineForm
     # Hack to force inlines checking. Inlines are actually populated by get_inline_instances below
@@ -888,19 +888,61 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
     extra = 0
     verbose_name = 'Item'
     verbose_name_plural = 'Items'
-    fields = (
-        'name', 'asset', 'related_assets', 'next_item', 'url', 'new_window', 'icon', 'order', 'condition',
-        'authentication', 'permissions', 'enabled', 'is_global', 'preview'
-    )
+    loaded_config = None
+
+    hidden_fields = ('asset', 'related_assets')
     readonly_fields = ('is_global', 'preview')
 
     def __init__(self, *args, **kwargs):
+        default_config = Menu._meta.get_field('admin_config').default
         self.depth = kwargs.pop('depth', 1)
         self.total_depth = kwargs.pop('total_depth', 1)
         self.chosen_customization = kwargs.pop('customization', 'all')
         self.user_customizations = kwargs.pop('user_customizations', [])
+        self.admin_config = kwargs.pop('admin_config', default_config)
         self.custom_preview = kwargs.pop('custom_preview')
+
+        try:
+            self.loaded_config = json.loads(self.admin_config)
+        except JSONDecodeError:
+            self.loaded_config = json.loads(default_config)
+        
         super().__init__(*args, **kwargs)
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = (
+            (None, {
+                'classes': ('nested-stacked-flex', 'nested-stacked-heading',),
+                'fields': ['name', 'order']
+            }),
+            (None, {
+                'classes': ('nested-stacked-flex', 'nested-stacked-details',),
+                'fields': []
+            }),
+            ('Advanced', {
+                'classes': ('nested-stacked-advanced', 'nested-stacked-flex',),
+                'fields': []
+            }),
+    )
+        added_fields = ['name', 'order']
+        required_fields = ['enabled', 'asset']
+
+        def add_field(fieldset, fields):
+            for field in fields:
+                if field in required_fields:
+                    required_fields.remove(field)
+
+                if field not in added_fields:
+                    fieldsets[fieldset][1]['fields'].append(field)
+                    added_fields.append(field)
+
+        fieldset_list = [self.loaded_config.get(field_key, []) for field_key in ['header', 'details', 'advanced']]
+
+        [add_field(fieldset, field) for fieldset, field in enumerate(fieldset_list)]
+
+        fieldsets[2][1]['fields'].extend(required_fields)
+
+        return fieldsets
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -917,6 +959,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedTabula
             return [MenuNodeInline(
                 self.model, self.admin_site, depth=self.depth + 1, total_depth=self.total_depth,
                 customization=self.chosen_customization, user_customizations=self.user_customizations,
+                admin_config=self.admin_config,
                 custom_preview=self.custom_preview
             )]
         return []
@@ -948,11 +991,21 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     class Media:
         js = ('js/menuChange.js',)
 
-    def get_fields(self, request, obj=None):
+    def get_fieldsets(self, request, obj=None):
         fields = [field for field in super().get_fields(request, obj)]
+        fields.remove('admin_config')
         if not (obj and obj.pk):
             fields.remove('customization_view')
-        return fields
+        main = (None, {
+                "fields": fields
+            })
+        advanced = ('Advanced', {
+                "classes": ['nested-stacked-advanced'],
+                "fields": ['admin_config']
+            })
+
+        return (main, advanced) if request.user.is_superuser else (main,)
+
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         menu = Menu.objects.get(id=object_id)
@@ -975,6 +1028,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                 return [MenuNodeInline(
                     self.model, self.admin_site, depth=1, total_depth=obj_orig.depth,
                     customization=self.chosen_customization, user_customizations=request.user.customizations,
+                    admin_config=getattr(obj_orig, 'admin_config'),
                     custom_preview=self.model.preview_url
                 )]
         return []

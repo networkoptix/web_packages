@@ -51,7 +51,8 @@ def create_default_permission_group(asset):
         return None
 
     if asset.is_cloud_portal:
-        group = Group.objects.create(name=f'Portal Manager - {asset.name} - {asset.id}')
+        group = Group.objects.create(
+            name=f'Portal Manager - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
                                                               'change_assetcustomizationreview',
                                                               'change_asset', 'edit_content',
@@ -62,12 +63,15 @@ def create_default_permission_group(asset):
                                                type__in=[AssetType.ASSET_TYPES.cloud_portal,
                                                          AssetType.ASSET_TYPES.integration])
         for asset_type in asset_types:
-            UserGroupsToAssetType.objects.create(asset_type=asset_type, group=group)
+            UserGroupsToAssetType.objects.create(
+                asset_type=asset_type, group=group)
 
     else:
-        group = Group.objects.create(name=f'Developer - {asset.name} - {asset.id}')
+        group = Group.objects.create(
+            name=f'Developer - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(
-            codename__in=['edit_content', 'change_asset', 'change_assetcustomizationreview']
+            codename__in=['edit_content', 'change_asset',
+                          'change_assetcustomizationreview']
         )
 
     group.permissions.set(permissions)
@@ -92,9 +96,11 @@ def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
     if asset:
         return asset
 
-    customization_obj = Customization.objects.filter(name=customization).first()
+    customization_obj = Customization.objects.filter(
+        name=customization).first()
     if customization_obj:
-        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+        asset_type = AssetType.objects.get(
+            type=AssetType.ASSET_TYPES.cloud_portal, name='')
         cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
                                             asset_type=asset_type)
         cloud_portal.customizations.set([customization_obj])
@@ -122,7 +128,8 @@ def check_update_cache(customization, version_id):
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
-    data = customization_cache.get(f'customization_{customization_name}', dict())
+    data = customization_cache.get(
+        f'customization_{customization_name}', dict())
     asset = get_cloud_portal_asset(customization_name)
 
     if data and 'version_id' in data and not force:
@@ -132,7 +139,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
-        integration_store_enabled = asset.read_global_value("%INTEGRATION_STORE_ENABLED%")
+        integration_store_enabled = asset.read_global_value(
+            "%INTEGRATION_STORE_ENABLED%")
 
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
@@ -203,7 +211,8 @@ def check_user_menu_permissions(nodes, user):
         node = nodes[i]
         condition = node.pop('condition', None)
         condition_met = node.pop('condition_met', False)
-        beta_permission = Customization.BETA_PERMISSION_MAP.get(condition, None)
+        beta_permission = Customization.BETA_PERMISSION_MAP.get(
+            condition, None)
         if not condition_met and condition and \
                 not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
                     user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
@@ -271,7 +280,8 @@ def rename_file(instance, filename):
 def get_integration_type():
     # Prevents issue when migrating from empty db
     try:
-        integration = AssetType.objects.only('id', 'type').filter(type=AssetType.ASSET_TYPES.integration).first()
+        integration = AssetType.objects.only('id', 'type').filter(
+            type=AssetType.ASSET_TYPES.integration).first()
         if integration:
             return integration.id
     except ProgrammingError:
@@ -380,7 +390,8 @@ class Customization(models.Model):
 class AssetType(models.Model):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["name", "type"], name="Unique Asset Type")
+            models.UniqueConstraint(
+                fields=["name", "type"], name="Unique Asset Type")
         ]
     ASSET_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
                           (1, "vms", "Vms"),
@@ -392,7 +403,8 @@ class AssetType(models.Model):
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
-    type = models.IntegerField(choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
+    type = models.IntegerField(
+        choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
     advanced = models.BooleanField(default=True)
 
     def __str__(self):
@@ -431,12 +443,16 @@ class Asset(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
         blank=True, related_name='created_%(class)s', on_delete=models.CASCADE)
-    customizations = models.ManyToManyField(Customization, default=None, blank=True)
-    asset_type = models.ForeignKey(AssetType, default=get_integration_type, null=True, on_delete=models.CASCADE)
+    customizations = models.ManyToManyField(
+        Customization, default=None, blank=True)
+    asset_type = models.ForeignKey(
+        AssetType, default=get_integration_type, null=True, on_delete=models.CASCADE)
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
-    preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
-    primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_status = models.IntegerField(
+        choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
+    primary_group = models.OneToOneField(
+        Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
     protected = models.BooleanField(default=False)
 
     def __str__(self):
@@ -447,7 +463,7 @@ class Asset(models.Model):
     @property
     def can_preview_on_portal(self):
         return self.asset_type.can_preview and \
-               self.customizations.filter(name=settings.CUSTOMIZATION).exists()
+            self.customizations.filter(name=settings.CUSTOMIZATION).exists()
 
     @property
     def default_language(self):
@@ -501,8 +517,10 @@ class Asset(models.Model):
 
     @property
     def is_dirty(self):
-        version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
-        records_for_version = self.datarecord_set.filter(version__id=version_id)
+        version_id = self.contentversion_set.last(
+        ).id if self.contentversion_set.exists() else 0
+        records_for_version = self.datarecord_set.filter(
+            version__id=version_id)
         if not records_for_version.exists():
             return self.datarecord_set.exists()
         most_recent_record = records_for_version.latest('created_date')
@@ -557,7 +575,8 @@ class Asset(models.Model):
 
     def read_global_value(self, record_name, language=None):
         global_contexts = self.asset_type.context_set.filter(is_global=True)
-        data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
+        data_structure = DataStructure.objects.filter(
+            name=record_name, context__in=global_contexts).last()
         customization = None
 
         if self.asset_type.single_customization and self.customizations.exists():
@@ -572,8 +591,10 @@ class Asset(models.Model):
     def replace_global_values(self, content: str, global_contexts_dict=None):
         if not global_contexts_dict:
             from cms.controllers.filldata import global_contexts_to_dict
-            global_contexts = Context.objects.filter(asset_type=self.asset_type, is_global=True)
-            global_contexts_dict = global_contexts_to_dict(global_contexts, self)
+            global_contexts = Context.objects.filter(
+                asset_type=self.asset_type, is_global=True)
+            global_contexts_dict = global_contexts_to_dict(
+                global_contexts, self)
         for tag in global_contexts_dict:
             if tag in content:
                 content = content.replace(tag, global_contexts_dict[tag])
@@ -604,7 +625,8 @@ class Asset(models.Model):
 
         super(Asset, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal and len(self.customizations.all()) == 1 and self.can_preview_on_portal:
-            cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
+            cloud_portal_customization_cache(
+                self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
         if create_group or update_group:
             if create_group:
@@ -633,7 +655,8 @@ class Context(models.Model):
             ("edit_content", "Can edit content and send for review"),
         )
         ordering = ['order', 'id']
-    asset_type = models.ForeignKey(AssetType, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(
+        AssetType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
     label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
@@ -657,14 +680,17 @@ class Context(models.Model):
     def template_for_language(self, language, default_language, skin):
 
         priorities = ((language, skin),  # exact match
-                      (default_language, skin),  # skin is more important, fallback to default language
-                      (None, skin),  # skin is more important, fallback to empty language
+                      # skin is more important, fallback to default language
+                      (default_language, skin),
+                      # skin is more important, fallback to empty language
+                      (None, skin),
                       (language, ''),  # give up skin - find by lang only
                       (default_language, ''),  # fallback to default_language
                       (None, ''))  # default of default - no skin, no language
 
         # instantiate generator for contexts based on priorities
-        contexts = (self.contexttemplate_set.filter(language=item[0], skin=item[1]) for item in priorities)
+        contexts = (self.contexttemplate_set.filter(
+            language=item[0], skin=item[1]) for item in priorities)
 
         # retrieve first available template from the list or return None
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
@@ -698,7 +724,8 @@ class Context(models.Model):
             records = datastructure.datarecord_set.filter(asset=asset)
             last_record = records.last()
             last_record_value = last_record.cast_value if last_record else None
-            datastructure.default = DataStructure.cast_value(datastructure, datastructure.default)
+            datastructure.default = DataStructure.cast_value(
+                datastructure, datastructure.default)
 
             if type(datastructure.default) in [int, bool]:
                 datastructure.default = str(datastructure.default)
@@ -732,7 +759,8 @@ class ContextTemplate(models.Model):
         unique_together = ('context', 'language', 'skin')
 
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, blank=True, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(
+        Language, blank=True, null=True, on_delete=models.CASCADE)
     template = models.TextField()
     skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
@@ -826,7 +854,8 @@ class DataStructure(models.Model):
         content_value = ""
         if not asset:
             return DataStructure.cast_value(self, self.default)
-        content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
+        content_record = DataRecord.objects.filter(
+            asset=asset, data_structure=self)
         if not draft:
             if not asset.is_single_customization and customization_name:
                 content_record = content_record.filter(
@@ -838,15 +867,19 @@ class DataStructure(models.Model):
                     ])
             else:
                 content_record = content_record.\
-                    exclude(version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
+                    exclude(
+                        version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
             content_record = content_record.order_by('version_id')
 
         # try to get translated content
         if self.translatable:
-            default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+            default_lang = Customization.objects.get(
+                name=settings.CUSTOMIZATION).default_language
             content_record_language = content_record.filter(language=language)
-            content_record_default = content_record.filter(language=default_lang)
-            content_record_english = content_record.filter(language__code='en_US')
+            content_record_default = content_record.filter(
+                language=default_lang)
+            content_record_english = content_record.filter(
+                language__code='en_US')
 
             if language and content_record_language.exists():
                 content_record = content_record_language
@@ -862,7 +895,8 @@ class DataStructure(models.Model):
                 # which is not more than version_id
                 # filter only accepted content_records
                 if version_id:
-                    content_record = content_record.filter(version_id__lte=version_id)
+                    content_record = content_record.filter(
+                        version_id__lte=version_id)
                 if not draft:
                     if not asset.is_single_customization and customization_name:
                         new_review_records = content_record.filter(
@@ -876,7 +910,8 @@ class DataStructure(models.Model):
                     # If the version matches take it
                     version_content_record = None
                     if version_id:
-                        version_content_record = content_record.filter(version_id=version_id).last()
+                        version_content_record = content_record.filter(
+                            version_id=version_id).last()
                     if version_content_record:
                         content_record = version_content_record
                     # Take any record that is accepted
@@ -926,7 +961,8 @@ class DataStructure(models.Model):
         if version_id:
             records = records.filter(version_id__lte=version_id)
             if customization_name:
-                records = records.filter(version__assetcustomizationreview__customization__name=customization_name)
+                records = records.filter(
+                    version__assetcustomizationreview__customization__name=customization_name)
 
         if not draft:
             records = records.filter(
@@ -938,14 +974,16 @@ class DataStructure(models.Model):
         data_structure_set = set(data_structures)
         translatable_ds_set = {ds for ds in data_structures if ds.translatable}
         nontranslatable_ds_set = data_structure_set - translatable_ds_set
-        default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+        default_lang = Customization.objects.get(
+            name=settings.CUSTOMIZATION).default_language
         fished_records = {}
 
         # Get translatable records
         if language:
             translatable_ds_set = fish(translatable_ds_set, language=language)
         if translatable_ds_set and language != default_lang:
-            translatable_ds_set = fish(translatable_ds_set, language=default_lang)
+            translatable_ds_set = fish(
+                translatable_ds_set, language=default_lang)
         if translatable_ds_set:
             fish(translatable_ds_set, language__code='en_US')
 
@@ -1055,7 +1093,8 @@ class DataStructure(models.Model):
 # CMS settings. Release engineer can change that
 class UserGroupsToAssetPermissions(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(
+        Asset, default=None, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.group.name
@@ -1069,11 +1108,13 @@ class UserGroupsToAssetPermissions(models.Model):
 
         groups = Group.objects.filter(
             Q(usergroupstoassetpermissions__asset=asset) |
-            Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type),
+            Q(options__all_assets=True,
+              usergroupstoassettype__asset_type=asset.asset_type),
             user=user
         )
         if permission:
-            codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+            codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
+                permission)
             groups = groups.filter(permissions__codename=codename)
         return groups.exists()
 
@@ -1088,27 +1129,32 @@ class UserGroupsToAssetPermissions(models.Model):
     @staticmethod
     def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None):
         return UserGroupsToAssetPermissions.\
-            check_permission(user, get_cloud_portal_asset(customization), permission)
+            check_permission(user, get_cloud_portal_asset(
+                customization), permission)
 
     @staticmethod
     def check_customization_access(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, "cms.access_customization")
+            check_customization_permission(
+                user, customization, "cms.access_customization")
 
     @staticmethod
     def check_customization_change_account(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, "api.change_account")
+            check_customization_permission(
+                user, customization, "api.change_account")
 
     @staticmethod
     def check_customization_publish(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, "cms.publish_version")
+            check_customization_permission(
+                user, customization, "cms.publish_version")
 
     @staticmethod
     def user_has_beta_access(user):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, settings.CUSTOMIZATION, "cms.access_integration_store")
+            check_customization_permission(
+                user, settings.CUSTOMIZATION, "cms.access_integration_store")
 
     @staticmethod
     def convert_permission_to_codename(permission):
@@ -1120,7 +1166,8 @@ class UserGroupsToAssetPermissions(models.Model):
 
 class UserGroupsToAssetType(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    asset_type = models.ForeignKey(AssetType, default=None, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(
+        AssetType, default=None, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.group.name
@@ -1130,7 +1177,8 @@ class UserGroupsToAssetType(models.Model):
         if user.is_superuser:
             return True
 
-        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
+            permission)
         asset_type_groups = UserGroupsToAssetType.objects.\
             filter(group_id__in=user.groups.values_list('id', flat=True),
                    group__permissions__codename=codename,
@@ -1147,7 +1195,8 @@ class ContentVersion(models.Model):
         verbose_name_plural = 'revisions'
 
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
-    customization = models.ForeignKey(Customization, default=None, null=True, on_delete=models.SET_NULL)
+    customization = models.ForeignKey(
+        Customization, default=None, null=True, on_delete=models.SET_NULL)
     asset = models.ForeignKey(Asset, default=1, on_delete=models.CASCADE)
 
     created_date = models.DateTimeField(auto_now_add=True)
@@ -1176,11 +1225,14 @@ class ContentVersion(models.Model):
         for customization in self.asset.customizations.all():
             parent_in_review = False
             if customization.parent:
-                parent_in_review = self.asset.customizations.filter(id=customization.parent.id).exists()
+                parent_in_review = self.asset.customizations.filter(
+                    id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=pending).save()
 
     @property
     def state(self):
@@ -1210,7 +1262,8 @@ class AssetCustomizationReview(models.Model):
                             (3, "blocked", "Blocked"))
     customization = models.ForeignKey(Customization, on_delete=models.CASCADE)
     version = models.ForeignKey(ContentVersion, on_delete=models.CASCADE)
-    state = models.IntegerField(choices=REVIEW_STATES, default=REVIEW_STATES.pending)
+    state = models.IntegerField(
+        choices=REVIEW_STATES, default=REVIEW_STATES.pending)
     notes = models.TextField(default="", blank=True)
     reviewed_date = models.DateTimeField(null=True, blank=True)
     reviewed_by = models.ForeignKey(
@@ -1225,7 +1278,8 @@ class AssetCustomizationReview(models.Model):
             filter(customization__in=self.customization.children_customizations.all())
 
         can_show_customization = UserGroupsToAssetPermissions. \
-            check_customization_access(self.version.created_by, self.customization)
+            check_customization_access(
+                self.version.created_by, self.customization)
 
         for review in reviews:
             if review.state == AssetCustomizationReview.REVIEW_STATES.rejected:
@@ -1279,18 +1333,22 @@ class AssetCustomizationReview(models.Model):
     @property
     def can_preview_customization(self):
         can_preview = self.version.asset.asset_type.can_preview
-        in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
+        in_review = self.state in [
+            self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
         is_current_customization = self.customization.name == settings.CUSTOMIZATION
         return can_preview and in_review and is_current_customization
 
 
 class ExternalFile(models.Model):
-    data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
+    data_structure = models.ForeignKey(
+        DataStructure, default=None, null=True, on_delete=models.CASCADE)
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
-    file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
+    file = models.FileField(upload_to=rename_file,
+                            storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=1024, default='')
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(
+        Asset, default=None, null=True, on_delete=models.CASCADE)
     size = models.FloatField(default=0.0)
 
     def __str__(self):
@@ -1299,11 +1357,15 @@ class ExternalFile(models.Model):
 
 class DataRecord(models.Model):
     data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(
+        Asset, default=None, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(
+        Language, null=True, blank=True, on_delete=models.CASCADE)
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
-    customization = models.ForeignKey(Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
-    version = models.ForeignKey(ContentVersion, null=True, blank=True, on_delete=models.SET_NULL)
+    customization = models.ForeignKey(
+        Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+    version = models.ForeignKey(
+        ContentVersion, null=True, blank=True, on_delete=models.SET_NULL)
 
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
@@ -1311,7 +1373,8 @@ class DataRecord(models.Model):
         blank=True, related_name='created_%(class)s', on_delete=models.SET_NULL)
 
     value = models.TextField(default='', blank=True)
-    external_file = models.ForeignKey(ExternalFile, default=None, blank=True, null=True, on_delete=models.CASCADE)
+    external_file = models.ForeignKey(
+        ExternalFile, default=None, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.value
@@ -1339,7 +1402,8 @@ class DataRecord(models.Model):
             self.language = None
 
         if self.data_structure:
-            self.value = self.data_structure.to_string(self.data_structure, self.value)
+            self.value = self.data_structure.to_string(
+                self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
 
@@ -1364,8 +1428,10 @@ def delete_file_reverse(sender, **kwargs):
 
 class ContributorAgreement(models.Model):
     accepted_date = models.DateTimeField(auto_now_add=True)
-    accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    accepted_agreement = models.ForeignKey(
+        AssetCustomizationReview, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.accepted_agreement} - {self.user}'
@@ -1400,17 +1466,24 @@ class Menu(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     depth = models.IntegerField(default=2, blank=True)
-    base_url = models.CharField(blank=True, max_length=255, help_text='Ex: developers')
-    url = models.CharField(blank=True, max_length=255, help_text='Ex: knowledgebase')
+    base_url = models.CharField(
+        blank=True, max_length=255, help_text='Ex: developers')
+    url = models.CharField(blank=True, max_length=255,
+                           help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
+    admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
+        "header": ["name","url","enabled","order","is_global","preview"],
+        "details": ["asset","icon","authentication"],
+        "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
+    }""")
 
     def __str__(self):
         if self.name:
             return self.name
         else:
             return super().__str__()
-    
+
     @property
     def preview_url(self):
         if self.type is self.MENU_TYPES.generic or not self.base_url and not self.url:
@@ -1422,8 +1495,10 @@ class Menu(models.Model):
     def generate_menus_for_customization(cls, menus, customization):
         from cms.controllers.filldata import global_contexts_to_dict
         cloud_portal_asset = get_cloud_portal_asset(customization.name)
-        global_contexts = Context.objects.filter(asset_type=cloud_portal_asset.asset_type, is_global=True)
-        global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal_asset)
+        global_contexts = Context.objects.filter(
+            asset_type=cloud_portal_asset.asset_type, is_global=True)
+        global_contexts_dict = global_contexts_to_dict(
+            global_contexts, cloud_portal_asset)
         structures = {}
         for menu in menus:
             structures[menu.name.lower()] = {
@@ -1438,16 +1513,18 @@ class Menu(models.Model):
         menus = cls.get_prefetched_menus()
 
         if customization_name:
-            customizations = Customization.objects.filter(name=customization_name)
+            customizations = Customization.objects.filter(
+                name=customization_name)
         else:
             customizations = [asset.customizations.first() for asset in Asset.objects.annotate(
-                                  customization_count=models.Count('customizations')
-                              ).filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customization_count=1)]
+                customization_count=models.Count('customizations')
+            ).filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customization_count=1)]
 
         menu_customization_structure = {}
 
         with ThreadPoolExecutor(max_workers=4) as executer:
-            futures = [executer.submit(cls.generate_menus_for_customization, menus, customization) for customization in customizations]
+            futures = [executer.submit(cls.generate_menus_for_customization,
+                                       menus, customization) for customization in customizations]
 
         for future in as_completed(futures):
             customization, structures = future.result()
@@ -1457,7 +1534,8 @@ class Menu(models.Model):
 
     @classmethod
     def get_prefetched_menus(cls):
-        max_depth = cls.objects.all().aggregate(models.Max('depth'))['depth__max']
+        max_depth = cls.objects.all().aggregate(
+            models.Max('depth'))['depth__max']
         # Force qs evaluation to prevent threads from messing with prefetch cache
         return list(cls.objects.all().prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
 
@@ -1492,7 +1570,7 @@ class Menu(models.Model):
             for node in nodes_list:
                 node_dict = {
                     'name': node.name,
-                    'url' : node.url,
+                    'url': node.url,
                     'asset': node.asset.name if node.asset else None,
                     'asset_type': node.asset.asset_type.type if node.asset else None,
                     'related_assets': [(asset.name, asset.asset_type.type) for asset in node.related_assets.all()],
@@ -1513,7 +1591,8 @@ class Menu(models.Model):
                 nodes.append(node_dict)
             return nodes
 
-        menu = next(menu for menu in Menu.get_prefetched_menus() if menu.id == self.id)
+        menu = next(menu for menu in Menu.get_prefetched_menus()
+                    if menu.id == self.id)
         menu_dict = {
             'name': menu.name,
             'depth': menu.depth,
@@ -1524,9 +1603,11 @@ class Menu(models.Model):
 
     def from_dict(self, menu_dict):
         def find_or_create_asset(name, asset_type, customizations):
-            asset = Asset.objects.filter(name=name, asset_type__type=asset_type).first()
+            asset = Asset.objects.filter(
+                name=name, asset_type__type=asset_type).first()
             if not asset:
-                asset_type = AssetType.objects.filter(type=asset_type, name='').order_by('pk').first()
+                asset_type = AssetType.objects.filter(
+                    type=asset_type, name='').order_by('pk').first()
                 asset = Asset.objects.create(name=name, asset_type=asset_type)
                 asset.customizations.set(list(customizations))
             return asset
@@ -1537,7 +1618,8 @@ class Menu(models.Model):
                     parent_type = 'parent_menu'
                 else:
                     parent_type = 'parent_node'
-                node_obj = MenuNode.objects.filter(name=node['name'], **{parent_type: parent}).first()
+                node_obj = MenuNode.objects.filter(
+                    name=node['name'], **{parent_type: parent}).first()
                 if not node_obj:
                     node_obj = MenuNode()
                 node_obj.name = node['name']
@@ -1553,19 +1635,24 @@ class Menu(models.Model):
                 node_obj.__setattr__(parent_type, parent)
                 node_obj.save()
 
-                node_obj.available.set(list(Customization.objects.filter(name__in=node['available'])))
-                node_obj.enabled.set(list(Customization.objects.filter(name__in=node['enabled'])))
-                node_obj.permissions.set(list(Permission.objects.filter(codename__in=node['permissions'])))
+                node_obj.available.set(
+                    list(Customization.objects.filter(name__in=node['available'])))
+                node_obj.enabled.set(
+                    list(Customization.objects.filter(name__in=node['enabled'])))
+                node_obj.permissions.set(
+                    list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node_obj.is_global:
                     asset_customizations = Customization.objects.all()
                 else:
                     asset_customizations = node_obj.available.all()
                 if node['asset']:
-                    node_obj.asset = find_or_create_asset(node['asset'], node['asset_type'], asset_customizations)
+                    node_obj.asset = find_or_create_asset(
+                        node['asset'], node['asset_type'], asset_customizations)
                     node_obj.save()
                 for asset, asset_type in node.get('related_assets', []):
-                    node_obj.related_assets.add(find_or_create_asset(asset, asset_type , asset_customizations))
+                    node_obj.related_assets.add(find_or_create_asset(
+                        asset, asset_type, asset_customizations))
 
                 if node['nodes']:
                     set_nodes(node['nodes'], node_obj)
@@ -1582,20 +1669,27 @@ class MenuNode(models.Model):
                            (2, "both", "Both"))
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=2048, blank=True)
-    asset = models.ForeignKey(Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
-    related_assets = models.ManyToManyField(Asset, default=None, blank=True, related_name='nodes_related')
+    asset = models.ForeignKey(
+        Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+    related_assets = models.ManyToManyField(
+        Asset, default=None, blank=True, related_name='nodes_related')
     next_item = models.BooleanField(default=False, verbose_name='Link to next')
     new_window = models.BooleanField(default=False)
     icon = models.CharField(blank=True, max_length=255)
-    available = models.ManyToManyField(Customization, blank=True, related_name='available_nodes')
-    enabled = models.ManyToManyField(Customization, blank=True, related_name='enabled_nodes')
-    authentication = models.IntegerField(choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
+    available = models.ManyToManyField(
+        Customization, blank=True, related_name='available_nodes')
+    enabled = models.ManyToManyField(
+        Customization, blank=True, related_name='enabled_nodes')
+    authentication = models.IntegerField(
+        choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
     condition = models.CharField(blank=True, max_length=255)
     permissions = models.ManyToManyField(Permission, default=None, blank=True)
     order = models.IntegerField(default=0)
     is_global = models.BooleanField(default=True, verbose_name='Global')
-    parent_menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
-    parent_node = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    parent_menu = models.ForeignKey(
+        Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    parent_node = models.ForeignKey(
+        'self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
     touched = models.BooleanField(default=False)
 
     def __str__(self):
@@ -1605,9 +1699,12 @@ class MenuNode(models.Model):
     def generate_node_structure(nodes, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
         nodes_structure = []
         for node in nodes:
-            enabled = next((cust for cust in node.enabled_list if cust.id == customization.id), False)
-            condition_met = not node.condition or global_contexts_dict.get(node.condition, False)
-            asset_accepted = not node.asset or node.asset.version_id(customization.name) != 0
+            enabled = next(
+                (cust for cust in node.enabled_list if cust.id == customization.id), False)
+            condition_met = not node.condition or global_contexts_dict.get(
+                node.condition, False)
+            asset_accepted = not node.asset or node.asset.version_id(
+                customization.name) != 0
             if enabled and asset_accepted:
                 node_structure = {
                     'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
@@ -1671,9 +1768,12 @@ class ZendeskCategory(models.Model):
 
 class ZendeskSection(models.Model):
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
-    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
-    parent_category = models.ForeignKey(ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
-    parent_section = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    parent_category = models.ForeignKey(
+        ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
+    parent_section = models.ForeignKey(
+        'self', blank=True, null=True, on_delete=models.CASCADE)
     section_id = models.BigIntegerField(blank=True, null=True)
     position = models.IntegerField(default=0)
     name = models.CharField(max_length=500, blank=True)
@@ -1706,19 +1806,23 @@ class ZendeskArticle(models.Model):
     user_segment_id = models.BigIntegerField(blank=True, null=True)
 
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
 
 # End Zendesk Models
 
+
 class LicenseType(models.Model):
-    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    name = models.CharField(max_length=100, blank=False,
+                            null=False, unique=True)
     title = models.CharField(max_length=100, blank=False, null=False)
-    deactivations_allowed = models.PositiveIntegerField(default=3, blank=False, null=False)
+    deactivations_allowed = models.PositiveIntegerField(
+        default=3, blank=False, null=False)
 
     @staticmethod
     def get_license_types():
         license_types = list(LicenseType.objects.all().values(
             'name', 'title', 'deactivations_allowed'))
         return [{"deactivationsAllowed" if k == 'deactivations_allowed' else k: v
-                for k, v in license.items()}
+                 for k, v in license.items()}
                 for license in license_types]

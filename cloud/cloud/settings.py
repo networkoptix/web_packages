@@ -295,6 +295,10 @@ CACHES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
+if DEBUG:
+    INSTALLED_APPS += ('silk',)
+    MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -584,6 +588,9 @@ NPM_FILE_PATTERNS = {
     'csstree-validator': ['dist/*']
 }
 
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True
+SILKY_PYTHON_PROFILER = True
 
 # In House Settings
 
