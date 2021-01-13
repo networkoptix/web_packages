@@ -149,7 +149,10 @@ export class NxHeaderService {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
             window.open(serializedUrl, '_blank');
         } else {
-            this.router.navigate([url]);
+            this.router.navigate([url])
+                .catch((ex) => {
+                    console.error(ex);
+                });
         }
     }
 }

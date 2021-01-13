@@ -69,6 +69,7 @@ export class NxSystemStorageComponent implements OnInit {
     viewContainerRef: ViewContainerRef;
     storageTypes = STORAGE_TYPES
 
+    canSeeDetailInfo: boolean;
     loading: boolean;
     waitingForStorages = true;
     reindexingMain = false;
@@ -163,6 +164,8 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
         this.waitingForStorages = true;
         this.storageInfoLoaded.emit(false);
+
+        this.canSeeDetailInfo = this.system.canViewInfo();
 
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
             const empty = { reply: { storages: [] } };
@@ -901,9 +904,5 @@ export class NxSystemStorageComponent implements OnInit {
             systemId   : this.system.id,
             childRoute : ChildRoutes.HEALTH
         }) + 'storages';
-    }
-
-    get canSeeInfo() {
-        return this.system.info.capabilities && this.system.info.capabilities.vms_metrics && this.system.canViewInfo();
     }
 }

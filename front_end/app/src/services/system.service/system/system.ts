@@ -197,9 +197,8 @@ export class NxSystem extends System {
     }
 
     canViewInfo() {
-        return (this.info.capabilities &&
-            this.info.capabilities.vms_metrics) &&
-            this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        // system's capability check was removed as health info page handles it by showing "outdated version" placeholder
+        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
     }
 
     canUserViewCloudStorage() {
