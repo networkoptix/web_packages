@@ -706,11 +706,12 @@ Get All Descendant WebElements
     ...    by=xpath    value=.//*
     [Return]    ${descendants}
 
-Wait Until Number Of Tabs Are Open
-    [Arguments]    ${number}
-    @{tabs}=   Get Window Handles
-    ${current tabs}=   Get length    ${tabs}
-    Wait For Condition       return ${current tabs}==${number}
+#Wait Until Number Of Tabs Are Open
+#    [Arguments]    ${number}
+#    FOR    
+#    @{tabs}=   Get Window Handles
+#    ${current tabs}=   Get length    ${tabs}
+#    Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
     #${saved cookie1} =     Get Cookie    _ga
