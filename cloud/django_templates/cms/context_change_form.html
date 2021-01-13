@@ -435,24 +435,26 @@
     const stylingWrapper = document.getElementById('styling');
     const styleErrorsDisplay = document.createElement('div')
     styleErrorsDisplay.id = 'style-errors';
-    stylingWrapper.appendChild(styleErrorsDisplay);
-    const stylingInput = document.getElementById('id_styling');
-    const validateCssInput = ({ target: { value } }) => {
-        const syntaxErrors = csstreeValidator.validate(value);
-        styleErrorsDisplay.innerHTML = '';
-        if (syntaxErrors.length) {
-            syntaxErrors.sort(({ line: lineA }, {line: lineB}) => lineA - lineB).forEach(({ message, line }) => {
-                const errorDiv = document.createElement('div');
-                errorDiv.innerHTML = `<b>Line ${line}</b>: ${message}`;
-                errorDiv.classList.add('text-danger');
-                styleErrorsDisplay.appendChild(errorDiv);
-            });
-            stylingInput.setCustomValidity('Please fix css errors before saving');
-        } else {
-            stylingInput.setCustomValidity('');
+    if (stylingWrapper) {
+        stylingWrapper.appendChild(styleErrorsDisplay);
+        const stylingInput = document.getElementById('id_styling');
+        const validateCssInput = ({ target: { value } }) => {
+            const syntaxErrors = csstreeValidator.validate(value);
+            styleErrorsDisplay.innerHTML = '';
+            if (syntaxErrors.length) {
+                syntaxErrors.sort(({ line: lineA }, {line: lineB}) => lineA - lineB).forEach(({ message, line }) => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.innerHTML = `<b>Line ${line}</b>: ${message}`;
+                    errorDiv.classList.add('text-danger');
+                    styleErrorsDisplay.appendChild(errorDiv);
+                });
+                stylingInput.setCustomValidity('Please fix css errors before saving');
+            } else {
+                stylingInput.setCustomValidity('');
+            }
         }
+        const styling = stylingInput.addEventListener('input', validateCssInput)
     }
-    const styling = stylingInput.addEventListener('input', validateCssInput)
 
     // Handle custom previews
     const { customPreview } = window.location.search.substr(1).split('&').reduce((params, cur) => {
