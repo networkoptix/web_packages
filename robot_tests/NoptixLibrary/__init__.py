@@ -89,14 +89,13 @@ class NoptixLibrary(object):
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        locator = seleniumlib.find_element(locator)
+        element = seleniumlib.find_element(locator)
         # locator = self.convert_locator_to_webelement(locator)
-        logger.info("windows")
-        timeout = time.time() + 3
-        locator.send_keys(Keys.END)
-        while time.time() < timeout:
-            locator.send_keys(Keys.BACKSPACE)
-        locator.send_keys(text)
+        text = seleniumlib.get_text(locator)
+        element.send_keys(Keys.END)
+        for x in range(len(text)):
+            element.send_keys(Keys.BACKSPACE)
+        element.send_keys(text)
 
     def get_random_email(self, email):
         index = email.find('@')
@@ -235,6 +234,22 @@ class NoptixLibrary(object):
                     return
             except:
                 found = f"Table cell still had '{expected}' in it."
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_number_of_tabs_are_open(self, number, timeout=30):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+        while time.time() < timeout:
+            try:
+                handles = seleniumlib.get_window_handles()
+                logger.debug(len(handles))
+                logger.debug(number)
+                if str(len(handles)) == str(number):
+                    return
+            except:
+                found = f"Looking for {number} tabs, found {len(handles)} tabs."
             time.sleep(.2)
         raise AssertionError(found)
 
