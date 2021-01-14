@@ -3,6 +3,7 @@ export default {
   DEBUG_FONT_SIZE_PX: 20,
 
   SCROLL_STEP: 0.003,
+  SCROLL_ANIMATION_DURATION_MS: 400,
 
   ruler: {
     top: {

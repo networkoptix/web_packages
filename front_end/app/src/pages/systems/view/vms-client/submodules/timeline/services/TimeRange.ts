@@ -45,8 +45,6 @@ export class TimeRange {
   public iterate (interval: IrregularLengthInterval): Array<ms> {
     const start = alignTimeStamp(this.start, interval, 'left')
     const end = alignTimeStamp(this.end, interval, 'right')
-    // console.log('ITERATE', interval, this.start, this.end, start, end)
-    // console.log(new Date(this.start), new Date(this.end), new Date(start), new Date(end))
     const result = []
     for (let i = start; i <= end; i = alignTimeStamp(i, interval, 'right')) {
       result.push(i)

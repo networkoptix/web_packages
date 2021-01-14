@@ -4,16 +4,12 @@ import { Subject } from 'rxjs'
 import TimeRange from './TimeRange'
 import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases'
 import cfg from './timeline.config'
-import { config } from 'process'
 
-
-// let ts_id = 0
 
 export interface TimelineServiceStatus {
   fullRange: TimeRange,
   visibleRange: TimeRange,
   canvasGeometry: CanvasGeometry,
-  // TODO: extract into a separate zoom service?
   zoom: {
     canZoomIn: boolean,
     canZoomOut: boolean,
@@ -33,13 +29,9 @@ export class TimelineService {
   protected _subject = new Subject<TimelineServiceStatus>()
   protected _canvasGeometryUpdateRequested: boolean = true
 
-  // public readonly id: number
-
   public constructor () {
     this._onAnimationFrame = this._onAnimationFrame.bind(this)
     requestAnimationFrame(this._onAnimationFrame)
-    // this.id = (ts_id++)
-    // console.log('constructor called', this.id, this)
   }
 
   public get canvasGeometryUpdateRequested () {
@@ -84,7 +76,6 @@ export class TimelineService {
   }
 
   public reset (start: ms, end: ms): void {
-    // console.log('RESET', start, end)
     this._fullRange.start = start
     this._fullRange.end = end
     this._visibleRange.start = start
@@ -125,7 +116,6 @@ export class TimelineService {
   public canvasOffsetXtoTime (x: px): ms {
     return Math.round(this._visibleRange.start + this.msPerCanvasPx * x)
   }
-
 
   public timeToDomOffsetX (t: ms): px {
     return Math.round((t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr))
@@ -172,19 +162,24 @@ export class TimelineService {
     this._emit()
   }
 
-  public stepScrollToStartTime (targetT: ms, step=cfg.SCROLL_STEP) {
+  protected _sanitizeScrollStartTimeAim (targetT: ms): ms {
     if (targetT > this._fullRange.end - this._visibleRange.duration) {
       targetT = this._fullRange.end - this._visibleRange.duration
     }
     if (targetT < this._fullRange.start) {
       targetT = this._fullRange.start
     }
+    return targetT
+  }
+
+  public stepScrollToStartTime (targetT: ms, step=cfg.SCROLL_STEP) {
+    targetT = this._sanitizeScrollStartTimeAim(targetT)
     const dt = targetT - this._visibleRange.start
     const offset = Math.round(dt * step)
     this._visibleRange.shift(offset)
+    // TODO: check why not calling emit() here
   }
 
-  protected _scrollAnimationDurationMs = 400
   protected _scrollAnimationStartTime: ms
   protected _initialScrollMs: ms
   protected _targetScrollMs: ms
@@ -199,17 +194,12 @@ export class TimelineService {
       this._scrollAnimationStartTime = Date.now()
       this._initialScrollMs = this._visibleRange.start
       this._targetScrollMs = targetT
-    }
-    else {
+    } else {
       this.stepScrollToStartTime(targetT, 1.0)
     }
   }
 
-  protected _changeVisibleDurationStart (t: ms) {
-    const duration = this._visibleRange.duration
-    this._visibleRange.start = t
-    this._visibleRange.end = t + duration
-
+  protected _sanitizeVisibleRangePosition () {
     let diff = this._visibleRange.end - this._fullRange.end
     if (diff > 0) {
       this._visibleRange.shift(-diff)
@@ -220,18 +210,23 @@ export class TimelineService {
     }
   }
 
+  protected _changeVisibleDurationStart (t: ms) {
+    const duration = this._visibleRange.duration
+    this._visibleRange.start = t
+    this._visibleRange.end = t + duration
+    this._sanitizeVisibleRangePosition()
+  }
+
   protected _onAnimationFrame () {
     const now = Date.now()
     const diff = now - this._scrollAnimationStartTime
-    if (diff < this._scrollAnimationDurationMs) {
+    if (diff < cfg.SCROLL_ANIMATION_DURATION_MS) {
       this._animationStep ++
-      const percentage = diff / this._scrollAnimationDurationMs
+      const percentage = diff / cfg.SCROLL_ANIMATION_DURATION_MS
       const diffMs = (this._targetScrollMs - this._initialScrollMs)
       const dMs = Math.round(diffMs * percentage)
       const current = this._initialScrollMs + dMs
-
       this._changeVisibleDurationStart(current)
-
       this._emit()
     } else if (this._targetScrollMs) {
       this._changeVisibleDurationStart(this._targetScrollMs)
