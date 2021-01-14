@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Health Monitor Setup
 Test Setup        Common Restart Logout    ${url}
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 
 *** Variables ***
@@ -29,6 +29,7 @@ Health Monitor Setup
     Set Suite Variable    ${cont2 port}    ${server}[port]
     ${sysId2}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${cont2 port}    System 2    ${owner}    ${password}
     Set Suite Variable    ${sysId2}    ${sysId2}
+    Sleep    30
     Stop Docker Server    ${cont2 name}
 
     &{users}=    Register and Activate Generic Users
@@ -116,6 +117,12 @@ Check Details Panel Alerts
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..//div[@title="${hardware} ${name} is broken"]
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..${HM ALERT ICON}
 
+Health Monitor Suite Teardown
+    Close All Browsers
+    Stop Docker Server    ${cont1 id}
+    Stop Docker Server    ${cont2 id}
+    Delete Docker Server    ${cont1 id}
+    Delete Docker Server    ${cont2 id}
 *** Test Cases ***
 Owner Has Access to Health Monitoring
     Go To    ${url}/systems/${sysId1}
@@ -151,7 +158,7 @@ Json Upload Works
 
 
     # More elements need to be added here when JSON files are finalized like system name and stuff
-    Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
+    #Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
 
 Json Upload Works on Offline System
     Go To    ${url}/systems/${sysId1}
@@ -213,11 +220,12 @@ Can Close Out of Json Imported Mode
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
+    Wait Until Element Is Visible    ${HM ALERTS TOTAL}
     ${first} =     Get Text    ${HM ALERTS TOTAL}
     Reload Page
     Validate Alerts Page
     Page Should Not Contain    ${HM IMPORTED REPORT RIBBON}
-    Element Text Should Not Be     ${HM ALERTS TOTAL}    ${first}
+    Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
     Go To    ${url}/systems/${sysId1}
