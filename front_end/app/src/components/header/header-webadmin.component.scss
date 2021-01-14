@@ -1,3 +1,4 @@
+@use '../../styles/typography';
 @use '../../../styles/theme_variables';
 @import './header.component.scss';
 
@@ -10,7 +11,7 @@
 
 .breadcrumb-wrapper {
     & > svg-icon > svg > .st0{
-        fill: $light16 !important;
+        fill: typography.$light16 !important;
     }
 }
 

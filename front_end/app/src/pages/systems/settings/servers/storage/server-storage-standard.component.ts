@@ -177,7 +177,11 @@ export class NxSystemStorageComponent implements OnInit {
                             this.waitingForStorages = false;
                             this.storageInfoLoaded.emit(true);
                         }),
-                        catchError(() => of(empty)),
+                        catchError(() => {
+                            this.waitingForStorages = false;
+                            this.storageInfoLoaded.emit(true);
+                            return of(empty);
+                        }),
                         startWith(empty)
                     ))),
                 this.refreshStorages$.pipe(

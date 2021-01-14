@@ -13,9 +13,7 @@
         <p
             class="btn-helper mt-2 mb-0"
             [ngClass]="{ 'invisible': !(timeoutUntilRefresh$ | async) }"
-            [translate]="'servers.autoRefresh'"
-            [translateParams]="{ time: (timeoutUntilRefresh$ | async) }"
-        ></p>
+        >{{'servers.autoRefresh' | translate: { time: (timeoutUntilRefresh$ | async)} }}</p>
     </div>
     <div class="overlay-modal" *ngIf="servers && servers.length">
         <div class="overlay-modal-body">

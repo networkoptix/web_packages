@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
-import { UntilDestroy }                  from '@ngneat/until-destroy';
-import { BehaviorSubject, Subscription }                  from 'rxjs';
-import { delay, filter, map, retryWhen } from 'rxjs/operators';
+import { UntilDestroy }                      from '@ngneat/until-destroy';
+import { BehaviorSubject, of, Subscription }  from 'rxjs';
+import { delay, filter, map, retryWhen, tap } from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';

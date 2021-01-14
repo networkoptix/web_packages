@@ -8,8 +8,8 @@ import {
 }                                    from '@ngneat/until-destroy';
 import {
     of, SubscriptionLike, Subject, Observable
-}                                    from 'rxjs';
-import { catchError, map, switchMap, tap }                from 'rxjs/operators';
+}                                                 from 'rxjs';
+import { catchError, delay, map, switchMap, tap } from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
