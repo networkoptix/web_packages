@@ -13,7 +13,7 @@ Validate Uploaded Alerts Page
     Wait Until Elements Are Visible
     ...    ${HM ALERTS PAGE LINK}
     ...    ${HM DOWNLOAD FULL REPORT}
-    ...    ${HM IMPORTED REPORT RIBBON}
+    #...    ${HM IMPORTED REPORT RIBBON}
 
 Upload Json
     [arguments]    ${json_name}
