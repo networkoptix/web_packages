@@ -76,17 +76,20 @@ export interface ModuleInfo {
     type: string;
     version: string;
 }
-// <added by @gbezyuk for watch component>
+
 export interface ServerTimeInfo {
     vmsTimeOffset: number;
     osTimeOffset: number;
     serverId: string; // supposed to be stripped of {} around the UUID
     timeZoneOffset: number;
 }
+
 interface NameValue {
     name: string;
     value: string;
 }
+
+type AdditionalParam = NameValue
 
 export interface NxCamera {
     id: string;
@@ -95,7 +98,7 @@ export interface NxCamera {
     url: string;
     status: string; // TODO: enum (@gbezyuk)
     scheduleEnabled: boolean;
-    addParams: Array<NameValue>;
+    addParams: Array<AdditionalParam>;
 }
 
 export interface NxMediaServer {
@@ -108,7 +111,7 @@ export interface NxMediaServer {
     // considered obligatory for now, though may change later on (@gbezyuk)
     cameras: NxCamera[];
 }
-// </added by @gbezyuk for watch component>
+
 
 export interface Condition {
     paramId: string;
@@ -187,8 +190,6 @@ export class System extends SystemInterface {
     mergeInfo = undefined;
     stateMessage = '';
 
-    // <added by @gbezyuk for watch component>
     mediaservers: NxMediaServer[] = null;
     resourceTypes: any[] = null;
-    // </added by @gbezyuk for watch component>
 }

@@ -17,7 +17,7 @@ import { NxPollService }                            from '../../poll.service';
 import { NxAppStateService }                        from '../../nx-app-state.service';
 import { SystemConfigSettings }                     from '../../system-api.types';
 import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
-import { trim_ids as trimIds }                      from '../../../utils/api_response_cleaners';
+import { trimIDs as trimIds }                      from '../../../utils/api_response_cleaners';
 import { NxRibbonService }                          from '@components/ribbon';
 import {
     System, IParams, ServerTimeInfo, ICamera,
@@ -403,50 +403,44 @@ export class NxSystem extends System {
             .toPromise();
     }
 
-    // <added by @gbezyuk to fix auth race condition>
     authPromise: Promise<any>;
-    // </added by @gbezyuk to fix auth race condition>
-    // <changed by @gbezyuk to fix auth race condition>
-    ensureSystemAuth(force?) {
-        if (this.CONFIG.isLocal) { return Promise.resolve(); }
 
-        // console.log('ensureSystemAuth', this.id)
+    ensureSystemAuth(force?) {
+
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve();
+        }
+
         if (this.authPromise) {
-            // console.log('in progress')
             return this.authPromise;
         }
 
-        // NOTE@gbezyuk: bad direct dependency
-        if (!force && this.mediaserver.authGet) { // no need to update
-            // console.log('no need', this.mediaserver.authGet)
+        if (!force && this.mediaserver.authGet) {
             return Promise.resolve(true);
         }
 
-        this.authPromise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
-            if (authKeys.authGet) {
-                this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                // console.log('new ones are good')
-                this.authPromise = null;
-                return Promise.resolve(true);
-            } else {
-                // console.error('bad system auth response', authKeys)
-                this.authPromise = null;
-                return Promise.reject(authKeys);
+        this.authPromise = this.cloudApi.getSystemAuth(this.id).toPromise().then(
+            (authKeys: any) => {
+                if (authKeys.authGet) {
+                    this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                    this.authPromise = null;
+                    return Promise.resolve(true);
+                } else {
+                    this.authPromise = null;
+                    return Promise.reject(authKeys);
+                }
             }
-        });
+        );
+
         return this.authPromise;
     }
 
-    // </changed by @gbezyuk to fix auth race condition>
-    // <added by @gbezyuk for watch component>
     public getResourceTypes(force: boolean = false) {
-        // console.log('getting resource types')
+
         if (this.resourceTypes && !force) {
-            // console.log('there are resource types in cache')
             return Promise.resolve(this.resourceTypes);
         }
-        // TODO: cache invalidation (@gbezyuk)
-        // console.log('resource type cache is empty, sending a query')
+
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getResourceTypes().toPromise()
         ).then(resourceTypes => {
@@ -456,21 +450,16 @@ export class NxSystem extends System {
     }
 
     public getMediaServersAndCameras(force: boolean = false): any {
-        // console.log('getMediaServersAndCameras enter')
+
         if (this.mediaservers && !force) {
-            // console.log('using cached mediaservers');
             return Promise.resolve(this.mediaservers);
         }
 
-        // return this.mediaserver.getMediaServersAndCameras().toPromise().then( // simpler version, for debug
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getMediaServersAndCameras().toPromise()
         ).then(
-
             // @ts-ignore
             response => {
-                // console.log('GMSAC', response)
-                // CURSING@gbezyuk: error code as a string in JSON, guys, really?
                 // @ts-ignore
                 if ((response.error && response.error !== '0') || !response.reply) {
                     console.error('error getting mediaservers and cameras');
@@ -485,43 +474,36 @@ export class NxSystem extends System {
                 return [];
             }
         );
-        // TODO: better error handling
     }
 
     protected _setMediaServersAndCameras(apiReply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        const mss = apiReply['ec2/getMediaServersEx'] || apiReply['/ec2/getMediaServersEx']; // sometimes the server sends weird keys (@gbezyuk)
+
+        // sometimes the server sends weird keys (@gbezyuk)
+        const mss = apiReply['ec2/getMediaServersEx'] ||
+            apiReply['/ec2/getMediaServersEx'];
+
         let cs = apiReply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resourceTypes => {
-            // console.log('filtering, resource types that we got are', resourceTypes)
-            const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
 
-            console.log('desktop_camera_type', desktopCameraType);
+            const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
 
             cs = cs.filter(
                 c => c.typeId !== desktopCameraType.id &&
                     !c.addParams.find(p => p.name === 'ioConfigCapability')
             ).map(trimIds);
-            // TODO: map camera data preprocessing here
-            // (strip IDs, parse JSON, provide (and maybe check) URLs, etc.)
-            console.log('cameras filtered', cs);
 
-            // TODO: preprocess servers, too
-            // (strip IDs, parse JSON, etc.)
             this.mediaservers = mss.map(trimIds).map(ms => ({
                 ...ms,
-                // keeping cameras inside/under the mediaserver they belong to
-                // cameras: cs.filter(c => c.preferredServerId === ms.id)
                 cameras: cs.filter(c => c.parentId === ms.id)
             }));
-            console.log('mediaservers filtered', this.mediaservers);
+
             return this.mediaservers;
         });
     }
 
     public checkCameraThumbnail(cameraId) {
-        // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
         return this.ensureSystemAuth().then(
             () => this.mediaserver.checkCameraThumbnail(cameraId)
         );
@@ -556,7 +538,6 @@ export class NxSystem extends System {
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
-        // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getRecords(
                 cameraId, startTime, endTime, detail, limit, label, periodsType
@@ -891,8 +872,6 @@ export class NxSystem extends System {
         this.currentServerNotBusy = false;
         return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
-
-    // </added by @gbezyuk for watch component>
 
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
