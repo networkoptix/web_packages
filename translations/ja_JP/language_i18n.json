@@ -88,7 +88,7 @@
     "Email format incorrect": "メールアドレスのフォーマットが間違っています",
     "Email is required": "メールアドレスが必要です",
     "Embed": "埋め込み",
-    "Enable Audio": "音声使用",
+    "Enable Audio": "音声を有効にする",
     "Enable Motion Detection": "モーション検知を有効にする",
     "Enable audit trail": "操作履歴有効",
     "Enable auto discovery of cameras and servers": "カメラとサーバーの自動検出を有効にする",
