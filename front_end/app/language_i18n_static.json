@@ -707,6 +707,7 @@
         "unavailable": "unavailable"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted" :{
                 "success": "System {{systemName}} is successfully deleted from your account"

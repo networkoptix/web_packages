@@ -738,7 +738,8 @@ export interface SystemStatuses {
 }
 
 export interface ToastMessage {
-    system: ToastMessageSystem;
+    cloudUnavailable: string;
+    system:           ToastMessageSystem;
 }
 
 export interface ToastMessageSystem {
@@ -1558,6 +1559,7 @@ const typeMap: any = {
         { json: "unavailable", js: "unavailable", typ: "" },
     ], false),
     "ToastMessage": o([
+        { json: "cloudUnavailable", js: "cloudUnavailable", typ: "" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
     ], false),
     "ToastMessageSystem": o([

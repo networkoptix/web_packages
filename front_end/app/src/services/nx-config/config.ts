@@ -196,6 +196,12 @@ export const nxConfig: IConfig = {
         },
         myTagId: 'mine'
     },
+    interceptor: {
+        cloudUnavailable: {
+            error : 'cloudInvalidResponse',
+            timeout  : 5 * 1000
+        }
+    },
     ipvd: {
         pagerMaxSizeMedium               : 3,
         pagerMaxSize                     : 4,

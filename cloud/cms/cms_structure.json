@@ -620,7 +620,7 @@
             "description": "Platforms that are visible on the downloads page.",
             "advanced": true,
             "type": "multiselect",
-            "value": ["macos", "linux", "windows"],
+            "value": ["macos", "linux", "windows", "sdk"],
             "meta": {
               "options": [
                 "arm",

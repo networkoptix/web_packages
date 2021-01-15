@@ -28,6 +28,7 @@ export interface BaseConfig {
     // TODO Need to double check this type, object in config but accessed as array in integrations.component.ts
     // This is on line 107
     integration: Integration | any;
+    interceptor: any;
     ipvd: Ipvd;
     layout: Layout;
     maintenanceTimeout: number;

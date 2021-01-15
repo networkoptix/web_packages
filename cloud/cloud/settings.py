@@ -16,7 +16,7 @@ import re
 import json
 import sys
 from util.config import get_config
-from cloud.logger import downgrade_unauthorized_requests
+from cloud.logger import downgrade_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
@@ -277,9 +277,9 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
-        'downgrade_unauthorized': {
+        'downgrade_requests': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': downgrade_unauthorized_requests
+            'callback': downgrade_requests
         }
     },
     'formatters': {
@@ -294,7 +294,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'filters': ['downgrade_unauthorized'],
+            'filters': ['downgrade_requests'],
             'formatter': 'verbose'
         },
         'mail_admins': {

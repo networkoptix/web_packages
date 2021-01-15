@@ -34,6 +34,7 @@ import { AuthGuard, SystemGuard } from './src/routeGuards';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { NxUriCachingInterceptor } from './src/services/uri-cache-interceptor.service';
 import { NxUriCacheService }       from './src/services/uri-cache.service';
+import { CloudUnavailableInterceptor } from './src/interceptors/cloud-unavailable-interceptor';
 
 // AoT requires an exported function for factories
 // @ts-ignore
@@ -98,6 +99,11 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             provide : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
             multi : true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CloudUnavailableInterceptor,
+            multi: true
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
