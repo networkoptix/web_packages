@@ -73,6 +73,7 @@ Validate Devices Pane is Not Empty
 
 IPVD Text Search
     [Arguments]    ${SearchString}
+    Wait Until Element Is Visible    ${IPVD SEARCH BAR}
     Click Element    ${IPVD SEARCH BAR}
     Element should be Focused    ${IPVD SEARCH BAR}
     Input Text    ${IPVD SEARCH BAR}    ${SearchString}

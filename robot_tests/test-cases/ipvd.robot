@@ -34,9 +34,11 @@ IPVD landing page actions
     Log    Step 2 - Validate filtering by manufacturer
     ${vendor}=  Set variable    Axis
     Click Element    ${IPVD MANUFACTURERS PANE}//a[contains(text(), '${vendor}')]
+    Wait Until Element Is Visible    ${IPVD TABLE}
     Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
     Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
+    
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
     Validate Landing Page Objects are not Visible
 
@@ -45,7 +47,8 @@ IPVD landing page actions
     Validate on IPVD page
 
     Log    Step 4 - Validate filtering by device type
-    Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
+    Click Element    ${IPVD DEVICES PANE}//a[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
+    Sleep    5
     Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
     Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[3]
@@ -151,15 +154,16 @@ Text search
     Log    Step 3
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
     Click Element    ${IPVD NEXT PAGE BUTTON}
-    Location should be    ${baseurl}?search=h&page=2
+    Wait Until Location Is    ${baseurl}?search=h&page=2
     Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
 
     Log    Step 4
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
-    Location should be    ${baseurl}?search=h
+    Wait Until Location Is    ${baseurl}?search=h
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
 
     Log    Step 5
+    Wait Until Element Is Visible    ${IPVD LAST PAGE BUTTON}
     Click Element    ${IPVD LAST PAGE BUTTON}
     Wait Until Element Has Class    ${IPVD NEXT PAGE BUTTON}    disabled
 
@@ -283,6 +287,7 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Log    Step 1
     Go To IPVD Page
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
+    Wait Until Element Is Visible    ${IPVD TABLE}
     IPVD Text Search    Axis
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}/span    2 ${IPVD FILTERS APPLIED TEXT}
     #${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
@@ -327,6 +332,7 @@ Advanced search
     Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
 
     Log    Step 3
+    Wait Until Element Is Visible    ${IPVD TABLE}
     Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    down
     Click Element    ${IPVD ADV FILTERS MIN RES}
     Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    up
