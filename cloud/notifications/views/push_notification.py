@@ -3,6 +3,8 @@ from django.core.cache import caches
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -114,6 +116,11 @@ class CloudSessionAuthentication(SessionAuthentication):
         return account, None
 
 
+@swagger_auto_schema(method='POST', operation_description='Send a push notification',
+                     request_body=NotificationSerializer,
+                     responses={
+                         '200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'notificationId': openapi.Schema(type=openapi.TYPE_INTEGER)})
+                     })
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))

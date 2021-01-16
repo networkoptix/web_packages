@@ -29,8 +29,8 @@ class NotificationSerializer(serializers.Serializer):
                 raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
             return data
 
-    systemId = serializers.UUIDField(allow_null=False)
-    targets = serializers.ListField(child=serializers.CharField(min_length=1))
+    systemId = serializers.UUIDField(allow_null=False, label='ID of target system')
+    targets = serializers.ListField(child=serializers.CharField(min_length=1), label='List of emails')
     notification = NotificationDataSerializer()
 
 
