@@ -1,6 +1,6 @@
 [
   {
-    "name": "Header",
+    "name": "header",
     "depth": 2,
     "nodes": [
       {
@@ -142,7 +142,7 @@
     ]
   },
   {
-    "name": "Footer",
+    "name": "footer",
     "depth": 1,
     "nodes": [
       {

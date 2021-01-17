@@ -71,7 +71,8 @@ def set_session_credentials(request, email, password):
                              "password": password__body
                          },
                          required=["email", "first_name", "last_name", "password"]
-                     ))
+                     ),
+                     responses={'200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'activated': openapi.Schema(type=openapi.TYPE_BOOLEAN)})})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def register(request):
@@ -110,7 +111,8 @@ def register(request):
                              "timezone": timezone__body
                          },
                          required=["login", "password"]
-                     ))
+                     ),
+                     responses={'200': account__response})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def login(request):
@@ -156,7 +158,7 @@ def login(request):
     return api_success(serializer.data)
 
 
-# @swagger_auto_schema(method="POST", auto_schema=None)
+@swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def logout(request):
@@ -223,8 +225,9 @@ def auth_key(request):
                          properties={
                              "password": password__body
                          },
-                         required=["password"]
-                     ))
+                         required=["password"],
+                     ),
+                     responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def delete_user(request):
@@ -250,7 +253,8 @@ def delete_user(request):
                              "old_password": password__body
                          },
                          required=["new_password", "old_password"]
-                     ))
+                     ),
+                     responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def change_password(request):
@@ -285,7 +289,7 @@ def change_password(request):
                              "code": activate_code__body,
                              "email": email__body
                          }
-                     ))
+                     ), responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def activate(request):
@@ -333,7 +337,8 @@ def activate(request):
                              "new_password": password__body,
                              "user_email": email__body
                          }
-                     ))
+                     ),
+                     responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def restore_password(request):

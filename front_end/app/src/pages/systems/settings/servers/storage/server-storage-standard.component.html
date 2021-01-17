@@ -11,7 +11,7 @@
     <header>
         <div class="header-top-bar d-flex justify-content-between">
             <h4 translate>Storage Locations</h4>
-            <div *ngIf="canSeeInfo" class="buttons">
+            <div *ngIf="canSeeDetailInfo" class="buttons">
                 <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
                         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
@@ -70,7 +70,7 @@
                                 <div *ngSwitchCase="STATUS.INACCESSIBLE" class="error-label" translate>Inaccessible</div>
                                 <div *ngSwitchCase="STATUS.BEING_CHECKED" translate>Checking...</div>
                                 <div *ngSwitchCase="STATUS.REINDEXING" translate>Reindexing...</div>
-                                <div *ngSwitchCase="STATUS.IN_USE" 
+                                <div *ngSwitchCase="STATUS.IN_USE"
                                     class="position-absolute"
                                     [style.left.px]="dropdownOffsetCalc$ | async"
                                     [style.minWidth.px]="ddWidth">

@@ -8,8 +8,8 @@ import {
 }                                    from '@ngneat/until-destroy';
 import {
     of, SubscriptionLike, Subject, Observable
-}                                    from 'rxjs';
-import { catchError, map, switchMap, tap }                from 'rxjs/operators';
+}                                                 from 'rxjs';
+import { catchError, delay, map, switchMap, tap } from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
@@ -459,7 +459,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.currentAnalyticsDbId = this.selectedServer?.addParams
             .find(param => param.name === 'metadataStorageId')?.value;
         this.storageSubscription = this.storages$.subscribe(storages => {
-            this.storages = (storages || []).filter(store => store.storageType === 'local' && (store.isWritable || store.isUsedForWriting || store.usedForWriting));
+            this.storages = (storages || []).filter(store => store.storageType === 'local');
             this.dropdownStorages = this.storages
                 .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
                     const selected = this.currentAnalyticsDbId === storageId;

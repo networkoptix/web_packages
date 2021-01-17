@@ -1,6 +1,5 @@
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import serializers
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
@@ -11,6 +10,7 @@ from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
 from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu
 from cms.permissions import CanViewDevelopers
+from cms.serializers import *
 from cms.views.integration import make_integrations_json
 
 from util.helpers import get_language_object_from_request
@@ -27,9 +27,12 @@ filter__query_param = openapi.Parameter("filter", openapi.IN_QUERY,
 id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STRING)
 
 
-@swagger_auto_schema(method="GET",
-                     operation_description="Returns an documentation page using based on id and state param",
-                     manual_parameters=[state__query_param, id__query_param])
+@swagger_auto_schema(
+    method="GET",
+    operation_description="Returns a documentation page",
+    manual_parameters=[state__query_param],
+    responses={'200': openapi.Response('Documentation Page', DocumentationPageSerializer)}
+)
 @api_view(("GET", ))
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
@@ -48,7 +51,9 @@ def get_page(request, doc_id):
 
         docs_json = generate_doc_json([doc], language=language, draft=draft, review=review)
         if docs_json:
-            return api_success(docs_json[0])
+            ser = DocumentationPageSerializer(data=docs_json[0])
+            ser.is_valid()
+            return api_success(ser.data)
 
     raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
 
@@ -120,11 +125,15 @@ page__query_param = openapi.Parameter("page", openapi.IN_QUERY,
 page_size__query_param = openapi.Parameter("pageSize", openapi.IN_QUERY,
                                            description="Max number of results per page",
                                            type=openapi.TYPE_STRING)
+kb_name__path_param = openapi.Parameter(
+    'name', openapi.IN_PATH, type=openapi.TYPE_STRING, description='Knowledgebase name'
+)
 
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an array of all documentation pages. Can be filtered",
-                     manual_parameters=[filter__query_param, page__query_param, page_size__query_param])
+                     manual_parameters=[filter__query_param, page__query_param, page_size__query_param, kb_name__path_param],
+                     responses={'200': openapi.Response('Documentation pages', DocumentsSerializer)})
 @api_view(("GET", ))
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
@@ -200,6 +209,13 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
             )
 
 
+menu_name__path_param = openapi.Parameter('name', openapi.IN_PATH, description='Menu Name', type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns a serialized version of a menu with assets",
+                     manual_parameters=[menu_name__path_param, state__query_param],
+                     responses={'200': openapi.Response('Menu', MenuSerializer)})
 @api_view(("GET",))
 @permission_classes((CanViewDevelopers,))
 def menu_to_endpoint(request, name):

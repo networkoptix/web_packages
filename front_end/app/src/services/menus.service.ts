@@ -85,7 +85,7 @@ export class NxMenusService implements OnDestroy {
         let menu = this.menusStructure?.[name.toLowerCase()] ?? [];
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu = [this.currentSystemNode$.value, ...menu];
-        };
+        }
         if (this.CONFIG.isLocal) {
             return from([menu]);
         }
@@ -143,8 +143,12 @@ export class NxMenusService implements OnDestroy {
             return;
         }
         const { endpoint: { view = false, settings = false, information = false } } = this;
-        const name = activeSystem.name || (this.CONFIG.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
-        const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';
+        // TODO: unify system's name location once we remove promises
+        let name = activeSystem.info?.systemName || activeSystem.name;
+        if (!name) {
+            name = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
+        }
+        const icon = (activeSystem.isOnline || activeSystem.stateOfHealth === this.CONFIG.system.status.online) ? 'systems.svg' : 'system_offline.svg';
         const hasAdminAccess = activeSystem?.accessRole
             ? this.CONFIG.accessRoles.adminAccess.includes(activeSystem.accessRole.toLowerCase())
             : isLocalAdmin || false;

@@ -1,42 +1,49 @@
-import { async }          from '@angular/core/testing';
-import { HttpClient }     from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute }                          from '@angular/router';
+import { DebugElement }                            from '@angular/core';
+import { describe, expect, jest, beforeEach, it }  from '@jest/globals';
 
 import { NxSystemStandardServerComponent } from './server-standard.component';
-import { NxConfigService }                 from '../../../../../services/nx-config';
-import { NxLanguageProviderService }       from '../../../../../services/nx-language-provider';
-import { NxProcessService }                from '../../../../../services/process.service';
-import { NxApplyService }                  from '../../../../../services/apply.service';
+import { NxConfigService }                 from '@services/nx-config';
+import { nxConfig }                        from '@services/nx-config/config';
+import { NxLanguageProviderService }       from '@services/nx-language-provider';
+import { NxProcessService }                from '@services/process.service';
+import { NxApplyService }                  from '@services/apply.service';
 import { NxDialogsService }                from '../../../../../dialogs/dialogs.service';
 import { NxMenuService }                   from '../../../../../menu';
-import { NxUriService }                    from '../../../../../services/uri.service';
+import { NxUriService }                    from '@services/uri.service';
 import { NxToastService }                  from '../../../../../dialogs/toast.service';
 
 describe('NxSystemStandardServerComponent', () => {
-    let configMock: NxConfigService;
-    let langMock: NxLanguageProviderService;
-    let applyMock: NxApplyService;
-    let processMock: NxProcessService;
-    let routeMock: ActivatedRoute;
-    let dialogMock: NxDialogsService;
-    let menuMock: NxMenuService;
-    let uriMock: NxUriService;
-    let toastMock: NxToastService;
     let component: NxSystemStandardServerComponent;
-    beforeAll(async (() => {
-        configMock = new NxConfigService(new HttpClient(null));
-        langMock = jest.createMockFromModule('../../../../../services/nx-language-provider');
-        applyMock = jest.createMockFromModule('../../../../../services/apply.service');
-        processMock = jest.createMockFromModule('../../../../../services/process.service');
-        routeMock = jest.createMockFromModule('@angular/router');
-        dialogMock = jest.createMockFromModule('../../../../../dialogs/dialogs.service');
-        menuMock = jest.createMockFromModule('../../../../../menu');
-        uriMock = jest.createMockFromModule('../../../../../services/uri.service');
-        toastMock = jest.createMockFromModule('../../../../../dialogs/toast.service');
-        component = new NxSystemStandardServerComponent(
-            configMock, langMock, applyMock, processMock, 
-            routeMock, dialogMock, menuMock, uriMock, toastMock
-        );
+    let fixture: ComponentFixture<NxSystemStandardServerComponent>;
+    let el: DebugElement;
+
+    const translateMock = { translations: {}};
+    const configMock = { getConfig: () => nxConfig };
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations : [NxSystemStandardServerComponent],
+            imports      : [],
+            providers    : [
+                { provide: NxLanguageProviderService, useValue: translateMock },
+                { provide: NxConfigService, useValue: configMock },
+                NxApplyService,
+                { provide: NxProcessService, useValue: {} },
+                { provide: ActivatedRoute, useValue: {} },
+                { provide: NxDialogsService, useValue: {} },
+                NxMenuService,
+                { provide: NxUriService, useValue: {} },
+                NxToastService
+            ]
+        }).compileComponents()
+            .then(() => {
+                fixture = TestBed.createComponent(NxSystemStandardServerComponent);
+                component = fixture.componentInstance;
+                el = fixture.debugElement;
+            })
+            .catch(err => console.error(err));
     }));
 
     it('should create the component', () => {

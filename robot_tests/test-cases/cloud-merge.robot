@@ -1490,7 +1490,7 @@ Merge Errors - Different owners for Sytems 4.0
     Log    Step 3
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Confirm Merge Dialog    ${system 1}[name]    server at https://${QA BURBANK IP}}:${system 2}[port]
+    Validate Confirm Merge Dialog    ${system 1}[name]    server at https://${QA BURBANK IP}:${system 2}[port]
 
     Log    Step 4
     Input Text    ${MERGE PASSWORD INPUT}    ${base password}

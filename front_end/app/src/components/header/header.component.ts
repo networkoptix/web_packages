@@ -130,7 +130,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.menuSubscription = this.menusService.getMenu('Header', true).subscribe(header => {
+        this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
             this.headerService.nodes = header;
         });
         // Updates windowWidth$ behavior subject on window resize
@@ -501,7 +501,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                                             sys.moduleInfo = system.moduleInfo;
                                         }
                                     });
-                                    this.canSeeInfo = system && system.info.capabilities && system.info.capabilities.vms_metrics && this.system.canViewInfo();
+                                    this.canSeeInfo = system && this.system.canViewInfo();
                                 });
                             }
                         } else {

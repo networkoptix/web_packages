@@ -200,9 +200,9 @@ export class NxBootstrapProvider {
                 this.CONFIG.previewPath = 'preview';
                 this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
             }
+            this.CONFIG.docMenuMap = data?.docMenuMap;
+            this.CONFIG.licenseTypes = data?.licenseTypes;
         }
         this.CONFIG.dynamicMenus = data?.menus;
-        this.CONFIG.docMenuMap = data?.docMenuMap;
-        this.CONFIG.licenseTypes = data?.licenseTypes;
     }
 }

@@ -20,6 +20,7 @@ import { NxSystemAPIService }        from '../system-api.service';
 import { BaseAccount }               from './base';
 import { Account }                   from './account';
 import { NxStorageService }          from '../storage.service';
+import { CookieService }             from 'ngx-cookie-service';
 
 /**
  * LocalAcount overrides BaseAccount, should maintain the same interface.
@@ -33,6 +34,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         locationService: Location,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
+        protected cookieService: CookieService,
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
@@ -126,6 +128,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
+                this.cookieService.deleteAll();
                 if (!doNotRedirect) {
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])

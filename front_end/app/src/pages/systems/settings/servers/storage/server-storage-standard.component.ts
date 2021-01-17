@@ -69,6 +69,7 @@ export class NxSystemStorageComponent implements OnInit {
     viewContainerRef: ViewContainerRef;
     storageTypes = STORAGE_TYPES
 
+    canSeeDetailInfo: boolean;
     loading: boolean;
     waitingForStorages = true;
     reindexingMain = false;
@@ -82,6 +83,7 @@ export class NxSystemStorageComponent implements OnInit {
     deletedStorage: string[] = [];
     customSettings = false;
     systemHasBackupsOn = false;
+    beingChecked = false;
 
     stopReindex$ = new Subject<TARGET_STORAGE>();
     storage$ = new BehaviorSubject<any[] | any>([]);
@@ -164,6 +166,8 @@ export class NxSystemStorageComponent implements OnInit {
         this.waitingForStorages = true;
         this.storageInfoLoaded.emit(false);
 
+        this.canSeeDetailInfo = this.system.canViewInfo();
+
         if (this.system.currentServerNotBusy && this.system.servers?.length && this.serverId) {
             const empty = { reply: { storages: [] } };
             this.storageSubscription = combineLatest([
@@ -174,7 +178,11 @@ export class NxSystemStorageComponent implements OnInit {
                             this.waitingForStorages = false;
                             this.storageInfoLoaded.emit(true);
                         }),
-                        catchError(() => of(empty)),
+                        catchError(() => {
+                            this.waitingForStorages = false;
+                            this.storageInfoLoaded.emit(true);
+                            return of(empty);
+                        }),
                         startWith(empty)
                     ))),
                 this.refreshStorages$.pipe(
@@ -282,8 +290,11 @@ export class NxSystemStorageComponent implements OnInit {
                 switchMap(() => this.system.getStorages({ id: this.serverId })),
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
-                tap(storages => {
-                    this.systemHasBackupsOn = storages.reduce((hasBackup, { isBackup }) => hasBackup || isBackup, false);
+                tap(_ => {
+                    const systemHasDefaults = !this.system.serverManager.servers.some(({
+                        id, storages
+                    }: any) => !this.doesCurrentServerHaveDefaultSettings(id) && storages.some(({ isBackup }) => isBackup));
+                    this.systemHasBackupsOn = systemHasDefaults;
                 })
             ).subscribe();
         }
@@ -351,7 +362,7 @@ export class NxSystemStorageComponent implements OnInit {
         );
     }
 
-    async doesCurrentServerHaveDefaultSettings() {
+    async doesCurrentServerHaveDefaultSettings(serverId = this.serverId) {
         try {
             // check if backupNewCamerasBeDefault in system settings is true
             const res: any = await this.system.updateOrGetSystemSettings().toPromise();
@@ -360,13 +371,11 @@ export class NxSystemStorageComponent implements OnInit {
                 if (!settings.backupNewCamerasByDefault) return false;
             }
 
-            // check if server.backupType === 'BackupRealTime'
-            const server = this.system.servers.find(({ id }) => this.serverId === id);
-            if (server && server.backupType !== 'BackupRealTime') return false;
-
+            const server = this.system.serverManager.servers.find(({ id }) => serverId === id);
+            if (server && !['BackupRealTime', 'BackupManual'].includes(server.backupType)) return false;
             // check all cameras to see if backupType === 'CameraBackupDefault' || 'CameraBackupLowQuality'
-            return this.system.cameras.every(camera => {
-                return ['CameraBackupDefault', 'CameraBackupLowQuality'].includes(camera.backupType);
+            return server.backupType === 'BackupManual' || this.system.cameraManager.cameras.every(camera => {
+                return ['CameraBackupDefault', 'CameraBackupLowQuality', !this.isBackupOn.originalValue && 'CameraBackupDisabled'].includes(camera.backupType);
             });
         } catch (error) {
             console.error('error while retrieving data checking server for default backup settings', error);
@@ -499,6 +508,8 @@ export class NxSystemStorageComponent implements OnInit {
             this.loading = false;
             if (toggled && !this.systemHasBackupsOn) {
                 this.backupState = true;
+            } else {
+                this.isBackupOn.reset();
             }
         });
         this.storageEmit.emit(sortedStorage || []);
@@ -679,6 +690,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     checkStorages(maxTimeout = 60000, maxTimesToCheck = 10) {
+        this.beingChecked = true;
         const timesChecked$ = new BehaviorSubject<number>(0);
         const filterBeingChecked = (storage: any[]) => storage.filter(
             ({ status, storageStatus }) => status === STORAGE_STATUS.BEING_CHECKED ||
@@ -723,6 +735,7 @@ export class NxSystemStorageComponent implements OnInit {
             tap(updateChangedStatus(beingChecked)),
             map(checkIfStoragesMissing(beingChecked)),
             takeWhile(storagesMissing => storagesMissing || filterBeingChecked(beingChecked)),
+            takeWhile(_ => this.beingChecked),
             repeat(maxTimesToCheck),
             map(missing => missing ? 'Mediaserver still trying to connect to storages..' : 'Some storages have beingChecked status..'),
             untilDestroyed(this)
@@ -731,9 +744,15 @@ export class NxSystemStorageComponent implements OnInit {
         this.storage$.pipe(
             tap(() => timesChecked$.next(0)),
             map(filterBeingChecked),
-            switchMap(storagesBeingChecked => storagesBeingChecked.length ? pollStorageStatus(storagesBeingChecked) : of('Storages loaded, no storages in beingChecked state.')),
+            map((storagesBeingChecked) => {
+                this.beingChecked = storagesBeingChecked.length && timesChecked$.value < maxTimesToCheck;
+                return this.beingChecked && storagesBeingChecked;
+            }),
+            switchMap(storagesBeingChecked => storagesBeingChecked && storagesBeingChecked.length ? pollStorageStatus(storagesBeingChecked) : of('Storages loaded, no storages in beingChecked state.')),
             untilDestroyed(this)
-        ).subscribe(state => console.info(state));
+        ).subscribe(state => {
+            console.info(state);
+        });
     }
 
     calcDDWidth() {
@@ -829,6 +848,9 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     reindexing(type: TARGET_STORAGE, action?: string) {
+        if (this.beingChecked) {
+            return;
+        }
         const onlyCheck = !action;
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
@@ -901,9 +923,5 @@ export class NxSystemStorageComponent implements OnInit {
             systemId   : this.system.id,
             childRoute : ChildRoutes.HEALTH
         }) + 'storages';
-    }
-
-    get canSeeInfo() {
-        return this.system.info.capabilities && this.system.info.capabilities.vms_metrics && this.system.canViewInfo();
     }
 }

@@ -17,7 +17,8 @@ interface Server {
     name: string,
     ip: string,
     id: string,
-    url: string
+    url: string,
+    status: string
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -54,7 +55,7 @@ export class NxOverlayModalComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private appState: NxAppStateService,
+        public appState: NxAppStateService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
         private router: Router
@@ -99,17 +100,29 @@ export class NxOverlayModalComponent implements OnInit {
             const untilRefresh = this.timeoutUntilRefresh$.value;
 
             if (!this.oneCheckAtATime && untilRefresh < 1) {
-                this.checkIfOnline().then((res: any) => {
-                    this.oneCheckAtATime = false;
-                    // restarts the interval after checkIfOnline
-                    if (!res.ok && this.nextInterval <= 60) {
-                        this.timeoutUntilRefresh$.next(this.nextInterval);
-                        this.nextInterval += 5;
-                        this.refresh$.next('refresh');
-                    } else {
+                this.checkIfOnline()
+                    .then((res: any) => {
+                        this.oneCheckAtATime = false;
+                        // restarts the interval after checkIfOnline
+                        if (!res.reply && this.nextInterval <= 60) {
+                            this.timeoutUntilRefresh$.next(this.nextInterval);
+                            this.nextInterval += 5;
+                            this.refresh$.next('refresh');
+                        } else {
+                            this.refresh$.next(false);
+
+                            if (res.reply) {
+                                this.appState.systemAvailable$.next(true);
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Server still offline: ', err);
+                    })
+                    .finally(() => {
+                        this.checking$.next(false);
                         this.refresh$.next(false);
-                    }
-                });
+                    });
             } else if (!this.oneCheckAtATime) {
                 this.timeoutUntilRefresh$.next(untilRefresh - 1);
                 if (untilRefresh === 1) {
@@ -129,7 +142,7 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     getServers() {
-        return this.system.getServers().toPromise()
+        this.system.getServers().toPromise()
             .then(res => {
                 this.servers = res
                     ? Object.entries(res)
@@ -140,12 +153,12 @@ export class NxOverlayModalComponent implements OnInit {
                         })
                         .filter(server => server.id !== this.serverId)
                     : [];
-                return this.servers;
             })
             .catch(err => console.error(err));
     }
 
     manualRefresh() {
+        this.oneCheckAtATime = false;
         this.checking$.next(false);
         this.timeoutUntilRefresh$.next(5);
         this.nextInterval = 10;
@@ -154,10 +167,6 @@ export class NxOverlayModalComponent implements OnInit {
 
     checkIfOnline() {
         this.oneCheckAtATime = true;
-        return this.system.mediaserver.getModuleInfo().toPromise()
-            .then(res => res)
-            .finally(() => {
-                this.checking$.next(false);
-            });
+        return this.system.mediaserver.getModuleInfo().toPromise();
     }
 }
