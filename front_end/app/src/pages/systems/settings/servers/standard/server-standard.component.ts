@@ -170,8 +170,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             }
 
             if (currentValue.id !== previousValue?.id) {
-                // TODO: Cleanup and fix code to remove use of setTimeout. ExpressionChangedAfterItHasBeenCheckedError
-                setTimeout(() => this.setServer());
+                this.setServer();
             }
         }
     }

@@ -128,12 +128,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             if (this.system && this.system.servers && this.system.servers.length) {
                                 this.system.serverManager
                                     .initSystemMediaServers()
+                                    .then(() => {
+                                        this.setServer();
+                                    })
                                     .catch(error => {
                                         console.error(error);
                                     });
                             }
-
-                            this.setServer();
                         }
                     });
             });
@@ -186,10 +187,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             this.selectedServer = server;
             this.menuService.detail = this.selectedServer.id;
             if (this.selectedServer.id !== this.serverId$.value) {
-                this.serverId$.next('');
-                setTimeout(() => {
-                    this.serverId$.next(this.selectedServer.id);
-                });
+                this.serverId$.next(this.selectedServer.id);
             }
         }
     }

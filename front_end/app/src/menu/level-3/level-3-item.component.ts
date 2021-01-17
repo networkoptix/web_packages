@@ -59,7 +59,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.item.currentValue) {
+        if (changes.item?.currentValue) {
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
 
             if (changes.item.currentValue.additionalText) {

@@ -37,7 +37,7 @@
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>
-    <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded && (storages$ | async); else preloader">
+    <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded; else preloader">
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar">
