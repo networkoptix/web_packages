@@ -25,18 +25,24 @@ export class TimelineWheelHandlerService {
     this.timeUnderMouse.handleMouseMove(e)
   }
 
+  protected _sanitizeOffset (offset) {
+    if (offset > 0) {
+      if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
+        offset = this.timeline.fullRange.end - this.timeline.visibleRange.end
+      }
+    } else {
+      if (this.timeline.visibleRange.start + offset < this.timeline.fullRange.start) {
+        offset = this.timeline.fullRange.start - this.timeline.visibleRange.start
+      }
+    }
+    return offset
+  }
+
   public wheelScroll (delta: int) {
     const step = 0.01
-    let offset = Math.round(delta * step * this.timeline.visibleRange.duration)
-    if (delta > 0) {
-        if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
-          offset = this.timeline.fullRange.end - this.timeline.visibleRange.end
-        }
-    } else {
-        if (this.timeline.visibleRange.start + offset < this.timeline.fullRange.start) {
-          offset = this.timeline.fullRange.start - this.timeline.visibleRange.start
-        }
-    }
+    const offset = this._sanitizeOffset(
+      Math.round(delta * step * this.timeline.visibleRange.duration)
+    )
     this.timeline.shiftVisibleRange(offset)
   }
 
@@ -45,8 +51,9 @@ export class TimelineWheelHandlerService {
     const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr
     const step = 0.002
     let durationDelta = duration * step * delta
-    if (duration - durationDelta < MIN_DURATION) {
-        durationDelta = duration - MIN_DURATION
+    const d2 = duration - durationDelta
+    if (d2 < MIN_DURATION) {
+        durationDelta = d2
     }
     this.timeline.zoom(durationDelta, offset)
   }

@@ -1,6 +1,6 @@
 type ByteHexString = string
 
-import { percentage } from '../../../../../utils/type-aliases'
+import { percentage } from '../../../../../../utils/type-aliases'
 
 export function percentageToHex (p: percentage): ByteHexString {
     return Math.round(p * 255).toString(16)

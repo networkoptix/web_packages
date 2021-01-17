@@ -5,12 +5,12 @@ import TimelineService from '../../timeline.service'
 import IrregularLengthInterval from './intervals/IrregularLengthInterval'
 import irregularLengthIntervals from './intervals/irregularLengthIntervals'
 import estimateIrregularLengthIntervalPessimistically from './intervals/utils/estimateIrregularLengthIntervalPessimistically'
-import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/TOP__MIN_WIDTH_FOR_INTERVALS'
+import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS'
 import { ms, px } from '../../../../../utils/type-aliases'
-import drawingConfig from './topRulerDrawingConfig'
+import drawingConfig from './drawingConfigs/topRulerDrawingConfig'
 import cfg from '../../timeline.config'
 import topRulerDateFormats from './dateformats/top_ruler_date_formats'
-import percentageToHex from './percentageToHex'
+import percentageToHex from './utils/percentageToHex'
 
 import isIntervalOdd from './intervals/utils/isIntervalOdd'
 
@@ -42,7 +42,10 @@ export class TimelineTopRulerCanvasRendererService {
       ctx.lineTo(this.timeline.canvasGeometry.width, h)
       ctx.stroke()
 
-      serifTimes.map((time, index, serifTimes) => this._drawSerif(ctx, interval, time, serifTimes[index - 1], serifTimes[index + 1]))
+      serifTimes.map(
+        (time, index, serifTimes) =>
+          this._drawSerif(ctx, interval, time, serifTimes[index - 1], serifTimes[index + 1])
+      )
     })
   }
 
@@ -99,22 +102,32 @@ export class TimelineTopRulerCanvasRendererService {
     ctx.font = oldFont
   }
 
-  protected _drawSerif (ctx: CanvasRenderingContext2D, interval: IrregularLengthInterval, curTime: ms, prevTime: ms, nextTime: ms) {
+  protected _drawSerif (
+    ctx: CanvasRenderingContext2D,
+    interval: IrregularLengthInterval,
+    curTime: ms,
+    prevTime: ms,
+    nextTime: ms
+  ) {
     let x0: px = this.timeline.timeToCanvasOffsetX(curTime)
     const xNext: px = nextTime
       ? this.timeline.timeToCanvasOffsetX(nextTime)
       : x0 + this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval))
-    const xPrev: px = prevTime
-      ? this.timeline.timeToCanvasOffsetX(prevTime)
-      : x0 - this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval))
+    // const xPrev: px = prevTime
+    //   ? this.timeline.timeToCanvasOffsetX(prevTime)
+    //   : x0 - this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval))
     let x1 = xNext
 
     // if (xPrev < 0 && xNext > this.timeline.canvasGeometry.width && x0 < this.timeline.canvasGeometry.width) {
     //   x0 = 0
     //   x1 = this.timeline.canvasGeometry.width
     // }
-    if (x0 < 0) x0 = 0
-    if (x1 > this.timeline.canvasGeometry.width) x1 = this.timeline.canvasGeometry.width
+    if (x0 < 0) {
+      x0 = 0
+    }
+    if (x1 > this.timeline.canvasGeometry.width) {
+      x1 = this.timeline.canvasGeometry.width
+    }
     const MIN_WIDTH = 130 * this.timeline.canvasGeometry.dpr
 
     const y0: px = 0
@@ -126,32 +139,44 @@ export class TimelineTopRulerCanvasRendererService {
       ctx.fillRect(x0, y0, x1 - x0, y1)
     }
 
-    if (x1 - x0 < MIN_WIDTH) return
-
-
-    ctx.strokeStyle = `${drawingConfig.serif.baseColorHex}${percentageToHex(drawingConfig.serif.opacity)}`
-    ctx.beginPath()
-    ctx.moveTo(x0, y0)
-    ctx.lineTo(x0, y2)
-    ctx.stroke()
-    const format = topRulerDateFormats[interval]
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    const topString = dateformat(curTime, format.top)
-    const x = Math.round((x0 + x1) / 2)
-    const y = Math.round((y0 + y1) / 2)
-    ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`
-    const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif'
-    ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`
-    ctx.fillText(topString, x, y)
-
-    if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
-      const serifString = dateformat(curTime, format.serif)
-      ctx.fillStyle = `${drawingConfig.bottomLabel.baseColorHex}${percentageToHex(drawingConfig.bottomLabel.opacity)}`
-      ctx.font = `${drawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`
-      ctx.textBaseline = 'top'
-      ctx.fillText(serifString, x0, y2 + this.timeline.canvasGeometry.dpr * 10)
+    if (x1 - x0 >= MIN_WIDTH) {
+      this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2)
     }
+  }
+
+  protected _drawSerifText (
+    ctx: CanvasRenderingContext2D,
+    interval: IrregularLengthInterval,
+    curTime: ms,
+    x0: px,
+    x1: px,
+    y0: px,
+    y1: px,
+    y2:px,
+  ) {
+    ctx.strokeStyle = `${drawingConfig.serif.baseColorHex}${percentageToHex(drawingConfig.serif.opacity)}`
+      ctx.beginPath()
+      ctx.moveTo(x0, y0)
+      ctx.lineTo(x0, y2)
+      ctx.stroke()
+      const format = topRulerDateFormats[interval]
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      const topString = dateformat(curTime, format.top)
+      const x = Math.round((x0 + x1) / 2)
+      const y = Math.round((y0 + y1) / 2)
+      ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`
+      const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif'
+      ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`
+      ctx.fillText(topString, x, y)
+
+      if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
+        const serifString = dateformat(curTime, format.serif)
+        ctx.fillStyle = `${drawingConfig.bottomLabel.baseColorHex}${percentageToHex(drawingConfig.bottomLabel.opacity)}`
+        ctx.font = `${drawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`
+        ctx.textBaseline = 'top'
+        ctx.fillText(serifString, x0, y2 + this.timeline.canvasGeometry.dpr * 10)
+      }
   }
 }
 

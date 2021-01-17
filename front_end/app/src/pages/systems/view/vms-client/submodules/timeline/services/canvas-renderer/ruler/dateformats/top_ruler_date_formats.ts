@@ -1,5 +1,7 @@
-import LABEL_FORMATS from './label_formats'
-import { SECOND, MINUTE, HOUR, DAY, ROUGH_CENTURY, ROUGH_YEAR, ROUGH_MONTH } from '../intervals/regularLengthIntervals'
+import { LABEL_FORMATS as LF } from './label_formats'
+import { SECOND, MINUTE, HOUR, DAY, } from '../intervals/regularLengthIntervals'
+// import { ROUGH_CENTURY, ROUGH_YEAR, ROUGH_MONTH } from '../intervals/regularLengthIntervals'
+
 
 export const topRulerDateFormats = {
 
@@ -19,20 +21,20 @@ export const topRulerDateFormats = {
   // [6 * HOUR]: { top: 'd mmmm yyyy', serif: 'MM', }, // should never happen
   // [12 * HOUR]: { top: 'd mmmm yyyy', serif: 'MM', }, // should never happen
 
-  [DAY]: { top: LABEL_FORMATS.DAY_OF_YEAR, serif: 'd' },
+  [DAY]: { top: LF.DAY_OF_YEAR, serif: 'd' },
 
-  // [ROUGH_MONTH]: { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
-  'month': { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
-  // [3 * ROUGH_MONTH]: { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
-  'quarter-year': { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
-  // [6 * ROUGH_MONTH]: { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
-  'half-year': { top: LABEL_FORMATS.MONTH_AND_YEAR, serif: LABEL_FORMATS.MONTH, },
+  // [ROUGH_MONTH]: { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
+  'month': { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
+  // [3 * ROUGH_MONTH]: { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
+  'quarter-year': { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
+  // [6 * ROUGH_MONTH]: { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
+  'half-year': { top: LF.MONTH_AND_YEAR, serif: LF.MONTH, },
 
-  // [ROUGH_YEAR]: { top: LABEL_FORMATS.YEAR, serif: LABEL_FORMATS.YEAR, },
-  year: { top: LABEL_FORMATS.YEAR, serif: LABEL_FORMATS.YEAR, },
+  // [ROUGH_YEAR]: { top: LF.YEAR, serif: LF.YEAR, },
+  'year': { top: LF.YEAR, serif: LF.YEAR, },
 
-  // [ROUGH_CENTURY]: { top: LABEL_FORMATS.YEAR, serif: LABEL_FORMATS.YEAR, },
-  century: { top: LABEL_FORMATS.YEAR, serif: LABEL_FORMATS.YEAR, },
+  // [ROUGH_CENTURY]: { top: LF.YEAR, serif: LF.YEAR, },
+  'century': { top: LF.YEAR, serif: LF.YEAR, },
 }
 
 export default topRulerDateFormats

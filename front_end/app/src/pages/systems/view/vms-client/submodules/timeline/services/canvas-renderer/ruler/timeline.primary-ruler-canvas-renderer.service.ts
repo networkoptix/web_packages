@@ -4,7 +4,7 @@ import IrregularLengthInterval from './intervals/IrregularLengthInterval'
 import irregularLengthIntervals from './intervals/irregularLengthIntervals'
 import estimateIrregularLengthIntervalPessimistically from './intervals/utils/estimateIrregularLengthIntervalPessimistically'
 import isAlignedByIrregularInterval from './intervals/utils/isAlignedByIrregularInterval'
-import { MAX_WEIGHT, MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS } from './intervals/MIN_WIDTH_FOR_INTERVALS'
+import { MAX_WEIGHT, MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS } from './intervals/cfg/MIN_WIDTH_FOR_INTERVALS'
 
 import * as df from 'dateformat'
 const dateformat = df.default || df
@@ -12,12 +12,15 @@ const dateformat = df.default || df
 import cfg from '../../timeline.config'
 import TimelineService from '../../timeline.service'
 import { ms, int, px } from '../../../../../utils/type-aliases'
-import primaryRulerSerifDrawingConfigs from './primaryRulerSerifDrawingConfigs'
+import primaryRulerSerifDrawingConfigs from './drawingConfigs/primaryRulerSerifDrawingConfigs'
 import primaryRulerDateFormats from './dateformats/primary_ruler_date_formats'
 
-import percentageToHex from './percentageToHex'
+import percentageToHex from './utils/percentageToHex'
 
-import AnimatedFloat from './animation_primitives/AnimatedFloat'
+import AnimatedFloat from './animationPrimitives/AnimatedFloat'
+
+import getIntervalDiffDict from './utils/getIntervalDiffDict'
+
 
 export interface RulerSerif {
   interval: IrregularLengthInterval,
@@ -121,10 +124,11 @@ export class TimelinePrimaryRulerCanvasRendererService {
     if (!intervals || !intervals.length) return []
 
     const smallestInterval = intervals[0]
+    const intervalsReversed = [...intervals].reverse()
     return this.timeline.visibleRange.iterate(smallestInterval).map(time => {
-      const weight = this._getIntervalWeight(time, intervals)
+      const weight = this._getIntervalWeight(time, intervalsReversed)
       // const interval = intervals[~~weight - 1]
-      const interval = [...intervals].reverse().find(i => isAlignedByIrregularInterval(time, i))
+      const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(time, i))
       const result = {
         time,
         weight,
@@ -135,12 +139,12 @@ export class TimelinePrimaryRulerCanvasRendererService {
     }).filter(s => s.interval)
   }
 
-  protected _getIntervalWeight(time: ms, intervals: Array<IrregularLengthInterval>): int {
-    const interval = [...intervals].reverse().find(i => isAlignedByIrregularInterval(time, i))
+  protected _getIntervalWeight(time: ms, intervalsReversed: Array<IrregularLengthInterval>): int {
+    const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(time, i))
     // console.log(interval, this._intervalWeightAnimations[interval], this._intervalWeightAnimations[interval].get())
     const result = this._intervalWeightAnimations[interval]?.get() || 0
     if (!this._intervalWeightAnimations[interval]) {
-      console.warn('_getIntervalWeight', 'no animation for the interval', time, intervals, this._intervalWeightAnimations)
+      console.warn('_getIntervalWeight', 'no animation for the interval', time, intervalsReversed, this._intervalWeightAnimations)
     }
     // if (result != ~~result) console.log('GIW', result)
     return result
@@ -207,29 +211,3 @@ export class TimelinePrimaryRulerCanvasRendererService {
 }
 
 export default TimelinePrimaryRulerCanvasRendererService
-
-
-
-function getWeightArrayFromIntervalList (arr: Array<any>) {
-  return arr.reduce((acc, v, k) => {
-    acc[v] = k + 1
-    return acc
-  }, {})
-}
-
-function getIntervalDiffDict (a1: Array<IrregularLengthInterval>, a2: Array<IrregularLengthInterval>) {
-  const d1 = getWeightArrayFromIntervalList(a1)
-  const d2 = getWeightArrayFromIntervalList(a2)
-  const result = {}
-  Object.keys(d1).map(d1k => {
-    if (d1[d1k] !== d2[d1k]) {
-      result[d1k] = [d1[d1k], d2[d1k] || 0]
-    } else {
-      result[d1k] = d1[d1k]
-    }
-  })
-  Object.keys(d2).filter(d2k => !(d2k in result)).map(d2k => {
-    result[d2k] = [0, d2[d2k]]
-  })
-  return result
-}
