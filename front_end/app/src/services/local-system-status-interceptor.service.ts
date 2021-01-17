@@ -6,31 +6,24 @@ import {
     HttpResponse,
     HttpErrorResponse,
     HttpEvent
-}                      from '@angular/common/http';
-import { filter, tap } from 'rxjs/operators';
-import { Observable }  from 'rxjs';
+}                     from '@angular/common/http';
+import { tap }        from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { environment }       from '../../environments/environment';
 import { NxAppStateService } from './nx-app-state.service';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
-    constructor(private appState: NxAppStateService) {}
+    constructor(private appState: NxAppStateService) {
+    }
 
     public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
-        if (!environment.isLocal) {
+        if (!environment.isLocal || httpRequest.headers.get('X-Server-Guid')) {
             return handler.handle(httpRequest);
         }
         return handler.handle(httpRequest)
             .pipe(
-                filter(() => {
-                    // If you see some unexpected behavior such as "eaten" requests ... it maybe happens here :)
-                    const noServerGuid = !httpRequest.headers.get('X-Server-Guid');
-                    if (noServerGuid) {
-                        console.debug('Request eaten due to missing X-Server-Guid', httpRequest.headers);
-                    }
-                    return noServerGuid;
-                }),
                 tap(
                     res => this.checkIfSystemAvailable(res),
                     err => this.checkIfSystemAvailable(err)
