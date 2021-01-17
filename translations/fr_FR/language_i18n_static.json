@@ -45,7 +45,7 @@
             "label": "Personnalisé"
         },
         "customRole": {
-            "description": "Rôle d’usager personnalisé spécifié dans le système",
+            "description": "Rôle d’utilisateur personnalisé spécifié dans le système",
             "label": "Rôle personnalisé"
         },
         "disabled": {
@@ -210,7 +210,7 @@
                 "whenFullyUsed": "Lorsqu'il est entièrement utilisé",
                 "amountUsed": "Quantité utilisée",
                 "archiveFrom": "Archive de",
-                "recordingBitrate": "Bitrate d'enregistrement",
+                "recordingBitrate": "Débit d'enregistrement",
                 "delayFromLive": "Délai avec le direct"
             },
             "remove": {
@@ -260,16 +260,16 @@
             "ownerCanMergeText": "Vous ne pouvez fusionner que les systèmes dont vous êtes le propriétaire",
             "passwordRequired": "Mot de passe requis",
             "passwordWrong": "Mot de passe incorrect",
-            "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
+            "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente qui est incompatible avec le système actuel. Mettez à jour le système actuel vers la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour le fusionner avec le système {{targetSystem}}.",
             "primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}",
-            "primarySystemUnavailable": "Le système {{primarySystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemUnavailable": "Le système {{primarySystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Nous vous recommandons de consulter avec",
                 "b_support": "support",
                 "c_proceeding": "avant de procéder."
             },
-            "secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
-            "secondarySystemUnavailable": "Le système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "secondaryCannotMerge": "Le système {{targetSystem}} a une ancienne version du logiciel incompatible avec le système actuel. Mettez à jour {{targetSystem}} vers la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour la fusionner avec la version actuelle.",
+            "secondarySystemUnavailable": "Le système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "serveur à {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Impossible d'accéder au système {{targetSystem}}.</p><p>Assurez-vous que le serveur spécifié est en ligne et réessayez.</p>",
             "serverNotYours": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
@@ -319,7 +319,7 @@
             "deleteUser": "Supprimer l'utilisateur?",
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
-            "removeUser": "Supprimer Usager?",
+            "removeUser": "Supprimer Utilisateur?",
             "serversDetach": "Détacher le serveur \"{{ title }}\" du système actuel?",
             "serversReset": "Réinitialiser le serveur \"{{ title }}\" aux paramètres par défaut?",
             "serversRestart": "Redémarrer le serveur \"{{ title }}\"?"
@@ -423,11 +423,11 @@
         "cantChangeAccountPrefix": "Impossible d'enregistrer les changements",
         "cantChangePasswordPrefix": "Ne peut pas enregistrer le mot de passe",
         "cantDisconnectSystemPrefix": "Impossible de supprimer le système",
-        "cantEditAdmin": "Cet usager dispose d’autorisations administrateur",
+        "cantEditAdmin": "Cet utilisateur dispose d’autorisations administrateur",
         "cantEditYourself": "Modification des propres autorisations n’est pas autorisée",
         "cantGetSystemInfoPrefix": "Information système non disponible",
         "cantGetSystemsListPrefix": "Liste système non disponible",
-        "cantGetUsersListPrefix": "Liste des usagers non disponible",
+        "cantGetUsersListPrefix": "Liste des utilisateurs non disponible",
         "cantOpenClient": "L'application %VMS_NAME% n'est pas détectée.",
         "cantRegisterPrefix": "Erreur survenue",
         "cantSendActivationPrefix": "Impossible d’envoyer courriel de confirmation",
@@ -520,7 +520,7 @@
             "systemAdministration": "Administration Système",
             "general": "Général",
             "licenses": "Licences",
-            "users": "Usagers"
+            "users": "Utilisateurs"
         }
     },
     "pageTitles": {
@@ -661,7 +661,7 @@
             "unavailable": "Le système est inaccessible"
         },
         "users": {
-            "cloudDelete": "Supprimer Usager",
+            "cloudDelete": "Supprimer Utilisateur",
             "localDelete": "Supprimer l'utilisateur"
         },
         "yourSystem": "Votre système",
@@ -817,7 +817,7 @@
         "smtpPort": "Port SMTP",
         "smtpSimple": "SMTP simple",
         "smtpTimeout": "Délai d’attente SMTP",
-        "smtpUser": "Usager SMTP",
+        "smtpUser": "Utilisateur SMTP",
         "statisticsAllowed": "Envoyer des statistiques d'utilisation et des rapports d'erreur anonymes",
         "statisticsReportLastNumber": "Rapport statistique - dernier numéro",
         "statisticsReportLastTime": "Rapport statistique - dernière fois",
@@ -829,7 +829,7 @@
         "SystemName": "Nom système",
         "takeCameraOwnershipWithoutLock": "Prendre propriété des caméras sans verrou",
         "timeSynchronizationEnabled": "Synchronisation de l'heure activée",
-        "primaryTimeServer": "Serveur de synchronisation horaire principal",
+        "primaryTimeServer": "Serveur de synchronisation de l'heure principale",
         "osTimeChangeCheckPeriodMs": "Période de vérification du changement d'heure de l'OS",
         "syncTimeExchangePeriod": "Intervalle de synchronisation de synchronisation de l'heure pour les requêtes réseau",
         "syncTimeEpsilon": "Synchroniser le temps epsilon. La nouvelle valeur n'est pas appliquée si le temps delta est inférieur à epsilon",
