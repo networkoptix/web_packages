@@ -28,8 +28,8 @@ Failed to access system page correctly shows when going to a non-existent system
 The logo takes you to the home page when not logged in
     [Tags]    C41539
     Open Browser and go to URL    ${url}/register
-    Wait Until Element Is Visible    ${LOGO LINK}
-    Click Link    ${LOGO LINK}
+    Wait Until Element Is Visible    ${HEADER ICON LINK}
+    Click Link    ${HEADER ICON LINK}
     Location Should Be    ${url}/
 
 The logo takes you to the systems page when logged in
@@ -37,8 +37,8 @@ The logo takes you to the systems page when logged in
     Open Browser and go to URL    ${url}/register
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Go To    ${url}/${AUTO_TESTS SYSTEM ID}
-    Wait Until Element Is Visible    ${LOGO LINK}
-    Click Link    ${LOGO LINK}
+    Wait Until Element Is Visible    ${HEADER ICON LINK}
+    Click Link    ${HEADER ICON LINK}
     Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Location Should Be    ${url}/systems
 

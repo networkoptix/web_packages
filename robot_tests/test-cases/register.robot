@@ -47,7 +47,7 @@ Should open register page in anonymous state by clicking Register button on home
     Open Browser and go to URL    ${url}
     Wait Until Element Is Visible    ${CREATE ACCOUNT BODY}
     Click Link    ${CREATE ACCOUNT BODY}
-    Location Should Be    ${url}/register
+    Wait Until Location Is    ${url}/register
 
 #I am assuming this means directly going to the /register url and not clicking a button
 Should open register page in anonymous state
