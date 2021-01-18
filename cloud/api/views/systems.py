@@ -10,6 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.controllers import cloud_api, cloud_gateway
 from api.helpers.exceptions import api_success, require_params, \
     APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
+from api.serializers import *
 
 
 # Swagger parameters
@@ -176,7 +177,8 @@ def access_roles(request, system_id):
                              "system_id": system_id__body
                          },
                          required=["password", "system_id"]
-                     ))
+                     ),
+                     responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def disconnect(request):

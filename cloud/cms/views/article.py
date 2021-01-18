@@ -9,6 +9,7 @@ from api.helpers.exceptions import (
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language, 
                         AssetCustomizationReview, DataStructure)
+from cms.serializers import ArticleSerializer
 from util.helpers import get_language_object_from_request
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
@@ -22,7 +23,8 @@ url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an article based on params",
-                     manual_parameters=[state__query_param, id__query_param, url__route_param])
+                     manual_parameters=[state__query_param, id__query_param, url__route_param],
+                     responses={'200': openapi.Response('Article', ArticleSerializer)})
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_article(request, url_param, **kwargs):
@@ -94,6 +96,8 @@ def get_article(request, url_param, **kwargs):
             process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
                                     global_contexts, global_contexts_dict, language=language)
 
-            return api_success(article_dict)
+            ser = ArticleSerializer(data=article_dict)
+            ser.is_valid()
+            return api_success(ser.data)
 
     raise APINotFoundException(error_data={'url_param': url_param}, error_text='Article not found')

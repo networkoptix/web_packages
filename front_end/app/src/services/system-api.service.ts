@@ -343,6 +343,7 @@ export class NxSystemAPI {
             }),
             flatMap((data: any) => {
                 if (data.error !== '0') {
+                    this.cookieService.delete('x-runtime-guid');
                     return Promise.reject(data.data || data);
                 }
                 this.setAuthKeys(auth, authPost, authRtsp);
@@ -351,9 +352,10 @@ export class NxSystemAPI {
     }
 
     logout() {
-        return this.post('/api/cookieLogout').pipe(tap(() => {
-            this.cookieService.delete('x-runtime-guid');
-        })).toPromise();
+        return this.post('/api/cookieLogout')
+            .pipe(tap(() => {
+                this.cookieService.delete('x-runtime-guid');
+            })).toPromise();
     }
 
     logUrl(params: {id?: number, lines?: number}) {

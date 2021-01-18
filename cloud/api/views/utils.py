@@ -115,7 +115,8 @@ def visited_key(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
-                     operation_description="Gets the language of the current user.")
+                     operation_description="Gets the language of the current user.",
+                     responses={'302': 'Redirect to language file'})
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Sets the language for current user.",
                      request_body=openapi.Schema(
@@ -124,7 +125,8 @@ def visited_key(request):
                              "language": language__body
                          },
                          required=["language"]
-                     ))
+                     ),
+                     responses={'200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'language': openapi.Schema(type=openapi.TYPE_STRING)})})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -358,7 +360,8 @@ def get_settings(request):
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns the list of supported devices.")
 @swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="Clear's the supported devices cache.")
+                     operation_description="Clear's the supported devices cache.",
+                     responses={'200': 'IPVD cache cleared'})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 def get_ipvd(request):

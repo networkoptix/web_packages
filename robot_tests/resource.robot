@@ -1061,16 +1061,19 @@ Get container id by name
     Release Lock    get_id_lock
     [Return]    ${id}
 
-Get Storages
-    [Arguments]    ${system}
-    ${cauth}=   Create List    admin    qweasd 123
-    Create Session    get_storages    ${system}    auth=${cauth}    disable_warnings=1
-    ${r}=   Get Request    get_storages   /ec2/getStorages  timeout=10
-    [Return]    ${r}
+Page Should Not Contain Elements
+    [Arguments]    @{locators}
+    FOR    ${loc}    IN    @{locators}
+        Page Should Not Contain Element    ${loc}
+    END
 
-Save Storages
-    [Arguments]    ${url}    ${data}
-    ${cauth}=   Create List    admin    qweasd 123
-    Create Session    save_storages    ${url}    auth=${cauth}    disable_warnings=1
-    ${r}=   Post Request    save_storages   /ec2/saveStorages    json=${data}    timeout=10
-    [Return]    ${r}
+Execute Command Remotely
+    [Arguments]    ${command}
+    Acquire Lock    exec_cmd_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${result}=   Execute Command    ${command}
+    Close Connection
+    Release Lock    exec_cmd_lock
+    [Return]    ${result}
+

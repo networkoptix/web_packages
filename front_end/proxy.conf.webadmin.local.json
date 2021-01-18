@@ -1,24 +1,24 @@
 {
   "/api/*": {
-    "target": "https://localhost:8111",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://localhost:8111",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://localhost:8111",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/customization/*": {
-    "target": "https://localhost:8111",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

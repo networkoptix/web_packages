@@ -1,4 +1,4 @@
-from cms.models import get_cloud_portal_asset, Asset
+from cms.models import get_cloud_portal_asset, Asset, LicenseType
 from util.config import get_config
 
 
@@ -15,6 +15,7 @@ class SpecialStructures:
         self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization)
         self.add_function("%LANGUAGES%", self.calc_lang_codes)
         self.add_function("%CLOUD_LINK%", self.calc_cloud_link)
+        self.add_function("%licenseTypes%", self.calc_license_type)
 
     def add_function(self, tag: str, function):
         self.function_dict[tag] = function
@@ -56,3 +57,7 @@ class SpecialStructures:
     @staticmethod
     def calc_support_link(asset: Asset):
         return SpecialStructures.get_global_value(asset, "%SUPPORT_LINK%")
+
+    @staticmethod
+    def calc_license_type(asset: Asset):
+        return LicenseType.get_license_types()

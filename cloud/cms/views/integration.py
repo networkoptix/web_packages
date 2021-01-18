@@ -302,6 +302,9 @@ def get_integrations(request):
     return api_success({'data': integration_list})
 
 
+@swagger_auto_schema(method='GET',
+                     operation_description="Returns the number of integrations in the integration store",
+                     responses={'200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'count': openapi.Schema(type=openapi.TYPE_INTEGER)})})
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_integrations_count(request):

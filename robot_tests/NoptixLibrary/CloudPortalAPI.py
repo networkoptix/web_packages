@@ -267,6 +267,15 @@ class CloudPortalAPI(object):
         f.write(json.dumps(systemsJson))
         f.close()
 
-    def check_http_connection(selfself, protocol, ip, url):
-        r = requests.get(protocol+ip+url)
+    # @staticmethod
+    # def check_http_connection(protocol, ip, url):
+    #     r = requests.get(protocol+ip+url)
+    #     return r.status_code
+
+    @staticmethod
+    def check_connection(url, verify=True):
+        try:
+            r = requests.get(url, verify=verify)
+        except requests.exceptions.SSLError:
+            return 'SSL Error'
         return r.status_code
