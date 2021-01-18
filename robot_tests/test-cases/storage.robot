@@ -113,7 +113,7 @@ Storage Suite Teardown
         SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
         ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     rm disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm -d disk${n}-${random}/     sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     rm -r disk${n}-${random}/     sudo=True    sudo_password=${QA BURBANK PASS}
         Close Connection
     END 
     
