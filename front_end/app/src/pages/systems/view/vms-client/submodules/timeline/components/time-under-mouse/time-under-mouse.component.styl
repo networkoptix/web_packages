@@ -1,3 +1,7 @@
+$usualBackground = rgba(205,215,220, 0.9)
+$textColor = rgb(43, 56, 63)
+$pressedColor = $textColor
+
 :host
   display block
   position absolute
@@ -10,9 +14,18 @@
   transform translateX(-50%)
 
   text-align center
-  background rgba(205,215,220, 0.9)
-  color rgb(43, 56, 63)
+  background $usualBackground
+  color $textColor
   z-index 100
+
+  > .bottom-stripe
+    position absolute
+    bottom 0
+    width 0
+    left 50%
+    height 2px
+    background transparent
+    transition all .2s ease-in-out
 
   > svg
     position absolute
@@ -22,13 +35,14 @@
     width 180px
     height 10px
     > polygon
-      fill rgba(205,215,220, 0.9)
+      transition fill .2s ease-in-out
+      fill $usualBackground
 
   > .vertical-line
     content ''
     width 2px
     height 25px
-    background-color rgba(205,215,220, 0.9)
+    background-color $usualBackground
     position absolute
     left 50%
     bottom -33px
@@ -51,3 +65,13 @@
       font-size 16px
       line-height 1.0em
       font-family 'robotobold', Roboto, Helvetica, sans-serif
+
+
+  &.pressed
+    > .bottom-stripe
+      background $pressedColor
+      left 0
+      width 100%
+    > svg
+      > polygon
+        fill $pressedColor

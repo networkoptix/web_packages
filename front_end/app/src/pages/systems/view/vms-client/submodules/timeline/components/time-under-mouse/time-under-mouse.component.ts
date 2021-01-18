@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
 import {
   TimelineTimeUnderMouseService,
   TimelineTimeUnderMouseServiceStatus,
@@ -109,6 +109,16 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
       result -= offset
     }
     return result
+  }
+
+  @HostListener('document:mousedown')
+  onMouseDown () {
+    this.self.nativeElement.classList.add('pressed')
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp () {
+    this.self.nativeElement.classList.remove('pressed')
   }
 }
 
