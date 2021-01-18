@@ -151,7 +151,7 @@ $border-color: #cdd7dc;
 
   > .settings {
     position: absolute;
-    right: 0;
+    right: 4px;
     top: 40px;
     // height: 80px;
     width: 160px;
@@ -161,6 +161,7 @@ $border-color: #cdd7dc;
     background-color: rgba(33, 42, 47, 0.9);
     color: #698796;
     z-index: 2000;
+    padding-bottom: 8px;
     &.shown {
       opacity: 1.0;
       pointer-events: all;
@@ -172,16 +173,29 @@ $border-color: #cdd7dc;
         padding: 0 8px;
         line-height: 36px;
         font-size: 12px;
-        border-bottom: 1px solid #698796;
+
+        &:after {
+          content: '';
+          display: block;
+          background-color: $light16; // #698796
+          opacity: .2;
+          height: 1px;
+          width: 100%;
+          margin-bottom: 8px;
+        }
       }
       > .options {
         > .option {
           color: #fff;
           background-color: transparent;
           transition: background-color .2s ease-in-out;
-          line-height: 18px;
+          line-height: 20px;
           font-size: 12px;
-          &:hover,
+          padding-left: 8px !important;
+          margin-bottom: 0;
+          &:hover {
+            background-color: rgba($light16, .1);
+          }
           &.selected {
             background-color: #39b2ef;
           }
