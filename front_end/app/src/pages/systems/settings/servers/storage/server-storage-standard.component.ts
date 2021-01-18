@@ -288,6 +288,10 @@ export class NxSystemStorageComponent implements OnInit {
             this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
                 startWith('trigger'),
                 switchMap(() => this.system.getStorages({ id: this.serverId })),
+                catchError(err => {
+                    console.error(err);
+                    return of([]);
+                }),
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
                 tap(_ => {
