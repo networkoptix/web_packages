@@ -14,15 +14,17 @@ System Admin Suite Setup
     ${owner}=   Register and activate account with random email    System    Owner    ${base password}
     ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
     Set Suite Variable    ${email noperm}
+    ${local auth}=   Create List    admin    ${base password}
     ${cloud auth}=   Create List    ${owner}    ${base password}
     Set Suite Variable    ${cloud auth}
+    Set Suite Variable    ${local auth}
     ${system}=   Setup Docker System    cloud email=${owner}
     Set Suite Variable    ${system}
 
     ${users}=   Create Dictionary
     FOR    ${role}    IN    @{permissions.keys()}
         ${email}=   Register and activate account with random email    System    ${role}    ${base password}
-        Share    ${cloud auth}   ${system}[id]    ${role}    ${email}
+        Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
         Set To Dictionary    ${users}    ${role}=${email}
     END
     Set Suite Variable    ${users}
@@ -31,7 +33,7 @@ System Admin Suite Setup
 
 System Admin Suite Tear Down
     Run keyword and ignore error    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
-    FOR    ${email}    IN   @{users.values()}    ${system}[owner]
+    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
         Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
     END
     Delete Docker Server    ${system}[cont]
@@ -42,9 +44,9 @@ System Admin Test Restart
     ${auth}=   Create List    admin    ${base password}
     Run keyword and return status    Rename System    ${auth}    ${system}[id]    ${system}[name]
 
-Open Rename System Dialog
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
+#Open Rename System Dialog
+#    Click Button    ${RENAME SYSTEM}
+#    Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
 
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
@@ -59,29 +61,30 @@ Change System Name
         ...    Sleep    1
 
 Settings on page should match settings on server
+    [Arguments]    ${server url}=https://${QABURBANK IP}:${system}[port]
     Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled
+    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled    ${server url}
     Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed
+    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed    ${server url}
     Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization
+    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization    ${server url}
     Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled
+    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled    ${server url}
     Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced
+    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced    ${server url}
     Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced
+    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced    ${server url}
     Log    Limit session duration to
-    ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    sessionLimitMinutes    0
+    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
 
 Setting on page matches server
-    [Arguments]    ${setting}    ${id}    ${system}=${AUTO SYS IP}
-    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
+    [Arguments]    ${setting locator}    ${setting key}    ${server url}=https://${QABURBANK IP}:${system}[port]
+    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting locator}//span    class    tick checked
     ${string}=   Convert To String    ${status}
     ${selected}=   Convert To Lowercase    ${string}
-    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${selected}    ${system}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${setting key}    ${selected}
 
 Input on page matches server
     [Arguments]    ${input}    ${id}    ${system}=${ADVANCED SYS IP}
@@ -103,89 +106,108 @@ Data on page matches server
     Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${data}    ${system}
     
 Evaluate Session Limit
+    [Arguments]    ${server url}=https://${QABURBANK IP}:${system}[port]
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Sleep    5
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
     ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
     ...    "${interval}"=="${MINUTES TEXT}"    1
     ${number}=   Evaluate      ${multiplier}*${value}
-    Evaluate System Settings via API    sessionLimitMinutes      ${number}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
 
 Changing setting changes it on server
-    [Arguments]    ${setting}    ${id}    ${system}=${AUTO SYS IP}
-    ${advanced} =    Run Keyword and Return Status    Location Should Contain    ${ADVANCED SETTINGS}
-    Wait until element is enabled    ${setting}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
+    [Arguments]    ${setting locator}    ${setting key}    ${server url}=${AUTO SYS IP}
+    ${advanced}=   Run Keyword and Return Status    Location Should Contain    ${ADVANCED SETTINGS}
+    Wait until element is enabled    ${setting locator}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting locator}
     ${selected}=   Set Variable If    ${status}==True    false
     ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
+    Set Checkbox Value    ${setting locator}    ${selected}
+    Sleep    1
     Run Keyword If    ${advanced}    Run Keywords
     ...    Click Element   ${ADVANCED SETTINGS SAVE BUTTON}    AND
     ...    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    AND
     ...    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
     ...    ELSE    Run Keywords
-    ...    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}    AND
-    ...    Click Button    ${SYSTEM SAVE}    AND
-    ...    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Evaluate System Settings via API     ${id}    ${selected}    ${system}
+        ...    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}    AND
+        ...    Click Button    ${SYSTEM SAVE}    AND
+        ...    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Evaluate System Settings via API    ${local auth}    ${server url}     ${setting key}    ${selected}
 
-Change Setting and Save
-    [Arguments]    ${setting}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
+#Change Setting and Save
+#    [Arguments]    ${setting}
+#    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
+#    ${selected}=   Set Variable If    ${status}==True    false
+#    ...    ${status}==False    true
+#    Set Checkbox Value    ${setting}    ${selected}
+#    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+#    Click Button    ${SYSTEM SAVE}
+#    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+#
+#Change Setting Without Saving
+#    [Arguments]    ${setting}
+#    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
+#    ${selected} =    Set Variable If    ${status}==True    false
+#    ...    ${status}==False    true
+#    Set Checkbox Value    ${setting}    ${selected}
+
+Change Setting
+    [Arguments]    ${setting locator}    ${save}=${True}    ${buttons}=${True}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting locator}
     ${selected}=   Set Variable If    ${status}==True    false
     ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-
-Change Setting Without Saving
-    [Arguments]    ${setting}
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected} =    Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
-
-Set Hidden Checkbox
-     Log    BOTH CHECKBOXES ARE UNCHECKED TO START
-     Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true
-     Sleep    1
-     Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
-     Sleep    2
-     Capture Page Screenshot
+    Set Checkbox Value    ${setting locator}    ${selected}
+    Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Run Keyword If    ${save}    Run Keywords
+        ...    Sleep    0.1    AND
+        ...    Click Button    ${SYSTEM SAVE}    AND
+        ...    Sleep    0.1    AND
+        ...    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
 
 Change Setting Encrypt video traffic
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
     ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
     ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
     ...    ${status}==True and ${status2}==True     false
+
     Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
     ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
-    ...    ELSE    Set Hidden Checkbox
+    ...    ELSE    Run Keywords
+       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true
+       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
+
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     [Return]    ${selected}
 
 Changing Several Settings at Random
-    [Arguments]     ${action}
-    ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
-    FOR    ${idx}    IN RANGE   ${random}
-        ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
-        Log    ${checkbox}
-        Change Setting Without Saving    ${checkbox}
+    [Arguments]     ${action}   ${server url}=https://${QABURBANK IP}:${system}[port]
+#    ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
+#    # Might give same setting several times
+#    FOR    ${idx}    IN RANGE   ${random}
+#        ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
+#        Log    ${checkbox}
+#        Change Setting    ${checkbox}    save=False
+#    END
+
+    ${num settings}=   Evaluate    random.randint(2, 6)    modules=random    # random number of settings
+    ${settings to change}=   Evaluate    random.sample(${checkboxes}, ${num_settings})    modules=random    # random set of stttings
+    FOR    ${s}    IN    @{settings to change}
+        Change Setting    ${s}    save=False
     END
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Sleep    2
-    Settings on page should match settings on server
+    Settings on page should match settings on server    ${server url}
 
 Changing All Settings
     [Arguments]    ${action}
     FOR    ${checkbox}    IN   @{checkboxes}
         Log    ${checkbox}
-        Change Setting Without Saving    ${checkbox}
+        Change Setting    ${checkbox}    save=False
     END
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
@@ -242,7 +264,22 @@ Wait Until Security Settings Are Visible
     ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
     ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
     ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
-       
+
+Wait until settings are visible
+    [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    timeout=${timeout}
+
+    Run Keyword Unless    ${old system}    Wait Until Elements Are Visible
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    ...    timeout=${timeout}
+
 Log in to Advanced Settings System
     [Arguments]    ${email}
     Go To    ${url}/systems/${ADVANCED SETTINGS SYSTEM ID}

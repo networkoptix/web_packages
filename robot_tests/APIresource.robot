@@ -151,14 +151,6 @@ Activate Account
     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
     Return From Keyword    ${resp.json()}
 
-Register New User and Activate the Account
-    [Arguments]    ${email}    ${password}    ${first_name}    ${last_name}
-    @{auth}=   Create List    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
-    Register    ${ENV}    ${auth}    ${email}    ${password}    ${first_name}    ${last_name}
-    Create Digest Session    Register Session    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
-    ${resp}=   Post Request    Register Session   /api/systemSettings   timeout=10
-    Should Be Equal As Strings    ${resp.status_code}    200
-
 Log Out via API
     [Arguments]    ${validate}=${True}
     ${cookies}=   Get Cookies    as_dict = True
@@ -168,41 +160,12 @@ Log Out via API
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 
-Evaluate System Settings via API    
-    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
-    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
-    ${string}=   Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${selected}
-    
-Evaluate Log Level via API
-    [Arguments]    ${setting}    ${selected}    ${system}=${AUTO SYS IP}
-    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
-    ${string}=   Convert To String    ${logLevel.json()}
-    ${selected} =    Convert To Lowercase    ${selected}
-    Should Contain    ${string}    ${setting}': '${selected}
-
 Disconnect Server via API
     [Arguments]    ${auth}    ${sysId}    ${password}    ${email}
     &{data}=    Create Dictionary    password=${password}    system_id=${sysid}    email=${email}
     Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-
-Set System Settings via API
-    [Arguments]    ${setting}    ${state}    ${system}=${AUTO SYS IP}
-    Create Digest Session    returnedSetting    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
-    ${string}=   Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${state}
-    
-Set 3 dot 2 System Settings via API
-    [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    https://10.1.5.238:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
-    ${string}=   Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${state}
 
 # Keywords which use System/Server API
 Setup Local System
@@ -391,12 +354,6 @@ Get Users
     ${resp}=   Get Request    Get Users session    /ec2/getUsers
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
-    
-Check Allow Only Secure Connections
-    [Arguments]    ${server url}    ${auth}
-    Create Digest Session    Check HTTPS   ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
-    Should Be Equal As Strings    ${resp.status_code}    200
 
 Set System Name
     [Arguments]    ${server url}    ${auth}    ${new name}
@@ -530,3 +487,24 @@ Save Storages via API
     Create Digest Session    modifyStorage    ${system}    auth=${AUTO SYS AUTH}    disable_warnings=1
     ${resp}=   Post Request    modifyStorage    /ec2/saveStorages   json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+
+Evaluate System Settings via API
+    [Arguments]    ${auth}    ${server url}    ${setting key}    ${expected value}
+    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
+    Dictionary should contain item    ${settings}    ${setting key}    ${expected value}
+
+Evaluate Log Level via API
+    [Arguments]    ${auth}    ${server url}    ${setting}    ${selected}
+    Create Digest Session    returnedSetting    ${server url}    auth=${auth}     disable_warnings=1
+    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
+    ${string}=   Convert To String    ${logLevel.json()}
+    ${selected} =    Convert To Lowercase    ${selected}
+    Should Contain    ${string}    ${setting}': '${selected}
+
+Set System Settings via API
+    [Arguments]    ${auth}    ${server url}    ${setting key}    ${setting value}
+    Create Digest Session    Set Setting Session    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Set Setting Session   /api/systemSettings?${setting key}=${setting value}    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
