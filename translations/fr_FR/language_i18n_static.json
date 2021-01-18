@@ -89,7 +89,7 @@
         "audio": "Caméras avec audio",
         "encoder": "Encodeurs",
         "fisheye": "Caméras Fisheye",
-        "highRes": "Caméras extra haute résolution",
+        "highRes": "Caméras haute résolution",
         "multiSensor": "Caméras multi-capteur",
         "ptz": "Caméras PTZ"
     },
@@ -330,15 +330,15 @@
     },
     "downloads": {
         "appTypes": {
-            "bundle": "Client et serveur",
-            "camera_sdk": "Source vidéo SDK",
-            "client": "Client seulement",
-            "metadata_sdk": "Métadonnées SDK",
+            "bundle": "Client et Serveur",
+            "camera_sdk": "SDK Vidéo Source",
+            "client": "Client uniquement",
+            "metadata_sdk": "SDK des métadonnées",
             "package": "Paquet",
-            "server": "Server seulement",
+            "server": "Serveur uniquement",
             "servertool": "Outil de configuration",
-            "storage_sdk": "Stockage SDK",
-            "video_source_sdk": "Source vidéo SDK"
+            "storage_sdk": "SDK de stockage",
+            "video_source_sdk": "SDK Vidéo Source"
         },
         "groups": {
             "android": {
