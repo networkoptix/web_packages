@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core'
 import { INxViewCamera  } from '../../view.types'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NxSystemService, NxSystem } from '../../../../../services/system.service'
@@ -258,12 +258,26 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
     }
 
-    public toggleFullScreen () {
+    public toggleFullScreen ($event?) {
+      $event?.stopPropagation()
       this.ux.isFullScreen = !document.fullscreenElement
     }
 
-    public toggleSettings () {
+    public stopSettingsClickPropagation ($event) {
+      $event?.stopPropagation()
+    }
+
+    public toggleSettings ($event?) {
+      $event?.stopPropagation()
       this.settingsShown = !this.settingsShown
+    }
+
+    public hideSettings () {
+      this.settingsShown = false
+    }
+
+    public showSettings () {
+      this.settingsShown = true
     }
 
     public setQuality (q: PlaybackQuality) {
@@ -277,6 +291,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public onVideoDblClick (_: boolean) {
       this.toggleFullScreen()
+    }
+
+    @HostListener('document:click', ['$event'])
+    public clickOutside ($event) {
+      this.hideSettings()
     }
   }
 // export class NxSystemViewCameraPageComponent implements OnInit {

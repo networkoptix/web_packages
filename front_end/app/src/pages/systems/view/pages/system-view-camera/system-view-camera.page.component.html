@@ -13,7 +13,7 @@
   <span class="name">{{ camera.name }}</span>
 
   <div class="buttons">
-    <div class="settings-toggler" (click)="toggleSettings()">
+    <div class="settings-toggler" (click)="toggleSettings($event)">
       <svg viewBox="0 0 36 36">
         <path class="st0" d="M34.7,23l-3.5-2c0.2-1,0.4-2,0.4-3s-0.1-2.1-0.4-3l3.5-2c0.5-0.3,0.6-0.9,0.4-1.4l-3-5.2
           c-0.3-0.5-0.9-0.6-1.4-0.4l-3.5,2C25.8,6.6,24,5.6,22,5V0.5C22,0.2,21.8,0,21.5,0h-7C14.2,0,14,0.2,14,0.5V5C12,5.6,10.2,6.6,8.7,8
@@ -23,7 +23,7 @@
           c-4.2,0-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6s7.6,3.4,7.6,7.6S22.2,25.6,18,25.6z"/>
         </svg>
     </div>
-    <div class="fullscreen-toggler" (click)="toggleFullScreen()">
+    <div class="fullscreen-toggler" (click)="toggleFullScreen($event)">
       <svg viewBox="0 0 24 24">
         <path class="st0" d="M10,6V4H4v6h2V7.4l2.8,2.8l1.4-1.4L7.4,6H10z"/>
         <path class="st0" d="M18,16.6l-2.8-2.8l-1.4,1.4l2.8,2.8H14v2h6v-6h-2V16.6z"/>
@@ -34,7 +34,7 @@
   </div>
 </header>
 
-<div class="settings" [ngClass]="{ shown: settingsShown }">
+<div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
   <div class="section qualitySelection">
     <div class="caption">Quality</div>
     <div class="options" *ngIf="qualitiesAvailable.length else noQualitiesAvailable">
