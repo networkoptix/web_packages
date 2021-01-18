@@ -940,7 +940,8 @@ class DataStructure(models.Model):
         return content_value
 
     @classmethod
-    def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False, customization_name=None):
+    def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False,
+                           customization_name=None, as_records=False, only_review=False):
         def fish(data_structures_needed: set, **kwargs):
             remaining = data_structures_needed.copy()
             while remaining:
@@ -964,12 +965,19 @@ class DataStructure(models.Model):
                 records = records.filter(
                     version__assetcustomizationreview__customization__name=customization_name)
 
-        if not draft:
+        if not (draft or only_review):
             records = records.filter(
                 version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
             ).order_by('-version_id')
         elif version_id:
             records = records.order_by('-version_id')
+        elif only_review:
+            records = records.filter(
+                version__assetcustomizationreview__state__in=[
+                    AssetCustomizationReview.REVIEW_STATES.pending,
+                    AssetCustomizationReview.REVIEW_STATES.rejected,
+                    AssetCustomizationReview.REVIEW_STATES.blocked
+                ]).order_by('-version_id')
 
         data_structure_set = set(data_structures)
         translatable_ds_set = {ds for ds in data_structures if ds.translatable}
@@ -994,7 +1002,12 @@ class DataStructure(models.Model):
 
         for ds in data_structure_set:
             if ds not in fished_records:
-                final_values[ds] = ''
+                if as_records:
+                    final_values[ds] = None
+                else:
+                    final_values[ds] = ''
+            elif as_records:
+                final_values[ds] = fished_records[ds]
             else:
                 final_values[ds] = fished_records[ds].cast_value
 
