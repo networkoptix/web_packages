@@ -17,7 +17,7 @@ $border-color: #cdd7dc;
   top: 0;
   box-sizing: border-box;
 
-  transition: all .2s ease-in-out;
+  // transition: all .2s ease-in-out;
 
   &.is-full-screen {
     height: 100vh;
@@ -156,7 +156,7 @@ $border-color: #cdd7dc;
     // height: 80px;
     width: 160px;
     opacity: 0;
-    transition: opacity .2s ease-in-out;
+    // transition: opacity .2s ease-in-out;
     pointer-events: none;
     background-color: rgba(33, 42, 47, 0.9);
     color: #698796;
@@ -167,6 +167,8 @@ $border-color: #cdd7dc;
     }
     > .section {
       > .caption {
+        pointer-events: none;
+        user-select: none;
         padding: 0 8px;
         line-height: 36px;
         font-size: 12px;
@@ -200,7 +202,7 @@ $border-color: #cdd7dc;
     flex-shrink: 0;
     background-color: $player-background;
     height: calc(100vh - 48px);
-    transition: all .2s ease-in-out;
+    // transition: all .2s ease-in-out;
   }
   > .offline-message {
     height: calc(100vh - 48px);
@@ -212,7 +214,7 @@ $border-color: #cdd7dc;
     justify-content: center;
     text-transform: uppercase;
     background: $player-background;
-    transition: all .2s ease-in-out;
+    // transition: all .2s ease-in-out;
 
     > svg {
       width: 96px;
@@ -235,7 +237,7 @@ $border-color: #cdd7dc;
   > .controls {
     position: absolute;
     bottom: 0;
-    transition: all .2s ease-in-out;
+    // transition: all .2s ease-in-out;
     left: 0;
     right: 0;
     height: 100px;
