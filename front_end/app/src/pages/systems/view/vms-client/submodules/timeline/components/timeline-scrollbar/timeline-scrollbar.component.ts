@@ -11,6 +11,9 @@ import TimelineService from '../../services/timeline.service';
 import { float, percentage } from '../../../../utils/type-aliases';
 
 
+const MIN_BAR_WIDTH_PX = 50
+
+
 @Component({
   selector: 'timeline-scrollbar',
   templateUrl: './timeline-scrollbar.component.html',
@@ -54,7 +57,6 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
 
   public onScrollBarSubjectChange (s: TimelineScrollbarServiceStatus) {
     const honestBarWidthPx = (this.self.nativeElement as HTMLElement).getBoundingClientRect().width / s.magnification
-    const MIN_BAR_WIDTH_PX = 50
     const barWidthFixPx = Math.max(0, MIN_BAR_WIDTH_PX - honestBarWidthPx)
     const minBarWidthCompensationPx = barWidthFixPx * s.offset
     this.barView.nativeElement.style.left = `calc(${100 * s.offset}% - ${minBarWidthCompensationPx}px)`
@@ -86,7 +88,12 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public barMouseDownHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBarMouseDown(e)
+    // const honestBarWidthPx = (this.self.nativeElement as HTMLElement).getBoundingClientRect().width / this._magnification
+    // const visibleWidth = this.barView.nativeElement.clientWidth
+    // if (honestBarWidthPx < visibleWidth) {
+    //   console.log('weird case', e.offsetX, honestBarWidthPx, visibleWidth)
+    // }
+    this.timelineScrollbar.handleBarMouseDown(e) // , honestBarWidthPx, visibleWidth)
   }
 
   @HostListener('document:mouseup', ['$event'])

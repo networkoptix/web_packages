@@ -50,7 +50,7 @@ export class TimelineScrollbarService {
   }
 
   public get offset (): px {
-    return (this.timeline.visibleRange.start - this.timeline.fullRange.start) / this.timeline.fullRange.duration
+    return (this.timeline.targetScrollMs - this.timeline.fullRange.start) / this.timeline.fullRange.duration
   }
 
   public get magnification (): float {
@@ -78,10 +78,13 @@ export class TimelineScrollbarService {
 
   protected _isBarGrabbed: boolean = false
   protected barDragAnchor: px = -1
+  // protected honestBarWidthPx: px = null
 
-  public handleBarMouseDown (e: MouseEvent) {
+  public handleBarMouseDown (e: MouseEvent) { // , honestBarWidthPx?: px, visibleWidth?: px) {
     this._isBarGrabbed = true
     this.barDragAnchor = e.offsetX
+    // this.honestBarWidthPx = honestBarWidthPx
+    // console.log('got honest bar width', honestBarWidthPx)
     e.stopPropagation()
     e.preventDefault()
     this._emit()
@@ -98,8 +101,10 @@ export class TimelineScrollbarService {
       const boundingRect = $bar.parentElement.getBoundingClientRect()
       const relativeX = Math.max(Math.min((e.clientX - boundingRect.left) / boundingRect.width, 1.0), 0.0)
       const targetTime = this.timeline.fullRange.start + relativeX * this.timeline.fullRange.duration
+      // const fix = this.barDragAnchor / (this.honestBarWidthPx || $bar.clientWidth)
       const fix = this.barDragAnchor / $bar.clientWidth
-      this.timeline.jumpScrollTo(Math.round(targetTime - this.timeline.visibleRange.duration * fix))
+      console.log('fix', fix, fix * this.timeline.visibleRange.duration)
+      this.timeline.jumpScrollTo(Math.round(targetTime - this.timeline.visibleRange.duration * fix), true)
       this._emit()
     }
   }
