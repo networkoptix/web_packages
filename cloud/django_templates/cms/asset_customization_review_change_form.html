@@ -196,8 +196,7 @@
                 {% if allowed.reject %}
                     <button id="rejectButton" class="btn btn-sm btn-danger" data-action="reject" data-name="Reject"
                             title="Reject for {{ current_customization_name | portal_name }}"
-                            onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('hide')"
-                            data-target="#addNotes" onclick="return false;">Reject
+                            data-toggle="modal" data-target="#addNotes" onclick="return false;">Reject
                     </button>
                 {% endif %}
 

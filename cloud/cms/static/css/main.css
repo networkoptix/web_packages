@@ -339,6 +339,7 @@ img.light {
     bottom: 8px;
     background: #E1E7EA !important;
     border: 1px solid #999 !important;
+    overflow: unset !important;
 }
 
 .breadcrumbs{

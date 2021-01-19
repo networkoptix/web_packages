@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.deletion import Collector
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, m2m_changed
 from django.db.utils import ProgrammingError
 from django.dispatch import receiver
 from django.utils.functional import cached_property
@@ -647,6 +647,14 @@ class Asset(models.Model):
             raise FieldError('Cannot delete a protected asset')
         else:
             return super().delete(*args, **kwargs)
+
+
+@receiver(m2m_changed, sender=Asset.customizations.through)
+def update_asset_customization_reviews(sender, instance, action, pk_set, **kwargs):
+    if action in ["post_add", "post_remove"]:
+        for asset_customization_review in AssetCustomizationReview.objects.\
+                filter(version__asset=instance, customization_id__in=pk_set):
+            asset_customization_review.update_children_reviews()
 
 
 class Context(models.Model):
@@ -1294,6 +1302,10 @@ class AssetCustomizationReview(models.Model):
             check_customization_access(
                 self.version.created_by, self.customization)
 
+        is_parent_in_asset = self.is_customization_in_asset
+        recursive_update_states = [AssetCustomizationReview.REVIEW_STATES.blocked,
+                                   AssetCustomizationReview.REVIEW_STATES.rejected]
+
         for review in reviews:
             if review.state == AssetCustomizationReview.REVIEW_STATES.rejected:
                 continue
@@ -1313,13 +1325,19 @@ class AssetCustomizationReview(models.Model):
                     # If the child customization does not trust its parent we need to set reviewed by and date to blank.
                     review.reviewed_by = None
                     review.reviewed_date = None
+            # Handles then case when the  parent is added back
+            elif is_parent_in_asset and review.state == AssetCustomizationReview.REVIEW_STATES.pending:
+                review.state = AssetCustomizationReview.REVIEW_STATES.blocked
+            # Handles the case when the parent is removed.
+            elif not is_parent_in_asset:
+                review.state = AssetCustomizationReview.REVIEW_STATES.pending
             elif can_show_customization:
                 review.notes = f"Automatically rejected by {self.customization}"
             else:
                 review.notes = "Automatically rejected"
 
             review.save()
-            if review.state == AssetCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
+            if review.state in recursive_update_states or review.customization.trust_parent:
                 review.update_children_reviews()
 
     def update_state(self, user, state):
@@ -1350,6 +1368,15 @@ class AssetCustomizationReview(models.Model):
             self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
         is_current_customization = self.customization.name == settings.CUSTOMIZATION
         return can_preview and in_review and is_current_customization
+
+    @property
+    def is_customization_in_asset(self):
+        return self.version.asset.customizations.filter(id=self.customization.id).exists()
+
+
+@receiver(post_delete, sender=AssetCustomizationReview)
+def unblock_child_reviews(sender, instance, **kwargs):
+    instance.update_children_reviews()
 
 
 class ExternalFile(models.Model):

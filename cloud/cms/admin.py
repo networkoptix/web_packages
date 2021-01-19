@@ -4,7 +4,7 @@ from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, Case, When, Value, BooleanField
+from django.db.models import F, Q, Case, When, Value, BooleanField
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse, path
@@ -665,7 +665,9 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
                                                             customization_review.customization)
 
         extra_context['review_states'] = AssetCustomizationReview.REVIEW_STATES
-        extra_context['customization_reviews'] = version.assetcustomizationreview_set.all()
+        # Exclude customization reviews that are not in the asset's customizations
+        extra_context['customization_reviews'] = version.assetcustomizationreview_set.\
+            filter(customization__in=version.asset.customizations.all())
         if not request.user.is_superuser:
             extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
@@ -715,7 +717,8 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         qs = qs.annotate(show_customization=Case(When(customization__name__in=can_view, then=Value(True)),
                                                  default=Value(False),
                                                  output_field=BooleanField()))
-
+        # Hide customizations that are not in the asset's customizations.
+        qs = qs.filter(customization__in=F('version__asset__customizations'))
         return qs
 
     def get_readonly_fields(self, request, obj=None):
