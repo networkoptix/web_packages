@@ -33,7 +33,8 @@
             recording: camera.isRecording,
             offline: !camera.isOnline,
             unauthorized: !camera.isAuthorized,
-            isScheduleEnabled: camera.isScheduleEnabled
+            isScheduleEnabled: camera.isScheduleEnabled,
+            selected: camera.id === activeCameraId
           }"
         >
           <div class="preview">

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-
 import { Subscription } from 'rxjs'
 
 import { CookieService } from 'ngx-cookie-service'
@@ -28,11 +27,14 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     [serverId: string]: boolean
   } = {}
 
+  public activeCameraId: string
+
   constructor (
     private vms: VideoManagementSystemService,
     protected cookieService: CookieService,
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
+
   }
 
   public ngOnInit(): void {
@@ -51,6 +53,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
         this._mediaservers = s.mediaServers
+        this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera.id : undefined
         const cameraComparator = (c1: ICamera, c2: ICamera) => {
           const n1 = c1.name.toLocaleLowerCase()
           const n2 = c2.name.toLocaleLowerCase()
