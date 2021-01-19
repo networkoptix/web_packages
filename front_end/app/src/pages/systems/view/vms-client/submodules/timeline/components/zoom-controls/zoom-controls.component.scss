@@ -1,25 +1,24 @@
-$background-color: #f0f3f4;
-$border-color: #cdd7dc;
+@import 'styles/_theme_palette';
 
-$hover-background: #cdd7dc;
-$hover-foreground: #f0f3f4;
 
 :host {
   display: inline-block;
   box-sizing: border-box;
-  background-color: $background-color;
+  background-color: $additional_light2;
   width: 40px;
   overflow: hidden;
   padding: 6px 1px;
-  border-left: 1px solid $border-color;
-  border-top: 1px solid $border-color;
+  border-left: 1px solid $light4;
+  border-top: 1px solid $light4;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
 
+  z-index: 1;
+  box-shadow: 0 2px 5px rgba($dark5, 0.5);
+
   > .button {
-    opacity: 0.2;
     display: block;
     flex-grow: 1;
     text-align: center;
@@ -32,14 +31,23 @@ $hover-foreground: #f0f3f4;
     width: 100%;
     font-size: 25px;
 
+    color: $light4;
+
+    transition: all .2s ease-in-out;
+
+    &:hover {
+      background-color: $additional_light3;
+    }
+    &:active {
+      background-color: $light5 !important;
+    }
+
     &.enabled {
       cursor: pointer;
-      opacity: 0.8;
+      color: $light16;
 
       &:hover {
-        opacity: 1.0;
-        background-color: $hover-background;
-        color: $hover-foreground;
+        background-color: $light4;
       }
     }
   }

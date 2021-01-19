@@ -63,9 +63,9 @@
   <zoom-controls></zoom-controls>
   <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
   <ng-template #noArchiveYet>
-    <div class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive">Loading Archive...</div>
+    <nx-pre-loader class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive"></nx-pre-loader>
     <ng-template #noArchive>
-      <div class="no-archive-message">Archive Empty</div>
+      <div class="no-archive-message">No Archive</div>
     </ng-template>
   </ng-template>
   <playback-state-indicator></playback-state-indicator>

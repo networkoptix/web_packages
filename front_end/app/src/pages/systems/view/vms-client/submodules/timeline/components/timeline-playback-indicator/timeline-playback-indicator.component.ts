@@ -145,6 +145,8 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         this.visible = false
         break
       case PLAYBACK_MODE.LIVE:
+        this.visible = false
+        break
       case PLAYBACK_MODE.ARCHIVE:
         this.visible = true
         this.timeMs = s.currentTime

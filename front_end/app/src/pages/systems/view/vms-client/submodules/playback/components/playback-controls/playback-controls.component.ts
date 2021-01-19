@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs'
 @Component({
   selector: 'playback-controls',
   templateUrl: './playback-controls.component.html',
-  styleUrls: ['./playback-controls.component.styl'],
+  styleUrls: ['./playback-controls.component.scss'],
 })
 export class PlaybackControlsComponent implements OnInit, OnDestroy {
 
