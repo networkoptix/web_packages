@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractBaseUser, Group, PermissionsMixin
 from django.utils import timezone
 from django.utils.html import format_html
 
+from jsonfield import JSONField
+
 from api.controllers.cloud_api import Account as cloud_api_account
 from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions
@@ -288,3 +290,15 @@ def group_saved(sender, created, signal, instance, **kwargs):
 
 post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
 post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
+
+class AccountCustomProperty(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    endpoint = models.SlugField()
+    json_data = JSONField()
+    class Meta:
+        verbose_name = 'Account Custom Property'
+        verbose_name_plural = 'Account Custom Properties'
+
+    def __str__(self):
+        return f'{self.account} - {self.endpoint}'
+    

@@ -55,5 +55,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^robot/get_code$', robot.get_code)
+        url(r'^robot/get_code$', robot.get_code),
+        url(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$', account.AccountCustomPropertyView.as_view()),
+        url(r'^custom-properties/(?P<endpoint>.+?)$', account.AccountCustomPropertyView.as_view()),
     ]
