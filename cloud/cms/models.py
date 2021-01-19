@@ -4,6 +4,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
+from util.base_cache import BaseCache
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -25,21 +26,21 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
-class MenuCache:
+class MenuCache(BaseCache):
     def __init__(self):
-        self.cache = caches['menus']
+        super().__init__(cache_key='menus')
 
     def __getitem__(self, key):
-        return self.cache.get(key.lower(), None)
+        return super().__getitem__(key.lower())
 
     def __setitem__(self, key, menu):
         from cms.controllers.documentation import DOC_CACHE
         DOC_CACHE.clear_cache()
-        self.cache.set(key.lower(), menu)
+        super().__setitem__(key.lower(), menu)
 
     def clear_cache(self):
         from cms.controllers.documentation import DOC_CACHE
-        self.cache.clear()
+        super().clear_cache()
         DOC_CACHE.clear_cache()
 
 

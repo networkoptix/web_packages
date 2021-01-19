@@ -289,6 +289,20 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/10',
         "KEY_PREFIX": 'documentation'
+    },
+    "article": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 24 * 60 * 60,  # 1 day
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/11',
+        "KEY_PREFIX": 'article'
+    },
+    "agreement": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/12',
+        "KEY_PREFIX": 'agreement'
     }
 }
 

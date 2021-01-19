@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 from api.helpers.exceptions import api_success, handle_exceptions
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
@@ -20,22 +21,7 @@ INTEGRATION = AssetType.ASSET_TYPES.integration
 ACCEPTED = AssetCustomizationReview.REVIEW_STATES.accepted
 PENDING = AssetCustomizationReview.REVIEW_STATES.pending
 
-
-class IntegrationsCache(object):
-    def __init__(self):
-        self.cache = caches['integrations']
-
-    def __getitem__(self, key):
-        return self.cache.get(key, None)
-
-    def __setitem__(self, key, integration):
-        self.cache.set(key, integration)
-
-    def clear_cache(self):
-        self.cache.clear()
-
-
-INTEGRATION_CACHE = IntegrationsCache()
+INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 
 
 def make_integrations_json(integrations, language, contexts=None, show_pending=False, show_drafts=False, user=None):

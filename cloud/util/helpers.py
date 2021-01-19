@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from api.models import Account
-from cms.models import cloud_portal_customization_cache, Language
+from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language
 
 
 def get_languages(customization=None):

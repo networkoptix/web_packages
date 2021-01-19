@@ -9,8 +9,10 @@ from api.helpers.exceptions import (
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language, 
                         AssetCustomizationReview, DataStructure)
-from cms.serializers import ArticleSerializer
+from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
+
+from cms.serializers import ArticleSerializer
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the article. Ex: draft, published, or review",
@@ -28,11 +30,15 @@ url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_article(request, url_param, **kwargs):
-    draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'pending'
+    ARTICLE_CACHE = BaseCache(cache_key='article')
+    state = request.query_params.get('state') or 'accepted'
+    draft =  state == 'draft'
+    review = state == 'pending'
     article_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
     article = None
+    version = None
+    cached_article = None
 
     if article_id:
         # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
@@ -49,17 +55,21 @@ def get_article(request, url_param, **kwargs):
             # Check that that the asset's current url still matches
             article = article_review.version.asset
             version = article.version_id(settings.CUSTOMIZATION)
-            url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
-            if url_ds.find_actual_value(asset=article, version_id=version,
-                                        customization_name=settings.CUSTOMIZATION) != url_param:
-                article = None
+            ARTICLE_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{url_param}-{state}-{version if not draft else "latest"}'
+            cached_article = ARTICLE_CACHE.get_cached_item()
 
+            if not cached_article:
+                url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
+                if url_ds.find_actual_value(asset=article, version_id=version,
+                                            customization_name=settings.CUSTOMIZATION) != url_param:
+                    article = None
     # If article is not found, then return a 404
-    if article:
+    if article or cached_article:
         if (draft or review) and not (request.user.is_superuser or article.created_by == request.user):
             raise APIForbiddenException(error_data={'url_param': url_param},
                                         error_text='Not allowed to view this preview')
-
+        if cached_article:
+            return api_success(cached_article)
         # Set version based on draft or pending query params
         version = article.version_id()
         if review:
@@ -95,6 +105,7 @@ def get_article(request, url_param, **kwargs):
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
                                     global_contexts, global_contexts_dict, language=language)
+            ARTICLE_CACHE.set_cached_item(article_dict)
 
             ser = ArticleSerializer(data=article_dict)
             ser.is_valid()

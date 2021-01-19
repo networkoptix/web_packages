@@ -3,6 +3,7 @@ import base64
 from io import BytesIO
 import json
 import re
+from util.base_cache import BaseCache
 import uuid
 import hashlib
 
@@ -536,9 +537,7 @@ def publish_latest_version(asset, review_id, user, state=None):
         fill_content(asset, preview=False, incremental=True)
 
     if asset.is_cloud_portal:
-        MENU_CACHE.clear_cache()
-        INTEGRATION_CACHE.clear_cache()
-    DOC_CACHE.clear_cache()
+        BaseCache.clear_global_cache()
     return publish_errors
 
 

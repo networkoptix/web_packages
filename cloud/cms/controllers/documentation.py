@@ -1,29 +1,18 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.conf import settings
-from django.core.cache import caches
 from inlinestyler.utils import inline_css
 import re
 
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
 
-
-class DocumentationCache:
-    def __init__(self):
-        self.cache = caches['documentation']
-
-    def __getitem__(self, key):
-        return self.cache.get(key, None)
-
-    def __setitem__(self, key, doc):
-        self.cache.set(key, doc)
-
-    def clear_cache(self):
-        self.cache.clear()
+from util.base_cache import BaseCache
 
 
-DOC_CACHE = DocumentationCache()
+
+
+DOC_CACHE = BaseCache(cache_key='documentation')
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
