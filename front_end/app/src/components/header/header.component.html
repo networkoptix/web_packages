@@ -60,7 +60,7 @@
                 <div #breadcrumbWrapper class="d-flex" (resize)="updateBreadcrumbSizes(breadcrumbWrapper)">
                     <ng-container *ngTemplateOutlet="breadcrumbLinks;context:{
                         breadcrumbs:filterBreadcrumbs(headerService.currentLocation?.breadcrumbs)
-                    }"></ng-container> 
+                    }"></ng-container>
                 </div>
                 <div class="tab-wrapper" (resize)="tabsWidth$.next($event.width)">
                 <ng-container *ngTemplateOutlet="menuTabs"></ng-container>
@@ -98,7 +98,7 @@
                 <ng-container *ngIf="showIcon$ | async">
                     <ng-container *ngTemplateOutlet="navIcon"></ng-container>
                 </ng-container>
-                <ul class="nav navbar-nav d-flex" [ngClass]="{'invisible': hideWebAdmin}">
+                <div class="nav navbar-nav d-flex" [ngClass]="{'invisible': hideWebAdmin}">
                     <div (resize)="mainButtonWidth$.next($event.width)" >
                         <nx-header-main-button
                                 *ngIf="systems?.length || headerService?.nodes?.length"
@@ -128,7 +128,7 @@
                             <nx-nav-dropdown [nodeLocation]="headerService.currentLocation"></nx-nav-dropdown>
                         </div>
                     </ng-container>
-                </ul>
+                </div>
             </div>
 
             <div class="app-header-right" [ngClass]="{'invisible': hideWebAdmin}">
