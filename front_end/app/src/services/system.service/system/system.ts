@@ -629,9 +629,9 @@ export class NxSystem extends System {
      * @deprecated Not really deprecated yet but should be soon.
      */
     filterCamerasFromUserPermissions() {
-        const accessRights: { [resourceId: string]: true; } = this.currentUser.accessRights;
-        if (accessRights && this.cameras) {
-            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
+        const accessRights: { [resourceId: string]: true; } = this.userManager.currentUser?.accessRights;
+        if (accessRights && this.cameraManager.cameras) {
+            this.cameraManager.cameras = this.cameraManager.cameras.filter(camera => accessRights[camera.id]);
         }
     }
 
