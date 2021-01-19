@@ -1,4 +1,6 @@
-@use '../../../../../../../../../styles/theme_variables' as *;
+@import 'styles/_theme_palette';
+$green-border: #51D22A;
+$green-fill: #56E829;
 
 :host {
   display: flex;
@@ -6,6 +8,7 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 -2px 5px rgba($dark5, 0.5);
 
   > .is-live {
     opacity: 0.0;
@@ -16,15 +19,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #e1e7ea;
-    color: #000;
+
+    background: $additional_light2;
+    color: $dark9;
+    border-left: 1px solid $light6;
+    border-right: 1px solid $light4;
 
     > .line {
       display: block;
 
       > .icon {
         display: inline-block;
-        border: 1px solid green;
+        border: 1px solid $light10;
+        background: $light7;
+        transition: all 0.2s ease-in-out;
         width: 8px;
         height: 8px;
         border-radius: 4px;
@@ -41,7 +49,8 @@
     &.playing {
       > .line {
         > .icon {
-          background: green;
+          border: 1px solid $green-border;
+          background: $green-fill;
         }
       }
     }
@@ -49,7 +58,7 @@
     &.recording {
       > .line {
         > .icon {
-          border-color: red;
+          border-color: $red_main;
         }
       }
       &.playing {
@@ -62,12 +71,29 @@
     }
 
     &.active {
-      opacity: 0.8;
+      opacity: 1.0;
       cursor: pointer;
+      background: $light5;
+      border-left: 1px solid $light8;
+      border-right: 1px solid $light7;
 
       &:hover {
-        opacity: 1.0;
+        background: $light4;
+        border-left: 1px solid $light7;
+        border-right: 1px solid $light6;
       }
+    }
+
+    &:hover {
+      background: $light3;
+      border-left: 1px solid $light6;
+      border-right: 1px solid $light5;
+    }
+
+    &:active {
+      background: $light5 !important;
+      border-left: 1px solid $light8 !important;
+      border-right: 1px solid $light7 !important;
     }
   }
 }

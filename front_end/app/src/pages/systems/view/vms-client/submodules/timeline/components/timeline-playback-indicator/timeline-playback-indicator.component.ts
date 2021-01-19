@@ -9,7 +9,8 @@ const dateformat = df.default || df
 import { ms, px } from '../../../../utils/type-aliases'
 
 
-const MARGIN = 20
+const MARGIN = 5
+const ARROW_WIDTH = 10
 const PRIMARY_WIDTH = 140
 
 @Component({
@@ -77,7 +78,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     // }
 
     const wwm = PRIMARY_WIDTH + 2 * MARGIN // widthWithMargins
-    const aw = MARGIN // arrowWidth
+    const aw = ARROW_WIDTH // arrowWidth
 
     let tl = Math.round((wwm - aw) / 2) // top left vertex
     let tr = Math.round((wwm + aw) / 2) // top right vertex
@@ -101,7 +102,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
       if (tr > wwm - MARGIN)
         tr = wwm - MARGIN
     }
-    this._svgArrowPoints = `${tl},0 ${tr},0 ${b},10`
+    this._svgArrowPoints = `${tl},0 ${tr},0 ${b},5`
   }
 
   public get verticalLineLeftPx () {

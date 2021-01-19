@@ -4,7 +4,7 @@ $current-playback-indicator-color: black;
 :host {
   display: block;
   position: absolute;
-  bottom: 0;
+  bottom: 1px;
   left: 0;
   right: 0;
   width: 100%;
@@ -37,7 +37,7 @@ $current-playback-indicator-color: black;
       top: 0;
       bottom: 0;
       background: #95a6b1;
-      cursor: grab;
+      // cursor: grab;
       min-width: 50px;
 
       display: flex;
@@ -65,7 +65,7 @@ $current-playback-indicator-color: black;
       }
 
       &.grabbed {
-        cursor: grabbing;
+        // cursor: grabbing;
       }
     }
   }

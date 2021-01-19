@@ -10,7 +10,8 @@ const dateformat = df.default || df
 import { px } from '../../../../utils/type-aliases'
 
 
-const MARGIN = 20
+const MARGIN = 5
+const ARROW_WIDTH = 10
 const PRIMARY_WIDTH = 140
 
 
@@ -73,7 +74,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
 
   public get svgArrowPoints () {
     const wwm = PRIMARY_WIDTH + 2 * MARGIN // widthWithMargins
-    const aw = MARGIN // arrowWidth
+    const aw = ARROW_WIDTH // arrowWidth
 
     let tl = Math.round((wwm - aw) / 2) // top left vertex
     let tr = Math.round((wwm + aw) / 2) // top right vertex
@@ -99,7 +100,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         tr = wwm - MARGIN
     }
 
-    return `${tl},0 ${tr},0 ${b},10`
+    return `${tl},0 ${tr},0 ${b},5`
   }
 
   public get verticalLineLeftPx () {
