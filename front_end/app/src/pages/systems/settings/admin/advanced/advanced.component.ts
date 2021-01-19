@@ -84,8 +84,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
                 .then((response: any) => {
-                    this.settingsToBeDisplayedOrUpdated(response.reply.settings);
-                    this.formWatcher.hardReset();
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -94,8 +92,12 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                                 console.error(error);
                             });
                     } else {
+                        this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
                             .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
+                            .then(() => {
+                                this.formWatcher.hardReset();
+                            })
                             .catch(error => {
                                 console.error(error);
                             });
@@ -115,16 +117,19 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             this.saveSettings
         );
         this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
-        this.settingsSubscription = this.systemSettingsForm.valueChanges.subscribe((values) => {
-            Object.entries(values).forEach(([key, current]) => {
-                const original = this.systemSettings[key];
-                const changed = current !== original;
-                if (changed) {
-                    this.changedFields[key] = current;
-                } else if (key in this.changedFields) {
-                    delete this.changedFields[key];
-                }
-            });
+
+        this.formWatcher.valueSubject.subscribe((values) => {
+            if (values) {
+                Object.entries(values).forEach(([key, current]) => {
+                    const original = this.systemSettings[key];
+                    const changed = current !== original;
+                    if (changed) {
+                        this.changedFields[key] = current;
+                    } else if (key in this.changedFields) {
+                        delete this.changedFields[key];
+                    }
+                });
+            }
         });
     }
 
@@ -174,7 +179,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                     systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
                     break;
                 case 'checkbox':
-                    systemSettings[key] = (value === 'true');
+                    systemSettings[key] = (typeof value === 'boolean') ? value : (value === 'true');
                     break;
                 default:
                     systemSettings[key] = value;
