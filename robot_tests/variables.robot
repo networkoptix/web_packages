@@ -10,8 +10,8 @@ ${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/butto
 
 ${BROWSER}                            Chrome
 
-${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdownMenuButton']
-${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
+${LANGUAGE DROPDOWN}                  //header//nx-header-language-select//button[@id='dropdownMenuButton']
+${LANGUAGE TO SELECT}                 //header//nx-header-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
 
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Client Custom
@@ -263,6 +263,8 @@ ${PASSWORD BADGE}                     //nx-tag//a[contains(@class,"badge")]
 ${PASSWORD IS WEAK BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
 ${PASSWORD IS FAIR BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
 ${PASSWORD IS GOOD BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD IS TOO SHORT BADGE}        //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
+${PASSWORD IS TOO COMMON BADGE}       //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
 ${PASSWORD INCORRECT BADGE}           //nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
@@ -286,7 +288,7 @@ ${UPPERCASE PASSWORD}    ADRHARTJAD
 ${NUMBERS PASSWORD}      13462344
 ${7CHAR PASSWORD}       asdfghj
 ${SYMBOL ONLY PASSWORD}    !@#$%^&*()_-+=
-@{WEAK PASSWORDS}    ${7CHAR PASSWORD}    ${UPPERCASE PASSWORD}    ${LOWERCASE PASSWORD}    ${COMMON PASSWORD}    ${7CHAR PASSWORD}    ${NUMBERS PASSWORD}    ${SYMBOL ONLY PASSWORD}
+@{WEAK PASSWORDS}    ${UPPERCASE PASSWORD}    ${LOWERCASE PASSWORD}    ${COMMON PASSWORD}    ${NUMBERS PASSWORD}    ${SYMBOL ONLY PASSWORD}
 
 ${LOWER UPPER PASSWORD}    multPASS
 ${LOWER NUMBER PASSWORD}    mult1234

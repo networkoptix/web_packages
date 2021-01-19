@@ -1,11 +1,16 @@
 import base64
 import time
 import logging
+import json
 
 import django
 from django.conf import settings
 from django.contrib.auth.models import Permission
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -439,3 +444,53 @@ class PermissionsAutocomplete(autocomplete.Select2QuerySetView):
 
     def get_selected_result_label(self, item):
         return item.name
+
+class AccountCustomPropertyView(APIView):
+    """
+   Get or post custom properties attached to a cloud account.
+
+   GET/POST to your own account requires you to be logged in and is accessed using the following endpoint.
+   custom-properties/{custom-endpoint-name}
+
+   GET/POST to another account's custom property requires superuser permissions and is accessed at the following endpoint.
+   custom-properties/{custom-endpoint-name}/{username-for-other-account}
+
+   TODO: Add developer/application endpoints such as custom-properties/{developer-username}/{custom-endpoint-name}/{username-for-other-account}
+   Could maybe be used to allow an easy place to persist user specific data for other either developer experiments or integrations
+    """
+
+    def get_and_validate_user(self, request, username=None):
+        is_superuser = request.user.is_superuser
+        current_user = request.user.email
+        if username and not is_superuser and username != current_user:
+            raise APIRequestException(
+                'Only superusers are able to request custom properties of other users', ErrorCodes.not_authorized)
+        else:
+            return username or current_user
+
+    def get(self, request, username=None, endpoint=None):
+        username = self.get_and_validate_user(request, username)
+        try:
+            obj = models.AccountCustomProperty.objects.get(
+                account__email=username, endpoint=endpoint)
+            return Response(obj.json_data)
+        except (ObjectDoesNotExist, AttributeError) as e:
+            raise APIRequestException(
+                f'Custom property {endpoint} was not found for user {username}', ErrorCodes.not_found, str(e))
+
+    def post(self, request, username=None, endpoint=None, developer=None):
+        username = self.get_and_validate_user(request, username)
+        current_account = models.Account.objects.filter(email=username).first()
+
+        if not current_account:
+            raise APIRequestException(f'Failed to save "{endpoint}" for user "{username}". User does not exist', ErrorCodes.not_found)
+
+        try:
+            obj, _ = models.AccountCustomProperty.objects.get_or_create(
+                account=current_account, endpoint=endpoint)
+            obj.json_data = json.loads(request.body)
+            obj.save()
+            return Response(obj.json_data, status=201)
+        except Exception as e:
+            raise APIRequestException(
+                f'Failed to save "{endpoint}" for user "{username}"', ErrorCodes.unknown_error, str(e))

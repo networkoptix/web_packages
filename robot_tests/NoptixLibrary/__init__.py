@@ -1,23 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from shlex import shlex
-import subprocess
-from typing import Any, Union
 
 import docker
-import socket
 import email.header
 import imaplib
 import os
 import re
+import socket
+import subprocess
 import time
 import uuid
-import subprocess
+
 from datetime import date
-from email.parser import HeaderParser
 from platform import system
 from random import *
-
 from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
@@ -25,13 +21,11 @@ from robot.api import logger
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
-from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs)
+from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr, timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
-
 
 class NoptixLibrary(object):
 

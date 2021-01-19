@@ -231,6 +231,16 @@ export class NxCloudApiService {
         return this.http.get<Account>(endpoint, { headers });
     }
 
+    getCustomAccountProperty(property: string, username?: string) {
+        const endpoint = `${this.CONFIG.apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        return this.http.get<any>(endpoint);
+    }
+
+    saveCustomAccountProperty(payload: any, property: string, username?: string) {
+        const endpoint = `${this.CONFIG.apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        return this.http.post<any>(endpoint, payload);
+    }
+
     getLanguages() {
         const endpoint = '/static/languages.json';
         this.cacheService.addToCache(endpoint);

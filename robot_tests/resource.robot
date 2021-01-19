@@ -101,8 +101,8 @@ Set Language Anonymous
     Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //nx-language-select//span[@lang='${lang}']/..
-    Click Element    //nx-language-select//span[@lang='${lang}']/..
+    Wait Until Element Is Visible    //header//nx-header-language-select//span[@lang='${lang}']/..
+    Click Element    //header//nx-header-language-select//span[@lang='${lang}']/..
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
@@ -814,15 +814,26 @@ Delete All Local Users
 Check Password Badge
     [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Mouse Over    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}''' in ${weak passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    Run Keyword If    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}     Wait Until Element Is Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}          Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
 
-    Run Keyword If    '''${pass}''' in ${weak passwords}    Move focus and check badge disappears    ${PASSWORD IS WEAK BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge disappears    ${PASSWORD INCORRECT BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge stays   ${PASSWORD IS FAIR BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge stays   ${PASSWORD IS GOOD BADGE}    ${new focus}
+    Mouse Over    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO SHORT TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
+
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge stays    ${PASSWORD INCORRECT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Move focus and check badge stays    ${PASSWORD IS TOO SHORT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}         Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
 
 Move focus and check badge disappears
     [Arguments]    ${badge}    ${new focus}

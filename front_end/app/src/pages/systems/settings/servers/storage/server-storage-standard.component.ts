@@ -288,6 +288,10 @@ export class NxSystemStorageComponent implements OnInit {
             this.triggerUpdateSubscription = this.triggerUpdate$.pipe(
                 startWith('trigger'),
                 switchMap(() => this.system.getStorages({ id: this.serverId })),
+                catchError(err => {
+                    console.error(err);
+                    return of([]);
+                }),
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
                 tap(_ => {
@@ -589,7 +593,7 @@ export class NxSystemStorageComponent implements OnInit {
                 const store = storage.find(({ storageId }) => storageId === id);
                 store.isBackup = updateParams.isBackup;
                 store.isUsedForWriting = updateParams.usedForWriting;
-                this.updateStorage(storage);
+                this.updateStorage(storage, true);
             });
         }
 
@@ -662,7 +666,7 @@ export class NxSystemStorageComponent implements OnInit {
             ).subscribe(curInterval => {
                 if (curInterval >= 15 || !this.updatingModes.length) {
                     setUpdating(false, this.updatingModes);
-                    this.updateStorage(storagesWithUpdatedStatus);
+                    this.updateStorage(storagesWithUpdatedStatus, true);
                     this.updatingModes = [];
                     this.cancelPolling$.next('time ran out');
                 } else {
@@ -676,7 +680,7 @@ export class NxSystemStorageComponent implements OnInit {
                                 if (!storageStatus.includes('beingChecked')) {
                                     setUpdating(false, [id]);
                                     if (!this.updatingModes.length) {
-                                        this.updateStorage(storagesWithUpdatedStatus);
+                                        this.updateStorage(storagesWithUpdatedStatus, true);
                                         this.cancelPolling$.next('all modes changed');
                                     }
                                 }
