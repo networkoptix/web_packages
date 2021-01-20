@@ -173,28 +173,24 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 return Promise.reject();
             }
             this.locked[user.email] = true;
-            await this.system.saveUser(user, user.role);
-            await this.system.getUsers(true);
-            if (this.localUserNameWatcher.value !== this.localUserNameWatcher.originalValue) {
-                try {
-                    this.locked[user.email] = true;
-                    user.name = this.localUserNameWatcher.value;
-                    await this.system.saveUser(user, user.role);
-                    await this.system.getUsers(true);
-                    this.locked[user.email] = false;
-                } catch (_) {
-                    this.selectedUser.name = this.localUserNameWatcher.originalValue;
-                    const options = {
-                        classname : this.CONFIG.toast.warning,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(
-                        NxLanguageProviderService.translate(
-                            this.LANG.toastMessage.nameFail?.(),
-                            { type: this.LANG.common.login?.() }
-                        ), options);
-                }
+            try {
+                this.locked[user.email] = true;
+                user.name = this.localUserNameWatcher.value;
+                await this.system.saveUser(user, user.role);
+                await this.system.getUsers(true).catch(err => console.error(err));
+                this.locked[user.email] = false;
+            } catch (_) {
+                this.selectedUser.name = this.localUserNameWatcher.originalValue;
+                const options = {
+                    classname : this.CONFIG.toast.warning,
+                    autohide  : true,
+                    delay     : this.CONFIG.alertTimeout
+                };
+                this.toastService.show(
+                    NxLanguageProviderService.translate(
+                        this.LANG.toastMessage.nameFail?.(),
+                        { type: this.LANG.common.login?.() }
+                    ), options);
             }
             this.locked[user.email] = false;
             this.applyService.hardReset();
