@@ -66,6 +66,8 @@ $large-desktop-breakpoint: 1477px;
     margin: 0 1rem 1rem 0;
     h3 {
         @include typography.medium15;
+        margin-top: 0;
+        margin-bottom: 16px;
     }
 }
 

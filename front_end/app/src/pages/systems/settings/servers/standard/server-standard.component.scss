@@ -109,7 +109,8 @@
         }
     }
     nx-select {
-        width: 240px;
+        min-width: 0px;
+        max-width: 240px;
     }
 }
 

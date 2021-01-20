@@ -2,7 +2,7 @@ import {
     Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
 }                                       from '@angular/core';
 import { Subscription }                 from 'rxjs';
-import { map }                          from 'rxjs/operators';
+import { filter, map }                          from 'rxjs/operators';
 import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { NxSystem }                     from '@services/system.service';
 import { LanguageI18NStaticTypes }      from '@services/../../language_i18n_static_types';
@@ -11,6 +11,7 @@ import { Watcher }                      from '@services/apply.service';
 import { NxProcessService, Process }    from '@services/process.service';
 import { NxDialogsService }             from '@services/../dialogs/dialogs.service';
 import { IConfig, NxConfigService }      from '@services/nx-config';
+import { CurrentStorageState } from '@services/system.service/system/storage-manager/current-storage-state';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,6 +26,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    currentStorageState: CurrentStorageState;
     loading: boolean;
     showStorage: boolean;
     systemSubscription: Subscription;
@@ -91,38 +93,35 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     updateAndGetStorage() {
-        this.system.getStorages({ id: this.serverId })
-            .pipe(
-                map((storages: any) => storages.map(({ id }) => id))
-            ).subscribe((storageIds) => {
-                if (!storageIds.length) {
-                    this.loading = false;
-                    this.showStorage = false;
-                    this.failedToLoad = false;
-                    this.storages = [];
-                    this.watchers = [];
-                    return;
-                }
-                this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, true).toPromise().then(response => {
-                    this.loading = false;
-                    this.failedToLoad = false;
-                    this.showStorage = (Object.keys(response.reply.storages).length > 0);
-                    const { storages, watchers } = mapStorages(response.reply.storages, storageIds);
-                    this.storages = storages;
-                    this.watchers = watchers;
-                    this.updateSaveProcess();
-                }).catch(() => {
-                    this.failedToLoad = true;
-                });
-            });
+        this.system.storageManager.storageState$.pipe(
+            filter(({ storageInfoLoaded }) => storageInfoLoaded)
+        ).subscribe(currentState => {
+            this.loading = false;
+            this.failedToLoad = false;
+            this.showStorage = !!currentState.locations.length;
+            this.currentStorageState = currentState;
+            if (!this.showStorage) {
+                this.storages = [];
+                this.watchers = [];
+            } else {
+                const { storages, watchers } = mapStorages(currentState.locations);
+                this.storages = storages;
+                this.watchers = watchers;
+                this.updateSaveProcess();
+            }
+        });
     }
 
     updateSaveProcess() {
         this.saveSettings = this.processService.createProcess(() => {
-            return this.system.storageManager
-                .updateOrGetSystemStorage(this.buildUpdateParams())
-                .toPromise()
-                .then(response => {
+            this.storages.forEach(({ storageId: id, isUsedForWriting, reservedSpace }) => {
+                const storage = this.currentStorageState.locations.find(({ storageId }) => storageId === id);
+                storage.usedForWriting = isUsedForWriting.value;
+                storage.reservedSpace = Math.round(reservedSpace.bits);
+            });
+
+            return this.currentStorageState.saveStorages()
+                .toPromise().then(response => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -175,10 +174,7 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
     usedForWriting : isUsedForWriting.value
 });
 
-export const mapStorages = (storages, storageIds) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, isUsedForWriting: ufw, ...storage }) => {
-    if (!storageIds.includes(storage.storageId)) {
-        return {};
-    }
+export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, usedForWriting: ufw, ...storage }) => {
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
     const remainingSpace = new FreeSpace(new BitConverter(freeSpace.bits - reservedSpace._bits.originalValue), reservedSpace);

@@ -725,7 +725,6 @@ export class NxSystemAPI {
             cleanedUser.userRoleId = this.emptyId;
         }
         cleanedUser.email = cleanedUser.email.toLowerCase();
-        cleanedUser.name = cleanedUser.name.toLowerCase();
         return cleanedUser;
     }
 

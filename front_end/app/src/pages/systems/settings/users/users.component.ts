@@ -50,10 +50,18 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     userRole = new Watcher<string>();
     fullName = new Watcher<string>();
     email = new Watcher<string>();
+    localUserNameWatcher = new Watcher<string>();
 
-    localUserName: string;
     editMode = false;
     emptyName = false;
+
+    get localUserName() {
+        return this.localUserNameWatcher.value;
+    }
+
+    set localUserName(value) {
+        this.localUserNameWatcher.value = value;
+    }
 
     private routeParamsSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -137,14 +145,17 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 const originalRole = this.userRole.originalValue === 'Custom'
                     ? this.currentCustomRole : this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
                 this.setPermission(originalRole);
+                this.localUserNameWatcher.originalValue = this.localUserNameWatcher.value = this.selectedUser.name;
                 this.applyService.reset();
             },
             [
                 this.userEnabled,
                 this.userRole,
                 this.fullName,
-                this.email
-            ]);
+                this.email,
+                this.localUserNameWatcher
+            ]
+            );
     }
 
     ngOnDestroy(): void {
@@ -164,31 +175,15 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.locked[user.email] = true;
             await this.system.saveUser(user, user.role);
             await this.system.getUsers(true);
-            this.locked[user.email] = false;
-            this.applyService.hardReset();
-            this.setUser();
-            this.applyService.reset();
-        }, {
-            ignoreError: true
-        });
-    }
-
-    handleBlur() {
-        const originalName = this.selectedUser.name;
-        this.editMode = false;
-
-        if (!this.localUserName || this.emptyName) {
-            this.localUserName = originalName;
-        } else if (this.localUserName !== originalName) {
-            const user = this.selectedUser;
-            user.name = this.localUserName;
-            this.locked[user.email] = true;
-            this.system.saveUser(user, user.role)
-                .then(() => this.system.getUsers(true))
-                .then(() => { this.locked[user.email] = false; })
-                .catch(() => {
-                    this.selectedUser.name = originalName;
-                    this.localUserName = originalName;
+            if (this.localUserNameWatcher.value !== this.localUserNameWatcher.originalValue) {
+                try {
+                    this.locked[user.email] = true;
+                    user.name = this.localUserNameWatcher.value;
+                    await this.system.saveUser(user, user.role);
+                    await this.system.getUsers(true);
+                    this.locked[user.email] = false;
+                } catch (_) {
+                    this.selectedUser.name = this.localUserNameWatcher.originalValue;
                     const options = {
                         classname : this.CONFIG.toast.warning,
                         autohide  : true,
@@ -199,7 +194,22 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                             this.LANG.toastMessage.nameFail?.(),
                             { type: this.LANG.common.login?.() }
                         ), options);
-                });
+                }
+            }
+            this.locked[user.email] = false;
+            this.applyService.hardReset();
+            this.setUser();
+            this.applyService.reset();
+        }, {
+            ignoreError: true
+        });
+    }
+
+    handleBlur() {
+        this.editMode = false;
+
+        if (!this.localUserName || this.emptyName) {
+            this.localUserNameWatcher.reset();
         }
     }
 

@@ -5,7 +5,7 @@ import {
 import { NgForm }                               from '@angular/forms';
 import { BehaviorSubject, merge, Subscription, Observable, from } from 'rxjs';
 import {
-    distinctUntilChanged, filter, skip, map, combineLatest
+    distinctUntilChanged, filter, skip, map, combineLatest, tap
 }                                               from 'rxjs/operators';
 
 import { NxApplyComponent }          from '../components/apply/apply.component';
@@ -525,15 +525,14 @@ export class NxApplyService {
      */
     private addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
         this.watchers = watchers;
+        this.watchersSubscription?.unsubscribe?.();
         this.watchersSubscription = merge(...watchers.map(watcher => {
             return watcher.valueSubject.pipe(
                 distinctUntilChanged(),
                 filter((watcher) => watcher !== undefined),
-                map(() => watcher)
+                skip(1)
             );
-        })).pipe(
-            skip(this.watchers.length)
-        ).subscribe(changedWatcher => {
+        })).subscribe(changedWatcher => {
             if (changedWatcher.changed) {
                 this.touched();
             } else {

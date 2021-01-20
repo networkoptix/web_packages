@@ -9,7 +9,7 @@ import {
 import {
     of, SubscriptionLike, Subject, Observable
 }                                                 from 'rxjs';
-import { catchError, delay, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
@@ -47,8 +47,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
-    @Input() storages$: Observable<any>;
-    @Input() storageInfoLoaded = false;
     @Output() loaded = new EventEmitter(false);
 
     CONFIG: IConfig;
@@ -57,7 +55,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     serverIdFromParams;
 
     editMode = false;
-    storages: any[];
 
     saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
@@ -74,7 +71,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     checkingForDataAnalytics = false;
     storagesLoading = true;
     showAnalytics = true;
-    useDefaultAnalyticsStorage = false;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -202,39 +198,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         if (!this.applyService.locked) {
             this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
-        const checkForPlugins = (cameras: false |ICamera[]) => {
-            if (!cameras) {
-                return false;
-            }
-
-            const checkCamera = ({
-                addParamsRaw, parentId
-            }: ICamera) => addParamsRaw.find(({
-                name
-            }) => name === 'compatibleAnalyticsEngines' &&
-                    parentId === this.selectedServer.id)?.value !== '[]';
-
-            return cameras.reduce((hasEnabled, camera) => hasEnabled || checkCamera(camera), false);
-        };
-        this.analyticsSubscription = this.system.serverManager.checkForAnalyticsData(this.selectedServer.id).pipe(
-            switchMap((analyticsData) => analyticsData.length
-                ? of(true)
-                : this.system.cameraManager.getCameras()
-            ),
-            map(plugins => plugins === true || checkForPlugins(plugins)),
-            catchError(err => {
-                console.error(err);
-                return of(false);
-            }),
-            tap((showAnalytics) => {
-                this.showAnalytics = showAnalytics;
-                this.checkIfOnline(this.selectedServer.id).then(() => {
-                    this.serverLoaded = true;
-                    this.applyService.reset();
-                });
-                this.parseStorages();
-            })
-        ).subscribe();
+        this.getCurrentStorages();
     }
 
     initForApplyService(): void {
@@ -450,35 +414,33 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.checkingForDataAnalytics = false;
     }
 
-    parseStorages() {
-        this.useDefaultAnalyticsStorage = false;
-        if (this.saveStorageWatcher.value === undefined) {
-            this.saveStorageWatcher.value = false;
-        }
-        this.currentAnalyticsDbId = this.selectedServer?.addParams
-            .find(param => param.name === 'metadataStorageId')?.value;
-        this.storageSubscription = this.storages$.subscribe(storages => {
-            this.storages = (storages || []).filter(store => store.storageType === 'local');
-            this.dropdownStorages = this.storages
-                .map(({ url, isOnline, isUsedForWriting, storageStatus, storageId, isWritable, freeSpace }) => {
-                    const selected = this.currentAnalyticsDbId === storageId;
-                    return {
-                        name        : url,
-                        isOnline,
-                        isUsedForWriting,
-                        isWritable,
-                        isNotSystem : !storageStatus?.includes('system'),
-                        selected,
-                        id          : storageId,
-                        value       : storageId,
-                        freeSpace
-                    };
-                });
-            this.selectedStorage = this.dropdownStorages.find(store => store.selected) ||
-                this.selectDefaultStorage();
-            const hasMultipleStorages = this.dropdownStorages.length > 1;
-            this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage?.isNotSystem && this.currentAnalyticsDbId === this.selectedStorage.id;
-            this.storagesLoading = !this.dropdownStorages.every(({ id }) => id);
+    getCurrentStorages() {
+        this.storageSubscription = this.system.storageManager.storageState$.pipe(
+            filter(({ storageInfoLoaded, analyticsLoaded }) => storageInfoLoaded && analyticsLoaded)
+        ).subscribe(({
+            currentAnalyticsDbLocation,
+            analyticsDbTargetLocations
+        }) => {
+            this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
+            this.dropdownStorages = analyticsDbTargetLocations.map(({ url, isOnline, storageStatus, storageId, isWritable, freeSpace }) => {
+                const selected = this.currentAnalyticsDbId === storageId;
+                return {
+                    name        : url,
+                    isOnline,
+                    isWritable,
+                    isNotSystem : !storageStatus?.includes('system'),
+                    selected,
+                    id          : storageId,
+                    value       : storageId,
+                    freeSpace
+                };
+            });
+            this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+            this.storagesLoading = false;
+            this.serverLoaded = true;
+            if (this.saveStorageWatcher.value === undefined) {
+                this.saveStorageWatcher.value = false;
+            }
         });
     }
 

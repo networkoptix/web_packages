@@ -7,8 +7,7 @@ import { UntilDestroy }             from '@ngneat/until-destroy';
 import { SubscriptionLike }         from 'rxjs';
 
 import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxMenuService }            from '@src/menu';
-import { isArray }                  from 'rxjs/internal-compatibility';
+import { NxMenuService }            from '@src/menu/menu.service';
 
 /* Usage
  */

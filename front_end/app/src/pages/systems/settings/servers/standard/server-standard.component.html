@@ -112,7 +112,7 @@
                         [disabled]="portChangeDisabled || serverUnavailable"
                         (change)="onPortChange()"
                     >
-                    <ng-container *ngIf="showAnalytics && dropdownStorages.length && (storageInfoLoaded && !storagesLoading) || (!storageInfoLoaded && storagesLoading)">
+                    <ng-container *ngIf="showAnalytics && dropdownStorages.length && !storagesLoading || storagesLoading">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
                         <nx-select
                             id="system"
@@ -126,7 +126,7 @@
                             <span></span>
                             <div class="error-label">
                                 <p class="mb-0" translate>Analytics data can take up large amounts of space.</p>
-                                <p class="mb-0" translate>We recommend to choose another locations for it instead of the system partition.</p>
+                                <p class="mb-0" translate>We recommend to choose another location for it instead of the system partition.</p>
                             </div>
                         </ng-container>
                     </ng-container>

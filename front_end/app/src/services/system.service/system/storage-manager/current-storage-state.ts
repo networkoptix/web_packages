@@ -30,6 +30,7 @@ export class CurrentStorageState {
     vmsSpaceLoaded: boolean;
     storageInfoLoaded: boolean;
     storageStatsLoaded: boolean;
+    analyticsLoaded: boolean;
 
     #serverManager: ServerManager;
     #hasAnalyticsData = false;
@@ -87,12 +88,9 @@ export class CurrentStorageState {
     /**
      * Saves the current analyticsDb location to server.
      */
-    saveAnalyticsDbLocation() {
-        const payload = { metadataStorageId: this.currentAnalyticsDbLocation };
-        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, payload);
+    saveAnalyticsDbLocation(metadataStorageId: string = this.currentAnalyticsDbLocation.storageId) {
+        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, { metadataStorageId });
     }
-
-    // Polling - Need to think about this some more
 
     constructor(
         state: Partial<CurrentStorageState>,

@@ -35,8 +35,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     params: Params;
     isOffline = false;
     serverLoaded = false;
-    storageInfoLoaded = false;
-    emittedStorage$ = new BehaviorSubject<any>([])
 
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -189,10 +187,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);
             }
+            this.system.storageManager.serverId = this.selectedServer.id;
         }
-    }
-
-    updateStorage(storages) {
-        this.emittedStorage$.next(storages);
     }
 }

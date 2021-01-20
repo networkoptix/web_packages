@@ -61,8 +61,6 @@ enum STORAGE_TYPES {
 export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() serverId: string;
-    @Output() storageEmit = new EventEmitter<any>();
-    @Output() storageInfoLoaded = new EventEmitter<boolean>();
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -148,7 +146,6 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.storageEmit.emit();
         this.calcDDWidth();
         this.init();
     }
@@ -156,7 +153,6 @@ export class NxSystemStorageComponent implements OnInit {
     ngOnChanges(changes) {
         if (!changes.serverId.firstChange) {
             this.loading = true;
-            this.storageEmit.emit();
             this.triggerUpdate$.next('update');
         }
     }
@@ -164,7 +160,6 @@ export class NxSystemStorageComponent implements OnInit {
     init = () => {
         this.loading = true;
         this.waitingForStorages = true;
-        this.storageInfoLoaded.emit(false);
 
         this.canSeeDetailInfo = this.system.canViewInfo();
 
@@ -176,11 +171,9 @@ export class NxSystemStorageComponent implements OnInit {
                     switchMap(() => this.system.storageManager.updateOrGetSystemStorage({ serverId: this.serverId }, false, 60000).pipe(
                         tap(() => {
                             this.waitingForStorages = false;
-                            this.storageInfoLoaded.emit(true);
                         }),
                         catchError(() => {
                             this.waitingForStorages = false;
-                            this.storageInfoLoaded.emit(true);
                             return of(empty);
                         }),
                         startWith(empty)
@@ -295,10 +288,12 @@ export class NxSystemStorageComponent implements OnInit {
                 tap(this.refreshStorages$),
                 switchMap(() => this.system.getStorages()),
                 tap(_ => {
-                    const systemHasDefaults = !this.system.serverManager.servers.some(({
+                    this.systemHasBackupsOn = false;
+                    this.system.serverManager.servers.forEach(({
                         id, storages
-                    }: any) => !this.doesCurrentServerHaveDefaultSettings(id) && storages.some(({ isBackup }) => isBackup));
-                    this.systemHasBackupsOn = systemHasDefaults;
+                    }: any) => this.doesCurrentServerHaveDefaultSettings(id).then(hasDefault => {
+                        this.systemHasBackupsOn ||= hasDefault && storages.some(({ isBackup }) => isBackup);
+                    }));
                 })
             ).subscribe();
         }
@@ -388,8 +383,9 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     updateCustom = () => {
-        return this.doesCurrentServerHaveDefaultSettings().then(hasDefault => {
-            this.customSettings = !hasDefault;
+        this.customSettings = false;
+        this.system.serverManager.servers.forEach(async({ id }) => {
+            this.customSettings ||= !(await this.doesCurrentServerHaveDefaultSettings(id));
         });
     }
 
@@ -503,6 +499,7 @@ export class NxSystemStorageComponent implements OnInit {
         };
 
         const sortedStorage = storage.sort(sortByTypeAndUrl);
+        sortedStorage.skipNextPoll = false;
         this.storage$.next(sortedStorage);
         this.backupLocations$.pipe(
             startWith(true),
@@ -516,7 +513,6 @@ export class NxSystemStorageComponent implements OnInit {
                 this.isBackupOn.reset();
             }
         });
-        this.storageEmit.emit(sortedStorage || []);
     }
 
     normalizeId = (id) => `{${NxUtilsService.cleanId(id || '')}}`
@@ -696,7 +692,7 @@ export class NxSystemStorageComponent implements OnInit {
     checkStorages(maxTimeout = 60000, maxTimesToCheck = 10) {
         this.beingChecked = true;
         const timesChecked$ = new BehaviorSubject<number>(0);
-        const filterBeingChecked = (storage: any[]) => storage.filter(
+        const filterBeingChecked = (storage: any) => storage.skipNextPoll ? [] : storage.filter(
             ({ status, storageStatus }) => status === STORAGE_STATUS.BEING_CHECKED ||
             storageStatus?.includes('beingChecked')
         );
@@ -729,6 +725,7 @@ export class NxSystemStorageComponent implements OnInit {
                         storage.hasAction = store.hasAction = true;
                     }
                 });
+                storage.skipNextPoll = true;
                 this.storage$.next(storage);
                 console.info('Not able to get updated status on remaining storages, setting still pending to inaccessible');
             }
