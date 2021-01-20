@@ -309,7 +309,7 @@ CACHES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
-if DEBUG:
+if LOCAL_ENVIRONMENT:
     INSTALLED_APPS += ('silk',)
     MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
 
