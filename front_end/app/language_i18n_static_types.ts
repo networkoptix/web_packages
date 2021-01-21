@@ -19,6 +19,7 @@ export interface LanguageI18NStaticTypes {
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
+    authorize:             Authorize;
     cameraFilters:         CameraFilters;
     clientProtocol:        any;
     common:                Common;
@@ -73,6 +74,34 @@ export interface ActiveActions {
     sendConfirm:         any;
     setNewPassword:      any;
     setNewPasswordLabel: any;
+}
+
+export interface Authorize {
+    email:         Email;
+    createAccount: Confirmation;
+    activate:      Activate;
+    confirmation:  Confirmation;
+}
+
+export interface Activate {
+    header:    any;
+    created:   Ated;
+    activated: Ated;
+}
+
+export interface Ated {
+    header:  any;
+    message: any;
+}
+
+export interface Confirmation {
+    header: any;
+}
+
+export interface Email {
+    loginCloud:  any;
+    loginSystem: any;
+    connect:     any;
 }
 
 export interface CameraFilters {
@@ -1001,6 +1030,7 @@ const typeMap: any = {
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
+        { json: "authorize", js: "authorize", typ: r("Authorize") },
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
         { json: "clientProtocol", js: "clientProtocol", typ: "any" },
         { json: "common", js: "common", typ: r("Common") },
@@ -1052,6 +1082,29 @@ const typeMap: any = {
         { json: "sendConfirm", js: "sendConfirm", typ: "any" },
         { json: "setNewPassword", js: "setNewPassword", typ: "any" },
         { json: "setNewPasswordLabel", js: "setNewPasswordLabel", typ: "any" },
+    ], false),
+    "Authorize": o([
+        { json: "email", js: "email", typ: r("Email") },
+        { json: "createAccount", js: "createAccount", typ: r("Confirmation") },
+        { json: "activate", js: "activate", typ: r("Activate") },
+        { json: "confirmation", js: "confirmation", typ: r("Confirmation") },
+    ], false),
+    "Activate": o([
+        { json: "header", js: "header", typ: "any" },
+        { json: "created", js: "created", typ: r("Ated") },
+        { json: "activated", js: "activated", typ: r("Ated") },
+    ], false),
+    "Ated": o([
+        { json: "header", js: "header", typ: "any" },
+        { json: "message", js: "message", typ: "any" },
+    ], false),
+    "Confirmation": o([
+        { json: "header", js: "header", typ: "any" },
+    ], false),
+    "Email": o([
+        { json: "loginCloud", js: "loginCloud", typ: "any" },
+        { json: "loginSystem", js: "loginSystem", typ: "any" },
+        { json: "connect", js: "connect", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

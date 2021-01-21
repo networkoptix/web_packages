@@ -81,6 +81,30 @@
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
     },
+    "authorize": {
+        "email": {
+            "loginCloud": "Log in to %CLOUD_NAME%",
+            "loginSystem": "Log in to {systemName}",
+            "connect": "Connect System to %CLOUD_NAME%"
+        },
+        "createAccount": {
+            "header": "Create %CLOUD_NAME% account"
+        },
+        "activate": {
+            "header": "Activate %CLOUD_NAME% Account",
+            "created": {
+                "header": "Account Created!",
+                "message": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {account}.</p><p>Please, activate the account and return here to finish the process.</p>"
+            },
+            "activated": {
+                "header": "Account Activated!",
+                "message": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>"
+            }
+        },
+        "confirmation": {
+            "header": "System connected to %CLOUD_NAME%!"
+        }
+    },
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",

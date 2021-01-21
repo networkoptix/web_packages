@@ -43,6 +43,7 @@ import { MenuModule }                          from '@src/menu';
 import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
 import { WebadminPageModule }                  from '@pages/webadmin-page.module';
 import { PagesModule }                         from '@pages/pages.module';
+import { NxAuthorizeModule }                   from '@components/authorize/authorize.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
 import { NxUriCachingInterceptor }             from '@src/interceptors/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-system-status-interceptor.service';
@@ -90,6 +91,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         DeviceDetectorModule.forRoot(),
         NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot(),
+        NxAuthorizeModule,
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production && !environment.isLocal, registrationStrategy: 'registerImmediately' })

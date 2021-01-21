@@ -189,7 +189,19 @@ export class NxBootstrapProvider {
             }
             this.CONFIG.docMenuMap = data?.docMenuMap;
             this.CONFIG.licenseTypes = data?.licenseTypes;
-            this.CONFIG.dynamicMenus = data?.menus;
+
+            if (data) {
+                data.menus.authorizeFooter = (data?.menus?.footer || [])
+                    .filter(item => ['About', 'Terms', 'Privacy'].find(i => item.name.includes(i)))
+                    .map(item => {
+                        if (item.name === 'Privacy') {
+                            item.name = 'Privacy Policy';
+                        }
+                        return item;
+                    });
+            }
         }
+
+        this.CONFIG.dynamicMenus = data?.menus;
     }
 }

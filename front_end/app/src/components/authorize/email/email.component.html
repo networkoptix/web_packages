@@ -1,0 +1,26 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header>
+    <svg-icon nx-add-svg-src 
+        [src]="CONFIG.icons.dir + 'cloud-header.svg'" 
+        [svgStyle]="{'width.px': 24, 'height.px': 24}"
+        [applyClass]="true"></svg-icon>
+    <h3>{{LANG.authorize.email.loginCloud()}}</h3>
+</header>
+<main>
+    <input type="email">
+</main>
+<footer>
+    <button class="btn svg-icon" type="button">
+        <!-- (click)="forgotPassword()" -->
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.icons.dir + 'plus.svg'" 
+            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [applyClass]="true"></svg-icon>
+        <span translate>Create Account</span>
+    </button>
+    <nx-process-button
+        buttonText="{{ 'Next' | translate }}"
+        [process]="emailProcess"
+        svg="arrow_right">
+    </nx-process-button>
+</footer>
