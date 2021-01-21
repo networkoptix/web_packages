@@ -58,7 +58,7 @@
                     <nx-client-button *ngIf="!CONFIG.isLocal" [textOnly]="true"></nx-client-button>
                 </div>
 
-                <span class="system-owner" *ngIf="system.permissions.isAdmin && !CONFIG.isLocal">
+                <span class="system-owner" *ngIf="!CONFIG.isLocal">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
                         <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
