@@ -28,7 +28,7 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((response) => {
-                if (response.error.resultCode === this.error) {
+                if (response.error?.resultCode === this.error) {
                     return timer(this.retryTimeout).pipe(
                         flatMap(() => next.handle(req)
                             .pipe(catchError((response) => {

@@ -194,10 +194,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             new InfoBlockLine(this.LANG.common.os(), this.selectedServer.osName || '-'),
             new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
-
         if (!this.applyService.locked) {
             this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
+        this.checkIfOnline(this.parsedServerId);
         this.getCurrentStorages();
     }
 
@@ -270,7 +270,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         return this.system.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
             if (res) {
                 const servers: any[] = Object.entries(res).map(server => server[1]);
-                this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                this.setStatus(servers.find(server => NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)).status === 'Online'
                     ? '' : this.CONFIG.servers.status.offline);
                 this.applyService.setVisible(true);
             }
