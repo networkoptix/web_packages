@@ -1,4 +1,4 @@
-Nou missatge
+Missatge nou
 
 Tipus: {{message.type}}
 Dades: {{{message.data}}}

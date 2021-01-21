@@ -5,7 +5,7 @@
     "Integrations (β)": "統合 (β)",
     "Privacy": "プライバシー",
     "Support": "サポート",
-    "Supported Devices": "サポートされているデバイス",
+    "Supported Devices": "対応デバイス",
     "Terms": "利用規約",
     "accessRoles": {
         "Administrator": {
@@ -29,7 +29,7 @@
             "label": "オーナー"
         },
         "Viewer": {
-            "description": "ライブ ビデオとアーカイブを参照できます",
+            "description": "ライブおよび録画映像を参照できます",
             "label": "ビューアー"
         },
         "advancedViewer": {
@@ -61,7 +61,7 @@
             "label": "オーナー"
         },
         "viewer": {
-            "description": "ライブ ビデオとアーカイブを参照できます",
+            "description": "ライブおよび録画映像を参照できます",
             "label": "ビューアー"
         }
     },
@@ -142,7 +142,7 @@
             "best": "最高",
             "high": "高い",
             "medium": "標準",
-            "low": "低い"
+            "low": "低"
         },
         "general": "一般",
         "searchCamPlaceholder": "検索",
@@ -251,7 +251,7 @@
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、所有者が異なります。 クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "システム内にある任意のサーバーのアドレスを入力します。",
-            "mergeConfirmation": "<p class=\"mb-0\"><strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>のシステムを統合しようとしています。</p><p>設定と名前は <strong>{{primarySystem}}</strong>から取得されます。</p>",
+            "mergeConfirmation": "<p class=\"mb-0\"><strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>のシステムを統合しようとしています。</p><p>設定と名称は <strong>{{primarySystem}}</strong>の値を使用します。</p>",
             "mergeSystemsTitle": "現在のシステムと統合",
             "mergeFailedTitle": "システム統合が失敗しました",
             "noServerFound": "サーバーが見つかりません",
@@ -261,7 +261,7 @@
             "passwordRequired": "パスワードが必要",
             "passwordWrong": "間違ったパスワード",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
-            "primarySystemOffline": "システム {{primarySystem}} はオフラインであり、システム {{targetSystem}} と統合することはできません",
+            "primarySystemOffline": "システム {{primarySystem}} がオフラインであるため、システム{{targetSystem}} と統合することはできません。",
             "primarySystemUnavailable": "システム {{primarySystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "recommendSupport": {
                 "a_recommend": "私たちはあなたと相談することをお勧めします",
@@ -406,7 +406,7 @@
         "EmailAlreadyExists": "このEmailは既に登録されています",
         "FAIL": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
         "Connection timed out": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "Bad Gateway": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。両方とも <a href=\"/download\">最新ビルド</a>にアップデートしてください。",
         "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方の下にリストされているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
@@ -486,9 +486,9 @@
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "feedback": {
-            "a_Please": "これを実行して下さい",
-            "b_Link": "リクエストを送信する",
-            "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
+            "a_Please": "対応デバイスに関するその他の質問/懸念事項については",
+            "b_Link": "リクエストを送信",
+            "c_Info": "してください。"
         },
         "hardwareType": "タイプ",
         "isAnalyticsSupported": "解析",
@@ -542,7 +542,7 @@
         "registerSuccess": "ようこそ",
         "restorePassword": "パスワードリセット",
         "restorePasswordSuccess": "パスワードを保存",
-        "supportedDevices": "サポートされているデバイス",
+        "supportedDevices": "対応デバイス",
         "system": "システム",
         "systemName": "{{systemName}}",
         "systemShare": "共有システム",
@@ -586,7 +586,7 @@
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
         "integration": "{{INTEGRATION_COMPANY}} プライバシーポリシーは<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">こちら</a>にあります。同意を撤回する方法についての説明を含む%COMPANY_NAME%プライバシーポリシーは、<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a>から入手できます。",
-        "ipvd": "このフォームを送信すると、 %COMPANY_NAME%から連絡を受けることにに同意したことになります。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> には、同意を取り消す方法の説明が含まれています。"
+        "ipvd": "このフォームを送信すると、%COMPANY_NAME%から連絡を受けることに同意したことになります。\n<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> の %COMPANY_NAME% プライバシーポリシーには、同意を取り消す方法の説明が含まれています。"
     },
     "registration": {
         "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
@@ -649,7 +649,7 @@
             "notAbleToLoadSystem": "システム設定を読み込めません。",
             "notAbleToLoadStorageInfo": "ストレージ情報を読み込めません。",
             "sessionLimitDuration": {
-                "hours": "時",
+                "hours": "時間",
                 "minutes": "分"
             },
             "warningMessages": {
@@ -742,7 +742,7 @@
             "starter": "スターター",
             "iomodule": "IOモジュール",
             "bridge": "ブリッジ",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "サーバーが見つかりません"
         },
         "messages": {
             "required": "{{number}} 以上必要",
@@ -755,7 +755,7 @@
         "additionalLocalFsTypes": "追加のローカルFSタイプ",
         "autoDiscoveryResponseEnabled": "自動検出応答",
         "crossdomainEnabled": "クロスドメイン",
-        "defaultExportVideoCodec": "デフォルトのエクスポートビデオコーデック",
+        "defaultExportVideoCodec": "エクスポート映像のデフォルトコーデック",
         "defaultVideoCodec": "デフォルトのビデオコーデック",
         "downloaderPeers": "ダウンローダーピア",
         "lastMergeMasterId": "最終マージマスターID",

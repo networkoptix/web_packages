@@ -1,13 +1,13 @@
-Benvingut a %CLOUD_NAME%
+Us donem la benvinguda a %CLOUD_NAME%
 
 {{#message.sharer_name}}
 {{message.sharer_name}} ({{message.sharer_email}}) us convida a unir-vos a %CLOUD_NAME% i us comparteix el sistema {{message.system_name}}.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Estàs convidat a unir-te a %CLOUD_NAME%.
-Se t'ha concedit accés a {{message.system_name}}.
+Us han convidat a unir-vos a %CLOUD_NAME%.
+Us han concedit accés a {{message.system_name}}.
 {{/message.sharer_name}}
 
-Registreu-vos i visualitzeu el sistema: {{config.portal_url}}/ register /{{message.code}}
+Registreu-vos i visualitzeu el sistema: {{config.portal_url}}/register/{{message.code}}
 

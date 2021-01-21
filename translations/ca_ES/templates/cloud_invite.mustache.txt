@@ -1,12 +1,12 @@
 Hola,
 
-Heu estat convidat a %CLOUD_NAME%.
+Us han convidat a %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Si us plau, creeu el compte a %CLOUD_NAME%
-utilitzant la vostra adreça d'email actual i seguiu les instruccions.
+Creeu un compte a %CLOUD_NAME%
+utilitzant el vostre email actual i seguiu les instruccions.
 
-Registreu el vostre compte mitjançant aquest enllaç: {{ config.portal_url }}/ register /{{ message.code }}
+Registreu el compte mitjançant aquest enllaç: {{ config.portal_url }}/register/{{ message.code }}

@@ -1,35 +1,35 @@
 {
   "activate_account": {
-    "emailSubject": "Activar el teu compte"
+    "emailSubject": "Activeu el compte"
   },
   "cloud_invite": {
-    "emailSubject": "Heu estat convidat a %CLOUD_NAME%"
+    "emailSubject": "Us han convidat a %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Consulta de vendes per a {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Consulta tècnica per a {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Suggeriments per a {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Comentaris sobre la pàgina de la càmera {{#message.asset}} per a {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} té una nova versió que cal revisar"
   },
   "restore_password": {
     "emailSubject": "Restableix la contrasenya"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} us convida a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}El sistema de vídeo {{{message.system_name}}} s'ha compartit amb vós{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "El sistema de vídeo {{{message.system_name}}} s'ha compartit amb vós"
   }
 }

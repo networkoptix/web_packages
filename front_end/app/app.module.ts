@@ -46,6 +46,7 @@ import { PagesModule }                         from '@pages/pages.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
 import { NxUriCachingInterceptor }             from '@services/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }        from '@services/local-system-status-interceptor.service';
+import { CloudUnavailableInterceptor } from './src/interceptors/cloud-unavailable-interceptor';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -100,6 +101,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             provide : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
             multi : true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CloudUnavailableInterceptor,
+            multi: true
         },
         {
             provide : HTTP_INTERCEPTORS,

@@ -70,6 +70,7 @@ class ErrorCodes(Enum):
                     ErrorCodes.wrong_password):
             return logging.INFO
         if self in (ErrorCodes.account_blocked,
+                    ErrorCodes.cloud_invalid_response,
                     ErrorCodes.forbidden,
                     ErrorCodes.invalid_nonce,
                     ErrorCodes.wrong_code,

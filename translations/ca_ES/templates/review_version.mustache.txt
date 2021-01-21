@@ -1,10 +1,10 @@
-Hi ha una nova versió per revisar {{ message.asset }} ({{message.asset_type}}).
+Hi ha una nova versió de {{ message.asset }} ({{message.asset_type}}) per revisar.
 
-Feu clic a l’enllaç per revisar l’esborrany {{ message.id }} de {{ message.asset }}
+Feu clic a l'enllaç per revisar l'esborrany {{ message.id }} de {{ message.asset }}
 
-Enllaç per revisar la versió: {{ config.portal_url }}/ admin / cms / assetcustomizationreview /{{ message.id }}/ change /
+Enllaç per revisar: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
-En aquesta pàgina podeu fer
+En aquesta pàgina podeu
 1) Crear una vista prèvia per veure els canvis més recents.
 2) Publicar aquesta versió que actualitzarà tot el contingut.
-3) Editeu contextos fent clic al botó d'edició del registre. Per veure aquests canvis, haureu de crear una nova versió.
+3) Editar contextos fent clic al botó d'edició del registre. Per veure aquests canvis, haureu de crear una nova versió.

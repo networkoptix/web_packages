@@ -1,7 +1,7 @@
 {
     "About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
-    "For developers": "For developers",
+    "For developers": "Dla programistów",
     "Integrations (β)": "Integracje (β)",
     "Privacy": "Prywatność",
     "Support": "Wsparcie",
@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
         "recordingSettingsWarning": "Proszę zaktualizować brakujące ustawienia nagrywania.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Tryb nagrywania zostanie zmieniony na „Zawsze nagrywaj”",
         "recordingModes": {
             "always": "Nagrywaj zawsze",
             "motion": "Nagrywaj tylko ruch",
@@ -406,7 +406,7 @@
         "EmailAlreadyExists": "Ten e-mail jest już zarejestrowany",
         "FAIL": "System <strong>{{failedSystem}}</strong> jest w trybie offline.",
         "Connection timed out": "System <strong>{{failedSystem}}</strong> jest w trybie offline.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "Bad Gateway": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
         "INCOMPATIBLE": "Systemy mają różne wersje oprogramowania. Zaktualizuj oba z nich do <a href=\"/download\">najnowszej wersji</a>.",
         "cloud_systems_have_different_owners": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
@@ -742,7 +742,7 @@
             "starter": "Starter",
             "iomodule": "Moduł I/O",
             "bridge": "Bridge",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Nie znaleziono serwera"
         },
         "messages": {
             "required": "Jeszcze {{number}} jest wymagane",

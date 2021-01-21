@@ -36,12 +36,17 @@ class LimitAdminEmailHandler(AdminEmailHandler):
         super(LimitAdminEmailHandler, self).emit(record)
 
 
-def downgrade_unauthorized_requests(record):
-    """Downgrades the loglevel of unauthenticated requests to info.
-    Routes are defined in the {DOWNGRADE_ROUTES} variable."""
-    if record.name == 'django.request' and record.status_code == 401 and not record.request.user.is_authenticated:
-        for route in DOWNGRADE_ROUTES:
-            if route in record.request.path:
-                logger.info(record.getMessage())
-                return False
+def downgrade_requests(record):
+    """Downgrades the loglevel of certain request errors."""
+    if record.name == 'django.request':
+        # If the user is unauthenticated and the route in the {DOWNGRADE_ROUTES} variable.
+        if record.status_code == 401 and not record.request.user.is_authenticated:
+            for route in DOWNGRADE_ROUTES:
+                if route in record.request.path:
+                    logger.info(record.getMessage())
+                    return False
+        # If the status code is 504 that means clouddb is unavailable or returned nothing.
+        elif record.status_code == 504:
+            logger.warning(record.getMessage())
+            return False
     return True

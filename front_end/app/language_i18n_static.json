@@ -736,6 +736,7 @@
         "unavailable": "unavailable"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
         "system": {
             "deleted" :{
