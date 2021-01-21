@@ -1,0 +1,57 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header>
+    <h3>{{LANG.authorize.email.loginCloud()}}</h3>
+    <ng-container *ngIf="accountEmail">
+        <span class="sub-header" translate>For</span>
+        <span class="account-password">{{accountEmail}}</span>
+    </ng-container>
+</header>
+<main>
+    <div class="row" *ngIf="!accountEmail">
+        <label for="email" translate>Email</label>
+        <input type="email" name="email">
+    </div>
+    <div class="row">
+        <div class="left">
+            <label for="firstName" translate>First Name</label>
+            <input type="text" name="firstName">
+        </div>
+        <div class="right">
+            <label for="lastName" translate>Last Name</label>
+            <input type="text" name="lastName">
+        </div>
+    </div>
+    <div class="row">
+        <label for="password" translate>Password</label>
+        <input type="password" name="password">
+    </div>
+    <nx-checkbox
+        name="termsAndConditions"
+        componentId="termsAndConditions">
+    </nx-checkbox>
+    <!-- [(ngModel)]="termsAndConditions"
+    #termsAndConditions="ngModel"
+    description="termsAndConditionsHelpBlock"> -->
+</main>
+<footer>
+    <button class="btn svg-icon" type="button">
+        <!-- (click)="login()" -->
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.icons.dir + 'door.svg'" 
+            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [applyClass]="true"></svg-icon>
+        <span translate>Log In</span>
+    </button>
+    <button class="btn svg-icon" type="button">
+        <!-- (click)="goBack()"  -->
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+        <span translate>Back</span>
+    </button>
+    <nx-process-button
+        buttonText="{{ 'Next' | translate }}"
+        svg="arrow_right">
+    </nx-process-button>
+    <!-- [clickFn]="createAccountNext"
+    [form]="createAccountForm"
+    [process]="createAccountProcess"> -->
+</footer>

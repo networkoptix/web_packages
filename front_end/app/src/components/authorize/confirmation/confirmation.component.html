@@ -1,0 +1,11 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<main>
+    <svg-icon nx-add-svg-src 
+        [src]="CONFIG.icons.dir + 'checkmark-placeholder.svg'" 
+        [svgStyle]="{'width.px': 24, 'height.px': 24}"
+        [applyClass]="true"></svg-icon>
+    <h3>{{LANG.authorize.confirmation.header()}}</h3>
+</main>
+<footer>
+    <button class="btn svg-icon" type="submit" translate>OK</button>
+</footer>

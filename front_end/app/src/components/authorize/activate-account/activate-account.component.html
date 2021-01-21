@@ -1,0 +1,20 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header *ngIf="created" >
+    <h3>{{LANG.authorize.activate.header}}</h3>
+</header>
+<main>
+    <svg-icon nx-add-svg-src 
+        [src]="CONFIG.icons.dir + created ? 'mail' : 'checkmark' + '-placeholder.svg'" 
+        [svgStyle]="{'width.px': 24, 'height.px': 24}"
+        [applyClass]="true"></svg-icon>
+    <h3>{{contentHeader}}</h3>
+    <div [innerHTML]="contentMessage"></div>
+</main>
+<footer>
+    <nx-process-button
+        buttonText="{{ 'Log In' | translate }}">
+    </nx-process-button>
+    <!-- [clickFn]="logInNext"
+    [form]="logInForm"
+    [process]="logInProcess"> -->
+</footer>

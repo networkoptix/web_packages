@@ -1,0 +1,15 @@
+<div class="authorize-main">
+    <div class="dialog-window">
+        AUTHORIZE
+        <router-outlet></router-outlet>
+    </div>
+    <div *ngIf="windowWideEnough">
+        <div class="row">
+            <ul class="">
+                <li *ngFor="let item of footerItems">
+                    <a href="item.url" target="_blank">{{ item.name }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
