@@ -156,17 +156,14 @@ Choose System From Dropdown
     ...    ${input url}=${EMPTY}
     ...    ${check url}=${False}
 
-    Log    ${input url}
-    Click Element    ${MERGE SYSTEM DROPDOWN}
-    Sleep   1
-    ${menu shown}=   Run Keyword and Return Status    Element Should Be Visible    ${MERGE SYSTEMS MENU}
+    Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=0.5
+    ${menu shown}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${MERGE SYSTEMS MENU}    timeout=10
     Run Keyword Unless    ${menu shown}    Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
     Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
-    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
+    Slow    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]    timeout=0.5
     Run Keyword Unless     ${check url}==${False}    Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
     ${url placeholder}=   Run Keyword If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
     Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host:port
-    # TODO: add auto-populated url verification(there is no text in DOM now) if check url==${True}
     Run Keyword Unless    '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${input url}
 
 Choose Primary System
