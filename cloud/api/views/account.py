@@ -374,6 +374,13 @@ def restore_password(request):
     return api_success()
 
 
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def check_account_in_portal(request):
+    require_params(request, ('email',))
+    return api_success({'emailExists': AccountManager.is_email_in_portal(request.data['email'])})
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Check the code and returns an email if its valid.",
                      request_body=openapi.Schema(
