@@ -108,7 +108,7 @@ Activate Key
 
 Activate Trial
     Wait Until Elements Are Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
-    Click Button    ${ACTIVATE TRIAL BUTTON}
+    Slow    Click Button    ${ACTIVATE TRIAL BUTTON}    timeout=1
     Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
     Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
 #    Commented out due to CLOUD-5714
