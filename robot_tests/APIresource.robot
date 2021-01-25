@@ -176,7 +176,8 @@ Setup Local System
     ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     ${auth}=   Create List    admin    ${new password}
-    Disable Stat Reports    ${auth}    ${server url}
+    Set System Settings via API    ${auth}    ${server url}    statisticsAllowed    false
+    Set System Settings via API    ${auth}    ${server url}    trafficEncryptionForced    false
     [Return]    ${resp.json()}
 
 Setup Cloud System
@@ -508,3 +509,27 @@ Set System Settings via API
     Should be equal as strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+
+# Misc
+Get Customizations
+    [Arguments]    ${auth}
+    Create Digest Session    Get Customizations Session    https://ireg.hdw.mx    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Customizations Session  /api/v1/public/products/nxcloud/instances/prod/    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    ${instance customizations}=   Set Variable    ${resp.json()}[instance_customizations]
+    ${customizations}=   Create List
+    FOR    ${obj}    IN    @{instance customizations}
+        Append To List    ${customizations}    ${obj}[domain]
+    END
+    [Return]    ${customizations}
+
+Get Relays
+    [Arguments]    ${auth}
+    Create Digest Session    Get Relays Session    https://ireg.hdw.mx    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Relays Session  /api/v1/public/products/traffic_relay/instances/?group__name=prod    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    ${relays}=   Create List
+    FOR    ${obj}    IN    @{resp.json()}
+       Append To List    ${relays}    ${obj}[domain]
+    END
+    [Return]    ${relays}
