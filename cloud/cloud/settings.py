@@ -41,6 +41,7 @@ from cloud.logger import downgrade_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+TESTING = sys.argv[1:2] == ['test']
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
@@ -452,6 +453,8 @@ EMAIL_USE_TLS = conf['smtp']['tls']
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
+TEST_RUNNER = 'cloud.tests.NxRunner'
+
 
 # Package Settings
 
@@ -647,7 +650,7 @@ CLOUD_CONNECT = {
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
 CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 
-USE_ASYNC_QUEUE = True
+USE_ASYNC_QUEUE = True and 'test' not in sys.argv
 
 LINKS_LIVE_TIMEOUT = 300  # Five minutes
 
