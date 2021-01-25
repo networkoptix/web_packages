@@ -138,13 +138,18 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
     if not data or force:
         customization = Customization.objects.get(name=customization_name)
-        custom_config = get_config(customization.name)
 
         integration_store_enabled = asset.read_global_value(
             "%INTEGRATION_STORE_ENABLED%")
 
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
+        cloud_name = asset.read_global_value("%CLOUD_NAME%")
+        vms_name = asset.read_global_value("%VMS_NAME%")
+        seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
+            .replace("%CLOUD_NAME%", cloud_name)\
+            .replace("%VMS_NAME%", vms_name)
 
         data = {
             'version_id': asset.version_id(),
@@ -172,7 +177,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
-                'integration_seo_page_description': asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%"),
+                'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
@@ -188,8 +193,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
                 'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
-                'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
-                'vms_name': asset.read_global_value("%VMS_NAME%"),
+                'cloud_name': cloud_name,
+                'vms_name': vms_name,
                 'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%'),
                 'trial_license_key': asset.read_global_value('%TRIAL_LICENSE_KEY%')

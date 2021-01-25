@@ -190,10 +190,7 @@ export class NxBootstrapProvider {
             this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.vmsName = data.vmsName;
 
-            this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription
-                .replace('%VMS_NAME%', this.CONFIG.vmsName)
-                .replace('%CLOUD_NAME%', this.CONFIG.cloudName);
-
+            this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription;
 
             // detect preview mode
             if (window.location.href.indexOf('preview') >= 0) {
