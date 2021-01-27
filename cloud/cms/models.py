@@ -177,6 +177,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_all_betas': asset.read_global_value("%SHOW_ALL_BETAS%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
                 'sort_supported_devices_by_popularity': asset.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),

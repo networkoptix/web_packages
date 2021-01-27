@@ -632,6 +632,16 @@
             "fieldset": "Downloads"
           },
           {
+            "label": "Show All Betas",
+            "name": "%SHOW_ALL_BETAS%",
+            "value": false,
+            "description": "If enabled all betas are shown. Otherwise only the latest mobile and vms releases are shown.",
+            "advanced": true,
+            "optional": true,
+            "type": "check_box",
+            "fieldset": "Downloads"
+          },
+          {
             "label": "Downloads per platform",
             "name": "%AVAILABLE_DOWNLOADS_PLATFORM%",
             "description": "Platforms that are visible on the downloads page.",
