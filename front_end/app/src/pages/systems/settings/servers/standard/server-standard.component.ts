@@ -195,9 +195,12 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
         if (!this.applyService.locked) {
+            // TODO: This is triggering the apply service lock on server change. Need to find out why.
             this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         }
-        this.checkIfOnline(this.parsedServerId);
+        this.checkIfOnline(this.parsedServerId).finally(() => {
+            this.serverLoaded = true;
+        });
         this.getCurrentStorages();
     }
 
@@ -437,11 +440,15 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             });
             this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
             this.storagesLoading = false;
-            this.serverLoaded = true;
             if (this.saveStorageWatcher.value === undefined) {
                 this.saveStorageWatcher.value = false;
             }
-        });
+        }, () => {
+            this.currentAnalyticsDbId = null;
+            this.dropdownStorages = [];
+            this.storagesLoading = false;
+        }
+        );
     }
 
     selectDefaultStorage() {

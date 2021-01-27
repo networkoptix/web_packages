@@ -40,6 +40,7 @@ export interface BaseConfig {
     menus: Menus;
     newSystem: boolean;
     permissions: Permissions;
+    pollingTimeout: number;
     redirect: Redirect;
     showHeaderAndFooter: boolean;
     search: Search;

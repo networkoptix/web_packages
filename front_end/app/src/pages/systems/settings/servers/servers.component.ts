@@ -59,7 +59,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
         this.setupDefaults();
-        this.applyService.initPageWatcher(this.applyContainerRef);
     }
 
     ngOnInit(): void {
@@ -127,7 +126,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 this.system.serverManager
                                     .initSystemMediaServers()
                                     .then(() => {
-                                        this.setServer();
+                                        this.setServer(false);
                                     })
                                     .catch(error => {
                                         console.error(error);
@@ -152,7 +151,10 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             });
     }
 
-    setServer(): void {
+    setServer(initWatcher = true): void {
+        if (initWatcher) {
+            this.applyService.initPageWatcher(this.applyContainerRef);
+        }
         if (this.system && this.system.servers && this.system.servers.length > 0) {
             let server;
             if (this.serverIdFromParams) {

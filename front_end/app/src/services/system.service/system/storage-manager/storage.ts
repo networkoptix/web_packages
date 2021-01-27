@@ -49,7 +49,9 @@ export class StorageDataStructure {
     vmsSpace : number;
     storageId: string;
     canUpdate: boolean;
-    constructor(inputs?: Partial<StorageDataStructure>) {
+    constructor(inputs?: Partial<StorageDataStructure & {status: string}>) {
+        // The status field was added to 4.3 systems but isn't really needed here
+        delete inputs.status;
         const defaults: StorageDataStructure = {
             isBackup       : false,
             reservedSpace  : 0,
@@ -100,7 +102,26 @@ export class Storage extends StorageDataStructure {
         this.isBackup = mode === MODE.BACKUP;
     }
 
-    get status() {
+    get mainOnly() {
+        return this.usedForWriting &&
+            this.isWritable &&
+            !this.isBackup &&
+            this.currentStorageState.locations.filter(({
+                mode
+            }) => mode === MODE.MAIN).length <= 1;
+    }
+
+    get reindexing() {
+        return this.storageStatus.includes('beingRebuilt');
+    }
+
+    /**
+     * Need to add checking for inaccessible
+     */
+    get status(): STORAGE_STATUS {
+        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE)) {
+            return STORAGE_STATUS.INACCESSIBLE;
+        }
         if (!this.isOnline || !this.totalSpace) {
             return STORAGE_STATUS.BEING_CHECKED;
         }

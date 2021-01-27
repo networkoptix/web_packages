@@ -9,13 +9,7 @@ import { Subscription } from 'rxjs';
 import { NxLanguageProviderService } from '../../../../../../services/nx-language-provider';
 import { NxUtilsService }            from '../../../../../../services/utils.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../../language_i18n_static_types';
-
-enum STORAGE_STATUS {
-    IN_USE,
-    INACCESSIBLE,
-    RESERVED,
-    DISABLED
-}
+import { Storage, STORAGE_STATUS }   from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,7 +18,7 @@ enum STORAGE_STATUS {
     styleUrls   : ['size.component.scss']
 })
 export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
-    @Input() store: any;
+    @Input() store: Storage;
 
     LANG: LanguageI18NStaticTypes;
 
@@ -78,14 +72,14 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         if (this.store.freeSpace === undefined) {
-            this.store.freeSpace = this.store.totalSpace - this.store.archiveSpace;
+            this.store.freeSpace = this.store.totalSpace - this.store.vmsSpace;
         };
 
         if (this.store.reservedSpace === undefined) {
             this.store.reservedSpace = 0;
         };
 
-        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
+        const usedSpace = this.store.totalSpace - this.store.freeSpace - this.store.vmsSpace;
         this.totalSpace = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
@@ -97,9 +91,9 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         this.archive = '&mdash;';
         this.archivePercentage = 0;
 
-        if (this.store.archiveSpace) {
-            this.archive = this.toFriendlyBytes(this.store.archiveSpace);
-            this.archivePercentage = this.toPercentageOfTotal(this.store.archiveSpace);
+        if (this.store.vmsSpace) {
+            this.archive = this.toFriendlyBytes(this.store.vmsSpace);
+            this.archivePercentage = this.toPercentageOfTotal(this.store.vmsSpace);
         }
     }
 

@@ -2,8 +2,9 @@ import { IConfig } from './config-types';
 import { environment } from '../../../environments/environment';
 
 export const nxConfig: IConfig = {
-    alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
-    animations   : {
+    alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
+    pollingTimeout : 30 * 1000,
+    animations     : {
         carouselImage: {
             enter : '0.25s ease-in',
             leave : '0.25s ease-out'
@@ -31,7 +32,7 @@ export const nxConfig: IConfig = {
         }
     },
     defaultLanguage : 'en_US',
-    dialogs: {
+    dialogs         : {
         message: {
             subjects: {
                 integration          : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
@@ -207,8 +208,8 @@ export const nxConfig: IConfig = {
     },
     interceptor: {
         cloudUnavailable: {
-            error : 'cloudInvalidResponse',
-            timeout  : 5 * 1000
+            error   : 'cloudInvalidResponse',
+            timeout : 5 * 1000
         }
     },
     ipvd: {
@@ -303,8 +304,8 @@ export const nxConfig: IConfig = {
             }
         }
     },
-    newSystem: false,
-    permissions: {
+    newSystem   : false,
+    permissions : {
         canViewRelease: 'can_view_release'
     },
     redirect: {
@@ -314,8 +315,8 @@ export const nxConfig: IConfig = {
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
     },
     showHeaderAndFooter : true,
-    headerHeight : 48,
-    ribbonHeight : 33,
+    headerHeight        : 48,
+    ribbonHeight        : 33,
     search              : {
         debounceTime : 500, // ms
         maxLength    : 200,
@@ -338,7 +339,7 @@ export const nxConfig: IConfig = {
         }
     },
     supportedLanguages : [],
-    system: {
+    system             : {
         flags: {
             newSystem: 'SF_NewSystem'
         },
@@ -377,13 +378,13 @@ export const nxConfig: IConfig = {
         cloudStorageSize          : 0,
         healthMonitorCacheTimeout : 60
     },
-    cloudName : '',
-    cloudHost : '',
-    cloudSystemId : '',
-    localSystemId : '',
+    cloudName       : '',
+    cloudHost       : '',
+    cloudSystemId   : '',
+    localSystemId   : '',
     localSystemName : '',
-    localServerId : '',
-    company   : {
+    localServerId   : '',
+    company         : {
         copyrightYear : '',
         links         : {
             privacy : '',

@@ -1,5 +1,5 @@
-import { filter, map, retry, startWith, switchMap } from 'rxjs/operators';
-import { combineLatest, Subject }                   from 'rxjs';
+import { filter, map, retry, retryWhen, skip, startWith, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subject }                   from 'rxjs';
 
 import { ServerManager }                                    from '../server-manager/server-manager';
 import { StateManager }                                     from '@src/utils';
@@ -7,12 +7,14 @@ import { BaseManager }                                      from '../base/base-m
 import { CurrentStorageState, currentStorageStateFactory }  from './current-storage-state';
 import { NxLogger }                                         from '@services/utils.service';
 
-enum UpdateTriggers {
+export enum UpdateTriggers {
     INFO='info',
     METRICS='metrics',
     STATS='stats',
     ANALYTICS='analytics'
 }
+
+export type TriggerUpdateCallback = () => void
 
 /**
  * StorageState class should only handle managing the storage state data stream.
@@ -26,6 +28,10 @@ export class StorageState extends BaseManager {
      * Trigger updates, leave blank to update all or add UpdateTrigger to update specific data.
      */
     update = (dataToRefresh?: UpdateTriggers) => !dataToRefresh ? Object.values(UpdateTriggers).forEach(this.update) : this.#updater$.next(dataToRefresh)
+
+    poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
+        return [this.storageState$, () => this.update(dataToPoll)];
+    }
 
     /**
      * Triggers update events, similar to redux action/reducer pattern.
