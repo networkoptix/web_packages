@@ -174,6 +174,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy() {}
 
     setServer(): void {
+        this.storagesLoading = true;
         this.serverLoaded = false;
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;

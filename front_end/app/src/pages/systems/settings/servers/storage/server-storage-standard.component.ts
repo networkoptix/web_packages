@@ -1,5 +1,5 @@
 import {
-    Component, Inject, ViewContainerRef, LOCALE_ID, Input, OnInit
+    Component, Inject, ViewContainerRef, LOCALE_ID, Input, OnInit, SimpleChanges
 }                                       from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -117,9 +117,10 @@ export class NxSystemStorageComponent implements OnInit {
         this.init();
     }
 
-    ngOnChanges(changes) {
-        if (!changes.serverId.firstChange) {
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.serverId.currentValue !== changes.serverId.previousValue) {
             this.loading = true;
+            this.waitingForStorages = true;
         }
     }
 

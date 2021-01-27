@@ -557,8 +557,8 @@ export class NxSystemAPI {
         return this.getRequestAggregator([analyticsEndpoint, getCamerasEndpoint, getServerEndpoint])
             .pipe(map(({ reply }: any) => {
                 return ({
-                    hasAnalyticsData : !!reply[analyticsEndpoint].length,
-                    hasPlugins       : reply[getCamerasEndpoint].reduce((
+                    hasAnalyticsData : !!reply[analyticsEndpoint]?.length,
+                    hasPlugins       : reply[getCamerasEndpoint]?.reduce((
                         hasPlugins, { addParams, parentId }
                     ) => hasPlugins || addParams.find(({
                         name

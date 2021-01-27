@@ -115,6 +115,10 @@ export class Storage extends StorageDataStructure {
         return this.storageStatus.includes('beingRebuilt');
     }
 
+    set status(value) {
+        // Kind of a hack for 4.3
+    }
+
     /**
      * Need to add checking for inaccessible
      */
