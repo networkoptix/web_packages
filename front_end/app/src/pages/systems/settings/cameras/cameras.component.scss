@@ -46,6 +46,7 @@
 
         .camera-buttons {
             flex: 0 0 auto;
+            padding-right: 0 !important;
             &:hover {
                 color: $dark15 !important;
                 svg-icon {

@@ -7,8 +7,9 @@
 @import '~bootstrap/scss/mixins';
 
 @mixin button {
-    @include typography.medium14;
-    font-size       : 0.875rem !important;
+    font-family     : $font-family-medium;
+    color           : $font-color-medium;
+    font-size       : $h6-font-size !important;
     height          : 2rem !important;
     border-radius   : $border-radius-base !important;
     font-weight     : inherit !important;

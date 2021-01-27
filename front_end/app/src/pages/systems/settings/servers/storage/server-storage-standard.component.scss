@@ -107,6 +107,7 @@ form.form-horizontal {
     }
 
     .server-buttons {
+        padding-right: 0 !important;
         &:hover {
             color : $dark15;
 
@@ -227,4 +228,8 @@ svg-icon:not(.animate-rotation) .st0 {
 
 .no-storages-sizing {
     height: 168px !important;
+}
+
+.header-button-span {
+    color: $light16 !important;
 }
