@@ -487,7 +487,8 @@ class AccountCustomPropertyView(APIView):
 
         try:
             obj, _ = models.AccountCustomProperty.objects.get_or_create(
-                account=current_account, endpoint=endpoint, json_data=request.data)
+                account=current_account, endpoint=endpoint)
+            obj.json_data=request.data
             obj.save()
             return Response(obj.json_data, status=201)
         except Exception as e:
