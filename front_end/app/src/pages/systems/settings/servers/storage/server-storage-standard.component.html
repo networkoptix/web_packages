@@ -61,7 +61,7 @@
                                             <span translate>Reserved</span>
                                             <svg-icon nx-add-svg-src
                                                       class="ml-1"
-                                                      [ngbTooltip]="store.statusTooltip"
+                                                      [ngbTooltip]="getStatusTooltip(store.statusTooltip)"
                                                       [openDelay]="300"
                                                       [closeDelay]="100"
                                                       placement="top"
@@ -123,7 +123,7 @@
         </div>
     </nx-section>
     <nx-section>
-        <button [disabled]="loading" class="btn btn-default" (click)="addExternalStorage()" translate>Add External Storage</button>
+        <button class="btn btn-default" (click)="addExternalStorage()" translate>Add External Storage</button>
     </nx-section>
 </nx-block>
 

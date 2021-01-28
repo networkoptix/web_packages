@@ -3,10 +3,10 @@ import {
 }                                       from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    Subscription, combineLatest, BehaviorSubject, Subject, defer, of
+    combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                       from 'rxjs';
 import {
-    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap
+    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, skip
 }                                       from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -128,7 +128,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
         this.waitingForStorages = true;
         this.canSeeDetailInfo = this.system.canViewInfo();
-        this.system.storageManager.storageState$.pipe(untilDestroyed(this)).subscribe(state => {
+        this.system.storageManager.storageState$.pipe(untilDestroyed(this)).subscribe(async(state) => {
             const { analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded } = state;
             const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
             if (sources.every(loaded => loaded)) {
@@ -142,7 +142,9 @@ export class NxSystemStorageComponent implements OnInit {
                         this.modeWatchers[this.normalizeId(storageId)].value = mode;
                     }
                 });
-                this.setupWatchers(!!this.currentStorageState.onlineBackups);
+                await this.system.storageManager.getBackupState(
+                    this.serverId, !!this.currentStorageState.onlineBackups
+                ).then(this.setupWatchers).catch(_ => this.setupWatchers());
                 if (this.loading && this.currentStorageState.beingChecked) {
                     this.pollStats();
                 }
@@ -157,11 +159,21 @@ export class NxSystemStorageComponent implements OnInit {
             this.waitingForStorages = false;
             this.waitingForStorages = false;
             this.currentStorageState = null;
+            this.setupWatchers();
         });
     }
 
-    pollStats = () => {
+    pollStats = async(update = false) => {
         this.cancelPolling$.next('cancel previous');
+        if (update) {
+            await timer(1500).toPromise();
+            this.system.storageManager.update();
+            await this.system.storageManager.storageState$.pipe(
+                skip(1),
+                takeUntil(this.cancelPolling$),
+                untilDestroyed(this)
+            ).toPromise();
+        }
         const started = Date.now();
         const triggerUpdate = () => this.system.storageManager.update(UpdateTriggers.STATS);
         let first = true;
@@ -206,10 +218,11 @@ export class NxSystemStorageComponent implements OnInit {
         });
     }
 
-    setupWatchers = (backupInitialValue?: boolean) => {
+    setupWatchers = (backupInitialState?: { backup: boolean, custom: boolean }) => {
+        this.customSettings = backupInitialState?.custom;
         const modeWatchers = Object.entries(this.modeWatchers);
-        if (backupInitialValue !== undefined) {
-            this.isBackupOn.originalValue = this.backupState = backupInitialValue;
+        if (backupInitialState !== undefined) {
+            this.isBackupOn.originalValue = this.backupState = backupInitialState?.backup;
         }
         const resetWatchers = () => {
             this.isBackupOn.reset();
@@ -252,7 +265,7 @@ export class NxSystemStorageComponent implements OnInit {
                         }),
                 this.handleModeUpdate()
             ]).then(res => {
-                this.pollStats();
+                this.pollStats(true);
                 if (backupSaveState) {
                     const backup = backupSaveState === 'StartFail';
                     this.isBackupOn.originalValue = this.backupState = !backup;
@@ -268,36 +281,15 @@ export class NxSystemStorageComponent implements OnInit {
         );
     }
 
-    async doesCurrentServerHaveDefaultSettings(serverId = this.serverId) {
-        try {
-            // check if backupNewCamerasBeDefault in system settings is true
-            const res: any = await this.system.updateOrGetSystemSettings().toPromise();
-            if (res) {
-                const { settings } = res.reply;
-                if (!settings.backupNewCamerasByDefault) return false;
-            }
-
-            const server = this.system.serverManager.servers.find(({ id }) => serverId === id);
-            if (server && !['BackupRealTime', 'BackupManual'].includes(server.backupType)) return false;
-            // check all cameras to see if backupType === 'CameraBackupDefault' || 'CameraBackupLowQuality'
-            return server.backupType === 'BackupManual' || this.system.cameraManager.cameras.every(camera => {
-                return ['CameraBackupDefault', 'CameraBackupLowQuality', !this.isBackupOn.originalValue && 'CameraBackupDisabled'].includes(camera.backupType);
-            });
-        } catch (error) {
-            console.error('error while retrieving data checking server for default backup settings', error);
-            return false;
-        }
-    }
-
     setDefaultBackupSettings = async() => {
         await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
         await this.system.updateOrGetSystemSettings({
-            backupNewCamerasByDefault: true, backupQualities: 'CameraBackupDefault'
+            backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
         }).toPromise();
         await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
         await this.system.serverManager.initSystemMediaServers();
         const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
-            if (camera.backupType !== 'CameraBackupDefault') {
+            if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
                 let retries = 5;
                 const update = () => {
                     if (retries < 5) {
@@ -306,7 +298,7 @@ export class NxSystemStorageComponent implements OnInit {
                     retries--;
                     return this.system.setCameraUserSettings(
                         this.serverId, camera.id,
-                        { backupType: 'CameraBackupDefault' }
+                        { backupType: 'CameraBackupLowQuality' }
                     ).catch(() => retries ? update() : console.error('failed to save camera.id'));
                 };
                 cameras.push(update);
@@ -488,6 +480,9 @@ export class NxSystemStorageComponent implements OnInit {
                             this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.failedRemove, { url: this.cleanUrl(storage.url) }), 'danger');
                         });
                 }
+            }).finally(() => {
+                this.system.storageManager.update();
+                this.pollStats(true);
             });
     }
 
@@ -519,7 +514,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.serverId,
             this.currentStorageState.locations,
             this.system.storageManager.update
-        );
+        ).finally(() => this.pollStats(true));
     }
 
     reindexStorage(type: MODE) {
@@ -601,5 +596,9 @@ export class NxSystemStorageComponent implements OnInit {
 
     getStorageTypeTooltip(storageType: string) {
         return this.LANG.system.storageToolTips[storageType.toLowerCase()]();
+    }
+
+    getStatusTooltip(status: string) {
+        return this.LANG.storage[status]();
     }
 }

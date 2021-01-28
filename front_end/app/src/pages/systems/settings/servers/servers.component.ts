@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
-import { UntilDestroy }                      from '@ngneat/until-destroy';
-import { BehaviorSubject, of, Subscription }  from 'rxjs';
-import { delay, filter, map, retryWhen, tap } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+    delay, filter, map, retryWhen, skip, switchMap, takeUntil
+}                                        from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
@@ -18,9 +20,9 @@ import { NxProcessService }              from '../../../../services/process.serv
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-server-component',
-    templateUrl: 'servers.component.html',
-    styleUrls  : ['servers.component.scss']
+    selector : 'nx-server-component',
+    templateUrl : 'servers.component.html',
+    styleUrls : ['servers.component.scss']
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
@@ -31,14 +33,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     selectedServer;
     serverId$ = new BehaviorSubject('')
 
+    routeParamsSubscription: Subscription;
+
     advanced: boolean;
     params: Params;
     isOffline = false;
     serverLoaded = false;
-
-    private serverSubscription: Subscription;
-    private systemSubscription: Subscription;
-    private routeParamsSubscription: Subscription;
 
     private setupDefaults() {
         this.menuService.section = 'servers';
@@ -85,55 +85,51 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
-            .subscribe((system) => {
-                this.isOffline = !system.isOnline;
-                this.settingsService.footerSubject.next(true);
-                if (system && (!this.system || !this.CONFIG.isLocal)) {
-                    this.system = system;
-                    (
-                        this.CONFIG.isLocal
-                            ? this.system.update()
-                            : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false)
-                        .catch(err => console.error('system subscription', err)))
-                        .finally(() => {
-                            if (this.system && !this.system.permissions?.editUsers) {
-                                this.uriService
-                                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            }
-                        });
+        this.settingsService.systemSubject
+            .pipe(
+                filter(data => data !== undefined),
+                switchMap((system) => {
+                    this.isOffline = !system.isOnline;
+                    this.settingsService.footerSubject.next(true);
+                    if (system && (!this.system || !this.CONFIG.isLocal)) {
+                        this.system = system;
+                        (
+                            this.CONFIG.isLocal
+                                ? this.system.update()
+                                : Promise.resolve()
+                        ).then(() => this.system.getInfoAndPermissions(false).catch(err => console.error('system subscription', err)))
+                            .finally(() => {
+                                if (this.system && !this.system.permissions?.editUsers) {
+                                    this.uriService
+                                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
+                                }
+                            });
+                    }
+                    return this.system.infoSubject;
+                }),
+                map(system => {
+                    if (!system.servers || system.servers.length === 0) {
+                        throw system;
+                    }
+                }),
+                retryWhen(err => err.pipe(delay(1000))),
+                untilDestroyed(this)
+            ).subscribe(() => {
+                if (this.system.currentServerNotBusy) {
+                    if (this.system && this.system.servers && this.system.servers.length) {
+                        this.system.serverManager
+                            .initSystemMediaServers()
+                            .then(() => {
+                                this.setServer(false);
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
                 }
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
-                    .pipe(
-                        map(system => {
-                            if (!system.servers || system.servers.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .subscribe(() => {
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system.serverManager
-                                    .initSystemMediaServers()
-                                    .then(() => {
-                                        this.setServer(false);
-                                    })
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            }
-                        }
-                    });
             });
     }
 

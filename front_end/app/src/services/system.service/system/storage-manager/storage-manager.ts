@@ -1,4 +1,5 @@
 import { ServerManager }    from '../server-manager/server-manager';
+import { NxSystem } from '../system';
 import { StorageState }     from './storage-state';
 
 /**
@@ -57,6 +58,19 @@ export class StorageManager extends StorageState {
         return this.serverManager.checkForAnalyticsData(serverId);
     }
 
+    async getBackupState(serverId: string, hasOnlineBackups: boolean) {
+        const backupType = this.serverManager.servers.find(({ id }) => id === serverId).backupType;
+        const backup = hasOnlineBackups && backupType !== 'BackupManual';
+        const settings = (await this.system.updateOrGetSystemSettings().toPromise()).reply?.settings;
+        const custom = backup && (
+            backupType === 'BackupSchedule' ||
+                !this.system.cameraManager.cameras.every(({ backupType }) => ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType)) ||
+                settings?.backupNewCamerasByDefault !== 'true' ||
+                 !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(settings?.backupQualities)
+        );
+        return { backup, custom };
+    }
+
     updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
         if (!updateParams?.serverId) {
             return this.serverManager.mediaserver.updateStorages(updateParams, customTimeout);
@@ -65,8 +79,8 @@ export class StorageManager extends StorageState {
     }
 
     constructor(
-        serverManager: ServerManager
+        public system: NxSystem
     ) {
-        super(serverManager);
+        super(system.serverManager);
     }
 }

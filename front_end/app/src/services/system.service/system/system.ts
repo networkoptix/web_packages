@@ -178,9 +178,7 @@ export class NxSystem extends System {
             this.serverManager
         );
 
-        this.storageManager = new StorageManager(
-            this.serverManager
-        );
+        this.storageManager = new StorageManager(this);
     }
 
     updateSystemAuth(force?: boolean) {
