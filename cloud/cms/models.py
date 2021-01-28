@@ -1594,7 +1594,10 @@ class Menu(models.Model):
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
         permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
         related_assets_lookup = f'{parent_node_lookup}__{nodes_to_attr}__related_assets' if depth > 1 else f'{nodes_to_attr}__related_assets'
-        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order').select_related('asset', 'asset__asset_type'),
+        prefetches = [models.Prefetch(nodes_lookup,
+                                      queryset=MenuNode.objects.order_by('order').select_related(
+                                          'asset', 'asset__asset_type'
+                                      ).prefetch_related(models.Prefetch('asset__customizations', to_attr='asset_customizations_list')),
                                       to_attr=nodes_to_attr),
                       models.Prefetch(enabled_lookup, to_attr='enabled_list'),
                       models.Prefetch(permission_lookup),
@@ -1625,7 +1628,7 @@ class Menu(models.Model):
                     'new_window': node.new_window,
                     'icon': node.icon,
                     'available': [customization.name for customization in node.available.all()],
-                    'enabled': [customization.name for customization in node.enabled.all()],
+                    'enabled': [customization.name for customization in node.enabled_customizations],
                     'authentication': node.authentication,
                     'condition': node.condition,
                     'permissions': [permission.codename for permission in node.permissions.all()],
@@ -1697,6 +1700,7 @@ class Menu(models.Model):
                     node_obj.asset = find_or_create_asset(
                         node['asset'], node['asset_type'], asset_customizations)
                     node_obj.save()
+                    node_obj.asset.customizations.set(Customization.objects.filter(name__in=node['enabled']))
                 for asset, asset_type in node.get('related_assets', []):
                     node_obj.related_assets.add(find_or_create_asset(
                         asset, asset_type, asset_customizations))
@@ -1743,11 +1747,10 @@ class MenuNode(models.Model):
         return f'Item: {self.name}'
 
     @staticmethod
-    def generate_node_structure(nodes, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
+    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
         nodes_structure = []
         for node in nodes:
-            enabled = next(
-                (cust for cust in node.enabled_list if cust.id == customization.id), False)
+            enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
             asset_accepted = not node.asset or node.asset.version_id(
@@ -1785,6 +1788,17 @@ class MenuNode(models.Model):
             for node in cls.objects.filter(is_global=True):
                 node.enabled.add(customization)
             Menu.cache_all_customizations()
+
+    @property
+    def enabled_customizations(self):
+        if self.asset:
+            return getattr(self.asset, 'asset_customizations_list', self.asset.customizations.all())
+        else:
+            return getattr(self, 'enabled_list', self.enabled.all())
+
+    def is_enabled(self, customization):
+        return next(
+            (cust for cust in self.enabled_customizations if cust.id == customization.id), False)
 
     def get_parent(self):
         if self.parent_node:
