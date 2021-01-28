@@ -103,6 +103,9 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             devices = set_subscriptions_from_targets(notification_object, request_data)
             if not devices:
                 log_push_result(notification_object, 'No matching subscriptions found')
+                notification_object.send_date = timezone.now()
+                notification_object.state = PushNotification.RESULT_STATES.success
+                notification_object.save()
                 return
             responses = notification_object.send_notifications(devices=devices)
         else:
