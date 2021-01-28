@@ -22,10 +22,13 @@ const appRoutes: Routes = [
         component: Nx404Component
     },
     {
-        path      : ':name',
-        component : NxAboutComponent,
+        path        : ':name',
         canActivate : [DevelopersGuard],
-        children  : [
+        children    : [
+            {
+                path      : '',
+                component : NxAboutComponent
+            },
             {
                 path      : 'dev-tools',
                 component : NxDevToolsComponent,

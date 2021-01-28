@@ -34,6 +34,15 @@ export class NxDevToolsComponent implements OnInit {
     ) {
         this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);
+    }
+
+    ngOnInit() {
+        let snapshot = this.route.snapshot;
+        while (!snapshot.paramMap.get('name')) {
+            snapshot = snapshot.parent;
+        }
+        this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
+
         if (!this.devToolsNode) {
             const mapToDevToolsNode = ({
                 name,
@@ -62,24 +71,18 @@ export class NxDevToolsComponent implements OnInit {
                     };
                 });
         }
-    }
-
-    ngOnInit() {
-        let snapshot = this.route.snapshot;
-        while (!snapshot.paramMap.get('name')) {
-            snapshot = snapshot.parent;
-        }
-        this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
 
         const devToolsConfig = this.errorManager.buildConfig(
-            ['title', 'nodes'],
+            ['nodes'],
             this.errorManager.buildConfig(
-                ['title', 'url', 'icon']
+                ['title', 'url']
             )
         );
-        this.errorManager.checkAboutNode(
-            this.devToolsNode as AboutNode,
-            devToolsConfig
-        );
+        if (this.devToolsNode) {
+            this.errorManager.checkAboutNode(
+                this.devToolsNode as AboutNode,
+                devToolsConfig
+            );
+        }
     }
 }

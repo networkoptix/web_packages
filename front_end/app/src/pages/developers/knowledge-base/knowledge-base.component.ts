@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewEncapsulation, Renderer2, Inject, ViewChild, ElementRef } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxCloudApiService, DOC_TYPES } from '../../../services/nx-cloud-api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, tap, delay, map, filter } from 'rxjs/operators';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { BehaviorSubject, timer, combineLatest } from 'rxjs';
-import { MenuNodeWithParent, RelatedLinks } from '../../../components/left-menu/left-menu.component';
-import { NxMenusService, MenuNode } from '../../../services/menus.service';
-import { SearchFilter, SearchTag } from '../../../components/search/search.component';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef }  from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
+import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
+import { BehaviorSubject, combineLatest }                       from 'rxjs';
+import { switchMap, tap, delay, map, filter, startWith }        from 'rxjs/operators';
+
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxHeaderService }              from '@services/nx-header.service';
+import { NxMenusService, MenuNode }     from '@services/menus.service';
+
+import { RelatedLinks }                 from '@components/left-menu/left-menu.component';
+import { SearchFilter }                 from '@components/search/search.component';
 
 export enum CardClasses {
     NORMAL='text',
@@ -90,7 +92,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.currentSearchResultPage += 1;
         this.fetchSearchHandler(
             { ...this.searchQuery$.value, page: this.currentSearchResultPage }
-        ).subscribe((results) => {
+        ).pipe(untilDestroyed(this)).subscribe((results) => {
             this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
             this.loadingNext = false;
         });
@@ -113,7 +115,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     }
 
     prefetchDocument(assetId) {
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).subscribe();
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).pipe(untilDestroyed(this)).subscribe();
     }
 
     parseResults({ docs }) {
@@ -138,26 +140,30 @@ export class NxKnowledgeBaseComponent implements OnInit {
     }
 
     ngOnInit() {
-        let snapshot = this.route.snapshot;
-        while (!snapshot.paramMap.get('kb-name')) {
-            snapshot = snapshot.parent;
-        }
-        this.kbName = snapshot.paramMap.get('kb-name') || this.kbName;
-        while (!snapshot.paramMap.get('name')) {
-            snapshot = snapshot.parent;
-        }
-        this.basePath = snapshot.paramMap.get('name');
-        this.menuName = this.CONFIG.docMenuMap[this.basePath][this.kbName];
-        if (!this.menuName) {
-            setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
-            return;
-        }
-        this.route.url.pipe(
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            startWith(''),
+            switchMap(_ => {
+                let snapshot = this.route.snapshot;
+                while (!snapshot.paramMap.get('kb-name')) {
+                    snapshot = snapshot.parent;
+                }
+                this.kbName = snapshot.paramMap.get('kb-name') || this.kbName;
+                while (!snapshot.paramMap.get('name')) {
+                    snapshot = snapshot.parent;
+                }
+                this.basePath = snapshot.paramMap.get('name');
+                this.menuName = this.CONFIG.docMenuMap[this.basePath][this.kbName];
+                if (!this.menuName) {
+                    setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+                }
+                return this.route.url;
+            }),
             switchMap(urlSegment => {
                 this.loading = true;
                 this.clearSearch();
                 const getFirstDoc = () => {
-                    const traverseToFirst = (nodes: MenuNode[]): string => nodes[0].asset_id || traverseToFirst(nodes[0].nodes);
+                    const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): string => first.asset_id || traverseToFirst([...remaining, ...first.nodes]);
                     return this.menusService.getMenu(this.menuName).pipe(
                         map(menu => traverseToFirst(menu))
                     );
@@ -188,19 +194,22 @@ export class NxKnowledgeBaseComponent implements OnInit {
                                     );
                                     this.loading = false;
                                     setTimeout(() => {
-                                        Array.from(this.scriptDiv.nativeElement.children).forEach(child => {
+                                        Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
                                             this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
                                         });
                                         const myScript = this.renderer2.createElement('script');
                                         myScript.type = 'text/javascript';
                                         myScript.innerHTML = this.pageNode.script;
-                                        this.renderer2.appendChild(this.scriptDiv.nativeElement, myScript);
+                                        if (this.scriptDiv?.nativeElement) {
+                                            this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
+                                        }
                                     });
                                 })
                             );
                     })
                 );
-            })
+            }),
+            untilDestroyed(this)
         ).subscribe();
 
         this.searchQuery$.pipe(
@@ -209,7 +218,9 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 this.searchLoading = this.searchMode;
                 this.currentSearchResultPage = 1;
                 return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
-            })).subscribe((results) => {
+            }),
+            untilDestroyed(this)
+        ).subscribe((results) => {
             this.totalSearchResultPages = results.totalPages;
             this.searchLoading = false;
             this.searchResults$.next(this.parseResults(results));

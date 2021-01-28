@@ -106,6 +106,11 @@ export class NxMenusService implements OnDestroy {
         return menu.reduce(checkNodes, []);
     }
 
+    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => menu.reduce((menu, node: MenuNode) => {
+        const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
+        return nodes.length || (checkAsset && node.asset_id) || node.url ? [...menu, { ...node, nodes }] : menu;
+    }, []);
+
     private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {
             return;

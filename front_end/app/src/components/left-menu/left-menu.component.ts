@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Router, NavigationEnd }                          from '@angular/router';
-import { Location }                                       from '@angular/common';
-import { filter, map, startWith, takeUntil }              from 'rxjs/operators';
-import { timer, Subject }                                 from 'rxjs';
-import { UntilDestroy }                                   from '@ngneat/until-destroy';
-import { NxMenusService, MenuNode }                       from '../../services/menus.service';
-import { IConfig, NxConfigService }                       from '../../services/nx-config';
+import { Component, Input, Output, EventEmitter }   from '@angular/core';
+import { Router, NavigationEnd }                    from '@angular/router';
+import { Location }                                 from '@angular/common';
+import { filter, map, startWith, takeUntil }        from 'rxjs/operators';
+import { timer, Subject }                           from 'rxjs';
+import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
+import { NxMenusService, MenuNode }                 from '../../services/menus.service';
+import { IConfig, NxConfigService }                 from '../../services/nx-config';
 
 export interface RelatedLinks {
     type: string,
@@ -18,11 +18,12 @@ export interface RelatedLinks {
     templateUrl : 'left-menu.component.html',
     styleUrls   : ['left-menu.component.scss']
 })
-export class NxLeftMenuComponent implements OnInit {
+export class NxLeftMenuComponent {
     @Input() menuName: string;
     @Input() baseRoute: string;
     @Input() ignoreQuery = false;
     @Input() showDefault = true;
+    @Input() allowEmpty =false;
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<number>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
@@ -34,8 +35,6 @@ export class NxLeftMenuComponent implements OnInit {
     mouseLeave$ = new Subject();
     prefetchedDocuments = [];
     firstUrl = ''
-
-    routeSubscription;
 
     constructor(
         configService: NxConfigService,
@@ -84,7 +83,7 @@ export class NxLeftMenuComponent implements OnInit {
         };
         findActiveNode(this.menuNodes);
         if (this.showDefault && !this.activeRouteNodes.length) {
-            const getFirstUrl = (nodes: MenuNodeWithParent[]): string => nodes[0].url || getFirstUrl(nodes[0].nodes);
+            const getFirstUrl = ([first, ...remaining]: MenuNode[] = []): string => first.url || getFirstUrl([...remaining, ...first.nodes]);
             this.firstUrl = getFirstUrl(this.menuNodes);
             this.updateActive(this.firstUrl);
         }
@@ -102,7 +101,7 @@ export class NxLeftMenuComponent implements OnInit {
 
     prefetchAsset(assetId) {
         if (assetId) {
-            timer(250).pipe(takeUntil(this.mouseLeave$)).subscribe(() => {
+            timer(250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
                 this.prefetchedDocuments.push(assetId);
                 this.handlePrefetch.emit(assetId);
             });
@@ -121,16 +120,17 @@ export class NxLeftMenuComponent implements OnInit {
         this.onClick.emit(event);
     }
 
-    ngOnInit() {
-        this.menusService.getMenu(this.menuName).subscribe(menu => {
-            this.menuNodes = menu;
+    ngOnChanges() {
+        this.menusService.getMenu(this.menuName).pipe(untilDestroyed(this)).subscribe(menu => {
+            this.menuNodes = this.allowEmpty ? menu : this.menusService.cleanEmptyNodes(menu, true);
             this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
         });
-        this.routeSubscription = this.router.events
+        this.router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),
                 map((event: NavigationEnd) => event.url),
-                startWith(this.location.path())
+                startWith(this.location.path()),
+                untilDestroyed(this)
             )
             .subscribe(url => this.updateActive(this.location.path().split(this.ignoreQuery ? '?' : null)[0]));
     }
