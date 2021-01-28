@@ -146,6 +146,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             () => {
                 this.applyService.reset();
                 this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
+                this.setSystemStorageChosen(this.selectedStorage);
             }
         );
 
@@ -174,6 +175,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy() {}
 
     setServer(): void {
+        this.systemStorageChosen = false;
         this.storagesLoading = true;
         this.serverLoaded = false;
         this.showAnalytics = true;
@@ -375,9 +377,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
     }
 
-    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+    private setSystemStorageChosen(storage) {
         const hasMultipleStorages = this.dropdownStorages.length > 1;
-        this.systemStorageChosen = hasMultipleStorages && !newStorage.isNotSystem;
+        this.systemStorageChosen = hasMultipleStorages && !storage.isNotSystem;
+    }
+
+    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+        this.setSystemStorageChosen(newStorage);
+
         if (newStorage.id === this.currentAnalyticsDbId) return;
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
@@ -401,11 +408,11 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
-                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
+                        this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
                     } else if (closeRes === 'cancel') {
                         this.selectedStorage = { ...this.selectedStorage };
-                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
+                        this.setSystemStorageChosen(this.selectedStorage);
                     }
                     this.currentAnalyticsDbId = this.selectedStorage.id;
                     this.saveStorageWatcher.value = false;
@@ -413,7 +420,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         } else {
             this.selectedStorage = newStorage;
             this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
-            this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
         }
         this.checkingForDataAnalytics = false;
     }
@@ -441,6 +447,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             });
             this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
             this.storagesLoading = false;
+
+            this.setSystemStorageChosen(this.selectedStorage);
+
             if (this.saveStorageWatcher.value === undefined) {
                 this.saveStorageWatcher.value = false;
             }
