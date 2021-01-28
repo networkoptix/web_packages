@@ -1,4 +1,4 @@
-<input [style.display]="lockEmail ? 'none' : 'inline'"
+<input *ngIf="!lockEmail"
        [ngModel]="value"
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"

@@ -684,7 +684,7 @@ export class NxSystem extends System {
             this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, currentUser.email);
+        return this.cloudApi.unshare(this.id, currentUser?.email || this.userManager.currentUserEmail);
     }
 
     /**
