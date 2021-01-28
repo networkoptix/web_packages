@@ -650,7 +650,7 @@ CLOUD_CONNECT = {
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
 CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 
-USE_ASYNC_QUEUE = True and 'test' not in sys.argv
+USE_ASYNC_QUEUE = not LOCAL_ENVIRONMENT and not TESTING
 
 LINKS_LIVE_TIMEOUT = 300  # Five minutes
 
