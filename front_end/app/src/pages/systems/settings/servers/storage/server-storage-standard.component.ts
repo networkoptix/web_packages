@@ -220,7 +220,7 @@ export class NxSystemStorageComponent implements OnInit {
     setupWatchers = (backupInitialState?: { backup: boolean, custom: boolean }) => {
         this.customSettings = backupInitialState?.custom;
         const modeWatchers = Object.entries(this.modeWatchers);
-        if (backupInitialState !== undefined) {
+        if (!this.saveSettings && backupInitialState !== undefined) {
             this.isBackupOn.originalValue = this.backupState = backupInitialState?.backup;
         }
         this.resetWatchers = () => {
@@ -315,7 +315,8 @@ export class NxSystemStorageComponent implements OnInit {
         return Promise.resolve();
     }
 
-    turnOffBackup = async() => {
+    turnOffBackup = async(retries = 5) => {
+        this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = !retries;
         await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId);
 
@@ -323,8 +324,8 @@ export class NxSystemStorageComponent implements OnInit {
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
         if (state !== 'BackupState_None') {
             await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
-        }
-        if (state) {
+            return this.turnOffBackup(retries - 1);
+        } else {
             this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = false;
         }
     }
