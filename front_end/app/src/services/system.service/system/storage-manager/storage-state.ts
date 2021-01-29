@@ -101,11 +101,14 @@ export class StorageState extends BaseManager {
         })
     );
 
+    statsUpdated$ = new Subject<any>()
+
     constructor(public serverManager: ServerManager) {
         super();
         this.storageState$.subscribe(NxLogger.logCustom({
             logIdentifier : 'Storage State',
             prettyPrint   : false
         }));
+        this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
     }
 }

@@ -6,7 +6,7 @@ import {
     combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                       from 'rxjs';
 import {
-    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, skip, switchMap, take
+    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, switchMap, take, startWith
 }                                       from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -168,51 +168,47 @@ export class NxSystemStorageComponent implements OnInit {
         if (update) {
             await timer(1500).pipe(
                 switchMap(_ => this.system.storageManager.update()),
-                take(5)
+                take(2)
             ).toPromise();
         }
         const started = Date.now();
         const triggerUpdate = () => this.system.storageManager.update(UpdateTriggers.STATS);
-        let first = true;
-        this.system.storageManager.storageState$.pipe(
-            tap(currentStorageState => {
-                const beingChecked = currentStorageState.locations.filter(({
-                    storageStatus
-                }) => storageStatus.includes('beingChecked')).map(({
-                    storageId
-                }) => storageId);
-                this.updatingModes = beingChecked;
+        const pollUpdater$ = new Subject<number>();
+        pollUpdater$.pipe(
+            tap(time => {
+                if (started < (time - this.CONFIG.pollingTimeout)) {
+                    this.changedModes = [];
+                    this.updatingModes = [];
+                    this.currentStorageState.locations = this.currentStorageState.locations.map((location) => {
+                        if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)) {
+                            location.status = STORAGE_STATUS.INACCESSIBLE;
+                            location.storageStatus = `${location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '')} | ${STORAGE_STATUS.INACCESSIBLE}`;
+                        }
+                        return location;
+                    });
+                    this.cancelPolling$.next('timeout');
+                }
             }),
-            map(currentStorage => currentStorage.beingChecked),
-            takeUntil(this.cancelPolling$),
-            untilDestroyed(this)
-        ).subscribe(beingChecked => {
-            if (!beingChecked && !first) {
-                this.updatingModes = [];
-            } else if (started > (Date.now() - this.CONFIG.pollingTimeout)) {
-                NxLogger.logCustom({
-                    logIdentifier   : 'Polling Status',
-                    logLevel        : LogLevel.INFO,
-                    logLoggerObject : true
-                })(
-                    `Continue polling for another ${Math.round((this.CONFIG.pollingTimeout - (Date.now() - started)) / 1000)} seconds`
-                );
-                first = false;
+            startWith(0),
+            delay(1500),
+            switchMap(_ => {
+                triggerUpdate();
+                return this.system.storageManager.statsUpdated$.pipe(take(1));
+            }),
+            map(_ => {
+                const state = this.system.storageManager.storageState;
+                this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId)
                 for (const location of this.currentStorageState.locations) {
-                    if (location.storageStatus.includes('beingChecked') && !this.updatingModes.includes(location.storageId)) {
-                        location.storageStatus = location.storageStatus.replace('beingChecked', '');
+                    if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED) && !this.updatingModes.includes(location.storageId)) {
+                        location.storageStatus = location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '');
                     }
                 }
-                setTimeout(triggerUpdate, 2500);
-            } else {
-                for (const location of this.currentStorageState.locations) {
-                    if (location.storageStatus.includes('beingChecked')) {
-                        location.storageStatus = `${location.storageStatus} | ${STORAGE_STATUS.INACCESSIBLE}`;
-                    }
+                if (this.updatingModes.length) {
+                    pollUpdater$.next(Date.now());
                 }
-                this.updatingModes = [];
-            }
-        });
+            }),
+            takeUntil(this.cancelPolling$)
+        ).subscribe();
     }
 
     setupWatchers = (backupInitialState?: { backup: boolean, custom: boolean }) => {
