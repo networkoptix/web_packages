@@ -68,6 +68,7 @@ export class NxSystemStorageComponent implements OnInit {
     updatingModes: string[] = [];
     customSettings = false;
     systemHasBackupsOn = false;
+    forceShowBackupBlock = false;
     reindexingStorages: MODE[] = [];
 
     stopReindex$ = new Subject<TARGET_STORAGE>();
@@ -188,6 +189,7 @@ export class NxSystemStorageComponent implements OnInit {
                         }
                         return location;
                     });
+                    this.forceShowBackupBlock = false;
                     this.cancelPolling$.next('timeout');
                 }
             }),
@@ -199,7 +201,7 @@ export class NxSystemStorageComponent implements OnInit {
             }),
             map(_ => {
                 const state = this.system.storageManager.storageState;
-                this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId)
+                this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId);
                 for (const location of this.currentStorageState.locations) {
                     if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED) && !this.updatingModes.includes(location.storageId)) {
                         location.storageStatus = location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '');
@@ -207,6 +209,8 @@ export class NxSystemStorageComponent implements OnInit {
                 }
                 if (this.updatingModes.length) {
                     pollUpdater$.next(Date.now());
+                } else {
+                    this.forceShowBackupBlock = false;
                 }
             }),
             takeUntil(this.cancelPolling$)
@@ -406,7 +410,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     handleModeUpdate = () => {
-        console.log('ran');
+        this.forceShowBackupBlock = false;
         const updating = [];
         for (const id in this.modeWatchers) {
             const store = this.currentStorageState.locations.find(({ storageId }) => storageId === NxUtilsService.cleanId(id));
@@ -418,6 +422,7 @@ export class NxSystemStorageComponent implements OnInit {
                     // Excludes non changeable storage
                     updating.push(store.storageId);
                 }
+                this.forceShowBackupBlock ||= store.isBackup;
             }
         }
         this.updatingModes = [...this.updatingModes, ...updating];
