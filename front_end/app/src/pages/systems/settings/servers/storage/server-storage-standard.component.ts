@@ -52,8 +52,10 @@ export class NxSystemStorageComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     viewContainerRef: ViewContainerRef;
-    storageTypes = STORAGE_TYPES
-    storageModes = MODE
+    storageTypes = STORAGE_TYPES;
+    storageModes = MODE;
+    saveSettings: Process;
+    resetWatchers: () => any;
 
     canSeeDetailInfo: boolean;
     loading: boolean;
@@ -217,7 +219,7 @@ export class NxSystemStorageComponent implements OnInit {
         if (backupInitialState !== undefined) {
             this.isBackupOn.originalValue = this.backupState = backupInitialState?.backup;
         }
-        const resetWatchers = () => {
+        this.resetWatchers = () => {
             this.isBackupOn.reset();
             this.backupState = this.isBackupOn.originalValue;
             const storage = this.currentStorageState.locations;
@@ -241,37 +243,38 @@ export class NxSystemStorageComponent implements OnInit {
                 }
             });
         };
-
-        const saveSettings: Process = this.processService.createProcess(() => {
-            let backupSaveState: 'StopFail' | 'StartFail';
-            return Promise.all([
-                this.isBackupOn.originalValue === this.backupState
-                    ? Promise.resolve()
-                    : this.backupState
-                        ? this.setDefaultBackupSettings().catch(err => {
-                            console.error(err);
-                            backupSaveState = 'StartFail';
-                        })
-                        : this.turnOffBackup().catch(err => {
-                            console.error(err);
-                            backupSaveState = 'StopFail';
-                        }),
-                this.handleModeUpdate()
-            ]).then(res => {
-                this.pollStats(true);
-                if (backupSaveState) {
-                    const backup = backupSaveState === 'StartFail';
-                    this.isBackupOn.originalValue = this.backupState = !backup;
-                    this.isBackupOn.value = backup;
-                }
-                return res;
+        if (!this.saveSettings) {
+            this.saveSettings = this.processService.createProcess(() => {
+                let backupSaveState: 'StopFail' | 'StartFail';
+                return Promise.all([
+                    this.isBackupOn.originalValue === this.backupState
+                        ? Promise.resolve()
+                        : this.backupState
+                            ? this.setDefaultBackupSettings().catch(err => {
+                                console.error(err);
+                                backupSaveState = 'StartFail';
+                            })
+                            : this.turnOffBackup().catch(err => {
+                                console.error(err);
+                                backupSaveState = 'StopFail';
+                            }),
+                    this.handleModeUpdate()
+                ]).then(res => {
+                    this.pollStats(true);
+                    if (backupSaveState) {
+                        const backup = backupSaveState === 'StartFail';
+                        this.isBackupOn.originalValue = this.backupState = !backup;
+                        this.isBackupOn.value = backup;
+                    }
+                    return res;
+                });
             });
-        });
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.isBackupOn, ...modeWatchers.map(([_, watcher]) => watcher)],
-            saveSettings,
-            resetWatchers
-        );
+            this.applyService.addWatchersAndFunctionsFromChild(
+                [this.isBackupOn, ...modeWatchers.map(([_, watcher]) => watcher)],
+                this.saveSettings,
+                this.resetWatchers
+            );
+        }
     }
 
     setDefaultBackupSettings = async() => {
@@ -403,6 +406,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     handleModeUpdate = () => {
+        console.log('ran');
         const updating = [];
         for (const id in this.modeWatchers) {
             const store = this.currentStorageState.locations.find(({ storageId }) => storageId === NxUtilsService.cleanId(id));
