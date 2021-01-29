@@ -5,7 +5,6 @@ import { BehaviorSubject }           from 'rxjs';
     providedIn: 'root'
 })
 export class NxAppStateService {
-
     private readySubject = new BehaviorSubject(false);
     private ribbonSubject = new BehaviorSubject(false);
 

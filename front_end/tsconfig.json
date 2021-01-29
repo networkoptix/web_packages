@@ -47,9 +47,8 @@
   ],
   "exclude": [
     "node_modules",
-    "ipvd",
-    "health_monitor",
     "app/**/*.spec.ts",
-    "app/**/*.test.ts"
+    "app/**/*.test.ts",
+    ".eslintrc.js"
   ]
 }

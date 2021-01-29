@@ -20,8 +20,16 @@ export class NxPageService {
     }
 
     // called from app component
+    public get newLanguage() {
+        return this.LANG;
+    }
+
     public set newLanguage(language: LanguageI18NStaticTypes) {
         this.LANG = language;
+    }
+
+    public get pageTitle() {
+        return this.title.getTitle();
     }
 
     public set pageTitle(title: any) {
@@ -33,8 +41,16 @@ export class NxPageService {
         this.title.setTitle(txt);
     }
 
-	public set pageDescription(content: any) {
+    public get pageDescription() {
+        return this.meta.getTag('description');
+    }
+
+    public set pageDescription(content: any) {
         this.meta.updateTag({ name: 'description', content: content });
+    }
+
+    public get pageTitleRemoveHyphen() {
+        return this.title.getTitle().replace('- ', '');
     }
 
     public set pageTitleRemoveHyphen(title: any) {

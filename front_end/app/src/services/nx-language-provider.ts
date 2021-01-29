@@ -92,6 +92,10 @@ export class NxLanguageProviderService {
         return this.translate.currentLang;
     }
 
+    public get newTranslation() {
+        return this.translate.translations;
+    }
+
     public set newTranslation(translate: { language: string, json: JSON }) {
         this.translate.setTranslation(translate.language, translate.json);
         this.translate.currentLang = translate.language;
@@ -99,8 +103,16 @@ export class NxLanguageProviderService {
         this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
     }
 
+    public get defaultLanguage() {
+        return this.translate.defaultLang;
+    }
+
     public set defaultLanguage(language: string) {
         this.translate.setDefaultLang(language);
+    }
+
+    public get currentLang() {
+        return this.translate.currentLang;
     }
 
     public set currentLang(language: string) {

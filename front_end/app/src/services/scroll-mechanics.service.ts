@@ -72,6 +72,10 @@ export class NxScrollMechanicsService {
         return this.windowScrollSubject.getValue();
     }
 
+    get panelVisible() {
+        return this.panelSubject.getValue();
+    }
+
     set panelVisible(value: boolean) {
         this.panelSubject.next(value);
     }

@@ -6,7 +6,7 @@ import {
 @Directive({ selector: '[nxFocusMe]' })
 // directives do support AfterViewInit
 // ... this hook is fired by the parent component
-export class NxFocusMeDirective implements AfterViewInit{
+export class NxFocusMeDirective implements AfterViewInit {
     @Input() timeout = 0;
 
     constructor(private _elementRef: ElementRef) {}

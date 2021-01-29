@@ -669,7 +669,7 @@ export enum ActionTypes {
 
 export interface ServerNetworkSettings {
     dhcp: boolean;
-    dns_servers: string;
+    dnsServers: string;
     extraParams: IParams;
     ipAddr: string;
     mac: string;

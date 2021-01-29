@@ -13,6 +13,10 @@ export class NxStorageService {
         this.storage = localStorageService;
     }
 
+    get clear() {
+        return '';
+    }
+
     set clear(what) {
         this.storage.clear(what);
     }
@@ -25,7 +29,7 @@ export class NxStorageService {
         this.storage.store('systemId', systemId);
     }
 
-   get email(): string {
+    get email(): string {
         return this.storage.retrieve('email') || '';
     }
 
@@ -72,6 +76,4 @@ export class NxStorageService {
     set restoreProcess(restoreProcess: any) {
         this.storage.store('restoreProcess', restoreProcess);
     }
-
-
 }

@@ -50,11 +50,11 @@ const lazyRoutes: Routes = [
         Nx500Module,
         Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
-            initialNavigation : true,
+            initialNavigation         : true,
             scrollPositionRestoration : 'enabled',
-            anchorScrolling : 'enabled',
-            enableTracing : false,
-            preloadingStrategy: QuicklinkStrategy
+            anchorScrolling           : 'enabled',
+            enableTracing             : false,
+            preloadingStrategy        : QuicklinkStrategy
         })
     ],
     declarations: [

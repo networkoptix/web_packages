@@ -197,7 +197,7 @@ export class NxApplyService {
     constructor(
         private factoryResolver: ComponentFactoryResolver,
         private processService: NxProcessService,
-        private modalService: NgbModal,
+        private modalService: NgbModal
     ) {}
 
     get locked() {
@@ -430,8 +430,8 @@ export class NxApplyService {
         }
 
         const options: any = {
-            windowClass: 'modal-holder',
-            backdrop   : 'static'
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
         };
 
         return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });

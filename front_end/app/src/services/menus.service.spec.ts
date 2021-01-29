@@ -14,20 +14,20 @@ describe('Test Suite Name', () => {
     let menu: NxMenusService;
 
     const translateMock = {
-        translations: {},
-        translateSubject: new Subject()
+        translations     : {},
+        translateSubject : new Subject()
     };
     const configMock = { getConfig: () => nxConfig };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers    : [
+            providers: [
                 NxMenusService,
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
-                { provide: TranslateService, useValue: {}},
-                { provide: NxSessionService, useValue: {}},
-                { provide: WINDOW, useValue: {}}
+                { provide: TranslateService, useValue: {} },
+                { provide: NxSessionService, useValue: {} },
+                { provide: WINDOW, useValue: {} }
             ]
         });
         menu = TestBed.inject(NxMenusService);

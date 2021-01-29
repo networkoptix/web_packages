@@ -943,7 +943,7 @@ export class NxSystemAPI {
     // End of Health Monitor
 
     // <added by @gbezyuk for watch component>
-    public checkCameraThumbnail(camera_id, width = 70, height = 40) {
+    public checkCameraThumbnail(cameraId, width = 70, height = 40) {
         // it expects JSON yet normally gets JPG, thus rejects,
         // let's override to make it more meaningful (@gbezyuk)
         const _checker = response => {
@@ -953,7 +953,7 @@ export class NxSystemAPI {
                 return Promise.resolve(response);
             }
         };
-        return this.get(`/ec2/cameraThumbnail?cameraId=${camera_id}&width=${width}&height=${height}`)
+        return this.get(`/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}`)
             .toPromise().then(_checker).catch(_checker);
     }
 
