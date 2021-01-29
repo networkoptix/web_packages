@@ -3,6 +3,7 @@ from bs4.element import Tag
 from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
+import sass
 
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
@@ -18,9 +19,9 @@ BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 def inline_styles(body, css):
     if css and body:
+        css = '.article-content { ' + css + ' }'
+        css = sass.compile(string=css)
         html = f'<style>{css}</style>{body}'
-        html = inline_css(html)
-        html = BODY_REGEX.search(html)[1]
         return html
     return body
 

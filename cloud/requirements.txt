@@ -50,6 +50,7 @@ inlinestyler==0.2.1
 jmespath==0.9.4
 jsonfield==2.0.2
 kombu==4.6.9
+libsass==0.20.1
 lxml==4.3.3
 mypy==0.701
 mypy-extensions==0.4.1
