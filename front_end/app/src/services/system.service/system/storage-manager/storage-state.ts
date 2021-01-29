@@ -27,7 +27,14 @@ export class StorageState extends BaseManager {
     /**
      * Trigger updates, leave blank to update all or add UpdateTrigger to update specific data.
      */
-    update = (dataToRefresh?: UpdateTriggers) => !dataToRefresh ? Object.values(UpdateTriggers).forEach(this.update) : this.#updater$.next(dataToRefresh)
+    update = (dataToRefresh?: UpdateTriggers) => {
+        if (!dataToRefresh) {
+            Object.values(UpdateTriggers).forEach(this.update);
+        } else {
+            this.#updater$.next(dataToRefresh);
+        }
+        return this.storageState$;
+    }
 
     poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
         return [this.storageState$, () => this.update(dataToPoll)];

@@ -6,7 +6,7 @@ import {
     combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                       from 'rxjs';
 import {
-    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, skip
+    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, skip, switchMap, take
 }                                       from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -166,12 +166,9 @@ export class NxSystemStorageComponent implements OnInit {
     pollStats = async(update = false) => {
         this.cancelPolling$.next('cancel previous');
         if (update) {
-            await timer(1500).toPromise();
-            this.system.storageManager.update();
-            await this.system.storageManager.storageState$.pipe(
-                skip(1),
-                takeUntil(this.cancelPolling$),
-                untilDestroyed(this)
+            await timer(1500).pipe(
+                switchMap(_ => this.system.storageManager.update()),
+                take(5)
             ).toPromise();
         }
         const started = Date.now();
