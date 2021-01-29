@@ -288,13 +288,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             if (this.system.isAvailable) {
                                 this.updateAlert();
                             }
-                            if (this.system.users) {
-                                this.updateMenu();
-                            }
                             if (this.system.canViewInfo()) {
                                 // Makes request to get health, this is used to cache request.
                                 this.system.mediaserver.getAggregateHealthReport().subscribe();
                             }
+
+                            this.updateMenu();
                         });
 
                     if (this.connectionSubscription) {

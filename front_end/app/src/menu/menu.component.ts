@@ -142,6 +142,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         if (changes.content.currentValue) {
             if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
                 this.menuService.content = changes.content.currentValue.level1;
+                this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.fillerItemsBy(this.menuModel);
@@ -160,21 +161,21 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
             this.transition = false;
 
-            if (changes.content.currentValue.selectedSection && this.autoFit && this.scrollArea) {
-                if (!this.menuInit) {
-                    return;
+            if (changes.content.currentValue.selectedSection) {
+                this.systemId = changes.content.currentValue.system?.id;
+
+                if (this.autoFit && this.scrollArea) {
+                    if (!this.menuInit) {
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        this.menuInit = false;
+                        this.getMenuDimensions();
+                        this.resizeMenu();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.menuInit = false;
-                    this.getMenuDimensions();
-                    this.resizeMenu();
-                });
             }
-        }
-
-        if (changes.content.currentValue.selectedSection) {
-            this.systemId = changes.content.currentValue.system?.id;
         }
     }
 

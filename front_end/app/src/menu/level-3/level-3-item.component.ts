@@ -45,11 +45,6 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
-        this.itemSearch = this.item.query?.search;
-        this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
-
         this.navItemSubscription = this.menuService.navItemSubject.subscribe(() => {
             this.menuNavItemId = this.menuService.navItemId;
         });
@@ -58,7 +53,12 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.base?.currentValue) {
+            this.itemPath = this.base;
+        }
         if (changes.item?.currentValue) {
+            this.itemPath += (changes.item.currentValue.path !== '') ? '/' + changes.item.currentValue.path : '';
+            this.itemSearch = changes.item.currentValue.query?.search;
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
 
             if (changes.item.currentValue.additionalText) {
