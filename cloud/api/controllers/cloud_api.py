@@ -578,7 +578,7 @@ class Auth(object):
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             params["refresh_token"] = refresh_token
 
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -596,7 +596,7 @@ class Auth(object):
             "username": email,
             "password": password
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -609,7 +609,7 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "code": code
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -622,32 +622,32 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "refresh_token": refresh_token
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
     def validate_token(access_token):
-        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", auth=Auth.auth)
+        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}")
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_token(request, token):
-        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", auth=Auth.auth)
+        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}")
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_users_tokens(request, headers=None):
         request = f"{CLOUD_DB_URL}/oauth2/user/self"
-        return delete_wrapper(request, headers=headers, auth=Auth.auth)
+        return delete_wrapper(request, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_users_tokens_by_client(request, client_id, headers=None):
         request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
-        return delete_wrapper(request, headers=headers, auth=Auth.auth)
+        return delete_wrapper(request, headers=headers)
 
     @staticmethod
     @validate_response
@@ -665,8 +665,6 @@ class Auth(object):
     CLIENT_ID = "cloud_portal"
     GRANT_TYPE = Grant
     RESPONSE_TYPE = ResponseType
-    # Using this for local development
-    auth = HTTPDigestAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
 
     @staticmethod
     def get_token_helper():
