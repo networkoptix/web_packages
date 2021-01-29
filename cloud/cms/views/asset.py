@@ -249,10 +249,11 @@ def review(request):
     elif publish and can_publish:
         customization = asset_review.customization.name
         customization_cache = MENU_CACHE[customization]
-        menus = {node.get_parent() for node in asset.nodes.all()}
-        for menu in menus:
-            customization_cache.pop(str(menu).lower(), None)
-        MENU_CACHE[customization] = customization_cache
+        if customization_cache:
+            menus = {node.get_parent() for node in asset.nodes.all()}
+            for menu in menus:
+                customization_cache.pop(str(menu).lower(), None)
+            MENU_CACHE[customization] = customization_cache
         if asset.is_cloud_portal:
             if asset.can_preview_on_portal:
                 publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
