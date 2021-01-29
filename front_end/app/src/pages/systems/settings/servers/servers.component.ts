@@ -79,7 +79,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
                     this.menuService.detail = this.serverIdFromParams;
 
-                    this.setServer();
+                    this.setServer(true);
                 }
             });
 

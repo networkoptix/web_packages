@@ -14,6 +14,7 @@ import { NxSystem }                         from '@services/system.service';
 import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { map, startWith }                   from 'rxjs/operators';
+import { NxApplyService }                   from '@services/apply.service';
 
 /* Usage
  <nx-menu>
@@ -49,12 +50,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
     menuModel: any = {};
     navItems: any = [];
     navItemIdx: number;
-
-    private routeParamsSubscription: SubscriptionLike;
-    private navDirectionSubscription: SubscriptionLike;
-    private navSelectionSubscription: SubscriptionLike;
-    private resizeSubscription: SubscriptionLike;
-
     windowHeight: number;
     menuHeight: number;
 
@@ -64,6 +59,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
     scrollHeightFit: string;
     permHeight: number;
     menuInit: boolean;
+
+    private routeParamsSubscription: SubscriptionLike;
+    private navDirectionSubscription: SubscriptionLike;
+    private navSelectionSubscription: SubscriptionLike;
+    private resizeSubscription: SubscriptionLike;
+    private applyOnNavSubscription: SubscriptionLike;
+
+    private origLevel1: string;
+    private origLevel2: string;
+    private origLevel3: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -77,7 +82,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private router: Router,
         private route: ActivatedRoute,
         public menuService: NxMenuService,
-        private searchService: NxSearchService
+        private searchService: NxSearchService,
+        private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -151,13 +157,35 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuContent = filtered;
             }
 
-            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection && this.autoFit) {
-                this.menuInit = true;
+            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
+                if (this.autoFit) {
+                    this.menuInit = true;
+                }
+
+                if (this.applyService.locked) {
+                    this.origLevel1 = this.selectedLevel1;
+                    this.origLevel2 = this.selectedLevel2;
+                    this.origLevel3 = this.selectedLevel3;
+
+                    if (this.applyOnNavSubscription) {
+                        this.applyOnNavSubscription.unsubscribe();
+                    }
+
+                    this.applyOnNavSubscription = this.applyService.applyOnNavSubject.subscribe(status => {
+                        if (status === 'canceled') {
+                            this.selectedLevel1 = this.origLevel1;
+                            this.selectedLevel2 = this.origLevel2;
+                            this.selectedLevel3 = this.origLevel3;
+                        }
+                    });
+                }
             }
 
-            this.selectedLevel1 = changes.content.currentValue.selectedSection;
-            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
-            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+            if (!this.applyService.locked) {
+                this.selectedLevel1 = changes.content.currentValue.selectedSection;
+                this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
+                this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+            }
 
             this.transition = false;
 

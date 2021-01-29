@@ -1,17 +1,19 @@
 import {
     ComponentFactoryResolver, Injectable,
-    ViewContainerRef, ComponentRef, ViewChild
-} from '@angular/core';
-import { NgForm }                               from '@angular/forms';
-import { BehaviorSubject, merge, Subscription, Observable, from } from 'rxjs';
+    ViewContainerRef, ComponentRef
+}                                    from '@angular/core';
+import { NgForm }                    from '@angular/forms';
 import {
-    distinctUntilChanged, filter, skip, map, combineLatest, tap
-}                                               from 'rxjs/operators';
-
-import { NxApplyComponent }          from '../components/apply/apply.component';
+    BehaviorSubject, merge, Subscription
+}                                    from 'rxjs';
+import {
+    distinctUntilChanged, filter, skip,
+    combineLatest
+}                                    from 'rxjs/operators';
+import { NxApplyComponent }          from '@components/apply/apply.component';
 import { Process, NxProcessService } from './process.service';
 import { NxUtilsService }            from './utils.service';
-import { ApplyModalContent }         from '../dialogs/apply/apply.component';
+import { ApplyModalContent }         from '@dialogs/apply/apply.component';
 import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
 
 interface IParams<Value = any> {
@@ -189,9 +191,9 @@ export class NxApplyService {
     private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
-
     private watchersSubscription: Subscription;
 
+    applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
     constructor(
@@ -444,16 +446,22 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
+        this.applyOnNavSubject.next('');
+
         return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
-                status => {
+                (status: string) => {
+                    this.applyOnNavSubject.next(status);
                     if (status !== 'applied' && status !== 'discarded') {
                         return false;
                     }
                     this.reset();
                     return true;
                 },
-                () => false
+                (status: string) => {
+                    this.applyOnNavSubject.next(status);
+                    return false;
+                }
             )
             .finally(() => { this.popupActive = false; });
     }
