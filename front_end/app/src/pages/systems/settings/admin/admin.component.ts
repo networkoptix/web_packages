@@ -105,14 +105,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
-        @Inject(ViewContainerRef) public viewContainerRef,
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         this.setupDefaults();
-        this.applyService.initPageWatcher(this.viewContainerRef);
     }
 
     ngOnDestroy() {}
@@ -175,6 +174,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     });
             });
 
+        this.applyService.initPageWatcher(this.applyContainerRef);
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.systemNameWatcher],
             this.processService.createProcess(() => {

@@ -54,7 +54,7 @@
                 <div class="d-flex">
                     <nx-editable-settings-heading
                             [nameWatcher]="systemNameWatcher"
-                            [editEnabled]="system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
+                            [editEnabled]="system.isOnline && system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
                     <nx-client-button *ngIf="!CONFIG.isLocal" [textOnly]="true"></nx-client-button>
                 </div>
 
