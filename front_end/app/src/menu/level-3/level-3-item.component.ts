@@ -57,6 +57,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.itemPath = this.base;
         }
         if (changes.item?.currentValue) {
+            this.itemPath = this.base;
             this.itemPath += (changes.item.currentValue.path !== '') ? '/' + changes.item.currentValue.path : '';
             this.itemSearch = changes.item.currentValue.query?.search;
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
