@@ -85,4 +85,10 @@ nx-select {
             -moz-animation-delay    : 0.6s;
         }
     }
+    .dropdown-force-position, .force-position {
+        position: static !important;
+        & > .dropdown-menu {
+            transform: translateY(100%);
+        }
+    }
 }

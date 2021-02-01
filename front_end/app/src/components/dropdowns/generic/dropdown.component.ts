@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, EventEmitter,
-    Output, SimpleChanges, ViewChild
+    Output, SimpleChanges, ViewChild, ElementRef
 }                            from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -47,6 +47,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
+    @Input() forcePosition: {left?: number, top?: number, width?: number}
 
     @Output() onSelected = new EventEmitter<string>();
 
@@ -56,7 +57,8 @@ export class NxGenericDropdown extends BaseDropdown {
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        public ref: ElementRef
     ) {
         super(languageService, configService);
     }

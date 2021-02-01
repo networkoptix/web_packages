@@ -16,52 +16,55 @@ describe('NxGenericDropdown', () => {
     let el: DebugElement;
     const dropdownItems = [
         {
-            name: 'item1',
-            value: '1',
-            disabled: false,
-            help: undefined,
-            state: undefined
+            name     : 'item1',
+            value    : '1',
+            disabled : false,
+            help     : undefined,
+            state    : undefined
         },
         {
-            name: 'item2',
-            value: '2',
-            disabled: true,
-            help: undefined,
-            state: undefined
+            name     : 'item2',
+            value    : '2',
+            disabled : true,
+            help     : undefined,
+            state    : undefined
         },
         {
-            name: 'horizontal',
-            value: '3',
-            disabled: false,
-            help: undefined,
-            state: undefined
+            name     : 'horizontal',
+            value    : '3',
+            disabled : false,
+            help     : undefined,
+            state    : undefined
         },
         {
-            name: 'item4',
-            value: '4',
-            disabled: false,
-            help: 'helpText4',
-            state: undefined
+            name     : 'item4',
+            value    : '4',
+            disabled : false,
+            help     : 'helpText4',
+            state    : undefined
         },
         {
-            name: 'item5',
-            value: '5',
-            disabled: false,
-            help: undefined,
-            state: 'state5'
-        },
-    ]
+            name     : 'item5',
+            value    : '5',
+            disabled : false,
+            help     : undefined,
+            state    : 'state5'
+        }
+    ];
 
     beforeEach(waitForAsync(() => {
-        const translateSpy = { translations: {
-            pleaseSelect: () => "Please select..."
-        }};
-        const configSpy = { getConfig: jest.fn(() => {
+        const translateSpy = {
+            translations: {
+                pleaseSelect: () => 'Please select...'
+            }
+        };
+        const configSpy = {
+            getConfig: jest.fn(() => {
                 return {
                     icons: {
                         dirSectionPlaceholder: '/static/images/placeholders/section/'
                     }
-                }
+                };
             })
         };
         TestBed.configureTestingModule({
@@ -137,7 +140,7 @@ describe('NxGenericDropdown', () => {
         fixture.detectChanges();
         tick();
         const items = el.queryAll(By.css('.dropdown-item'));
-        click(items[2])
+        click(items[2]);
         fixture.detectChanges();
         tick();
         const selectedPostClick = el.nativeElement.querySelector('button.dropdown-toggle span');
@@ -183,11 +186,27 @@ describe('NxGenericDropdown', () => {
         const horizontal = el.nativeElement.querySelector('hr');
         expect(horizontal).toBeFalsy();
     });
+
+    it('should apply type as class on root element', () => {
+        component.type = 'force-position';
+        fixture.detectChanges();
+        const root = el.nativeElement.querySelector('div');
+        expect(root.className).toBe('dropdown dropdown-' + component.type);
+    });
+
+    it('should apply forcePosition style to dropdown when forcePosition input exists', () => {
+        component.forcePosition = { top: 20, left: 40, width: 200 };
+        fixture.detectChanges();
+        const dropdownMenu = el.queryAll(By.css('.dropdown-menu'))[0];
+        expect(dropdownMenu.nativeElement.style.left).toBe(component.forcePosition.left + 'px');
+        expect(dropdownMenu.nativeElement.style.top).toBe(component.forcePosition.top + 'px');
+        expect(dropdownMenu.nativeElement.style.width).toBe(component.forcePosition.width + 'px');
+    });
 });
 
 const ButtonClickEvents = {
-    left:  { button: 0 },
-    right: { button: 2 }
+    left  : { button: 0 },
+    right : { button: 2 }
 };
 
 function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClickEvents.left): void {
