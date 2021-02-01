@@ -78,7 +78,7 @@ export class NxGenericDropdown extends BaseDropdown {
 
     ngAfterViewInit() {
         Promise.resolve().then(() => {
-            this.nativeElementTop = this.ref.nativeElement.offsetTop;
+            this.nativeElementTop = this.forcePosition ? this.ref.nativeElement.parentElement.parentElement.offsetTop : this.ref.nativeElement.offsetHeight;
         });
     }
 

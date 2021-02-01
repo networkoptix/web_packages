@@ -88,7 +88,7 @@ nx-select {
     .dropdown-force-position, .force-position {
         position: static !important;
         & > .dropdown-menu {
-            transform: translateY(100%);
+            transform: translateY(calc(100% - 8px));
         }
     }
 }
