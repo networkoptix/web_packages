@@ -15,7 +15,7 @@ export enum STORAGE_TYPES {
 export enum MODE {
     MAIN='main',
     BACKUP='backup',
-    NOT_IN_USE='notUsed'
+    NOT_IN_USE='notInUse'
 }
 
 /**
