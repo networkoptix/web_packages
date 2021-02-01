@@ -52,6 +52,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Output() onSelected = new EventEmitter<string>();
 
     dropdownType: string;
+    nativeElementTop = 0
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
@@ -73,6 +74,12 @@ export class NxGenericDropdown extends BaseDropdown {
         });
 
         this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
+    }
+
+    ngAfterViewInit() {
+        Promise.resolve().then(() => {
+            this.nativeElementTop = this.ref.nativeElement.offsetTop;
+        });
     }
 
     change(item) {
