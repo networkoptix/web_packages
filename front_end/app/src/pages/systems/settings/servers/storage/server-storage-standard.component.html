@@ -128,7 +128,7 @@
 </nx-block>
 
 <!-- Need to find out what to do here -->
-<nx-block *ngIf="!loading && (forceShowBackupBlock || currentStorageState.onlineBackups)" type="mb-3">
+<nx-block *ngIf="!loading && (forceShowBackupBlock || currentStorageState?.onlineBackups)" type="mb-3">
     <header>
         <div class="header-top-bar">
             <nx-switch

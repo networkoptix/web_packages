@@ -224,9 +224,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
+
                         this.toastService.show(
                             NxLanguageProviderService.translate(
-                                this.LANG.toastMessage.nameFail?.(),
+                                this.LANG.toastMessage.nameFail,
                                 { type: this.LANG.common.server?.() }
                             ), options);
                     });
