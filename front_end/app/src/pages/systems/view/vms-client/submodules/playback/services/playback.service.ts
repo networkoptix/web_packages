@@ -55,24 +55,50 @@ export class PlaybackService {
     return PLAYBACK_MODE[this._state.mode]
   }
 
-
-  public playLive () {
-    if (!this.canPlayLive) return
-    this._state = createInitialLiveState(this.vms.selectedCamera.getLiveVideoUrl(this._state.quality), this._state.quality)
-    console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
-    this._emit()
+  public get canPlayLive (): boolean {
+    if (!this.vms.selectedCamera?.isLive) {
+      return false
+    }
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        return true
+      case PLAYBACK_MODE.LIVE:
+        return false
+      case PLAYBACK_MODE.ARCHIVE:
+        return true
+      default:
+        assertNever(this._state)
+    }
   }
 
   public canPlayArchive (t: ms) {
     return this.vms.selectedCamera?.hasArchive
   }
 
+  public playLive () {
+    if (!this.canPlayLive) {
+      return
+    }
+    this._state = createInitialLiveState(
+      this.vms.selectedCamera.getLiveVideoUrl(this._state.quality),
+      this._state.quality
+    )
+    console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
+    this._emit()
+  }
+
   public playArchive (t: ms) {
-    if (!this.canPlayArchive(t)) return
+    if (!this.canPlayArchive(t)) {
+      return
+    }
     if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
       this.stop()
     }
-    this._state = createInitialArchiveState(this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.quality), t, this._state.quality)
+    this._state = createInitialArchiveState(
+      this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.quality),
+      t,
+      this._state.quality
+    )
     console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
@@ -256,22 +282,6 @@ export class PlaybackService {
         return false
       case PLAYBACK_MODE.LIVE:
         return true
-      case PLAYBACK_MODE.ARCHIVE:
-        return true
-      default:
-        assertNever(this._state)
-    }
-  }
-
-  public get canPlayLive (): boolean {
-    if (!this.vms.selectedCamera?.isLive) {
-      return false
-    }
-    switch (this._state.mode) {
-      case PLAYBACK_MODE.STOPPED:
-        return true
-      case PLAYBACK_MODE.LIVE:
-        return false
       case PLAYBACK_MODE.ARCHIVE:
         return true
       default:

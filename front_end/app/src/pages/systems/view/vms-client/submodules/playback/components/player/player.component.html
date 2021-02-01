@@ -1,6 +1,13 @@
 <!-- Player ({{ mode }}) {{ isBuffering && 'buffering' }} -->
 <video #video [muted]="true"
+  (loadstart)="videoLoadStartHandler($event)"
+  (loadedmetadata)="videoLoadedMetadataHandler($event)"
+  (loadeddata)="videoLoadedDataHandler($event)"
+  (canplay)="videoCanPlayHandler($event)"
+  (canplaythrough)="videoCanPlayThroughHandler($event)"
+  (progress)="videoProgressHandler($event)"
   (play)="videoPlayHandler($event)"
+
   (click)="videoClickHandler($event)"
   (dblclick)="videoDblClickHandler($event)"
 >

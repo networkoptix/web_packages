@@ -22,6 +22,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   protected subscription: Subscription
   protected state: PlaybackState
 
+  protected _playPromise: Promise<any>
+
   constructor (
     public playback: PlaybackService,
   ) {
@@ -63,6 +65,28 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public isBuffering: boolean = false
 
+  protected _playVideo () {
+    console.log('video play request, promise is', this._playPromise)
+    this._playPromise = this.$video.play().then(() => {
+      console.log('play promise resolved')
+    }).catch(e => {
+      console.log('play promise catch', e)
+    }).finally(() => {
+      console.log('play promise reset')
+      this._playPromise = undefined
+    })
+  }
+
+  protected _pauseVideo () {
+    console.log('pause video, play promise is', this._playPromise)
+    if (this._playPromise) {
+      console.log('ignorring pause request')
+    } else {
+      console.log('video.pause')
+      this.$video.pause()
+    }
+  }
+
   protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
     switch (this.state.mode) {
       case PLAYBACK_MODE.STOPPED:
@@ -91,9 +115,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           const ps = prevState as ArchivePlaybackState
           if (ps.paused && !this.state.paused) {
-            this.$video.play()
+            console.log('PLAY 1')
+            this._playVideo()
           } else if (!ps.paused && this.state.paused) {
-            this.$video.pause()
+            console.log('PAUSE 1')
+            this._pauseVideo()
           // } else if (prevState.sourceUrl !== this.state.sourceUrl) {
           //   // console.log('gotta react on sourceUrl change ARCHIVE',
           //   //   this.state.sourceUrl.slice(this.state.sourceUrl.indexOf('?') + 1, this.state.sourceUrl.indexOf('?') + 3))
@@ -123,7 +149,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _stop () {
     this._lastTimeUpdateTimeStamp = undefined
-    this.$video.pause()
+    console.log('PAUSE 2')
+    this._pauseVideo()
     this.$video.currentTime = 0
   }
 
@@ -155,7 +182,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (sourceUrl.endsWith('mp4')) {
       this._setPlaybackSource(sourceUrl)
       setTimeout(() => this.isBuffering = true)
-      setTimeout(() => this.$video.play(), 1000)
+      setTimeout(() => {
+        console.log('PLAY 2 (MP4 case)')
+        this._playVideo()
+      }, 1000)
 
     } else if (sourceUrl.search('.m3u8') !== -1) {
       if (Hls.isSupported()) {
@@ -164,12 +194,16 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         hls.loadSource(sourceUrl);
         hls.attachMedia(this.$video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          this.$video.play();
+          console.log('HLS manifest parsed')
+          // this._playVideo()
+          // console.log('PLAY 3 (HLS)')
         });
         hls.on(Hls.Events.FRAG_LOADED, () => {
+          console.log('HLS Fragment Loaded')
           if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
             if (!this.playback.state.started) {
-              this.playback.handleStarted()
+              console.log('HLS it was the first fragment')
+              // this.playback.handleStarted()
             }
           }
         })
@@ -187,8 +221,43 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.playback.handlePaused()
   // }
 
+  public videoLoadStartHandler (e: MediaStreamEvent) {
+    console.log('video load start event', e)
+  }
+
+  public videoLoadedMetadataHandler (e: MediaStreamEvent) {
+    console.log('video loaded metadata event', e)
+  }
+
+  public videoLoadedDataHandler (e: MediaStreamEvent) {
+    console.log('video loaded data event', e)
+  }
+
+  public videoCanPlayHandler (e: MediaStreamEvent) {
+    console.log('video can play event', e)
+    this._playVideo()
+    console.log('PLAY 3 (HLS)')
+  }
+
+  public videoCanPlayThroughHandler (e: MediaStreamEvent) {
+    console.log('video can play through event', e)
+  }
+
+  public videoProgressHandler (e: MediaStreamEvent) {
+    console.log('video progress event', e)
+  }
+
   public videoPlayHandler (e: MediaStreamEvent) {
     // this.playback.handleStarted()
+    console.log('video play event', e)
+    if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
+      if (!this.playback.state.started) {
+        console.log('it was the first play event')
+        this.playback.handleStarted()
+      }
+    } else {
+      console.warn('video play event while playback state mode is STOPPED')
+    }
   }
 
   protected _lastTimeUpdateTimeStamp: ms
@@ -222,7 +291,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public videoClickHandler (e: MouseEvent) {
 
     if (this.playback.canPause) {
-      this.playback.pause()
+      console.log('PAUSE 3')
+      this._pauseVideo()
     } else if (this.playback.canUnpause) {
       this.playback.unpause()
     } else if (this.playback.canStop) {

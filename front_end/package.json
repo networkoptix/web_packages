@@ -4,7 +4,11 @@
   "scripts": {
     "ng": "ng",
     "serve": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.cloud-test.json",
-    "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.webadmin.local.json",
+    "serve-cloud-test": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.cloud-test.json",
+    "serve-dev2": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.dev2.json",
+    "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.json",
+    "serve-webadmin-local": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.webadmin.local.json",
+    "serve-webadmin-demo": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.webadmin.demo.json",
     "build": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
     "bundle-report": "npm run lang && ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",

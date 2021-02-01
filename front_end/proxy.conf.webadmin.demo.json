@@ -1,24 +1,24 @@
 {
   "/api/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "http://demo.networkoptix.com:7001/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "http://demo.networkoptix.com:7001/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "http://demo.networkoptix.com:7001/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/customization/*": {
-    "target": "https://10.1.5.210:7001",
+    "target": "http://demo.networkoptix.com:7001/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
