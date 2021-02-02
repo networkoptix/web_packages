@@ -210,8 +210,9 @@ svg-icon.archive-warning {
     width: 20px;
 }
 
-.animate-rotation {
+.animate-rotation path{
     @include rotate;
+    transform-origin: center center !important;
 }
 
 svg-icon:not(.animate-rotation) .st0 {
