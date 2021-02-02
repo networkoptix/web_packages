@@ -70,8 +70,7 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        let protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
-        protocol = protocol.replace('%VMS_PROTOCOL%', 'nx-vms');
+        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
         const host     = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
@@ -170,26 +169,41 @@ export class NxUrlProtocolService {
                 // Check on before unload
                 // @ts-ignore
                 // eslint-disable-next-line prefer-promise-reject-errors
-                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
-                    setTimeout(() => {
+                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout,
+                    () => {
                         this.accountService
                             .checkVisitedKey(authKey)
                             .then((visited) => {
+                                // On windows chrome actually fails so we can use the protocol error handler
                                 this.window.onblur = undefined;
                                 this.window.onfocus = undefined;
-                                /* How the check works
-                                 * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
-                                 * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
-                                 * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
-                                 */
-                                if (!visited && (!hasBlur || hasOpened)) {
+                                if (!visited && blurCount > 0) {
                                     // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }
-                                return resolve(visited);
+                                return resolve(false);
                             });
-                    }, this.CONFIG.openClientTimeout);
-                });
+                    },
+                    () => {
+                        setTimeout(() => {
+                            this.accountService
+                                .checkVisitedKey(authKey)
+                                .then((visited) => {
+                                    this.window.onblur = undefined;
+                                    this.window.onfocus = undefined;
+                                    /* How the check works
+                                     * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
+                                     * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
+                                     * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
+                                     */
+                                    if (!visited && (!hasBlur || hasOpened)) {
+                                        // eslint-disable-next-line prefer-promise-reject-errors
+                                        return reject({ resultCode: this.CONFIG.openClientError });
+                                    }
+                                    return resolve(visited);
+                                });
+                        }, this.CONFIG.openClientTimeout);
+                    });
             });
         });
     }
