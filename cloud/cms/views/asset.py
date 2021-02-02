@@ -251,9 +251,8 @@ def review(request):
         customization_cache = MENU_CACHE[customization]
         if customization_cache:
             menus = {node.get_parent() for node in asset.nodes.all()}
-            for menu in menus:
-                customization_cache.pop(str(menu).lower(), None)
-            MENU_CACHE[customization] = customization_cache
+            if len(menus):
+                MENU_CACHE[customization] = None
         if asset.is_cloud_portal:
             if asset.can_preview_on_portal:
                 publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
