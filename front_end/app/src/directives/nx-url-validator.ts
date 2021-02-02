@@ -2,13 +2,13 @@ import {
     AbstractControl, Validator,
     NG_VALIDATORS
 }                    from '@angular/forms';
-import { Directive } from '@angular/core';
+import { Directive, forwardRef } from '@angular/core';
 
 @Directive({
     selector  : '[nxUrlValidator]',
     providers : [{
         provide     : NG_VALIDATORS,
-        useExisting : 'NxUrlValidatorDirective',
+        useExisting : forwardRef(() => NxUrlValidatorDirective),
         multi       : true
     }]
 })
