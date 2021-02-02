@@ -23,7 +23,10 @@
 </ng-template>
 
 <section *ngIf="!errorManager.hasErrors; else showError" class="supported-tech">
-    <h2 class="heading-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
+    <ng-template #nonLinkHeader>
+        <h2 class="header-non-link">{{supportedTechNode.title}}</h2>
+    </ng-template>
+    <h2 *ngIf="supportedTechNode.url; else nonLinkHeader" class="header-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
     <div *ngIf="supportedTechNode.nodes[0].nodes.length" class="tech-wrapper">
         <ng-container *ngFor="let tech of supportedTechNode.nodes[0].nodes">
             <ng-container *ngTemplateOutlet="techBlock;context{tech:tech}"></ng-container>

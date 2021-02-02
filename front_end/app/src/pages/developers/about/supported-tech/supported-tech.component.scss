@@ -2,9 +2,13 @@
 @use '../../../../../styles/theme_variables' as *;
 @use 'bootstrap_utils' as bootstrap;
 
-.heading-link {
-    cursor: pointer;
+.header-non-link {
     @include typography.regular24;
+}
+
+.header-link {
+    @extend .header-non-link;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }

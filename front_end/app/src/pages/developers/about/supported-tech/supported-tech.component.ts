@@ -30,7 +30,7 @@ export class NxSupportedTechComponent {
 
     ngOnInit() {
         const supportedTechConfig = this.errorManager.buildConfig(
-            ['url', 'title', 'nodes'],
+            ['title', 'nodes'],
             [
                 this.errorManager.buildConfig(
                     ['title'],
