@@ -43,7 +43,7 @@ interface DropdownStorage {
     templateUrl : 'server-standard.component.html',
     styleUrls   : ['server-standard.component.scss']
 })
-export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
+export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
@@ -137,22 +137,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
-        this.initForApplyService();
-
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
-                this.setSystemStorageChosen(this.selectedStorage);
-            }
-        );
-
-        this.applyService.setVisible(false);
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
             this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
@@ -175,6 +159,19 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy() {}
 
     setServer(): void {
+        this.initForApplyService();
+
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
+            this.saveSettings,
+            () => {
+                this.applyService.reset();
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
+                this.setSystemStorageChosen(this.selectedStorage);
+            }
+        );
+
+        this.applyService.setVisible(false);
         this.systemStorageChosen = false;
         this.storagesLoading = true;
         this.serverLoaded = false;
@@ -208,6 +205,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     initForApplyService(): void {
+        if (this.saveSettings) {
+            return;
+        }
         this.saveSettings = this.processService.createProcess(async() => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
@@ -380,7 +380,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     private setSystemStorageChosen(storage) {
         const hasMultipleStorages = this.dropdownStorages.length > 1;
-        this.systemStorageChosen = hasMultipleStorages && !storage.isNotSystem;
+        this.systemStorageChosen = hasMultipleStorages && storage && !storage.isNotSystem;
     }
 
     async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
@@ -426,6 +426,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     getCurrentStorages() {
+        if (this.storageSubscription) {
+            return;
+        }
         this.storageSubscription = this.system.storageManager.storageState$.pipe(
             filter(({ storageInfoLoaded, analyticsLoaded }) => storageInfoLoaded && analyticsLoaded)
         ).subscribe(({
