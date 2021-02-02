@@ -1,4 +1,5 @@
 @use "../../../../styles/typography";
+@use "../../../../styles/mixins";
 @use '../../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
@@ -45,42 +46,9 @@
         margin-bottom: 24px;
 
         .camera-buttons {
-            flex: 0 0 auto;
-            padding-right: 0 !important;
-            &:hover {
-                color: $dark15 !important;
-                svg-icon {
-                    svg {
-                        g,
-                        path {
-                            fill: $dark15 !important;
-                        }
-                    }
-                }
-            }
-            @include typography.regular13;
-            // flex: 0 0 auto;
-            background-color: inherit;
-            color: $light16 !important;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            padding-left: 8px;
-            padding-right: 0px;
-            svg-icon {
-                svg {
-                    height: 20px;
-                    g,
-                    path {
-                        fill: $light16 !important;
-                    }
-                }
-            }
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
+            @include mixins.details-buttons;
         }
+
     }
 
     .header-table {

@@ -1,5 +1,6 @@
 
 @use '../../../../../styles/typography';
+@use '../../../../../styles/mixins';
 @use '../../../../../../styles/theme_variables' as *;
 
 
@@ -11,32 +12,7 @@
         display: flex;
         align-items: center;
         .server-buttons {
-            padding-right: 0 !important;
-            flex-shrink: 0;
-            &:hover {
-                color: $dark15;
-                svg-icon {
-                    svg {
-                        g, path {
-                            fill: $dark15 !important;
-                        }
-                    }
-                }
-            }
-            @include typography.regular13;
-            background-color: inherit;
-            color: $light16;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            svg-icon {
-                svg {
-                    height: 20px;
-                    g, path {
-                        fill: $light16 !important;
-                    }
-                }
-            }
+            @include mixins.details-buttons;
             .animate-rotation {
                 animation-name: rotate;
                 animation-duration: 1.8s;
@@ -50,10 +26,6 @@
                 100% {
                     transform: rotate(360deg);
                 }
-            }
-            a {
-                text-decoration: none;
-                color: inherit;
             }
         }
     }
