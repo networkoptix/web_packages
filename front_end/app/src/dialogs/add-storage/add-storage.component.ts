@@ -4,8 +4,7 @@ import {
 }                                      from '@angular/forms';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy }                from '@ngneat/until-destroy';
-import { of, Subscription }            from 'rxjs';
-import { switchMap }                   from 'rxjs/operators';
+import { Observable, Subscription }    from 'rxjs';
 
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -13,6 +12,7 @@ import { NxProcessService, Process } from '../../services/process.service';
 import { NxSystem }                  from '../../services/system.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { CurrentStorageState }       from '@services/system.service/system/storage-manager/current-storage-state';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -23,7 +23,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 export class AddStorageModalContent {
     @Input() system: NxSystem;
     @Input() serverId: string;
-    @Input() storage: any[];
+    @Input() storageState: Observable<CurrentStorageState>;
     @Input() closable: boolean;
     @Input() updateStorage: () => Promise<any>;
     storageForm: FormGroup;
@@ -40,6 +40,7 @@ export class AddStorageModalContent {
     urlChecked = false;
     passwordChecked = false;
     loginPasswordWrong = false;
+    storage = []
 
     constructor(
         configService: NxConfigService,
@@ -76,6 +77,9 @@ export class AddStorageModalContent {
     }
 
     ngOnInit() {
+        this.storageState.subscribe(state => {
+            this.storage = state.locations;
+        });
         this.storageForm = new FormGroup({
             url      : new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
             login    : new FormControl(),

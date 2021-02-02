@@ -515,7 +515,7 @@ export class NxSystemStorageComponent implements OnInit {
         return this.dialogs.addStorage(
             this.system,
             this.serverId,
-            this.currentStorageState.locations,
+            this.system.storageManager.storageState$,
             this.system.storageManager.update
         ).finally(() => this.pollStats(true));
     }

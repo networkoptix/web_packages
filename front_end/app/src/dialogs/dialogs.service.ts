@@ -5,7 +5,9 @@ import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap'
 import { Router }                              from '@angular/router';
 import { NgForm }                              from '@angular/forms';
 import { UntilDestroy }                        from '@ngneat/until-destroy';
-import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
+import {
+    BehaviorSubject, Observable, SubscriptionLike
+}                                              from 'rxjs';
 
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '../services/nx-language-provider';
@@ -42,6 +44,7 @@ import { NxAccountService }               from '../services/account.service';
 import { BaseAccount }                    from '../services/account.service/base';
 import { CloudAccount }                   from '../services/account.service/cloud';
 import { NxBootstrapProvider }            from '../services/nx-bootstrap-provider';
+import { CurrentStorageState }            from '@services/system.service/system/storage-manager/current-storage-state';
 
 import './../dialogs/dialogs.scss';
 
@@ -225,7 +228,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(system: NxSystem, serverId: string, storage: any[], updateStorage) {
+    addStorage(system: NxSystem, serverId: string, storageState: Observable<CurrentStorageState>, updateStorage) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -234,7 +237,7 @@ export class NxDialogsService {
         const params: IParams = {
             system,
             serverId,
-            storage,
+            storageState,
             updateStorage,
             closable: true
         };
