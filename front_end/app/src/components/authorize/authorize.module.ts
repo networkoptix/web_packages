@@ -15,43 +15,13 @@ import { NxAuthorizePasswordComponent } from './password/password.component';
 import { NxAuthorizeCreateAccountComponent } from './create-account/create-account.component';
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 export const authorizedRoutes: Routes = [
     {
         path        : 'authorize',
         component   : NxAuthorizeComponent,
-        canActivate : [],
-        children    : [
-            {
-                path          : '',
-                component     : NxAuthorizeEmailComponent,
-                canDeactivate : []
-            },
-            {
-                path          : 'password',
-                component     : NxAuthorizePasswordComponent,
-                canDeactivate : [],
-                canActivate   : []
-            },
-            {
-                path          : 'create-account',
-                component     : NxAuthorizeCreateAccountComponent,
-                canDeactivate : [],
-                canActivate   : []
-            },
-            {
-                path          : 'activate-account',
-                component     : NxAuthorizeActivateAccountComponent,
-                canDeactivate : [],
-                canActivate   : []
-            },
-            {
-                path          : 'confirmation',
-                component     : NxAuthorizeConfirmationComponent,
-                canDeactivate : [],
-                canActivate   : []
-            }
-        ]
+        canActivate : []
     }
 ];
 
@@ -60,11 +30,21 @@ export const authorizedRoutes: Routes = [
         CommonModule,
         NgbModule,
         TranslateModule,
+        ReactiveFormsModule,
+        FormsModule,
         ComponentsModule,
         RouterModule.forRoot(authorizedRoutes),
         AngularSvgIconModule.forRoot()
     ],
     declarations: [
+        NxAuthorizeComponent,
+        NxAuthorizeEmailComponent,
+        NxAuthorizePasswordComponent,
+        NxAuthorizeCreateAccountComponent,
+        NxAuthorizeActivateAccountComponent,
+        NxAuthorizeConfirmationComponent
+    ],
+    providers: [
         NxAuthorizeComponent,
         NxAuthorizeEmailComponent,
         NxAuthorizePasswordComponent,

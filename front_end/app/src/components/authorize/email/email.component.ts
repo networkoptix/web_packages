@@ -1,23 +1,14 @@
 import {
-    Component, Inject, OnDestroy,
-    OnInit, ViewContainerRef
-}                                               from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute, Router }                       from '@angular/router';
-import { UntilDestroy }                         from '@ngneat/until-destroy';
+    Component, EventEmitter, Input, OnChanges, OnDestroy,
+    OnInit, Output, SimpleChanges
+}                       from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxDialogsService }                     from '@dialogs/dialogs.service';
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxPageService }                        from '@services/page.service';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxUtilsService }                       from '@services/utils.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
-import { NxProcessService, Process }            from '@services/process.service';
-import { NxUriService }                         from '@services/uri.service';
-import { NxApplyService, Watcher }              from '@services/apply.service';
-import { NxToastService }                       from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
-import { WINDOW }                               from '@services/window-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Process }                   from '@services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,58 +16,36 @@ import { WINDOW }                               from '@services/window-provider'
     templateUrl : 'email.component.html',
     styleUrls   : ['email.component.scss']
 })
-export class NxAuthorizeEmailComponent implements OnInit, OnDestroy {
+export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    email = new FormControl();
 
-    emailProcess: Process;
+    @Input() emailProcess: Process;
+    @Input() errorCode: string;
+    @Output() sendEmailToParent = new EventEmitter<string>();
+
+    sendEmail: any;
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
-        @Inject(WINDOW) private window: Window,
-        @Inject(ViewContainerRef) viewContainerRef,
-        private route: ActivatedRoute,
-        private router: Router,
-        private applyService: NxApplyService,
-        private pageService: NxPageService,
-        private dialogs: NxDialogsService,
-        private processService: NxProcessService,
-        private uriService: NxUriService,
-        private toastService: NxToastService,
-        location: Location
+        configService: NxConfigService
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
-        this.initProcesses();
-    //     this.routeParamsSubscription = this.route
-    //         .params
-    //         .subscribe(params => {
-    //             if (params.userId) {
-    //                 this.paramUser = params.userId;
-    //                 if (this.paramUser.indexOf('?') > -1) {
-    //                     this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
-    //                 }
-    //                 this.menuService.detail = this.paramUser;
-    //                 this.setUser();
-    //             }
-    //         });
+        this.sendEmail = () => {
+            this.sendEmailToParent.emit(this.email.value);
+        };
     }
 
-    ngOnDestroy(): void {
-    //     this.routeParamsSubscription.unsubscribe();
-    //     this.systemSubscription.unsubscribe();
-    //     if (this.userSubscription) {
-    //         this.userSubscription.unsubscribe();
-    //     }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.errorCode) {
+            this.email.setErrors({ [changes.errorCode.currentValue]: true });
+        }
     }
 
-    initProcesses() {
-        this.emailProcess = this.processService.createProcess(async() => {
-            this.router.navigate(['authorize', 'password']);
-        }, { ignoreError: true });
-    }
+    ngOnDestroy(): void {}
 }

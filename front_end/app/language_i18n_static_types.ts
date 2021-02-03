@@ -77,31 +77,35 @@ export interface ActiveActions {
 }
 
 export interface Authorize {
-    email:         Email;
-    createAccount: Confirmation;
-    activate:      Activate;
-    confirmation:  Confirmation;
-}
-
-export interface Activate {
-    header:    any;
-    created:   Ated;
-    activated: Ated;
-}
-
-export interface Ated {
-    header:  any;
-    message: any;
-}
-
-export interface Confirmation {
-    header: any;
-}
-
-export interface Email {
-    loginCloud:  any;
-    loginSystem: any;
-    connect:     any;
+    loginCloudHeader:        any;
+    loginSystemHeader:       any;
+    connectHeader:           any;
+    expiredHeader:           any;
+    loginSystemSubheader:    any;
+    connectSubheader:        any;
+    expiredSubheader:        any;
+    connectAdditional:       any;
+    createText:              any;
+    setupText:               any;
+    asAccountSubheader:      any;
+    toAccountSubheader:      any;
+    forAccountSubheader:     any;
+    expiredAccountSubheader: any;
+    createAccountHeader:     any;
+    activateHeader:          any;
+    createdText:             any;
+    activatedText:           any;
+    createdAdditional:       any;
+    activatedAdditional:     any;
+    passResetHeader:         any;
+    newPassHeader:           any;
+    newPassConfirmText:      any;
+    confirmHeader:           any;
+    loginError:              any;
+    loginErrorAdditional:    any;
+    connectErrorAdditional:  any;
+    setupErrorAdditional:    any;
+    connectedText:           any;
 }
 
 export interface CameraFilters {
@@ -1084,27 +1088,35 @@ const typeMap: any = {
         { json: "setNewPasswordLabel", js: "setNewPasswordLabel", typ: "any" },
     ], false),
     "Authorize": o([
-        { json: "email", js: "email", typ: r("Email") },
-        { json: "createAccount", js: "createAccount", typ: r("Confirmation") },
-        { json: "activate", js: "activate", typ: r("Activate") },
-        { json: "confirmation", js: "confirmation", typ: r("Confirmation") },
-    ], false),
-    "Activate": o([
-        { json: "header", js: "header", typ: "any" },
-        { json: "created", js: "created", typ: r("Ated") },
-        { json: "activated", js: "activated", typ: r("Ated") },
-    ], false),
-    "Ated": o([
-        { json: "header", js: "header", typ: "any" },
-        { json: "message", js: "message", typ: "any" },
-    ], false),
-    "Confirmation": o([
-        { json: "header", js: "header", typ: "any" },
-    ], false),
-    "Email": o([
-        { json: "loginCloud", js: "loginCloud", typ: "any" },
-        { json: "loginSystem", js: "loginSystem", typ: "any" },
-        { json: "connect", js: "connect", typ: "any" },
+        { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },
+        { json: "loginSystemHeader", js: "loginSystemHeader", typ: "any" },
+        { json: "connectHeader", js: "connectHeader", typ: "any" },
+        { json: "expiredHeader", js: "expiredHeader", typ: "any" },
+        { json: "loginSystemSubheader", js: "loginSystemSubheader", typ: "any" },
+        { json: "connectSubheader", js: "connectSubheader", typ: "any" },
+        { json: "expiredSubheader", js: "expiredSubheader", typ: "any" },
+        { json: "connectAdditional", js: "connectAdditional", typ: "any" },
+        { json: "createText", js: "createText", typ: "any" },
+        { json: "setupText", js: "setupText", typ: "any" },
+        { json: "asAccountSubheader", js: "asAccountSubheader", typ: "any" },
+        { json: "toAccountSubheader", js: "toAccountSubheader", typ: "any" },
+        { json: "forAccountSubheader", js: "forAccountSubheader", typ: "any" },
+        { json: "expiredAccountSubheader", js: "expiredAccountSubheader", typ: "any" },
+        { json: "createAccountHeader", js: "createAccountHeader", typ: "any" },
+        { json: "activateHeader", js: "activateHeader", typ: "any" },
+        { json: "createdText", js: "createdText", typ: "any" },
+        { json: "activatedText", js: "activatedText", typ: "any" },
+        { json: "createdAdditional", js: "createdAdditional", typ: "any" },
+        { json: "activatedAdditional", js: "activatedAdditional", typ: "any" },
+        { json: "passResetHeader", js: "passResetHeader", typ: "any" },
+        { json: "newPassHeader", js: "newPassHeader", typ: "any" },
+        { json: "newPassConfirmText", js: "newPassConfirmText", typ: "any" },
+        { json: "confirmHeader", js: "confirmHeader", typ: "any" },
+        { json: "loginError", js: "loginError", typ: "any" },
+        { json: "loginErrorAdditional", js: "loginErrorAdditional", typ: "any" },
+        { json: "connectErrorAdditional", js: "connectErrorAdditional", typ: "any" },
+        { json: "setupErrorAdditional", js: "setupErrorAdditional", typ: "any" },
+        { json: "connectedText", js: "connectedText", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

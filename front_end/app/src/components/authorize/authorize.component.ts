@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
 import {
     Component, Input,
-    OnDestroy, OnInit
+    OnDestroy, OnInit, ViewEncapsulation
 }                                 from '@angular/core';
 import {
     ActivatedRoute, Router, NavigationEnd
@@ -25,12 +26,44 @@ import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxAppStateService }         from '@services/nx-app-state.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+
+type AuthorizeParams = {
+    response_type: string,
+    client_id: string,
+    redirect_url: string,
+    grant_type?: string,
+    scope?: string,
+    state?: string,
+    client_type?: string
+};
+
+export enum AuthorizeState {
+    email = 'email',
+    password = 'password',
+    create = 'createAccount',
+    activate = 'activateAccount',
+    confirm = 'confirmation',
+    error = 'error'
+};
+
+export enum ClientType {
+    loginCloud = 'loginToCloud',
+    loginSystem = 'loginToSystem',
+    loginWebadmin = 'loginToWebadmin',
+    connect = 'connectSystemToCloud',
+    setup = 'setupWizard',
+    expired = 'sessionExpired',
+    renewDesktop = 'renewSessionDesktop',
+    renewWeb = 'renewSessionWeb'
+};
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-component',
-    templateUrl : 'authorize.component.html',
-    styleUrls   : ['authorize.component.scss']
+    selector      : 'nx-authorize-component',
+    templateUrl   : 'authorize.component.html',
+    styleUrls     : ['authorize.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxAuthorizeComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -40,15 +73,23 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     footerItems: { name: string, url: string }[];
 
-    account: Account;
-    system: NxSystem|any;
-    systems;
+    currentState: string;
+    clientType: string;
     windowWideEnough = true;
+    initialData: AuthorizeParams;
+
+    emailProcess: Process;
+    authorizeEmail: string;
+    emailErrorCode: string;
+
+    passwordProcess: Process;
+    authorizePassword: string;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private cloudService: NxCloudApiService,
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
@@ -67,55 +108,153 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter;
+        this.initProcesses();
+        this.route.queryParams.subscribe((params: any) => {
+            this.initialData = NxUtilsService.deepCopy(params);
+            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
+            this.currentState = AuthorizeState.email;
+            this.setupComponents();
+        });
     }
 
-    // init(): void {
-    //     // this.systemId = this.uriParamSystemId;
-    //     this.routerParamsSubscription = this.route.params.subscribe(params => {
-    //         if (params.systemId) {
-    //             this.systemId = params.systemId;
-    //             this.content.base = this.CONFIG.menus.systemSettings.baseUrl + this.systemId;
-    //             this.content = { ...this.content }; // trigger onChange
-    //             if (!this.CONFIG.isLocal && this.system) {
-    //                 this.system.stopPoll();
-    //                 this.system = undefined;
-    //                 this.settingsService.system = undefined;
-    //             }
-    //             this.systemNoAccess = false;
-    //             this.menuVisible = false;
-    //         } else {
-    //             this.systemId = '';
-    //         }
-    //         this.getSystemInfo();
-    //     });
+    initProcesses() {
+        this.emailProcess = this.processService.createProcess(async() => {
+            const { emailExists } = await this.cloudService.checkIfEmailExistsInCloud(this.authorizeEmail);
+            if (emailExists) {
+                this.currentState = AuthorizeState.password;
+            } else {
+                this.emailErrorCode = 'accountDoesNotExist';
+            }
+            return Promise.resolve();
+        }, { ignoreError: true });
 
-    //     this.router.events.subscribe(route => {
-    //         if (route instanceof NavigationEnd) {
-    //             const isSystemRoute = route.url.includes('/systems');
-    //             const isCameraRoute = route.url.includes('/cameras');
-    //             if (isSystemRoute && !isCameraRoute && this.system) {
-    //                 this.system.show404 = false;
-    //             }
-    //         }
-    //     });
+        this.passwordProcess = this.processService.createProcess(async() => {
+            let result;
+            try {
+                result = await this.cloudService.authenticate(
+                    this.authorizeEmail,
+                    this.authorizePassword,
+                    this.initialData.client_id || 'cloud_portal',
+                    this.initialData.redirect_url || 'http://localhost:9000/',
+                    this.initialData.response_type || 'code',
+                    this.initialData.state
+                );
+                window.location.href = result.link;
+            } catch (err) {
+                console.error('err from oauth/authenticate', err);
+            }
+            return Promise.resolve();
+        }, { ignoreError: true });
+    }
 
-    //     this.content = {
-    //         selectedSection    : '', // updated by selectedSectionSubject
-    //         selectedSubSection : '', // updated by selectedSubSectionSubject
-    //         system             : {}, // updated by getSystemInfo
-    //         base               : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
-    //         level1             : [
-    //             {
-    //                 id     : this.CONFIG.menus.systemSettings.admin.id,
-    //                 svg    : this.CONFIG.menus.systemSettings.admin.icon,
-    //                 label  : this.LANG.menu.titles.systemAdministration(),
-    //                 path   : this.CONFIG.menus.systemSettings.admin.path,
-    //                 level2 : []
-    //             }
-    //         ]
-    //     };
-    // }
+    getEmailFromChild(email: string) {
+        this.authorizeEmail = email;
+    }
 
-    ngOnDestroy() {
+    getPasswordFromChild(password: string) {
+        this.authorizePassword = password;
+    }
+
+    ngOnDestroy() {}
+
+    setupComponents() {
+        this.content = {
+            loginToCloud: {
+                email: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginCloudHeader,
+                    subHeader          : undefined,
+                    additionalText     : undefined,
+                    textButton         : this.LANG.authorize.createText,
+                    backButton         : false
+                },
+                password: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginCloudHeader,
+                    subHeader          : this.LANG.authorize.asAccountSubheader,
+                    forgotButton       : true,
+                    logOutButton       : false,
+                    backButton         : true
+                },
+                error: {
+                    placeholder    : 'error',
+                    content        : this.LANG.authorize.loginError,
+                    additionalText : this.LANG.authorize.loginErrorAdditional,
+                    backButton     : false
+                }
+            },
+            loginToSystem: {
+                email: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginSystemHeader,
+                    subHeader          : this.LANG.authorize.loginSystemSubheader,
+                    additionalText     : undefined,
+                    textButton         : undefined,
+                    backButton         : false
+                },
+                password: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginSystemHeader,
+                    subHeader          : this.LANG.authorize.asAccountSubheader,
+                    forgotButton       : true,
+                    logOutButton       : false,
+                    backButton         : true
+                },
+                error: {
+                    placeholder    : 'error',
+                    content        : this.LANG.authorize.loginError,
+                    additionalText : this.LANG.authorize.loginErrorAdditional,
+                    backButton     : false
+                }
+            },
+            loginToWebadmin: {
+                email: {
+                    headerIllustration : 'server',
+                    header             : this.LANG.authorize.loginSystemHeader,
+                    subHeader          : undefined,
+                    additionalText     : undefined,
+                    textButton         : undefined,
+                    backButton         : false
+                },
+                password: {
+                    headerIllustration : 'server',
+                    header             : this.LANG.authorize.loginSystemHeader,
+                    subHeader          : this.LANG.authorize.asAccountSubheader,
+                    forgotButton       : false,
+                    logOutButton       : false,
+                    backButton         : true
+                },
+                error: {
+                    placeholder    : 'error',
+                    content        : this.LANG.authorize.loginError,
+                    additionalText : this.LANG.authorize.loginErrorAdditional,
+                    backButton     : false
+                }
+            },
+            connectSystem: {
+                email: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginCloudHeader,
+                    subHeader          : undefined,
+                    additionalText     : undefined,
+                    textButton         : this.LANG.authorize.createText,
+                    backButton         : false
+                },
+                password: {
+                    headerIllustration : 'cloud',
+                    header             : this.LANG.authorize.loginCloudHeader,
+                    subHeader          : this.LANG.authorize.asAccountSubheader,
+                    forgotButton       : true,
+                    logOutButton       : false,
+                    backButton         : true
+                },
+                error: {
+                    placeholder    : 'error',
+                    content        : this.LANG.authorize.loginError,
+                    additionalText : this.LANG.authorize.loginErrorAdditional,
+                    backButton     : false
+                }
+            }
+        };
     }
 }

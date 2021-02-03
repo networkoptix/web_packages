@@ -299,11 +299,22 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
-    authenticate(email: string, password: string) {
-        return this.http.post<any>(this.CONFIG.apiBase + '/oauth/authenticate', {
-            email,
-            password
-        }).toPromise();
+    checkIfEmailExistsInCloud(email: string) {
+        return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
+    }
+
+    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string) {
+        let params = new HttpParams()
+            .set('email', email)
+            .set('password', password)
+            .set('client_id', clientId)
+            .set('redirect_url', redirectUrl)
+            .set('response_type', responseType);
+        if (state) {
+            params = params.set('state', state);
+        }
+
+        return this.http.get<any>('/oauth/authenticate', { params: params }).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)

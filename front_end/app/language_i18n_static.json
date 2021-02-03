@@ -82,28 +82,35 @@
         "setNewPasswordLabel": "New password"
     },
     "authorize": {
-        "email": {
-            "loginCloud": "Log in to %CLOUD_NAME%",
-            "loginSystem": "Log in to {systemName}",
-            "connect": "Connect System to %CLOUD_NAME%"
-        },
-        "createAccount": {
-            "header": "Create %CLOUD_NAME% account"
-        },
-        "activate": {
-            "header": "Activate %CLOUD_NAME% Account",
-            "created": {
-                "header": "Account Created!",
-                "message": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {account}.</p><p>Please, activate the account and return here to finish the process.</p>"
-            },
-            "activated": {
-                "header": "Account Activated!",
-                "message": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>"
-            }
-        },
-        "confirmation": {
-            "header": "System connected to %CLOUD_NAME%!"
-        }
+        "loginCloudHeader": "Log in to %CLOUD_NAME%",
+        "loginSystemHeader": "Log in to {systemName}",
+        "connectHeader": "Connect System to %CLOUD_NAME%",
+        "expiredHeader": "Your session has expired",
+        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
+        "connectSubheader": "To access it from anywhere and enable additional features",
+        "expiredSubheader": "Please, log in again",
+        "connectAdditional": "This account will get owner access level",
+        "createText": "Create Account",
+        "setupText": "Setup Non-cloud System",
+        "asAccountSubheader": "As {accountEmail}",
+        "toAccountSubheader": "To {accountEmail}",
+        "forAccountSubheader": "For {accountEmail}",
+        "expiredAccountSubheader": "Please, log in again as {accountEmail}",
+        "createAccountHeader": "Create %CLOUD_NAME% account",
+        "activateHeader": "Activate %CLOUD_NAME% Account",
+        "createdText": "Account Created!",
+        "activatedText": "Account Activated!",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {account}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "passResetHeader": "Reset Password",
+        "newPassHeader": "Set New Password",
+        "newPassConfirmText": "Password is set!",
+        "confirmHeader": "System connected to %CLOUD_NAME%!",
+        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "connectErrorAdditional": "Please try again later.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "connectedText": "System connected to %CLOUD_NAME%"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",

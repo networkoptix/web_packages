@@ -58,12 +58,12 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.contentHeader = this.created
-            ? this.LANG.authorize.activate.created.header()
-            : this.LANG.authorize.activate.created.message();
+            ? this.LANG.authorize.createdText()
+            : this.LANG.authorize.activatedText();
         this.contentMessage = NxLanguageProviderService.translate(
             this.created
-                ? this.LANG.authorize.activate.created.message
-                : this.LANG.authorize.activate.activated.message,
+                ? this.LANG.authorize.createdAdditional
+                : this.LANG.authorize.activatedAdditional,
             { account: '' }
         );
 

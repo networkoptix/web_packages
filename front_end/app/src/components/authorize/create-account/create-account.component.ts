@@ -31,6 +31,12 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     accountEmail: string;
+    createEmail: string;
+    firstNameInput: string;
+    lastNameInput: string;
+    createPassword: string;
+    hideErrors: boolean;
+    weakPassword: boolean;
 
     constructor(
         language: NxLanguageProviderService,
@@ -71,6 +77,10 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnDestroy {
     //     if (this.userSubscription) {
     //         this.userSubscription.unsubscribe();
     //     }
+    }
+
+    onPasswordChange(password) {
+        this.createPassword = password;
     }
 
     // initProcesses() {
