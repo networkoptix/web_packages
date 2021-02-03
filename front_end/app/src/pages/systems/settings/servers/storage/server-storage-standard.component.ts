@@ -145,9 +145,15 @@ export class NxSystemStorageComponent implements OnInit {
                         this.modeWatchers[this.normalizeId(storageId)].value = mode;
                     }
                 });
-                await this.system.storageManager.getBackupState(
+                const backupState = await this.system.storageManager.getBackupState(
                     this.serverId, !!this.currentStorageState.onlineBackups
-                ).then(this.setupWatchers).catch(_ => this.setupWatchers());
+                ).catch(err => {
+                    console.error(err);
+                    return { backup: false, custom: false };
+                });
+                this.customSettings = backupState.custom;
+                this.isBackupOn.originalValue = backupState.backup;
+                this.setupWatchers();
                 if (this.loading && this.currentStorageState.beingChecked) {
                     this.pollStats();
                 }
@@ -217,12 +223,9 @@ export class NxSystemStorageComponent implements OnInit {
         ).subscribe();
     }
 
-    setupWatchers = (backupInitialState?: { backup: boolean, custom: boolean }) => {
-        this.customSettings = backupInitialState?.custom;
+    setupWatchers = () => {
         const modeWatchers = Object.entries(this.modeWatchers);
-        if (!this.saveSettings && backupInitialState !== undefined) {
-            this.isBackupOn.originalValue = this.backupState = backupInitialState?.backup;
-        }
+        this.backupState = this.isBackupOn.originalValue;
         this.resetWatchers = () => {
             this.isBackupOn.reset();
             this.backupState = this.isBackupOn.originalValue;
@@ -247,29 +250,30 @@ export class NxSystemStorageComponent implements OnInit {
                 }
             });
         };
+        const handleFailedBackupChange = (backupSaveState) => {
+            const backup = backupSaveState === 'StartFail';
+            this.isBackupOn.originalValue = this.backupState = !backup;
+            this.isBackupOn.value = backup;
+        };
+        const updateBackup = () => this.isBackupOn.originalValue === this.backupState
+            ? Promise.resolve()
+            : this.backupState
+                ? this.setDefaultBackupSettings().catch(err => {
+                    console.error(err);
+                    handleFailedBackupChange('StartFail');
+                })
+                : this.turnOffBackup().catch(err => {
+                    console.error(err);
+                    handleFailedBackupChange('StopFail');
+                });
+
         if (!this.saveSettings) {
             this.saveSettings = this.processService.createProcess(() => {
-                let backupSaveState: 'StopFail' | 'StartFail';
                 return Promise.all([
-                    this.isBackupOn.originalValue === this.backupState
-                        ? Promise.resolve()
-                        : this.backupState
-                            ? this.setDefaultBackupSettings().catch(err => {
-                                console.error(err);
-                                backupSaveState = 'StartFail';
-                            })
-                            : this.turnOffBackup().catch(err => {
-                                console.error(err);
-                                backupSaveState = 'StopFail';
-                            }),
+                    updateBackup(),
                     this.handleModeUpdate()
                 ]).then(res => {
                     this.pollStats(true);
-                    if (backupSaveState) {
-                        const backup = backupSaveState === 'StartFail';
-                        this.isBackupOn.originalValue = this.backupState = !backup;
-                        this.isBackupOn.value = backup;
-                    }
                     return res;
                 });
             });
@@ -277,6 +281,15 @@ export class NxSystemStorageComponent implements OnInit {
                 [this.isBackupOn, ...modeWatchers.map(([_, watcher]) => watcher)],
                 this.saveSettings,
                 this.resetWatchers
+            );
+        } else {
+            this.applyService.addWatchersAndFunctionsFromChild(
+                [this.isBackupOn],
+                this.processService.createProcess(updateBackup),
+                () => {
+                    this.isBackupOn.reset();
+                    this.backupState = this.isBackupOn.originalValue;
+                }
             );
         }
     }
