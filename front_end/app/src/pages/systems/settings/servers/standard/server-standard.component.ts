@@ -433,7 +433,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             filter(({ storageInfoLoaded, analyticsLoaded }) => storageInfoLoaded && analyticsLoaded)
         ).subscribe(({
             currentAnalyticsDbLocation,
-            analyticsDbTargetLocations
+            analyticsDbTargetLocations,
+            hasAnalyticsData,
+            hasCompatibleAnalyticsPlugins
         }) => {
             this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
             this.dropdownStorages = analyticsDbTargetLocations.map(({ url, isOnline, storageStatus, storageId, isWritable, freeSpace }) => {
@@ -451,6 +453,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
             this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
             this.storagesLoading = false;
+            this.showAnalytics = !!currentAnalyticsDbLocation || hasAnalyticsData || hasCompatibleAnalyticsPlugins;
 
             this.setSystemStorageChosen(this.selectedStorage);
 
