@@ -1,0 +1,13 @@
+@use '../../styles/typography';
+@use '../../styles/mixins';
+@use '../../../styles/theme_variables' as *;
+
+.authorize-main {
+    .invalid-state {
+        border-color: $error;
+    }
+    
+    .btn-forward {
+        background: $brand_core;
+    }
+}

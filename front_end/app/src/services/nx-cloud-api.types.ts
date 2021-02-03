@@ -232,3 +232,7 @@ export interface CloudStorageUsage extends CloudResponse {
     delayFromLive: number,
     spaceUsed: number
 }
+
+export interface CheckEmailExists {
+    emailExists: boolean
+}

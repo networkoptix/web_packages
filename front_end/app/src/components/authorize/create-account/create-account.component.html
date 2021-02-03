@@ -1,37 +1,90 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header>
-    <h3>{{LANG.authorize.email.loginCloud()}}</h3>
+    <h3>{{LANG.authorize.loginCloudHeader()}}</h3>
     <ng-container *ngIf="accountEmail">
         <span class="sub-header" translate>For</span>
         <span class="account-password">{{accountEmail}}</span>
     </ng-container>
 </header>
 <main>
-    <div class="row" *ngIf="!accountEmail">
-        <label for="email" translate>Email</label>
-        <input type="email" name="email">
-    </div>
-    <div class="row">
-        <div class="left">
-            <label for="firstName" translate>First Name</label>
-            <input type="text" name="firstName">
+    <form #createAccountForm="ngForm" class="form">
+        <div class="row" *ngIf="!accountEmail">
+            <label for="createEmail" translate>Email</label>
+            <input
+                type="email"
+                id="createEmail"
+                [ngClass]="{ 'invalid-state': email.errors.required || email.errors.wrongEmail }"
+                #email="ngModel"
+                autocomplete="email"
+                [(ngModel)]="createEmail"
+                required
+                nxFocusMe>
+            <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
+                <p *ngIf="email.errors.required" class="error-label" translate>Required</p>
+                <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
+                <p *ngIf="email.errors.alreadyExists" class="error-label" translate>Account already exists</p>
+            </ng-container>
         </div>
-        <div class="right">
-            <label for="lastName" translate>Last Name</label>
-            <input type="text" name="lastName">
+        <div class="row">
+            <div class="left">
+                <label for="firstName" translate>First Name</label>
+                <input
+                    type="text"
+                    id="firstName"
+                    [ngClass]="{ 'invalid-state': firstName.errors.required }"
+                    #firstName="ngModel"
+                    autocomplete="given-name"
+                    [(ngModel)]="firstNameInput"
+                    required
+                    nxFocusMe>
+                <p *ngif="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label" translate>Required</p>
+            </div>
+            <div class="right">
+                <label for="lastName" translate>last Name</label>
+                <input
+                    type="text"
+                    id="lastName"
+                    [ngClass]="{ 'invalid-state': lastName.errors.required }"
+                    #lastName="ngModel"
+                    autocomplete="family-name"
+                    [(ngModel)]="lastNameInput"
+                    required
+                    nxFocusMe>
+                <p *ngif="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label" translate>Required</p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <label for="password" translate>Password</label>
-        <input type="password" name="password">
-    </div>
-    <nx-checkbox
-        name="termsAndConditions"
-        componentId="termsAndConditions">
-    </nx-checkbox>
-    <!-- [(ngModel)]="termsAndConditions"
-    #termsAndConditions="ngModel"
-    description="termsAndConditionsHelpBlock"> -->
+        <div class="row">
+            <label for="password" translate>Password</label>
+            <div class="col-12 col-md-7 pb-2 pb-md-0 pr-0 mr-2">
+                <nx-password-input
+                    name="createAccountPassword"
+                    componentId="createAccountPassword"
+                    class="form-component"
+                    [ngModel]="createPassword"
+                    (ngModelChange)="onPasswordChange($event)"
+                    [form]="createAccountForm"
+                    [component]="createAccountPassword"
+                    #createAccountPassword="ngModel">
+                </nx-password-input>
+            </div>
+            <div class="col-12 col-md-5 d-block d-md-flex ml-md-n2 align-items-center">
+                <nx-password-input-validation
+                    [forElement]="createAccountPassword"
+                    [hideErrors]="hideErrors"
+                    [value]="createPassword"
+                    (updateWeakPassword)="weakPassword = $event">
+                </nx-password-input-validation>
+            </div>
+        </div>
+        <nx-checkbox
+            name="termsAndConditions"
+            required
+            componentId="termsAndConditions">
+        </nx-checkbox>
+        <!-- [(ngModel)]="termsAndConditions"
+        #termsAndConditions="ngModel"
+        description="termsAndConditionsHelpBlock"> -->
+    </form>
 </main>
 <footer>
     <button class="btn svg-icon" type="button">

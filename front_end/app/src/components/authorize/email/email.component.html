@@ -1,26 +1,75 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header>
-    <svg-icon nx-add-svg-src 
-        [src]="CONFIG.icons.dir + 'cloud-header.svg'" 
-        [svgStyle]="{'width.px': 24, 'height.px': 24}"
-        [applyClass]="true"></svg-icon>
-    <h3>{{LANG.authorize.email.loginCloud()}}</h3>
-</header>
-<main>
-    <input type="email">
-</main>
-<footer>
-    <button class="btn svg-icon" type="button">
-        <!-- (click)="forgotPassword()" -->
+<form #emailForm="ngForm" name="emailForm">
+    <header>
         <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dir + 'plus.svg'" 
+            [src]="CONFIG.icons.dir + 'cloud-header.svg'" 
             [svgStyle]="{'width.px': 24, 'height.px': 24}"
             [applyClass]="true"></svg-icon>
-        <span translate>Create Account</span>
-    </button>
-    <nx-process-button
-        buttonText="{{ 'Next' | translate }}"
-        [process]="emailProcess"
-        svg="arrow_right">
-    </nx-process-button>
-</footer>
+        <h3>{{LANG.authorize.loginCloudHeader()}}</h3>
+    </header>
+    <main>
+        <ng-container *ngIf="!CONFIG.isLocal; else webadmin">
+            <label for="authorizeEmail" translate>Email</label>
+            <input
+                type="email"
+                id="authorizeEmail"
+                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
+                [formControl]="email"
+                autocomplete="email"
+                required
+                nxFocusMe>
+            <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
+                <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
+                <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
+                <ng-container *ngIf="email.errors.accountNotActivated">
+                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p><a href="resendLink" target="_blank" translate>Resend activation email.</a></p>
+                </ng-container>
+                <ng-container *ngIf="email.errors.accountDoesNotExist">
+                    <p class="mb-2" translate>Account does not exist.</p>
+                    <p translate>You can create account with this email address or try to enter a different one.</p>
+                </ng-container>
+                <p *ngIf="email.errors.accountNotExistenceReset" class="error-label" translate>Account does not exist.</p>
+                <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
+                <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
+            </ng-container>
+        </ng-container>
+        <ng-template #webadmin>
+            <label for="authorizeLogin" translate>Login</label>
+            <input
+                type="text"
+                id="authorizeLogin"
+                [formControl]="email"
+                [ngClass]="{ 'invalid-state': login.errors?.required || logins.errors?.accountNotAccessSystem }"
+                #login="ngModel"
+                required
+                nxFocusMe>
+            <ng-container *ngIf="login.invalid && (login.dirty || login.touched)">
+                <p *ngif="login.errors.required" class="error-label" translate>Enter login</p>
+                <ng-container *ngIf="login.errors.accountNotActivated">
+                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p translate>Look for email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.</p>
+                </ng-container>
+                <p *ngIf="login.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't exist in this system.</p>
+                <p *ngIf="login.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
+            </ng-container>
+        </ng-template>
+    </main>
+    <footer>
+        <button class="btn svg-icon" type="button">
+            <!-- (click)="forgotPassword()" -->
+            <svg-icon nx-add-svg-src 
+                [src]="CONFIG.icons.dir + 'plus.svg'" 
+                [svgStyle]="{'width.px': 24, 'height.px': 24}"
+                [applyClass]="true"></svg-icon>
+            <span translate>Create Account</span>
+        </button>
+        <nx-process-button
+            buttonText="{{ 'Next' | translate }}"
+            [clickFn]="sendEmail"
+            [form]="emailForm"
+            [process]="emailProcess"
+            [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }">
+        </nx-process-button>
+    </footer>
+</form>

@@ -63,12 +63,12 @@ def authenticate(request):
     redirect_url = request.query_params["redirect_url"]
     state = request.query_params.get("state")
 
-    code = Auth.get_code(email=request.data["email"],
-                         password=request.data["password"],
-                         client_id=request.data["client_id"],
+    code = Auth.get_code(email=request.query_params["email"],
+                         password=request.query_params["password"],
+                         client_id=request.query_params["client_id"],
                          ip=ip)
 
-    return redirect(f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
+    return api_success({"link": f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}"})
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,
