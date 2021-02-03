@@ -133,8 +133,7 @@ export class Storage extends StorageDataStructure {
         if (
             !this.isWritable ||
             this.storageStatus.includes('tooSmall') ||
-            this.storageStatus.includes('removable') ||
-            this.storageId.startsWith('/') ||
+            (this.storageId.startsWith('/') && !this.storageStatus.includes('removable')) ||
             this.storageStatus.includes('system') &&
             this.totalSpace < (this.currentStorageState.freeSpace / 6)
         ) {

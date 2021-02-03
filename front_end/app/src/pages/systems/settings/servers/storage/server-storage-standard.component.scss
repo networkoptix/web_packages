@@ -32,11 +32,13 @@ form.form-horizontal {
     thead,
     tbody,
     tr {
+        max-height: 24px !important;
         display : contents;
     }
 
     th,
     td {
+        max-height: 24px !important;
         overflow      : hidden;
         text-overflow : ellipsis;
         white-space   : nowrap;
@@ -171,10 +173,9 @@ form.form-horizontal {
 
 svg-icon.archive-warning {
     position: absolute;
-    right: 12px;
-    top: calc(50% - 10px);
     height: 20px;
     width: 20px;
+    transform: translateY(-22px);
 }
 
 .animate-rotation path{
@@ -200,4 +201,12 @@ svg-icon:not(.animate-rotation) .st0 {
 
 .header-button-span {
     color: $light16 !important;
+}
+
+button.btn.btn-dropdown-toggle.dropdown-toggle {
+    border-style: none !important;
+}
+
+nx-storage-size-component {
+    height: auto !important;
 }

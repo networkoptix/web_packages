@@ -80,6 +80,7 @@
                                             <svg-icon nx-add-svg-src
                                                 *ngIf="checkArchiveWarning(store)"
                                                 class="archive-warning"
+                                                [style.left.px]="(dropdownOffsetCalc$ | async) + ddWidth - 20"
                                                 [ngbTooltip]="LANG.storage.stillHasArchives()"
                                                 [src]="CONFIG.icons.dirNonStandard + 'error.svg'">
                                             </svg-icon>
@@ -92,12 +93,15 @@
                             <ng-template #updatingMode>
                                 <td [ngClass]="{'px-0' : [STATUS.IN_USE, STATUS.BEING_CHECKED].includes(store.status)}" [style.width.px]="ddWidth">
                                     <div class="disabled-label changing" >
-                                        <span translate>Checking...</span>
+                                        <ng-template #checking>
+                                            <span translate>Checking...</span>
+                                        </ng-template>
+                                        <span *ngIf="checkIfChanged(store.storageId); else checking" translate>Changing mode...</span>
                                     </div>
                                 </td>
                             </ng-template>
                             <td class="size-chart">
-                                <nx-storage-size-component [store]="store"></nx-storage-size-component>
+                                <nx-storage-size-component [store]="store" [cachedSizes]="cachedSizes"></nx-storage-size-component>
                             </td>
                             <td *ngIf="currentStorageState?.hasAction" class="d-flex justify-content-end">
                                 <!-- Add settings button -->

@@ -19,6 +19,7 @@ import { Storage, STORAGE_STATUS }   from '@services/system.service/system/stora
 })
 export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     @Input() store: Storage;
+    @Input() cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
     LANG: LanguageI18NStaticTypes;
 
@@ -56,6 +57,8 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     init() {
+        this.store.totalSpace = this.cachedSizes?.[this.store.storageId]?.total || this.store.totalSpace;
+        this.store.vmsSpace = this.cachedSizes?.[this.store.storageId]?.vms || this.store.vmsSpace;
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE && !this.store.totalSpace) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';

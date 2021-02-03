@@ -70,6 +70,8 @@ export class NxSystemStorageComponent implements OnInit {
     systemHasBackupsOn = false;
     forceShowBackupBlock = false;
     reindexingStorages: MODE[] = [];
+    beingUpdated = [];
+    cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
     stopReindex$ = new Subject<TARGET_STORAGE>();
     currentStorageState: CurrentStorageState;
@@ -136,8 +138,11 @@ export class NxSystemStorageComponent implements OnInit {
             const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
             if (sources.every(loaded => loaded)) {
                 this.currentStorageState = state;
-                this.currentStorageState.locations.forEach((store, idx) => {
+                this.currentStorageState.locations.forEach((store) => {
                     const storageId = store.storageId;
+                    this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
+                    this.cachedSizes[storageId].vms ||= store.vmsSpace;
+                    this.cachedSizes[storageId].total ||= store.totalSpace;
                     const mode = this.selectMode(store)?.value || 'modeNotInUse';
                     if (!this.modeWatchers[this.normalizeId(storageId)]) {
                         this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode);
@@ -440,8 +445,13 @@ export class NxSystemStorageComponent implements OnInit {
             }
         }
         this.updatingModes = [...this.updatingModes, ...updating];
+        this.beingUpdated = [...this.updatingModes];
         return this.currentStorageState.saveStorages().toPromise().catch(err => console.error(err));
     };
+
+    checkIfChanged(id) {
+        return this.beingUpdated.includes(id)
+    }
 
     calcDDWidth() {
         const modes: {

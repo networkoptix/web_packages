@@ -88,7 +88,13 @@ nx-select {
     .dropdown-force-position, .force-position {
         position: static !important;
         & > .dropdown-menu {
-            transform: translateY(calc(100% - 8px));
+            transform: translateY(calc(100% - 22px));
+        }
+        & > button.dropdown-toggle {
+            height: 24px !important;
+            & > .arrow-flip > svg-icon {
+                bottom: 2px !important;
+            }
         }
     }
 }
