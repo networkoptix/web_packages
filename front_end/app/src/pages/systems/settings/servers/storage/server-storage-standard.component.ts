@@ -113,7 +113,7 @@ export class NxSystemStorageComponent implements OnInit {
             { name: this.LANG.storage.modes.main(), value: 'modeMain' },
             { name: this.LANG.storage.modes.backup(), value: 'modeBackup' },
             { name: 'horizontal', value: '' },
-            { name: this.LANG.storage.modes.notInUse(), value: 'modeNotInUse' }
+            { name: this.LANG.storage.modes.notInUse(), value: 'modeNotUsed' }
         ];
     }
 
@@ -249,7 +249,7 @@ export class NxSystemStorageComponent implements OnInit {
                         store.isBackup = true;
                         break;
 
-                    case 'modeNotInUse':
+                    case 'modeNotUsed':
                         store.usedForWriting = false;
                         break;
                 }
@@ -374,16 +374,17 @@ export class NxSystemStorageComponent implements OnInit {
 
     checkArchiveWarning({ storageId, vmsSpace }: Storage) {
         const { value, originalValue } = this.modeWatchers[this.normalizeId(storageId)];
-        return [value, originalValue].every(state => state === 'modeNotInUse') && vmsSpace;
+        return [value, originalValue].every(state => state === 'modeNotUsed') && vmsSpace;
     }
 
     selectMode(store) {
-        if (!store.isUsedForWriting && !store.usedForWriting) {
-            return this.modes[MODE_INDEX.NOT_IN_USE];
-        } else if (!store.isBackup) {
-            return this.modes[MODE_INDEX.MAIN];
-        } else {
-            return this.modes[MODE_INDEX.BACKUP];
+        switch (store.mode) {
+            case (MODE.NOT_IN_USE):
+                return this.modes[MODE_INDEX.NOT_IN_USE];
+            case (MODE.MAIN):
+                return this.modes[MODE_INDEX.MAIN];
+            default:
+                return this.modes[MODE_INDEX.BACKUP];
         }
     }
 
@@ -398,7 +399,7 @@ export class NxSystemStorageComponent implements OnInit {
     checkDisabled = (store: Storage) => store.status !== STORAGE_STATUS.REINDEXING &&
         store.status !== STORAGE_STATUS.IN_USE ||
         this.updatingModes.includes(store.storageId) ||
-        this.selectMode(store).value === 'modeNotInUse'
+        this.selectMode(store).value === 'modeNotUsed'
 
     changeMode(
         { isBackup, storageId, id: _id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
@@ -410,12 +411,12 @@ export class NxSystemStorageComponent implements OnInit {
         };
         const checkChanged = ({ value }, currentlyBackup = isBackup, currentlyUsed = usedForWriting) => {
             const useAsBackup = value === 'modeBackup';
-            const useForWriting = value !== 'modeNotInUse';
+            const useForWriting = value !== 'modeNotUsed';
             return currentlyBackup !== useAsBackup || currentlyUsed !== useForWriting;
         };
         if (checkChanged(selected)) {
             updateParams.isBackup = selected.value === 'modeBackup';
-            updateParams.usedForWriting = selected.value !== 'modeNotInUse';
+            updateParams.usedForWriting = selected.value !== 'modeNotUsed';
             this.modeWatchers[this.normalizeId(id)].value = selected.value;
             this.changedModes = [...this.changedModes, id];
             const store = this.currentStorageState.locations.find(({ storageId }) => this.normalizeId(storageId) === this.normalizeId(id));
@@ -424,7 +425,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
 
         const hasArchive = id => !!this.currentStorageState.locations.find(({ storageId }) => id === storageId)?.vmsSpace;
-        const showWarn = Object.entries(this.modeWatchers).some(([id, { changed, value }]) => value === 'modeNotInUse' && changed && hasArchive(id));
+        const showWarn = Object.entries(this.modeWatchers).some(([id, { changed, value }]) => value === 'modeNotUsed' && changed && hasArchive(id));
         this.applyService.setWarn(showWarn ? this.LANG.storage.stillHasArchivesPreWarning?.() : '');
     }
 
