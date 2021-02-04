@@ -3,8 +3,7 @@ import { HttpClient }        from '@angular/common/http';
 
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
-import { environment }       from '../../../environments/environment';
-import webAdminMenus         from '../../../customization/menus.json';
+import { environment }       from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -29,14 +28,8 @@ export class NxConfigService {
     }
 
     getSettings() {
-        const menus = !NxConfigService.isLocal ? {} : webAdminMenus.reduce(
-            (menus, { name, nodes }) => {
-                menus[name] = nodes;
-                return menus;
-            }, {});
-        return NxConfigService.isLocal
-            ? Promise.resolve({ menus })
-            : this.http.get('/api/utils/settings').toPromise();
+        const url = environment.isLocal ? '/static/customization/webadmin_config.json' : '/api/utils/settings';
+        return this.http.get(url).toPromise();
     }
 
     getConfig() {
