@@ -44,14 +44,6 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeActivateAccountComponent,
         NxAuthorizeConfirmationComponent
     ],
-    providers: [
-        NxAuthorizeComponent,
-        NxAuthorizeEmailComponent,
-        NxAuthorizePasswordComponent,
-        NxAuthorizeCreateAccountComponent,
-        NxAuthorizeActivateAccountComponent,
-        NxAuthorizeConfirmationComponent
-    ],
     exports: [
         NxAuthorizeComponent
     ]
