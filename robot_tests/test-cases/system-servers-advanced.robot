@@ -15,9 +15,7 @@ ${url}         ${ENV}
 *** Keywords ***
 Server Settings Test Setup
     [Arguments]    ${email}    ${system id}
-    Log in to user and system    ${email}    ${system id}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    Log in to user and system    ${email}    ${system id}/servers
 
 *** Test Cases ***
 Advanced server settings availability

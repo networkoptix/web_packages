@@ -67,10 +67,11 @@ class CloudPortalAPI(object):
     def get_account_systems(self, env, email, password):
         with self.log_in(env, email, password) as s:
             data = s.get(f'{env}/api/systems/')
-            systems = []
-            for system in data.json():
-                systems.append(system['id'])
-            return systems
+            # systems = []
+            # for system in data.json():
+            #     systems.append(system['id'])
+            # return systems
+        return data.json()
 
     def get_system_settings(self, server_url, local_auth):
         r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
@@ -266,11 +267,6 @@ class CloudPortalAPI(object):
         f= open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
-
-    # @staticmethod
-    # def check_http_connection(protocol, ip, url):
-    #     r = requests.get(protocol+ip+url)
-    #     return r.status_code
 
     @staticmethod
     def check_connection(url, verify=True):

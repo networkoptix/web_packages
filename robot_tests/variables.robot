@@ -78,7 +78,7 @@ ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
-${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "Open in Nx Witness")]
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
@@ -106,9 +106,7 @@ ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON 
 ${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
 ${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG IN BUTTON TEXT}")]
-${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message']//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
-
-
+${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings
 ${SYSTEM NAME}                        //div[contains(@class,"header-title")]/h2[@id="editable-title"]
@@ -245,9 +243,9 @@ ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED D
 
 #Misc
 ${PAGE NOT FOUND}                     //h2[@name="404" and contains(text(),'${PAGE NOT FOUND TEXT}')]
-${TAKE ME HOME}                       //a[@href='/' and contains(text(),"${GO TO MAIN PAGE TEXT}")]
+${TAKE ME HOME}                       //button[a="${GO TO MAIN PAGE TEXT}"]
 ${404 ICON}                           //div[@name="404"]/svg-icon
-
+${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
@@ -329,18 +327,3 @@ ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/im
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
 ${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
 ${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
-
-#ADVANCED SETTINGS
-${ADVANCED SETTINGS}                    ?advanced=true
-${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
-${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
-${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
-${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
-${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
-@{ADVANCED SETTINGS ALERT BAR}
-...    ${HIDE ADVANCED SETTINGS BUTTON}
-...    ${HIDE ADVANCED SETTINGS ICON}
-...    ${ADVANCED SETTINGS ALERT ICON}
-...    ${ADVANCED SETTINGS ALERT}
-...    ${ADVANCED SETTINGS WARNING}
-...    ${ADVANCED SETTINGS WARNING}

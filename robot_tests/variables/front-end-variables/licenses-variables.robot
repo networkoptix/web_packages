@@ -24,7 +24,7 @@ ${LM PASSWORD}    qweasd123
 ...    vmax=VMAX
 ...    bridge=Bridge
 
-${TRIAL LICENSE}    0000-0000-0000-0005
+#${TRIAL LICENSE}    0000-0000-0000-0005
 ${LICENSES LINK}    //a[@id="licenses"]
 
 # System is offline

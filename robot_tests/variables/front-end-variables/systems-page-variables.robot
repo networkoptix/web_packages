@@ -1,4 +1,5 @@
 *** Variables ***
+${SYSTEMS HEADER}                     //h1[contains(text(), "${SYSTEMS TITLE TEXT}")]
 ${SYSTEMS LIST}                       //nx-systems-list-component
 ${SYSTEMS LIST BUTTONS}               ${SYSTEMS LIST}//div[contains(@class, 'system-button')]
 ${SYSTEMS SEARCH INPUT}               ${SYSTEMS LIST}//div[contains(@class,'search-block')]//input

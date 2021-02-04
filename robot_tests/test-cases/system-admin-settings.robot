@@ -2,26 +2,16 @@
 Resource          ../resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
-Test Teardown     Run Keyword If Test Failed    Execute Command Remotely    docker start ${system}[cont]
-Suite Teardown    System Admin Suite Tear Down
+Test Teardown     Run Keyword If Test Failed    System Admin Test Restart
+Suite Teardown    System Admin Suite Teardown
 Force Tags        system
-
-*** Variables ***
-@{checkboxes}
-...    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
-...    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
-...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
-...    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
-...    ${ALLOW ONLY SECURE CHECKBOX REAL}
-...    ${LIMIT SESSION DURATION CHECKBOX REAL}
-${3.2 system url}    http://10.1.5.113:7001
 
 *** Test Cases ***
 Should show system settings and security settings and they should match settings on server
     [Tags]    system settings    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
     Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
@@ -37,59 +27,38 @@ Should show system settings and security settings and they should match settings
 
     Settings on page should match settings on server
 
-Changing the Setting 'Enable auto discovery of cameras and servers' changes it on the server
+Changing the Setting * changes it on the server
     [Tags]    system settings    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled    https://${QABURBANK IP}:${system}[port]
 
-Changing the Setting 'Send anonymous usage and crash statistics to developers' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    https://${QABURBANK IP}:${system}[port]
-
-Changing the Setting 'Allow system to optimize camera settings' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible
-    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization    https://${QABURBANK IP}:${system}[port]
-
-Changing the Setting 'Enable audit trail' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible
-    Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled    https://${QABURBANK IP}:${system}[port]
-
-Changing the Setting 'Allow only secure connections' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible
-    Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced    https://${QABURBANK IP}:${system}[port]
+    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization    auditTrailEnabled    trafficEncryptionForced
+        Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
+    END
 
 Changing the Setting 'Encrypt video traffic' changes it on the server
     [Tags]    system settings    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
     ${selected}=   Change Setting Encrypt video traffic
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    ${selected}
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting 'Limit session duration to' changes it on the server
     [Tags]    system settings    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]     sessionLimitMinutes    0
+    Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}     sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
 
 Change Time Interval And Verify on Server
     [Tags]    system settings    C65722    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Run Keyword If    ${status}==False    Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}    save=False
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
+    Run Keyword If    ${status}==False    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
     Change Duration Time Interval    ${SYSTEM SAVE}
     Evaluate Session Limit
     Reload Page
@@ -101,91 +70,74 @@ Changing Several Random Checkboxes Works
     [Tags]    system settings    threaded
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Changing Several Settings at Random    ${SYSTEM SAVE}
-    Changing Several Settings at Random    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Changing Several Settings at Random    ${SAVE BUTTON}
+    Changing Several Settings at Random    ${CANCEL BUTTON}
     
 Systems Settings Block is Available for Administrator or Owner
     [Tags]    C69736    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]   autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    Log    Step 2
-    Log Out
-    Log in to user and system    ${users}[cloudAdmin]    ${system}[id]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    
-System Settings block is not available for other users
-    [Tags]    C69737    system settings     threaded
-    @{users}=   Create List    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]    ${users}[custom]
-    FOR    ${user}    IN    @{users}
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
         Log in to user and system    ${user}    ${system}[id]
-        Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+        Wait Until Settings Are Visible
+        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Checkbox should be selected     ${ENABLE AUTO DISCOVERY CHECKBOX}
+        Checkbox should be selected     ${SEND ANONYMOUS USAGE CHECKBOX}
+        Checkbox should be selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+        Log Out
+    END
+
+System and Security Settings block is not available for other users
+    [Tags]    C69737    C65698    system settings     threaded
+    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]     ${users}[custom]
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Elements Are Visible
+        ...    //h2[contains(text(), "${system}[name]")]
+        ...    ${DISCONNECT FROM MY ACCOUNT}
         Wait until elements are not visible
-        ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
-        ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-        ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
         Log Out
     END
     
 Cancel changes in System Settings block
     [Tags]    C69738    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    Log    Step 1
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Log    Step 2
-    Click Button    ${SYSTEM CANCEL}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Log    Step 3
-    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Log    Step 4
-    Click Button    ${SYSTEM CANCEL}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected    ${setting}    ${True}
+        Change Setting    ${setting}
+        Slow    Click Button    ${CANCEL BUTTON}    timeout=0.5
+        Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+        Elements Should Not Be Visible    ${SYSTEM SAVE}    ${CANCEL BUTTON}
+        Checkbox Is Selected    ${setting}    ${True}
+    END
+
 Moving to a different page after making changes in System Settings without saving them first
     [Tags]    C69739    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    Log    Step 1    
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+
+    Log    Step 1
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    save=False
-    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    save=False
-    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${True}
+    END
+    FOR    ${setting}    IN    @{tested settings}
+        Change Setting     ${setting}
+    END
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+
     Log    Step 2
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible
@@ -193,30 +145,34 @@ Moving to a different page after making changes in System Settings without savin
     ...    ${APPLY CHANGES BUTTON}  
     ...    ${DISCARD CHANGES BUTTON}
     ...    ${CANCEL CHANGES BUTTON}
+
     Log    Step 3
     Click Button    ${DISCARD CHANGES BUTTON}
     Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
     Wait Until Location is    ${env}/systems/${system}[id]/health/alerts
+
     Log    Step 4
     Go To    ${env}/systems/${system}[id]
     Wait Until Settings Are Visible
-    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    save=False
-    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    save=False
-    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    FOR    ${setting}    IN    @{tested settings}
+        Change Setting     ${setting}
+    END
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible
     ...    ${APPLY CHANGES QUESTION}
     ...    ${APPLY CHANGES BUTTON}  
     ...    ${DISCARD CHANGES BUTTON}
     ...    ${CANCEL CHANGES BUTTON}
+
     Log    Step 5
     Click Button    ${CANCEL CHANGES BUTTON}
     Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${False}
+    END
+
     Log    Step 6
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible
@@ -225,239 +181,205 @@ Moving to a different page after making changes in System Settings without savin
     ...    ${DISCARD CHANGES BUTTON}
     ...    ${CANCEL CHANGES BUTTON}
     ...    ${APPLY CHANGES CLOSE BUTTON} 
+
     Log    Step 7
     Click Button    ${APPLY CHANGES CLOSE BUTTON}
     Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${False}
+    END
+
     Log    Step 8
     Reload Page
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${True}
+    END
 
 Changing All Checkboxes Works
     [Tags]    system settings    C65722    threaded
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
     Log    Steps 1 - 8
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible    timeout=60
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Changing All Settings    ${SYSTEM SAVE}
-    Changing All Settings    ${SYSTEM CANCEL}
-    Changing All Settings    ${SYSTEM SAVE}
-    
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Changing All Settings    ${SAVE BUTTON}
+    Changing All Settings    ${CANCEL BUTTON}
+
 Changes made in the thick client are displayed in System Settings block in Cloud Portal
     [Tags]    C69741    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
     Log    Step 1
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    false
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+
     Log    Step 2
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+
     Log    Step 3
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    false
+    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    false
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
-    
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+
     Log    Step 4
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
+    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+
     Log    Step 5
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    false
+    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    false
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked 
-    
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
+
     Log    Step 6
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
+    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked   
-    
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
     Log    Step 7
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    false
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=false   statisticsAllowed=false    cameraSettingsOptimization=false
+    Set System Settings    ${local auth}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
 
     Log    Step 8
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
 Checking the dependency of system settings checkboxes
     [Tags]    C69742    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
 
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
     Log    Step 1
-    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
     Log    Step 2
-    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
     Log    Step 3
-    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked 
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
 
     Log    Step 4
     Reload Page
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
     
 Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
-    
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
     Log    Step 1
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    false
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick unchecked
-    
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+
     Log    Step 2
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
+    Set System Settings via API    ${local auth}    ${server url}    auditTrailEnabled    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+
     Log    Step 3
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    true
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
+
     Log    Step 4
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    true
+    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    true
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
+
     Log    Step 5
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
+    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked 
-    
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+
     Log    Step 6
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked   
-    
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+
     Log    Step 7
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    30
+    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    30
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked 
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 30    Fail
     
     Log    Step 8
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
     Reload Page
     Wait Until Settings Are Visible
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
 
 Security block is available for administrator or owner
     [Tags]    C65697    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
-    Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait Until Settings Are Visible    timeout=60
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
-    
-    Log    Step 2
-    Log Out
-    Log in to user and system    ${users}[cloudAdmin]    ${system}[id]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
+    Log    Step 1, 2
+    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+    Log in to user and system    ${user}    ${system}[id]
+        Wait Until Settings Are Visible    timeout=60
+        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+        Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+        Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+        Log Out
+    END
 
 System Settings block is not available when the system is offline
     [Tags]    C69744    system settings    threaded
@@ -465,156 +387,125 @@ System Settings block is not available when the system is offline
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
-    ...    ${EDITABLE TITLE}
     ...    ${MERGE BUTTON SYSTEM}
     ...    ${PLACEHOLDER ICON}
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
-    Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
-    Element Should Not Be Visible    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Element Should Not Be Visible    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
     Start Docker Server    ${system}[cont]
 
 System settings block view for different System versions
-    [Tags]    C69743    system settings    threaded    deb
-    ${sys}=   Setup Docker System    image=${image 4.0}    cloud email=${system}[owner]
+    [Tags]    C69743    C65829    system settings    threaded
+    ${4.0 system}=   Setup Docker System    image=${image 4.0}    cloud email=${EMAIL OWNER}
+    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
+    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
+    ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[id]
+    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
+    Common Restart Logout    ${ENV}
+    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
+        Set System Settings    ${local auth}    ${url}     ${default settings}
+        Log in to user and system    ${EMAIL OWNER}    ${id}
+        Reload Page
+        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
+        ...    ELSE    Wait Until Settings Are Visible    timeout=60    old system=False
+        Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+        Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
-    Log    Check 3.2
-    Set System Settings via API    ${local auth}    ${3.2 system url}    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    ${3.2 system url}    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    ${3.2 system url}    cameraSettingsOptimization    true
+        Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX}    autoDiscoveryEnabled    ${url}
+        Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX}    statisticsAllowed    ${url}
+        Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    cameraSettingsOptimization    ${url}
+        Changing setting changes it on server    ${ENABLE AUDIT TRAIL CHECKBOX}    auditTrailEnabled    ${url}
+        Log Out
+    END
 
-    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
-    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
-    Wait Until Settings Are Visible    timeout=60    old system=True
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Delete Docker Server    ${4.0 cont}
 
-    Log    Fails due to CLOUD-6523
-    Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled    ${3.2 system url}
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    ${3.2 system url}
-    Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization    ${3.2 system url}
-    Log Out
-
-    Log    Check 4.0
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${sys}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${sys}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${sys}[port]    cameraSettingsOptimization    true
-
-    Log in to user and system    ${sys}[owner]    ${sys}[id]
-    Wait Until Settings Are Visible    timeout=60
-    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
-
-    Changing Several Settings at Random    ${SYSTEM SAVE}    server url=https://${QABURBANK IP}:${sys}[port]
-    Log Out
-
-Security block is not available for other users
-    [Tags]    C65698    system settings    threaded
-    FOR    ${user}    IN    @{users.values()}
-	    Log in to user and system    ${user}    ${base password}
-	    Sleep    1
-	    Page Should Not Contain Elements
-	        ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-	        ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
-	        ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-	        ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
-	    Log Out
-	END  
-	
 Cancel changes in Security block
     [Tags]    C65724    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
     Log    Step 1
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 2
-    Click Button    ${SYSTEM CANCEL}
+    Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
     
     Log    Step 3
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}    save=False
-    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    save=False
-    Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}        save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
+    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
+    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 4
-    Click Button    ${SYSTEM CANCEL}
+    Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
     
 Checking the dependency of security settings checkboxes
     [Tags]    C65700    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
     
     Log    Step 1
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible    timeout=60
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true    
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
-    
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+
     Log    Step 2
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
+    Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
     
     Log    Step 3
-    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    save=False
+    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
     Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
     Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
     
     Log    Step 4
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}    save=False    buttons=False
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
-    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}    buttons=False
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Wait until elements are not visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 Check Limit session duration
     [Tags]    C65703    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    auditTrailEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
-    
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
     Log    Step 1
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
-    Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}    save=False
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -633,9 +524,9 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Page Should Not Contain Element     ${SYSTEM SAVE}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 3
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -646,9 +537,9 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Page Should Not Contain Element     ${SYSTEM SAVE}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 4
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -659,9 +550,9 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1    
-    Page Should Not Contain Element     ${SYSTEM SAVE}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    0
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 5
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -672,13 +563,13 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Wait Until Elements Are Visible	 ${SYSTEM SAVE}    ${SYSTEM CANCEL}    
-    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible	 ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    65
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    65
         
     Log    Step 6
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -689,10 +580,10 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Click Button     ${SYSTEM SAVE} 
+    Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    1
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    1
     
     Log    Step 7
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -703,11 +594,11 @@ Check Limit session duration
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    600  
     Sleep    1
-    Click Button     ${SYSTEM SAVE} 
+    Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${minutes} =    Evaluate    600*60
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    ${minutes}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    ${minutes}
     
     Log    Step added by auto qa (CLOUD-5221 found)
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -716,12 +607,12 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Click Button     ${SYSTEM SAVE} 
+    Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    600
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    600
     
     Log    Step 8
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -731,32 +622,32 @@ Check Limit session duration
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
-    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button     ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 5   Fail    Interval not 5 minutes as expected
-    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    sessionLimitMinutes    5
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    5
 
 Check HTTPS traffic encryption
     [Tags]    C65701    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    true
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
     
     Log    Step 1
     Log in to user and system    ${system}[owner]    ${system}[id]
     Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Change Setting And Save   ${ALLOW ONLY SECURE CHECKBOX}
 
     Log    Step 2
-    Go To    http://${QABURBANK IP}:${system}[port]
-    Wait until location is    http://${QABURBANK IP}:${system}[port]/static/index.html#/
+    Go To    ${server url}
+    Wait until location is    ${server url}/static/index.html#/
 
     Log    Step 3
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    false
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
+    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 4
     ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
@@ -764,28 +655,26 @@ Check HTTPS traffic encryption
 
     Log    Step 5
     Go To    ${env}/systems/${system}[id]
-    Wait until settings are visible
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Wait Until Settings Are Visible
+    Change Setting And Save    ${ALLOW ONLY SECURE CHECKBOX}
 
-# TODO: figure out failure
-#    Log    Step 6
-#    Go To    http://${QABURBANK IP}:${system}[port]
-#    Wait until location contains    https://${QABURBANK IP}:${system}[port]
+    Log    Step 6
+    Go To    http://${QABURBANK IP}:${system}[port]
+    Run keyword and continue on failure    Wait until location contains    ${server url}
 
     Log    Step 7
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    trafficEncryptionForced    true
-    Evaluate System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    videoTrafficEncryptionForced    false
+    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 8
-    ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
+    ${resp}=   Check Connection    ${server url}
     Should Be Equal As Strings    ${resp}    SSL Error
 
     Log    Step 9
-    ${resp}=   Check Connection    https://${QABURBANK IP}:${system}[port]    verify=False
+    ${resp}=   Check Connection    ${server url}    verify=False
     Should Be Equal As Strings    ${resp}    200
 
-    ${resp}=   Check Connection    https://${QABURBANK IP}:${system}[port]
-    Should Be Equal As Strings    ${resp}    SSL Error
+    Go To    ${ENV}
 
 Security block view for 3 dot 2 System
     [Tags]    C65829    system settings    threaded
@@ -793,42 +682,21 @@ Security block view for 3 dot 2 System
     Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
     ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
 
-    Log    Step 1 covered in other testcases by default
-    Log    Step 2
     Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
-    Wait until element is visible    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
-    
+    Wait Until Settings Are Visible    old system=True
+    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+
 Changes in System Settings block are displayed in thick client
     [Tags]    C69740    threaded    system settings
     Log    Preconditions
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    autoDiscoveryEnabled    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    statisticsAllowed    true
-    Set System Settings via API    ${local auth}    https://${QABURBANK IP}:${system}[port]    cameraSettingsOptimization    true
-    
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
     Log in to user and system    ${system}[owner]    ${system}[id]
-    Wait until settings are visible
+    Wait Until Settings Are Visible
 
-    Log    Step 1
-    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 2
-    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 3
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 4
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 5
-    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 6
-    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization    https://${QABURBANK IP}:${system}[port]
-    
-    Log    Step 7
-    Changing All Settings    ${SYSTEM SAVE}
-    
-    Log    Step 8
-    Changing All Settings    ${SYSTEM SAVE}
+    Log    Steps 1-6
+    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization
+        Repeat Keyword    2 times    Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
+    END
+
+    Log    Step 7, 8
+    Repeat Keyword    2 times    Changing All Settings    ${SAVE BUTTON}

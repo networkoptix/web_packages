@@ -934,9 +934,9 @@ Setup Custom Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Run Keyword If    '4.0' in $image    Set Local Variable   ${vms}    old
+    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
     ...    ELSE   Set Local Variable    ${vms}    new
-    # Get random available port(sorry)
+    # Get random available port
     ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
                   ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
@@ -956,16 +956,48 @@ Setup Docker System
     Set To Dictionary    ${system}    cont=${system}[cont]
     ${auth}=   Create List    admin    ${base password}
     Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+    Return From Keyword If    not $cloud_email    ${system}
 
 #   Connect system to cloud if email is provided
-    ${mock list}=   Create List
-    Run Keyword If    $cloud_email    Append To List    ${mock list}    1
-    FOR    ${i}    IN    @{mock list}
-        Set To Dictionary    ${system}    owner=${cloud email}
-        ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
-        Set To Dictionary    ${system}    id=${id}
-    END
+    Set To Dictionary    ${system}    owner=${cloud email}
+    ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
+    Set To Dictionary    ${system}    id=${id}
     [Return]    ${system}
+
+Create Base Cloud System
+    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${add users}=${True}
+    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
+    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
+    ...               where "Create Base Cloud System" is called
+
+    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
+    ${local auth}=   Create List    admin    ${base password}
+    ${cloud auth}=   Create List    ${owner}    ${base password}
+    Set Suite Variable    ${cloud auth}
+    Set Suite Variable    ${local auth}
+    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
+    Set Suite Variable    ${system}
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
+    Return From Keyword If    not $add_users
+
+    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
+    Set Suite Variable    ${email noperm}
+    ${users}=   Create Dictionary
+    FOR    ${role}    IN    @{permissions.keys()}
+        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
+        Sleep    1
+        Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+        Set To Dictionary    ${users}    ${role}=${email}
+    END
+    Set Suite Variable    ${users}
+
+Delete Base Cloud System
+    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
+    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
+    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
+        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+    END
+    Delete Docker Server    ${system}[cont]
 
 Create Custom Network
     [Arguments]    ${name}    ${num}
@@ -974,58 +1006,26 @@ Create Custom Network
     ${ip range}=   Set Variable    192.28.${num}.0/24
     ${gateway}=    Set Variable    192.28.${num}.254
     ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
-
-    Acquire Lock   create_net_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${net id}=   Execute Command    ${cmd}
-    Close Connection
-    Release Lock   create_net_lock
+    Execute Command Remotely    ${cmd}
     [Return]    ${net id}
 
 Remove Custom Network
     [Arguments]    ${net id}
-    ${cmd}=   Set Variable    docker network rm ${net id}
-    Acquire Lock   remove_net_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${net id}=   Execute Command    ${cmd}
-    Close Connection
-    Release Lock   remove_net_lock
+    Execute Command Remotely    docker network rm ${net id}
     [Return]    ${net id}
 
 Delete Docker Server
     [Arguments]    ${name}
-    Acquire Lock   delete_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Execute Command    docker rm -f ${name}
-    ${result}=   Execute Command    docker ps -qaf "name=${name}"
-    Close Connection
-    Release Lock   delete_server_lock
-    Return from Keyword If    "${result}" == "${EMPTY}"    ${True}
+    Execute Command Remotely    docker rm -f ${name}
     [Return]    ${False}
 
 Start Docker Server
     [Arguments]    ${name}
-    Acquire Lock   start_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Execute Command    docker start ${name}
-    ${port info}=   Execute Command    docker container port ${name}
-    ${port info}=   Split String    ${port info}    :
-    Close Connection
-    Release Lock   start_server_lock
-    [Return]    ${port info}[1]
+    Execute Command Remotely    docker start ${name}
 
 Stop Docker Server
     [Arguments]    ${name}
-    Acquire Lock   stop_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Execute Command    docker stop ${name}
-    Close Connection
-    Release Lock   stop_server_lock
+    Execute Command Remotely    docker stop ${name}
 
 Restart Docker Server
     [Arguments]    ${port}    ${name}    ${auth}
@@ -1068,12 +1068,11 @@ Page Should Not Contain Elements
     END
 
 Execute Command Remotely
-    [Arguments]    ${command}
+    [Arguments]    ${command}    ${host ip}=${QA BURBANK IP}    ${host user}=${QA BURBANK USER}    ${host password}=${QA BURBANK PASS}
     Acquire Lock    exec_cmd_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Open Connection    ${host ip}
+    SSHLibrary.Login    ${host user}    ${host password}
     ${result}=   Execute Command    ${command}
     Close Connection
     Release Lock    exec_cmd_lock
     [Return]    ${result}
-
