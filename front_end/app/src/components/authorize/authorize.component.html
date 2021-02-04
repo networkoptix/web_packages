@@ -1,25 +1,25 @@
 <div class="authorize-main">
     <div class="dialog-window" [ngSwitch]="currentState">
         <nx-authorize-email-component
-            *ngSwitchCase="'email'"
+            *ngSwitchCase="AuthorizeState.email"
             [errorCode]="emailErrorCode"
             (sendEmailToParent)="getEmailFromChild($event)"
             [emailProcess]="emailProcess"
         ></nx-authorize-email-component>
         <nx-authorize-password-component 
-            *ngSwitchCase="'password'"
+            *ngSwitchCase="AuthorizeState.password"
             [authorizeEmail]="authorizeEmail"
             (sendPasswordToParent)="getPasswordFromChild($event)"
             [passwordProcess]="passwordProcess"
         ></nx-authorize-password-component>
         <nx-authorize-create-account-component 
-            *ngSwitchCase="'createAccount'"
+            *ngSwitchCase="AuthorizeState.create"
         ></nx-authorize-create-account-component>
         <nx-authorize-activate-account-component 
-            *ngSwitchCase="'activateAccount'"
+            *ngSwitchCase="AuthorizeState.activate"
         ></nx-authorize-activate-account-component>
         <nx-authorize-confirmation-component 
-            *ngSwitchCase="'confirmation'"
+            *ngSwitchCase="AuthorizeState.confirm"
         ></nx-authorize-confirmation-component>
         <!-- <router-outlet></router-outlet> -->
 

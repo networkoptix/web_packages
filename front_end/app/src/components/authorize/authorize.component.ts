@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
 import {
     Component, Input,
@@ -28,7 +29,7 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 
-type AuthorizeParams = {
+interface AuthorizeParams {
     response_type: string,
     client_id: string,
     redirect_url: string,
@@ -70,11 +71,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     plugin;
     content: any = {};
+    AuthorizeState = AuthorizeState;
 
     footerItems: { name: string, url: string }[];
 
-    currentState: string;
-    clientType: string;
+    currentState: AuthorizeState;
+    clientType: ClientType;
     windowWideEnough = true;
     initialData: AuthorizeParams;
 
@@ -90,17 +92,17 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
-        private accountService: NxAccountService,
-        private pageService: NxPageService,
-        private dialogs: NxDialogsService,
-        private systemService: NxSystemService,
-        private systemsService: NxSystemsService,
-        private processService: NxProcessService,
-        private uriService: NxUriService,
-        private router: Router,
-        private scrollMechanicsService: NxScrollMechanicsService,
-        private applyService: NxApplyService,
-        private appStateService: NxAppStateService
+        private processService: NxProcessService
+        // private accountService: NxAccountService,
+        // private pageService: NxPageService,
+        // private dialogs: NxDialogsService,
+        // private systemService: NxSystemService,
+        // private systemsService: NxSystemsService,
+        // private uriService: NxUriService,
+        // private router: Router,
+        // private scrollMechanicsService: NxScrollMechanicsService,
+        // private applyService: NxApplyService,
+        // private appStateService: NxAppStateService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -134,7 +136,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 result = await this.cloudService.authenticate(
                     this.authorizeEmail,
                     this.authorizePassword,
-                    this.initialData.client_id || 'cloud_portal',
+                    this.initialData.client_id || 'cloud_portal', // take out hard coded strings before pushing to production
                     this.initialData.redirect_url || 'http://localhost:9000/',
                     this.initialData.response_type || 'code',
                     this.initialData.state
@@ -257,4 +259,32 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
         };
     }
+    /**
+     * Chris' suggestion
+     * class AuthContent {
+            ... property definitions
+            constructor(
+                content: Partial<AuthContent>
+            ) {...combine content with contentDefault object}
+        }
+
+        class AuthStateContent {
+            constructor(
+                public email: AuthContent,
+                public password: AuthContent,
+                public error: ErrorContent = defaultErrorState
+            ){}
+        }
+
+        interface AuthStates {
+            [key: ClientType] : AuthStateContent
+        }
+        this.content = {
+            [ClientType.loginCloud]: new AuthStateContent(
+                new AuthContent({...}),
+                new AuthContent({...}),
+                // Error can be left empty to use default
+            )
+        }
+     */
 }
