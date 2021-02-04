@@ -23,7 +23,7 @@ from dal import autocomplete
 
 from api import models
 from api.controllers.cloud_api import Account, Auth, TempLogin
-from api.account_backend import AccountManager, get_ip
+from api.account_backend import get_ip
 from api.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
@@ -92,7 +92,7 @@ def register(request):
 
     account = models.Account.objects.filter(email=data['email']).first()
     if not account or account.is_active:
-        AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
+        models.AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
         serializer = CreateAccountSerializer(data=data)
         if not serializer.is_valid():
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
@@ -100,10 +100,10 @@ def register(request):
         logger.debug('/api/account/register calling serializer.save')
         serializer.save()
     else:
-        AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
+        models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
 
     logger.debug('/api/account/register checking if activated')
-    activated = AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
+    activated = models.AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
     logger.debug('/api/account/register completed')
     return api_success({'activated': activated})
 
@@ -143,7 +143,7 @@ def login(request):
             request.session.pop('account_blocked', None)
             raise APINotAuthorisedException("Account is blocked", ErrorCodes.account_blocked)
         # try to find user in the DB
-        if not AccountManager.is_email_in_portal(email):
+        if not models.AccountManager.is_email_in_portal(email):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
@@ -312,7 +312,7 @@ def activate(request):
             raise APIInternalException('No email from cloud_db', ErrorCodes.cloud_invalid_response)
 
         email = user_data['email'].lower()
-        if not AccountManager.is_email_in_portal(email):
+        if not models.AccountManager.is_email_in_portal(email):
             raise APIInternalException('No email in portal_db', ErrorCodes.portal_critical_error)
 
         user = models.Account.objects.get(email=email)
@@ -378,7 +378,12 @@ def restore_password(request):
 @permission_classes((AllowAny, ))
 def check_account_in_portal(request):
     require_params(request, ('email',))
-    return api_success({'emailExists': AccountManager.is_email_in_portal(request.data['email'])})
+    email = request.data['email']
+    email_exists = models.AccountManager.is_email_in_portal(email)
+    return api_success({
+        'active': email_exists and models.Account.objects.get(email=email).is_active,
+        'emailExists': email_exists
+    })
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -396,7 +401,7 @@ def check_account_in_portal(request):
 def check_code_in_portal(request):
     require_params(request, ('code',))
     (temp_password, email) = Account.extract_temp_credentials(request.data['code'])
-    email_exists = AccountManager.is_email_in_portal(email)
+    email_exists = models.AccountManager.is_email_in_portal(email)
     return api_success({'emailExists': email_exists})
 
 
