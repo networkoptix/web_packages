@@ -60,6 +60,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systemSubscription: Subscription;
     currentMergeInfo: any = undefined;
     merging: boolean;
+    editMode = false;
 
     settingsForSystem;
 
