@@ -32,13 +32,11 @@ form.form-horizontal {
     thead,
     tbody,
     tr {
-        max-height: 24px !important;
         display : contents;
     }
 
     th,
     td {
-        max-height: 24px !important;
         overflow      : hidden;
         text-overflow : ellipsis;
         white-space   : nowrap;
@@ -50,6 +48,8 @@ form.form-horizontal {
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
         color            : $dark9;
+        height: 32px !important;
+
     }
 
     th:last-child {
@@ -58,6 +58,7 @@ form.form-horizontal {
 
     td {
         @include typography.regular13;
+        max-height: 24px !important;
         padding          : 5px 0 5px 16px;
         background-color : $light1;
         display          : flex;
@@ -100,6 +101,7 @@ form.form-horizontal {
 .header-top-bar {
     display     : flex;
     align-items : center;
+    height      : 20px;
 
     .header-title {
         display     : flex;
@@ -195,7 +197,7 @@ svg-icon:not(.animate-rotation) .st0 {
 }
 
 .no-storages-sizing {
-    height: 138px !important;
+    height: 144px !important;
 }
 
 .header-button-span {
