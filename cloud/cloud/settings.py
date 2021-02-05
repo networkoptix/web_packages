@@ -471,14 +471,14 @@ on a part of your site, e.g. an API at /api/.
 
 Regex allows cors for the following api calls:
 1) /api/ping
-2) /api/login
+2) /api/account/login
 3) /api/systems/connect
 4) /api/systems/disconnect
 5) /api/systems/{cloud_system_id}/users
 These urls need to be whitelisted because mediaserver use them.
 """
 # Comment out for swagger-ui local.
-CORS_URLS_REGEX = r'^\/api\/(?:login|ping|systems)\/(?:(?:dis)?connect|(?:[\w\d-]+\/users))'
+CORS_URLS_REGEX = r'^/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?)'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
