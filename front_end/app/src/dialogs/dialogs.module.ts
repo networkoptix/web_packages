@@ -8,8 +8,8 @@ import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
 
-import { ComponentsModule }            from '../components/components.module';
-import { DirectivesModule }            from '../directives/directives.module';
+import { ComponentsModule }            from '@components/components.module';
+import { DirectivesModule }            from '@directives/directives.module';
 import { PipesModule }                 from '../pipes/pipes.module';
 import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
@@ -42,6 +42,7 @@ import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-stora
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
 import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
+import { RemoveSystemModalContent }       from './remove-system/remove-system.component';
 import { NxDialogsService }               from './dialogs.service';
 
 @NgModule({
@@ -83,7 +84,8 @@ import { NxDialogsService }               from './dialogs.service';
         CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,
         ResetBackupModalContent,
-        AddStorageModalContent
+        AddStorageModalContent,
+        RemoveSystemModalContent
     ],
     providers: [
         NxDialogsService,

@@ -8,22 +8,23 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 import { auditTime }                 from 'rxjs/operators';
 
-import { NxRibbonService }           from '../../../../components/ribbon';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../services/process.service';
-import { NxSystem, NxSystemUser }    from '../../../../services/system.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem, NxSystemUser }    from '@services/system.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
-import { NxPageService }             from '../../../../services/page.service';
-import { NxSystemsService }          from '../../../../services/systems.service';
-import { NxAccountService }          from '../../../../services/account.service';
-import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
-import { NxUriService }              from '../../../../services/uri.service';
-import { NxToastService }            from '../../../../dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { NxPageService }             from '@services/page.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxAccountService }          from '@services/account.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxToastService }            from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxApplyService, Watcher }   from '@services/apply.service';
+import { WINDOW }                    from '@services/window-provider';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -107,6 +108,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
+        @Inject(WINDOW) private window: Window,
         private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
@@ -301,6 +303,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
+            if (this.CONFIG.isLocal) {
+                return this.dialogs.removeSystem(this.system)
+                    .then((result) => result === true && setTimeout(() => this.window.location.reload(), 6000));
+            }
             this.dialogs.confirm(
                 this.LANG.dialogs.removeSystem.message(),
                 this.LANG.dialogs.removeSystem.title(),

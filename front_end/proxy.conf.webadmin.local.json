@@ -5,6 +5,11 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/api/systems/*": {
+    "target": "http://cloud-test.hdw.mx",
+    "secure": false,
+    "changeOrigin": true
+  },
   "/web/api/*": {
     "target": "https://localhost:7001",
     "secure": false,

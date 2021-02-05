@@ -677,14 +677,16 @@ export class NxSystem extends System {
         return this.userManager.deleteUser(removedUser);
     }
 
-    deleteFromCurrentAccount() {
+    deleteFromCurrentAccount(password?: string) {
         const currentUser = this.userManager.currentUser;
-        if (this.isAvailable && currentUser && !currentUser.isAdmin) {
+        const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
+        if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
-            this.userManager.deleteUser(currentUser);
+            const delPromise = this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, currentUser?.email || this.userManager.currentUserEmail);
+        const id = this.CONFIG.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        return this.cloudApi.unshare(id, email, password);
     }
 
     /**

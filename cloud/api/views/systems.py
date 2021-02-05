@@ -67,18 +67,27 @@ def list_systems(request):
                          required=["role", "user_email"]
                      ))
 @api_view(['GET', 'POST'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 def sharing(request, system_id):
     if request.method == 'GET':
+        if not request.user.is_authenticated:
+            raise APINotAuthorisedException()
         # get authorized user here
         data = cloud_api.System.users(request.session['login'], request.session['password'], system_id)
         return api_success(data['sharing'])
 
     elif request.method == 'POST':
+        if not request.user.is_authenticated:
+            require_params(request, ('email', 'password'))
+            login = request.data['email'].lower()
+            password = request.data['password']
+        else:
+            login = request.session['login']
+            password = request.session['password']
         require_params(request, ('user_email', 'role'))
         # 2. share or change sharing
         user_email = request.data['user_email'].lower()
-        data = cloud_api.System.share(request.session['login'], request.session['password'], system_id,
+        data = cloud_api.System.share(login, password, system_id,
                                       user_email,
                                       request.data['role'])
 

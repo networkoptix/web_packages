@@ -179,11 +179,18 @@ export class NxCloudApiService {
         return this.http.get<t.CloudUsers>(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
     }
 
-    unshare(systemId: string, userEmail: string) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
+    unshare(systemId: string, userEmail: string, password?: string) {
+        let url = `${this.CONFIG.apiBase}/systems/${systemId}/users`;
+        const data: any = {
             user_email : userEmail,
             role       : this.CONFIG.accessRoles.unshare
-        });
+        };
+        if (this.CONFIG.isLocal) {
+            url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
+            data.email = userEmail;
+            data.password = password || '';
+        }
+        return this.http.post(url, data);
     }
 
     authKey() {
