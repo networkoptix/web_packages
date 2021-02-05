@@ -158,7 +158,6 @@ $grid-breakpoints: typography.$grid-breakpoints;
             padding          : 5px 15px;
             background-color : theme_variables.$additional_light1;
             border-bottom    : 1px solid theme_variables.$light3;
-            color            : theme_variables.$dark9;
         }
 
         th:last-child {
@@ -314,8 +313,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
                 height: 48px;
             }
             & p {
-                @include typography.medium13;
-                color: theme_variables.$dark15;
+                @include typography.medium13dark15;
                 opacity: 0.4;
                 margin-bottom: 6px;
             }
@@ -348,8 +346,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
             }
 
             .minor-text {
-                @include typography.regular11;
-                color      : typography.$light16;
+                @include typography.regular11light;
                 margin-top : 5px;
             }
         }

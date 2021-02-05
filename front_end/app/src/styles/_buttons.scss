@@ -214,8 +214,7 @@ button, .btn {
 }
 
 .btn-tag {
-    @include typography.regular13;
-    color            : $light16 !important;
+    @include typography.regular13light;
     font-weight      : 400;
     white-space      : nowrap;
     background-color : $light4;
@@ -311,8 +310,7 @@ button, .btn {
     }
 
     span {
-        @include typography.regular13;
-        color : $light16 !important;
+        @include typography.regular13light;
 
         &.close {
             left   : 0;

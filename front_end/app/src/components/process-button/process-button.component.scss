@@ -133,7 +133,7 @@ nx-process-button {
     }
 
     .text-only {
-        @include typography.light13;
+        @include typography.regular13light;
         cursor: pointer;
     }
 }

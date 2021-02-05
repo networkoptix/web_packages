@@ -111,9 +111,8 @@
         color: $dark15;
         fill: $dark15;
     }
-    @include typography.regular13;
+    @include typography.regular13light;
     background-color: inherit;
-    color: $light16;
     display: flex;
     align-items: center;
     fill: $light16;

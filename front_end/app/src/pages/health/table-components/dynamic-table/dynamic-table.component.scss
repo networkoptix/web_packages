@@ -278,8 +278,7 @@ nx-dynamic-table {
           }
 
           .page-link {
-            @include typography.regular13;
-            color            : $light16 !important;
+            @include typography.regular13light;
             background-color : $light4;
             border-radius    : 2px;
             height           : 32px;

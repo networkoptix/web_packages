@@ -32,7 +32,6 @@ $stripes : repeating-linear-gradient(
     .total-label {
         @include typography.regular13;
         position : absolute;
-        color    : $dark9;
         z-index  : 9;
         left     : 8px;
     }

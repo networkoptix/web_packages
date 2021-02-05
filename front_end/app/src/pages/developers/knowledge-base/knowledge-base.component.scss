@@ -118,8 +118,7 @@
     border-top: 2px solid $additional_light2;
 
     & > h4 {
-        @include typography.medium15;
-        color: $dark17 !important;
+        @include typography.medium15dark17;
         letter-spacing: 0.64px;
     }
 

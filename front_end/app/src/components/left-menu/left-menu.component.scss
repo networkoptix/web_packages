@@ -18,10 +18,9 @@
 }
 
 .base-level {
-    @include typography.regular14;
+    @include typography.regular14dark10;
     position: relative;
     cursor: pointer;
-    color: $dark10;
     user-select: none;
     & > .menu-link {
         padding: 5px 5px 5px 0 ;

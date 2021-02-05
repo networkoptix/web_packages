@@ -56,8 +56,7 @@ $item_height : 40px;
 }
 
 .search-results-label {
-    @include typography.regular13;
-    color    : $light16 !important;
+    @include typography.regular13light;
     position : absolute;
     top      : 0;
     right    : 36px;

@@ -112,8 +112,7 @@ header {
         max-width        : 100%;
 
         &.btn.btn-dropdown-toggle span .text-muted {
-            @include typography.regular14;
-            color : $light16 !important;
+            @include typography.regular14light;
         }
 
         &::after {

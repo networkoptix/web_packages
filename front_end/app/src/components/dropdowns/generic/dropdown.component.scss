@@ -15,9 +15,8 @@ nx-select {
     }
 
     .additional-help {
-        @include typography.regular13;
+        @include typography.regular13light;
         margin-left: 0.25rem;
-        color : $light16;
     }
 
     .selected .additional-help {

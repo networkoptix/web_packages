@@ -9226,14 +9226,13 @@
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-	@include typography.medium13nocolor;
+	@include typography.medium13light1;
 	min-width     : 80px;
 	padding       : 2px 8px;
 	text-align    : center;
 	border-radius : 2px;
 	background    : #000;
 	text-shadow   : 0 1px 0 rgba(0, 0, 0, .1);
-	color         : $light1;
 }
 
 .swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
@@ -10713,8 +10712,7 @@
 }
 
 .swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameter__deprecated {
-	@include typography.regular13nocolor;
-	color       : $light8;
+	@include typography.regular13light8;
 }
 
 .swagger-ui .parameter__empty_value_toggle {

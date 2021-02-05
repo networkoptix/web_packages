@@ -270,8 +270,7 @@
             }
 
             .minor-text {
-                @include typography.regular11;
-                color      : typography.$light16;
+                @include typography.regular11light;
                 margin-top : 5px;
             }
         }

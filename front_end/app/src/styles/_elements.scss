@@ -50,8 +50,7 @@ svg {
 }
 
 .disabled-label {
-    @include typography.regular13;
-    color : $light10 !important;
+    @include typography.regular13light10;
 }
 
 .warning-label {

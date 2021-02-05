@@ -162,8 +162,7 @@ nx-health-viewer-component {
         pointer-events : none;
 
         span {
-          @include typography.medium24nocolor;
-          color : $light1;
+          @include typography.medium24light1;
         }
 
         svg-icon {

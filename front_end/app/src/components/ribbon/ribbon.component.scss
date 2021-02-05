@@ -2,8 +2,7 @@
 @use '../../../styles/theme_variables' as *;
 
 .ribbon {
-    @include typography.regular13;
-    color            : $light1;
+    @include typography.regular13light1;
     background-color : $brand_d1;
     line-height      : 1rem;
     //border-top       : 1px solid $brand_d2;
@@ -31,8 +30,7 @@
         text-align : right;
 
         a {
-            @include typography.regular13;
-            color           : $light1;
+            @include typography.regular13light1;
             text-decoration : underline;
 
             &:hover {

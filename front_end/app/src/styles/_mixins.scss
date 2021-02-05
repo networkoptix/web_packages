@@ -136,10 +136,9 @@
             }
         }
     }
-    @include typography.regular13;
+    @include typography.regular13light;
     // flex: 0 0 auto;
     background-color: inherit;
-    color: theme_variables.$light16 !important;
     display: flex;
     align-items: center;
     white-space: nowrap;

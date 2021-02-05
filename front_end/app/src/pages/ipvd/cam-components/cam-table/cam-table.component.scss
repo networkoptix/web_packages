@@ -65,8 +65,7 @@ nx-cam-table {
           }
 
           .caption {
-            @include typography.medium13;
-            color : $light16;
+            @include typography.medium13light;
             position : relative;
             height   : 2rem;
             overflow-wrap : initial;
@@ -167,8 +166,7 @@ nx-cam-table {
           }
 
           .page-link {
-            @include typography.regular13;
-            color: $light16 !important;
+            @include typography.regular13light;
             background-color: $light4;
             border-radius: 2px;
             height: 32px;

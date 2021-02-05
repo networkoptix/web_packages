@@ -27,8 +27,7 @@
     }
 
     .text-placeholder {
-        @include typography.regular20;
-        color       : $light16;
+        @include typography.regular20light;
         height      : 2rem;
     }
 

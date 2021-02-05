@@ -33,7 +33,6 @@
         padding          : 5px 15px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
-        color            : $dark9;
     }
 
     th:last-child {
@@ -81,9 +80,8 @@
             }
 
             .tag {
-                @include typography.medium11;
+                @include typography.medium11light1;
                 margin-left    : 8px;
-                color          : $light1;
                 padding        : 4px 8px;
                 text-transform : uppercase;
                 border-radius  : 2px;
@@ -147,8 +145,7 @@
 }
 
 .text-muted {
-    @include typography.regular11;
-    color : $light16;
+    @include typography.regular11light;
 }
 
 .item {

@@ -17,17 +17,15 @@
         }
     
         h2 {
-            @include typography.medium24;
+            @include typography.medium24light1;
             margin-top: 40px;
-            color: $light1;
         }
     
         button {
-            @include typography.regular16;
+            @include typography.regular16light1;
             border-radius: 2px;
             border: 1px rgba($light4, 0.2) solid;
             margin-top: 40px;
-            color: $light1;
     
             svg-icon {
                 .circular {
@@ -66,8 +64,7 @@
         }
     
         .btn-helper {
-            @include typography.regular13;
-            color: $light8;
+            @include typography.regular13light8;
             min-height: 20px;
         }
     }
@@ -87,7 +84,6 @@
         &-body {
             .overlay-modal-title {
                 @include typography.regular13;
-                color: $dark9;
             }
             .overlay-modal-servers {
                 list-style-type: none;
@@ -109,8 +105,7 @@
                         @include typography.medium13;
                     }
                     span.server-ip {
-                        @include typography.regular13;
-                        color: $light16;
+                        @include typography.regular13light;
                     }
                     &:hover {
                         background-color: $light3;

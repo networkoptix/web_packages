@@ -17,8 +17,7 @@ nx-vendor-list {
         height : 24px;
 
         a {
-            @include typography.regular15;
-            color           : $light16;
+            @include typography.regular15light;
             height          : 24px;
             text-decoration : none;
 
