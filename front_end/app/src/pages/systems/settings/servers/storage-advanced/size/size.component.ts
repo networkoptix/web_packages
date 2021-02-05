@@ -38,6 +38,10 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     archivePercentage: number;
     STATUS: any;
 
+    get inaccessible() {
+        return [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.store.status);
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string
@@ -59,7 +63,7 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     init() {
         this.store.totalSpace = this.cachedSizes?.[this.store.storageId]?.total || this.store.totalSpace;
         this.store.vmsSpace = this.cachedSizes?.[this.store.storageId]?.vms || this.store.vmsSpace;
-        if (this.store.status === STORAGE_STATUS.INACCESSIBLE && !this.store.totalSpace) {
+        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';
             this.reservedPercentage = 0;

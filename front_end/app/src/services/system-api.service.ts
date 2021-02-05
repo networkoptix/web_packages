@@ -546,7 +546,7 @@ export class NxSystemAPI {
     /**
      * Start of Storage
      */
-    public getStoragesInfo(queryParams) {
+    public getStoragesInfo(queryParams?) {
         return this.get<t.GetStorages[]>('/ec2/getStorages', queryParams);
     }
 

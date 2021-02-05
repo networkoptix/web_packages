@@ -4,15 +4,17 @@ import {
 }                                      from '@angular/forms';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy }                from '@ngneat/until-destroy';
-import { Observable, Subscription }    from 'rxjs';
+import { Subscription }                from 'rxjs';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxSystem }                  from '../../services/system.service';
+import { StorageManager }            from '@services/system.service/system/storage-manager/storage-manager';
+import { Storage }                   from '@services/system.service/system/storage-manager/storage';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { CurrentStorageState }       from '@services/system.service/system/storage-manager/current-storage-state';
+import { skip, take } from 'rxjs/operators';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,11 +23,10 @@ import { CurrentStorageState }       from '@services/system.service/system/stora
     styleUrls   : ['add-storage.component.scss']
 })
 export class AddStorageModalContent {
-    @Input() system: NxSystem;
     @Input() serverId: string;
-    @Input() storageState: Observable<CurrentStorageState>;
+    @Input() storageManager: StorageManager;
+    @Input() cancelPolls: () => any
     @Input() closable: boolean;
-    @Input() updateStorage: () => Promise<any>;
     storageForm: FormGroup;
 
     LANG: LanguageI18NStaticTypes;
@@ -40,7 +41,6 @@ export class AddStorageModalContent {
     urlChecked = false;
     passwordChecked = false;
     loginPasswordWrong = false;
-    storage = []
 
     constructor(
         configService: NxConfigService,
@@ -63,10 +63,10 @@ export class AddStorageModalContent {
         }
     }
 
-    validateUrl = (control: FormControl): { [key: string]: any } | null => {
+    validateUrl = (control: FormControl): { [key: string]: any; } => {
         const systemNetworkStorage = control.value?.substr(1);
         const smbStorage = `smb:${control.value}`;
-        const alreadyExistingUrl = this.storage.find(({ url }) => url === systemNetworkStorage || url === smbStorage);
+        const alreadyExistingUrl = this.storageManager.storageState.locations.find(({ url }) => url === systemNetworkStorage || url === smbStorage);
         if (alreadyExistingUrl) {
             return { alreadyExists: true };
         }
@@ -77,9 +77,6 @@ export class AddStorageModalContent {
     }
 
     ngOnInit() {
-        this.storageState.subscribe(state => {
-            this.storage = state.locations;
-        });
         this.storageForm = new FormGroup({
             url      : new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
             login    : new FormControl(),
@@ -101,13 +98,12 @@ export class AddStorageModalContent {
         this.addStorage = this.processService
             .createProcess(async() => {
                 const { url, login, password } = this.storageForm.value;
-                const systemStorages = (await this.system.getStorages().toPromise()) || [];
+                const systemStorages = (await this.storageManager.getStoragesInfo().toPromise()) || [];
                 const storageExistsOnSystem = !this.alreadyCheckedAndExists && systemStorages.find((s) => s.url.replace('smb:', '') === url);
                 if (storageExistsOnSystem) {
                     return Promise.reject(Error('alreadyExists'));
                 }
                 const id = await this.addStorageProcess(url, login, password);
-                await this.updateStorage();
                 return id;
             }, { ignoreError: true },
             (res: any) => {
@@ -130,7 +126,6 @@ export class AddStorageModalContent {
                 } else {
                     let message = this.LANG.storage.failed();
                     if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
-                        this.system.systemInfo = this.system;
                         message = this.LANG.storage.serverOffline();
                     } else if (err?.message === 'WrongPath') {
                         message = this.LANG.storage.invalidPath();
@@ -150,7 +145,7 @@ export class AddStorageModalContent {
         try {
             const credentials = login || password ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@` : '';
             const smbShare = `smb://${credentials}${url.substr(2)}`;
-            const { reply } = await this.system.getStorageStatus({ path: smbShare }).toPromise();
+            const { reply } = await this.storageManager.getStorageStatus({ path: smbShare }).toPromise();
             if (!reply) {
                 return Promise.reject(Error('SystemOffline'));
             }
@@ -166,14 +161,22 @@ export class AddStorageModalContent {
                 return Promise.reject(Error('WrongAuth'));
             }
             if (reply.status.toLowerCase() === this.CONFIG.responseOk && reply.storage.isWritable) {
-                return this.system.saveStorage({
-                    parentId         : this.serverId,
-                    url              : smbShare,
-                    storageType      : 'smb',
-                    usedForWriting   : true,
-                    isWritable       : true,
-                    isBackup         : false
+                const id = await this.storageManager.saveStorage({
+                    parentId       : this.serverId,
+                    url            : smbShare,
+                    storageType    : 'smb',
+                    usedForWriting : true,
+                    isWritable     : true,
+                    isBackup       : false
                 }).toPromise();
+                return id ? new Promise(resolve => {
+                    this.cancelPolls();
+                    this.storageManager.update().pipe(skip(1), take(1)).subscribe(_ => {
+                        setTimeout(() => {
+                            resolve(id);
+                        }, 5000);
+                    });
+                }) : Promise.reject();
             }
             return Promise.reject();
         } catch (error) {

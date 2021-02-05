@@ -5,9 +5,7 @@ import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap'
 import { Router }                              from '@angular/router';
 import { NgForm }                              from '@angular/forms';
 import { UntilDestroy }                        from '@ngneat/until-destroy';
-import {
-    BehaviorSubject, Observable, SubscriptionLike
-}                                              from 'rxjs';
+import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
 
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '@services/nx-language-provider';
@@ -45,7 +43,7 @@ import { NxAccountService }               from '@services/account.service';
 import { BaseAccount }                    from '@services/account.service/base';
 import { CloudAccount }                   from '@services/account.service/cloud';
 import { NxBootstrapProvider }            from '@services/nx-bootstrap-provider';
-import { CurrentStorageState }            from '@services/system.service/system/storage-manager/current-storage-state';
+import { StorageManager }                 from '@services/system.service/system/storage-manager/storage-manager';
 
 import './../dialogs/dialogs.scss';
 
@@ -229,17 +227,16 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(system: NxSystem, serverId: string, storageState: Observable<CurrentStorageState>, updateStorage) {
+    addStorage(serverId: string, storageManager: StorageManager, cancelPolls: () => any) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            system,
             serverId,
-            storageState,
-            updateStorage,
+            storageManager,
+            cancelPolls,
             closable: true
         };
 

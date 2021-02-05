@@ -359,10 +359,18 @@ export class NxSystem extends System {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     getStorageStatus(queryParams) {
         return this.mediaserver.getStorageStatus(queryParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     saveStorage<T>(updateParams?: T) {
         const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
         return this.mediaserver.saveStorage({ ...updateParams, typeId });
