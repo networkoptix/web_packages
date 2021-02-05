@@ -501,7 +501,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                                             sys.moduleInfo = system.moduleInfo;
                                         }
                                     });
-                                    this.canSeeInfo = system && this.system.canViewInfo();
+                                    this.canSeeInfo = system.canViewInfo();
                                 });
                             }
                         } else {

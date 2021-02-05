@@ -359,10 +359,18 @@ export class NxSystem extends System {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     getStorageStatus(queryParams) {
         return this.mediaserver.getStorageStatus(queryParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     saveStorage<T>(updateParams?: T) {
         const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
         return this.mediaserver.saveStorage({ ...updateParams, typeId });
@@ -677,14 +685,16 @@ export class NxSystem extends System {
         return this.userManager.deleteUser(removedUser);
     }
 
-    deleteFromCurrentAccount() {
+    deleteFromCurrentAccount(password?: string) {
         const currentUser = this.userManager.currentUser;
-        if (this.isAvailable && currentUser && !currentUser.isAdmin) {
+        const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
+        if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
-            this.userManager.deleteUser(currentUser);
+            const delPromise = this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, currentUser?.email || this.userManager.currentUserEmail);
+        const id = this.CONFIG.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        return this.cloudApi.unshare(id, email, password);
     }
 
     /**

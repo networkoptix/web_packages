@@ -185,7 +185,11 @@ function run_mediaserver() {
     do
         echo "Starting mediaserver $PORT"
         docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
-        python cloud/manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
+        if [[ -e $EMAIL ]]; then
+            pushd cloud
+                python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
+            popd
+        fi
         echo
     done
 }

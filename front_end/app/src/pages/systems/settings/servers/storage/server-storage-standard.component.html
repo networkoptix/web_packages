@@ -1,5 +1,5 @@
 <ng-template #noStorages>
-    <nx-pre-loader *ngIf="waitingForStorages"></nx-pre-loader>
+    <nx-pre-loader *ngIf="waitingForStorages" type="storage"></nx-pre-loader>
     <nx-section-placeholder
         *ngIf="!waitingForStorages"
         svgFileName="system_settings_placeholder"

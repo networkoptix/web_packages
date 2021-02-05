@@ -592,7 +592,7 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(customization__name__in=self.request.user.customizations_with_permission('cms.publish_version'))
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__icontains=self.q)
         return qs
 
     def create_object(self, text):

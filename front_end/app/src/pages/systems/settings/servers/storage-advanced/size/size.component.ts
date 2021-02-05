@@ -17,7 +17,7 @@ import { Storage, STORAGE_STATUS }   from '@services/system.service/system/stora
     templateUrl : 'size.component.html',
     styleUrls   : ['size.component.scss']
 })
-export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
+export class NxStorageSizeComponent implements OnDestroy, OnChanges {
     @Input() store: Storage;
     @Input() cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
@@ -38,6 +38,21 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     archivePercentage: number;
     STATUS: any;
 
+    get inaccessible() {
+        return [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.store.status);
+    }
+
+    get cachedSizesClean() {
+        return Object.entries(
+            this.cachedSizes
+        ).reduce((
+            cachedSizes, [key, store]
+        ) => store.total > 0
+            ? { ...cachedSizes, [key]: store }
+            : cachedSizes,
+        {});
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string
@@ -47,9 +62,6 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         this.STATUS = STORAGE_STATUS;
     }
 
-    ngOnInit() {
-    }
-
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.store.currentValue) {
             this.init();
@@ -57,9 +69,9 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     init() {
-        this.store.totalSpace = this.cachedSizes?.[this.store.storageId]?.total || this.store.totalSpace;
-        this.store.vmsSpace = this.cachedSizes?.[this.store.storageId]?.vms || this.store.vmsSpace;
-        if (this.store.status === STORAGE_STATUS.INACCESSIBLE && !this.store.totalSpace) {
+        this.store.totalSpace = this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
+        this.store.vmsSpace = this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
+        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';
             this.reservedPercentage = 0;

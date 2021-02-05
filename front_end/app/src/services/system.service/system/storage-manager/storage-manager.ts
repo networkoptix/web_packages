@@ -78,6 +78,19 @@ export class StorageManager extends StorageState {
         return this.serverManager.getStorages(updateParams.serverId, useCache, customTimeout);
     }
 
+    getStoragesInfo() {
+        return this.serverManager.mediaserver.getStoragesInfo();
+    }
+
+    getStorageStatus(queryParams) {
+        return this.serverManager.mediaserver.getStorageStatus(queryParams);
+    }
+
+    saveStorage<T>(updateParams?: T) {
+        const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
+        return this.serverManager.mediaserver.saveStorage({ ...updateParams, typeId });
+    }
+
     constructor(
         public system: NxSystem
     ) {

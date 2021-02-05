@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
 Test Teardown     System Admin Test Restart
-Suite Teardown    System Admin Suite Tear Down
+Suite Teardown    System Admin Suite Teardown
 Force Tags        system    threaded
 
 *** Test Cases ***

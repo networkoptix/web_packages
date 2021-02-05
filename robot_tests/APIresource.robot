@@ -62,8 +62,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
-    Log    ${bind json}
-    Sleep    5
+    Sleep    10
     ${Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}
@@ -173,7 +172,7 @@ Setup Local System
     @{auth}=   Create List    admin    admin
     &{data}=    Create Dictionary    password=${new password}    systemName=${system name}
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
+    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     ${auth}=   Create List    admin    ${new password}
     Set System Settings via API    ${auth}    ${server url}    statisticsAllowed    false
@@ -347,7 +346,16 @@ Get System Settings From Server
     Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Get Request    Get System Settings session   /api/systemSettings
     Should Be Equal As Strings    ${resp.status_code}    200
+    Should Be Equal As Strings    ${resp.json()}[error]    0
     Return From Keyword    ${resp.json()}[reply][settings]
+
+Get Log Level
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get Log Level session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get Log Level session   /api/logLevel
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Should Be Equal As Strings    ${resp.json}[error]    0
+    Return From Keyword    ${resp.json()}[reply]
 
 Get Users
     [Arguments]    ${auth}    ${server url}
@@ -489,26 +497,12 @@ Save Storages via API
     ${resp}=   Post Request    modifyStorage    /ec2/saveStorages   json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
-Evaluate System Settings via API
-    [Arguments]    ${auth}    ${server url}    ${setting key}    ${expected value}
-    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    Dictionary should contain item    ${settings}    ${setting key}    ${expected value}
-
-Evaluate Log Level via API
-    [Arguments]    ${auth}    ${server url}    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${server url}    auth=${auth}     disable_warnings=1
-    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
-    ${string}=   Convert To String    ${logLevel.json()}
-    ${selected} =    Convert To Lowercase    ${selected}
-    Should Contain    ${string}    ${setting}': '${selected}
-
 Set System Settings via API
     [Arguments]    ${auth}    ${server url}    ${setting key}    ${setting value}
     Create Digest Session    Set Setting Session    ${server url}    auth=${auth}     disable_warnings=1
     ${resp}=   Get Request    Set Setting Session   /api/systemSettings?${setting key}=${setting value}    timeout=10
     Should be equal as strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
-
 
 # Misc
 Get Customizations
@@ -522,6 +516,18 @@ Get Customizations
         Append To List    ${customizations}    ${obj}[domain]
     END
     [Return]    ${customizations}
+
+Set System Settings
+    [Arguments]    ${auth}    ${server url}    ${settings}
+    Create Digest Session    Set Setting Session    ${server url}    auth=${auth}     disable_warnings=1
+    ${query}=   Set Variable    /api/systemSettings?
+    FOR    ${key}    ${val}    IN ZIP    ${settings.keys()}    ${settings.values()}
+        ${query}=   Catenate    SEPARATOR=    ${query}    ${key}=${val}&
+    END
+    ${query}=   Evaluate    $query[:-1]    # remove last & from the query string
+    ${resp}=   Get Request    Set Setting Session   ${query}    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
 
 Get Relays
     [Arguments]    ${auth}

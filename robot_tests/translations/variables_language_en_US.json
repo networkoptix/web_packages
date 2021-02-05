@@ -401,6 +401,8 @@
     "MISSING SETTINGS TEXT"                :    "Please update missing recording settings.",
     "CURRENT TEXT"                         :    "current",
     "AUTO TEXT"                            :    "Auto",
+
+    "SETTINGS SAVED TEXT"                  :    "Settings saved.",
     "HIDE ADVANCED SETTINGS TEXT"		   :	"Hide Advanced Settings",
     "ADVANCED SETTINGS ALERT TEXT"		   :	"Settings displayed below are advanced.",
     "ADVANCED SETTINGS WARNING TEXT"	   :	"Changing them may cause server to work incorrectly.",
@@ -492,6 +494,7 @@
     "LOG SETTINGS TEXT"					   :	"Log settings",
     "NOT ABLE TO LOAD TEXT"				   :	"Not able to load system settings.",
     "CLOSE TEXT"						   :	"Close",
+    "SUCCESS TEXT"                         :    "Success",
     "NONE TEXT"							   :	"None",
     "ERROR TEXT"						   :	"Error",
     "WARNING TEXT"						   :	"Warning",
