@@ -7,9 +7,7 @@
             <div class="form-group col-12 row p-0 m-0 mb-3"
                  *ngFor="let setting of systemSettings | keyvalue">
 
-                <div class="form-group col-12 row p-0 m-0"
-                     *ngIf="(CONFIG.settingsConfig[setting.key] | keyvalue)?.length > 0">
-
+                <div class="form-group col-12 row p-0 m-0">
                     <div class="col-12 row p-0" *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox'">
                         <div class="col-12 col-md-4 m-0 pr-1 pl-3  d-flex align-items-start justify-keys flex-row">
                             <div class="text-muted break-long">{{setting.key}}</div>
@@ -22,7 +20,7 @@
                                     name="{{setting.key}}"
                                     [ngModel]="systemSettings[setting.key]">
                             </nx-checkbox>
-                            <div>{{getDescription(setting.key)}}</div>
+                            <div [innerHTML]="getDescription(setting.key)"></div>
                         </div>
                     </div>
 

@@ -499,8 +499,8 @@ export const nxConfig: IConfig = {
         useSystemTime               : true
     },
     settingsConfig: {
-        auditTrailEnabled          : { type: 'checkbox' },
-        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
+        auditTrailEnabled          : { type: 'checkbox', hiddenInAdvanced: true },
+        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         defaultMotionMask          : '5,0,0,44,32',
         disabledVendors            : { type: 'text' },
         ec2AliveUpdateIntervalSec  : {
@@ -517,7 +517,7 @@ export const nxConfig: IConfig = {
         ldapSearchBase                   : { type: 'text' },
         ldapSearchFilter                 : { type: 'text' },
         ldapUri                          : { type: 'text' },
-        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true },
+        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         smtpConnectionType               : { type: 'text' },
         smtpHost                         : { type: 'text' },
         smtpPort                         : { type: 'number' },
@@ -528,7 +528,7 @@ export const nxConfig: IConfig = {
         updateNotificationsEnabled       : { type: 'checkbox' },
         arecontRtspEnabled               : { type: 'checkbox' },
         backupNewCamerasByDefault        : { type: 'checkbox' },
-        statisticsAllowed                : { type: 'checkbox', setupWizard: true },
+        statisticsAllowed                : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         backupQualities                  : { type: 'text' },
         serverDiscoveryPingTimeoutSec    : { type: 'number' },
 
@@ -555,8 +555,8 @@ export const nxConfig: IConfig = {
         takeCameraOwnershipWithoutLock : { type: 'checkbox' },
         upnpPortMappingEnabled         : { type: 'checkbox' },
 
-        trafficEncryptionForced      : { type: 'checkbox' },
-        videoTrafficEncryptionForced : { type: 'checkbox' },
+        trafficEncryptionForced      : { type: 'checkbox', hiddenInAdvanced: true },
+        videoTrafficEncryptionForced : { type: 'checkbox', hiddenInAdvanced: true },
         updateStatus                 : { type: 'static' },
         watermarkSettings            : { type: 'static' },
 

@@ -138,7 +138,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     getAdvancedSettings() {
-        this.system.updateOrGetSystemSettings({ ignore: 'installedUpdateInformation,targetUpdateInformation' })
+        this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
@@ -151,27 +151,11 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     settingsToBeDisplayedOrUpdated = (settings) => {
-        const standardSettingsToExclude = [
-            'autoDiscoveryEnabled',
-            'statisticsAllowed',
-            'cameraSettingsOptimization',
-            'auditTrailEnabled',
-            'trafficEncryptionForced',
-            'videoTrafficEncryptionForced',
-            'sessionLimitMinutes'
-        ];
-
         Object.entries(settings).reduce((systemSettings, [key, value]) => {
-            if (standardSettingsToExclude.includes(key)) {
+            // CLOUD-6350: Refactor advanced global settings page
+            // if a key is missing from settingsConfig it is not displayed or updated
+            if (!this.CONFIG.settingsConfig[key] || this.CONFIG.settingsConfig[key].hiddenInAdvanced) {
                 return systemSettings;
-            }
-            if (!this.CONFIG.settingsConfig[key]) {
-                let type = 'text';
-                if (value === true || value === false ||
-                    value === 'true' || value === 'false') {
-                    type = 'checkbox';
-                }
-                this.CONFIG.settingsConfig[key] = { label: key, type: type };
             }
 
             switch (this.CONFIG.settingsConfig[key].type) {
@@ -184,6 +168,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 default:
                     systemSettings[key] = value;
             }
+
             return systemSettings;
         }, this.systemSettings);
     }

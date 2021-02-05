@@ -578,6 +578,7 @@ export interface Setting {
     type: string;
     alert?: string;
     setupWizard?: boolean;
+    hiddenInAdvanced?: boolean;
     label?: string;
 }
 
