@@ -207,3 +207,7 @@ button.btn.btn-dropdown-toggle.dropdown-toggle {
 nx-storage-size-component {
     height: auto !important;
 }
+
+::ng-deep .show.tooltip {
+    pointer-events: none;
+}
