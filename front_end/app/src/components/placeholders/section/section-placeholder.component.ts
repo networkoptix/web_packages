@@ -20,6 +20,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
+    @Input() wrapperHeight = 203;
     @Input() height: string;
     @Input() width: string;
     @Input() translatedMessage: any;

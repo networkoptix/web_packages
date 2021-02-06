@@ -3,6 +3,7 @@
     <nx-section-placeholder
         *ngIf="!waitingForStorages"
         svgFileName="system_settings_placeholder"
+        [wrapperHeight]="144"
         [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo()">
     </nx-section-placeholder>
 </ng-template>
@@ -24,7 +25,7 @@
     </header>
 
     <nx-section nonPadded>
-        <div class="storage-container" [ngClass]="{'no-storages-sizing': !currentStorageState?.locations.length || waitingForStorages}">
+        <div class="storage-container">
             <form class="form form-horizontal"
                 (scroll)="handleScroll($event)"
                 role="form"
