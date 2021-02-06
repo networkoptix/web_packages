@@ -99,7 +99,9 @@ export class AddStorageModalContent {
             .createProcess(async() => {
                 const { url, login, password } = this.storageForm.value;
                 const systemStorages = (await this.storageManager.getStoragesInfo().toPromise()) || [];
-                const storageExistsOnSystem = !this.alreadyCheckedAndExists && systemStorages.find((s) => s.url.replace('smb:', '') === url);
+                const storageExistsOnSystem = !this.alreadyCheckedAndExists && systemStorages.find(
+                    (s) => s.url.replace('smb:', '').split('@').reverse()[0] === url.replace('//', '')
+                );
                 if (storageExistsOnSystem) {
                     return Promise.reject(Error('alreadyExists'));
                 }
