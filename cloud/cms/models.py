@@ -1539,21 +1539,38 @@ class Menu(models.Model):
         return f'/docs/{self.base_url}{"/" if self.base_url and self.url else ""}{self.url}?state=draft'
 
     @classmethod
-    def generate_menus_for_customization(cls, menus, customization):
+    def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
         from cms.controllers.filldata import global_contexts_to_dict
         cloud_portal_asset = get_cloud_portal_asset(customization.name)
         global_contexts = Context.objects.filter(
             asset_type=cloud_portal_asset.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(
             global_contexts, cloud_portal_asset)
-        structures = {}
-        for menu in menus:
-            structures[menu.name.lower()] = {
-                'nodes': MenuNode.generate_node_structure(menu.nodes_list, cloud_portal_asset, customization, global_contexts_dict, max_depth=menu.depth),
+        structures = {
+            menu.name.lower(): {
+                'nodes': MenuNode.generate_node_structure(
+                    menu.nodes_list,
+                    cloud_portal_asset,
+                    customization,
+                    global_contexts_dict,
+                    max_depth=menu.depth,
+                    include_not_accepted=include_not_accepted
+                ),
                 'type': menu.type,
                 'base_url': menu.base_url
             }
+            for menu in menus
+        }
+
         return customization, structures
+
+    @classmethod
+    def generate_menu(cls, menu_name, customization_name=settings.CUSTOMIZATION):
+        menu_name = menu_name.lower()
+        customization = Customization.objects.filter(name=customization_name).first()
+        menus = cls.get_prefetched_menus(menu_name)
+        _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
+        return structures.get(menu_name).get('nodes')
 
     @classmethod
     def generate_menus(cls, customization_name=None):
@@ -1580,11 +1597,14 @@ class Menu(models.Model):
         return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
 
     @classmethod
-    def get_prefetched_menus(cls):
-        max_depth = cls.objects.all().aggregate(
+    def get_prefetched_menus(cls, menu_name=None):
+        menu_query = cls.objects.filter(name=menu_name) if menu_name else cls.objects.all()
+        max_depth = menu_query.aggregate(
             models.Max('depth'))['depth__max']
+        if max_depth is None:
+            return []
         # Force qs evaluation to prevent threads from messing with prefetch cache
-        return list(cls.objects.all().prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
+        return list(menu_query.prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
 
     @classmethod
     def get_prefetch_objects(cls, max_depth, depth=1):
@@ -1747,19 +1767,26 @@ class MenuNode(models.Model):
         return f'Item: {self.name}'
 
     @staticmethod
-    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
+    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2, include_not_accepted=False):
         nodes_structure = []
+        pending = None
         for node in nodes:
             enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
             asset_accepted = not node.asset or node.asset.version_id(
                 customization.name) != 0
-            if enabled and asset_accepted:
+            if enabled and asset_accepted or include_not_accepted:
+                if node.asset:
+                    pending = AssetCustomizationReview.objects.filter(
+                        customization__name=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending).exists()
                 node_structure = {
                     'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
                     'asset_id': node.asset.id if node.asset else None,
+                    'accepted': asset_accepted,
+                    'pending': pending,
+                    'draft':  node.asset and node.asset.is_dirty,
                     'asset_type': AssetType.ASSET_TYPES[node.asset.asset_type.type] if node.asset else None,
                     'related_asset_ids': [asset.id for asset in node.related_assets.all()],
                     'next_item': node.next_item,

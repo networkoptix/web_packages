@@ -114,8 +114,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.CONFIG = configService.config;
     }
 
-    prefetchDocument(assetId) {
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId).pipe(untilDestroyed(this)).subscribe();
+    prefetchDocument({ assetId, state = null }) {
+        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId, state).pipe(untilDestroyed(this)).subscribe();
     }
 
     parseResults({ docs }) {

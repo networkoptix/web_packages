@@ -1,11 +1,14 @@
 import { Component, Input, Output, EventEmitter }   from '@angular/core';
 import { Router, NavigationEnd }                    from '@angular/router';
 import { Location }                                 from '@angular/common';
-import { filter, map, startWith, takeUntil }        from 'rxjs/operators';
+import {
+    filter, map, startWith, switchMap, takeUntil
+}                                                   from 'rxjs/operators';
 import { timer, Subject }                           from 'rxjs';
 import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
 import { NxMenusService, MenuNode }                 from '../../services/menus.service';
 import { IConfig, NxConfigService }                 from '../../services/nx-config';
+import { NxAccountService }                         from '@services/account.service';
 
 export interface RelatedLinks {
     type: string,
@@ -23,9 +26,9 @@ export class NxLeftMenuComponent {
     @Input() baseRoute: string;
     @Input() ignoreQuery = false;
     @Input() showDefault = true;
-    @Input() allowEmpty =false;
+    @Input() allowEmpty = false;
     @Output() onClick = new EventEmitter();
-    @Output() handlePrefetch = new EventEmitter<number>();
+    @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
 
     CONFIG: IConfig;
@@ -40,7 +43,8 @@ export class NxLeftMenuComponent {
         configService: NxConfigService,
         private router: Router,
         private menusService: NxMenusService,
-        public location: Location
+        public location: Location,
+        private accountService: NxAccountService
     ) {
         this.CONFIG = configService.config;
     }
@@ -59,7 +63,7 @@ export class NxLeftMenuComponent {
             }
         };
         const relatedNodes = [];
-        const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = url, action:string = 'update') => {
+        const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = decodeURIComponent(url), action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
                 if (node.url === targetUrl) {
                     if (action === 'update') {
@@ -82,7 +86,7 @@ export class NxLeftMenuComponent {
             nodes.forEach(checkNode);
         };
         findActiveNode(this.menuNodes);
-        if (this.showDefault && !this.activeRouteNodes.length) {
+        if (this.showDefault && !this.activeRouteNodes.length && this.menuNodes.length) {
             const getFirstUrl = ([first, ...remaining]: MenuNode[] = []): string => first.url || getFirstUrl([...remaining, ...first.nodes]);
             this.firstUrl = getFirstUrl(this.menuNodes);
             this.updateActive(this.firstUrl);
@@ -99,11 +103,11 @@ export class NxLeftMenuComponent {
         }
     }
 
-    prefetchAsset(assetId) {
+    prefetchAsset(assetId, state) {
         if (assetId) {
             timer(250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
-                this.prefetchedDocuments.push(assetId);
-                this.handlePrefetch.emit(assetId);
+                this.prefetchedDocuments.push(state ? `${assetId}?state=${state}` : assetId);
+                this.handlePrefetch.emit({assetId, state});
             });
         }
     }
@@ -121,9 +125,20 @@ export class NxLeftMenuComponent {
     }
 
     ngOnChanges() {
-        this.menusService.getMenu(this.menuName).pipe(untilDestroyed(this)).subscribe(menu => {
+        this.accountService.accountSubject.pipe(
+            filter(account => !!account),
+            switchMap((account: any) => this.menusService.getMenu(
+                this.menuName, false, account.is_superuser
+            ).pipe(
+                map((menu: MenuNode[]): [MenuNode[], any] => [menu, account])
+            )),
+            untilDestroyed(this)
+        ).subscribe(([menu, account]) => {
             this.menuNodes = this.allowEmpty ? menu : this.menusService.cleanEmptyNodes(menu, true);
             this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
+            if (account.is_superuser) {
+                this.menuNodes = this.menusService.addDraftAndPending(this.menuNodes);
+            }
         });
         this.router.events
             .pipe(

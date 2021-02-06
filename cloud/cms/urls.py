@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from cms.views import integration, article, agreement, asset, documentation
+from cms.views import integration, article, agreement, asset, documentation, menu
 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('documentation/struct/<str:name>', documentation.menu_to_endpoint),
     path('documentation/kb/<str:name>', documentation.get_pages, name='doc_pages'),
     path('documentation/<int:doc_id>', documentation.get_page, name='doc_page'),
+    path('menus/<str:name>', menu.get_menu, name='get_menu'),
 ]

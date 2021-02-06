@@ -2,16 +2,18 @@
 import { Inject, Injectable, OnDestroy }  from '@angular/core';
 import { TranslateService }               from '@ngx-translate/core';
 import {
-    BehaviorSubject, Subject, from, combineLatest
+    BehaviorSubject, Subject, from, combineLatest, Observable
 }                                         from 'rxjs';
-import { takeUntil, map }                 from 'rxjs/operators';
+import {
+    takeUntil, map, switchMap, startWith
+}                                         from 'rxjs/operators';
 
-import { WINDOW }                    from './window-provider';
 import { IConfig, NxConfigService }  from './nx-config';
 import { MenuStructure }             from './nx-config/base-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService }          from './session.service';
+import { NxCloudApiService }         from './nx-cloud-api';
 
 export enum Auth {
     BOTH='Both',
@@ -22,6 +24,11 @@ export enum Auth {
 export class MenuNode {
     public icon?: string;
     public currentRoute?: boolean;
+    public accepted?: boolean
+    public draft?: boolean;
+    public pending?: boolean;
+    public indented?: boolean;
+    public state?: 'pending' | 'draft'
     public breadcrumbs: MenuNode[];
 
     constructor(
@@ -60,7 +67,7 @@ export class NxMenusService implements OnDestroy {
         private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window
+        private cloudApi: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -81,7 +88,7 @@ export class NxMenusService implements OnDestroy {
             }, {});
     }
 
-    getMenu = (name: string, withCurrentSystem = false) => {
+    getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
         let menu = this.menusStructure?.[name.toLowerCase()] ?? [];
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu = [this.currentSystemNode$.value, ...menu];
@@ -90,7 +97,16 @@ export class NxMenusService implements OnDestroy {
             return from([menu]);
         }
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
-            .pipe(map(([login]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT).map(this.translateNode())));
+            .pipe(
+                switchMap(([login]): Promise<[string, MenuNode[]]> | Observable<[string, MenuNode[]]> => ignoreCache
+                    ? this.cloudApi.getMenu(name).pipe(
+                        map((menu): [string, MenuNode[]] => [login, menu]),
+                        startWith([login, menu])
+                    )
+                    : Promise.resolve([login, menu])
+                ),
+                map(([login, menu]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT).map(this.translateNode()))
+            ) as Observable<MenuNode[]>;
     }
 
     filterMenu = (menu: MenuNode[], auth: Auth) => {
@@ -110,6 +126,27 @@ export class NxMenusService implements OnDestroy {
         const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
         return nodes.length || (checkAsset && node.asset_id) || node.url ? [...menu, { ...node, nodes }] : menu;
     }, []);
+
+    addDraftAndPending = <T extends MenuNode>(menu: T[]) => menu.reduce((nodes: T[], node: T) => {
+        let indented = false;
+        if (node.nodes?.length) {
+            node.nodes = this.addDraftAndPending(node.nodes);
+        }
+        if (node.accepted) {
+            nodes.push({...node, indented});
+            indented = true;
+        }
+        if (node.pending) {
+            const state = 'pending';
+            nodes.push({ ...node, nodes: [], display_name: indented ? '⮑' : node.display_name, state, indented });
+            indented = true;
+        }
+        if (node.draft) {
+            const state = 'draft';
+            nodes.push({ ...node, nodes: [], display_name: indented ? '⮑' : node.display_name, state, indented });
+        }
+        return nodes;
+    }, [])
 
     private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {

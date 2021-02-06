@@ -1,14 +1,17 @@
 import { Injectable }               from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+    HttpClient, HttpHeaders, HttpParams
+}                                   from '@angular/common/http';
+import { Router }                   from '@angular/router';
+import { catchError }               from 'rxjs/operators';
+import { EMPTY, of }                from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
-import { catchError }               from 'rxjs/operators';
-import { Router }                   from '@angular/router';
-import { EMPTY, of }                from 'rxjs';
+import { MenuNode }                 from './menus.service';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -398,5 +401,9 @@ export class NxCloudApiService {
                 return of(error);
             }
         }));
+    }
+
+    getMenu(menuName: string) {
+        return this.http.get<MenuNode[]>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 }

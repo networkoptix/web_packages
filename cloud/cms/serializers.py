@@ -112,6 +112,8 @@ class MenuSerializer(serializers.Serializer):
     display_name = serializers.CharField()
     asset = serializers.JSONField(label='Asset Data')
     assetKB = serializers.CharField(label='Asset Knowledebase Name')
+    pending = serializers.BooleanField()
+    draft = serializers.BooleanField()
 
 
 class ArticleSerializer(serializers.Serializer):
