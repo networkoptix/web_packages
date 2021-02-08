@@ -39,7 +39,8 @@
           }"
         >
           <div class="preview">
-            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl">
+            <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
+            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)">
           </div>
           <span class="name" [ngClass]="camera.status">{{ camera.name }}</span>
           <span class="ip-info">{{ camera.url | ip_info }}</span>
