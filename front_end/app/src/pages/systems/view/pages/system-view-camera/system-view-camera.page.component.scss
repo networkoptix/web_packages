@@ -274,7 +274,6 @@ $border-color: #cdd7dc;
       height: 16px;
       width: 40px;
       background: $additional_light2;
-      border-radius: 2px 2px 0 0;
       cursor: pointer;
       background-image: url('./img/arrow-down.png');
       background-position: center center;
@@ -286,6 +285,14 @@ $border-color: #cdd7dc;
       transition: opacity .2s ease-in-out;
       &:hover {
         opacity: 1.0;
+      }
+
+      transform: rotate(180deg);
+      border-radius: 0 0 2px 2px;
+
+      &.shown {
+        transform: rotate(0deg);
+        border-radius: 2px 2px 0 0;
       }
     }
 

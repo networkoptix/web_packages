@@ -11,7 +11,7 @@
     <ng-template #primary>
         <div class="nx-view-sidebar">
             <media-server-list></media-server-list>
-            <div class="sidebar-toggling-ear" (click)="handleSidebarTogglingEarClick()"></div>
+            <div class="sidebar-toggling-ear" [ngClass]="{ 'shown': isSidebarShown }" (click)="handleSidebarTogglingEarClick()"></div>
         </div>
         <router-outlet></router-outlet>
     </ng-template>

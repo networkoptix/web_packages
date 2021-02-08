@@ -37,6 +37,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
   public initialized: boolean = false
   public initializedWithError: boolean = false
+  public isSidebarShown: boolean = false
 
   // public animated: boolean = false
 
@@ -90,6 +91,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     } else {
       this.$self.classList.remove('sidebarShown')
     }
+    // console.log('ux state change sidebar visibility', s.isSidebarShown)
+    this.isSidebarShown = s.isSidebarShown
     setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
   }
 

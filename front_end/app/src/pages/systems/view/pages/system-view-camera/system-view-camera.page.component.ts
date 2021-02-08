@@ -41,6 +41,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public qualitiesAvailable: Array<PlaybackQuality> = [ ]
     public qualitySelected: PlaybackQuality = 'auto'
 
+    public controlsShown: boolean = false
+
     constructor (
       protected self: ElementRef,
       protected route: ActivatedRoute,
@@ -187,6 +189,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       } else {
         this.$self.classList.remove('controls-shown')
       }
+      this.controlsShown = s.isTimelineShown
       // setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
 
       if (s.isSidebarShown) {
