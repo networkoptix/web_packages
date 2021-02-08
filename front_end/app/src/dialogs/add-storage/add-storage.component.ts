@@ -163,10 +163,14 @@ export class AddStorageModalContent {
                 return Promise.reject(Error('WrongAuth'));
             }
             if (reply.status.toLowerCase() === this.CONFIG.responseOk && reply.storage.isWritable) {
+                const size = reply.storage.totalSpace;
+                const upperBound = 107374182400; // 100GB
+                const lowerBound = upperBound / 2; // 50GB
                 const id = await this.storageManager.saveStorage({
                     parentId       : this.serverId,
                     url            : smbShare,
                     storageType    : 'smb',
+                    spaceLimit     : Math.min(Math.max(Math.round(size / 10), lowerBound), upperBound, size),
                     usedForWriting : true,
                     isWritable     : true,
                     isBackup       : false
