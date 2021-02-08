@@ -78,12 +78,14 @@ $current-playback-indicator-color: black;
     cursor: pointer;
     background: #0002;
     opacity: 0.0;
+    display: none;
     // transition: opacity 0.2s ease-in-out;
     background-position: center center;
     background-repeat: no-repeat;
 
     &.enabled {
       opacity: .8;
+      display: block;
 
       &:hover {
         opacity: 1.0;
