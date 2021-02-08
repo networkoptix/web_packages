@@ -36,10 +36,6 @@ export class NxConfigService {
         return this.config;
     }
 
-    updateConfig(data) {
-        this.config = {...this.config, ...data};
-    }
-
     static get isLocal() {
         return nxConfig.isLocal;
     }

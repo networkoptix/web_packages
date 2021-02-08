@@ -94,22 +94,22 @@ export class NxBootstrapProvider {
 
     setSettings(data) {
         if (this.CONFIG.isLocal) {
-            const { companyLink, companyName, copyrightYear } = data;
-            delete data.companyLink;
-            delete data.companyName;
-            delete data.copyrightYear;
-            data.dynamicMenus = data.dynamicMenus.reduce((menu, { name, nodes }) => {
+            // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
+            this.CONFIG.dynamicMenus = data.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = nodes;
                 return menu;
             }, {});
-            const company = {
-                copyrightYear,
-                links: {
-                    website: companyLink
+            this.CONFIG.company = {
+                copyrightYear : data.copyrightYear,
+                links         : {
+                    website: data.companyLink
                 },
-                name: companyName
+                name: data.companyName
             };
-            this.configService.updateConfig({ ...data, company });
+            this.CONFIG.defaultLanguage = data.defaultLanguage;
+            this.CONFIG.licenseTypes = data.licenseTypes;
+            this.CONFIG.supportedLanguages = data.supportedLanguages;
+
         } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once

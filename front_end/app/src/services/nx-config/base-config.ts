@@ -187,8 +187,8 @@ export interface Company {
 }
 
 export interface Links {
-    privacy: string;
-    support: string;
+    privacy?: string;
+    support?: string;
     website: string;
 }
 
