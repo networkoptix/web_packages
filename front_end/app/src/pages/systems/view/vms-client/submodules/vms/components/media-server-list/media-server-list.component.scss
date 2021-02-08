@@ -43,19 +43,12 @@
                     }
                 }
 
-                &.unauthorized,
                 &.offline {
                     >.server-name:after {
                         // background-image: url('/static/images/icons/standard/server_offline.svg');
                         background-image: url('/static/images/icons/view/placeholder_camera_server_offline.svg');
                     }
                 }
-
-                // &.unauthorized {
-                //     >.server-name:after {
-                //         background-image: url('/static/images/icons/view/camera_server_unauthorized.svg');
-                //     }
-                // }
 
                 .server-name {
                     padding: 0 36px;
@@ -77,8 +70,7 @@
                         top: 0;
                         width: 44px;
                         height: 44px;
-                        background-image: url('/static/images/icons/standard/servers.svg');
-                        // background-image: url('/static/images/icons/standard/server.svg');
+                        background-image: url('/static/images/icons/standard/server.svg');
                         background-position: 3px 4px;
                         background-size: auto 29px;
                         background-repeat: no-repeat;
@@ -248,7 +240,8 @@
                             > .preview {
                                 // background-image: url('/static/images/icons/view/placeholder_preview_offline.svg');
                                 // background-image: url('/static/images/icons/standard/camera_offline.svg');
-                                background-image: url('/static/images/icons/view/placeholder_camera_offline.svg');
+                                // background-image: url('/static/images/icons/view/placeholder_camera_offline.svg');
+                                background-image: url('/static/images/icons/standard/cameras_list_placeholder_offline.svg');
                                 background-position: center center;
                                 background-size: 36% auto;
                                 background-repeat: no-repeat;
@@ -261,7 +254,8 @@
                         &.unauthorized {
                             > .preview {
                                 // background-image: url('/static/images/icons/standard/camera_unauthorized.svg');
-                                background-image: url('/static/images/icons/view/placeholder_camera_unauthorized.svg');
+                                // background-image: url('/static/images/icons/view/placeholder_camera_unauthorized.svg');
+                                background-image: url('/static/images/icons/standard/cameras_list_placeholder_unauthorized.svg');
                             }
                         }
 

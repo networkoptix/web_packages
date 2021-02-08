@@ -21,6 +21,7 @@ const MIN_BAR_WIDTH_PX = 50
 })
 export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @ViewChild("background") backgroundView: ElementRef;
   @ViewChild("bar") barView: ElementRef;
   @ViewChild("currentPlayback") currentPlaybackView: ElementRef;
 
@@ -57,10 +58,19 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
 
   public onScrollBarSubjectChange (s: TimelineScrollbarServiceStatus) {
     const honestBarWidthPx = (this.self.nativeElement as HTMLElement).getBoundingClientRect().width / s.magnification
-    const barWidthFixPx = Math.max(0, MIN_BAR_WIDTH_PX - honestBarWidthPx)
-    const minBarWidthCompensationPx = barWidthFixPx * s.offset
-    this.barView.nativeElement.style.left = `calc(${100 * s.offset}% - ${minBarWidthCompensationPx}px)`
-    this.barView.nativeElement.style.width = `${100 / s.magnification}%`
+
+    const backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width
+    const barWidth = Math.max(honestBarWidthPx, MIN_BAR_WIDTH_PX)
+    this.barView.nativeElement.style.width = `${barWidth}px`
+
+    const left = Math.min(Math.max(0, backgroundWidth * s.offset), backgroundWidth - barWidth)
+    this.barView.nativeElement.style.left = `${left}px`
+
+    // const barWidthFixPx = Math.max(0, MIN_BAR_WIDTH_PX - honestBarWidthPx)
+    // const minBarWidthCompensationPx = barWidthFixPx * s.offset
+    // this.barView.nativeElement.style.left = `calc(${100 * s.offset}% - ${minBarWidthCompensationPx}px)`
+    // this.barView.nativeElement.style.width = `${100 / s.magnification}%`
+
     this.isBarGrabbed = s.isBarGrabbed
     this.canScrollLeft = s.canScrollLeft
     this.canScrollRight = s.canScrollRight

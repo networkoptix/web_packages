@@ -103,7 +103,7 @@ export class TimelineScrollbarService {
       const targetTime = this.timeline.fullRange.start + relativeX * this.timeline.fullRange.duration
       // const fix = this.barDragAnchor / (this.honestBarWidthPx || $bar.clientWidth)
       const fix = this.barDragAnchor / $bar.clientWidth
-      console.log('fix', fix, fix * this.timeline.visibleRange.duration)
+      // console.log('fix', fix, fix * this.timeline.visibleRange.duration)
       this.timeline.jumpScrollTo(Math.round(targetTime - this.timeline.visibleRange.duration * fix), true)
       this._emit()
     }
