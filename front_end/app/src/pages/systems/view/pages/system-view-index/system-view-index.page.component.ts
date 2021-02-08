@@ -158,6 +158,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
+        // (check archive presence mode)
+        return this.system.getCameraRecords(cid, 0, now, now).then(response => {
+          const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length)
+          // console.log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
+          if (hasArchive) {
+            const start = parseInt(response.reply[0].startTimeMs)
+            const duration = parseInt(response.reply[0].durationMs)
+            const now = Date.now()
+            const end = (duration === -1) ? now : (start + duration)
+            archiveRanges[cid] = new SimpleTimeRange(start, end)
+          }
+        })
+        // (full archive prefetch mode)
         // return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
         //   // console.log('got camera archive range', cid, ar)
         //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
@@ -174,6 +187,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         //   }
         // })
       })).then(() => {
+        // console.log('archiveRanges', archiveRanges)
         this.vms.setMediaServers(this.systemId, mediaServers.map(ms => ({
           id: ms.id,
           name: ms.name,
@@ -186,8 +200,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               c.url,
               (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
               c.scheduleEnabled,
-              new SimpleTimeRange(0, 0), // archiveRanges[c.id],
-              [], // archives[c.id],
+              archiveRanges[c.id] || new SimpleTimeRange(0, 0),
+              archives[c.id] || [],
               c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
               (quality: string) => {
                 return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))

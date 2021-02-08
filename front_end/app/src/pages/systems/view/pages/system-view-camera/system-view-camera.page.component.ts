@@ -165,7 +165,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public ngAfterViewInit () {
       this.$self.classList.add('controls-shown')
-      this.fpsMeter.install()
+
+      // this.fpsMeter.install()
+      document['fpsMeter'] = this.fpsMeter
+
       this.ux.isFullScreen = !!document.fullscreenElement
     }
 

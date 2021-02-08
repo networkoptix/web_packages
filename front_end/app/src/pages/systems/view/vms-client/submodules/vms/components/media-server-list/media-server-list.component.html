@@ -19,7 +19,7 @@
       }"
     >
       <div class="server-name" (click)=changeServerVisibility(server.id)>
-        <span class="name">{{ server.name }}</span>
+        <span class="name" [ngClass]="server.status">{{ server.name }}</span>
         <span class="ip-info">{{ server.url | ip_info }}</span>
       </div>
       <div class="cameras">
@@ -31,6 +31,7 @@
             online: camera.isOnline,
             live: camera.isLive,
             recording: camera.isRecording,
+            hasArchive: camera.hasArchive,
             offline: !camera.isOnline,
             unauthorized: !camera.isAuthorized,
             isScheduleEnabled: camera.isScheduleEnabled,
@@ -40,7 +41,7 @@
           <div class="preview">
             <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl">
           </div>
-          <span class="name">{{ camera.name }}</span>
+          <span class="name" [ngClass]="camera.status">{{ camera.name }}</span>
           <span class="ip-info">{{ camera.url | ip_info }}</span>
         </a>
       </div>
