@@ -143,7 +143,7 @@ export class NxSystemStorageComponent implements OnInit {
                 sources.every(loaded => loaded) &&
                 !this.updatingModes.length
             ) {
-                if (!state.locations.length && this.currentStorageState.locations.length) {
+                if (!state.locations.length && this.currentStorageState?.locations.length) {
                     return;
                 }
                 this.currentStorageState = state;
