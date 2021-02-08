@@ -220,6 +220,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _onRouteChange (params) {
       this.id = params['cameraId'];
       this.vms.selectCamera(this.id)
+      this.setQuality('auto')
       this._getRecords()
       this._updateQualitiesAvailable()
     }

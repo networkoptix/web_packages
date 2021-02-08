@@ -57,7 +57,7 @@ export class TimelineRecordsCanvasRendererService {
       // visually extend the last record if the camera is still recording
       if (this.vms.selectedCamera.isRecording) {
         const lastRecord = this.vms.selectedCamera.archive[this.vms.selectedCamera.archive.length - 1]
-        if (lastRecord.start <= endMs) {
+        if (lastRecord && (lastRecord.start <= endMs)) {
           // const oldFill = ctx.fillStyle
           // ctx.fillStyle = 'orange'
           this._drawRecord(ctx, { start: lastRecord.end, end: endMs }, startMs, pxPerMs)
