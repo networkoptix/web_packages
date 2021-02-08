@@ -79,12 +79,20 @@ export class Camera implements ICamera {
     return this.status !== 'Offline'
   }
 
+  public get isOffline () {
+    return this.status === 'Offline'
+  }
+
   public get isRecording () {
     return this.status === 'Recording'
   }
 
   public get isAuthorized () {
     return this.status !== 'Unauthorized'
+  }
+
+  public get isUnauthorized () {
+    return this.status === 'Unauthorized'
   }
 
   public get hasArchive () {
