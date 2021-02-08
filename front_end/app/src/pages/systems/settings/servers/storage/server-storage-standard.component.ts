@@ -143,7 +143,7 @@ export class NxSystemStorageComponent implements OnInit {
                 sources.every(loaded => loaded) &&
                 !this.updatingModes.length
             ) {
-                if (!state.locations.length && this.currentStorageState.locations.length) {
+                if (!state.locations.length && this.currentStorageState?.locations.length) {
                     return;
                 }
                 this.currentStorageState = state;
@@ -461,8 +461,8 @@ export class NxSystemStorageComponent implements OnInit {
                 this.forceShowBackupBlock ||= store.isBackup;
             }
         }
+        this.beingUpdated = updating.filter(id => !this.updatingModes.includes(id));
         this.updatingModes = [...this.updatingModes, ...updating];
-        this.beingUpdated = [...this.updatingModes];
         return this.currentStorageState.saveStorages().toPromise().catch(err => console.error(err));
     };
 
