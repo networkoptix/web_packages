@@ -289,20 +289,26 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public videoClickHandler (e: MouseEvent) {
-
+    console.log('video click')
     if (this.playback.canPause) {
-      console.log('PAUSE 3')
+      console.log('can pause -> pause')
       this._pauseVideo()
     } else if (this.playback.canUnpause) {
+      console.log('can unpause -> unpause')
       this.playback.unpause()
     } else if (this.playback.canStop) {
+      console.log('can stop -> stop')
       this.playback.stop()
     } else if (this.playback.canPlayLive) {
+      console.log('can play live -> play live')
       this.playback.playLive()
+    } else {
+      console.log('can not respond on click in any meaningful way -> doing nothing')
     }
   }
 
   public videoDblClickHandler (e: MouseEvent) {
+    console.log('video double click -> emitting upstairs')
     this.videoDblClick.emit(true)
   }
 }

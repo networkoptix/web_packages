@@ -8,8 +8,9 @@
   position: relative;
   z-index: 2;
 
-  > .playback-control-button {
+  > .button {
     display: block;
+    z-index: -1;
     text-align: center;
 
     position: absolute;
@@ -29,18 +30,24 @@
       background-repeat: no-repeat;
       width: 20px;
       height: 20px;
-      opacity: 0.5;
     }
 
-    &.play {
+    &.playLive {
       > .glyph {
         background-size: -2px -4px;
       }
     }
 
-    &.pause {
+    &.pauseToggle {
       > .glyph {
         background-position: -26px -2px;
+      }
+    }
+
+    &.stop {
+      > .glyph {
+        background-size: 192px 408px;
+        background-position: -26px -2px; // same as pause, TODO: change
       }
     }
 
@@ -48,23 +55,20 @@
     background-color: $additional_light2;
     transition: all .2s ease-in-out;
 
+    &:hover {
+      background-color: $additional_light3;
+    }
+    &:active {
+      background-color: $light5 !important;
+    }
+
     &.enabled {
       cursor: pointer;
       color: $light16;
       z-index: 1;
 
-      > .glyph {
-        opacity: 1.0;
-      }
-
-      // &:hover {
-      //   background-color: $light4;
-      // }
       &:hover {
-        background-color: $additional_light3;
-      }
-      &:active {
-        background-color: $light5 !important;
+        background-color: $light4;
       }
     }
   }
