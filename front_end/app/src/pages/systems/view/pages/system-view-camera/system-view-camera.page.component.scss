@@ -67,6 +67,10 @@ $border-color: #cdd7dc;
       &.name {
         padding: 0 .5em;
         text-shadow: 0px 1px 3pxrgba(0,0,0,1);
+
+        > .quality {
+          text-transform: capitalize;
+        }
       }
 
       &.glyph {
