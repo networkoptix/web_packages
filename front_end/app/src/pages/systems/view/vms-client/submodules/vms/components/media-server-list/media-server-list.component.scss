@@ -8,6 +8,12 @@
             height : calc(100vh - 92px);
             overflow: auto;
 
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+
             .server {
                 width: 100%;
                 position: relative;
