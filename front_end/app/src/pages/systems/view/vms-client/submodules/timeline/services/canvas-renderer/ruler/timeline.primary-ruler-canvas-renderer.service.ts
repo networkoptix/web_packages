@@ -199,7 +199,12 @@ export class TimelinePrimaryRulerCanvasRendererService {
     const relativeFontSize = lowerRelativeFontSize + (upperRelativeFontSize - lowerRelativeFontSize) * (s.weight - lowerWeight)
     const fontSize: px = Math.round(relativeFontSize * this.timeline.canvasGeometry.dpr)
     const format: string = primaryRulerDateFormats[s.interval]
-    ctx.fillStyle = `${color}${percentageToHex(opacity)}`
+
+    const labelLowerOpacity = lowerLabelCfg.opacity || lowerOpacity
+    const labelUpperOpacity = upperLabelCfg.opacity || upperOpacity
+    const labelOpacity = labelLowerOpacity + (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight)
+
+    ctx.fillStyle = `${color}${percentageToHex(labelOpacity)}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
     const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif'
