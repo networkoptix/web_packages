@@ -139,8 +139,9 @@ export class PlaybackService {
         break
       case PLAYBACK_MODE.ARCHIVE:
         if (this._state.paused) {
-          this._state.paused = false
-          this._emit()
+          // this._state.paused = false
+          // this._emit()
+          this.playArchive(this._state.currentTime)
         } else {
           console.warn('unpause request while already unpaused')
         }
@@ -171,13 +172,16 @@ export class PlaybackService {
 
   public handleTimeUpdate (timeSinceStart: ms): void {
     switch (this._state.mode) {
+
       case PLAYBACK_MODE.STOPPED:
         console.warn('playback time update while playback mode is STOPPED')
         break
+
       case PLAYBACK_MODE.LIVE:
         this._state.currentTime = Date.now()
         this._emit()
         break
+
       case PLAYBACK_MODE.ARCHIVE:
 
         const newT = this._state.startTime + timeSinceStart
