@@ -77,6 +77,10 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     }
     this.timeline.zoom(durationDelta, offset)
   }
+
+  public fullZoomOut () {
+    this.timeline.fullZoomOut()
+  }
 }
 
 export default ZoomControlsComponent

@@ -1,2 +1,2 @@
 <div class="button zoom-in" [ngClass]="{ 'enabled': canZoomIn }" (mousedown)="startZooming(+1)" (mouseup)="stopZooming()">+</div>
-<div class="button zoom-out" [ngClass]="{ 'enabled': canZoomOut }" (mousedown)="startZooming(-1)" (mouseup)="stopZooming()">–</div>
+<div class="button zoom-out" [ngClass]="{ 'enabled': canZoomOut }" (mousedown)="startZooming(-1)" (mouseup)="stopZooming()" (dblclick)="fullZoomOut()">–</div>
