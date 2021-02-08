@@ -203,7 +203,7 @@
       {
         "name": "System Calculator",
         "url": "http://nx.networkoptix.com/calculator/",
-        "enabled": ["default"],
+        "enabled": ["default", "default_cn", "default_zh_CN", "metavms"],
         "new_window": true
       }
     ]
