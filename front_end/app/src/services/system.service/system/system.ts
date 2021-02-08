@@ -514,8 +514,8 @@ export class NxSystem extends System {
         );
     }
 
-    public getCameraThumbnailUrl(cameraId, width = 68, height = 38) {
-        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height);
+    public getCameraThumbnailUrl(cameraId, width = 128, height = 128, t?) {
+        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
     }
 
     public getCameraLiveHlsUrl(cameraId) {

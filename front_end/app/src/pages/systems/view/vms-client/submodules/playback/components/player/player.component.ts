@@ -7,6 +7,9 @@ import { ms } from '../../../../utils/type-aliases'
 import Hls from 'hls.js'
 
 
+const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+
+
 @Component({
   selector: 'player',
   templateUrl: './player.component.html',
@@ -90,8 +93,9 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
     switch (this.state.mode) {
       case PLAYBACK_MODE.STOPPED:
+        console.log('PLAYBACK_MODE -> STOPPED')
+        this._setPlaybackSource('')
         if (prevState.mode !== this.state.mode) {
-          this._setPlaybackSource('')
           this._stop()
         }
         break
@@ -158,8 +162,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   //   return !!(this.state && this.state.mode !== PLAYBACK_MODE.STOPPED && !this.state.started)
   // }
 
-  protected _setPlaybackSource (sourceUrl: string) {
+  protected _setPlaybackSource (sourceUrl: string, posterUrl?: string) {
+    // console.log('_setPlaybackSource', sourceUrl, posterUrl)
+    this.videoView.nativeElement.pause()
+    this.videoView.nativeElement.src = sourceUrl
     this.videoSourceView.nativeElement.src = sourceUrl
+    this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
   }
 
   protected _startLive () {
@@ -178,6 +186,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _unsafeStartPlayback () {
     const sourceUrl = this.state['sourceUrl']
+    const posterUrl = this.state['posterUrl'] || null
 
     if (sourceUrl.endsWith('mp4')) {
       this._setPlaybackSource(sourceUrl)
@@ -191,6 +200,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
       if (Hls.isSupported()) {
         setTimeout(() => this.isBuffering = true)
         var hls = new Hls();
+        this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
         hls.loadSource(sourceUrl);
         hls.attachMedia(this.$video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {

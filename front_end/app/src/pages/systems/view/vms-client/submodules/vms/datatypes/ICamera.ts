@@ -73,6 +73,7 @@ export interface ICamera {
 
   getLiveVideoUrl (quality: string),
   getArchiveVideoUrl (t: ms, quality: string),
+  getPosterUrl (t?: ms),
   getRecords (startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
   setRecords (range: ISimpleTimeRange, records: CameraArchive)
 

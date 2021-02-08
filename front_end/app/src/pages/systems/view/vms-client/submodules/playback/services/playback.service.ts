@@ -81,7 +81,8 @@ export class PlaybackService {
     }
     this._state = createInitialLiveState(
       this.vms.selectedCamera.getLiveVideoUrl(this._state.quality),
-      this._state.quality
+      this._state.quality,
+      this.vms.selectedCamera.getPosterUrl()
     )
     console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
@@ -97,13 +98,15 @@ export class PlaybackService {
     this._state = createInitialArchiveState(
       this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.quality),
       t,
-      this._state.quality
+      this._state.quality,
+      this.vms.selectedCamera.getPosterUrl(t)
     )
     console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
   public stop () {
+    console.log('PLAYBACK.STOP()')
     this._state = createInitialStoppedState(this._state.quality)
     this._emit()
   }

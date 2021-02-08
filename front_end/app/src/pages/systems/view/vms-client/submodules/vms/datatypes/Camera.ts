@@ -34,8 +34,9 @@ export class Camera implements ICamera {
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
-    public getLiveVideoUrl: (quality: string) => string,
-    public getArchiveVideoUrl: (t: ms, quality: string) => string,
+    public readonly getLiveVideoUrl: (quality: string) => string,
+    public readonly getArchiveVideoUrl: (t: ms, quality: string) => string,
+    public readonly getPosterUrl: (t?: ms) => string,
   ) {
     this._initBirdView()
   }

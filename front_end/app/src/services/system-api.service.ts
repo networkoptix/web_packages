@@ -957,8 +957,8 @@ export class NxSystemAPI {
             .toPromise().then(_checker).catch(_checker);
     }
 
-    public getCameraThumbnailUrl(cameraId, width = 68, height = 38) {
-        return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}`;
+    public getCameraThumbnailUrl(cameraId, width = 128, height = 128, t?) {
+        return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}&time=${t || 'now'}`;
     }
 
     getLiveHlsUrl(cameraId, resolution = 'hi') {
