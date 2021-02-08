@@ -51,18 +51,33 @@ export class TimelineRecordsCanvasRendererService {
       const records = this.vms.selectedCamera.getRecords(startMs, endMs, minGapMs)
 
       records.map(r => {
-        const x0 = Math.round((r.start - startMs) * pxPerMs)
-        let x1 = Math.round((r.end - startMs) * pxPerMs)
-        if (x1 - x0 < this.cfg.MIN_RECORD_WIDTH_PX) {
-          x1 = x0 + this.cfg.MIN_RECORD_WIDTH_PX
-        }
-        const ch = this.timeline.canvasGeometry.height
-        const y = Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * ch)
-        const h = Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * ch)
-        const w = x1 - x0
-        ctx.fillRect(x0, y, w, h)
+        this._drawRecord(ctx, r, startMs, pxPerMs)
       })
+
+      // visually extend the last record if the camera is still recording
+      if (this.vms.selectedCamera.isRecording) {
+        const lastRecord = this.vms.selectedCamera.archive[this.vms.selectedCamera.archive.length - 1]
+        if (lastRecord.start <= endMs) {
+          // const oldFill = ctx.fillStyle
+          // ctx.fillStyle = 'orange'
+          this._drawRecord(ctx, { start: lastRecord.end, end: endMs }, startMs, pxPerMs)
+          // ctx.fillStyle = oldFill
+        }
+      }
     }
+  }
+
+  protected _drawRecord (ctx, r, startMs, pxPerMs) {
+    const x0 = Math.round((r.start - startMs) * pxPerMs)
+    let x1 = Math.round((r.end - startMs) * pxPerMs)
+    if (x1 - x0 < this.cfg.MIN_RECORD_WIDTH_PX) {
+      x1 = x0 + this.cfg.MIN_RECORD_WIDTH_PX
+    }
+    const ch = this.timeline.canvasGeometry.height
+    const y = Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * ch)
+    const h = Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * ch)
+    const w = x1 - x0
+    ctx.fillRect(x0, y, w, h)
   }
 }
 

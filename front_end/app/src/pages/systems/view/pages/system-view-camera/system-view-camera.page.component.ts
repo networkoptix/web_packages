@@ -140,11 +140,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
               console.log('empty archive')
             } else try {
-              const range = new SimpleTimeRange(
-                parseInt(ar.reply[0].startTimeMs),
-                parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
-              )
+              const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs)
+              const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs)
+              const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs)
+              const stillRecording = lastRecordDuration === -1
+              const now = Date.now()
+              const archiveEndMs = stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration)
+              const range = new SimpleTimeRange(firstRecordStartTimeMs, archiveEndMs)
               const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
+              if (stillRecording) {
+                archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now)
+                console.log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration)
+              }
               console.log('non-empty archive', this.id, range, archive)
               this.vms.setCameraRecords(this.id, range, archive)
               this._initSelectedCamera()
