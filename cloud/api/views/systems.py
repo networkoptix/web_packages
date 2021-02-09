@@ -88,7 +88,11 @@ def sharing(request, system_id):
         require_params(request, ('user_email', 'role'))
         # 2. share or change sharing
         user_email = request.data['user_email'].lower()
-        data = cloud_api.System.share(request, system_id, user_email, request.data['role'])
+        with cloud_api.TempLogin(login, password) as credentials:
+            data = cloud_api.System.share(credentials.tokens,
+                                          system_id,
+                                          user_email,
+                                          request.data['role'])
 
         return api_success(data)
 
