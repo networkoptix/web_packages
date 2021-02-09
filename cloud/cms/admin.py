@@ -588,6 +588,12 @@ admin.site.register(DataStructure, DataStructureAdmin)
 
 class LanguageAdmin(CMSAdmin):
     list_display = ('name', 'code')
+    form = LanguageForm
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        form.instance.customization_set.set(form.cleaned_data['customizations'])
+
 
 
 admin.site.register(Language, LanguageAdmin)

@@ -395,6 +395,22 @@ class CustomizationForm(forms.ModelForm):
         return data
 
 
+class LanguageForm(forms.ModelForm):
+    customizations = forms.ModelMultipleChoiceField(
+        queryset=Customization.objects.all(),
+        widget=FilteredSelectMultiple('customizations', False)
+    )
+
+    class Meta:
+        model = Language
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['customizations'].initial = self.instance.customization_set.all()
+
+
 class ContributorAgreementForm(forms.ModelForm):
     class Meta:
         model = ContributorAgreement
