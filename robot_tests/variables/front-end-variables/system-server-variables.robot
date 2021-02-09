@@ -24,13 +24,16 @@ ${RENAME CLOSE BUTTON}              ${RENAME SERVER FORM}//button[contains(@clas
 ${RENAME SERVER INPUT}              ${RENAME SERVER FORM}//input[@id="serverName"]
 ${RENAME ERROR TEXT}                ${RENAME SERVER INPUT}/following-sibling::p/span[contains(@class,"input-error")]
 
-${ANALYTICS DROPDOWN}               //div[@class="server-settings"]/span[contains(text(), "${ANALYTICS STORAGE}")]/following-sibling::nx-select//button
-${ANALYTICS WARNING}                //div[@class='server-settings']/div[contains(@class, 'error-label')]/p[contains(text(), "${ANALYTICS WARNING TEXT}")]
+${ANALYTICS DROPDOWN}               //button[@id="system"]
+${ANALYTICS WARNING}                //p[contains(text(), "${ANALYTICS WARNING TEXT}")]
 ${CHANGE ANALYTICS MODAL}           //nx-modal-change-storage/form[@id="changeStorageForm"]
 ${CS MODAL CLOSE BUTTON}            ${CHANGE ANALYTICS MODAL}/div[@class="modal-header"]/button
 ${CS MODAL DELETE BUTTON}           ${CHANGE ANALYTICS MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button[contains(text(), "${DELETE BUTTON TEXT}")]
 ${CS MODAL KEEP BUTTON}             ${CHANGE ANALYTICS MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button[contains(text(), "${KEEP BUTTON TEXT}")]
 ${CS MODAL CANCEL BUTTON}           ${CHANGE ANALYTICS MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
+${CS MODAL PARAGRAPH}               ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE TEXT}")]
+${CS MODAL CONTACT}                 ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE CONTACT TEXT}")]
+${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a 
 
 ${STORAGE LOCATIONS BLOCK}          //nx-block/div[contains(@class, "storage-info")]
 ${STORAGE INFO BUTTON}              ${STORAGE LOCATIONS BLOCK}//header//button/span[contains(text(), "${DETAILED INFO TEXT}")]/..

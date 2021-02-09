@@ -282,7 +282,7 @@ Activate License
     [Arguments]    ${auth}    ${server url}    ${license}
     ${data}=   Create Dictionary    licenseKey=${license}
     Create Digest Session    Activate License session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
-    ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=10
+    ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 

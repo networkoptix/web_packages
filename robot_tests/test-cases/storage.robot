@@ -2,172 +2,247 @@
 Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
 #Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
-Test Teardown     Common Restart Logout    ${url}
+Test Teardown     Restart
 Suite Teardown    Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
-${email}       qaburbank@gmail.com
-${password}    ${BASE PASSWORD}
-@{auth}        ${email}    ${password}
+${password}    ${BASE PASSWORD}    
 ${url}         ${ENV}
-${storage string}    ${EMPTY}
+${storage string 1}    ${EMPTY}
+${storage string 2}    ${EMPTY}
+${camera}      00-0D-F1-20-B5-02
+${disk location}    /media/nxwitness-storages/disk1
 
 *** Keywords ***
-Server Settings Test Setup
-    [Arguments]    ${email}    ${system id}
-    Log in to user and system    ${email}    cdd3a885-5d66-4f49-b708-84ab99828da6
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-
-Storage Suite Setup
-    FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
-        ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-        Set Suite Variable    ${${account}}          ${random email}
-    END
-
-    @{system names} =    Create List    
-    ...    ${AUTO TESTS}
-    ...    ${AUTO TESTS 2}
-    ...    Auto Tests 3
-       
-    @{auth}=    Create List    ${owner}    ${password}
-    Set Suite Variable    ${auth}    ${auth}   
-     
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
-    Set Suite Variable     ${random}    ${random}
-    
-    @{server auth}=   Create List    admin    qweasd 123
-    
-    @{size} =    Create List    60000    60000    60000    12000    12000
-
-    #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
-    
-    FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
-        ${results}    Execute Command     dd if=/dev/zero of=disk${n}-${random}.img bs=1M count=${size[${n}]}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mkfs -t ext4 disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}    
-        ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mount -t auto -o loop disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
-        Close Connection 
-        Exit For Loop if    ${n} > 3        
-        ${storage string} =    Catenate    ${storage string}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}  
-    END
-    
-    ${storage string} =    Get Substring    ${storage string}    1     
-
-    ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string}    
-    Set Suite Variable    ${port0}    ${port[0]}
-    Sleep     10
-    Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
-    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId0}    ${sysId}
-    Sleep    10
-    Close Connection
-    
-    ${port} =    Create Docker Server    storage1-${random}    4.1_test    --mount type=bind,source="/home/qaburbank/disk4-${random}",target=/disk4  
-    Set Suite Variable    ${port1}    ${port[0]}
-    Sleep     10
-    Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
-    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId1}    ${sysId}
-    Sleep    10
-    Close Connection    
-    
-    ${SUITE AUTO TESTS USERS} =    Create Dictionary
-    ...    ${viewer}=viewer
-    ...    ${adv viewer}=advancedViewer
-    ...    ${live viewer}=liveViewer
-    ...    ${not owner}=viewer
-    ...    ${admin}=cloudAdmin
-    ...    ${custom}=custom
-
-    Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS} 
-    
-    FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
-        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
-    END
-    @{disabled} =    Create List    disk2    disk3
-    @{backups} =    Create List    disk1 
-    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
-    
-    Open Browser and go to URL    ${url}
-    
-    Verify Storages    ${sysId0}    4
-    Verify Storages    ${sysId1}    1
-    
-    
-    
-
-Storage Suite Teardown
-    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
-    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop storage0-${random} storage1-${random}
-    ${results}    Execute Command    docker container rm storage0-${random} storage1-${random}
-    Close Connection
-    FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm -r disk${n}-${random}/     sudo=True    sudo_password=${QA BURBANK PASS}
-        Close Connection
-    END 
-    
-    FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}     
-        Delete Account    ${ENV}    ${user email}    ${password}   
-    END
-    
-    Close All Browsers
-        
-Verify Storages
-    [Arguments]    ${system}    ${storages number}
-    Log in to user and system    ${owner}     ${system}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=95
-    Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
-    ${disks} =    Get Element Count    //span[contains(text(),"disk") and @class="ellipsis"]
-    Should be Equal as Numbers    ${disks}    ${storages number} 
-    Capture Page Screenshot
-    Log Out
-
-Set Default Storage Config
-    [Arguments]    ${server url}    ${disabled}    ${backups}
-    ${storages} =    Get Storages via API    ${server url}
-    ${storages string} =    Convert To String    ${storages}
-    ${storages string} =    Replace String    ${storages string}    '    "
-    ${storages string} =    Replace String    ${storages string}    False    "False"
-    ${storages string} =    Replace String    ${storages string}    True    "True"
-    ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    4
-        ${url} =    Set variable    ${storages dict[${n}]['url']}
-        ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}    
-        ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
-        Run Keyword If    ${disabled disk}   Run Keywords    
-        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${FALSE}    AND
-        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}    
-        ...    ELSE IF    ${backup}    Run Keywords
-        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup     ${TRUE}    AND
-        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}
-        ...    ELSE    Run Keywords    
-        ...    Set To Dictionary    ${storages dict[${n}]}    usedForWriting    ${TRUE}    AND
-        ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}   
-    END 
-    Save Storages via API    ${storages dict}    ${server url}
+Restart
+    Common Restart Logout    ${url}
+    Reset to Default Storage Config
 
 *** Test Cases ***
-
+Analytics DB Storage dropdown is not visible
+    [Tags]    C81740    Analytics
+    Log in to user and system    ${owner}     ${sysId1}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
+    
+# Analytics DB Storage Dropdown is Visible Analytics Plugin Enabled
+    # [Tags]    C81754    Analytics
+    # ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${port0}
+    # Log    ${response}
+    # Log in to user and system    ${owner}     ${sysId0}
+    # Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    # Click Link    ${SERVERS LINK}
+    # Verify on Servers Page
+    # Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    
+# Analytics DB Storage Dropdown is Visible Analytics Data Exists
+    # ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${port0}
+    # Log    ${response}
+    # Wait Until Analytics Data Exists    30    30    disk0    ${camera}    storage0-${random}
+    # [Tags]    C81755    Analytics             
+    # Log in to user and system    ${owner}     ${sysId0}
+    # Wait Until Element is Visible with Retry    ${SERVERS LINK}    
+    # Click Link    ${SERVERS LINK}
+    # Verify on Servers Page
+    # Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    # Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
 
     
-# Analytics DB Storage Dropdown Warning Shows FUTURE (a system storage needs to be chosen)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Wait Until Element is Visible    ${ANALYTICS WARNING}
-
+Storages order in "Analytics DB Storage" dropdown
+    [Tags]    C81757    Analytics
+    @{menu order}    Create List    
+    @{dropdown order}    Create List  
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //span[contains(text(),"disk3") and @class="ellipsis"]
+    @{storages} =    Get WebElements    //span[contains(text(),"disk") and @class="ellipsis"]
+    # @{reserved} =    Get WebElements    //span[contains(text(),"Reserved")]/ancestor::td/preceding-sibling::td//span[contains(text(),"disk") and @class="ellipsis"]
+    # Remove Values From List    ${storages}    @{reserved}
+    FOR    ${storage}    IN    @{storages}
+        ${disk} =    Get Text    ${storage}
+        Append To List    ${menu order}    ${disk}
+    END  
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Click Button    ${ANALYTICS DROPDOWN}
+    @{storages} =    Get WebElements    //a[@tabindex="0"]/span[contains(text(),"disk")]
+    FOR    ${storage}    IN    @{storages}
+        ${disk} =    Get Text    ${storage}
+        Append To List    ${dropdown order}    ${disk}
+    END  
+    Lists Should Be Equal    ${menu order}    ${dropdown order}
+    
+Cancel Changing "Analytics DB Storage"
+    [Tags]    C81778    Analytics
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Log    Step 1
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
+    Log    Step 2
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Log    Step 3
+    Wait Until Element is Visible     ${CANCEL BUTTON} 
+    Click Button    ${CANCEL BUTTON} 
+    
+Successful changing Analytics DB Storage plus confirmation dialog
+    [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List    disk3 
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Log    Step 1 - C81779
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
+    Log    Step 2 - C81779
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Log    Step 3 - C81779
+    Wait Until Element is Visible     ${SAVE BUTTON} 
+    Click Button    ${SAVE BUTTON} 
+    Log    Step 4 - C81779
+    ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${port0}
+    Log    ${response}
+    Reload Page
+    Log    C81754
+    Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
+    Log To Console    C81754 ....... | PASS |
+    Log    Step 5 - C81779
+    Wait Until Analytics Data Exists    30    30    disk1    ${camera}    storage0-${random}
+    Log To Console    C81779 ....... | PASS | 
+    Log    ${response}
+    Reload Page
+    Log    C81755
+    Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
+    Log To Console    C81755 ....... | PASS |
+    # Sleep    600
+    # Reload Page
+    Log    Step 1 - C81775
+    Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
+    Wait Until Element Contains   ${ANALYTICS DROPDOWN}    disk1
+    Log    Step 2 - C81775
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Wait For Analytics Move Dialog    disk2
+    Wait Until Elements Are Visible    
+    ...    ${CHANGE ANALYTICS MODAL} 
+    ...    ${CS MODAL CLOSE BUTTON}           
+    ...    ${CS MODAL DELETE BUTTON}           
+    ...    ${CS MODAL KEEP BUTTON} 
+    ...    ${CS MODAL CANCEL BUTTON} 
+    ...    ${CS MODAL PARAGRAPH}
+    ...    ${CS MODAL CONTACT}
+    ...    ${CS MODAL SUPPORT LINK} 
+    ${link} =    Get Element Attribute    ${CS MODAL SUPPORT LINK}    href
+    ${footer} =    Get Element Attribute   ${FOOTER SUPPORT LINK}    href
+    Should Be Equal As Strings    ${link}    ${footer}
+    Log    Step 3 - C81775
+    Click Link    ${CS MODAL SUPPORT LINK}
+    Wait Until Number Of Tabs Are Open    2
+    ${tabs}=   Get Window Handles
+    Select Window    ${tabs}[1]
+    Wait Until Location Contains    ${SUPPORT URL}
+    Log    Step 4 - C81775
+    Close Window
+    Select Window    ${tabs}[0]
+    Wait Until Element is Visible    ${CS MODAL CLOSE BUTTON}    
+    Click Button    ${CS MODAL CLOSE BUTTON}
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Elements Should Not Be Visible
+    ...    ${SAVE BUTTON}
+    ...    ${CANCEL BUTTON}
+    Log    Step 5 - C81775
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Wait Until Elements Are Visible    
+    ...    ${CHANGE ANALYTICS MODAL}
+    ...    ${CS MODAL CLOSE BUTTON}           
+    ...    ${CS MODAL DELETE BUTTON}           
+    ...    ${CS MODAL KEEP BUTTON} 
+    ...    ${CS MODAL CANCEL BUTTON} 
+    ...    ${CS MODAL PARAGRAPH}
+    ...    ${CS MODAL CONTACT}
+    ...    ${CS MODAL SUPPORT LINK} 
+    Log    Step 6 - C81775
+    Click Button    ${CS MODAL CANCEL BUTTON} 
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Elements Should Not Be Visible
+    ...    ${SAVE BUTTON}
+    ...    ${CANCEL BUTTON}
+    Log To Console    C81775 ....... | PASS |
+    Log    Step 1,2,3 - C81776 - already done above
+    Log    Step 4 - C81776
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk2")]
+    Wait For Analytics Move Dialog    disk2
+    Wait Until Elements Are Visible    
+    ...    ${CHANGE ANALYTICS MODAL} 
+    ...    ${CS MODAL CLOSE BUTTON}           
+    ...    ${CS MODAL DELETE BUTTON}           
+    ...    ${CS MODAL KEEP BUTTON} 
+    ...    ${CS MODAL CANCEL BUTTON} 
+    ...    ${CS MODAL PARAGRAPH}
+    ...    ${CS MODAL CONTACT}
+    ...    ${CS MODAL SUPPORT LINK} 
+    Log    Step 5 - C81776
+    Click Button    ${CS MODAL KEEP BUTTON} 
+    Wait Until Element Is Not Visible     ${CHANGE ANALYTICS MODAL} 
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk2
+    Elements Should Not Be Visible
+    ...    ${SAVE BUTTON}
+    ...    ${CANCEL BUTTON}
+    Log    Step 6 - C81776
+    Check Analytics Data is Present    disk2    ${camera}    storage0-${random}    keep=${TRUE}
+    Log To Console    C81776 ....... | PASS |
+    Log    Step 1 - C81777 - done above
+    # Sleep    600
+    Log    Step 2 - C81777
+    Click Button    ${ANALYTICS DROPDOWN}
+    Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Click Element    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Wait For Analytics Move Dialog    disk1
+    Wait Until Elements Are Visible    
+    ...    ${CHANGE ANALYTICS MODAL} 
+    ...    ${CS MODAL CLOSE BUTTON}           
+    ...    ${CS MODAL DELETE BUTTON}           
+    ...    ${CS MODAL KEEP BUTTON} 
+    ...    ${CS MODAL CANCEL BUTTON} 
+    ...    ${CS MODAL PARAGRAPH}
+    ...    ${CS MODAL CONTACT}
+    ...    ${CS MODAL SUPPORT LINK} 
+    Log    Step 3 - C81777
+    Click Button     ${CS MODAL DELETE BUTTON}
+    Wait Until Element Is Not Visible     ${CHANGE ANALYTICS MODAL} 
+    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
+    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Elements Should Not Be Visible
+    ...    ${SAVE BUTTON}
+    ...    ${CANCEL BUTTON}
+    Log    Step 4 - C81777
+    Sleep    20
+    Check Analytics Data is Present    disk1    ${camera}    storage0-${random}
+    Run Keyword and Expect Error    *    Check Analytics Data is Present    disk2    ${camera}    storage0-${random}
+    Log To Console    C81777 ....... | PASS |
+    
 # Change Storage used for Analytics data FUTURE (need other storages to select)
 #     Verify on Servers Page
 #     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
@@ -383,7 +458,7 @@ Detailed Info button works (system has one storage)
 
 Reindexing Main Archive Tooltip Shows
     Log in to user and system    ${owner}     ${sysId0}
-    Wait Until Element is Visible    ${SERVERS LINK}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE REINDEXING BLOCK}

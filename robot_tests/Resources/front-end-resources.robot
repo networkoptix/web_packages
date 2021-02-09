@@ -12,5 +12,5 @@ Resource     front-end-resources/restore-pass-form-validation-password-resource.
 Resource     front-end-resources/change-pass-form-validation-resource.robot
 Resource     front-end-resources/licenses-resource.robot
 Resource     front-end-resources/integrations-resource.robot
-
+Resource     front-end-resources/storage-resource.robot
 

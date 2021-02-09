@@ -902,9 +902,10 @@ Register and Activate Generic Users
 
 Create Docker Server
     [Arguments]    ${name}     ${image}=4.1_test    ${storage string}=${EMPTY}
+    ${mac}=   Get Random MAC
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 ${storage string} ${image}
+    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --mac-address=${mac} ${storage string} ${image}
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}
@@ -1076,3 +1077,9 @@ Execute Command Remotely
     Close Connection
     Release Lock    exec_cmd_lock
     [Return]    ${result}
+
+Wait Until Element is Visible with Retry
+    [Arguments]    ${element}    ${timeout}=120
+    ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
+    Run Keyword If    ${load} == ${FALSE}    Reload Page
+    Wait Until Element is Visible    ${element}   timeout=${timeout}

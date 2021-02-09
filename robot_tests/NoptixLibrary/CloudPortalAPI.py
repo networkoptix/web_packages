@@ -275,3 +275,35 @@ class CloudPortalAPI(object):
         except requests.exceptions.SSLError:
             return 'SSL Error'
         return r.status_code
+
+    def add_camera(self, serverUrl, camuser, campassword, uniqueId, url, manufacturer):
+        body = {
+            "user": camuser,
+            "password": campassword,
+            "cameras":
+                [
+                    {
+                    "uniqueId": uniqueId,
+                    "url": url,
+                    "manufacturer": manufacturer
+                    }
+                ]
+            } 
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        return r.text
+    
+    def turn_on_analytics(self, serverUrl):
+#         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
+#         cameraDict = r.json()
+#         cameraID = cameraDict["id"]      
+        body = [
+                    {
+                    "name": "userEnabledAnalyticsEngines",
+                    "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]", 
+                    "resourceId": "{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"
+                    }
+                ]
+            
+        p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        return p.text
+        
