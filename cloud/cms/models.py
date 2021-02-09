@@ -1750,6 +1750,20 @@ class Menu(models.Model):
         if menu_dict['nodes']:
             set_nodes(menu_dict.get('nodes', []), self)
 
+    @property
+    def all_node_ids(self):
+        def append_nodes(nodes):
+            for node in nodes:
+                all_nodes.append(node.id)
+                if hasattr(node, 'nodes_list'):
+                    append_nodes(node.nodes_list)
+
+        all_nodes = []
+        prefetched_menu = self.get_prefetched_menus(menu_name=self.name)[0]
+        if hasattr(prefetched_menu, 'nodes_list'):
+            append_nodes(prefetched_menu.nodes_list)
+        return all_nodes
+
 
 class MenuNode(models.Model):
     AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),

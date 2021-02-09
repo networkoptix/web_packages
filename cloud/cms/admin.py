@@ -1179,15 +1179,37 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'title': 'Export/Import Menus'})
 
 
+class MenuFilter(SimpleListFilter):
+    title = 'Menu'
+    parameter_name = 'menu'
+
+    def lookups(self, request, model_admin):
+        return ((menu.name, menu.name) for menu in Menu.objects.all())
+
+    def queryset(self, request, queryset):
+        if self.value():
+            menu = Menu.objects.filter(name__iexact=self.value()).first()
+            if menu:
+                node_ids = menu.all_node_ids
+                return queryset.filter(id__in=node_ids)
+        return queryset
+
+
 @admin.register(MenuNode)
 class MenuNodeAdmin(CMSAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'menu', 'url', 'condition', 'authentication', 'touched')
+    search_fields = ('name', 'asset__name')
+    list_filter = (MenuFilter, 'enabled', 'authentication')
     form = MenuNodeChangeForm
     fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available',
               'enabled', 'touched')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }
+
+    def menu(self, obj):
+        menu = obj.get_parent()
+        return format_html(f'<a href="{reverse("admin:cms_menu_change", args=(menu.id,))}">{menu.name}</a>')
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
