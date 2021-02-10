@@ -133,7 +133,7 @@ def get_wrapper(url, params=None, auth=None, headers=None):
     return requests.get(url, params=default_params, auth=auth, headers=headers)
 
 
-def post_wrapper(url, params=None, auth=None, json=None, headers=None):
+def post_wrapper(url, params=None, auth=None, data=None, json=None, headers=None):
     default_params = {'salt': salt_machine()}
 
     if params:
@@ -141,7 +141,7 @@ def post_wrapper(url, params=None, auth=None, json=None, headers=None):
 
     logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}')
 
-    return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
+    return requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers)
 
 
 def put_wrapper(url, params=None, auth=None, json=None, headers=None):
