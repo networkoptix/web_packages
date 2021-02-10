@@ -20,7 +20,7 @@
                         {{link.name}}
                     </a>
                 </ng-template>
-                <a *ngIf="link.new_window; else internalLink" [href]="link.url" target="_blank">
+                <a *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink" [href]="link.url" [target]="link.new_window ? '_blank' : '_self'">
                     {{link.name}}
                 </a>
                 <svg-icon *ngIf="link.new_window || link.icon" 
