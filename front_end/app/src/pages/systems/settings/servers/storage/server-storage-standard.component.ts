@@ -6,7 +6,7 @@ import {
     combineLatest, BehaviorSubject, Subject, defer, of, timer
 }                                       from 'rxjs';
 import {
-    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, switchMap, take, startWith
+    map, takeUntil, delay, retryWhen, distinctUntilChanged, bufferCount, concatMap, filter, tap, switchMap, take, startWith, skip
 }                                       from 'rxjs/operators';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -70,6 +70,7 @@ export class NxSystemStorageComponent implements OnInit {
     systemHasBackupsOn = false;
     forceShowBackupBlock = false;
     reindexingStorages: MODE[] = [];
+    previouslyReserved = new Set<string>();
     beingUpdated = [];
     cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
@@ -132,6 +133,7 @@ export class NxSystemStorageComponent implements OnInit {
     init = () => {
         this.loading = true;
         this.waitingForStorages = true;
+        this.previouslyReserved.clear();
         this.canSeeDetailInfo = this.system.canViewInfo();
         this.system.storageManager.serverId$.pipe(untilDestroyed(this)).subscribe(() => {
             this.saveSettings = null;
@@ -156,10 +158,15 @@ export class NxSystemStorageComponent implements OnInit {
                     if (!this.modeWatchers[this.normalizeId(storageId)]) {
                         this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode);
                     } else {
-                        if (store.status === STORAGE_STATUS.RESERVED) {
+                        if (store.status === STORAGE_STATUS.RESERVED || this.previouslyReserved.has(store.storageId)) {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                         }
                         this.modeWatchers[this.normalizeId(storageId)].value = mode;
+                    }
+                    if (store.status === STORAGE_STATUS.RESERVED) {
+                        this.previouslyReserved.add(store.storageId);
+                    } else if (this.previouslyReserved.has(store.storageId)) {
+                        this.previouslyReserved.delete(store.storageId);
                     }
                 });
                 const backupState = await this.system.storageManager.getBackupState(
@@ -515,9 +522,10 @@ export class NxSystemStorageComponent implements OnInit {
                 if (response === true) {
                     this.system
                         .removeStorage({ id: storage.storageId || storage.id }).toPromise()
-                        .then((response) => {
+                        .then(async(response) => {
                             if (response.id) {
                                 this.currentStorageState.locations = this.currentStorageState.locations.filter(({ storageId }) => storageId !== NxUtilsService.cleanId(response.id));
+                                await this.system.storageManager.update().pipe(skip(1), take(1)).toPromise();
                                 this.toastService.notify(NxLanguageProviderService.translate(this.LANG.storage.storageDeleted, { url: this.cleanUrl(storage.url) }), 'success');
                             } else {
                                 throw new Error('failed to remove storage');
