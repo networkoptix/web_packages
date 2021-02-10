@@ -103,7 +103,7 @@ def register(request):
         models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
 
     logger.debug('/api/account/register checking if activated')
-    activated = models.AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
+    activated = models.AccountManager().check_if_activated(request, data['email'], data['password'], data.pop('IP', ''))
     logger.debug('/api/account/register completed')
     return api_success({'activated': activated})
 
@@ -205,7 +205,7 @@ def index(request):
                                       ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
 
-        Account.update(request.auth, request.data['first_name'], request.data['last_name'])
+        Account.update(request, request.data['first_name'], request.data['last_name'])
         # if not success:
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -276,7 +276,7 @@ def change_password(request):
                                   error_data={'new_password': error.detail})
 
     try:
-        Account.change_password(request.user.email, old_password, new_password)
+        Account.change_password(request, request.user.email, old_password, new_password)
         models.Account.objects.get(email=request.user.email).password_changed()
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
@@ -357,7 +357,7 @@ def restore_password(request):
                                       error_data={'new_password': error.detail})
 
         email = Account.extract_temp_credentials(code)[1]
-        Account.restore_password(code, new_password)
+        Account.restore_password(request, code, new_password)
         models.Account.objects.get(email=email).password_changed()
 
         account = models.Account.objects.get(email=email)
