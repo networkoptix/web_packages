@@ -148,7 +148,7 @@ export class NxLeftMenuComponent {
                 startWith(this.location.path()),
                 untilDestroyed(this)
             )
-            .subscribe(url => this.updateActive(this.location.path().split(this.ignoreQuery ? '?' : null)[0]));
+            .subscribe(url => Promise.resolve(url).then(url => this.updateActive(url.split(this.ignoreQuery ? '?' : null)[0])));
     }
 };
 
