@@ -126,9 +126,9 @@ export class NxLeftMenuComponent {
 
     ngOnChanges() {
         this.accountService.accountSubject.pipe(
-            filter(account => !!account),
             switchMap((account: any) => this.menusService.getMenu(
-                this.menuName, false, account.is_superuser
+                // eslint-disable-next-line camelcase
+                this.menuName, false, account?.is_superuser
             ).pipe(
                 map((menu: MenuNode[]): [MenuNode[], any] => [menu, account])
             )),
@@ -136,7 +136,8 @@ export class NxLeftMenuComponent {
         ).subscribe(([menu, account]) => {
             this.menuNodes = this.allowEmpty ? menu : this.menusService.cleanEmptyNodes(menu, true);
             this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
-            if (account.is_superuser) {
+            // eslint-disable-next-line camelcase
+            if (account?.is_superuser) {
                 this.menuNodes = this.menusService.addDraftAndPending(this.menuNodes);
             }
         });
