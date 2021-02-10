@@ -539,6 +539,7 @@ export const nxConfig: IConfig = {
 
         systemName: { type: 'text' },
 
+        licenseServer             : { type: 'text' },
         newSystem                 : { type: 'static' },
         proxyConnectTimeoutSec    : { type: 'number' },
         crossdomainEnabled        : { type: 'checkbox' },

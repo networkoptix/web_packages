@@ -617,6 +617,7 @@ export interface SettingsConfig {
     cloudAuthKey: Setting,
     cloudSystemID: Setting,
     systemName: Setting,
+    licenseServer: Setting,
     newSystem: Setting,
     proxyConnectTimeoutSec:Setting,
     crossdomainEnabled: Setting,
