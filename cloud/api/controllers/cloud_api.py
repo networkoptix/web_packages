@@ -30,9 +30,18 @@ def lower_case_email(func):
 
 def auto_refresh_token(func):
     def _wrapper(request, *args, **kwargs):
-        access_token = request.session.get("access_token")
-        refresh_token = request.session.get("refresh_token")
-        ip = get_client_ip(request)
+        access_token = None
+        refresh_token = None
+        if hasattr(request, "session"):
+            access_token = request.session.get("access_token")
+            refresh_token = request.session.get("refresh_token")
+        elif request is dict:
+            access_token = request.get("access_token")
+            refresh_token = request.get("refresh_token")
+
+        ip = ""
+        if hasattr(request, "META"):
+            ip = get_client_ip(request)
 
         if "headers" not in kwargs:
             kwargs["headers"] = {}
@@ -56,8 +65,9 @@ def auto_refresh_token(func):
                 raise e
             tokens = Auth.get_refresh_token(refresh_token, ip=ip)
             access_token = tokens["access_token"]
-            request.session["access_token"] = access_token
-            request.session["refresh_token"] = tokens["refresh_token"]
+            if hasattr(request, "session"):
+                request.session["access_token"] = access_token
+                request.session["refresh_token"] = tokens["refresh_token"]
 
             kwargs["headers"] = {
                 "Authorization": f"Bearer {access_token}"
@@ -326,9 +336,9 @@ class Account(object):
             return data
 
     @staticmethod
-    def restore_password(code, new_password):
+    def restore_password(request, code, new_password):
         temp_password, email = Account.extract_temp_credentials(code)
-        return Account.change_password(email, temp_password, new_password)
+        return Account.change_password(request, email, temp_password, new_password)
 
     @staticmethod
     @validate_response
@@ -411,7 +421,6 @@ class Account(object):
     @validate_response
     @auto_refresh_token
     def get(request, username=None, password=None, headers=None):
-        request = CLOUD_DB_URL + '/account/get'
         auth = None
         if username and password:
             auth = HTTPBasicAuth(username, password)

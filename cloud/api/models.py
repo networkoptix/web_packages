@@ -94,10 +94,10 @@ class AccountManager(models.Manager):
         return True
 
     @staticmethod
-    def check_if_activated(email, password, ip):
+    def check_if_activated(request, email, password, ip):
         activated = False
         try:
-            cloud_api_account.get(email, password, ip)  # try to authenticate with clouddb to check if activated
+            cloud_api_account.get(request, email, password, ip)  # try to authenticate with clouddb to check if activated
             activated = True
         except APILogicException as exception:
             if exception.error_code != ErrorCodes.account_not_activated:
