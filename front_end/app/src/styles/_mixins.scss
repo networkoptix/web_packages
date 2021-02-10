@@ -124,7 +124,6 @@
 
 @mixin details-buttons {
     flex: 0 0 auto;
-    padding-right: 0 !important;
     &:hover, &:hover > span {
         color: theme_variables.$dark15 !important;
         svg-icon {
