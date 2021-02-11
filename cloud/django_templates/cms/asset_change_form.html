@@ -95,6 +95,14 @@
                 customizations.hide();
         }
 
+        function onAssetTypeChanged() {
+            if ($("option:selected", this).text() === 'Documentation Page') {
+                menuField.show();
+            } else {
+                menuField.hide();
+            }
+        }
+
         $(document).ready(function() {
             publishAllDiv = $('.field-publish_all_customizations');
             if(publishAllDiv.length) {
@@ -104,6 +112,13 @@
                 });
 
                 publishAllField.change();
+            }
+
+            assetTypeField = $('#id_asset_type');
+            menuField = $('div.field-menu');
+            if (menuField.length) {
+                onAssetTypeChanged();
+                assetTypeField.change(onAssetTypeChanged);
             }
         });
     </script>

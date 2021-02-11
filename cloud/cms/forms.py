@@ -301,6 +301,7 @@ class AssetSettingsForm(forms.Form):
 
 class AssetForm(forms.ModelForm):
     publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), label='Parent Menu', required=False)
 
     class Meta:
         model = Asset

@@ -392,12 +392,26 @@ class AssetAdmin(CMSAdmin):
             fields.remove('protected')
         if obj:
             fields.remove('publish_all_customizations')
+            fields.remove('menu')
             if not request.user.is_superuser and not obj.asset_type.single_customization:
                 fields.remove('customizations')
         else:
             fields.remove('preview_status')
             fields.append(fields.pop(fields.index('customizations')))
+            if not request.user.is_superuser:
+                fields.remove('menu')
         return fields
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            new = True
+        else:
+            new = False
+        super().save_model(request, obj, form, change)
+        if new and obj.asset_type.type == AssetType.ASSET_TYPES.documentation:
+            menu = form.cleaned_data.get('menu', None)
+            if menu:
+                MenuNode.objects.create(name=obj.name, parent_menu=menu, asset=obj)
 
     def get_readonly_fields(self, request, obj=None):
         if obj and not request.user.is_superuser:
