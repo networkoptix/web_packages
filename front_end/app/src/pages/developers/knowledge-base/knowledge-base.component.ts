@@ -166,7 +166,14 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 this.basePath = snapshot.paramMap.get('name');
                 this.menuName = this.CONFIG.docMenuMap[this.basePath][this.kbName];
                 if (!this.menuName) {
-                    setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+                    // Navigate to 404 and replace failing url so going history back will load requesting page
+                    this.router
+                        .navigate([this.CONFIG.redirect.page404], {
+                            replaceUrl: true
+                        })
+                        .catch(_ => {});
+
+                    return;
                 }
                 return this.route.url;
             }),
