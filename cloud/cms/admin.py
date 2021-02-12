@@ -1031,14 +1031,23 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
-        menu = Menu.objects.get(id=object_id)
         extra_context = extra_context or {}
+        filters_dict = caches['filters'].get(request.user.id) or {}
+        cached_path = filters_dict.get(request.path_info, None)
+        query_params = request.META['QUERY_STRING']
+        if not query_params and cached_path:
+            return redirect(f'{request.path_info}?{cached_path}')
+        menu = Menu.objects.get(id=object_id)
         extra_context['preview_url'] = menu.preview_url
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(
                 name=self.chosen_customization, name__in=request.user.customizations
             ).first() or 'all'
+        valid_query = query_params != 'e=1' and str(self.chosen_customization) == request.GET.get(
+            'customization') and str(self.chosen_customization) != 'all'
+        filters_dict[request.path_info] = query_params if valid_query else ''
+        caches['filters'].set(request.user.id, filters_dict)
         return super().change_view(request, object_id, form_url, extra_context)
 
     def get_inline_instances(self, request, obj=None):
