@@ -1,3 +1,5 @@
+from urllib.parse import unquote, quote
+
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
 from django.contrib.admin.actions import delete_selected
@@ -500,8 +502,7 @@ class AssetAdmin(CMSAdmin):
             exclude_hidden = qs.filter(hidden=False)
             if qs.count() == 1 or not request.user.is_superuser and exclude_hidden.count() == 1:
                 context_id = exclude_hidden.first().id
-                params = f'?customPreview={custom_preview}' if custom_preview else ''
-                
+                params = f'?customPreview={unquote(custom_preview).replace("asset_id", asset_id)}' if custom_preview else ''
                 return redirect(reverse('admin:change_page', args=[asset_id, context_id]) + params)
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = exclude_hidden
@@ -1067,7 +1068,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     self.model, self.admin_site, depth=1, total_depth=obj_orig.depth,
                     customization=self.chosen_customization, user_customizations=request.user.customizations,
                     admin_config=getattr(obj_orig, 'admin_config'),
-                    custom_preview=self.model.preview_url
+                    custom_preview=self.model.node_preview_url
                 )]
         return []
 

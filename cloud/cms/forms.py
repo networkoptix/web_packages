@@ -524,7 +524,8 @@ class MenuNodeInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        custom_preview_url = self.instance.parent_menu and quote(self.instance.parent_menu.preview_url)
+        parent_menu = self.instance.get_parent()
+        custom_preview_url = parent_menu and quote(parent_menu.node_preview_url)
         self.fields['asset'].widget.can_add_related = True
         self.fields['asset'].widget.get_related_url = lambda *_: (
             reverse('admin:pages_custom_preview', kwargs={'asset_id': '__fk__', 'custom_preview': custom_preview_url}) if custom_preview_url

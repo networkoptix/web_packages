@@ -1535,10 +1535,22 @@ class Menu(models.Model):
 
     @property
     def preview_url(self):
-        if self.type is self.MENU_TYPES.generic or not self.base_url and not self.url:
-            return ''
+        """Preview url for menu change form.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft',
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft'
+        }.get(self.type, '')
 
-        return f'/docs/{self.base_url}{"/" if self.base_url and self.url else ""}{self.url}?state=draft'
+    @property
+    def node_preview_url(self):
+        """Preview url for child menu nodes.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: self.preview_url,
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
+        }.get(self.type, '')
+
 
     @classmethod
     def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
