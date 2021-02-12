@@ -1007,12 +1007,18 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
 
 @admin.register(Menu)
 class MenuAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('name', 'depth')
+    list_display = ('name', 'depth', 'eval_url', 'enabled')
     form = MenuChangeForm
     change_form_template = 'cms/menu_change_form.html'
 
     class Media:
         js = ('js/menuChange.js',)
+
+    def eval_url(self, obj: Menu):
+        if obj.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase] and obj.base_url:
+            return f'/docs/{obj.base_url}/{obj.url}'
+        return ''
+    eval_url.short_description = 'URL'
 
     def get_fieldsets(self, request, obj=None):
         fields = [field for field in super().get_fields(request, obj)]

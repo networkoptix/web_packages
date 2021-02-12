@@ -243,7 +243,7 @@ def cached_doc_menu_map(customization_name, refresh=False):
     menu_map = MENU_CACHE[cache_key]
     if refresh or not menu_map:
         menu_map = {}
-        for menu in Menu.objects.filter(type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
+        for menu in Menu.objects.filter(enabled=True, type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
             if menu.base_url not in menu_map:
                 menu_map[menu.base_url] = {}
             if menu.url not in menu_map[menu.base_url]:
@@ -1525,6 +1525,8 @@ class Menu(models.Model):
         "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
     }""")
 
+    enabled = models.BooleanField(default=True)
+
     def __str__(self):
         if self.name:
             return self.name
@@ -1597,8 +1599,11 @@ class Menu(models.Model):
         return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
 
     @classmethod
-    def get_prefetched_menus(cls, menu_name=None):
-        menu_query = cls.objects.filter(name=menu_name) if menu_name else cls.objects.all()
+    def get_prefetched_menus(cls, menu_name=None, only_enabled=True):
+        menus = cls.objects.all()
+        if only_enabled:
+            menus = menus.filter(enabled=True)
+        menu_query = menus.filter(name=menu_name) if menu_name else menus
         max_depth = menu_query.aggregate(
             models.Max('depth'))['depth__max']
         if max_depth is None:
@@ -1661,7 +1666,7 @@ class Menu(models.Model):
                 nodes.append(node_dict)
             return nodes
 
-        menu = next(menu for menu in Menu.get_prefetched_menus()
+        menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
                     if menu.id == self.id)
         menu_dict = {
             'name': menu.name,
