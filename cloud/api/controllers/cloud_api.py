@@ -43,7 +43,7 @@ def auto_refresh_token(func):
         if hasattr(request, "META"):
             ip = get_client_ip(request)
 
-        if "headers" not in kwargs:
+        if "headers" not in kwargs or not kwargs["headers"]:
             kwargs["headers"] = {}
 
         if ip:
@@ -55,14 +55,18 @@ def auto_refresh_token(func):
             kwargs["headers"].update({
                 "Authorization": f"Bearer {access_token}"
             })
-
+        res = None
         try:
-            res = func(request, *args, **kwargs)
+            res = func(request, **kwargs)
             res.raise_for_status()
             return res
         except requests.exceptions.HTTPError as e:
+            response_data = hasattr(res, "json") and res.json()
             if not refresh_token:
-                raise e
+                if response_data["resultCode"] == ErrorCodes.not_authorized.value:
+                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+                else:
+                    raise e
             tokens = Auth.get_refresh_token(refresh_token, ip=ip)
             access_token = tokens["access_token"]
             if hasattr(request, "session"):
