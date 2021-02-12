@@ -516,12 +516,11 @@ def download_package(request, asset_id):
         cache_key = get_package_cache_key(asset, preview, version_id)
         package_info = PACKAGES_CACHE.get(cache_key)
         if not package_info:
-            make_package.apply_async(args=[asset_id, preview, version_id])
-            PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False}
-            return api_success({"msg": "Building the package"})
-        elif package_info.get("is_ready"):
-            return api_success({"msg": "Package is ready"})
-        return api_success({"msg": "Package is not ready"})
+            task = make_package.apply_async(args=[asset_id, preview, version_id])
+            PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False, "task_id": str(task)}
+            return api_success({"msg": "Building the package", "is_ready": False, "task_id": str(task)})
+        is_ready = package_info.get("is_ready")
+        return api_success({"msg": "Package is ready" if is_ready else "Package is not ready", "is_ready": is_ready, "task_id": package_info.get("task_id")})
     else:
         zipped_data = filldata.get_zip_package(asset, preview, version_id)
         return response_attachment(zipped_data, make_package_name(asset), "application/zip")

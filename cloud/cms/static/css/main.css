@@ -349,3 +349,15 @@ img.light {
 .object-tools {
     top: 6px;
 }
+
+#download-button {
+    color: white;
+}
+
+.progress-bar.custom-download-transition {
+    transition: width 1s linear;
+}
+
+#preparing-package {
+    backdrop-filter: blur(1px) brightness(.9);
+}

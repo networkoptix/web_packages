@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from cms.views import asset
+from cms.views import asset, celery
 
 urlpatterns = [
     url(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
@@ -10,6 +10,8 @@ urlpatterns = [
     path('download_all_asset_structures/<int:asset_type>', asset.download_all_asset_structures,
         name="download_all_asset_structures"),
     url(r'preview/', asset.make_preview, name="preview"),
+
+    url(r'^celery/check_status/(?P<task_id>.+?)/?$', celery.check_status, name="celery_check_status"),
 
     url(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
     url(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),
