@@ -93,17 +93,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
-        let languagePromise;
-        if (this.CONFIG.isLocal) {
-            const languages = this.CONFIG.supportedLanguages.map((langCode) => {
-                const lang = { name: langCode, language: langCode };
-                return <ILanguage>lang;
-            });
-            languagePromise = Promise.resolve(languages);
-        } else {
-            languagePromise = this.cloudApi.getLanguages();
-        }
-        languagePromise.then((data) => {
+        this.cloudApi.getLanguages().then((data) => {
             this.languages = data;
             this.languages.sort(NxUtilsService.byParam((lang) => {
                 return lang.language;
