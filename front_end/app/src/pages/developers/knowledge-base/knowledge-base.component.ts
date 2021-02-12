@@ -48,9 +48,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         map(this.filterRelatedLinks)
     );
 
-    get CardClasses() {
-        return CardClasses;
-    }
+    CardClasses = CardClasses;
 
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (relatedLinks.type === 'next') {

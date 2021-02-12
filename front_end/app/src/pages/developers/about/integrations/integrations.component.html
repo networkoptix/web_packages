@@ -9,7 +9,7 @@
 </ng-template>
 
 <ng-template #integrationsBlocks>
-    <div *ngIf="integrationsDetails() as integrations" class="card integrations-block">
+    <div *ngIf="integrations" class="card integrations-block">
         <h3 translate>Examples of Integrations</h3>
         <div class="integrations-blocks-wrapper">
             <ng-container *ngFor="let integration of integrations.plugins">

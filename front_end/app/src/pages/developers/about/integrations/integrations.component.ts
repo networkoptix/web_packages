@@ -24,6 +24,7 @@ export class NxIntegrationsComponent implements OnInit {
     currentWindowWidth: number;
     scrollIndex = 0;
     pluginCount = 0;
+    integrations;
 
     @HostListener('window:resize') onResize() {
         this.currentWindowWidth = window.innerWidth;
@@ -33,21 +34,6 @@ export class NxIntegrationsComponent implements OnInit {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-
-    // getScrollPosition({ target: { scrollLeft, scrollWidth } }, positions) {
-    //     const tabWidth = scrollWidth / positions;
-    //     return Math.round(scrollLeft / tabWidth);
-    // }
-
-    // updateIndex(index) {
-    //     this.scrollIndex = index;
-    // }
-
-    // updateScroll(index, positions) {
-    //     const scrollWidth = this.integrationsScroll.nativeElement.scrollWidth;
-    //     const tabWidth = scrollWidth / positions;
-    //     this.integrationsScroll.nativeElement.scrollLeft = index * tabWidth;
-    // }
 
     integrationsDetails() {
         const allPlugins = this.integrationsNode.nodes[1].nodes;
@@ -104,6 +90,7 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.integrations = this.integrationsDetails();
         this.currentWindowWidth = window.innerWidth;
 
         const integrationsConfig = this.errorManager.buildConfig(

@@ -53,12 +53,4 @@ export class NxGetStartedComponent implements OnChanges {
         });
         this.steps = getStartedNode;
     }
-
-    // slideUp(wrapperId) {
-    //     this.document.getElementById(wrapperId).classList.add('slide-up');
-    // }
-    //
-    // slideBack(wrapperId) {
-    //     this.document.getElementById(wrapperId).classList.remove('slide-up');
-    // }
 }
