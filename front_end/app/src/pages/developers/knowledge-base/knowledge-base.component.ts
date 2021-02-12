@@ -1,5 +1,8 @@
-import { Component, OnInit, Renderer2, ViewChild, ElementRef }  from '@angular/core';
+import {
+    Component, OnInit, Renderer2, ViewChild, ElementRef, Inject
+}                                                               from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
+import { WINDOW }                                               from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest }                       from 'rxjs';
 import { switchMap, tap, delay, map, filter, startWith }        from 'rxjs/operators';
@@ -85,6 +88,15 @@ export class NxKnowledgeBaseComponent implements OnInit {
         this.searchMode = false;
     }
 
+    projectedLinkHandler({url, target}: { url: string, target: string }) {
+        const base = this.window.location.origin;
+        if (target || !url.startsWith(base)) {
+            return this.window.open(url, target || '_self');
+        }
+        const updated = url.replace(base, '');
+        this.router.navigateByUrl(updated);
+    }
+
     fetchNext = () => {
         this.loadingNext = true;
         this.currentSearchResultPage += 1;
@@ -107,7 +119,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private menusService: NxMenusService,
-        private renderer2: Renderer2
+        private renderer2: Renderer2,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
     }
