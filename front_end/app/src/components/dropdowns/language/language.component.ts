@@ -25,7 +25,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     show: boolean;
     direction: string;
     langCode: string;
-    activeLanguage = {
+    activeLanguage: ILanguage = {
         language : '',
         name     : ''
     };
@@ -94,8 +94,10 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
         this.cloudApi.getLanguages().then((data) => {
-            this.languages = data;
-            this.languages.sort(NxUtilsService.byParam((lang) => {
+            this.languages = this.CONFIG.supportedLanguages.length === 0
+                ? data
+                : data.filter((language) => this.CONFIG.supportedLanguages.includes(language.language));
+            this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
                 return lang.language;
             }, NxUtilsService.sortASC));
 
