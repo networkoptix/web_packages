@@ -1,14 +1,14 @@
 import {
     Component, EventEmitter, Input, OnChanges, OnDestroy,
-    OnInit, Output, SimpleChanges
+    OnInit, Output, SimpleChanges, ViewChild
 }                       from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { AuthorizeState } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,13 +19,15 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    email = new FormControl();
 
+    @Output() setCurrentState = new EventEmitter<AuthorizeState>();
     @Input() emailProcess: Process;
     @Input() errorCode: string;
-    @Output() sendEmailToParent = new EventEmitter<string>();
+    @Input() loginEmail: string;
+    @Output() loginEmailChange = new EventEmitter<string>();
 
     sendEmail: any;
+    @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
 
     constructor(
         language: NxLanguageProviderService,
@@ -37,15 +39,19 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnInit(): void {
         this.sendEmail = () => {
-            this.sendEmailToParent.emit(this.email.value);
+            this.loginEmailChange.emit(this.loginEmail);
         };
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode) {
-            this.email.setErrors({ [changes.errorCode.currentValue]: true });
+            this.emailForm?.controls.email.setErrors({ [changes.errorCode.currentValue]: true });
         }
     }
 
     ngOnDestroy(): void {}
+
+    createAccount() {
+        this.setCurrentState.emit(AuthorizeState.create);
+    }
 }

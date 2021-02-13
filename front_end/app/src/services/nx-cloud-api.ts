@@ -215,7 +215,6 @@ export class NxCloudApiService {
         password: string,
         firstName: string,
         lastName: string,
-        subscribe: string,
         code: string
     ) {
         return this.http
@@ -225,7 +224,6 @@ export class NxCloudApiService {
                     password,
                     first_name : firstName,
                     last_name  : lastName,
-                    subscribe,
                     code
                 })
             .toPromise();

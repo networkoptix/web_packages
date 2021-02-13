@@ -100,7 +100,7 @@
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",
         "activatedText": "Account Activated!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {account}.</p><p>Please, activate the account and return here to finish the process.</p>",
+        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Reset Password",
         "newPassHeader": "Set New Password",

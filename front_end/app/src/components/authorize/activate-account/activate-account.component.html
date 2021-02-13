@@ -1,20 +1,31 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header *ngIf="created" >
-    <h3>{{LANG.authorize.activate.header}}</h3>
-</header>
-<main>
-    <svg-icon nx-add-svg-src 
-        [src]="CONFIG.icons.dir + created ? 'mail' : 'checkmark' + '-placeholder.svg'" 
-        [svgStyle]="{'width.px': 24, 'height.px': 24}"
-        [applyClass]="true"></svg-icon>
-    <h3>{{contentHeader}}</h3>
-    <div [innerHTML]="contentMessage"></div>
-</main>
-<footer>
-    <nx-process-button
-        buttonText="{{ 'Log In' | translate }}">
-    </nx-process-button>
-    <!-- [clickFn]="logInNext"
-    [form]="logInForm"
-    [process]="logInProcess"> -->
-</footer>
+<form #activateAccountForm>
+    <header *ngIf="!(activated$ | async)" >
+        <h3>{{LANG.authorize.activateHeader()}}</h3>
+    </header>
+    <main>
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.icons.dir + ((activated$ | async) ? 'checkmark' : 'mail') + '-placeholder.svg'" 
+            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [applyClass]="true"></svg-icon>
+        <h3>{{ (contentHeader$ | async) }}</h3>
+        <div class="content-message" [innerHTML]="(contentMessage$ | async)"></div>
+    </main>
+    <footer>
+        <ng-container *ngIf="!(fromEmail$ | async)">
+            <button class="btn svg-icon" type="button" (click)="login()">
+                <span translate>Log In</span>
+            </button>
+            <button class="btn svg-icon" type="button">
+                <!-- (click)="goBack()"  -->
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+                <span translate>Back</span>
+            </button>
+        </ng-container>
+        <nx-process-button
+            [form]="activateAccountForm"
+            [process]="(activated$ | async) ? loginProcess : checkActivationProcess"
+            buttonText="{{ ((fromEmail$ | async) ? 'Log In' : 'Next') | translate }}">
+        </nx-process-button>
+    </footer>
+</form>

@@ -13,8 +13,10 @@
             <input
                 type="email"
                 id="authorizeEmail"
+                name="email"
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
-                [formControl]="email"
+                [(ngModel)]="loginEmail"
+                #email="ngModel"
                 autocomplete="email"
                 required
                 nxFocusMe>
@@ -39,8 +41,9 @@
             <input
                 type="text"
                 id="authorizeLogin"
-                [formControl]="email"
-                [ngClass]="{ 'invalid-state': login.errors?.required || logins.errors?.accountNotAccessSystem }"
+                name="login"
+                [(ngModel)]="loginEmail"
+                [ngClass]="{ 'invalid-state': login.errors?.required || login.errors?.accountNotAccessSystem }"
                 #login="ngModel"
                 required
                 nxFocusMe>
@@ -56,8 +59,7 @@
         </ng-template>
     </main>
     <footer>
-        <button class="btn svg-icon" type="button">
-            <!-- (click)="forgotPassword()" -->
+        <button class="btn svg-icon" (click)="createAccount()" type="button">
             <svg-icon nx-add-svg-src 
                 [src]="CONFIG.icons.dir + 'plus.svg'" 
                 [svgStyle]="{'width.px': 24, 'height.px': 24}"

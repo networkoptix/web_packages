@@ -1,23 +1,13 @@
 import {
-    Component, Inject, OnDestroy,
-    OnInit, ViewContainerRef
+    Component, EventEmitter, Input, OnChanges, OnDestroy,
+    OnInit, Output, SimpleChanges, ViewChild
 }                                               from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
 import { UntilDestroy }                         from '@ngneat/until-destroy';
 
-import { NxDialogsService }                     from '@dialogs/dialogs.service';
 import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxPageService }                        from '@services/page.service';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxUtilsService }                       from '@services/utils.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
-import { NxProcessService, Process }            from '@services/process.service';
-import { NxUriService }                         from '@services/uri.service';
-import { NxApplyService, Watcher }              from '@services/apply.service';
-import { NxToastService }                       from '@dialogs/toast.service';
+import { Process }                              from '@services/process.service';
 import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
-import { WINDOW }                               from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,64 +15,64 @@ import { WINDOW }                               from '@services/window-provider'
     templateUrl : 'create-account.component.html',
     styleUrls   : ['create-account.component.scss']
 })
-
-export class NxAuthorizeCreateAccountComponent implements OnInit, OnDestroy {
+export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    accountEmail: string;
+    @Input() existingEmail: string;
+    @Input() accountInfo: {
+        email: string;
+        password: string;
+        firstName: string;
+        lastName: string;
+    }
+
+    @Output() accountInfoChange = new EventEmitter<{
+        email: string;
+        password: string;
+        firstName: string;
+        lastName: string;
+    }>();
+
     createEmail: string;
-    firstNameInput: string;
-    lastNameInput: string;
+    createFirstName: string;
+    createLastName: string;
     createPassword: string;
+
+    @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
     weakPassword: boolean;
 
+    @Input() createAccountProcess: Process;
+    onCreateSubmit: any;
+
+    @ViewChild('createAccountForm', { static: false }) createForm: HTMLFormElement;
+
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService,
-        @Inject(WINDOW) private window: Window,
-        @Inject(ViewContainerRef) viewContainerRef,
-        private route: ActivatedRoute,
-        private applyService: NxApplyService,
-        private pageService: NxPageService,
-        private dialogs: NxDialogsService,
-        private processService: NxProcessService,
-        private uriService: NxUriService,
-        private toastService: NxToastService,
-        location: Location
+        configService: NxConfigService
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
-    //     this.routeParamsSubscription = this.route
-    //         .params
-    //         .subscribe(params => {
-    //             if (params.userId) {
-    //                 this.paramUser = params.userId;
-    //                 if (this.paramUser.indexOf('?') > -1) {
-    //                     this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
-    //                 }
-    //                 this.menuService.detail = this.paramUser;
-    //                 this.setUser();
-    //             }
-    //         });
+        this.onCreateSubmit = () => {
+            this.accountInfoChange.emit({
+                email     : this.existingEmail || this.createEmail,
+                firstName : this.createFirstName,
+                lastName  : this.createLastName,
+                password  : this.createPassword
+            });
+        };
     }
 
-    ngOnDestroy(): void {
-    //     this.routeParamsSubscription.unsubscribe();
-    //     this.systemSubscription.unsubscribe();
-    //     if (this.userSubscription) {
-    //         this.userSubscription.unsubscribe();
-    //     }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.errorCode) {
+            const eC = changes.errorCode.currentValue;
+            this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
+        }
     }
 
-    onPasswordChange(password) {
-        this.createPassword = password;
-    }
-
-    // initProcesses() {
-    // }
+    ngOnDestroy(): void {}
 }

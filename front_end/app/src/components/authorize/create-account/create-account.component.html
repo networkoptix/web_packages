@@ -1,28 +1,28 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header>
     <h3>{{LANG.authorize.loginCloudHeader()}}</h3>
-    <ng-container *ngIf="accountEmail">
+    <ng-container *ngIf="existingEmail">
         <span class="sub-header" translate>For</span>
-        <span class="account-password">{{accountEmail}}</span>
+        <span class="account-password">{{existingEmail}}</span>
     </ng-container>
 </header>
 <main>
     <form #createAccountForm="ngForm" class="form">
-        <div class="row" *ngIf="!accountEmail">
+        <div class="row" *ngIf="!existingEmail">
             <label for="createEmail" translate>Email</label>
-            <input
-                type="email"
-                id="createEmail"
-                [ngClass]="{ 'invalid-state': email.errors.required || email.errors.wrongEmail }"
-                #email="ngModel"
-                autocomplete="email"
+            <nx-email-input
+                name="email"
+                componentId="email"
+                [hideErrors]="false"
                 [(ngModel)]="createEmail"
-                required
-                nxFocusMe>
-            <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
-                <p *ngIf="email.errors.required" class="error-label" translate>Required</p>
-                <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
-                <p *ngIf="email.errors.alreadyExists" class="error-label" translate>Account already exists</p>
+                [lockEmail]="false"
+                [form]="createAccountForm"
+                #createAccountEmail="ngModel"
+            ></nx-email-input>
+            <ng-container *ngIf="createAccountEmail.invalid && (createAccountEmail.dirty || createAccountEmail.touched)">
+                <p *ngIf="createAccountEmail.errors.required" class="error-label" translate>Required</p>
+                <p *ngIf="createAccountEmail.errors.pattern" class="error-label" translate>Invalid email</p>
+                <p *ngIf="createAccountEmail.errors.alreadyExists" class="error-label" translate>Account already exists</p>
             </ng-container>
         </div>
         <div class="row">
@@ -31,26 +31,28 @@
                 <input
                     type="text"
                     id="firstName"
-                    [ngClass]="{ 'invalid-state': firstName.errors.required }"
+                    name="firstName"
+                    [ngClass]="{ 'invalid-state': firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required }"
+                    [(ngModel)]="createFirstName"
                     #firstName="ngModel"
                     autocomplete="given-name"
-                    [(ngModel)]="firstNameInput"
                     required
                     nxFocusMe>
-                <p *ngif="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label" translate>Required</p>
+                <p *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label" translate>Required</p>
             </div>
             <div class="right">
-                <label for="lastName" translate>last Name</label>
+                <label for="lastName" translate>Last Name</label>
                 <input
                     type="text"
                     id="lastName"
-                    [ngClass]="{ 'invalid-state': lastName.errors.required }"
+                    name="lastName"
+                    [ngClass]="{ 'invalid-state': lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required }"
+                    [(ngModel)]="createLastName"
                     #lastName="ngModel"
                     autocomplete="family-name"
-                    [(ngModel)]="lastNameInput"
                     required
                     nxFocusMe>
-                <p *ngif="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label" translate>Required</p>
+                <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label" translate>Required</p>
             </div>
         </div>
         <div class="row">
@@ -59,9 +61,9 @@
                 <nx-password-input
                     name="createAccountPassword"
                     componentId="createAccountPassword"
+                    [hideErrors]="false"
                     class="form-component"
-                    [ngModel]="createPassword"
-                    (ngModelChange)="onPasswordChange($event)"
+                    [(ngModel)]="createPassword"
                     [form]="createAccountForm"
                     [component]="createAccountPassword"
                     #createAccountPassword="ngModel">
@@ -101,10 +103,10 @@
         <span translate>Back</span>
     </button>
     <nx-process-button
-        buttonText="{{ 'Next' | translate }}"
-        svg="arrow_right">
+        [form]="createAccountForm"
+        [clickFn]="onCreateSubmit"
+        [process]="createAccountProcess"
+        buttonText="{{ 'Create Account' | translate }}">
     </nx-process-button>
-    <!-- [clickFn]="createAccountNext"
-    [form]="createAccountForm"
-    [process]="createAccountProcess"> -->
+    <!-- [process]="createAccountFactory(accountInfo)" -->
 </footer>
