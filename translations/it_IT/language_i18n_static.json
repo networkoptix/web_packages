@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mio",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Requisiti",
-        "testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-        "testedVersionsLabel": "Verificato sulla versione {{vmsName}}:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Telecamere PTZ avanzato",
@@ -535,7 +535,7 @@
         "download": "Scarica %VMS_NAME%",
         "downloadPlatform": "Scarica %VMS_NAME% per ",
         "failedToAccessSystem": "Impossibile accedere al sistema",
-        "integrations": "Integrazioni",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Accesso",
         "pageNotFound": "Pagina non trovata",
         "register": "Creare un account",
@@ -549,6 +549,11 @@
         "systems": "Sistemi",
         "template": "{{title}} %CLOUD_NAME%",
         "view": "Visualizza telecamere"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "troppo comune",
@@ -702,6 +707,7 @@
         "unavailable": "non disponibile"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account"
@@ -742,6 +748,8 @@
             "starter": "Iniziale",
             "iomodule": "Modulo I / O",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server non trovato"
         },
         "messages": {

@@ -43,6 +43,7 @@
     "Camera is offline": "Kamera jest odłączona",
     "Camera is unauthorized": "Kamera jest nieautoryzowana",
     "Cameras menu": "Menu kamer",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "Anuluj",
     "Change Password": "Zmień hasło",
     "Changing them may cause server to work incorrectly.": "Zmiana może spowodować nieprawidłowe działanie serwera.",

@@ -43,6 +43,7 @@
     "Camera is offline": "เซิร์ฟเวอร์ออฟไลน์",
     "Camera is unauthorized": "สิทธิ์เข้าถึงยังไม่ถูกต้อง",
     "Cameras menu": "เมนูกล้อง",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "ยกเลิก",
     "Change Password": "เปลี่ยนรหัสผ่าน",
     "Changing them may cause server to work incorrectly.": "การเปลี่ยนพวกเขาอาจทำให้เซิร์ฟเวอร์ทำงานไม่ถูกต้อง",

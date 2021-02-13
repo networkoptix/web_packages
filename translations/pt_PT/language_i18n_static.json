@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mine",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Advanced PTZ cameras",
@@ -535,7 +535,7 @@
         "download": "Baixar %VMS_NAME%",
         "downloadPlatform": "Baixar %VMS_NAME% para ",
         "failedToAccessSystem": "Failed to access system",
-        "integrations": "Integrations",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Página não encontrada",
         "register": "Create account",
@@ -549,6 +549,11 @@
         "systems": "Sistemas",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Visualizar câmaras"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "demasiado comum",
@@ -702,6 +707,7 @@
         "unavailable": "indisponível"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "O sistema {{systemName}} foi apagado com sucesso da sua conta"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "IO Module",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

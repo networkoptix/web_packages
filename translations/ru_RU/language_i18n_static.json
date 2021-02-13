@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Мой",
         "phoneNumberWithLabel": "Тел: {{number}}",
         "requirements": "{{name}} требований",
-        "testedVersionLabel": "Проверено на версии {{vmsName}}:",
-        "testedVersionsLabel": "Проверено на версии {{vmsName}}:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Камеры с расширенным PTZ",
@@ -535,7 +535,7 @@
         "download": "Скачать %VMS_NAME%",
         "downloadPlatform": "Скачать %VMS_NAME% для ",
         "failedToAccessSystem": "Не удалось получить доступ к системе",
-        "integrations": "Интеграции",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Войти",
         "pageNotFound": "Страница не найдена",
         "register": "Зарегистрироваться в",
@@ -549,6 +549,11 @@
         "systems": "Системы",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Просмотр камер"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "часто встречающийся",
@@ -702,6 +707,7 @@
         "unavailable": "недоступен"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "Система {{systemName}} успешно удалена из вашей учетной записи"
@@ -742,6 +748,8 @@
             "starter": "Стартовая",
             "iomodule": "Модуль ввода/вывода",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

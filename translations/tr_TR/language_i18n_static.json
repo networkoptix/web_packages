@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Benim",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Gereksinimler",
-        "testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
-        "testedVersionsLabel": "{{vmsName}} versiyonda test edildi:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Gelişmiş PTZ kameralar",
@@ -535,7 +535,7 @@
         "download": "İndir %VMS_NAME%",
         "downloadPlatform": "İçin %VMS_NAME% indir ",
         "failedToAccessSystem": "Sisteme erişim sağlanılamadı",
-        "integrations": "Entegrasyonlar",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Giriş yap",
         "pageNotFound": "Sayfa bulunamadı",
         "register": "Hesap Oluştur",
@@ -549,6 +549,11 @@
         "systems": "Sistemler",
         "template": "{{title}} %CLOUD_NAME%",
         "view": "Kameraları görüntüle"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "çok yaygın",
@@ -702,6 +707,7 @@
         "unavailable": "kullanılamaz"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "{{systemName}} sistemi hesabınızdan başarıyla silindi"
@@ -742,6 +748,8 @@
             "starter": "Başlangıç",
             "iomodule": "I/O Modül",
             "bridge": "Köprü",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Sunucu bulunamadı"
         },
         "messages": {

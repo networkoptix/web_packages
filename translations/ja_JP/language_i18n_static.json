@@ -248,7 +248,7 @@
             "checking": "チェック中...",
             "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
             "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-            "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、所有者が異なります。 クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "システム内にある任意のサーバーのアドレスを入力します。",
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>のシステムを統合しようとしています。</p><p>設定と名称は <strong>{{primarySystem}}</strong>の値を使用します。</p>",
@@ -272,7 +272,7 @@
             "secondarySystemUnavailable": "システム {{targetSystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "serverAtUrl": "{{url}} のサーバー",
             "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} システムにアクセスできません。</p><p>指定されたサーバーがオンラインであることを確認して、もう一度やり直してください。</p>",
-            "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません",
             "systemOfflineUrl": "{{targetSystem}} はアクセスできません。",
             "systemsIncompatible": "このサーバーは互換性のないソフトウェアバージョンです。両方のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a>に更新してください。",
@@ -401,14 +401,14 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
         "DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
         "EmailAlreadyExists": "このEmailは既に登録されています",
         "FAIL": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
         "Connection timed out": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
         "Bad Gateway": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。両方とも <a href=\"/download\">最新ビルド</a>にアップデートしてください。",
-        "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+        "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方の下にリストされているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
         "fail": "{{failedSystem}} はアクセスできません。",
         "incompatible": "このサーバーには互換性のないソフトウェアバージョンがあります。両方のシステムを同じビルドに更新して統合します。",
@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "自分",
         "phoneNumberWithLabel": "電話： {{number}}",
         "requirements": "{{name}} 要件",
-        "testedVersionLabel": "{{vmsName}} バージョンでテスト済み:",
-        "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み:"
+        "testedVersionLabel": "開発者によるテストが以下の {{vmsName}} バージョンに対して行われました:",
+        "testedVersionsLabel": "開発者によるテストが以下の {{vmsName}} バージョンに対して行われました:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "高度なPTZカメラ",
@@ -535,7 +535,7 @@
         "download": "%VMS_NAME% をダウンロード",
         "downloadPlatform": "%VMS_NAME% をダウンロード ",
         "failedToAccessSystem": "システムにアクセスできませんでした",
-        "integrations": "統合",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
@@ -549,6 +549,11 @@
         "systems": "システム",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "カメラを表示"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "あまりにも一般的",
@@ -702,6 +707,7 @@
         "unavailable": "利用できません"
     },
     "toastMessage": {
+        "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "system": {
             "deleted": {
                 "success": "システム {{systemName}} はあなたのアカウントから正常に削除されました"
@@ -742,6 +748,8 @@
             "starter": "スターター",
             "iomodule": "IOモジュール",
             "bridge": "ブリッジ",
+            "nvr": "NVR",
+            "nvrError": "NVRエラー",
             "serverNotFound": "サーバーが見つかりません"
         },
         "messages": {

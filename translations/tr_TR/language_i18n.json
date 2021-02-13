@@ -43,6 +43,7 @@
     "Camera is offline": "Kamera çevrimdışı",
     "Camera is unauthorized": "Kamera yetkisiz kullanıcı",
     "Cameras menu": "Kamera menüsü",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "İptal",
     "Change Password": "Parola Değiştir",
     "Changing them may cause server to work incorrectly.": "Bunların değiştirilmesi sunucunun yanlış çalışmasına neden olabilir.",

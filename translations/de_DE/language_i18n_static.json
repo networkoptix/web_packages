@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Meine",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Voraussetzungen",
-        "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
-        "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:"
+        "testedVersionLabel": "Vom Entwickler getestet mit {{vmsName}} Version:",
+        "testedVersionsLabel": "Vom Entwickler getestet mit {{vmsName}} Versionen:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Erweiterte PTZ-Kameras",
@@ -535,7 +535,7 @@
         "download": "%VMS_NAME% herunterladen",
         "downloadPlatform": "Download %VMS_NAME% für ",
         "failedToAccessSystem": "Fehler beim Zugriff auf das System",
-        "integrations": "Integrationen",
+        "integrations": "%VMS_NAME% Integrationen",
         "login": "Anmelden",
         "pageNotFound": "Seite nicht gefunden",
         "register": "Account erstellen bei",
@@ -549,6 +549,11 @@
         "systems": "Systeme",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Kameras ansehen"
+    },
+    "pageDescriptions": {
+        "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",
+        "integrationSetup": "Setup-Anweisungen für {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} für {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "zu häufig verwendet",
@@ -702,6 +707,7 @@
         "unavailable": "nicht verfügbar"
     },
     "toastMessage": {
+        "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "system": {
             "deleted": {
                 "success": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "I/O-Modul",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR-Fehler",
             "serverNotFound": "Server nicht gefunden"
         },
         "messages": {

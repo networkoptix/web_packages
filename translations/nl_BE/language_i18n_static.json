@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mijn",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Vereisten",
-        "testedVersionLabel": "Getest op {{vmsName}} versie:",
-        "testedVersionsLabel": "Getest op {{vmsName}} versies:"
+        "testedVersionLabel": "Getest door ontwikkelaar met versie {{vmsName}}:",
+        "testedVersionsLabel": "Getest door ontwikkelaar met versies {{vmsName}}:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
@@ -535,7 +535,7 @@
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% voor ",
         "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
-        "integrations": "Integraties",
+        "integrations": "%VMS_NAME% Integraties",
         "login": "Inloggen",
         "pageNotFound": "Pagina niet gevonden",
         "register": "Maak een account aan in",
@@ -549,6 +549,11 @@
         "systems": "Systemen",
         "template": "{{title}} %CLOUD_NAME%",
         "view": "Bekijk camera's"
+    },
+    "pageDescriptions": {
+        "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
+        "integrationSetup": "Installatie-instructies voor {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} voor {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "te algemeen",
@@ -702,6 +707,7 @@
         "unavailable": "niet beschikbaar"
     },
     "toastMessage": {
+        "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "system": {
             "deleted": {
                 "success": "Systeem {{systemName}} is succesvol verwijderd van uw account"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "I/O module",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR fout",
             "serverNotFound": "Server niet gevonden"
         },
         "messages": {

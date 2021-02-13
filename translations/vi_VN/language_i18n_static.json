@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Của tôi",
         "phoneNumberWithLabel": "Điện thoại: {{number}}",
         "requirements": "{{name}} Yêu cầu",
-        "testedVersionLabel": "Đã thử nghiệm với phiên bản {{vmsName}}:",
-        "testedVersionsLabel": "Đã thử nghiệm với {{vmsName}} phiên bản:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Camera PTZ nâng cao",
@@ -535,7 +535,7 @@
         "download": "Tải xuống %VMS_NAME%",
         "downloadPlatform": "Tải xuống %VMS_NAME% cho ",
         "failedToAccessSystem": "Không thể truy cập hệ thống",
-        "integrations": "Tích hợp",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Đăng nhập",
         "pageNotFound": "Không tìm thấy trang",
         "register": "Tạo tài khoản tại",
@@ -549,6 +549,11 @@
         "systems": "Hệ thống",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Xem camera"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "quá phổ biến",
@@ -702,6 +707,7 @@
         "unavailable": "không khả dụng"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn"
@@ -742,6 +748,8 @@
             "starter": "Bắt đầu",
             "iomodule": "Mô đun IO",
             "bridge": "Cầu",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

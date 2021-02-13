@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Utvinn",
         "phoneNumberWithLabel": "Tlf: {{number}}",
         "requirements": "{{name}} Krav",
-        "testedVersionLabel": "Testet på {{vmsName}} versjon:",
-        "testedVersionsLabel": "Testet på {{vmsName}} versjon:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avanserte PTZ kameraer",
@@ -535,7 +535,7 @@
         "download": "Last ned %VMS_NAME%",
         "downloadPlatform": "Last ned %VMS_NAME% for ",
         "failedToAccessSystem": "Kunne ikke få tilgang til systemet",
-        "integrations": "Integrasjoner",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Logg Inn",
         "pageNotFound": "Siden ble ikke funnet",
         "register": "Opprett konto i",
@@ -549,6 +549,11 @@
         "systems": "Systemer",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Se kameraer"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "for vanlig",
@@ -702,6 +707,7 @@
         "unavailable": "utilgjengelig"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "System {{systemName}} er slettet fra kontoen din"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "IO Module",
             "bridge": "Bro",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

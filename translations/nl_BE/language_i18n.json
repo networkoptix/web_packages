@@ -43,6 +43,7 @@
     "Camera is offline": "Camera is offline",
     "Camera is unauthorized": "Camera niet geautoriseerd",
     "Cameras menu": "Camera's menu",
+    "Can't activate license: only one NVR license is allowed per System": "Kan licentie niet activeren: slechts één NVR licentie is toegestaan per systeem",
     "Cancel": "Annuleren",
     "Change Password": "Wachtwoord wijzigen",
     "Changing them may cause server to work incorrectly.": "Als u deze wijzigt, heeft dat mogelijk effect op de correcte werking van de server applicatie.",

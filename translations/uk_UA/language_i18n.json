@@ -43,6 +43,7 @@
     "Camera is offline": "Камера не в мережі",
     "Camera is unauthorized": "Камера не авторизована",
     "Cameras menu": "Меню камер",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "Скасувати",
     "Change Password": "Змінити пароль",
     "Changing them may cause server to work incorrectly.": "Зміна них може спричинити неправильну роботу сервера.",

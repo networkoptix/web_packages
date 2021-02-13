@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "나의",
         "phoneNumberWithLabel": "전화: {{number}}",
         "requirements": "{{name}} 요구 사항",
-        "testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
-        "testedVersionsLabel": "테스트된 {{vmsName}} 버전:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "고급 PTZ 카메라",
@@ -535,7 +535,7 @@
         "download": "%VMS_NAME% 다운로드",
         "downloadPlatform": "에 대한 %VMS_NAME% 다운로드 ",
         "failedToAccessSystem": "시스템에 액세스 실패",
-        "integrations": "연동",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "로그인",
         "pageNotFound": "페이지를 찾을 수 없음",
         "register": "에 계정 만들기",
@@ -549,6 +549,11 @@
         "systems": "시스템",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "카메라 보기"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "너무 평범",
@@ -702,6 +707,7 @@
         "unavailable": "사용할 수 없음"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다."
@@ -742,6 +748,8 @@
             "starter": "스타터",
             "iomodule": "IO장치",
             "bridge": "연결",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

@@ -43,6 +43,7 @@
     "Camera is offline": "Kameraet er offline",
     "Camera is unauthorized": "Kameraet er uautorisert",
     "Cameras menu": "Kamera-meny",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "Avbryt",
     "Change Password": "Bytt passord",
     "Changing them may cause server to work incorrectly.": "Endring av dem kan føre til at serveren ikke fungerer korrekt.",

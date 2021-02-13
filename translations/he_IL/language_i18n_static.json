@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "שלי",
         "phoneNumberWithLabel": "טלפון: {{number}}",
         "requirements": "{{name}} דרישות",
-        "testedVersionLabel": "נבדק עם {{vmsName}} גרסה:",
-        "testedVersionsLabel": "נבדק עם {{vmsName}} בגרסאות:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "מצלמות PTZ מתקדמות",
@@ -535,7 +535,7 @@
         "download": "הורד %VMS_NAME%",
         "downloadPlatform": "הורד %VMS_NAME% עבור ",
         "failedToAccessSystem": "כניסה למערכת נכשלה",
-        "integrations": "אינטגרציות",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "התחבר",
         "pageNotFound": "דף לא נמצא",
         "register": "צור חשבון ב-",
@@ -549,6 +549,11 @@
         "systems": "מערכות",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "הצג מצלמות"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "נפוץ מדי",
@@ -702,6 +707,7 @@
         "unavailable": "לא זמין"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך"
@@ -742,6 +748,8 @@
             "starter": "מתחיל",
             "iomodule": "מודול קלט/פלט",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

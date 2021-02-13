@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mina",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Krav",
-        "testedVersionLabel": "Testat på {{vmsName}} version:",
-        "testedVersionsLabel": "Testat på {{vmsName}} version:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avancerade PTZ-kameror",
@@ -535,7 +535,7 @@
         "download": "Ladda ner %VMS_NAME%",
         "downloadPlatform": "Hämta %VMS_NAME% för ",
         "failedToAccessSystem": "Misslyckades med att komma åt system",
-        "integrations": "Integrationer",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
         "register": "Skapa konto i",
@@ -549,6 +549,11 @@
         "systems": "System",
         "template": "{{title}} %CLOUD_NAME%",
         "view": "Visa kameror"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "för vanligt",
@@ -702,6 +707,7 @@
         "unavailable": "inte tillgänglig"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "System {{systemName}} har tagits bort från ditt konto"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "I/O Modul",
             "bridge": "Brygga",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Servern hittades inte"
         },
         "messages": {

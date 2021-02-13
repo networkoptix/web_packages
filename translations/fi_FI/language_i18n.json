@@ -43,6 +43,7 @@
     "Camera is offline": "Camera is offline",
     "Camera is unauthorized": "Camera is unauthorized",
     "Cameras menu": "Kamerat-valikko",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "Peruuta",
     "Change Password": "Vaihda salasana",
     "Changing them may cause server to work incorrectly.": "Changing them may cause server to work incorrectly.",

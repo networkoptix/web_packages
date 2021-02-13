@@ -130,7 +130,7 @@
         },
         "chromeCastWarning": "Chromecast consommer beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
         "recordingSettingsWarning": "Veuillez mettre à jour les paramètres d'enregistrement manquants.",
-        "disableMotionWarning": "Le mode d'enregistrement sera changé en \"Enregistrer toujours\"",
+        "disableMotionWarning": "Le mode d'enregistrement sera changé en \"Toujours enregistrer\"",
         "recordingModes": {
             "always": "Toujours enregistrer",
             "motion": "Enregistrer sur mouvement seulement",
@@ -146,7 +146,7 @@
         },
         "general": "Général",
         "searchCamPlaceholder": "Recherche",
-        "systemHasNoCameras": "Aucune caméra",
+        "systemHasNoCameras": "Pas de caméras",
         "systemHasNoCamerasMessage": "Il n'y a pas de caméras accessibles pour vous dans le système. <br><br>Connectez quelques caméras au réseau local du serveur pour les rendre détectables ou demandez à l'administrateur système de modifier votre niveau d'accès.",
         "systemNewVersion": "Mettre à jour votre système",
         "systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
@@ -183,7 +183,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "Ce courriel a déjà été enregistré dans le système %systemName%"
+            "alreadyExists": "Cet e-mail a déjà été enregistré dans le système %systemName%"
         },
         "buttons": {
             "cancel": "Annuler",
@@ -201,8 +201,8 @@
             "title": "Stockage cloud",
             "enableStorage": "Activer le stockage cloud",
             "otherSystem": "Autre Système...",
-            "initial": "Nous vous proposons {{compCapacity}} de stockage cloud gratuit par système pour vous aider à démarrer.",
-            "available": "L'emplacement de stockage cloud est disponible pour tous les serveurs de ce système. Vous pouvez le gérer à l'aide du client de bureau {{vmsName}}.",
+            "initial": "Nous offrons {{compCapacity}} de stockage cloud gratuit par système pour vous aider à démarrer.",
+            "available": "L'emplacement de stockage dans le cloud est disponible pour tous les serveurs de ce système. Vous pouvez le gérer en utilisant le client bureau {{vmsName}}.",
             "camera": "caméra",
             "cameras": "caméras",
             "usageLabels": {
@@ -211,15 +211,15 @@
                 "amountUsed": "Quantité utilisée",
                 "archiveFrom": "Archive de",
                 "recordingBitrate": "Débit d'enregistrement",
-                "delayFromLive": "Délai avec le direct"
+                "delayFromLive": "Retard par rapport au direct"
             },
             "remove": {
-                "success": "Stockage cloud a bien été supprimé du système",
-                "errorPrefix": "Erreur de suppression du stockage cloud"
+                "success": "Stockage Cloud supprimé du système avec succès",
+                "errorPrefix": "Erreur lors de la suppression du stockage cloud"
             },
             "activationError": {
                 "title": "Impossible d'activer le stockage cloud",
-                "message": "Vous avez déjà au total <volume> stockage cloud ajouté à vos systèmes et vous ne pouvez pas en ajouter davantage. <br/><br/>Vous pouvez supprimer le stockage d'un autre système à la place ou le déplacer vers celui-ci. "
+                "message": "Vous avez déjà un total de <volume> stockage cloud ajouté à vos systèmes et ne pouvez pas en ajouter plus. <br/><br/>Vous pouvez supprimer le stockage d'un autre système à la place ou le déplacer vers celui-ci. "
             },
             "systemDisconnectError": {
                 "title": "Impossible de déconnecter le système de %CLOUD_NAME%",
@@ -228,8 +228,8 @@
             "moveCloudStorage": {
                 "title": "Déplacer le stockage cloud",
                 "success": "Stockage déplacé avec succès",
-                "errorPrefix": "Erreur de déplacement du stockage cloud",
-                "notFound": "Stockage introuvable. Le stockage a peut-être été déplacé ou supprimé par un autre utilisateur",
+                "errorPrefix": "Erreur lors du déplacement du stockage cloud",
+                "notFound": "Le stockage n'a pas été trouvé. Le stockage peut avoir été déplacé ou supprimé par un autre utilisateur",
                 "status": {
                     "offline": "Le stockage cloud ne peut pas être déplacé vers des systèmes hors ligne."
                 }
@@ -435,7 +435,7 @@
         "cantSharePrefix": "Impossible de partager le système",
         "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
         "emailNotFound": "Compte n’existe pas.",
-        "failedToAccessSystem": "Aucun système n'est accessible par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué ou si vous êtes connecté au compte incorrect.",
+        "failedToAccessSystem": "Aucun système ne peut être accédé par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, ou si vous êtes connecté au compte incorrect.",
         "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
         "lostConnection": "Connexion à {{systemName}} perdu",
         "mergedSystemIsOffline": "Système <strong>{{failedSystem}}</strong> hors ligne.",
@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mien",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "Exigences {{name}}",
-        "testedVersionLabel": "Testé avec la version {{vmsName}}:",
-        "testedVersionsLabel": "Testé avec les versions {{vmsName}}:"
+        "testedVersionLabel": "Testé par le développeur avec la version {{vmsName}}:",
+        "testedVersionsLabel": "Testé par le développeur avec les versions {{vmsName}}:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Caméras PTZ avancées",
@@ -495,7 +495,7 @@
         "isAptzSupported": "PTZ avancé",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
-        "isDualStreamingSupported": "Flux double",
+        "isDualStreamingSupported": "Double Flux",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "E/S",
@@ -535,7 +535,7 @@
         "download": "Télécharger %VMS_NAME%",
         "downloadPlatform": "Télécharger %VMS_NAME% pour ",
         "failedToAccessSystem": "Impossible d'accéder au système",
-        "integrations": "Intégrations",
+        "integrations": "Intégrations de %VMS_NAME%",
         "login": "Connexion",
         "pageNotFound": "Page non trouvée",
         "register": "Créer compte dans",
@@ -549,6 +549,11 @@
         "systems": "Systèmes",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Voir les caméras"
+    },
+    "pageDescriptions": {
+        "integrations": "Le Marché des Intégrations est un écosystème centralisé de produits qui s'intègrent parfaitement aux produits VMS comme %VMS_NAME%, tous disponibles en %CLOUD_NAME% afin que vous puissiez trouver des solutions pour construire et personnaliser votre système vidéo IP.",
+        "integrationSetup": "Instructions d'installation pour {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} pour {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "trop commun",
@@ -647,7 +652,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Impossible de charger les paramètres de sécurité.",
             "notAbleToLoadSystem": "Impossible de charger les paramètres système.",
-            "notAbleToLoadStorageInfo": "Impossible de charger l'information stockage.",
+            "notAbleToLoadStorageInfo": "Impossible de charger les informations de stockage.",
             "sessionLimitDuration": {
                 "hours": "heure",
                 "minutes": "minute"
@@ -668,23 +673,23 @@
         "loggers": {
             "none": {
                 "text": "Aucun",
-                "help": "(journal désactivé)"
+                "help": "(journal d'événement désactivé)"
             },
             "error": {
                 "text": "Erreur",
-                "help": "(log erreurs uniquement)"
+                "help": "(journal des erreurs uniquement)"
             },
             "warning": {
                 "text": "Attention",
-                "help": "(journal avertissements et erreurs)"
+                "help": "(journal d'avertissements et d'erreurs)"
             },
             "info": {
                 "text": "Info",
-                "help": "(Journal d'avertissements, erreurs et tous messages)"
+                "help": "(journal d'avertissements, erreurs et tous les messages)"
             },
             "debug": {
                 "text": "Débogage",
-                "help": "(Journal de tous les messages système et info de débogage)"
+                "help": "(journal de tous les messages du système et les informations de débogage)"
             },
             "verbose": {
                 "text": "Verbose",
@@ -702,6 +707,7 @@
         "unavailable": "non disponible"
     },
     "toastMessage": {
+        "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "system": {
             "deleted": {
                 "success": "Système {{systemName}} a correctement été supprimé de votre compte"
@@ -733,15 +739,17 @@
             "error": "Erreur",
             "expired": "Expiré",
             "ok": "OK",
-            "digital": "Professionel",
-            "analog": "Analogue",
+            "digital": "Professionnel",
+            "analog": "Analogique",
             "edge": "Edge",
             "vmax": "VMAX",
             "videowall": "Mur Vidéo",
-            "analogencoder": "Encodeur Analogue",
-            "starter": "Entrée",
-            "iomodule": "Module IO",
-            "bridge": "Pont",
+            "analogencoder": "Encodeur Analogique",
+            "starter": "Démarrage",
+            "iomodule": "Module E/S",
+            "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "Erreur NVR",
             "serverNotFound": "Serveur introuvable"
         },
         "messages": {
@@ -753,17 +761,17 @@
     },
     "settingsConfig": {
         "additionalLocalFsTypes": "Types de FS locaux supplémentaires",
-        "autoDiscoveryResponseEnabled": "Réponse de découverte automatique",
+        "autoDiscoveryResponseEnabled": "Réponse de la découverte automatique",
         "crossdomainEnabled": "Domaine croisé",
         "defaultExportVideoCodec": "Codec vidéo d'exportation par défaut",
         "defaultVideoCodec": "Codec vidéo par défaut",
-        "downloaderPeers": "Peers du téléchargeur",
+        "downloaderPeers": "Téléchargements Pairs",
         "lastMergeMasterId": "Dernier masterId de fusion",
         "lastMergeSlaveId": "Dernier slaveId de fusion",
         "ldapSearchTimeoutS": "Délai d'expiration de recherche LDAP(sec)",
         "licenseServer": "Serveur de licence",
         "lowQualityScreenVideoCodec": "Codec vidéo d'écran faible qualité",
-        "maxP2pAllClientsSizeBytes": "Octets P2P Max des clients",
+        "maxP2pAllClientsSizeBytes": "Taille maximale des octets P2P de tous les clients",
         "maxRtpRetryCount": "Nombre max de tentatives RTP",
         "metadataStorageChangePolicy": "Politique de modification du stockage des métadonnées",
         "pushNotificationsLanguage": "Langue de notification push",
@@ -774,19 +782,19 @@
         "webSocketEnabled": "Sockets Web",
         "arecontRtspEnabled": "Arecont RTSP activé",
         "auditTrailEnabled": "Piste d'audit activée",
-        "auditTrailPeriodDays": "Jours de période de vérification",
+        "auditTrailPeriodDays": "Période de la piste d'audit jours",
         "autoDiscoveryEnabled": "Activer la détection automatique de périphérique",
-        "autoUpdateThumbnails": "MàJ automatique de vignettes",
-        "backupNewCamerasByDefault": "Sauvegarde de nouvelles caméras par défaut",
+        "autoUpdateThumbnails": "Mise à jour automatique des vignettes",
+        "backupNewCamerasByDefault": "Sauvegarder les nouvelles caméras par défaut",
         "backupQualities": "Qualités de sauvegarde",
-        "cameraSettingsOptimization": "Autoriser l'optimisation de paramètre périphérique",
-        "clientStatisticsSettingsUrl": "Statistiques relatives clients url",
-        "cloudAccountName": "Compte propriétaire du Nuage",
-        "cloudConnectRelayingEnabled": "Activer le relais pour cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Activer UDP perforation cloud connect",
+        "cameraSettingsOptimization": "Autoriser l'optimisation des paramètres du périphérique",
+        "clientStatisticsSettingsUrl": "Url relative sur les statistiques du client",
+        "cloudAccountName": "Compte propriétaire du Cloud",
+        "cloudConnectRelayingEnabled": "Activer le relais pour la connexion cloud",
+        "cloudConnectUdpHolePunchingEnabled": "Activer la perforation UDP pour la connexion au cloud",
         "cloudHost": "Hôte cloud",
         "cloudSystemID": "Identifiant du système cloud",
-        "disabledVendors": "Vendeurs Désactivés",
+        "disabledVendors": "Fournisseurs désactivés",
         "ec2AliveUpdateIntervalSec": "Intervalle de mise à jour système actif (secondes)",
         "ec2ConnectionKeepAliveTimeoutSec": "Temps Mort de connexion 'Keep Alive' (secondes)",
         "ec2KeepAliveProbeCount": "Sondes de connexion 'Keep Alive' (secondes)",
@@ -842,7 +850,7 @@
         "videoTrafficEncryptionForced": "Forcer le chiffrement du trafic vidéo",
         "updateStatus": "Mettre à jour statut",
         "watermarkSettings": "Paramètres du filigrane",
-        "maxWebMTranscoders": "Nombre maximal de connexions WEBM pour le serveur. Chrome ouvre 2 connexions à la fois, puis ferme la première. Il est donc recommandé de définir la valeur> = 2 sur ce paramètre.",
+        "maxWebMTranscoders": "Nombre maximum de connexions WEBM pour le serveur. Chrome ouvre 2 connexions à la fois, puis ferme la première. Il est donc recommandé de définir la valeur >=2 à ce paramètre.",
         "maxEventLogRecords": "Nombre maximal d'enregistrements du journal des événements à conserver dans la base de données. La quantité réelle d'enregistrements non supprimés peut dépasser de 20% la valeur spécifiée.",
         "forceLiveCacheForPrimaryStream": "S'il faut mettre certaines images en cache pour le flux principal. Valeurs: \"oui\" - toujours activé (peut utiliser beaucoup de RAM), \"non\" - toujours désactivé sauf lorsque requis par la lecture (par exemple, HLS), \"auto\" - similaire à \"non\", mais activé lorsque l'amélioration de l'expérience utilisateur (par exemple, lorsqu'un plug-in Analytics fonctionne sur la caméra)."
     }

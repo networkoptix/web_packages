@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Meu",
         "phoneNumberWithLabel": "Tel.: {{number}}",
         "requirements": "Requisits de {{name}}",
-        "testedVersionLabel": "Provat amb la versió {{vmsName}}:",
-        "testedVersionsLabel": "Provat amb les versions {{vmsName}}:"
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Càmeres amb PTZ avançat",
@@ -535,7 +535,7 @@
         "download": "Descarrega %VMS_NAME%",
         "downloadPlatform": "Descarrega %VMS_NAME% per a ",
         "failedToAccessSystem": "No s'ha pogut accedir al sistema",
-        "integrations": "Integracions",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Inicia la sessió",
         "pageNotFound": "No s'ha trobat la pàgina",
         "register": "Crea un compte a",
@@ -549,6 +549,11 @@
         "systems": "Sistemes",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "Mostra les càmeres"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "massa comuna",
@@ -702,6 +707,7 @@
         "unavailable": "no disponible"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "El sistema {{systemName}} s'ha suprimit correctament del vostre compte"
@@ -742,6 +748,8 @@
             "starter": "Inicial",
             "iomodule": "Mòdul I/O",
             "bridge": "Bridge",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "No s'ha trobat el servidor"
         },
         "messages": {

@@ -43,6 +43,7 @@
     "Camera is offline": "カメラはオフラインです",
     "Camera is unauthorized": "カメラにアクセスする権限がありません",
     "Cameras menu": "カメラメニュー",
+    "Can't activate license: only one NVR license is allowed per System": "ライセンスを有効化できません：NVRライセンスはシステムごとに1つのみ利用可能です",
     "Cancel": "キャンセル",
     "Change Password": "パスワードを変更",
     "Changing them may cause server to work incorrectly.": "変更すると、サーバーが正しく動作しなくなる可能性があります。",

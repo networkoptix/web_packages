@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "我的",
         "phoneNumberWithLabel": "电话： {{number}}",
         "requirements": "{{name}} 要求",
-        "testedVersionLabel": "测试 {{vmsName}} 版本：",
-        "testedVersionsLabel": "测试 {{vmsName}} 版本："
+        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "高级 PTZ 摄像机",
@@ -535,7 +535,7 @@
         "download": "下载 %VMS_NAME%",
         "downloadPlatform": "下载 %VMS_NAME% ",
         "failedToAccessSystem": "无法访问系统",
-        "integrations": "集成",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "登录",
         "pageNotFound": "找不到页面",
         "register": "创建帐户中",
@@ -549,6 +549,11 @@
         "systems": "系统",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "查看摄像机"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "太常见",
@@ -702,6 +707,7 @@
         "unavailable": "不可用"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "system": {
             "deleted": {
                 "success": "从您的帐户成功删除系统 {{systemName}}"
@@ -742,6 +748,8 @@
             "starter": "Starter",
             "iomodule": "I/O模块",
             "bridge": "桥接",
+            "nvr": "NVR",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {

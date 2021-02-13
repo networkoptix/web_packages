@@ -43,6 +43,7 @@
     "Camera is offline": "摄像机离线",
     "Camera is unauthorized": "摄像机未经授权",
     "Cameras menu": "摄像机功能菜单",
+    "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "取消",
     "Change Password": "更改密码",
     "Changing them may cause server to work incorrectly.": "更改设定值可能导致服务器无法正常工作。",
