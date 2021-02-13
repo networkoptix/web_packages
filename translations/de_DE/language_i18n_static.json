@@ -1,11 +1,11 @@
 {
+    "language": "en_US",
     "About %CLOUD_NAME%": "Über %CLOUD_NAME%",
     "Download %VMS_NAME%": "%VMS_NAME% herunterladen",
     "For developers": "Für Entwickler",
     "Integrations (β)": "Integrationen (β)",
     "Privacy": "Datenschutz",
     "Support": "Support",
-    "Supported Devices": "Unterstützte Geräte",
     "Terms": "Bedingungen",
     "accessRoles": {
         "Administrator": {
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Konto erstellt",
-                "message": "Bestätigungsnachricht mit dem Aktivierungslink wird an {{email}} gesendet"
+                "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
                 "title": "Konto erfolgreich aktiviert"
@@ -129,6 +129,7 @@
             "unauthorized": "Authentifizierung erforderlich"
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
+        "login": "login",
         "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
         "disableMotionWarning": "Der Aufnahmemodus wird auf \"Immer aufnehmen\" geändert",
         "recordingModes": {
@@ -145,7 +146,10 @@
             "low": "Niedrig"
         },
         "general": "Allgemein",
+        "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Suche",
+        "system": "system",
         "systemHasNoCameras": "Keine Kameras",
         "systemHasNoCamerasMessage": "Es gibt keine zugänglichen Kameras für Sie im System. <br><br>Schließen Sie einige Kameras an das lokale Netzwerk des Servers an, um sie erkennbar zu machen, oder bitten Sie den Systemadministrator, Ihre Zugriffsebene zu ändern.",
         "systemNewVersion": "Aktualisieren Sie Ihr System",
@@ -157,7 +161,6 @@
         "systemServerError": "Interner Serverfehler",
         "systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
-        "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
         "unknown": "Unbekannt",
         "vendor": "Hersteller",
         "model": "Modell",
@@ -201,8 +204,8 @@
             "title": "Cloudspeicher",
             "enableStorage": "Cloudspeicher aktivieren",
             "otherSystem": "Anderes System...",
-            "initial": "Wir bieten {{compCapacity}} kostenlosen Cloudspeicher pro System an, um Ihnen den Einstieg zu erleichtern.",
-            "available": "Der Cloudspeicherort ist für alle Server in diesem System verfügbar. Sie können es mit dem {{vmsName}}-Client verwalten.",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "kamera",
             "cameras": "kameras",
             "usageLabels": {
@@ -227,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Cloudspeicher verschieben",
-                "success": "Speicher erfolgreich verschoben",
+                "success": "Storage successfully moved",
                 "errorPrefix": "Fehler beim Verschieben des Cloudspeichers",
                 "notFound": "Speicher wurde nicht gefunden. Der Speicher wurde möglicherweise von einem anderen Benutzer verschoben oder gelöscht",
                 "status": {
@@ -242,16 +245,20 @@
                 "message": "Sie können den Cloudspeicher nur zwischen Systemen verschieben, deren Besitzer Sie sind. <br/><br/>Verbinden Sie ein System mit %CLOUD_NAME% mit Ihrem Cloudkonto, um den Cloudspeicher dorthin zu verschieben."
             }
         },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
         "merge": {
-            "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{{secondarySystem}}</strong> ein",
-            "adminPasswordWrong": "Falsches Passwort für lokalen Adminbenutzer",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "Prüfung...",
-            "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
-            "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "Sowohl das ausgewählte als auch das aktuelle System sind mit %CLOUD_NAME% verbunden und haben unterschiedliche Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
-            "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
-            "mergeConfirmation": "<p class=\"mb-0\">Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen.</p><p>Einstellungen und der Name werden von <strong>{{primarySystem}}</strong> übernommen.</p>",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
             "noServerFound": "Keine Server gefunden",
@@ -260,27 +267,31 @@
             "ownerCanMergeText": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind",
             "passwordRequired": "Passwort ist erforderlich",
             "passwordWrong": "Falsches Passwort",
-            "primaryCannotMerge": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
-            "primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden",
-            "primarySystemUnavailable": "System {{primarySystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Wir empfehlen Ihnen, sich in Verbindung zu setzen mit",
                 "b_support": "support",
                 "c_proceeding": "bevor Sie fortfahren."
             },
-            "secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
-            "secondarySystemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "serverAtUrl": "server bei {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Zugriff auf das {{targetSystem}}-System nicht möglich.</p><p>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.</p>",
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
-            "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
-            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar.",
-            "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Bitte aktualisieren Sie beide Systeme auf die <a href=\"/download\" target=\"_blank\" translate>neueste Version</a>.",
-            "systemVersionsNotMatch": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide Systeme auf den <a href=\"/download\" target=\"_blank\" translate>neuesten Build</a>.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "warning": "Das zusammengeführte System enthält mehr als <strong>{{maxServers}}</strong> Server."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
             "storageSettingsSaved": "Speichereinstellungen gespeichert.",
@@ -295,22 +306,22 @@
             },
             "sent": "Die Nachricht wurde gesendet.",
             "subject": {
-                "integration_feedback": "Feedback zur Integration {{asset}}",
-                "ipvd_feedback_device": "Feedback zu {{asset}}",
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Feedback zur Kameraseite",
-                "sales_inquiry": "Verkaufsanfrage für {{asset}}",
-                "technical_inquiry": "Technische Anfrage für {{asset}}"
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "Kontaktieren Sie {{companyName}}",
-                "ipvd_feedback_device": "Feedback zu {{asset}}",
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Feedback zur Kameraseite"
             }
         },
         "removeSystem": {
             "action": "Trennen",
-            "message": "Sie können sich nicht mehr bei diesem System anmelden.",
-            "title": "System von Ihrem Konto trennen?"
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
         },
         "titles": {
             "error": "Fehler",
@@ -320,9 +331,9 @@
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
             "removeUser": "Nutzer entfernen?",
-            "serversDetach": "Server \"{{ title }}\" vom aktuellen System trennen?",
-            "serversReset": "Server \"{{ title }}\" auf Standard zurücksetzen?",
-            "serversRestart": "Server \"{{ title }}\" neustarten?"
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -404,24 +415,26 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
         "DUPLICATE_MEDIASERVER_FOUND": "Einige Serverlisten sind in beiden Systemen vorhanden - im ausgewählten und im aktuellen.<br>Entfernen Sie offline und inkompatible Server von jedem System, und versuchen Sie es erneut.",
         "EmailAlreadyExists": "Diese E-Mail ist bereits registriert",
-        "FAIL": "System <strong>{{failedSystem}}</strong> ist offline.",
-        "Connection timed out": "System <strong>{{failedSystem}}</strong> ist offline.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> ist derzeit nicht erreichbar.<br>Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-        "INCOMPATIBLE": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide auf den <a href=\"/download\">neuesten Build</a>.",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
         "cloud_systems_have_different_owners": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
-        "fail": "{{failedSystem}} ist nicht erreichbar.",
+        "fail": "{failedSystem} is inaccessible.",
         "incompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
         "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
         "accountAlreadyActivated": "Dieser Account ist bereits aktiviert",
         "accountBlocked": "Dieses Konto ist vorübergehend gesperrt. Bitte versuchen Sie es in ein paar Minuten noch einmal.",
         "accountNotActivated": "Dieser Account ist noch nicht aktiviert. <a href=\"/activate\">Bestätigungsmail erneut senden</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "Dieser Accounts existiert bereits",
         "brokenAccount": "Unerwartetes Problem mit dem Konto. <a href=\"/restore_password\">Konto wiederherstellen</a>",
         "cantActivatePrefix": "Account kann nicht aktiviert werden",
         "cantAddYourOwnEmail": "Das Hinzufügen eigener Emails ist nicht zulässig",
         "cantChangeAccountPrefix": "Änderungen können nicht gespeichert werden",
         "cantChangePasswordPrefix": "Passwort kann nicht gespeichert werden",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantDisconnectSystemPrefix": "System kann nicht gelöscht werden",
         "cantEditAdmin": "Dieser Benutzer hat Administratorberechtigungen",
         "cantEditYourself": "Eigene Berechtigungen zu ändern ist nicht erlaubt",
@@ -437,15 +450,16 @@
         "emailNotFound": "Account existiert nicht.",
         "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde oder wenn Sie bei dem falschen Konto angemeldet sind.",
         "forbidden": "Sie haben keine Berechtigung diese Aktion auszuführen",
-        "lostConnection": "Verbindung zu {{systemName}} verloren",
-        "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> ist offline.",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Falsches Passwort",
+        "badUsername": "Account not found",
         "notFound": "Nicht gefunden",
         "ok": "ok",
         "oldPasswordMistmatch": "Aktuelles Passwort ist falsch.",
         "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
         "passwordMismatch": "Falsches Passwort",
-        "systemUnavailable": "{{failedSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "das System",
         "unknownError": "Es ist ein unerwarteter Fehler aufgetreten",
         "unknownMergeError": "Unbekannter Fehler. Sie können versuchen, die Seite zu aktualisieren und den Versuch zu wiederholen. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -456,7 +470,7 @@
         "licenseFail": "Fehler beim Aktivieren der Lizenz. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
         "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
         "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
-        "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -466,10 +480,9 @@
         "Health Monitor": "Statusüberwachung",
         "Storage": "Speicher",
         "myIntegrationsLabel": "Meine",
-        "phoneNumberWithLabel": "Tel: {{number}}",
-        "requirements": "{{name}} Voraussetzungen",
-        "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
-        "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:"
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Erweiterte PTZ-Kameras",
@@ -482,14 +495,8 @@
         "PTZ cameras": "PTZ-Kameras",
         "camera": "Kamera",
         "count": "Anzahl",
-        "disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
         "dvr": "DVR",
         "encoder": "Encoder",
-        "feedback": {
-            "a_Please": "Bitte",
-            "b_Link": "anfrage abschicken",
-            "c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
-        },
         "hardwareType": "Typ",
         "isAnalyticsSupported": "Analytik",
         "isAptzSupported": "Erweiterte PTZ",
@@ -511,9 +518,16 @@
         "primaryCodec": "Codec",
         "resolutionArea": "Bereich",
         "sndResolution": "Sekundärer Stream",
-        "topXByVolume": "Top {{value}} nach Volumen:",
-        "vendor": "Hersteller"
+        "vendor": "Hersteller",
+        "sortKey": ""
     },
+    "ipvdFeedback": {
+        "a_Please": "Bitte",
+        "b_Link": "anfrage abschicken",
+        "c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
             "cameras": "Kameras",
@@ -535,7 +549,7 @@
         "download": "%VMS_NAME% herunterladen",
         "downloadPlatform": "Download %VMS_NAME% für ",
         "failedToAccessSystem": "Fehler beim Zugriff auf das System",
-        "integrations": "Integrationen",
+        "integrations": "%VMS_NAME% Integrationen",
         "login": "Anmelden",
         "pageNotFound": "Seite nicht gefunden",
         "register": "Account erstellen bei",
@@ -544,11 +558,16 @@
         "restorePasswordSuccess": "Passwort gespeichert",
         "supportedDevices": "Unterstützte Geräte",
         "system": "System",
-        "systemName": "{{systemName}}",
         "systemShare": "System freigeben",
         "systems": "Systeme",
-        "template": "{{title}} - %CLOUD_NAME%",
-        "view": "Kameras ansehen"
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Kameras ansehen",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "zu häufig verwendet",
@@ -571,11 +590,11 @@
             "message": "Stellen Sie sicher, dass Ihre Server online sind, und versuchen Sie es erneut."
         },
         "merge": {
-            "title": "Dieses System wird mit {{systemName}} zusammengeführt.",
+            "title": "This system is being merged to {systemName}.",
             "message": {
                 "dependingOnSize": "Abhängig von der Größe der Datenbank kann dies mehrere Stunden dauern.",
                 "untilFinished": "Bis die Zusammenführung abgeschlossen ist, können Sie sich bei diesem System anmelden und Videos ansehen, aber keine Einstellungen ändern.",
-                "whenFinished": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"{{systemName}}\" verfügbar, und dieses System wird gelöscht."
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
         },
         "server": {
@@ -585,7 +604,7 @@
     },
     "pleaseSelect": "Bitte auswählen...",
     "privacyPolicy": {
-        "integration": "Die {{INTEGRATION_COMPANY}} Datenschutzbestimmungen finden Sie <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a>. Die %COMPANY_NAME% Datenschutzbestimmungen, die Anweisungen zum Widerruf Ihrer Einwilligung enthalten, finden Sie <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>.",
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
     },
     "registration": {
@@ -598,6 +617,8 @@
         },
         "finishingMerge": "Zusammenführung von Systemen abschließen",
         "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
             "backToEditText": "Zurück zu den Bearbeitungsoberflächen",
             "previewRibbon": "Diese Seite ist eine Vorschau auf die neuesten Änderungen und entspricht nicht der öffentlich zugänglichen Version."
         },
@@ -611,23 +632,28 @@
         "analyticsSelected": "analytik-Ereignisse",
         "filter applied": "angewandte filter",
         "filters applied": "angewandte filter",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Typ",
         "hardwareTypes": "Typen",
         "minResolution": "Minimale Auflösung",
         "search_ipvd": "Suche nach Modell oder Hersteller",
-        "selected": "ausgewählt",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Hersteller",
         "vendors": "Hersteller"
     },
     "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Der Server wird jetzt getrennt",
-        "beginReset": "Der Server wird jetzt zurückgesetzt.",
+        "beginReset": "Server is now resetting.",
         "detachSystemFailed": "Server konnte nicht vom System getrennt werden. Bitte überprüfen Sie, ob das eingegebene Passwort korrekt ist und der Server online ist, und versuchen Sie es erneut.",
         "detachSystemSuccess": "Der Server wurde erfolgreich vom System getrennt.",
-        "portWarning": "Portnummern kleiner als 1024 sind beschränkt. Der Server kann unzugänglich werden.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Fehler beim Entfernen des Servers vom System.",
         "resetFailed": "Server konnte nicht zurückgesetzt werden. Bitte überprüfen Sie, ob das eingegebene Passwort korrekt ist und der Server online ist, und versuchen Sie es erneut.",
-        "resetSuccessful": "Server {{ serverName }} wurde auf die Standardeinstellungen zurückgesetzt.",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
         "restartFailed": "Beim Neustart des Servers ist ein Problem aufgetreten.",
         "restartSuccessful": "Server wurde erfolgreich neu gestartet.",
         "serverOffline": "Server ist offline.",
@@ -635,19 +661,21 @@
         "status": {
             "checking": "überprüfen...",
             "offline": "offline",
-            "reseting": "zurücksetzen...",
+            "resetting": "resetting...",
             "restarting": "neustarten..."
         },
         "successRename": "Servername gespeichert."
     },
     "system": {
-        "MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}</strong>\" verfügbar, und dieses System wird gelöscht.",
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
+            "notAbleToLoadStorageInfo": "Speicherinformationen können nicht geladen werden.",
             "notAbleToLoadSecurity": "Sicherheitseinstellungen können nicht geladen werden.",
             "notAbleToLoadSystem": "Systemeinstellungen können nicht geladen werden.",
-            "notAbleToLoadStorageInfo": "Speicherinformationen können nicht geladen werden.",
             "sessionLimitDuration": {
                 "hours": "stunden",
                 "minutes": "minuten"
@@ -690,6 +718,13 @@
                 "text": "Ausführlich",
                 "help": "(alle verfügbaren Informationen protokollieren)"
             }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {
@@ -702,23 +737,47 @@
         "unavailable": "nicht verfügbar"
     },
     "toastMessage": {
+        "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
+        "nameFail": "Failed to change {type} name",
         "system": {
             "deleted": {
-                "success": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht"
+                "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
                 "success": "Das System wurde erfolgreich von %CLOUD_NAME% getrennt"
             },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
             "merge": {
                 "failed": "Systemzusammenführung fehlgeschlagen",
-                "success": "Zusammenführung der Systeme {{primaryName}} und {{secondaryName}} abgeschlossen"
+                "success": "System merge completed"
             },
             "rename": {
                 "success": "Systemname wurde gespeichert"
             }
-        }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
     },
     "license": {
+        "licenseTypeTitles": {
+            "Time": "Zeit",
+            "Trial": "Trial",
+            "Professional": "Professional",
+            "Analog": "Analog",
+            "Edge": "Kante",
+            "VMAX": "VMAX",
+            "Video Wall": "Videowand",
+            "Analog Encoder": "Analoger Encoder",
+            "Starter": "Starter",
+            "IO Module": "I/O-Modul",
+            "Bridge": "Bridge",
+            "NVR": "NVR"
+        },
         "info": {
             "type": "Typ",
             "channels": "Kanäle",
@@ -726,28 +785,18 @@
             "hwid": "Hardware-ID",
             "status": "Status",
             "expires": "Läuft ab",
-            "time": "Zeit",
             "deactivations": "Deaktivierung übrig",
-            "trial": "Trial",
             "online": "Online",
             "error": "Fehler",
             "expired": "Abgelaufen",
             "ok": "Ok",
-            "digital": "Professional",
-            "analog": "Analog",
-            "edge": "Kante",
-            "vmax": "VMAX",
-            "videowall": "Videowand",
-            "analogencoder": "Analoger Encoder",
-            "starter": "Starter",
-            "iomodule": "I/O-Modul",
-            "bridge": "Bridge",
+            "nvrError": "NVR-Fehler",
             "serverNotFound": "Server nicht gefunden"
         },
         "messages": {
-            "required": "{{number}} weitere erforderlich",
+            "required": "{number} more required",
             "activated": "Lizenzschlüssel aktiviert",
-            "inuse": "Der Lizenzschlüssel wurde bereits aktiviert und in einem anderen System an den Server mit der Hardware-ID {{hwid}} gebunden",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Testlizenz aktiviert. Ab heute können Sie 30 Tage lang mit bis zu 4 Kameras aufnehmen."
         }
     },
@@ -845,5 +894,37 @@
         "maxWebMTranscoders": "Maximale Anzahl von WEBM-Verbindungen für den Server. Chrome öffnet 2 Verbindungen auf einmal und schließt dann die erste. Es wird daher empfohlen, den Wert >=2 auf diesen Parameter zu setzen.",
         "maxEventLogRecords": "Maximale Ereignisprotokollaufzeichnungen, die in der Datenbank gespeichert werden sollen. Die tatsächliche Anzahl der nicht gelöschten Datensätze kann bis zu 20% höher sein als der angegebene Wert.",
         "forceLiveCacheForPrimaryStream": "Gibt an, ob einige Frames für den primären Stream zwischengespeichert werden sollen. Werte: \"Ja\" - immer aktiviert (verwendet möglicherweise viel RAM), \"Nein\" - immer deaktiviert, außer wenn dies für die Wiedergabe erforderlich ist (z. B. HLS), \"Auto\" - ähnlich wie \"Nein\", wird aber eingeschaltet, wenn die Benutzerfreundlichkeit verbessert wird (z.B. wenn einige Analytics-Plugins an der Kamera arbeiten)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Deaktiviert"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

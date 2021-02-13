@@ -1,11 +1,11 @@
 {
+    "language": "en_US",
     "About %CLOUD_NAME%": "О %CLOUD_NAME%",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "Политика конфиденциальности",
     "Support": "Техническая поддержка",
-    "Supported Devices": "Поддерживаемые устройства",
     "Terms": "Условия использования",
     "accessRoles": {
         "Administrator": {
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Учетная запись создана",
-                "message": "Подтверждение со ссылкой для активации отправляется на {{email}}"
+                "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
                 "title": "Учетная запись успешно активирована"
@@ -129,6 +129,7 @@
             "unauthorized": "Требуется аутентификация"
         },
         "chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
+        "login": "login",
         "recordingSettingsWarning": "Пожалуйста, обновите недостающие настройки записи.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -145,7 +146,10 @@
             "low": "Низкая"
         },
         "general": "Общие",
+        "inaccessibleFeatureMessage": "Система находится в автономном режиме и, следовательно, информация не доступна.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Поиск",
+        "system": "system",
         "systemHasNoCameras": "Нет камер",
         "systemHasNoCamerasMessage": "Для вас нет доступных камер в системе. <br><br>Подключите несколько камер к локальной сети сервера, чтобы их можно было обнаружить, или попросите системного администратора изменить уровень доступа.",
         "systemNewVersion": "Обновите вашу систему",
@@ -157,7 +161,6 @@
         "systemServerError": "Внутренняя ошибка сервера",
         "systemServerErrorMessage": "Произошла ошибка, повторите попытку позже. Если проблема повторится, обратитесь в службу поддержки.",
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
-        "inaccessibleFeatureMessage": "Система находится в автономном режиме и, следовательно, информация не доступна.",
         "unknown": "Неизвестный",
         "vendor": "Производитель",
         "model": "Модель",
@@ -201,8 +204,8 @@
             "title": "Облачное хранилище",
             "enableStorage": "Включить облачное хранилище",
             "otherSystem": "Другая система...",
-            "initial": "Для начала мы бесплатно предлагаем {{compCapacity}} облачного хранилища для каждой системы.",
-            "available": "Местоположение облачного хранилища доступно для всех серверов в этой системе. Вы можете управлять им, используя клиент {{vmsName}}.",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "камера",
             "cameras": "камеры",
             "usageLabels": {
@@ -227,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Переместить облачное хранилище",
-                "success": "Хранилище успешно перемещено",
+                "success": "Storage successfully moved",
                 "errorPrefix": "Ошибка перемещения облачного хранилища",
                 "notFound": "Хранение не найдено. Возможно, хранилище было перемещено или удалено другим пользователем",
                 "status": {
@@ -242,16 +245,20 @@
                 "message": "Вы можете перемещать облачное хранилище только между системами, владельцем которых вы являетесь. <br/><br/>Подключите систему к %CLOUD_NAME% используя вашу облачную учетную запись, чтобы иметь возможность перемещать в нее облачное хранилище."
             }
         },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
         "merge": {
-            "adminPasswordTitle": "Введите пароль к учетной записи владельца в <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Неправильный пароль для локального администратора",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "Проверка...",
-            "commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.",
-            "connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "Как выбранная, так и текущая система подключены к %CLOUD_NAME% и имеют разных владельцев. Облачные системы могут быть объединены, только если учетные записи владельцев совпадают.",
             "duplicateServers": "<p class=\"mb-2\">Похоже, что сервер перечисляет себя как в выбранной, так и в текущей системе.</p><p>Удалите автономные и несовместимые серверы из каждой системы и повторите попытку.</p>",
-            "enterSystemAddressTitle": "Введите адрес любого сервера, расположенного в системе, который вы хотите объединить с этим.",
-            "mergeConfirmation": "<p class=\"mb-0\">Вы собираетесь объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.</p><p>Настройки и название будут взяты из <strong>{{primarySystem}}</strong>.</p>",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Объединить текущую систему с",
             "mergeFailedTitle": "Объединение систем не удалось",
             "noServerFound": "Cервер не обнаружен",
@@ -260,27 +267,31 @@
             "ownerCanMergeText": "Вы можете объединять только те облачные системы, где вы являетесь владельцем",
             "passwordRequired": "Пароль обязателен для заполнения",
             "passwordWrong": "Неправильный пароль",
-            "primaryCannotMerge": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
-            "primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}",
-            "primarySystemUnavailable": "Система {{primarySystem}} в настоящее время недоступна. Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Мы рекомендуем вам проконсультироваться с",
                 "b_support": "техническая поддержка",
                 "c_proceeding": "прежде чем продолжить."
             },
-            "secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
-            "secondarySystemUnavailable": "Система {{targetSystem}} в настоящее время недоступна. Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
-            "serverAtUrl": "сервер на {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Не могу получить доступ к системе {{targetSystem}}.</p><p>Убедитесь, что указанный сервер подключен к сети, и повторите попытку.</p>",
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Эта система подключена к %CLOUD_NAME%, но имеет другого владельца. Облачные системы могут быть объединены, только если учетные записи владельцев совпадает.",
-            "systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей",
-            "systemOfflineUrl": "{{targetSystem}} недоступна.",
-            "systemsIncompatible": "Этот сервер имеет несовместимую версию ПО. Пожалуйста, обновите обе системы до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a>.",
-            "systemVersionsNotMatch": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\" target=\"_blank\" translate>последнюю версию</a>.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "urlEmpty": "Адрес сервера",
             "urlNotValid": "Введите правильный URL",
             "unknownError": "Неизвестная ошибка. Обновите страницу и повторите попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
-            "warning": "В объединенной системе будет больше <strong>{{maxServers}}</strong> серверов."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
             "storageSettingsSaved": "Настройки хранилищ сохранены.",
@@ -295,22 +306,22 @@
             },
             "sent": "Сообщение отправлено.",
             "subject": {
-                "integration_feedback": "Отзыв об интеграции {{asset}}",
-                "ipvd_feedback_device": "Отзыв о {{asset}}",
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Отзыв о странице камер",
-                "sales_inquiry": "Запрос на продажу {{asset}}",
-                "technical_inquiry": "Технический запрос для {{asset}}"
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "Связаться с {{companyName}}",
-                "ipvd_feedback_device": "Отзыв о {{asset}}",
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
             }
         },
         "removeSystem": {
             "action": "Отключить",
-            "message": "Вы больше не сможете войти в эту систему.",
-            "title": "Отключить систему от вашей учетной записи?"
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
         },
         "titles": {
             "error": "Ошибка",
@@ -320,9 +331,9 @@
             "loggedFromOtherAccount": "Вы будете авторизованы под другой учетной записью",
             "noClientDetected": "Установите %VMS_NAME% для просмотра вашей системы",
             "removeUser": "Удалить пользователя?",
-            "serversDetach": "Отсоединить сервер \"{{ title }}\" от текущей системы?",
-            "serversReset": "Сбросить сервер \"{{ title }}\" к значениям по умолчанию?",
-            "serversRestart": "Перезапустить сервер \"{{ title }}\"?"
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Отключите все системы, владельцем которых вы являетесь, от портала %CLOUD_NAME%, чтобы удалить свою учетную запись."
@@ -404,24 +415,26 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Эта система подключена к %CLOUD_NAME%, но имеет другого владельца. Облачные системы могут быть объединены, только если учетные записи владельцев совпадает.",
         "DUPLICATE_MEDIASERVER_FOUND": "Некоторые серверы перечислены как существующие в обеих системах - как в выбранной, так и в текущей.<br>Удалите серверы, которые находятся не в сети, и несовместимые серверы из каждой системы и повторите попытку.",
         "EmailAlreadyExists": "Этот Email уже зарегистрирован",
-        "FAIL": "Система <strong>{{failedSystem}}</strong> не в сети.",
-        "Connection timed out": "Система <strong>{{failedSystem}}</strong> не в сети.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\">последнюю версию</a>.",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
         "cloud_systems_have_different_owners": "Эта система подключена к %CLOUD_NAME%, но имеет другого владельца. Облачные системы могут быть объединены, только если учетные записи владельцев совпадает.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Похоже, что сервер перечисляет себя как в выбранной, так и в текущей системе.</p><p>Удалите автономные и несовместимые серверы из каждой системы и повторите попытку.</p>",
-        "fail": "{{failedSystem}} недоступна.",
+        "fail": "{failedSystem} is inaccessible.",
         "incompatible": "Этот сервер имеет несовместимую версию программного обеспечения. Обновите обе системы до одной сборки, чтобы объединить их.",
         "unknown_error": "Неизвестная ошибка. Обновите страницу и повторите попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
         "accountAlreadyActivated": "Эта учетная запись уже активирована",
         "accountBlocked": "Эта учетная запись заблокирована. Пожалуйста, повторите попытку через несколько минут.",
         "accountNotActivated": "Эта учетная запись еще не активирована. <a href=\"/activate\">Отправить ссылку активации снова</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "Эта учетная запись уже существует",
         "brokenAccount": "Неожиданная проблема с учетной записью. <a href=\"/restore_password\">Восстановить учетную запись</a>",
         "cantActivatePrefix": "Не удается активировать вашу учетную запись",
         "cantAddYourOwnEmail": "Добавление собственной электронной почты запрещено",
         "cantChangeAccountPrefix": "Не удается сохранить изменения",
         "cantChangePasswordPrefix": "Не удается сохранить пароль",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantDisconnectSystemPrefix": "Не удается удалить систему",
         "cantEditAdmin": "Этот пользователь имеет полномочия администратора",
         "cantEditYourself": "Не допускается изменение собственных полномочий",
@@ -437,15 +450,16 @@
         "emailNotFound": "Учетная запись не существует.",
         "failedToAccessSystem": "Ни одна система не может быть доступна по этой ссылке. Это может произойти, когда система была отключена от %CLOUD_NAME%, доступ к этой системе был отозван, или если вы вошли с некорректнуой учетной записью.",
         "forbidden": "Отсутствуют полномочия на выполнение этого действия",
-        "lostConnection": "Подключение к {{systemName}} потеряно",
-        "mergedSystemIsOffline": "Система <strong>{{failedSystem}}</strong> не в сети.",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Неправильный пароль",
+        "badUsername": "Account not found",
         "notFound": "Не найдено",
         "ok": "ок",
         "oldPasswordMistmatch": "Текущий пароль указан неверно.",
         "oldSafariNotSupported": "Версии Safari старше 10 не поддерживаются",
         "passwordMismatch": "Неправильный пароль",
-        "systemUnavailable": "{{failedSystem}} в настоящее время недоступна. Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "система",
         "unknownError": "Произошла непредвиденная ошибка",
         "unknownMergeError": "Неизвестная ошибка. Вы можете попробовать обновить страницу и повторить попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
@@ -456,7 +470,7 @@
         "licenseFail": "Не удалось активировать лицензию. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
         "licenseTimeout": "Не удалось активировать лицензию из-за таймаута соединения. Пожалуйста, убедитесь, что сервер онлайн, и повторите попытку.",
         "licenseServerError": "Не удалось активировать лицензию. Сервер лицензий не ответил. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
-        "networkConnection": "Невозможно подключиться к {{cloudName}}, проверьте подключение к сети."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
     },
     "integration": {
         "Access Control": "Контроль доступа",
@@ -466,10 +480,9 @@
         "Health Monitor": "Мониторинг ресурсов",
         "Storage": "Хранилища",
         "myIntegrationsLabel": "Мой",
-        "phoneNumberWithLabel": "Тел: {{number}}",
-        "requirements": "{{name}} требований",
-        "testedVersionLabel": "Проверено на версии {{vmsName}}:",
-        "testedVersionsLabel": "Проверено на версии {{vmsName}}:"
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Камеры с расширенным PTZ",
@@ -482,14 +495,8 @@
         "PTZ cameras": "Камеры PTZ",
         "camera": "Камера",
         "count": "Кол-во",
-        "disclaimer": "Этот список ограничен устройствами, найденными на {{vmsName}}, где пользователи разрешили автоматическую отправку данных по устройствам в {{companyName}}. Личная информация не собирается, и каждый пользователь остается полностью анонимным.",
         "dvr": "DVR",
         "encoder": "Кодировщик",
-        "feedback": {
-            "a_Please": "Пожалуйста",
-            "b_Link": "отправить запрос",
-            "c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
-        },
         "hardwareType": "Тип",
         "isAnalyticsSupported": "Аналитика",
         "isAptzSupported": "Расширенный PTZ",
@@ -511,9 +518,16 @@
         "primaryCodec": "Кодек",
         "resolutionArea": "Область",
         "sndResolution": "Вторичный поток",
-        "topXByVolume": "Топ {{value}} по объему:",
-        "vendor": "Производитель"
+        "vendor": "Производитель",
+        "sortKey": ""
     },
+    "ipvdFeedback": {
+        "a_Please": "Пожалуйста",
+        "b_Link": "отправить запрос",
+        "c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
             "cameras": "Камеры",
@@ -535,7 +549,7 @@
         "download": "Скачать %VMS_NAME%",
         "downloadPlatform": "Скачать %VMS_NAME% для ",
         "failedToAccessSystem": "Не удалось получить доступ к системе",
-        "integrations": "Интеграции",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "Войти",
         "pageNotFound": "Страница не найдена",
         "register": "Зарегистрироваться в",
@@ -544,11 +558,16 @@
         "restorePasswordSuccess": "Пароль сохранен",
         "supportedDevices": "Поддерживаемые устройства",
         "system": "Система",
-        "systemName": "{{systemName}}",
         "systemShare": "Общий доступ",
         "systems": "Системы",
-        "template": "{{title}} - %CLOUD_NAME%",
-        "view": "Просмотр камер"
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Просмотр камер",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "часто встречающийся",
@@ -571,11 +590,11 @@
             "message": "Пожалуйста, убедитесь, что ваши серверы подключены к сети, и попробуйте снова."
         },
         "merge": {
-            "title": "Эта система объединяется с {{systemName}}.",
+            "title": "This system is being merged to {systemName}.",
             "message": {
                 "dependingOnSize": "В зависимости от размера базы данных может потребоваться до нескольких часов.",
                 "untilFinished": "До окончания объединения вы можете войти в эту систему и посмотреть видео, но не можете изменить какие-либо настройки.",
-                "whenFinished": "После завершения объединения все пользователи и камеры из этой системы станут доступны в {{systemName}}, а эта система будет удалена."
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
         },
         "server": {
@@ -585,7 +604,7 @@
     },
     "pleaseSelect": "Пожалуйста, выберите...",
     "privacyPolicy": {
-        "integration": "Вы найдете политику конфиденциальности {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>. Политика конфиденциальности %COMPANY_NAME%, которая включает инструкцию о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
     },
     "registration": {
@@ -598,6 +617,8 @@
         },
         "finishingMerge": "Объединение систем заканчивается",
         "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
             "backToEditText": "Вернуться к интерфейсам редактирования",
             "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии."
         },
@@ -611,23 +632,28 @@
         "analyticsSelected": "события аналитики",
         "filter applied": "фильтр применен",
         "filters applied": "фильтры применены",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Тип",
         "hardwareTypes": "Типы",
         "minResolution": "Минимальное разрешение",
         "search_ipvd": "Поиск по модели или производителю",
-        "selected": "выбрано",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Производитель",
         "vendors": "Производители"
     },
     "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Сервер отключается",
-        "beginReset": "Сервер сбрасывается.",
+        "beginReset": "Server is now resetting.",
         "detachSystemFailed": "Не удалось отключить сервер от системы. Пожалуйста, проверьте, правильно ли вы ввели пароль, и подключен ли сервер к сети, и попробуйте снова.",
         "detachSystemSuccess": "Сервер был успешно отключен от системы.",
-        "portWarning": "Номера портов менее 1024 ограничены. Сервер может стать недоступным.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Не удалось удалить сервер из системы.",
         "resetFailed": "Не удалось сбросить сервер. Пожалуйста, проверьте, правильно ли вы ввели пароль, и подключен ли сервер к сети, и попробуйте снова.",
-        "resetSuccessful": "Сервер {{ serverName }} был сброшен до значений по умолчанию.",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
         "restartFailed": "При перезапуске сервера произошла ошибка.",
         "restartSuccessful": "Сервер успешно перезапущен.",
         "serverOffline": "Сервер не в сети.",
@@ -635,19 +661,21 @@
         "status": {
             "checking": "проверка...",
             "offline": "не в сети",
-            "reseting": "сброс...",
+            "resetting": "resetting...",
             "restarting": "перезапуск..."
         },
         "successRename": "Имя сервера сохранено."
     },
     "system": {
-        "MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
         "mySystemSearch": "ЯМойМоя",
         "settings": {
+            "notAbleToLoadStorageInfo": "Не удалось загрузить информацию о хранилищах.",
             "notAbleToLoadSecurity": "Не удалось загрузить настройки безопасности.",
             "notAbleToLoadSystem": "Не удалось загрузить системные настройки.",
-            "notAbleToLoadStorageInfo": "Не удалось загрузить информацию о хранилищах.",
             "sessionLimitDuration": {
                 "hours": "часа",
                 "minutes": "минуты"
@@ -690,6 +718,13 @@
                 "text": "Подробный",
                 "help": "(записывать всю доступную информацию)"
             }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {
@@ -702,23 +737,47 @@
         "unavailable": "недоступен"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "nameFail": "Failed to change {type} name",
         "system": {
             "deleted": {
-                "success": "Система {{systemName}} успешно удалена из вашей учетной записи"
+                "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
                 "success": "Система успешно отключена от %CLOUD_NAME%"
             },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
             "merge": {
                 "failed": "Объединение систем не удалось",
-                "success": "Объединение систем {{primaryName}} и {{secondaryName}} завершено"
+                "success": "System merge completed"
             },
             "rename": {
                 "success": "Имя системы сохранено"
             }
-        }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
     },
     "license": {
+        "licenseTypeTitles": {
+            "Time": "Время",
+            "Trial": "Временная",
+            "Professional": "Полная",
+            "Analog": "Аналоговая",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "Видеостена",
+            "Analog Encoder": "Аналоговый кодировщик",
+            "Starter": "Стартовая",
+            "IO Module": "Модуль ввода/вывода",
+            "Bridge": "Bridge",
+            "NVR": "NVR"
+        },
         "info": {
             "type": "Тип",
             "channels": "Каналы",
@@ -726,28 +785,18 @@
             "hwid": "Аппаратный ID",
             "status": "Состояние",
             "expires": "Срок действия",
-            "time": "Время",
             "deactivations": "Осталось деактиваций",
-            "trial": "Временная",
             "online": "В сети",
             "error": "Ошибка",
             "expired": "Срок закончен",
             "ok": "OK",
-            "digital": "Полная",
-            "analog": "Аналоговая",
-            "edge": "Edge",
-            "vmax": "VMAX",
-            "videowall": "Видеостена",
-            "analogencoder": "Аналоговый кодировщик",
-            "starter": "Стартовая",
-            "iomodule": "Модуль ввода/вывода",
-            "bridge": "Bridge",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {
-            "required": "Требуется еще {{number}}",
+            "required": "{number} more required",
             "activated": "Лицензионный ключ активирован",
-            "inuse": "Лицензионный ключ уже активирован и привязан к серверу с идентификатором оборудования {{hwid}} в другой системе",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Активирована пробная лицензия. Начиная с сегодняшнего дня, можно записывать до 4 камер в течение 30 дней."
         }
     },
@@ -845,5 +894,37 @@
         "maxWebMTranscoders": "Максимальное количество WEBM-соединений для сервера. Chrome открывает сразу 2 соединения, затем закрывает первое. Поэтому рекомендуется установить значение >= 2 для этого параметра.",
         "maxEventLogRecords": "Максимальное количество записей журнала событий в базе данных. Реальное количество восстановленных записей может быть на 20% выше указанного значения.",
         "forceLiveCacheForPrimaryStream": "Кешировать ли некоторые кадры для основного потока. Значения: «да» - всегда включен (может использовать много оперативной памяти), «нет» - всегда отключен, за исключением случаев, когда это требуется для воспроизведения (например, HLS), «авто» - аналогично «нет», но включается для удобства использования (например, когда какой-то плагин аналитики работает на камере)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Отключен"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }
