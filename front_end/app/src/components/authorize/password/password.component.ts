@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output
+    OnInit, Output, SimpleChanges, OnChanges, ViewChild
 }                       from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -15,15 +15,17 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
     templateUrl : 'password.component.html',
     styleUrls   : ['password.component.scss']
 })
-export class NxAuthorizePasswordComponent implements OnInit, OnDestroy {
+export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() passwordProcess: Process;
-    @Input() authorizeEmail: string;
-    @Output() sendPasswordToParent = new EventEmitter<string>();
-    authorizePassword: string;
+    @Input() loginEmail: string;
+    @Input() loginPassword: string;
+    @Output() loginPasswordChange = new EventEmitter<string>();
+    @Input() errorCode: string;
     sendPassword: any;
+    @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
 
     constructor(
         language: NxLanguageProviderService,
@@ -35,8 +37,14 @@ export class NxAuthorizePasswordComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sendPassword = () => {
-            this.sendPasswordToParent.emit(this.authorizePassword);
+            this.loginPasswordChange.emit(this.loginPassword);
         };
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.errorCode) {
+            this.passwordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
+        }
     }
 
     ngOnDestroy(): void {}

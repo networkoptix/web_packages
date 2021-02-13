@@ -65,7 +65,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
-        this.tagWidth = this.addons.nativeElement.offsetWidth;
+        this.tagWidth = this.addons?.nativeElement.offsetWidth;
 
         if (!c.value) {
             return {

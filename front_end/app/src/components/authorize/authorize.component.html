@@ -2,26 +2,37 @@
     <div class="dialog-window" [ngSwitch]="currentState">
         <nx-authorize-email-component
             *ngSwitchCase="AuthorizeState.email"
+            [(loginEmail)]="loginEmail"
+            [emailProcess]="checkEmailProcess"
             [errorCode]="emailErrorCode"
-            (sendEmailToParent)="getEmailFromChild($event)"
-            [emailProcess]="emailProcess"
+            (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-email-component>
         <nx-authorize-password-component 
             *ngSwitchCase="AuthorizeState.password"
-            [authorizeEmail]="authorizeEmail"
-            (sendPasswordToParent)="getPasswordFromChild($event)"
-            [passwordProcess]="passwordProcess"
+            [loginEmail]="loginEmail"
+            [(loginPassword)]="loginPassword"
+            [passwordProcess]="loginProcess"
+            [errorCode]="passwordErrorCode"
         ></nx-authorize-password-component>
         <nx-authorize-create-account-component 
             *ngSwitchCase="AuthorizeState.create"
+            [existingEmail]="existingEmail"
+            [(accountInfo)]="accountInfo"
+            [createAccountProcess]="createProcess"
+            [errorCode]="createErrorCode"
         ></nx-authorize-create-account-component>
         <nx-authorize-activate-account-component 
             *ngSwitchCase="AuthorizeState.activate"
+            [loginEmail]="loginEmail"
+            (setCurrentState)="setCurrentState($event)"
+            [checkActivationProcess]="checkEmailProcess"
+            [loginProcess]="loginProcess"
+            [activated$]="activated$"
+            [fromEmail$]="fromEmail$"
         ></nx-authorize-activate-account-component>
         <nx-authorize-confirmation-component 
             *ngSwitchCase="AuthorizeState.confirm"
         ></nx-authorize-confirmation-component>
-        <!-- <router-outlet></router-outlet> -->
 
     </div>
     <div *ngIf="windowWideEnough">
