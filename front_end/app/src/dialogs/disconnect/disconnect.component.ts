@@ -83,7 +83,7 @@ export class DisconnectModalContent {
             },
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
-            if (res.errorString === 'Wrong username or password.') {
+            if (['Wrong password.', 'Wrong username or password.'].includes(res.errorString)) {
                 this.wrongPassword = true;
                 this.auth.password = '';
 
