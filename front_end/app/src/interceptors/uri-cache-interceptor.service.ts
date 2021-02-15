@@ -9,7 +9,7 @@ import 'rxjs/add/operator/do';
 import { Observable, of }         from 'rxjs';
 import { share }      from 'rxjs/operators';
 
-import { NxUriCacheService } from './uri-cache.service';
+import { NxUriCacheService } from '@services/uri-cache.service';
 
 // Add the service we created in Step 1
 

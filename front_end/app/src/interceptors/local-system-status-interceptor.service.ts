@@ -10,8 +10,8 @@ import {
 import { tap }        from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { environment }       from '../../environments/environment';
-import { NxAppStateService } from './nx-app-state.service';
+import { environment }       from '@environments/environment';
+import { NxAppStateService } from '@services/nx-app-state.service';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {

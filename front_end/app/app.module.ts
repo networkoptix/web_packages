@@ -44,9 +44,9 @@ import { NxBootstrapProvider }                 from '@services/nx-bootstrap-prov
 import { WebadminPageModule }                  from '@pages/webadmin-page.module';
 import { PagesModule }                         from '@pages/pages.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
-import { NxUriCachingInterceptor }             from '@services/uri-cache-interceptor.service';
-import { LocalSystemStatusInterceptor }        from '@services/local-system-status-interceptor.service';
-import { CloudUnavailableInterceptor } from './src/interceptors/cloud-unavailable-interceptor';
+import { NxUriCachingInterceptor }             from '@src/interceptors/uri-cache-interceptor.service';
+import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-system-status-interceptor.service';
+import { CloudUnavailableInterceptor } from '@src/interceptors/cloud-unavailable-interceptor';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -90,7 +90,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule
     ],
-    providers       : [
+    providers: [
         NgbToast,
         NgbModal,
         Location,
@@ -98,27 +98,27 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CookieService,
         NxUriCacheService,
         {
-            provide : HTTP_INTERCEPTORS,
+            provide  : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
-            multi : true
+            multi    : true
         },
         {
-            provide: HTTP_INTERCEPTORS,
-            useClass: CloudUnavailableInterceptor,
-            multi: true
+            provide  : HTTP_INTERCEPTORS,
+            useClass : CloudUnavailableInterceptor,
+            multi    : true
         },
         {
-            provide : HTTP_INTERCEPTORS,
+            provide  : HTTP_INTERCEPTORS,
             useClass : LocalSystemStatusInterceptor,
-            multi : true
+            multi    : true
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
         {
-            provide   : FIREBASE_OPTIONS,
-            deps      : [NxConfigService],
-            useFactory: initializeApp
+            provide    : FIREBASE_OPTIONS,
+            deps       : [NxConfigService],
+            useFactory : initializeApp
         },
         AuthGuard,
         DevelopersGuard,

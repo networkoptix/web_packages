@@ -3,9 +3,9 @@ import { HttpClient }              from '@angular/common/http';
 import { TranslateService }        from '@ngx-translate/core';
 import { BehaviorSubject }         from 'rxjs';
 
-import { environment }              from '../../environments/environment';
+import { environment }              from '@environments/environment';
 import { NxCloudApiService }        from './nx-cloud-api';
-import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 import { NxSessionService }         from './session.service';
 import { LocalStorageService }      from 'ngx-webstorage';
 import { WINDOW }                   from './window-provider';

@@ -109,7 +109,6 @@ export class NxBootstrapProvider {
             this.CONFIG.defaultLanguage = data.defaultLanguage;
             this.CONFIG.licenseTypes = data.licenseTypes;
             this.CONFIG.supportedLanguages = data.supportedLanguages;
-
         } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
