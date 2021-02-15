@@ -90,6 +90,11 @@ export class RestartServerModalContent {
                                 }
                             }),
                             mergeMap(() => {
+                                if (NxConfigService.isLocal) {
+                                    // give the user chance to read the toaster
+                                    setTimeout(() => window.location.reload(), 2000);
+                                    throw Error('re-login on restart');
+                                }
                                 // makes sure that system is online
                                 return this.system.getInfo(true, false)
                                     .then(() => {

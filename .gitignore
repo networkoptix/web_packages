@@ -37,6 +37,7 @@ subinclude:robot_tests/.hgignore
 *.sql
 
 env
+venv
 cloud/.idea
 cloud/static
 cloud/node_modules

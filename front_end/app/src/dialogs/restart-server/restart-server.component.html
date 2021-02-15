@@ -1,9 +1,7 @@
 <form #restartServerForm="ngForm" name="restartServerForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title"
-            [translate]="'dialogs.titles.serversRestart'"
-            [translateParams]="{ title: serverName }"
-        ></h1>
+            [innerHTML]="'dialogs.titles.serversRestart'| translate: { title: serverName }"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="close('')" *ngIf="closable">

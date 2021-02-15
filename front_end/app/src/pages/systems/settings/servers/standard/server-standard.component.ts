@@ -152,6 +152,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
             if (currentValue.id !== previousValue?.id) {
                 this.setServer();
+            } else {
+                this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
             }
         }
     }
@@ -271,6 +273,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
+
+        if (!this.serverOffline && (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id))) {
+            this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
+        }
     }
 
     checkIfOnline = (serverId) => {

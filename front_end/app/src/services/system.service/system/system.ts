@@ -289,6 +289,8 @@ export class NxSystem extends System {
                     this.userManager.accessRole = this.info.accessRole;
                 }
                 return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
+            }).catch(_ => {
+                return Promise.reject();
             });
     }
 
