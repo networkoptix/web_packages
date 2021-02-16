@@ -78,6 +78,7 @@ export interface ModuleInfo {
 }
 
 export interface ServerTimeInfo {
+    vmsTime: any;
     vmsTimeOffset: number;
     osTimeOffset: number;
     serverId: string; // supposed to be stripped of {} around the UUID

@@ -1,13 +1,14 @@
 import { Component, OnInit }             from '@angular/core';
-import { SubscriptionLike }              from 'rxjs';
+import { forkJoin, SubscriptionLike }    from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }      from '../../../../services/nx-config';
-import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { NxSettingsService }             from '../settings.service';
-import { NxSystem, NxSystemServer }      from '../../../../services/system.service';
-import { NxMenuService }                 from '../../../../menu/menu.service';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxSettingsService }         from '../settings.service';
+import { NxSystem, NxSystemServer }  from '../../../../services/system.service';
+import { NxMenuService }             from '../../../../menu/menu.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxUtilsService }            from '../../../../services/utils.service';
 
 @Component({
     selector    : 'nx-system-licenses',
@@ -109,7 +110,6 @@ export class NxSystemLicensesComponent implements OnInit {
                 item.info[prop[0].toLowerCase()] = prop[1];
             });
 
-        item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
         item.info.status = item.info.expired ? this.LANG.license.info.expired() : this.LANG.license.info.ok();
         // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
@@ -180,20 +180,28 @@ export class NxSystemLicensesComponent implements OnInit {
                         .subscribe(() => {
                             if (this.system.currentServerNotBusy) {
                                 if (this.system && this.system.servers && this.system.servers.length) {
-                                    this.system
-                                        .getHardwareIdsOfServers()
-                                        .then((data: any) => {
+                                    forkJoin({ times: this.system.getServerTimes(), hardwareIds: this.system.getHardwareIdsOfServers() })
+                                        .subscribe(data => {
+                                            const serversTime = data.times;
+                                            const hardwareIds = data.hardwareIds.reply;
                                             this.licenseSummaries = [];
-                                            if (data.reply.length) {
+
+                                            if (hardwareIds.length) {
                                                 result.forEach((item) => {
                                                     this.createLicenseInfo(item);
 
-                                                    const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {
+                                                    const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
                                                         return server.hardwareIds.find((id: string) => id === item.info.hwid);
                                                     });
 
                                                     const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
+
                                                     if (Object.keys(server).length) {
+                                                        item.info.serverTime = serversTime.find(time => {
+                                                            return NxUtilsService.cleanId(server.id) === time.serverId;
+                                                        }).vmsTime;
+
+                                                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date(item.info.serverTime).getTime());
                                                         item.info.serverName = server.name;
                                                         item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()]();
                                                         item.info.status = item.info.serverStatus === this.LANG.license.info.online() ? item.info.status : this.LANG.license.info.error();

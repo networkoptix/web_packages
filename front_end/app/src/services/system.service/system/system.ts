@@ -559,6 +559,7 @@ export class NxSystem extends System {
                     const now = Date.now();
                     // @ts-ignore
                     return r.reply.map(i => ({
+                        vmsTime        : parseInt(i.vmsTime),
                         vmsTimeOffset  : now - parseInt(i.vmsTime),
                         osTimeOffset   : now - parseInt(i.osTime),
                         serverId       : i.serverId.slice(1, i.serverId.length - 1),
