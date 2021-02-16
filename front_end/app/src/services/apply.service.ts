@@ -531,7 +531,7 @@ export class NxApplyService {
      *     until the user saves or discards the changes.
      * @param watchers
      */
-    private addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
+    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
         this.watchers = watchers;
         this.watchersSubscription?.unsubscribe?.();
         this.watchersSubscription = merge(...watchers.map(watcher => {
