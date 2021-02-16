@@ -306,7 +306,7 @@ export class NxSystemStorageComponent implements OnInit {
                 });
             });
             this.applyService.addWatchersAndFunctionsFromChild(
-                [this.isBackupOn],
+                [this.isBackupOn, ...Object.values(this.modeWatchers)],
                 this.saveSettings,
                 this.resetWatchers
             );
