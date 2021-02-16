@@ -1,6 +1,7 @@
+import json
 import os
 import re
-import json
+import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
@@ -261,12 +262,12 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
         cached_doc_menu_map(customization_name, refresh=True)
     for menu_name, menu in menu_customization.items():
         check_user_menu_permissions(menu['nodes'], user)
+
+    if menu_type:
+        menu_customization = {name: menu for name, menu in menu_customization.items() if menu['type'] == menu_type}
     if name:
-        menu = menu_customization.get(name.lower(), None)
-        if menu and menu['type'] == menu_type:
-            return menu
-        else:
-            return None
+        return menu_customization.get(name.lower(), None)
+
     return menu_customization
 
 
@@ -461,6 +462,7 @@ class Asset(models.Model):
     primary_group = models.OneToOneField(
         Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
     protected = models.BooleanField(default=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
@@ -521,6 +523,12 @@ class Asset(models.Model):
     @property
     def is_single_customization(self):
         return self.asset_type.single_customization
+
+    def urlify(self, name=None):
+        if name is None:
+            name = self.name
+        name = name.lower().replace(' ', '-')
+        return f'{self.id}-{name}'
 
     @property
     def is_dirty(self):
@@ -1829,6 +1837,7 @@ class MenuNode(models.Model):
                     'condition': node.condition,
                     'condition_met': condition_met
                 }
+                node_structure['urlified'] = node.asset.urlify(node_structure['name']) if node.asset else None
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:

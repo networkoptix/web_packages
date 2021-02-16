@@ -442,6 +442,58 @@ def download_current_structure(request, asset_id):
     return HttpResponseBadRequest("Asset not given or found")
 
 
+def sub_doc_urls(matchobj):
+    doc_url_pieces = matchobj.group(2).split('/')
+    if len(doc_url_pieces) < 3:
+        return matchobj.string
+
+    base_path = doc_url_pieces[0]
+    kb_path = doc_url_pieces[1]
+    asset_param = doc_url_pieces[2]
+
+    param_id = asset_param.split('-')[0]
+    param_name = asset_param[len(param_id):]
+
+    if not param_id.isdigit():
+        return matchobj.string
+
+    asset_id = int(param_id)
+    asset = Asset.objects.filter(id=asset_id, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
+    if not asset:
+        return matchobj.string
+
+    url_data = {
+        'type': 'kb_article',
+        'base': base_path,
+        'kb': kb_path,
+        'asset_uuid': str(asset.uuid),
+        'asset_name': asset.name,
+        'param_name': param_name
+    }
+    doc_var = f'{{% {json.dumps(url_data)} %}}'
+    return rf'{matchobj.group(1)}{doc_var}{matchobj.group(3)}'
+
+
+INTERNAL_DOC_REGEX = re.compile(r'(href=".*?\.\./docs/)(.*?)(")')
+
+
+def prepare_doc_urls(asset_dict):
+    contexts = asset_dict.get('contexts', [])
+    content_context = next((context for context in contexts if context.get('name', '') == 'content'), [])
+    dss = content_context.get('values', [])
+    body = next((ds for ds in dss if ds.get('name', '') == 'body'), None)
+    if not body:
+        return
+
+    body['value'] = INTERNAL_DOC_REGEX.sub(sub_doc_urls, body.get('value', ''))
+
+
+def prepare_asset_exports(asset, asset_dict):
+    """Handle any special behavior for asset types"""
+    if asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+        prepare_doc_urls(asset_dict)
+
+
 @require_http_methods(["GET"])
 @permission_required('cms.change_asset')
 def download_all_asset_structures(request, asset_type):
@@ -452,7 +504,9 @@ def download_all_asset_structures(request, asset_type):
             continue
         asset_dict = generate_structure.from_database(asset, True)[0]
         asset_dict['name'] = asset.name
+        asset_dict['uuid'] = str(asset.uuid)
         asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
+        prepare_asset_exports(asset, asset_dict)
         data.append(asset_dict)
     content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
     file_name = "structure.json"

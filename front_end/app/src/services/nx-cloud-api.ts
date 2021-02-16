@@ -403,7 +403,18 @@ export class NxCloudApiService {
         }));
     }
 
-    getMenu(menuName: string) {
+    findArticleKB(assetId) {
+        return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
+            if (error.status === 404) {
+                this.router.navigate([this.CONFIG.redirect.page404]);
+                return EMPTY;
+            } else {
+                return of(error);
+            }
+        }));
+    }
+	
+	getMenu(menuName: string) {
         return this.http.get<MenuNode[]>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 }

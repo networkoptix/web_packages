@@ -4,7 +4,7 @@ import {
 import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
 import { WINDOW }                                               from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest }                       from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY} from 'rxjs';
 import { switchMap, tap, delay, map, filter, startWith }        from 'rxjs/operators';
 
 import { NxConfigService, IConfig }     from '@services/nx-config';
@@ -41,6 +41,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     basePath = '';
     menuName = '';
     kbName = '';
+    assetIds = [];
     pageNode: KnowledgeNode;
     search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
@@ -150,6 +151,14 @@ export class NxKnowledgeBaseComponent implements OnInit {
         });
     }
 
+    findKBWithArticle(assetId, assetParam) {
+        return this.cloudApi.findArticleKB(assetId).subscribe(({ base, kb_name }) => {
+            this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
+                this.router.navigate([`/docs/${base}/${kb_name}/${assetParam}`])
+            );
+        });
+    }
+
     ngOnInit() {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
@@ -164,16 +173,24 @@ export class NxKnowledgeBaseComponent implements OnInit {
                     snapshot = snapshot.parent;
                 }
                 this.basePath = snapshot.paramMap.get('name');
-                this.menuName = this.CONFIG.docMenuMap[this.basePath][this.kbName];
+                this.menuName = this.CONFIG.docMenuMap[this.basePath]?.[this.kbName];
                 if (!this.menuName) {
-                    // Navigate to 404 and replace failing url so going history back will load requesting page
-                    this.router
-                        .navigate([this.CONFIG.redirect.page404], {
-                            replaceUrl: true
-                        })
-                        .catch(_ => {});
+                    const assetParam = snapshot.paramMap.get('level1');
+                    if (assetParam) {
+                        const assetId = parseInt(assetParam.split('-')[0]);
+                        if (Number.isInteger(assetId)) {
+                            this.findKBWithArticle(assetId, assetParam);
+                        }
+                    } else {
+                        // Navigate to 404 and replace failing url so going history back will load requesting page
+                        this.router
+                            .navigate([this.CONFIG.redirect.page404], {
+                                replaceUrl: true
+                            })
+                            .catch(_ => {});
 
-                    return;
+                        return;
+                    }
                 }
                 return this.route.url;
             }),
@@ -183,47 +200,71 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 const getFirstDoc = () => {
                     const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): string => first.asset_id || traverseToFirst([...remaining, ...first.nodes]);
                     return this.menusService.getMenu(this.menuName).pipe(
+                        tap(menu => {
+                            if (!this.assetIds.length) {
+                                const getAllIds = (nodes: MenuNode[]) => {
+                                    nodes.forEach(node => {
+                                        if (node.asset_id) {
+                                            this.assetIds.push(node.asset_id);
+                                        }
+                                        getAllIds(node.nodes);
+                                    });
+                                };
+                                this.assetIds = [];
+                                getAllIds(menu);
+                            }
+                        }),
                         map(menu => traverseToFirst(menu))
                     );
                 };
                 return getFirstDoc().pipe(
                     switchMap(firstAsset => {
-                        this.assetId$.next(urlSegment[0]?.path || this.headerService.currentLocation.assetId || firstAsset);
+                        const assetParam = this.route.snapshot.paramMap.get('level1');
+                        let assetId;
+                        if (assetParam) {
+                            assetId = parseInt(assetParam.split('-')[0]);
+                        }
+                        this.assetId$.next(assetId || this.headerService.currentLocation.assetId || firstAsset);
                         this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
                         const state = this.route.snapshot.queryParamMap.get('state');
-                        return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
-                            .pipe(
-                                tap(({ title, blocks, contentHTML, script }) => {
-                                    this.search = { ...this.search };
-                                    this.pageNode = KnowledgeNode.normalHeader(
-                                        title,
-                                        this.assetId$.value,
-                                        contentHTML,
-                                        CardClasses.NORMAL,
-                                        blocks.map(({ contentHTML, title, type }) => {
-                                            return KnowledgeNode.normalHeader(
-                                                title,
-                                                '',
-                                                contentHTML,
-                                                type
-                                            );
-                                        }),
-                                        script
-                                    );
-                                    this.loading = false;
-                                    setTimeout(() => {
-                                        Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
-                                            this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
+                        if (!state && assetId && !this.assetIds.includes(assetId)) {
+                            this.findKBWithArticle(assetId, assetParam);
+                            return EMPTY;
+                        } else {
+                            return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
+                                .pipe(
+                                    tap(({title, blocks, contentHTML, script}) => {
+                                        this.search = {...this.search};
+                                        this.pageNode = KnowledgeNode.normalHeader(
+                                            title,
+                                            this.assetId$.value,
+                                            contentHTML,
+                                            CardClasses.NORMAL,
+                                            blocks.map(({contentHTML, title, type}) => {
+                                                return KnowledgeNode.normalHeader(
+                                                    title,
+                                                    '',
+                                                    contentHTML,
+                                                    type
+                                                );
+                                            }),
+                                            script
+                                        );
+                                        this.loading = false;
+                                        setTimeout(() => {
+                                            Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
+                                                this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
+                                            });
+                                            const myScript = this.renderer2.createElement('script');
+                                            myScript.type = 'text/javascript';
+                                            myScript.innerHTML = this.pageNode.script;
+                                            if (this.scriptDiv?.nativeElement) {
+                                                this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
+                                            }
                                         });
-                                        const myScript = this.renderer2.createElement('script');
-                                        myScript.type = 'text/javascript';
-                                        myScript.innerHTML = this.pageNode.script;
-                                        if (this.scriptDiv?.nativeElement) {
-                                            this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
-                                        }
-                                    });
-                                })
-                            );
+                                    })
+                                );
+                        }
                     })
                 );
             }),

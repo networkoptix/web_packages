@@ -8,7 +8,8 @@ from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
-from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu
+from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
+    AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
 from cms.views.integration import make_integrations_json
@@ -41,7 +42,7 @@ def get_page(request, doc_id):
     review = request.query_params.get('state') == 'pending'
     language = get_language_object_from_request(request)
 
-    doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation,id=doc_id).first()
+    doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()
 
     # If doc is not found, then return a 404
     if doc:
@@ -55,6 +56,42 @@ def get_page(request, doc_id):
             ser.is_valid()
             return api_success(ser.data)
 
+    raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+
+
+def find_article(nodes, doc_id):
+    for node in nodes:
+        if node.asset and node.asset.id == doc_id or find_article(node.get('nodes', []), doc_id):
+            return True
+    return False
+
+
+@swagger_auto_schema(
+    method="GET",
+    operation_description="Returns the first knowledgebase found for an article",
+    responses={'200': openapi.Response('Article Knowledgebase', openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'base': openapi.Schema(type=openapi.TYPE_STRING),
+            'kb_name': openapi.Schema(type=openapi.TYPE_STRING)
+        }
+    ))}
+)
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def kb_for_article(request, doc_id):
+    doc = Asset.objects.filter(
+        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=settings.CUSTOMIZATION,
+        contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+    ).first()
+    if not doc:
+        raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+    nodes = doc.nodes.all()
+    menus = {node.get_parent() for node in nodes}
+    for menu in menus:
+        if menu.base_url and menu.url:
+            return {'base': menu.base_url, 'kb_name': menu.url}
     raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
 
 

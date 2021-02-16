@@ -85,6 +85,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {
                 if (results.params.id) {
+                    const assetid = parseInt(results.params.id.split('-')[0]);
+                    if (isNaN(assetid)) {
+                        return;
+                    }
                     this.integrationService.setIntegrationPlugin({});
 
                     // @ts-ignore
@@ -114,11 +118,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                             }]
                     };
 
-                    this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
+                    this.integrationSubscription = this.integrationService.getIntegrationBy(assetid, results.query.state)
                         .subscribe(result => {
                             if (result.length) {
                                 // @ts-ignore
-                                this.content.base += results.params.id;
+                                this.content.base += assetid;
 
                                 this.plugin = this.integrationService.format(result[0]);
 

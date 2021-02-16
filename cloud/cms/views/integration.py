@@ -144,6 +144,8 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
             del integration_dict_copy['version']
             # Check if the integration belongs in the user's assets.
             integration_dict_copy['mine'] = integration.id in user_assets
+            name = integration_dict_copy.get('information', {}).get('name', integration.name)
+            integration_dict_copy['urlified'] = integration.urlify(name)
             integrations_json.append(integration_dict_copy)
 
     return integrations_json

@@ -37,7 +37,8 @@ export class NxLeftMenuComponent {
     openNodes: string[] = [];
     mouseLeave$ = new Subject();
     prefetchedDocuments = [];
-    firstUrl = ''
+    firstUrl = '';
+    activeNodeUrl = '';
 
     constructor(
         configService: NxConfigService,
@@ -52,6 +53,7 @@ export class NxLeftMenuComponent {
     updateActive = (url: string) => {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent) => {
+            this.activeNodeUrl = node.url;
             const name = node.display_name || node.name;
             const openNodeIndex = this.openNodes.indexOf(name);
             if (openNodeIndex !== 1) {
@@ -65,7 +67,7 @@ export class NxLeftMenuComponent {
         const relatedNodes = [];
         const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = decodeURIComponent(url), action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.url === targetUrl) {
+                if (node.url === targetUrl || node.asset_id === targetAssetId) {
                     if (action === 'update') {
                         updateActiveRoutes(node);
                         if (node.next_item) {
@@ -76,7 +78,7 @@ export class NxLeftMenuComponent {
                             });
                             this.relatedLinks.emit({ type: 'related', nodes: relatedNodes });
                         }
-                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url)) {
+                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === node.asset_id)) {
                         relatedNodes.push(node);
                     }
                 } else if (node.nodes?.length) {
@@ -85,6 +87,12 @@ export class NxLeftMenuComponent {
             };
             nodes.forEach(checkNode);
         };
+        const urlPieces = url.split('/');
+        const assetId = urlPieces[urlPieces.length - 1].split('-')[0];
+        let targetAssetId = parseInt(assetId);
+        if (isNaN(targetAssetId)) {
+            targetAssetId = -1;
+        }
         findActiveNode(this.menuNodes);
         if (this.showDefault && !this.activeRouteNodes.length && this.menuNodes.length) {
             const getFirstUrl = ([first, ...remaining]: MenuNode[] = []): string => first.url || getFirstUrl([...remaining, ...first.nodes]);
@@ -115,7 +123,7 @@ export class NxLeftMenuComponent {
     mapParentNodeAndUrl(currentNode, parentNode?) {
         currentNode.parentNode = parentNode;
         if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
-            currentNode.url = this.baseRoute + currentNode.asset_id;
+            currentNode.url = this.baseRoute + (currentNode.urlified || currentNode.asset_id);
         }
         currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
     }
