@@ -13,11 +13,11 @@
             "label": "Administrateur"
         },
         "Advanced Viewer": {
-            "description": "Peut visionner vidéo en direct, parcourir les archives, contrôler le PTZ, etc",
+            "description": "Peut voir la vidéo en direct, parcourir les archives, contrôler PTZ, etc",
             "label": "Visualisateur avancé"
         },
         "Custom": {
-            "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées",
+            "description": "Utilisez l'application client %VMS_NAME% pour configurer des permissions personnalisées",
             "label": "Personnalisé"
         },
         "Live Viewer": {
