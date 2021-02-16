@@ -10,7 +10,7 @@
 }
 
 .heading {
-    @include typography.medium24;
+    @include typography.medium24dark9;
     line-height : 40px;
     text-align  : center;
     display     : block;

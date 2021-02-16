@@ -134,13 +134,12 @@ h2.get-started-heading {
         }
 
         & > h3 {
-            @include typography.medium20;
+            @include typography.medium20dark9;
             margin-bottom: 2px;
         }
 
         & > span {
-            @include typography.regular14;
-            color: $brand_core !important;
+            @include typography.regular14brand;
         }
     }
 }

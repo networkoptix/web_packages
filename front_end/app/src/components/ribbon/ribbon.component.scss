@@ -53,7 +53,7 @@
         color: $dark9;
         text-align: center;
         .larger {
-            @include typography.regular18;
+            @include typography.regular18dark9;
         }
     }
 
@@ -69,14 +69,14 @@
         align-items: center;
         margin-left: 32px;
         cursor: pointer;
-    
+
         span {
             text-decoration: underline;
             margin-left: 2px;
             color: $blue10;
             cursor: pointer;
         }
-    
+
         &:hover {
             span {
                 color: $blue9;
@@ -85,7 +85,7 @@
                 fill: $blue9;
             }
         }
-    
+
         svg * {
             fill: $blue10;
         }

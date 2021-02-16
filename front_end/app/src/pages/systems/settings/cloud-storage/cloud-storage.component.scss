@@ -10,12 +10,12 @@
     align-items: center;
 
     h2 {
-        @include typography.medium24;
+        @include typography.medium24dark9;
         margin: 16px;
     }
 
     p {
-        @include typography.regular13;
+        @include typography.regular13dark9;
         max-width: 480px;
         text-align: center;
     }
@@ -39,7 +39,7 @@
     border-bottom: 1px dotted $light3;
 
     h2 {
-        @include typography.medium24;
+        @include typography.medium24dark9;
         text-align: left;
     }
 

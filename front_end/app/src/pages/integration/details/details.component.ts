@@ -172,7 +172,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         }).add(() => {
                             if (!this.plugin) {
                                 this.router
-                                    .navigate([this.CONFIG.redirect.page404])
+                                    .navigate([this.CONFIG.redirect.page404], {
+                                        replaceUrl: true
+                                    })
                                     .catch(error => {
                                         console.error(error);
                                     });

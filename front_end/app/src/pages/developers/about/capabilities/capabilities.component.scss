@@ -3,8 +3,9 @@
 @use 'bootstrap_utils' as bootstrap;
 
 .heading-link {
+    @include typography.regular24dark9;
     cursor: pointer;
-    @include typography.regular24;
+
     &:hover {
         text-decoration: underline;
     }
@@ -18,6 +19,7 @@
     padding: 0 16px;
     max-width: 896px;
     color: $dark10;
+
     @include bootstrap.media-breakpoint-down(xs) {
         margin-bottom: 24px !important;
     }
@@ -28,6 +30,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
     @include bootstrap.media-breakpoint-down(xs) {
         margin: 8px -16px 0 0;
     }
@@ -62,8 +65,7 @@
             }
         }
         & > .intro-line {
-            @include typography.medium14;
-            color: rgba($light1, 0.5) !important;
+            @include typography.medium14light1-50;
             display: flex;
             justify-content: flex-end;
             flex-direction: column;

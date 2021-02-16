@@ -72,8 +72,7 @@
 }
 
 .input-error {
-    @include typography.regular13;
-    color       : $error !important;
+    @include typography.regular13error;
     line-height : 1rem;
 
     @include media-breakpoint-down(sm) {

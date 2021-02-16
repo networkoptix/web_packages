@@ -15,7 +15,7 @@
         margin-top: 48px !important;
     }
     & > h2 {
-        @include typography.regular24;
+        @include typography.regular24dark9;
         line-height: 28px;
     }
 }
@@ -75,7 +75,7 @@
             a {
                 text-decoration: none;
                 & > button {
-                    @include typography.regular18;
+                    @include typography.regular18dark9;
                     display: block !important;
                     letter-spacing: 0.3px;
                     padding: 22px 27px !important;

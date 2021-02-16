@@ -68,7 +68,7 @@ header {
             box-shadow: none !important;
         }
         .btn-dropdown-toggle {
-            @include typography.regular13;
+            @include typography.regular13dark9;
             background-color : transparent !important;
             box-shadow       : none;
             border-radius    : 0;
@@ -183,7 +183,7 @@ header {
             height   : auto;
 
             .dropdown-item {
-                @include typography.medium13;
+                @include typography.medium13dark9;
                 display         : flex;
                 align-items     : center;
                 padding         : 0;

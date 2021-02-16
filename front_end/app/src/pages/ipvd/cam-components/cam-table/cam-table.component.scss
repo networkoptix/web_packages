@@ -43,7 +43,7 @@ nx-cam-table {
 
       thead {
         th {
-          @include typography.medium11;
+          // @include typography.medium11;
           padding          : .5rem 0;
           font-weight      : 500 !important;
           text-transform   : none;
@@ -56,7 +56,7 @@ nx-cam-table {
           }
 
           &.table-title {
-            @include typography.regular24;
+            @include typography.regular24dark9;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -95,9 +95,6 @@ nx-cam-table {
       }
 
       tbody {
-        //padding : .5rem 0;
-        //display : table-cell;
-
         tr {
           min-height : rem(24px);
 
@@ -119,7 +116,7 @@ nx-cam-table {
           }
 
           td {
-            @include typography.regular13;
+            @include typography.regular13dark9;
             padding      : 4px 4px 4px 0;
             line-height  : 1rem;
             border       : none;
@@ -131,22 +128,22 @@ nx-cam-table {
         }
       }
 
-      &-header {
-        @include typography.regular13;
-        padding          : 0.5rem 1rem;
-        background-color : $additional_light1;
-        border           : 1px solid $light3;
-        border-bottom    : none;
-        line-height      : 16px;
-        text-transform   : none;
-        overflow-wrap    : break-word;
-
-        .results {
-          @include typography.medium11;
-          font-weight : 500 !important;
-          line-height : 16px;
-        }
-      }
+      //&-header {
+      //  @include typography.regular13;
+      //  padding          : 0.5rem 1rem;
+      //  background-color : $additional_light1;
+      //  border           : 1px solid $light3;
+      //  border-bottom    : none;
+      //  line-height      : 16px;
+      //  text-transform   : none;
+      //  overflow-wrap    : break-word;
+      //
+      //  .results {
+      //    @include typography.medium11;
+      //    font-weight : 500 !important;
+      //    line-height : 16px;
+      //  }
+      //}
     }
 
     .pagination-nav {

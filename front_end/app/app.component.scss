@@ -1,37 +1,9 @@
-@use 'styles/_theme_variables';
-@forward 'src/styles/_buttons';
-@forward 'src/styles/_mixins';
-
-// Common
-// @import 'src/styles/_typography';
-@import 'src/styles/typography_defaults';
-@import 'src/styles/_forms';
-@import 'src/styles/_inputs';
-@import 'src/styles/_labels';
-@import 'src/styles/_navs';
-@import 'src/styles/_elements';
-@import 'src/styles/_visuals';
-@import 'src/styles/_tables';
-@import 'src/styles/_icons';
-@import 'src/styles/_components';
-
-// Components (common)
-@import './src/dialogs/dialogs';
-@import './src/components/dropdowns/dropdowns';
-@import './src/components/toast/toast.component';
-@import './src/directives/directive';
+@use 'styles/_theme_variables' as *;
+@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-app {
-    .headerPadding {
-        padding-top : theme_variables.$navbar-height;
-    }
-
-    .headerAndRibbonPadding {
-        padding-top : theme_variables.$navbar-height + 32px;
-    }
-
     .mainContainer {
-        background-color: theme_variables.$additional_light2;
+        background-color: $additional_light2;
     }
 
     .placeholder {

@@ -43,11 +43,10 @@ form.form-horizontal {
     }
 
     th {
-        @include typography.medium13;
+        @include typography.medium13dark9;
         padding          : 5px 0 5px 16px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
-        color            : $dark9;
         height: 32px !important;
 
     }
@@ -57,7 +56,7 @@ form.form-horizontal {
     }
 
     td {
-        @include typography.regular13;
+        @include typography.regular13dark9;
         max-height: 24px !important;
         padding          : 5px 0 5px 16px;
         background-color : $light1;
@@ -124,7 +123,7 @@ form.form-horizontal {
         align-items : flex-end;
 
         .cell-title {
-            @include typography.regular13;
+            @include typography.regular13dark9;
         }
 
         .cell-ellipsis {
@@ -137,7 +136,7 @@ form.form-horizontal {
 
 .reindex-container {
     p {
-        @include typography.regular13;
+        @include typography.regular13dark9;
     }
 
     .tooltip-text {
@@ -150,14 +149,13 @@ form.form-horizontal {
             flex-grow: 1;
             padding-top: 2px;
             .progress-bar-header {
-                @include typography.medium12;
                 display: flex;
                 justify-content: space-between;
                 div {
-                    color: $brand_core;
+                    @include typography.medium12brand;
                 }
                 span {
-                    color: $dark9;
+                    @include typography.medium12dark9;
                 }
             }
             .reindex-progress-container {

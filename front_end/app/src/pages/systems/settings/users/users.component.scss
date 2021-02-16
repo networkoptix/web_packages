@@ -4,7 +4,7 @@
 
 .user-name {
     @include mixins.ellipsis;
-    @include typography.regular13;
+    @include typography.regular13dark9;
 }
 
 .heading-style {

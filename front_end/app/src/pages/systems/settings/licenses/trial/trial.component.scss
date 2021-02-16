@@ -57,7 +57,7 @@
             align-items : flex-end;
 
             .cell-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
 
             .cell-ellipsis {
@@ -91,7 +91,7 @@
 }
 
 .text-muted {
-    @include typography.regular11light;
+    @include typography.regular11light16;
 }
 
 .item {
@@ -99,8 +99,7 @@
 }
 
 .help-block {
-    @include typography.regular11;
-    color            : $error;
+    @include typography.regular11error;
     padding          : .25rem 0 .5rem;
     background-color : transparent;
 }

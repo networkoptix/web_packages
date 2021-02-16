@@ -92,7 +92,7 @@
 }
 
 .doc-link {
-    @include typography.medium15;
+    @include typography.medium15dark9;
     cursor: pointer;
     &:hover {
         text-decoration: underline;
@@ -159,7 +159,7 @@
     h1, h2, h3, h4, h5, h6 {
         display: block;
     }
-    
+
 
     img {
         max-width: 100%;

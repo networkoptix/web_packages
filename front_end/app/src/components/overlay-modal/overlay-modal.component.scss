@@ -15,18 +15,18 @@
         svg-icon {
             margin-top: 64px;
         }
-    
+
         h2 {
             @include typography.medium24light1;
             margin-top: 40px;
         }
-    
+
         button {
             @include typography.regular16light1;
             border-radius: 2px;
             border: 1px rgba($light4, 0.2) solid;
             margin-top: 40px;
-    
+
             svg-icon {
                 .circular {
                     height: 22px;
@@ -37,7 +37,7 @@
                     }
                 }
             }
-    
+
             .animate-rotation {
                 animation-name: rotate;
                 animation-duration: 1.8s;
@@ -52,17 +52,17 @@
                     transform: rotate(360deg);
                 }
             }
-    
+
             &:hover {
                 background-color: rgba($light4, 0.1);
             }
-            
+
             &:active {
                 background-color: rgba($dark9, 0.1);
                 border: 1px rgba($dark9, 0.2) solid;
             }
         }
-    
+
         .btn-helper {
             @include typography.regular13light8;
             min-height: 20px;
@@ -83,7 +83,7 @@
         }
         &-body {
             .overlay-modal-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
             .overlay-modal-servers {
                 list-style-type: none;
@@ -102,7 +102,7 @@
                         }
                     }
                     span.server-name {
-                        @include typography.medium13;
+                        @include typography.medium13dark9;
                     }
                     span.server-ip {
                         @include typography.regular13light;

@@ -186,13 +186,13 @@ nx-health-viewer-component {
   }
 
   .contentZone {
-    @include typography.light14;
+    @include typography.light14light16;
     text-align : center;
   }
 
   .importInfo {
     p {
-      @include typography.light13;
+      @include typography.light13light16;
     }
   }
 }

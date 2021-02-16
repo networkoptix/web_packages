@@ -4,7 +4,7 @@
 $item_height : 40px;
 
 .menu-level-1 {
-    @include typography.medium15;
+    @include typography.medium15dark9;
     position         : relative;
     line-height      : $item_height;
     background-color : $additional_light2;

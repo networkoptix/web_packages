@@ -232,7 +232,7 @@ button, .btn {
 }
 
 .btn-tag-selected {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     @include mixins.badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;

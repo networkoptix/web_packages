@@ -57,13 +57,13 @@
 
 .system-name {
     @include ellipsis;
-    @include typography.medium14;
+    @include typography.medium14dark9;
     max-width: 100%;
     line-height: 24px;
 }
 
 .owner {
     @include ellipsis;
-    @include typography.regular11;
+    @include typography.regular11dark9;
     line-height: 16px;
 }

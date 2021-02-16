@@ -45,7 +45,7 @@ svg {
 }
 
 .error-label {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     color : $error !important;
 }
 

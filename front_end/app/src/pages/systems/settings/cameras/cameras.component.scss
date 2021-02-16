@@ -59,7 +59,7 @@
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -271,7 +271,7 @@
         }
         &-keys {
             p {
-                @include typography.regular13;
+                @include typography.regular13dark9;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -294,7 +294,7 @@
         }
         &-values {
             p {
-                @include typography.medium13;
+                @include typography.medium13dark9;
                 margin-right: 16px;
             }
         }
@@ -302,7 +302,7 @@
 }
 
 .recording-hint {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

@@ -3,7 +3,7 @@
 @use 'bootstrap_utils' as bootstrap;
 
 .header-non-link {
-    @include typography.regular24;
+    @include typography.regular24dark9;
 }
 
 .header-link {
@@ -37,7 +37,7 @@
         @include bootstrap.media-breakpoint-down(xs) {
             margin: 12px -72px -12px 16px;
         }
-        
+
         & > .tech-block {
             margin: 0 78px 78px 0;
             cursor: pointer;

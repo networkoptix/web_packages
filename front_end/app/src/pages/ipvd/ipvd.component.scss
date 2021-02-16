@@ -50,7 +50,7 @@
                 //white-space: normal;
 
                 .caption {
-                    @include typography.medium13;
+                    @include typography.medium13dark9;
                     line-height : 1rem;
                     align-items : flex-end;
                 }
