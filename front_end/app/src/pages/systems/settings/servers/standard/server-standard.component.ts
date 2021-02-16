@@ -156,6 +156,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
             }
         }
+        this.applyService.addWatchers([this.saveStorageWatcher]);
     }
 
     ngOnDestroy() {}
@@ -164,7 +165,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.initForApplyService();
 
         this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
+            [this.ipPortWatcher, this.serverNameWatcher],
             this.saveSettings,
             () => {
                 this.applyService.reset();
@@ -457,7 +458,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     freeSpace
                 };
             });
-            this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+            if (!this.saveStorageWatcher.value) {
+                this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+            }
             this.storagesLoading = false;
             this.showAnalytics = !!currentAnalyticsDbLocation || hasAnalyticsData || hasCompatibleAnalyticsPlugins;
 
