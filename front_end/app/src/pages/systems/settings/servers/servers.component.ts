@@ -185,7 +185,11 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);
             }
-            this.system.storageManager.serverId = this.selectedServer.id;
+            if (this.system.storageManager.serverId !== this.selectedServer.id) {
+                this.system.storageManager.serverId = this.selectedServer.id;
+            } else {
+                this.system.storageManager.update();
+            }
         }
     }
 }

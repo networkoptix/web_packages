@@ -57,7 +57,7 @@ export class AddStorageModalContent {
         const urlC = this.getControls('url');
         if (
             urlC.touched && urlC.errors && !urlC.errors.required &&
-            (urlC.errors.alreadyExists || urlC.errors.forbiddenUrl)
+            (urlC.errors.alreadyExists || urlC.errors.forbiddenUrl || urlC.errors.wrongPath)
         ) {
             this.urlChecked = true; // shows error border around input
         }
@@ -127,14 +127,14 @@ export class AddStorageModalContent {
                     this.loginPasswordWrong = true;
                 } else {
                     let message = this.LANG.storage.failed();
-                    if (['SystemOffline', 'Timeout has occurred'].includes(err?.message)) {
+                    if (err?.message === 'WrongPath') {
+                        this.getControls('url').setErrors({ wrongPath: true });
+                    } else {
                         message = this.LANG.storage.serverOffline();
-                    } else if (err?.message === 'WrongPath') {
-                        message = this.LANG.storage.invalidPath();
+                        this.storageForm.reset();
                     }
-                    this.storageForm.reset();
-                    this.activeModal.close();
                     this.toastService.show(message, options);
+                    this.addStorage.processing = false;
                 }
             }
             );
