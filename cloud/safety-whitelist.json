@@ -1,0 +1,13 @@
+{
+  "38834": {
+    "name": "urllib3"
+  },
+  "38765": {
+    "name": "pip",
+    "note": "The pip package before 19.2 for Python allows Directory Traversal when a URL is given in an install command"
+  },
+  "38678": {
+    "name": "django-celery-results",
+    "note": "Django-celery-results through 1.2.1 stores task results in the database. Among the data it stores are the variables passed into the tasks."
+  }
+}
