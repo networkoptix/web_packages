@@ -1660,6 +1660,7 @@ class Menu(models.Model):
             MENU_CACHE[customization] = structure
 
     def to_dict(self):
+        assets = set()
         def get_nodes(nodes_list):
             nodes = []
             for node in nodes_list:
@@ -1667,8 +1668,9 @@ class Menu(models.Model):
                     'name': node.name,
                     'url': node.url,
                     'asset': node.asset.name if node.asset else None,
+                    'uuid': str(node.asset.uuid) if node.asset else None,
                     'asset_type': node.asset.asset_type.type if node.asset else None,
-                    'related_assets': [(asset.name, asset.asset_type.type) for asset in node.related_assets.all()],
+                    'related_assets': [(asset.name, asset.asset_type.type, str(asset.uuid)) for asset in node.related_assets.all()],
                     'next_item': node.next_item,
                     'new_window': node.new_window,
                     'icon': node.icon,
@@ -1682,37 +1684,27 @@ class Menu(models.Model):
                     'touched': node.touched,
                     'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
                 }
-
+                assets.add(node_dict['uuid'])
+                assets.update({str(related_asset[2]) for related_asset in node_dict['related_assets']})
                 nodes.append(node_dict)
             return nodes
 
         menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
                     if menu.id == self.id)
-        menu_dict = {
+        
+        return {
             'name': menu.name,
             'depth': menu.depth,
-            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else []
+            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else [],
+            'assets': list(filter(lambda id: id, assets))
         }
 
-        return menu_dict
-
-    def from_dict(self, menu_dict):
-        def find_or_create_asset(name, asset_type, customizations):
-            asset = Asset.objects.filter(
-                name=name, asset_type__type=asset_type).first()
-            if not asset:
-                asset_type = AssetType.objects.filter(
-                    type=asset_type, name='').order_by('pk').first()
-                asset = Asset.objects.create(name=name, asset_type=asset_type)
-                asset.customizations.set(list(customizations))
-            return asset
-
+    def from_dict(self, menu_dict, user):
+        from cms.controllers.structure import import_assets_from_json
+        import_assets_from_json(menu_dict['assets'], user)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
-                if isinstance(parent, Menu):
-                    parent_type = 'parent_menu'
-                else:
-                    parent_type = 'parent_node'
+                parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
                 node_obj = MenuNode.objects.filter(
                     name=node['name'], **{parent_type: parent}).first()
                 if not node_obj:
@@ -1728,7 +1720,6 @@ class Menu(models.Model):
                 node_obj.is_global = node['is_global']
                 node_obj.touched = node['touched']
                 node_obj.__setattr__(parent_type, parent)
-                node_obj.save()
 
                 node_obj.available.set(
                     list(Customization.objects.filter(name__in=node['available'])))
@@ -1737,18 +1728,16 @@ class Menu(models.Model):
                 node_obj.permissions.set(
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
-                if node_obj.is_global:
-                    asset_customizations = Customization.objects.all()
-                else:
-                    asset_customizations = node_obj.available.all()
                 if node['asset']:
-                    node_obj.asset = find_or_create_asset(
-                        node['asset'], node['asset_type'], asset_customizations)
-                    node_obj.save()
-                    node_obj.asset.customizations.set(Customization.objects.filter(name__in=node['enabled']))
-                for asset, asset_type in node.get('related_assets', []):
-                    node_obj.related_assets.add(find_or_create_asset(
-                        asset, asset_type, asset_customizations))
+                    asset_obj = Asset.objects.filter(uuid=node['asset_uuid'], asset_type=node['asset_type']).first()
+                    asset_obj.name = node['asset']
+                    asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
+                    asset_obj.save()
+                    node_obj.asset = asset_obj
+
+                for asset, asset_type, asset_uuid in node.get('related_assets', []):
+                    node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())
+                node_obj.save()
 
                 if node['nodes']:
                     set_nodes(node['nodes'], node_obj)

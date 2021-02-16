@@ -15,9 +15,10 @@ from django.utils.html import format_html
 import nested_admin
 
 from cms.forms import *
+from cms.controllers import generate_structure
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
-from cms.views.asset import page_editor, review, response_attachment
+from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -1147,20 +1148,17 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             raise PermissionDenied()
         form_export = None
         form_import = None
-        if request.method == "POST":
+        if request.method == 'POST':
             if 'export' in request.POST:
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
                 if form_export.is_valid():
-                    data = form_export.cleaned_data
-                    menu_obj = data['menu']
-                    content = json.dumps(menu_obj.to_dict(), ensure_ascii=False, indent=4, separators=(',', ': '))
-                    return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+                    return self.generate_export(form_export)
             elif 'import' in request.POST:
                 form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
                 if form_import.is_valid():
                     data = form_import.cleaned_data
                     menu = data['menu']
-                    menu.from_dict(json.load(request.FILES['file']))
+                    menu.from_dict(json.load(request.FILES['file']), request.user)
                     messages.success(request, 'Successfully imported menu')
 
         if not form_export:
@@ -1177,6 +1175,22 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'site_header': admin.site.site_header,
                        'site_title': admin.site.site_title,
                        'title': 'Export/Import Menus'})
+
+    def generate_export(self, form_export):
+        data = form_export.cleaned_data
+        menu_obj = data['menu']
+        menu_dict = menu_obj.to_dict()
+        assets = []
+        for asset in Asset.objects.filter(uuid__in=menu_dict['assets']):
+            asset_dict = generate_structure.from_database(asset, True)[0]
+            asset_dict['name'] = asset.name
+            asset_dict['uuid'] = str(asset.uuid)
+            asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
+            prepare_asset_exports(asset, asset_dict)
+            assets.append(asset_dict)
+        menu_dict['assets'] = assets
+        content = json.dumps(menu_dict, ensure_ascii=False, indent=4, separators=(',', ': '))
+        return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
 
 
 class MenuFilter(SimpleListFilter):
