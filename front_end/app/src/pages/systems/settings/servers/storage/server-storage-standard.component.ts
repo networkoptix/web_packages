@@ -442,12 +442,14 @@ export class NxSystemStorageComponent implements OnInit {
             return currentlyBackup !== useAsBackup || currentlyUsed !== useForWriting;
         };
         if (checkChanged(selected)) {
-            updateParams.isBackup = selected.value !== 'modeMain' && isBackup;
+            updateParams.isBackup = selected.value === 'modeBackup';
             updateParams.usedForWriting = selected.value !== 'modeNotUsed';
             this.modeWatchers[this.normalizeId(id)].value = selected.value;
             this.changedModes = [...this.changedModes, id];
             const store = this.currentStorageState.locations.find(({ storageId }) => this.normalizeId(storageId) === this.normalizeId(id));
-            store.isBackup = updateParams.isBackup;
+            if (selected.value !== 'modeNotUsed') {
+                store.isBackup = updateParams.isBackup;
+            }
             store.usedForWriting = updateParams.usedForWriting;
         }
 

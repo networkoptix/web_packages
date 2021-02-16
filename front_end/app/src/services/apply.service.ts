@@ -308,6 +308,7 @@ export class NxApplyService {
         if (form) {
             this.setForm(form);
         }
+        this.watchers = undefined;
         this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent> this.applyComponentRef.instance).show = !!value;
@@ -532,7 +533,7 @@ export class NxApplyService {
      * @param watchers
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
-        this.watchers = watchers;
+        this.watchers = [...watchers, ...(this.watchers || [])];
         this.watchersSubscription?.unsubscribe?.();
         this.watchersSubscription = merge(...watchers.map(watcher => {
             return watcher.valueSubject.pipe(
