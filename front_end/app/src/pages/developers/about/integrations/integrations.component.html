@@ -19,7 +19,10 @@
                 <p [innerHTML]="integrations.translatedCount"></p>
             </div>
         </div>
-        <button class="btn btn-default store-button" routerLink="/integrations" translate>Go to store</button>
+        <button *ngIf="integrationsNode.nodes[1]?.url && integrationsNode.nodes[1].asset.title"
+            class="btn btn-default store-button"
+            [routerLink]="integrationsNode.nodes[1].url"
+        >{{integrationsNode.nodes[1].asset.title}}</button>
     </div>
 </ng-template>
 
@@ -29,7 +32,10 @@
         <div class="card info-block">
             <h3>{{integrationsNode.nodes[0].title}}</h3>
             <p *ngFor="let block of integrationsNode.nodes[0].asset.blocks" [innerHTML]="block.contentHTML"></p>
-            <button class="btn btn-default mr-auto mt-auto" [routerLink]="integrationsNode.nodes[0].url">{{integrationsNode.nodes[0].asset.title}}</button>
+            <button *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].asset.title"
+                class="btn btn-default mr-auto mt-auto"
+                [routerLink]="integrationsNode.nodes[0].url"
+            >{{integrationsNode.nodes[0].asset.title}}</button>
         </div>
         <ng-container *ngIf="currentWindowWidth > 608">
             <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>
