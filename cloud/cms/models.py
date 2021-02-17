@@ -1704,10 +1704,12 @@ class Menu(models.Model):
         import_assets_from_json(menu_dict['assets'], user)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
+                new_node = False
                 parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
                 node_obj = MenuNode.objects.filter(
                     name=node['name'], **{parent_type: parent}).first()
                 if not node_obj:
+                    new_node = True
                     node_obj = MenuNode()
                 node_obj.name = node['name']
                 node_obj.url = node['url']
@@ -1720,6 +1722,8 @@ class Menu(models.Model):
                 node_obj.is_global = node['is_global']
                 node_obj.touched = node['touched']
                 node_obj.__setattr__(parent_type, parent)
+                if new_node:
+                    node_obj.save()
 
                 node_obj.available.set(
                     list(Customization.objects.filter(name__in=node['available'])))
