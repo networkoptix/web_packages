@@ -18,7 +18,7 @@
                         <div class="card-body" *ngIf="activeBuilds">
                             <div *ngFor="let release of activeBuilds">
                                 <nx-release [LANG]="LANG"
-                                            [build]="build || release.backwardsCompatible ? release.version : release.buildNumber" [linkbase]="linkbase"
+                                            [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)" [linkbase]="linkbase"
                                             [release]="release"></nx-release>
                             </div>
                         </div>
