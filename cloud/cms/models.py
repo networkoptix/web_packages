@@ -1729,7 +1729,7 @@ class Menu(models.Model):
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node['asset']:
-                    asset_obj = Asset.objects.filter(uuid=node['asset_uuid'], asset_type=node['asset_type']).first()
+                    asset_obj = Asset.objects.filter(uuid=node['uuid'], asset_type=node['asset_type']).first()
                     asset_obj.name = node['asset']
                     asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
                     asset_obj.save()
