@@ -30,6 +30,7 @@
     "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}",
     "CUST LANGUAGE LIST"	     :	  "default_lang_list.json",
     "DEFAULT LANGUAGE"		     :	  "en_US",
+    "DISABLED STORAGE COLOR"     :    "rgba(165, 183, 192, 1)",
 
     "THEME COLOR"                : "#2FA2DB",
     "THEME COLOR RGB"            : "rgba(47, 162, 219, 1)",

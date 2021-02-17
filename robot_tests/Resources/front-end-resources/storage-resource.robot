@@ -1,6 +1,10 @@
 *** Keywords ***
 Storage Suite Setup
-    Log To Console    Storage Suite Setup
+    ${loglevel} =    Set Loglevel    INFO
+    ${ignore} =    Set Loglevel    ${loglevel}
+    ${console} =    Set Variable If    '${loglevel}' != 'INFO'    yes    no
+    Set Suite Variable    ${console}    ${console}    
+    Log    Storage Suite Setup    DEBUG      console=${console}  
     FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
         ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
         Set Suite Variable    ${${account}}          ${random email}
@@ -23,44 +27,62 @@ Storage Suite Setup
     @{size} =    Create List    30000    20000    20000    12000    12000
 
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
-    Log To Console    users created ..... | PASS |
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
+    ${results}    Execute Command    mkdir disk-invalid    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection 
+    Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}  
+
+    Log    users created ..... | PASS |    DEBUG      console=${console}  
     FOR    ${n}    IN RANGE    5
         Open Connection    ${QA BURBANK IP}
         SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
         ${results}    Execute Command     dd if=/dev/zero of=${disk location}/disk${n}-${random}.img bs=1M count=${size[${n}]}    sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     mkfs -t ext4 ${disk location}/disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mount -t auto -o loop ${disk location}/disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
+        ${results}    Execute Command     mount -t auto -o loop ${disk location}/disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
+        Should Be Equal As Integers   ${results}    0 
         Close Connection 
-        Log To Console    disk${n} mounted ..... | PASS |
+        Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}  
         Run Keyword If    ${n} < 4     Catenate Storages One    ${n}
         ...    ELSE     Catenate Storages Two    ${n} 
     END
     
-    ${storage string 1} =    Get Substring    ${storage string 1}    1     
+    #${storage string 1} =    Get Substring    ${storage string 1}    1     
     ${storage string 2} =    Get Substring    ${storage string 2}    1
 
     ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string 1}    
-    Set Suite Variable    ${port0}    ${port[0]}
+    Set Suite Variable    ${port0}    ${port[0]}    
     Sleep     10
-    Log To Console    docker storage0-${random} created ..... | PASS |
+    Log    docker storage0-${random} created ..... | PASS |    DEBUG      console=${console}  
     Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
     ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId0}    ${sysId}
     Sleep    10
     Close Connection
-    Log To Console    ${system names[0]} system created ..... | PASS |
+    Log    ${system names[0]} system created ..... | PASS |    DEBUG      console=${console}  
          
     ${port} =    Create Docker Server    storage1-${random}    4.1_test    ${storage string 2}  
     Set Suite Variable    ${port1}    ${port[0]}
     Sleep     10
-    Log To Console    docker storage1-${random} created ..... | PASS |
+    Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}  
     Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
     ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId1}    ${sysId}
     Sleep    10
     Close Connection    
-    Log To Console    ${system names[1]} system created ..... | PASS |
+    Log   ${system names[1]} system created ..... | PASS |    DEBUG      console=${console}  
+    
+    ${port} =    Create Docker Server    storage2-${random}    4.1_test      
+    Set Suite Variable    ${port2}    ${port[0]}
+    Sleep     10
+    Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}  
+    Setup Local System    https://${QA BURBANK IP}:${port2}    ${BASE PASSWORD}    ${system names[2]}
+    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2}    ${system names[2]}    ${owner}    ${BASE PASSWORD}
+    Set Suite Variable    ${sysId2}    ${sysId}
+    Sleep    10
+    Close Connection    
+    Log   ${system names[2]} system created ..... | PASS |    DEBUG      console=${console}  
     
     ${SUITE AUTO TESTS USERS} =    Create Dictionary
     ...    ${viewer}=viewer
@@ -75,35 +97,42 @@ Storage Suite Setup
     FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
     END
-    Log To Console    users added to ${system names[0]} ..... | PASS |
+    Log    users added to ${system names[0]} ..... | PASS |    DEBUG      console=${console}  
+    
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1 
     Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
-    Log To Console    default storage config set .....| PASS |
-    Open Browser and go to URL    ${url}
-    
-    Verify Storages    ${sysId0}    4
-    Verify Storages    ${sysId1}    1
+    Log    default storage config set .....| PASS |    DEBUG      console=${console}  
     
     Activate License    ${server auth}    https://${QA BURBANK IP}:${port0}    ${TRIAL LICENSE} 
     Sleep    5
-    Log To Console    trial license activated .....| PASS |
+    Log    trial license activated .....| PASS |    DEBUG      console=${console}  
+    
     Add Analytics stub plugin   storage0-${random}
     ${results} =    Add Camera    https://${QA BURBANK IP}:${port0}    admin    admin    ${camera}    http://10.1.5.116:80/onvif/device_service    Digital Watchdog
     Log    ${results}
-    Log To Console    camera added ..... | PASS |
+    Log    camera added ..... | PASS |    DEBUG      console=${console}  
+    
     Sleep    15
+    # restarting server and creating inaccessible disk
     Restart Server    https://${QA BURBANK IP}:${port0}    ${auth}
-    Sleep    90
-    Log To Console    server restarted ..... | PASS |
+    Sleep    3
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS} 
+    ${results}    Execute Command    rm -r disk-invalid    sudo=True    sudo_password=${QA BURBANK PASS}
+    Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}  
+    Sleep    90
+    Log    server restarted ..... | PASS |    DEBUG      console=${console}  
     ${results}    Execute Command    docker container port storage0-${random}
     @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     Close Connection
     Set Suite Variable    ${port0}    ${portnew[0]}
     
+    Open Browser and go to URL    ${url}
     Turn On Recording    ${sysId0}  
+ 
+    Verify Storages    ${sysId0}    5
+    Verify Storages    ${sysId1}    1
     
 Catenate Storages One
     [Arguments]    ${n}
@@ -118,10 +147,11 @@ Catenate Storages Two
 Storage Suite Teardown
     Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
     Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
+    Disconnect Server via API    ${auth}    ${sysId2}    ${password}    ${owner}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop storage0-${random} storage1-${random}
-    ${results}    Execute Command    docker container rm storage0-${random} storage1-${random}
+    ${results}    Execute Command    docker container stop storage0-${random} storage1-${random} storage2-${random}
+    ${results}    Execute Command    docker container rm storage0-${random} storage1-${random} storage2-${random}
     Close Connection
     FOR    ${n}    IN RANGE    5
         Open Connection    ${QA BURBANK IP}
@@ -145,41 +175,40 @@ Verify Storages
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
-    ${disks} =    Get Element Count    //span[contains(text(),"disk") and @class="ellipsis"]
+    ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
+    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number} 
-    Capture Page Screenshot
     Log Out
-    Log To Console    ${storages number} storage(s) for ${system} verified .....| PASS |
+    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG      console=${console}  
     
 Turn on Recording
     [Arguments]    ${system}    
     Log in to user and system    ${owner}     ${system}
     Go To Cameras
-    #Sleep    30
     Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}   
-    Capture Page Screenshot
+    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
     Toggle Recording
-    Capture Page Screenshot
+    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
     Verify Recording Options are Visible
     Click Element    ${RECORD ALWAYS RADIO BUTTON}/..   
-    #Sleep    30
     Wait Until Element is Visible    ${SAVE BUTTON}
-    Capture Page Screenshot
+    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
     Click Button    ${SAVE BUTTON}
     Sleep    2
-    Capture Page Screenshot
+    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
     Log Out
-    Log To Console    recording turned on ..... | PASS |
+    Log    recording turned on ..... | PASS |    DEBUG      console=${console}  
 
 Set Default Storage Config
     [Arguments]    ${server url}    ${disabled}    ${backups}
     ${storages} =    Get Storages via API    ${server url}
+    Should Not Be Empty    ${storages}
     ${storages string} =    Convert To String    ${storages}
     ${storages string} =    Replace String    ${storages string}    '    "
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    4
+    FOR    ${n}    IN RANGE    5
         ${url} =    Set variable    ${storages dict[${n}]['url']}
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}    
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
@@ -211,7 +240,7 @@ Add Analytics stub plugin
     # @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     Close Connection
     # [Return]    ${port1}
-    Log To Console    analytics stub plugin added ..... | PASS |
+    Log    analytics stub plugin added ..... | PASS |    DEBUG      console=${console}  
     
 Check Analytics Data is Present
     [Arguments]    ${disk}    ${camera}    ${server name}    ${keep}=${FALSE}
@@ -237,7 +266,7 @@ Wait For Analytics Move Dialog
 Retry For Analytics Move Dialog
     [Arguments]    ${attempts}    ${interval}    ${disk}
     FOR    ${attempt}    IN RANGE   ${attempts}
-        Log To Console    attempt ${attempt} to get dialog box
+    Log    attempt ${attempt} to get dialog box    DEBUG    console=True    
         Run Keyword and Continue on Failure    Click Button    ${CANCEL BUTTON}
         #Sleep    ${interval}
     	Click Button    ${ANALYTICS DROPDOWN}
@@ -256,4 +285,13 @@ Wait Until Analytics Data Exists
         Exit For Loop If     ${status}
     END
     Check Analytics Data is Present     ${disk}    ${camera}    ${server name}    
+    
+Verify Recorded Video Files
+    [Arguments]    ${disk}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS} 
+    ${results}    Execute Command    find ${disk}-${random} -iname "*mkv" -printf "%f "
+    ${files} =    Get Count    ${results}    .mkv
+    Close Connection
+    [Return]    ${files}
     

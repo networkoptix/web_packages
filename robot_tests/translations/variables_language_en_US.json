@@ -57,6 +57,7 @@
     "LOGIN OR PASSWORD INCORRECT TEXT"     :    "Login or password is incorrect",
     "FAILED TO ADD STORAGE TEXT"           :    "Failed to add external storage",
     "STATE TEXT"                           :    "State",
+    "NOT ABLE TO LOAD STORAGE TEXT"		   :	"Not able to load storage information.",
 
     "RESERVED"                             :    "Reserved",
     "INACCESSIBLE"                         :    "Inaccessible",

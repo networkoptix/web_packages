@@ -9,7 +9,7 @@ Force Tags        storage
 *** Variables ***
 ${password}    ${BASE PASSWORD}    
 ${url}         ${ENV}
-${storage string 1}    ${EMPTY}
+${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
 ${storage string 2}    ${EMPTY}
 ${camera}      00-0D-F1-20-B5-02
 ${disk location}    /media/nxwitness-storages/disk1
@@ -20,6 +20,271 @@ Restart
     Reset to Default Storage Config
 
 *** Test Cases ***
+Loading State of Storage Locations Block
+    [Tags]    C81803
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
+    ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
+    Should Be Equal As Integers    ${height}    256
+       
+Detailed Info in Storage Locations block
+    [Tags]    C81534
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Element Is Visible    ${STORAGE INFO BUTTON} 
+    Click Button    ${STORAGE INFO BUTTON} 
+    Location Should Contain    health/storages
+    Wait Until Element Is Visible    ${HM STORAGE TABLE}    
+         
+Scrolling on small resolutions in Storage Locations block
+    [Tags]    C81535
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK} 
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM} 
+    Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
+    Set Window Size    600    1080
+    Sleep    1
+    Verify Horizontal Scrollbar Exists    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table 
+    Set Window Size    1920    1080     
+    Sleep    1
+    Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
+    
+Alphabetical sorting in Storage Locations Table
+    [Tags]    C81537
+    @{menu order}    Create List
+    @{sorted}        Create List
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK} 
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
+    @{storages} =    Get WebElements    ${STORAGE ITEM}
+    FOR    ${storage}    IN    @{storages}
+        ${disk} =    Get Text    ${storage}
+        Append To List    ${menu order}    ${disk}
+    END   
+    ${sorted} =    Set Variable    ${menu order}
+    Sort List    ${sorted}
+    Lists Should Be Equal    ${menu order}    ${sorted}        
+
+Enabled, disabled and inaccessible storages appearance
+    [Tags]    C81540
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK} 
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE LOCATIONS BLOCK}    
+    ...    ${STORAGE ADD BUTTON}    
+    ...    ${STORAGE ITEM}
+    ...    ${STORAGE DISABLED INACCESSIBLE}
+    ...    ${STORAGE DISABLED NOT IN USE}
+    ...    ${STORAGE DISABLED RESERVED} 
+    ...    ${STORAGE ENABLED MAIN}
+    Element Style Should Be    ${STORAGE DISABLED INACCESSIBLE}            color    ${ERROR COLOR WITH OPACITY}
+    Element Style Should Be    ${STORAGE DISABLED INACCESSIBLE ICON}       color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED INACCESSIBLE ADDRESS}    color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED RESERVED}                color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED RESERVED ICON}           color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED RESERVED ADDRESS}        color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED NOT IN USE ICON}         color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED NOT IN USE ADDRESS}      color    ${DISABLED STORAGE COLOR}
+    Element Style Should Be    ${STORAGE DISABLED NOT IN USE}              color    ${COLOR DARK9 RGB}    
+    Element Style Should Be    ${STORAGE ENABLED MAIN}                     color    ${COLOR DARK9 RGB}
+    Element Style Should Be    ${STORAGE ENABLED MAIN ICON}                color    ${COLOR DARK9 RGB}
+    Element Style Should Be    ${STORAGE ENABLED MAIN ADDRESS}             color    ${COLOR DARK9 RGB}
+    
+Width of mode column
+    [Tags]    C81555
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}    ${STORAGE DISABLED NOT IN USE}     ${STORAGE ENABLED MAIN}
+    ${width}    ${height} =    Get Element Size    ${STORAGE DISABLED NOT IN USE}/ancestor::td
+    Click Button    ${STORAGE DISABLED NOT IN USE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${width 2}    ${height 2} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td 
+    Should Be Equal As Integers    ${width}    ${width 2}
+    Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button    
+    Wait Until Element is Visible    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a 
+    Click Link     ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a 
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${width 3}    ${height 3} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
+    Should Be Equal As Integers    ${width}    ${width 3}
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${width 4}    ${height 4} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
+    Should Be Equal As Integers    ${width}    ${width 4}  
+    
+Active Mode Lines
+    [Tags]    C81557
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    
+    Log    Step 1
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
+    
+    Log    Step 2
+    Click Button    ${STORAGE ENABLED MAIN}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE DISABLED}/parent::a
+    ...    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE DISABLED}/parent::a
+    ...    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}
+    
+    Log    Step3
+    Run Keyword and Expect Error    *    Click Link    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE DISABLED}/parent::a
+    Run Keyword and Expect Error    *    Click Link    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE DISABLED}/parent::a
+    
+    Log    Step 4
+    Click Link    ${STORAGE ENABLED MAIN}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE ENABLED MAIN} 
+    
+    Log    Step 5
+    Click Button    ${STORAGE ENABLED BACKUP}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}     
+    ${class} =    Get Element Attribute    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}    class
+    Should Be Equal    ${class}    ${EMPTY}
+    ${class} =    Get Element Attribute    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}    class
+    Should Be Equal    ${class}    ${EMPTY}
+    ${class} =    Get Element Attribute    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a    class
+    Should Contain    ${class}    selected
+    
+    Log    Step 6
+    Click Link    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 7
+    Click Button    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}   
+    Click Link    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a     
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 8
+    Click Button    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}   
+    Click Link    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    
+   
+    Log    Step 9
+    Click Button    ${STORAGE DISABLED NOT IN USE}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}     
+    ${class} =    Get Element Attribute    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}    class
+    Should Be Equal    ${class}    ${EMPTY}
+    ${class} =    Get Element Attribute    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}    class
+    Should Be Equal    ${class}    ${EMPTY}
+    ${class} =    Get Element Attribute    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a    class
+    Should Contain    ${class}    selected
+    
+    Log    Step 10
+    Click Link    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 11
+    Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}   
+    Click Link    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a     
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 12
+    Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}   
+    Click Link    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a     
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    
+    
+Reserved System storage tooltip
+    [Tags]    C81566
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED RESERVED}
+    Mouse Over   ${STORAGE RESERVED TOOLTIP ICON} 
+    Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}        
+    
+Changing of reserved space is shown in the table
+    [Tags]    C81569
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
+    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    ${reserved} =    Get Text    ${RESERVED SPACE}
+    Should Contain  ${reserved}    10.0
+    ${location} =    Get Location
+    Go To    ${location}${ADVANCED SETTINGS}
+    Wait Until Element is Visible    ${RESERVED SPACE ADVANCED}
+    ${new reserved} =    Set Variable    5
+    Input Text    ${RESERVED SPACE ADVANCED}    ${new reserved}
+    Wait Until Element Is Visible    ${SAVE BUTTON}
+    Click Button    ${SAVE BUTTON}
+    Sleep    2    
+    Reload Page
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
+    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    ${reserved} =    Get Text    ${RESERVED SPACE}
+    Should Contain  ${reserved}    5.0
+    
+No Size Tooltip when Inaccessble
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
+    Mouse Over    ${STORAGE INACCESSIBLE SIZE}
+    Sleep    1
+    Element Should Not Be Visible    ${STORAGE INACCESSIBLE SIZE}/following-sibling::ngb-popover-window
+    
+Storage Locations Table without control buttons
+    [Tags]    C81572
+    Log in to user and system    ${owner}     ${sysId1}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS FIRST ROW}
+    ${count} =    Get Element Count    ${STORAGE LOCATIONS TABLE}//th     
+    Should Be Equal As Integers    ${count}    3    
+
+Not able to load storage information
+    [Tags]    C84518
+    Log in to user and system    ${owner}     ${sysId2}
+    Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}     
+    ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
+    Should Be Equal As Integers    ${height}    259
+    
 Analytics DB Storage dropdown is not visible
     [Tags]    C81740    Analytics
     Log in to user and system    ${owner}     ${sysId1}
@@ -61,9 +326,9 @@ Storages order in "Analytics DB Storage" dropdown
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Wait Until Element is Visible    //span[contains(text(),"disk3") and @class="ellipsis"]
-    @{storages} =    Get WebElements    //span[contains(text(),"disk") and @class="ellipsis"]
-    # @{reserved} =    Get WebElements    //span[contains(text(),"Reserved")]/ancestor::td/preceding-sibling::td//span[contains(text(),"disk") and @class="ellipsis"]
-    # Remove Values From List    ${storages}    @{reserved}
+    @{storages} =    Get WebElements    ${STORAGE ITEM}
+    @{remove} =    Get WebElements    //div[contains(text(),"${INACCESSIBLE}")]/ancestor::td/preceding-sibling::td${STORAGE ITEM}
+    Remove Values From List    ${storages}    @{remove}
     FOR    ${storage}    IN    @{storages}
         ${disk} =    Get Text    ${storage}
         Append To List    ${menu order}    ${disk}
@@ -303,7 +568,125 @@ Successful changing Analytics DB Storage plus confirmation dialog
     # Sleep    5
     # Mouse Over    ${STORAGE RESERVED MODE}/following-sibling::svg-icon
     # Wait Until Element Is Visible    ${STORAGE SYSTEM TOOLTIP}
-
+    
+Change storage mode: Main -> Backup
+    [Tags]    C81541
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List     disk2
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    
+    Log    Step 2
+    Sleep    300
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files disk0} > 0
+    ${files disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files disk1} > 0
+    
+    Log    Step 3
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON} 
+    
+    Log    Step 5
+    Sleep    300
+    ${files 2 disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files 2 disk0} > ${files disk0}
+    ${files 2 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 2 disk1} > ${files disk1}
+    
+    Log    Step 6
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 7
+    Click Button    ${SAVE BUTTON}
+    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
+    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    
+    Log    Step 8 
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
+    
+    Log    Step 9
+    Sleep    210
+    ${files 3 disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files 3 disk0} > ${files 2 disk0}
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} = ${files 2 disk1}
+    
+Change storage mode: Backup -> Main
+    [Tags]    C81542
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
+    
+    Log    Step 2
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    ${files disk1} =    Verify Recorded Video Files    disk1   
+    Sleep    300
+    ${files 2 disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files 2 disk0} > ${files disk0}
+    ${files 2 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 2 disk1} = ${files disk1}
+    
+    Log    Step 3
+    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
+    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE ENABLED BACKUP}    
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON} 
+    
+    Log    Step 5
+    Sleep    300
+    ${files 3 disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files 3 disk0} > ${files 2 disk0}
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} = ${files disk1}
+    
+    Log    Step 6
+    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
+    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 7
+    Click Button    ${SAVE BUTTON}
+    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
+    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    
+    Log    Step 8 
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
+    
+    Log    Step 9
+    Sleep    300
+    ${files 4 disk0} =    Verify Recorded Video Files    disk0
+    Should Be True    ${files 4 disk0} > ${files 3 disk0}
+    ${files 4 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 4 disk1} > ${files disk1}
+    
 Storage Location Table Space Legend Tooltip Shows 
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible    ${SERVERS LINK}
@@ -322,8 +705,8 @@ Backup Option Disabled when only One Main Storage
     Click Button      ${STORAGE MAIN MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE BACKUP MENU ITEM}
     Wait Until Elements Are Visible    
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Backup"]
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="Not in use"]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${BACKUP}"]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
 
 Change Storage from Main to Backup
     @{disabled} =    Create List    disk3
@@ -333,14 +716,14 @@ Change Storage from Main to Backup
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]
-    Click Button      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Backup")]/parent::a
-    Click Link      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Main")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Backup")]/parent::a
-    Wait Until Element is Visible    //button[text()='${SAVE BUTTON TEXT}']
-    Click Button    //button[text()='${SAVE BUTTON TEXT}'] 
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Wait Until Element is Visible    ${SAVE BUTTON}
+    Click Button    ${SAVE BUTTON}
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
 
 Change Storage from Backup to Not in Use 
     @{disabled} =    Create List    disk3
@@ -350,14 +733,14 @@ Change Storage from Backup to Not in Use
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]
-    Click Button      //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Not in use")]/parent::a
-    Click Link     //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Backup")]/parent::button/following-sibling::div/ul/li//span[contains(text(), "Not in use")]/parent::a 
-    Wait Until Element is Visible    //button[text()='${SAVE BUTTON TEXT}']
-    Click Button    //button[text()='${SAVE BUTTON TEXT}']   
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link     ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a 
+    Wait Until Element is Visible    ${SAVE BUTTON}
+    Click Button    ${SAVE BUTTON}
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-    Wait Until Element is Visible    //span[contains(text(),"disk2")]/ancestor::tr//span[contains(text(), "Not in use")]
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}
 
 
 Add Storage Close button works
@@ -464,7 +847,7 @@ Reindexing Main Archive Tooltip Shows
     Wait Until Element is Visible    ${STORAGE REINDEXING BLOCK}
     Sleep    2
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
-    Wait Until Element Is Visible    ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
+    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
 
 # Reindex Main Storage Successfully FUTURE (need to make sure there's an archive or else reindexing will go too quickly)
 #     Verify on Servers Page

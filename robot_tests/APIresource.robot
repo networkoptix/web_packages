@@ -486,14 +486,14 @@ Disable Stat Reports
     [Return]    ${resp.json()}
 
 Get Storages via API
-    [Arguments]    ${system}
-    Create Digest Session    returnedStorages    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    [Arguments]    ${server url}
+    Create Digest Session    returnedStorages    ${server url}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemStorages}=   Get Request    returnedStorages   /ec2/getStorages  timeout=10
     [Return]    ${systemStorages.json()}
    
 Save Storages via API
-    [Arguments]    ${data}    ${system}
-    Create Digest Session    modifyStorage    ${system}    auth=${AUTO SYS AUTH}    disable_warnings=1
+    [Arguments]    ${data}    ${server url}
+    Create Digest Session    modifyStorage    ${server url}    auth=${AUTO SYS AUTH}    disable_warnings=1
     ${resp}=   Post Request    modifyStorage    /ec2/saveStorages   json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 

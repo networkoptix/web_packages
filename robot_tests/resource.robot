@@ -905,7 +905,7 @@ Create Docker Server
     ${mac}=   Get Random MAC
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --mac-address=${mac} ${storage string} ${image}
+    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --privileged --mac-address=${mac} ${storage string} ${image}
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}
@@ -1083,3 +1083,16 @@ Wait Until Element is Visible with Retry
     ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
     Run Keyword If    ${load} == ${FALSE}    Reload Page
     Wait Until Element is Visible    ${element}   timeout=${timeout}
+    
+Verify No Horizontal Scrollbar
+    [Arguments]    ${outer element}    ${inner element}
+    ${width out}    ${height out} =    Get Element Size    ${outer element}
+    ${width in}     ${height in} =    Get Element Size    ${inner element}
+    Should Be Equal As Numbers    ${width out}    ${width in} 
+    
+Verify Horizontal Scrollbar Exists
+    [Arguments]    ${outer element}    ${inner element}
+    ${width out}    ${height out} =    Get Element Size    ${outer element}
+    ${width in}     ${height in} =    Get Element Size    ${inner element}
+    Should Be True    ${width out} < ${width in}    
+    

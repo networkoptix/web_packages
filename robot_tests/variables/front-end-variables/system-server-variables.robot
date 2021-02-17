@@ -36,15 +36,20 @@ ${CS MODAL CONTACT}                 ${CHANGE ANALYTICS MODAL}//p[contains(text()
 ${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a 
 
 ${STORAGE LOCATIONS BLOCK}          //nx-block/div[contains(@class, "storage-info")]
+${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE LOCATIONS BLOCK}//div[contains(@class, "placeholder-preloader")]
+${STORAGE NOT ABLE TO LOAD}         //span[contains(text(), "${NOT ABLE TO LOAD STORAGE TEXT}")]
 ${STORAGE INFO BUTTON}              ${STORAGE LOCATIONS BLOCK}//header//button/span[contains(text(), "${DETAILED INFO TEXT}")]/..
 ${STORAGE LOCATIONS TABLE}          ${STORAGE LOCATIONS BLOCK}//nx-section//form[@name="storageSettings"]
-${STORAGE RESERVED MODE}            ${STORAGE LOCATIONS TABLE}//tbody/tr/td[2]/div[contains(@class, "disabled-label")]/span[contains(text(), "${RESERVED}")]
-${STORAGE INACCESSIBLE MODE}        ${STORAGE LOCATIONS TABLE}//tbody/tr/td[2]/div[contains(@class, "disabled-label")]/span[contains(text(), "${INACCESSIBLE}")]
-${STORAGE CHANGING MODE}            ${STORAGE LOCATIONS TABLE}//tbody/tr/td[2]/div[contains(@class, "disabled-label")]/span[contains(text(), "${CHANGING}")]
+${STORAGE RESERVED MODE}            //span[contains(text(), "${RESERVED}")]
+${STORAGE INACCESSIBLE MODE}        ${STORAGE LOCATIONS TABLE}//div[contains(@class, "disabled-label")]/span[contains(text(), "${INACCESSIBLE}")]
+${STORAGE CHANGING MODE}            ${STORAGE LOCATIONS TABLE}//div[contains(@class, "disabled-label")]/span[contains(text(), "${CHANGING}")]
 ${STORAGE DROPDOWN}                 ${STORAGE LOCATIONS TABLE}//tbody/tr/td[2]//nx-select
-${STORAGE MAIN MODE}                ${STORAGE DROPDOWN}//span[contains(text(), "${MAIN}")]
-${STORAGE BACKUP MODE}              ${STORAGE DROPDOWN}//span[contains(text(), "${BACKUP}")]
-${STORAGE NOT IN USE MODE}          ${STORAGE DROPDOWN}//span[contains(text(), "${NOT IN USE}")]
+${STORAGE MAIN MODE}                //span[contains(text(), "${MAIN}")]
+${STORAGE BACKUP MODE}              //span[contains(text(), "${BACKUP}")]
+${STORAGE NOT IN USE MODE}          //span[contains(text(), "${NOT IN USE}")]
+${STORAGE BACKUP MODE DISABLED}     //span[contains(text(), "${BACKUP}") and @class="disabled"]
+${STORAGE NOT IN USE MODE DISABLED}  //span[contains(text(), "${NOT IN USE}") and @class="disabled"]
+${STORAGE MODE LINE}                //span[contains(text(), "${BACKUP}")]/ancestor::li/following-sibling::li/hr
 ${STORAGE MAIN MENU ITEM}           ${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li//span[contains(text(), "${MAIN}")]/parent::a
 ${STORAGE BACKUP MENU ITEM}         ${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li//span[contains(text(), "${BACKUP}")]/parent::a
 ${STORAGE NOT IN USE MENU ITEM}     ${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li//span[contains(text(), "${NOT IN USE}")]/parent::a
@@ -52,6 +57,31 @@ ${STORAGE SYSTEM TOOLTIP}           //ngb-tooltip-window//div[contains(text(), "
 ${STORAGE NONSYSTEM TOOLTIP}        //ngb-tooltip-window//div[contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE LOCATIONS FIRST ROW}      ${STORAGE LOCATIONS TABLE}//tbody//tr[2]
 ${STORAGE LOCATIONS FIRST SPACE}    ${STORAGE LOCATIONS FIRST ROW}/td[3]/nx-storage-size-component/div[@class="container"]
+${STORAGE ITEM}                     //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
+${STORAGE DISK 0}                   //span[contains(text(), "disk0") and @class="ellipsis"] 
+${STORAGE DISK 1}                   //span[contains(text(), "disk1") and @class="ellipsis"]
+${STORAGE DISK 2}                   //span[contains(text(), "disk2") and @class="ellipsis"]
+${STORAGE DISK 3}                   //span[contains(text(), "disk3") and @class="ellipsis"]
+${STORAGE DISK 4}                   //span[contains(text(), "disk4") and @class="ellipsis"]
+${STORAGE DISK INVALID}             //span[contains(text(), "invalid") and @class="ellipsis"]
+${STORAGE DISABLED INACCESSIBLE}    ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]/following-sibling::td/div[contains(text(), "${INACCESSIBLE}")]
+${STORAGE DISABLED NOT IN USE}      ${STORAGE DISK 2}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE NOT IN USE MODE}
+${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE RESERVED MODE}
+${STORAGE ENABLED MAIN}             ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+${STORAGE ENABLED BACKUP}           ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
+${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED NOT IN USE ICON}  ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED INACCESSIBLE ICON}  ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED RESERVED ADDRESS}  ${STORAGE DISK 3}
+${STORAGE DISABLED NOT IN USE ADDRESS}  ${STORAGE DISK 2}
+${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
+${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
+${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/info.svg"]
+${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
+${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
+${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
+${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]
