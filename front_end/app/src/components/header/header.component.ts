@@ -522,7 +522,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             !this.active.ipvd;
     }
 
-    filterBreadcrumbs(nodes) {
+    filterBreadcrumbs([_, ...nodes] = []) {
         return (nodes || []).filter(({ url }) => url);
     }
 

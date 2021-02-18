@@ -308,7 +308,6 @@ export class NxApplyService {
         if (form) {
             this.setForm(form);
         }
-        this.watchers = undefined;
         this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent> this.applyComponentRef.instance).show = !!value;
