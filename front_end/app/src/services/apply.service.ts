@@ -4,11 +4,10 @@ import {
 }                                    from '@angular/core';
 import { NgForm }                    from '@angular/forms';
 import {
-    BehaviorSubject, merge, Subscription
+    BehaviorSubject, Subject, combineLatest as combineLatestFrom
 }                                    from 'rxjs';
 import {
-    distinctUntilChanged, filter, skip,
-    combineLatest
+    distinctUntilChanged, combineLatest, map, startWith, takeUntil
 }                                    from 'rxjs/operators';
 import { NxApplyComponent }          from '@components/apply/apply.component';
 import { Process, NxProcessService } from './process.service';
@@ -179,20 +178,19 @@ export class FormWatcher {
  */
 export class NxApplyService {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyComponentInstance: NxApplyComponent
     private applyFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
     private submitFunctions = [];
     private discardFunctions = [];
     private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
-    private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
-    private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
-    private watchersSubscription: Subscription;
 
+    private updatedWatchers$ = new Subject<string>()
     applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
@@ -203,11 +201,11 @@ export class NxApplyService {
     ) {}
 
     get locked() {
-        return this.lockedSubject.getValue();
+        return !!this.applyComponentInstance?.show;
     }
 
     set locked(value) {
-        this.lockedSubject.next(value);
+        this.applyComponentInstance.show = value;
     }
 
     /**
@@ -282,7 +280,6 @@ export class NxApplyService {
         onlyShowSectionWatchers = false
     ) {
         this.nonSystem$.next(nonSystem);
-        this.clearSubscriptions();
         this.component = component;
 
         this.createComponent(onlyShowSectionWatchers);
@@ -309,9 +306,7 @@ export class NxApplyService {
             this.setForm(form);
         }
         this.addWatchers(watchers);
-        this.lockedSubscription = this.lockedSubject.subscribe((value) => {
-            (<NxApplyComponent> this.applyComponentRef.instance).show = !!value;
-        });
+        this.applyComponentInstance = (<NxApplyComponent> this.applyComponentRef.instance);
         setTimeout(() => {
             (<NxApplyComponent> this.applyComponentRef.instance).ready = true;
         }, 0);
@@ -478,15 +473,6 @@ export class NxApplyService {
         });
     }
 
-    private clearSubscriptions() {
-        if (this.lockedSubscription) {
-            this.lockedSubscription.unsubscribe();
-        }
-        if (this.watchersSubscription) {
-            this.watchersSubscription.unsubscribe();
-        }
-    }
-
     private createComponent(onlyShowSectionWatchers = false) {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
@@ -532,20 +518,23 @@ export class NxApplyService {
      * @param watchers
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
+        this.updatedWatchers$.next('update');
         this.watchers = [...watchers, ...(this.watchers || [])];
-        this.watchersSubscription?.unsubscribe?.();
-        this.watchersSubscription = merge(...watchers.map(watcher => {
-            return watcher.valueSubject.pipe(
-                distinctUntilChanged(),
-                filter((watcher) => watcher !== undefined),
-                skip(1)
-            );
-        })).subscribe(changedWatcher => {
-            if (changedWatcher.changed) {
-                this.touched();
-            } else {
-                this.locked = watchers.some((watcher) => watcher.changed);
-            }
+        const changedWatchers$ = Object.values(
+            this.watchers
+        ).map(({
+            valueSubject, originalValue
+        }) => valueSubject.pipe(
+            map(current => current !== originalValue),
+            startWith(false)
+        ));
+        combineLatestFrom(
+            changedWatchers$
+        ).pipe(
+            map(changedArray => changedArray.some(changed => changed)),
+            takeUntil(this.updatedWatchers$)
+        ).subscribe(changed => {
+            this.locked = changed;
         });
     }
 
