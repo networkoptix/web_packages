@@ -176,7 +176,7 @@ Verify Storages
     Verify on Servers Page    timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
-    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number} 
     Log Out
     Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG      console=${console}  
@@ -186,16 +186,16 @@ Turn on Recording
     Log in to user and system    ${owner}     ${system}
     Go To Cameras
     Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}   
-    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Toggle Recording
-    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Verify Recording Options are Visible
     Click Element    ${RECORD ALWAYS RADIO BUTTON}/..   
     Wait Until Element is Visible    ${SAVE BUTTON}
-    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Click Button    ${SAVE BUTTON}
     Sleep    2
-    Run Keyword If    '${console} == 'yes'    Capture Page Screenshot
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Log Out
     Log    recording turned on ..... | PASS |    DEBUG      console=${console}  
 
