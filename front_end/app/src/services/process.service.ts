@@ -79,8 +79,8 @@ export class Process {
         if (this.canceled) return;
         const data = await res;
         const error = this.cloudApiService.checkResponseHasError(data);
-        if (error) {
-            this.errorHelper(error);
+        if (error || data?.error) {
+            this.errorHelper(error || data);
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
@@ -248,7 +248,7 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
         (error?.resultCode) ||
         (error?.type === 'error' &&
         'networkConnection') ||
-        error;
+        error?.errorText || error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();
     }
