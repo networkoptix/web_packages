@@ -174,6 +174,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             const padding: sizes = sizes.SM;
             const nodes = !!headerService.currentLocation.parentNode?.nodes;
             const breadcrumbs = this.filterBreadcrumbs(headerService.currentLocation?.breadcrumbs);
+            console.log(breadcrumbs)
             const hiddenBreadcrumbsButtonSize = 40;
 
             // Used to keep track of element total widths at different states of updating the view states
@@ -522,7 +523,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             !this.active.ipvd;
     }
 
-    filterBreadcrumbs(nodes) {
+    filterBreadcrumbs([_, ...nodes] = []) {
         return (nodes || []).filter(({ url }) => url);
     }
 
