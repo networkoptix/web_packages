@@ -1,0 +1,46 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<form #resetPasswordForm="ngForm" name="resetPasswordForm">
+    <header>
+        <h3>{{LANG.authorize.passResetHeader()}}</h3>
+    </header>
+    <main>
+        <svg-icon nx-add-svg-src *ngIf="confirm"
+            [src]="CONFIG.icons.dir + 'mail.svg'" 
+            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [applyClass]="true"></svg-icon>
+        <ng-container *ngIf="!confirm; else resetConfirm">
+            <label for="authorizeEmail" translate>Email</label>
+            <input
+                type="email"
+                id="resetPasswordEmail"
+                name="resetPasswordEmail"
+                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) }"
+                [(ngModel)]="resetEmail"
+                #email="ngModel"
+                autocomplete="email"
+                required
+                nxFocusMe>
+            <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
+                <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
+                <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
+                <p *ngIf="email.errors.accountDoesNotExist" class="error-label" translate>Account does not exist.</p>
+            </ng-container>
+        </ng-container>
+        <ng-template #resetConfirm>
+            <h3 translate>We've sent you an email</h3>
+            <p translate>Please follow instructions there to reset your password and return here to log in again.</p>
+        </ng-template>
+    </main>
+    <footer>
+        <button class="btn svg-icon" type="button">
+            <!-- (click)="goBack()"  -->
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <span translate>Back</span>
+        </button>
+        <nx-process-button
+            [clickFn]="!confirm && sendEmail"
+            buttonText="{{ (confirm ? 'Log In' : 'Reset Password') | translate }}"
+            [process]="confirm ? loginProcess : resetRequestProcess">
+        </nx-process-button>
+    </footer>
+</form>

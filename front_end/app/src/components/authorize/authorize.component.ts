@@ -45,6 +45,8 @@ export enum AuthorizeState {
     create = 'createAccount',
     activate = 'activateAccount',
     confirm = 'confirmation',
+    request = 'resetPasswordRequest',
+    reset = 'resetPassword',
     error = 'error'
 };
 
@@ -74,20 +76,23 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     content: any = {};
     footerItems: { name: string, url: string }[];
 
+    // shared
     currentState: string;
     clientType: ClientType;
     windowWideEnough = true;
     initialData: AuthorizeParams;
-
     checkEmailProcess: Process;
 
+    // email
     loginEmail: string;
     emailErrorCode: string;
 
+    // password
     loginProcess: Process;
     loginPassword: string;
     passwordErrorCode: string;
 
+    // create account
     existingEmail: string;
     createProcess: Process;
     accountInfo: {
@@ -99,8 +104,23 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     createErrorCode: [inputType: string, errorCode: string];
 
+    // activated
     activated$ = new BehaviorSubject<boolean>(false);
     fromEmail$ = new BehaviorSubject<boolean>(false);
+
+    // password reset request
+    confirmRequest: boolean;
+    resetPasswordEmail: string;
+    loginPostPasswordResetProcess: Process;
+    resetRequestProcess: Process;
+    resetRequestErrorCode: string;
+
+    // reset password
+    confirmReset: boolean;
+    resetPassword: string;
+    resetPasswordCode: string;
+    loginPostNewPasswordProcess: Process;
+    resetPasswordProcess: Process;
 
     constructor(
         configService: NxConfigService,
@@ -127,6 +147,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        // should save email to local storage on login
         this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter;
         this.initProcesses();
         this.route.queryParams.subscribe((params: any) => {
@@ -134,6 +155,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
             this.currentState = AuthorizeState.email;
             this.setupComponents();
+
+            // for reset password
+            this.resetPasswordCode = this.route.snapshot.params.code;
+            if (this.resetPasswordCode) {
+                this.resetPasswordEmail = atob(this.resetPasswordCode).split(':')[1];
+                this.currentState = AuthorizeState.reset;
+            }
         });
     }
 
@@ -171,29 +199,65 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
         // use factory if account properties are not needed outside of the create component
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
-        this.createProcess = this.processService.createProcess(() => {
-            return this.cloudService.registerUser(
+        this.createProcess = this.processService.createProcess(
+            () => this.cloudService.registerUser(
                 this.accountInfo.email,
                 this.accountInfo.password,
                 this.accountInfo.firstName,
                 this.accountInfo.lastName,
-                undefined); // code, not needed right now
-        }, { ignoreError: true },
-        res => {
-            if (res.resultCode === 'alreadyExists') {
-                this.createErrorCode = ['email', 'alreadyExists'];
-            } else if (res.resultCode === 'portalError') {
-                // how to handle this? errorText: 'User is not in portal'
-            } else {
-                // if we support code in the future, so that account can be activated upon registration
-                // then res.activated === true
-                this.currentState = AuthorizeState.activate;
+                undefined) // code, not needed right now
+            , { ignoreError: true },
+            res => {
+                if (res.resultCode === 'alreadyExists') {
+                    this.createErrorCode = ['email', 'alreadyExists'];
+                } else if (res.resultCode === 'portalError') {
+                    // how to handle this? errorText: 'User is not in portal'
+                } else {
+                    // if we support code in the future, so that account can be activated upon registration
+                    // then res.activated === true
+                    this.currentState = AuthorizeState.activate;
+                }
+            },
+            err => {
+                if (err.resultCode === 'alreadyExists') {
+                    this.createErrorCode = ['email', 'alreadyExists'];
+                }
             }
-        },
-        err => {
-            if (err.resultCode === 'alreadyExists') {
-                this.createErrorCode = ['email', 'alreadyExists'];
+        );
+
+        this.resetRequestProcess = this.processService.createProcess(
+            () => this.cloudService.restorePasswordRequest(this.resetPasswordEmail),
+            { ignoreError: true },
+            () => {
+                this.confirmRequest = true;
+            },
+            err => {
+                this.resetRequestErrorCode = 'accountDoesNotExist';
+                console.error('err in reset request process', err);
             }
+        );
+
+        this.loginPostPasswordResetProcess = this.processService.createProcess(() => {
+            this.loginEmail = this.resetPasswordEmail;
+            this.currentState = AuthorizeState.password;
+            return Promise.resolve();
+        });
+
+        this.resetPasswordProcess = this.processService.createProcess(
+            () => this.cloudService.restorePassword(this.resetPasswordCode, this.resetPassword),
+            { ignoreError: true },
+            () => {
+                this.confirmReset = true;
+            },
+            err => console.error(err)
+        );
+
+        this.loginPostNewPasswordProcess = this.processService.createProcess(() => {
+            this.loginPassword = this.resetPassword;
+            this.loginEmail = this.resetPasswordEmail; // || localStorage.email
+            // get email from local storage
+            this.currentState = AuthorizeState.password;
+            return Promise.resolve();
         });
     }
 

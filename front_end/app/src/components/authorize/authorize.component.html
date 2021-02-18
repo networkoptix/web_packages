@@ -33,6 +33,22 @@
         <nx-authorize-confirmation-component 
             *ngSwitchCase="AuthorizeState.confirm"
         ></nx-authorize-confirmation-component>
+        <nx-authorize-reset-request-component
+            *ngSwitchCase="AuthorizeState.request"
+            [confirm]="confirmRequest"
+            [(resetEmail)]="resetPasswordEmail"
+            [loginProcess]="loginPostPasswordRequestProcess"
+            [resetRequestProcess]="resetRequestProcess"
+            [errorCode]="resetRequestErrorCode"
+        ></nx-authorize-reset-request-component>
+        <nx-authorize-reset-password-component
+            *ngSwitchCase="AuthorizeState.reset"
+            [confirm]="confirmReset"
+            [loginEmail]="resetPasswordEmail"
+            [(password)]="resetPassword"
+            [newPasswordProcess]="resetPasswordProcess"
+            [loginProcess]="loginPostNewPasswordProcess"
+        ></nx-authorize-reset-password-component>
 
     </div>
     <div *ngIf="windowWideEnough">

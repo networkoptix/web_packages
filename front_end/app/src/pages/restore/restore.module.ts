@@ -42,7 +42,7 @@ const appRoutes: Routes = [
     { path: 'restore_password', component: NxRestoreComponent, resolve: { uriParam: ParamResolver} },
     { path: 'restore_password/sent', component: NxRestoreComponent, resolve: { uriParam: SentResolver } },
     { path: 'restore_password/success', component: NxRestoreComponent, resolve: { uriParam: SuccessResolver } },
-    { path: 'restore_password/:code', component: NxRestoreComponent }
+    { path: 'restore_password/:code', redirectTo: 'authorize/:code' } // potentially temporary
 ];
 
 // TODO: Remove it after test
