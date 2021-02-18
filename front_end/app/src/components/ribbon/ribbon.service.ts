@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { RibbonAction }      from './ribbon.component';
 import { NxAppStateService } from '../../services/nx-app-state.service';
+import { NxHeaderService }   from '@services/nx-header.service';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
     text: string | Function;
@@ -21,7 +22,8 @@ export class NxRibbonService {
     contextSubject = new BehaviorSubject(this.context);
 
     constructor(
-        private appStateService: NxAppStateService
+        private appStateService: NxAppStateService,
+        private headerService: NxHeaderService
     ) {
     }
 
@@ -41,7 +43,7 @@ export class NxRibbonService {
             updateFunction
         };
         this.contextSubject.next(this.context);
-        this.appStateService.ribbonVisibility = true;
+        this.appStateService.ribbonVisibility = this.headerService.currentLocation.isSystem && this.headerService.currentLocation.path !== '/systems';
     }
 
     hide() {

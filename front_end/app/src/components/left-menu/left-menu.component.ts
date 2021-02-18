@@ -115,7 +115,7 @@ export class NxLeftMenuComponent {
         if (assetId) {
             timer(250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
                 this.prefetchedDocuments.push(state ? `${assetId}?state=${state}` : assetId);
-                this.handlePrefetch.emit({assetId, state});
+                this.handlePrefetch.emit({ assetId, state });
             });
         }
     }

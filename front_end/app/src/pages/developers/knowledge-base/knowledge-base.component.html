@@ -89,7 +89,8 @@
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
-        <nx-search [ngModel]="search"
+        <nx-search *ngIf="!previewAssetId" 
+            [ngModel]="search"
             (ngModelChange)="updateSearchQuery($event)"
             [placeholder]="'Knowledge Base Search' | translate"
             layout="compact"></nx-search>

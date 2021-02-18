@@ -4,7 +4,7 @@ import {
 import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
 import { WINDOW }                                               from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
-import {BehaviorSubject, combineLatest, EMPTY} from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, of }            from 'rxjs';
 import { switchMap, tap, delay, map, filter, startWith }        from 'rxjs/operators';
 
 import { NxConfigService, IConfig }     from '@services/nx-config';
@@ -40,6 +40,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     searchLoading = false;
     basePath = '';
     menuName = '';
+    previewAssetId: number;
     kbName = '';
     assetIds = [];
     pageNode: KnowledgeNode;
@@ -110,7 +111,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     };
 
     fetchSearchHandler({ query, page }) {
-        return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+        return !this.previewAssetId ? of({}) : this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -127,6 +128,9 @@ export class NxKnowledgeBaseComponent implements OnInit {
     }
 
     prefetchDocument({ assetId, state = null }) {
+        if (this.previewAssetId) {
+            return;
+        }
         this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, assetId, state).pipe(untilDestroyed(this)).subscribe();
     }
 
@@ -175,11 +179,15 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 this.basePath = snapshot.paramMap.get('name');
                 this.menuName = this.CONFIG.docMenuMap[this.basePath]?.[this.kbName];
                 if (!this.menuName) {
-                    const assetParam = snapshot.paramMap.get('level1');
+                    const assetParam = snapshot.paramMap.get('level1') || snapshot.paramMap.get('kb-name');
                     if (assetParam) {
                         const assetId = parseInt(assetParam.split('-')[0]);
                         if (Number.isInteger(assetId)) {
-                            this.findKBWithArticle(assetId, assetParam);
+                            if (snapshot.paramMap.get('level1')) {
+                                this.findKBWithArticle(assetId, assetParam);
+                            } else {
+                                this.previewAssetId = assetId;
+                            }
                         }
                     } else {
                         // Navigate to 404 and replace failing url so going history back will load requesting page
@@ -198,8 +206,8 @@ export class NxKnowledgeBaseComponent implements OnInit {
                 this.loading = true;
                 this.clearSearch();
                 const getFirstDoc = () => {
-                    const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): string => first.asset_id || traverseToFirst([...remaining, ...first.nodes]);
-                    return this.menusService.getMenu(this.menuName).pipe(
+                    const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): string => !first ? '' : first.asset_id || traverseToFirst([...remaining, ...first.nodes]);
+                    return this.menusService.getMenu(this.menuName || '').pipe(
                         tap(menu => {
                             if (!this.assetIds.length) {
                                 const getAllIds = (nodes: MenuNode[]) => {
@@ -224,7 +232,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
                         if (assetParam) {
                             assetId = parseInt(assetParam.split('-')[0]);
                         }
-                        this.assetId$.next(assetId || this.headerService.currentLocation.assetId || firstAsset);
+                        this.assetId$.next(assetId || this.headerService.currentLocation.assetId || firstAsset || this.previewAssetId);
                         this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
                         const state = this.route.snapshot.queryParamMap.get('state');
                         if (!state && assetId && !this.assetIds.includes(assetId)) {
@@ -240,7 +248,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
                                             this.assetId$.value,
                                             contentHTML,
                                             CardClasses.NORMAL,
-                                            blocks.map(({contentHTML, title, type}) => {
+                                            (blocks || []).map(({contentHTML, title, type}) => {
                                                 return KnowledgeNode.normalHeader(
                                                     title,
                                                     '',

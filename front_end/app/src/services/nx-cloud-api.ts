@@ -375,7 +375,7 @@ export class NxCloudApiService {
     }
 
     getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
-        let endpoint = `/${type}/${name}`;
+        let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             const urlAppend = assetIdOrSearchObject ? `/${assetIdOrSearchObject}` : '';
@@ -389,7 +389,7 @@ export class NxCloudApiService {
             params = params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }
         if (state) {
-            params = params.set('state', state);
+            params = params.set('state', state.replace('pending', 'review'));
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
