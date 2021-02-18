@@ -126,14 +126,16 @@ export class AddStorageModalContent {
                     this.passwordChecked = true;
                     this.loginPasswordWrong = true;
                 } else {
-                    let message = this.LANG.storage.failed();
+                    let message;
                     if (err?.message === 'WrongPath') {
                         this.getControls('url').setErrors({ wrongPath: true });
                     } else {
                         message = this.LANG.storage.serverOffline();
                         this.storageForm.reset();
                     }
-                    this.toastService.show(message, options);
+                    if (message) {
+                        this.toastService.show(message, options);
+                    }
                     this.addStorage.processing = false;
                 }
             }
