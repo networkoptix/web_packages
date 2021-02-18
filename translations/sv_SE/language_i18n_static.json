@@ -230,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Flytta molnlagring",
-                "success": "Storage successfully moved",
+                "success": "Lagringen har flyttats",
                 "errorPrefix": "Fel vid flyttning av molnlagring",
                 "notFound": "Lagring hittades inte. Lagring kan ha flyttats eller raderats av en annan användare",
                 "status": {
@@ -246,10 +246,10 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Om du tänkte flytta analysdata till en annan lagringsplats, vänligen kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> innan du fortsätter."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "Kontrollerar...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
@@ -549,7 +549,7 @@
         "download": "Ladda ner %VMS_NAME%",
         "downloadPlatform": "Hämta %VMS_NAME% för ",
         "failedToAccessSystem": "Misslyckades med att komma åt system",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% Integrationer",
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
         "register": "Skapa konto i",
@@ -565,7 +565,7 @@
         "apiTool": "API testing tool"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
         "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
@@ -737,7 +737,7 @@
         "unavailable": "inte tillgänglig"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Failed to change {type} name",
         "system": {
             "deleted": {
@@ -790,7 +790,7 @@
             "error": "Fel",
             "expired": "Har förfallit",
             "ok": "OK",
-            "nvrError": "NVR Error",
+            "nvrError": "NVR fel",
             "serverNotFound": "Servern hittades inte"
         },
         "messages": {
