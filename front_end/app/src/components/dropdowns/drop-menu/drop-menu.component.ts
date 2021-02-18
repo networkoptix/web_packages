@@ -27,7 +27,7 @@ export class NxDropMenu extends BaseDropdown {
     columns$ = new BehaviorSubject(4);
     systems$ = new BehaviorSubject([]);
     additionalSystems$ = new BehaviorSubject(0);
-    columnWidth = 240;
+    columnWidth = 236;
 
     systemCounter: number;
     active = {
