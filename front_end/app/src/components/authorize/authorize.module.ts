@@ -1,10 +1,13 @@
-import { NgModule }                  from '@angular/core';
-import { CommonModule }              from '@angular/common';
-import { RouterModule, Routes }      from '@angular/router';
-import { AngularSvgIconModule }           from 'angular-svg-icon';
-import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }           from '@ngx-translate/core';
-import { ComponentsModule }          from '@components/components.module';
+import { NgModule }             from '@angular/core';
+import { CommonModule }         from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }      from '@ngx-translate/core';
+import { ComponentsModule }     from '@components/components.module';
+import {
+    ReactiveFormsModule, FormsModule
+}                               from '@angular/forms';
 // import {
 //     ApplyGuard, AuthGuard, SystemGuard
 // }                                    from '../../../routeGuards';
@@ -15,14 +18,16 @@ import { NxAuthorizePasswordComponent } from './password/password.component';
 import { NxAuthorizeCreateAccountComponent } from './create-account/create-account.component';
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
+import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
 
 export const authorizedRoutes: Routes = [
     {
         path        : 'authorize',
         component   : NxAuthorizeComponent,
         canActivate : []
-    }
+    },
+    { path: 'authorize/:code', component: NxAuthorizeComponent } // potentially temporary
 ];
 
 @NgModule({
@@ -42,7 +47,9 @@ export const authorizedRoutes: Routes = [
         NxAuthorizePasswordComponent,
         NxAuthorizeCreateAccountComponent,
         NxAuthorizeActivateAccountComponent,
-        NxAuthorizeConfirmationComponent
+        NxAuthorizeConfirmationComponent,
+        NxAuthorizeResetPasswordComponent,
+        NxAuthorizeResetRequestComponent
     ],
     exports: [
         NxAuthorizeComponent

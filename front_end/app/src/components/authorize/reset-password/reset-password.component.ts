@@ -1,0 +1,55 @@
+import {
+    Component, EventEmitter, Input, OnDestroy,
+    OnInit, Output, SimpleChanges, OnChanges, ViewChild
+}                       from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Process }                   from '@services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+
+@UntilDestroy({ checkProperties: true })
+@Component({
+    selector    : 'nx-authorize-reset-password-component',
+    templateUrl : 'reset-password.component.html',
+    styleUrls   : ['reset-password.component.scss']
+})
+export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnDestroy {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
+    @Input() loginEmail: string;
+    @Input() password: string;
+    @Output() passwordChange = new EventEmitter<string>();
+    hideErrors: boolean;
+    weakPassword: boolean;
+    @Input() confirm: boolean;
+    @Input() newPasswordProcess: Process;
+    @Input() loginProcess: Process;
+    // @Input() errorCode: string;
+    sendPassword: any;
+    // @ViewChild('resetForm', { static: false }) resetForm: HTMLFormElement;
+
+    constructor(
+        language: NxLanguageProviderService,
+        configService: NxConfigService
+    ) {
+        this.LANG = language.translations;
+        this.CONFIG = configService.getConfig();
+    }
+
+    ngOnInit(): void {
+        this.sendPassword = () => {
+            this.passwordChange.emit(this.password);
+        };
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // if (changes.errorCode) {
+        //     this.resetForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
+        // }
+    }
+
+    ngOnDestroy(): void {}
+}

@@ -31,7 +31,6 @@
                     <p class="mb-2" translate>Account does not exist.</p>
                     <p translate>You can create account with this email address or try to enter a different one.</p>
                 </ng-container>
-                <p *ngIf="email.errors.accountNotExistenceReset" class="error-label" translate>Account does not exist.</p>
                 <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
                 <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
             </ng-container>
