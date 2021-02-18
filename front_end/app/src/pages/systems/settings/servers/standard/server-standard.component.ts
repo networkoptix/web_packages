@@ -197,10 +197,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             new InfoBlockLine(this.LANG.common.os(), this.selectedServer.osName || '-'),
             new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
-        if (!this.applyService.locked) {
-            // TODO: This is triggering the apply service lock on server change. Need to find out why.
-            this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
-        }
+        this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
         this.checkIfOnline(this.parsedServerId).finally(() => {
             this.serverLoaded = true;
         });
