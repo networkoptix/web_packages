@@ -419,6 +419,8 @@
         "Connection timed out": "Le système <strong>{failedSystem}</strong> est hors ligne.",
         "Bad Gateway": "Le système <strong>{failedSystem}</strong> est actuellement injoignable.<br>Réessayez dans quelques minutes ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>.",
         "INCOMPATIBLE": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers le {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
         "fail": "{failedSystem} est inaccessible.",

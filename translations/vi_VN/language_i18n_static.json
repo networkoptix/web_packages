@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Một máy chủ dường như được liệt kê chính nó dưới cả hệ thống được chọn và hệ thống hiện tại.</p><p>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi hệ thống và thử lại.</p>",
         "fail": "{failedSystem} is inaccessible.",

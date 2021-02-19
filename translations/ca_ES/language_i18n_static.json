@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Aquest sistema està connectat a %CLOUD_NAME%, però té un propietari diferent. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Sembla que un servidor s'enumera tant al sistema seleccionat com al sistema actual.</p><p>Elimineu els servidors desconnectats i incompatibles de cada sistema i torneu-ho a intentar.</p>",
         "fail": "{failedSystem} is inaccessible.",

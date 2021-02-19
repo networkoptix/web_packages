@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
         "fail": "{failedSystem} is inaccessible.",

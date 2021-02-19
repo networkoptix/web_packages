@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
         "fail": "{failedSystem} is inaccessible.",

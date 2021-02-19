@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
         "fail": "{failedSystem} is inaccessible.",

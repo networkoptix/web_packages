@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Konto skapat",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Bekräftelsemeddelande med aktiveringslänken skickas till {email}"
             },
             "activated": {
                 "title": "Kontot har aktiverats"
@@ -129,7 +129,7 @@
             "unauthorized": "Autentisering krävs"
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
-        "login": "login",
+        "login": "logga in",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
         "disableMotionWarning": "Inspelningsläget ändras till \"Spela alltid in\"",
         "recordingModes": {
@@ -147,7 +147,7 @@
         },
         "general": "Allmänt",
         "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} fler integrationer...} one{#{endTag} mer integration...} other{#{endTag} fler integrationer...}}",
         "searchCamPlaceholder": "Sök",
         "system": "system",
         "systemHasNoCameras": "Inga kameror",
@@ -204,8 +204,8 @@
             "title": "Molnlagring",
             "enableStorage": "Aktivera molnlagring",
             "otherSystem": "Andra system...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "Vi erbjuder {compCapacity} gratis molnlagring per system för att komma igång.",
+            "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbordsklienten {vmsName}.",
             "camera": "kamera",
             "cameras": "kameror",
             "usageLabels": {
@@ -419,6 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -562,12 +564,12 @@
         "systems": "System",
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visa kameror",
-        "apiTool": "API testing tool"
+        "apiTool": "API-testverktyg"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrationSetup": "Installationsinstruktioner för {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} för {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "för vanligt",
@@ -590,11 +592,11 @@
             "message": "Se till att dina servrar är online och försök igen."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Detta system slås samman till {systemName}.",
             "message": {
                 "dependingOnSize": "Beroende på databasens storlek kan det ta upp till flera timmar.",
                 "untilFinished": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "När sammanslagningen är klar blir alla användare och kameror från detta system tillgängliga i {systemName} systemet och detta system kommer att raderas."
             }
         },
         "server": {
@@ -604,7 +606,7 @@
     },
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Du hittar {INTEGRATION_COMPANY} sekretesspolicy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">här</a>. %COMPANY_NAME% sekretesspolicyn, som innehåller instruktioner om hur du återkallar ditt samtycke, finns tillgänglig <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a>.",
         "ipvd": "Genom att skicka detta formulär samtycker du till att kontakta dig av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke."
     },
     "registration": {
@@ -617,8 +619,8 @@
         },
         "finishingMerge": "Slutför sammanslagningen av system",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Godkänn",
+            "reject": "Avvisa",
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
             "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen."
         },
@@ -632,28 +634,28 @@
         "analyticsSelected": "analyshändelse",
         "filter applied": "filter används",
         "filters applied": "filter används",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filter} one{# filter} other{# filter}} tillämpas",
         "hardwareType": "Typ",
         "hardwareTypes": "Typer",
         "minResolution": "Minsta upplösning",
         "search_ipvd": "Sök efter modell eller tillverkare",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
         "vendor": "Tillverkare",
         "vendors": "Tillverkare"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",
+        "autoRefresh": "automatisk uppdatering i {time}...",
         "beginDetach": "Servern frånkopplas nu",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Servern återställer nu.",
         "detachSystemFailed": "Det gick inte att ta bort servern från systemet. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
         "detachSystemSuccess": "Servern kopplades bort från systemet.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
+        "refresh": "Uppdatera",
+        "refreshing": "Uppdaterar...",
         "removeMediaserverFailed": "Det gick inte att ta bort servern från systemet.",
         "resetFailed": "Det gick inte att återställa servern. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Server {serverName} har återställts till standardvärden.",
         "restartFailed": "Det gick inte att starta om servern.",
         "restartSuccessful": "Servern har startat om.",
         "serverOffline": "Servern är offline.",
@@ -661,13 +663,13 @@
         "status": {
             "checking": "kontrollerar...",
             "offline": "frånkopplad",
-            "resetting": "resetting...",
+            "resetting": "återställer...",
             "restarting": "startar om..."
         },
         "successRename": "Servernamn sparat."
     },
     "system": {
-        "connected": "Connected",
+        "connected": "Ansluten",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Okänt namn för system (orsakad av molnsammanslagning)",

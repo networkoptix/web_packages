@@ -55,7 +55,7 @@
     "LOGIN OR PASSWORD INCORRECT TEXT": "Inloggning eller lösenord är felaktigt",
     "FAILED TO ADD STORAGE TEXT": "Det gick inte att lägga till extern lagring",
     "STATE TEXT": "Läge",
-    "NOT ABLE TO LOAD STORAGE TEXT": "Not able to load storage information.",
+    "NOT ABLE TO LOAD STORAGE TEXT": "Kan inte ladda lagringsinformation.",
     "RESERVED": "Reserverad",
     "INACCESSIBLE": "Otillgänglig",
     "CHANGING": "Byter läge...",
