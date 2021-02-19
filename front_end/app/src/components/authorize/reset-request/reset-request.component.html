@@ -5,8 +5,8 @@
     </header>
     <main>
         <svg-icon nx-add-svg-src *ngIf="confirm"
-            [src]="CONFIG.icons.dir + 'mail.svg'" 
-            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'mail.svg'" 
+            [svgStyle]="{'width.px': 320, 'height.px': 80}"
             [applyClass]="true"></svg-icon>
         <ng-container *ngIf="!confirm; else resetConfirm">
             <label for="authorizeEmail" translate>Email</label>
@@ -34,7 +34,10 @@
     <footer>
         <button class="btn svg-icon" type="button">
             <!-- (click)="goBack()"  -->
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': 24, 'height.px': 20}"
+                [applyClass]="true"></svg-icon>
             <span translate>Back</span>
         </button>
         <nx-process-button
