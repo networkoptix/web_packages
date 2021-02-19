@@ -26,6 +26,7 @@ import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import {
     InfoBlockLine, InfoBlockSection, InfoBlockColumns
 }                                    from '../../../../components/info-block/info-block.component';
+import { NxUtilsService }            from '../../../../services/utils.service';
 
 @Component({
     selector    : 'nx-cameras-component',
@@ -611,10 +612,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // in case we turn it off or revert the value before we apply the changes
-        if (this.recordingWatcher.originalValue && !switchValue || !this.recording && this.recordingWatcher.originalValue && switchValue) {
-            this.recording = !this.recording;
-        }
+        this.recording = switchValue;
     }
 
     toggleMode({ name: toggledName, enabled }) {
