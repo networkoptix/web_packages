@@ -9,6 +9,8 @@ import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 import { NxSessionService }         from './session.service';
 import { LocalStorageService }      from 'ngx-webstorage';
 import { WINDOW }                   from './window-provider';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { Router } from '@angular/router';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -26,6 +28,8 @@ export class NxLanguageProviderService {
         private cloudApiService: NxCloudApiService,
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
+        private cacheService: NxUriCacheService,
+        private router: Router,
         @Inject(WINDOW) private window: Window
     ) {
         if (environment.isLocal) {
@@ -124,6 +128,12 @@ export class NxLanguageProviderService {
         this.sessionService.language = language;
         this.loadLanguage().then(translation => {
             this.setTranslations(language, translation);
+        });
+        this.cacheService.cachedData.clear();
+        // Reload current component
+        const currentUrl = this.router.url;
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
+            this.router.navigateByUrl(currentUrl);
         });
     }
 }

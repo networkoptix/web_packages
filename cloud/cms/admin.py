@@ -6,7 +6,7 @@ from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
-from django.db.models import F, Q, Case, When, Value, BooleanField
+from django.db.models import F, Q, Case, When, Value, BooleanField, Max
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse, path
@@ -414,7 +414,8 @@ class AssetAdmin(CMSAdmin):
         if new and obj.asset_type.type == AssetType.ASSET_TYPES.documentation:
             menu = form.cleaned_data.get('menu', None)
             if menu:
-                MenuNode.objects.create(name=obj.name, parent_menu=menu, asset=obj)
+                order = (menu.nodes.aggregate(Max('order'))['order__max'] or 0) + 1
+                MenuNode.objects.create(name=obj.name, parent_menu=menu, asset=obj, order=order)
 
     def get_readonly_fields(self, request, obj=None):
         if obj and not request.user.is_superuser:
@@ -458,7 +459,7 @@ class AssetAdmin(CMSAdmin):
                 name='change_page'),
             url(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
         ]
-    
+
         return my_urls + urls
 
     def response_change(self, request, obj):
@@ -931,7 +932,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
             self.loaded_config = json.loads(self.admin_config)
         except JSONDecodeError:
             self.loaded_config = json.loads(default_config)
-        
+
         super().__init__(*args, **kwargs)
 
     def get_fieldsets(self, request, obj=None):

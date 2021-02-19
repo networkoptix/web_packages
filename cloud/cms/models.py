@@ -1808,7 +1808,7 @@ class MenuNode(models.Model):
                 node.condition, False)
             asset_accepted = not node.asset or node.asset.version_id(
                 customization.name) != 0
-            if enabled and asset_accepted or include_not_accepted:
+            if enabled and (asset_accepted or include_not_accepted):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
                         customization__name=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending).exists()

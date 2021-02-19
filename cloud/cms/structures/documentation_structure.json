@@ -25,7 +25,7 @@
             "type": "text",
             "optional": true,
             "advanced": true,
-            "unique": true,
+            "unique": false,
             "translatable": false,
             "meta": {
               "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
