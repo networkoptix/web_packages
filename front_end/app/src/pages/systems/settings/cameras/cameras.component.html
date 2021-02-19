@@ -45,7 +45,7 @@
                             id="editable-title"></h2>
                         </div>
                         <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
-                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20" alt="Edit icon image"/>
                         </div>
                         <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>
@@ -124,19 +124,19 @@
                     <div class="d-flex align-items-center">
                         <div>
                             <nx-switch
-                                [value]="recording"
+                                [checked]="recording"
                                 [label]="'Recording' | translate"
                                 componentId="recording"
                                 [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
-                                (click)="handleRecordingToggle()"></nx-switch>
-                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{
-                                'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
-                                'shake-hint': shakeHint
-                            }">{{
-                                availableLicenses > 0 ||  recordingWatcher.originalValue && availableLicenses === 0 ?
-                                ('1 professional license channel will be used' | translate)  :
-                                ('Professional license is required' | translate)
-                            }}</div>
+                                (onSwitch)="handleRecordingToggle($event)"></nx-switch>
+                            <div *ngIf="!recording && !recordingWatcher.originalValue" class="recording-hint"
+                                 [ngClass]="{
+                                        'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
+                                        'shake-hint': shakeHint
+                                }">{{ availableLicenses > 0 ?
+                                        ('1 professional license channel will be used' | translate)  :
+                                        ('Professional license is required' | translate)}}
+                            </div>
                         </div>
                     </div>
                 </header>
@@ -225,7 +225,12 @@
                             [initialMask]="motionMaskWatcher.value"></nx-motion-detection-overlay>
                     </div>
                 </div>
-                <div class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper" (contextmenu)="preventContext($event)">
+
+                <div *ngIf="isMobile" class="ml-3  mb-3 mr-3 sensitivity-hint" translate>
+                    This feature is not available on mobile devices.
+                </div>
+
+                <div *ngIf="!isMobile" class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper" (contextmenu)="preventContext($event)">
                     <span *ngIf="sensitivityButtons === false" class="sensitivity-hint" translate>Select some area on camera to change the sensitivity setting for it. Hold Shift key to make complex shape selection.</span>
                     <ng-container *ngIf="sensitivityButtons !== false">
                         <div class="btn-toolbar btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="sensitivityButtons">
