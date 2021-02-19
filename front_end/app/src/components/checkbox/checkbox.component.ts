@@ -46,7 +46,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
-    public value;
+    public value: any;
     public state: string;
 
     private touched: boolean;
@@ -58,9 +58,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         disabled  : 'disabled',
         undefined : 'tristate'
     };
-
-    state: string;
-    value: any;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
