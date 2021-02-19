@@ -26,7 +26,6 @@ import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
 import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
-import { NxUtilsService }            from '../../../../services/utils.service';
 import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
 import { NxUtilsService }            from '../../../../services/utils.service';
 
@@ -635,7 +634,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }, 500);
             return;
         }
-
+        // TODO: remove comment after task review
+        // this block changed in 20.1_hotfix to fix CLOUD-6788
+        // IF condition was removed as not necessary
         this.recording = switchValue;
     }
 
