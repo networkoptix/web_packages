@@ -6,13 +6,13 @@ import {
     tap, mergeMap
 }                                     from 'rxjs/operators';
 
-import { NxRibbonService }           from '../../components/ribbon';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxToastService }            from '../toast.service';
-import { NxApplyService }            from '../../services/apply.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxToastService }            from '@dialogs/toast.service';
+import { NxApplyService }            from '@services/apply.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-restart-server-content',

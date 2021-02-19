@@ -1,30 +1,26 @@
 import {
-    Component, OnInit, SimpleChanges, OnChanges,
-    OnDestroy, Input, Output, EventEmitter
+    Component, SimpleChanges, OnChanges, OnDestroy,
+    Input, Output, EventEmitter
 }                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import {
-    UntilDestroy, untilDestroyed
-}                                    from '@ngneat/until-destroy';
-import {
-    of, SubscriptionLike, Subject, Observable
-}                                                 from 'rxjs';
-import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
+import { ActivatedRoute }                from '@angular/router';
+import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+import { of, SubscriptionLike, Subject } from 'rxjs';
+import { catchError, filter }            from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
-}                                    from '../../../../../components/info-block/info-block.component';
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxMenuService }             from '../../../../../menu';
-import { ICamera, NxSystem }         from '../../../../../services/system.service';
-import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
-import { NxUtilsService }            from '../../../../../services/utils.service';
-import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+}                                    from '@components/info-block/info-block.component';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxApplyService, Watcher }   from '@services/apply.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxMenuService }             from '@src/menu';
+import { NxSystem }                  from '@services/system.service';
+import { NxUriService, ChildRoutes } from '@services/uri.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxToastService }            from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 interface DropdownStorage {
     name: string,
