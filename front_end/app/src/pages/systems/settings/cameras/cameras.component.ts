@@ -28,6 +28,7 @@ import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import { NxUtilsService }            from '../../../../services/utils.service';
 import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
+import { NxUtilsService }            from '../../../../services/utils.service';
 
 @UntilDestroy()
 @Component({
@@ -635,10 +636,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // in case we turn it off or revert the value before we apply the changes
-        if (this.recordingWatcher.originalValue && !switchValue || !this.recording && this.recordingWatcher.originalValue && switchValue) {
-            this.recording = !this.recording;
-        }
+        this.recording = switchValue;
     }
 
     toggleMode({ name: toggledName, enabled }) {
