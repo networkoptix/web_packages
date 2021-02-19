@@ -5,8 +5,8 @@
     </header>
     <main>
         <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dir + ((activated$ | async) ? 'checkmark' : 'mail') + '-placeholder.svg'" 
-            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [src]="CONFIG.icons.dirSectionPlaceholder + ((activated$ | async) ? 'success' : 'mail') + '_placeholder.svg'" 
+            [svgStyle]="{'width.px': 320, 'height.px': 80}"
             [applyClass]="true"></svg-icon>
         <h3>{{ (contentHeader$ | async) }}</h3>
         <div class="content-message" [innerHTML]="(contentMessage$ | async)"></div>
@@ -18,13 +18,17 @@
             </button>
             <button class="btn svg-icon" type="button">
                 <!-- (click)="goBack()"  -->
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [svgStyle]="{'width.px': 24, 'height.px': 20}"
+                    [applyClass]="true"></svg-icon>
                 <span translate>Back</span>
             </button>
         </ng-container>
         <nx-process-button
             [form]="activateAccountForm"
             [process]="(activated$ | async) ? loginProcess : checkActivationProcess"
+            [svg]="!(fromEmail$ | async) && { src: 'arrow_right', height: '24', width: '24', color: 'light1' }"
             buttonText="{{ ((fromEmail$ | async) ? 'Log In' : 'Next') | translate }}">
         </nx-process-button>
     </footer>

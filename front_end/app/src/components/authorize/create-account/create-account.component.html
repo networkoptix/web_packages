@@ -92,20 +92,24 @@
     <button class="btn svg-icon" type="button">
         <!-- (click)="login()" -->
         <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dir + 'door.svg'" 
+            [src]="CONFIG.icons.dir + 'login.svg'" 
             [svgStyle]="{'width.px': 24, 'height.px': 24}"
             [applyClass]="true"></svg-icon>
         <span translate>Log In</span>
     </button>
     <button class="btn svg-icon" type="button">
         <!-- (click)="goBack()"  -->
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+        <svg-icon nx-add-svg-src
+            [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+            [svgStyle]="{'width.px': 24, 'height.px': 20}"
+            [applyClass]="true"></svg-icon>
         <span translate>Back</span>
     </button>
     <nx-process-button
         [form]="createAccountForm"
         [clickFn]="onCreateSubmit"
         [process]="createAccountProcess"
+        [svg]="{ src: 'plus', height: '24', width: '24', color: 'light1' }"
         buttonText="{{ 'Create Account' | translate }}">
     </nx-process-button>
     <!-- [process]="createAccountFactory(accountInfo)" -->

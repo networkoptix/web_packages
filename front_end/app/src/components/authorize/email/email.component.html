@@ -2,8 +2,8 @@
 <form #emailForm="ngForm" name="emailForm">
     <header>
         <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dir + 'cloud-header.svg'" 
-            [svgStyle]="{'width.px': 24, 'height.px': 24}"
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header.svg'" 
+            [svgStyle]="{'width.px': 320, 'height.px': 80}"
             [applyClass]="true"></svg-icon>
         <h3>{{LANG.authorize.loginCloudHeader()}}</h3>
     </header>
@@ -70,7 +70,7 @@
             [clickFn]="sendEmail"
             [form]="emailForm"
             [process]="emailProcess"
-            [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }">
+            [svg]="{ src: 'arrow_right', height: '24', width: '24', color: 'light1' }">
         </nx-process-button>
     </footer>
 </form>
