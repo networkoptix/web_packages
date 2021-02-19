@@ -1,7 +1,7 @@
 import { ElementRef }       from '@angular/core';
 import {
-    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
-}                           from 'rxjs';
+    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject, of, EMPTY
+} from 'rxjs';
 import {
     switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
     startWith, tap, buffer, withLatestFrom, takeUntil, delay, merge as mergeOperator
@@ -35,7 +35,8 @@ export class MotionMaskRenderer {
         private motionMask: MotionMaskState,
         private sensitivityColors: string[],
         private unsub$: Subject<boolean>,
-        private sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>
+        private sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>,
+        private isMobile: boolean
     ) {
         this.matrixSubscription = this.motionMask.maskMatrix.pipe(takeUntil(this.unsub$)).subscribe(matrix => {
             const columns = matrix[0].length;
@@ -85,17 +86,14 @@ export class MotionMaskRenderer {
     private initInteractions(canvas: HTMLCanvasElement) {
         this.brandColor = getComputedStyle(canvas).color;
 
-        // Initialize base observables from events
-        const track = (eventName: string) =>
-            <Observable<MouseEvent>>fromEvent(canvas, eventName);
-        const [
-            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
-        ] = [
-            'mousedown', 'mouseup', 'mouseleave', 'mousemove'
-        ].map(track);
+        // Initialize base observables from events ... unless we're on mobile device (CLOUD-6752)
+        const track = (eventName: string) => this.isMobile ? EMPTY : <Observable<MouseEvent>>fromEvent(canvas, eventName);
+        const [mouseDown$, mouseUp$, mouseLeave$, mouseMove$] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
+
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
-            (event) => <Observable<KeyboardEvent>>fromEvent(window, event)
+            (event) => this.isMobile ? EMPTY : <Observable<KeyboardEvent>>fromEvent(window, event)
         );
+
         // Utility functions
         const findEventCoords = (event: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
@@ -106,6 +104,7 @@ export class MotionMaskRenderer {
                 y : Math.floor((event.clientY - rect.top) / cellActualHeight)
             };
         };
+
         const getAction = (buffer: any[]) => {
             buffer = buffer.filter(({ type }) => type !== null);
             const firstClick =

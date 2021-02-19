@@ -38,6 +38,7 @@ import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../c
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    isMobile: boolean;
 
     @ViewChild('fpsInput') fpsInput: ElementRef;
 
@@ -341,6 +342,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogService: NxDialogsService,
+        private utilsService: NxUtilsService,
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef
     ) {
@@ -352,6 +354,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
+
         this.routeParamsSubscription = this.route
             .params
             .pipe(untilDestroyed(this), distinctUntilChanged())
@@ -622,13 +626,17 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             : enabled);
     }
 
-    handleRecordingToggle() {
-        if (this.recordingWatcher.originalValue ? this.availableLicenses < 0 : this.availableLicenses <= 0) {
+    handleRecordingToggle(switchValue) {
+        if (!this.recording && this.recordingWatcher.originalValue ? this.availableLicenses < 0 : this.availableLicenses <= 0) {
             this.shakeHint = true;
             setTimeout(() => {
                 this.shakeHint = false;
             }, 500);
-        } else {
+            return;
+        }
+
+        // in case we turn it off or revert the value before we apply the changes
+        if (this.recordingWatcher.originalValue && !switchValue || !this.recording && this.recordingWatcher.originalValue && switchValue) {
             this.recording = !this.recording;
         }
     }
@@ -824,7 +832,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     lockGrid(lock: boolean) {
-        this.motionGridChangeWatcher.value = lock;
+        if (this.isMobile) {
+            this.motionGridChangeWatcher.value = lock;
+        }
     }
 }
 

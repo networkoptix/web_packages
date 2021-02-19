@@ -42,15 +42,19 @@ export class NxImageComponent implements OnChanges, OnDestroy {
 
     constructor() {
         this.show = false;
-        this.loaded.asObservable().subscribe(value => { this.show = value || !this.preloader; });
+        this.loaded.asObservable().subscribe(value => {
+            this.show = value || !this.preloader;
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const firstChange = Object.values(changes).reduce((noChanges, { firstChange }) => noChanges && firstChange, true);
-        if (!firstChange) {
-            this.show = false;
+        if (!(Object.keys(changes).length === 1 && changes.state)) {
+            const firstChange = Object.values(changes).reduce((noChanges, { firstChange }) => noChanges && firstChange, true);
+            if (!firstChange) {
+                this.show = false;
+            }
         }
-        if (this.state !== 'Online' && this.state !== 'Recording' && this.state !== 'Scheduled') {
+        if (changes.state && !['Online', 'Recording', 'Scheduled'].includes(changes.state.currentValue)) {
             this.url = '';
             this.loaded.emit(true);
         }
