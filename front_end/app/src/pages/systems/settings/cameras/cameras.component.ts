@@ -418,7 +418,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
-                                this.system.serverManager.initSystemMediaServers();
+                                this.system.serverManager.initSystemMediaServers().catch((_) => {});
                             }
                             if (!this.applyService.locked) this.setCamera();
                         }
@@ -617,8 +617,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     checkModeEnabled(id, enabled = this.motionEnabled) {
         return id === 'RT_Always' ||
         id === 'RT_Never' ||
-        (id === 'RT_MotionAndLowQuality'
-            ? this.selectedCamera.motionLowresEnabled
+        (id === 'RT_MetadataAndLowQuality'
+            ? this.selectedCamera.motionLowResEnabled
             : enabled);
     }
 
@@ -668,7 +668,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (updateModes) {
             this.recordingModes = this.recordingModes.map(({ name, id }) => {
                 const enabled = this.checkModeEnabled(id);
-                const value =  id === 'RT_MotionOnly' ? 2 : 0;
+                const value =  id === 'RT_MetadataOnly' ? 2 : 0;
                 return { name, id, enabled, value };
             });
         } else {

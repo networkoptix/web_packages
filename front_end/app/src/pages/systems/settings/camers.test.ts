@@ -70,13 +70,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -165,13 +165,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -292,13 +292,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -388,13 +388,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -475,13 +475,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -562,13 +562,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -649,13 +649,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -736,13 +736,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }
@@ -823,13 +823,13 @@ export default [
             },
             {
             "name": "motion",
-            "id": "RT_MotionOnly",
+            "id": "RT_MetadataOnly",
             "value": 0,
             "enabled": true
             },
             {
             "name": "motionLowRes",
-            "id": "RT_MotionAndLowQuality",
+            "id": "RT_MetadataAndLowQuality",
             "value": 0,
             "enabled": true
             }

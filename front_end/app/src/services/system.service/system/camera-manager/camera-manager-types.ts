@@ -22,7 +22,7 @@ export interface ICamera {
     groupName: string;
     id: string;
     licenseUsed: boolean;
-    motionLowresEnabled: boolean;
+    motionLowResEnabled: boolean;
     logicalId: string;
     mac: string;
     manuallyAdded: boolean;
@@ -91,7 +91,7 @@ export interface IRecordingModes {
     enabled: boolean;
 }
 
-export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_MotionAndLowQuality' | 'RT_Never';
+export type RecordingType = 'RT_Always' | 'RT_MetadataOnly' | 'RT_MetadataAndLowQuality' | 'RT_Never';
 
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';
 
