@@ -695,6 +695,11 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
 
+        if extra_context['customization_reviews'].count() > 1:
+            extra_context['show_accept_all'] = True
+        else:
+            extra_context['show_accept_all'] = False
+
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)

@@ -14,6 +14,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from queue import SimpleQueue
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
@@ -223,6 +224,47 @@ def accept_review(request):
 @require_http_methods(["POST"])
 @permission_required("cms.change_assetcustomizationreview")
 def review(request):
+    def publish_review(target_review, message=True):
+        customization = target_review.customization.name
+        target_review_id = target_review.id
+        customization_cache = MENU_CACHE[customization]
+        if customization_cache:
+            menus = {node.get_parent() for node in asset.nodes.all()}
+            if len(menus):
+                MENU_CACHE[customization] = None
+        if asset.is_cloud_portal:
+            if asset.can_preview_on_portal:
+                publishing_errors = modify_db.publish_latest_version(asset, target_review_id, request.user)
+                if publishing_errors:
+                    messages.error(request, f"Version {target_review.version.id} {publishing_errors}")
+                else:
+                    messages.success(request, f"Version {publishing_errors} has been published")
+            else:
+                messages.success(request, "Version {} has been published".format(target_review.version.id))
+            INTEGRATION_CACHE.clear_cache()
+        else:
+            modify_db.update_draft_state(target_review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
+            if message:
+                messages.success(request, f"Version {target_review.version.id} has been accepted")
+            if asset.is_documentation:
+                DOC_CACHE.clear_cache()
+
+    def review_generator(target_reviews):
+        queue = SimpleQueue()
+        list(map(queue.put, target_reviews))
+        blocked_marker = None
+        while not queue.empty():
+            next_review = queue.get()
+            next_review.refresh_from_db()
+            if next_review.state == AssetCustomizationReview.REVIEW_STATES.blocked:
+                queue.put(next_review)
+                if not blocked_marker:
+                    blocked_marker = next_review.id
+                elif blocked_marker == next_review.id:
+                    break
+            elif next_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
+                yield next_review
+
     review_id = request.POST.get('review_id')
     asset_review = AssetCustomizationReview.objects.filter(id=review_id).first()
 
@@ -233,9 +275,13 @@ def review(request):
     ask_question = "ask_question" in request.POST
     force_update = "force_update" in request.POST
     publish = "publish" in request.POST
+    publish_all = "publish_all" in request.POST
     reject = "reject" in request.POST
     revoke = "revoke" in request.POST
     can_publish = UserGroupsToAssetPermissions.check_customization_publish(request.user)
+    has_asset_type_permission = UserGroupsToAssetType.check_asset_type(
+        request.user, asset.asset_type, 'cms.publish_version'
+    )
 
     if force_update and UserGroupsToAssetPermissions.\
             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.force_update'):
@@ -246,28 +292,21 @@ def review(request):
         else:
             messages.error(request, "You cannot force update this asset")
 
-    elif publish and can_publish:
-        customization = asset_review.customization.name
-        customization_cache = MENU_CACHE[customization]
-        if customization_cache:
-            menus = {node.get_parent() for node in asset.nodes.all()}
-            if len(menus):
-                MENU_CACHE[customization] = None
-        if asset.is_cloud_portal:
-            if asset.can_preview_on_portal:
-                publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
-                if publishing_errors:
-                    messages.error(request, f"Version {asset_review.version.id} {publishing_errors}")
-                else:
-                    messages.success(request, f"Version {publishing_errors} has been published")
-            else:
-                messages.success(request, "Version {} has been published".format(asset_review.version.id))
-            INTEGRATION_CACHE.clear_cache()
-        else:
-            modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
-            messages.success(request, f"Version {asset_review.version.id} has been accepted")
-            if asset.is_documentation:
-                DOC_CACHE.clear_cache()
+    elif publish and can_publish and has_asset_type_permission:
+        publish_review(asset_review)
+
+    elif publish_all and can_publish and has_asset_type_permission:
+        reviews = asset_review.version.assetcustomizationreview_set. \
+            filter(customization__in=asset.customizations.all())
+        if not request.user.is_superuser:
+            reviews = reviews.filter(customization__name__in=request.user.customizations)
+        accepted = []
+        for target_review in review_generator(reviews):
+            if UserGroupsToAssetPermissions.check_customization_publish(request.user, customization=target_review.customization.name):
+                publish_review(target_review, message=False)
+                accepted.append(target_review.customization)
+        accepted_customization_portals = list(Asset.objects.filter(customizations__in=accepted, asset_type__type=AssetType.ASSET_TYPES.cloud_portal).values_list('name', flat=True))
+        messages.success(request, f"Version {asset_review.version.id} has been accepted for {', '.join(accepted_customization_portals)}")
 
     elif revoke and can_publish:
         if asset.is_cloud_portal and not asset.can_preview_on_portal:

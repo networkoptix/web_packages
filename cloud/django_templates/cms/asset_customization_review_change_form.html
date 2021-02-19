@@ -210,6 +210,12 @@
                         title="{% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %} for {{ current_customization_name | portal_name }}">
                         {% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %}
                 </button>
+                    {% if show_accept_all %}
+                    <button class="btn btn-sm btn-success" type="submit" name="publish_all" data-toggle="tooltip"
+                            title="{% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %} for all">
+                        {% if allowed.publish %}Publish{% elif allowed.accept %}Accept{% endif %} for all customizations
+                    </button>
+                    {% endif %}
                 {% endif %}
             </div>
         {% endif %}
