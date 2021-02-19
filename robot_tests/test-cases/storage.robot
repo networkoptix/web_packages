@@ -627,7 +627,7 @@ Change storage mode: Main -> Backup
     ${files 3 disk0} =    Verify Recorded Video Files    disk0
     Should Be True    ${files 3 disk0} > ${files 2 disk0}
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} = ${files 2 disk1}
+    Should Be True    ${files 3 disk1} == ${files 2 disk1}
     
 Change storage mode: Backup -> Main
     [Tags]    C81542
@@ -644,7 +644,7 @@ Change storage mode: Backup -> Main
     ${files 2 disk0} =    Verify Recorded Video Files    disk0
     Should Be True    ${files 2 disk0} > ${files disk0}
     ${files 2 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 2 disk1} = ${files disk1}
+    Should Be True    ${files 2 disk1} == ${files disk1}
     
     Log    Step 3
     Click Button      ${STORAGE ENABLED BACKUP}/parent::button
@@ -662,7 +662,7 @@ Change storage mode: Backup -> Main
     ${files 3 disk0} =    Verify Recorded Video Files    disk0
     Should Be True    ${files 3 disk0} > ${files 2 disk0}
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} = ${files disk1}
+    Should Be True    ${files 3 disk1} == ${files disk1}
     
     Log    Step 6
     Click Button      ${STORAGE ENABLED BACKUP}/parent::button
