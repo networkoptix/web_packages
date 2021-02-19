@@ -205,7 +205,9 @@ export class NxApplyService {
     }
 
     set locked(value) {
-        this.applyComponentInstance.show = value;
+        if (this.applyComponentInstance) {
+            this.applyComponentInstance.show = value;
+        }
     }
 
     /**
