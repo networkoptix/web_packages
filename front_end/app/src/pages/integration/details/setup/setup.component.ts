@@ -6,7 +6,10 @@ import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxPageService }                from '../../../../services/page.service';
 import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
 import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
+import { SubscriptionLike }             from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'setup-component',
     templateUrl : 'setup.component.html',
@@ -18,9 +21,9 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
 
     plugin: any = {};
+    pluginSubscription: SubscriptionLike;
 
     private setupDefaults() {
-        this.plugin = this.integrationService.getIntegrationPlugin();
         this.menuService.detail = 'how-to-setup';
     }
 
@@ -38,11 +41,14 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageDescription = NxLanguageProviderService.translate(
-            this.LANG.pageDescriptions.integrationSetup, {
-                PLUGIN_NAME              : this.plugin.information.name,
-                PLUGIN_SHORT_DESCRIPTION : this.plugin.information.shortDescription
-            });
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = NxLanguageProviderService.translate(
+                this.LANG.pageDescriptions.integrationSetup, {
+                    PLUGIN_NAME              : this.plugin.information?.name,
+                    PLUGIN_SHORT_DESCRIPTION : this.plugin.information?.shortDescription
+                });
+        });
     }
 
     ngOnDestroy() {

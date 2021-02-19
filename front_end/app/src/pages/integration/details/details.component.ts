@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location }                     from '@angular/common';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { DomSanitizer }                 from '@angular/platform-browser';
 import { UntilDestroy }                 from '@ngneat/until-destroy';
@@ -58,7 +59,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private location: Location
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -85,8 +87,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {
                 if (results.params.id) {
-                    const assetid = parseInt(results.params.id.split('-')[0]);
-                    if (isNaN(assetid)) {
+                    const assetParam = results.params.id;
+                    const paramParts = assetParam.split('-');
+                    const assetid = parseInt(paramParts[0]);
+                    if (isNaN(assetid) || (this.plugin?.id && this.plugin.id === assetid)) {
                         return;
                     }
                     this.integrationService.setIntegrationPlugin({});
@@ -121,10 +125,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                     this.integrationSubscription = this.integrationService.getIntegrationBy(assetid, results.query.state)
                         .subscribe(result => {
                             if (result.length) {
-                                // @ts-ignore
-                                this.content.base += assetid;
-
                                 this.plugin = this.integrationService.format(result[0]);
+                                if (paramParts.length > 1) {
+                                    this.content.base += assetParam;
+                                } else {
+                                    this.content.base += this.plugin.urlified || assetid;
+                                    const childPath = this.route.snapshot.firstChild.routeConfig.path;
+                                    const newUrl = this.content.base + (childPath ? '/' + childPath : '');
+                                    this.location.replaceState(newUrl);
+                                }
 
                                 if (this.plugin.pending || this.plugin.draft) {
                                     const ribbonActions: RibbonActionInput[] = [

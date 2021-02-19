@@ -52,8 +52,10 @@ export class NxLeftMenuComponent {
 
     updateActive = (url: string) => {
         this.activeRouteNodes = [];
-        const updateActiveRoutes = (node: MenuNodeWithParent) => {
-            this.activeNodeUrl = node.url;
+        const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
+            if (updateUrl) {
+                this.activeNodeUrl = node.url;
+            }
             const name = node.display_name || node.name;
             const openNodeIndex = this.openNodes.indexOf(name);
             if (openNodeIndex !== 1) {
@@ -69,7 +71,7 @@ export class NxLeftMenuComponent {
             const checkNode = (node: MenuNodeWithParent) => {
                 if (node.url === targetUrl || node.asset_id === targetAssetId) {
                     if (action === 'update') {
-                        updateActiveRoutes(node);
+                        updateActiveRoutes(node, true);
                         if (node.next_item) {
                             this.relatedLinks.emit({ type: 'next', nodes: node.parentNode?.nodes || [] });
                         } else {

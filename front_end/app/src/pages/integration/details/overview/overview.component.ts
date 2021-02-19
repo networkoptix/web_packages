@@ -4,7 +4,10 @@ import { IntegrationService }           from '../../integration.service';
 import { NxMenuService }                from '../../../../menu';
 import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxPageService }                from '../../../../services/page.service';
+import { SubscriptionLike } from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'overview-component',
     templateUrl : 'overview.component.html',
@@ -13,11 +16,11 @@ import { NxPageService }                from '../../../../services/page.service'
 
 export class NxOverviewComponent implements OnInit, OnDestroy {
     plugin: any;
+    pluginSubscription: SubscriptionLike;
 
     CONFIG: IConfig;
 
     private setupDefaults() {
-        this.plugin = this.integrationService.getIntegrationPlugin();
         this.menuService.detail = 'how-it-works';
     }
 
@@ -33,7 +36,10 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageDescription = this.plugin.information.shortDescription;
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = this.plugin.information?.shortDescription;
+        });
     }
 
     ngOnDestroy() {

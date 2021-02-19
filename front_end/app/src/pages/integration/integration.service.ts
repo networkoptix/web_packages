@@ -22,7 +22,7 @@ export class IntegrationService implements OnDestroy {
     CONFIG: IConfig;
 
     pluginsSubject = new BehaviorSubject(undefined);
-    plugin: any = {};
+    pluginSubject = new BehaviorSubject({});
     haveCustomBuild: boolean;
     private integrationSubject: Subscription;
 
@@ -258,11 +258,11 @@ export class IntegrationService implements OnDestroy {
     }
 
     setIntegrationPlugin(plugin: any = {}) {
-        this.plugin = plugin;
+        this.pluginSubject.next(plugin);
     }
 
     getIntegrationPlugin() {
-        return this.plugin;
+        return this.pluginSubject.value;
     }
 
     ngOnDestroy() {
