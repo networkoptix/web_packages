@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Questa E-mail è già stata registrata in %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Questo dispositivo ha segnalato di supportare alcuni eventi di analisi, ma non abbiamo informazioni precise su di essi.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Queste informazioni si basano su ciò che la telecamera invia tramite l'API. L'elenco effettivo degli eventi supportati da questa telecamera potrebbe essere diverso.",
     "This server must be available in the system to make the license key work": "Questo server deve essere disponibile nel sistema per far funzionare la chiave di licenza",
     "To": "A",

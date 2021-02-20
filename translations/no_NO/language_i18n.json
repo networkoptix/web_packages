@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Denne e-posten har allerede blitt registrert i %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Denne enheten har rapportert å støtte noen analysehendelser, men vi har ikke nøyaktig informasjon om dem.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Denne informasjonen er basert på det kameraet rapporterer via API. Den faktiske listen over hendelser som støttes av dette kameraet, kan være annerledes.",
     "This server must be available in the system to make the license key work": "Denne serveren må være tilgjengelig i systemet for å få lisensnøkkelen til å fungere",
     "To": "Til",

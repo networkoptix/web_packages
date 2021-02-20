@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Tento Email je již zaregistrován v %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Toto zařízení uvádí, že podporuje některé analytické události, ale nemáme o nich přesné informace.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Tyto informace jsou založeny na tom, co kamery reportují prostřednictvím API. Aktuální seznam událostí podporovaných tímto fotoaparátem se může lišit.",
     "This server must be available in the system to make the license key work": "Tento server musí být v systému, aby fungoval licenční klíč",
     "To": "Komu",

@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Ez az e-mail már regisztrálva van %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Az eszköz támogat néhány elemzési eseményt, de nincsenek pontos információk róla, hogy melyeket.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Ez az információ azon alapul, hogy a kamera mit jelent az API-n keresztül. A kamera által támogatott események tényleges listája eltérő lehet.",
     "This server must be available in the system to make the license key work": "Ennek a szervernek elérhetőnek kell lennie a rendszerben, hogy a licenckulcs működjön",
     "To": "Címzett",

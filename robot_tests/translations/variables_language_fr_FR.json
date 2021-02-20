@@ -55,7 +55,7 @@
     "LOGIN OR PASSWORD INCORRECT TEXT": "Mot de passe actuel incorrect",
     "FAILED TO ADD STORAGE TEXT": "Impossible d'ajouter le stockage externe",
     "STATE TEXT": "État",
-    "NOT ABLE TO LOAD STORAGE TEXT": "Not able to load storage information.",
+    "NOT ABLE TO LOAD STORAGE TEXT": "Impossible de charger les informations de stockage.",
     "RESERVED": "Réservé",
     "INACCESSIBLE": "Inaccessible",
     "CHANGING": "Changement de mode en cours...",

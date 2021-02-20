@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Tämä sähköpostiosoite on jo rekisteröity %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Tämän laitteen on ilmoitettu tukevan joitain analytiikkatapahtumia, mutta meillä ei ole tarkkaa tietoa niistä.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.",
     "This server must be available in the system to make the license key work": "This server must be available in the system to make the license key work",
     "To": "Jotta",

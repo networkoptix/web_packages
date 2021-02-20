@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "อีเมลนี้ได้รับการลงทะเบียนไว้แล้วใน %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "อุปกรณ์นี้ได้รายงานว่าสนับสนุนเหตุการณ์การวิเคราะห์บางอย่าง แต่เราไม่มีข้อมูลที่แน่นอนเกี่ยวกับพวกเขา",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "ข้อมูลนี้จะขึ้นอยู่กับสิ่งที่กล้องผ่าน API รายการกิจกรรมจริงที่กล้องนี้รองรับอาจแตกต่างกัน",
     "This server must be available in the system to make the license key work": "เซิร์ฟเวอร์นี้จะต้องมีอยู่ในระบบเพื่อให้คีย์ใบอนุญาตทำงานได้",
     "To": "ถึง",

@@ -279,6 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Ця електронна адреса вже зареєстрована в %CLOUD_NAME%",
     "This account will get full permissions within this system.": "This account will get full permissions within this system.",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Цей пристрій повідомив, що підтримує деякі аналітичні події, але ми не маємо точної інформації про них.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Ця інформація базується на тому, що камери звітують через API. Фактичний перелік подій, підтримуваних цією камерою, може бути різним.",
     "This server must be available in the system to make the license key work": "Цей сервер повинен бути доступний у системі для роботи ліцензійного ключа",
     "To": "До",
