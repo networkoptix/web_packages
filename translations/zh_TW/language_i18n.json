@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "伺服器將從該系統卸載至新系統上。資料庫，本機使用者，配置和錄影資料將保持不變。",
     "This Email has been already registered in %CLOUD_NAME%": "此電子郵件已在 %CLOUD_NAME% 中註冊",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "據傳此設備支援某些分析事件，但我們並沒有關於它們的確切資訊。",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "此資訊是根據攝影機透過API回報的內容。攝影機支援的事件列表實際上可能有所不同。",
     "This server must be available in the system to make the license key work": "須確保系統中有可用伺服器, 才能使授權生效",
     "To": "發送到",

@@ -535,7 +535,7 @@
         "download": "%VMS_NAME% をダウンロード",
         "downloadPlatform": "%VMS_NAME% をダウンロード ",
         "failedToAccessSystem": "システムにアクセスできませんでした",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% 統合",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
@@ -552,8 +552,8 @@
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
-        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
+        "integrationSetup": "{{pluginName}} のセットアップ手順。 {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} ： {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "あまりにも一般的",

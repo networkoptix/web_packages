@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "Le serveur sera détaché de ce système dans une nouvelle base de données, les utilisateurs locaux, la configuration et l'archive vidéo resteront intactes.",
     "This Email has been already registered in %CLOUD_NAME%": "Cet e-mail a déjà été enregistré dans %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Cet appareil a signalé qu'il supporte certains événements analytiques, mais nous n'avons pas d'informations exactes à leur sujet.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Cette information est basée sur les rapports de caméra à travers l'API. La liste réelle des événements pris en charge par cette caméra peut être différente.",
     "This server must be available in the system to make the license key work": "Ce serveur doit être disponible dans le système pour que la clé de licence fonctionne",
     "To": "À",

@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.",
     "This Email has been already registered in %CLOUD_NAME%": "Este e-mail já foi registado em %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Este dispositivo reportou que suporta alguns eventos de analytics, mas não temos informações exatas sobre eles.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.",
     "This server must be available in the system to make the license key work": "This server must be available in the system to make the license key work",
     "To": "Para",

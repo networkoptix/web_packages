@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "服务器将从该系统分离到新系統上。数据库，本地用户，配置和视频存档将保持不变。",
     "This Email has been already registered in %CLOUD_NAME%": "此电子邮件已在 %CLOUD_NAME% 中注册",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "据传此设备支援某些分析事件，但我们并没有关于它们的确切信息。",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "此资讯是根据摄像机透过API回报的内容。摄像机支持的事件列表实际上可能有所不同。",
     "This server must be available in the system to make the license key work": "系统中必须有可用服务器，才能使授权起作用",
     "To": "发送至",

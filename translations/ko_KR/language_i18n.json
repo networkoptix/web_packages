@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "서버가이 시스템에서 새 시스템으로 분리됩니다. 데이터베이스, 로컬 사용자, 구성 및 비디오 아카이브는 그대로 유지됩니다.",
     "This Email has been already registered in %CLOUD_NAME%": "상기 이메일은 이미 %CLOUD_NAME%에 등록되었습니다",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "이 기기는 일부 분석 이벤트를 지원하는 것으로보고되었지만 정확한 정보는 없습니다.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "이 정보는 카메라가 API를 통해보고하는 내용을 기반으로합니다. 이 카메라가 지원하는 실제 이벤트 목록은 다를 수 있습니다.",
     "This server must be available in the system to make the license key work": "라이선스 키가 작동하려면, 이 서버를 시스템에서 사용 가능해야합니다.",
     "To": "받는 사람",

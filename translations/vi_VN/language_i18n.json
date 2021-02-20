@@ -233,6 +233,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "Máy chủ sẽ được tách ra khỏi hệ thống này thành một hệ thống mới. Cơ sở dữ liệu, người dùng cục bộ, cấu hình và lưu trữ video sẽ vẫn còn nguyên.",
     "This Email has been already registered in %CLOUD_NAME%": "Email này đã được đăng ký trong %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Thiết bị này đã được báo cáo để hỗ trợ một số sự kiện phân tích, nhưng chúng tôi không có thông tin chính xác về chúng.",
+    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Thông tin này dựa trên những gì máy ảnh báo cáo thông qua API. Danh sách thực tế của các sự kiện được hỗ trợ bởi máy ảnh này có thể khác nhau.",
     "This server must be available in the system to make the license key work": "Máy chủ này phải có sẵn trong hệ thống để làm cho mã bản quyền hoạt động",
     "To": "Đến",
