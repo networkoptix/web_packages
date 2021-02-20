@@ -76,7 +76,7 @@
                             [(ngModel)]="fullName.value"
                             (change)="updateForm($event)"
                             name="fullName" id="fullName"
-                            [disabled]="!selectedUser.canBeEdited"
+                            [disabled]="!(isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
                     </div>
                     <div class="form-group d-md-table-row d-flex flex-column">
@@ -88,7 +88,7 @@
                             (change)="updateForm($event)"
                             name="email" id="email" #emailInput="ngModel"
                             pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
-                            [disabled]="!selectedUser.canBeEdited"
+                            [disabled]="!(isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
                         <span class="input-error" *ngIf="emailInput.invalid && emailInput.touched"
                             translate>Email format incorrect</span>

@@ -10,7 +10,7 @@ import { Subscription }                         from 'rxjs';
 
 import { NxDialogsService }                     from '@dialogs/dialogs.service';
 import { NxSettingsService }                    from '../settings.service';
-import { NxMenuService }                        from '../../../../menu';
+import { NxMenuService }                        from '@src/menu';
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxPageService }                        from '@services/page.service';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
@@ -20,8 +20,9 @@ import { NxProcessService, Process }            from '@services/process.service'
 import { NxUriService }                         from '@services/uri.service';
 import { NxApplyService, Watcher }              from '@services/apply.service';
 import { NxToastService }                       from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { WINDOW }                               from '@services/window-provider';
+import { environment }                          from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,6 +32,7 @@ import { WINDOW }                               from '@services/window-provider'
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
+    isLocal = environment.isLocal;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     location;

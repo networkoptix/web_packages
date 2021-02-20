@@ -246,6 +246,12 @@ export class UserManager {
         user.userRoleId = role.id || '';
         user.permissions = role.permissions || '';
 
+        // The mediaserver doesn't like any attempts to change admin's permissions
+        if (user.isLocalOwner) {
+            delete user.name;
+            delete user.permissions;
+        }
+
         // TODO: remove later
         // this.cloudApi.share(this.id, user.email, accessRole);
         return this.mediaserver.saveUser(user).toPromise().then(result => {
