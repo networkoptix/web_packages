@@ -80,8 +80,14 @@ export class CameraManager {
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
-            const { hasDualStreaming, bitrateInfos } = parsedAddParams;
-            const multiStream = bitrateInfos && JSON.parse(bitrateInfos).streams.length >= 2;
+            let { hasDualStreaming, bitrateInfos } = parsedAddParams;
+            let defaultRatio = 0;
+            if (bitrateInfos) {
+                bitrateInfos = JSON.parse(bitrateInfos);
+                const [x, y] = bitrateInfos.streams[0].resolution.split('x');
+                defaultRatio = x / y;
+            }
+            const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
             const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
@@ -99,7 +105,7 @@ export class CameraManager {
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio };
         });
         this.cameras = mappedCameras;
         return mappedCameras;

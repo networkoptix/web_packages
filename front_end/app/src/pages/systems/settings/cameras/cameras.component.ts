@@ -11,23 +11,23 @@ import {
     filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
 }                                    from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxProcessService, Process } from '../../../../services/process.service';
-import { WINDOW }                    from '../../../../services/window-provider';
-import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxProcessService, Process } from '@services/process.service';
+import { WINDOW }                    from '@services/window-provider';
+import { NxApplyService, Watcher }   from '@services/apply.service';
 import {
     ICamera, IRecordingModes, IRecordingSettings,
     ITask, MotionType, NxSystem, StreamQuality
-}                                    from '../../../../services/system.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+}                                    from '@services/system.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../menu';
-import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
-import { NxHealthService }           from '../../../health/health.service';
-import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
-import { NxUtilsService }            from '../../../../services/utils.service';
+import { NxMenuService }             from '@src/menu';
+import { NxUriService, ChildRoutes } from '@services/uri.service';
+import { NxHealthService }           from '@pages/health/health.service';
+import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component';
+import { NxUtilsService }            from '@services/utils.service';
 
 @UntilDestroy()
 @Component({
@@ -758,6 +758,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.cameraDetailColumns = this.selectedCamera.isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;
+            // Setup the automatic value based on the camera's dimensions
+            this.aspectRatios[0].value = this.selectedCamera.defaultRatio > 0 ? this.selectedCamera.defaultRatio : '';
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedAspect = aspect;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];

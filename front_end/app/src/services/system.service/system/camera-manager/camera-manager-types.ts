@@ -15,6 +15,7 @@ export interface ICamera {
     audioEnabled: boolean;
     backupType: string;
     controlEnabled: boolean;
+    defaultRatio: number;
     dewarpingParams: string;
     disableDualStreaming: boolean;
     failoverPriority: string;
