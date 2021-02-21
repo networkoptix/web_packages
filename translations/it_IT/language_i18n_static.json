@@ -468,8 +468,8 @@
         "myIntegrationsLabel": "Mio",
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} Requisiti",
-        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
+        "testedVersionLabel": "Verificato dallo sviluppatore con la versione {{vmsName}}:",
+        "testedVersionsLabel": "Verificato dallo sviluppatore con la versione {{vmsName}}:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Telecamere PTZ avanzato",
@@ -535,7 +535,7 @@
         "download": "Scarica %VMS_NAME%",
         "downloadPlatform": "Scarica %VMS_NAME% per ",
         "failedToAccessSystem": "Impossibile accedere al sistema",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "Integrazioni %VMS_NAME%",
         "login": "Accesso",
         "pageNotFound": "Pagina non trovata",
         "register": "Creare un account",
@@ -551,9 +551,9 @@
         "view": "Visualizza telecamere"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
-        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
+        "integrations": "Integrations Marketplace è un ecosistema centralizzato di prodotti che si integrano perfettamente con i prodotti VMS come %VMS_NAME%, tutti disponibili in %CLOUD_NAME% +permettendo di trovare soluzioni per costruire e personalizzare il tuo sistema video IP.",
+        "integrationSetup": "Istruzioni di configurazione per {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} per {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "troppo comune",
@@ -707,7 +707,7 @@
         "unavailable": "non disponibile"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Qualcosa è andato storto. Aggiorna la pagina tra circa 30 secondi.",
         "system": {
             "deleted": {
                 "success": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account"
@@ -749,7 +749,7 @@
             "iomodule": "Modulo I / O",
             "bridge": "Bridge",
             "nvr": "NVR",
-            "nvrError": "NVR Error",
+            "nvrError": "Errore NVR",
             "serverNotFound": "Server non trovato"
         },
         "messages": {
