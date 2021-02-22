@@ -649,7 +649,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     getStorageTypeTooltip(storageType: string) {
-        return this.LANG.system.storageToolTips[storageType.toLowerCase()]();
+        return storageType ? this.LANG.system.storageToolTips[storageType.toLowerCase()]() : '';
     }
 
     getStatusTooltip(status: string) {
