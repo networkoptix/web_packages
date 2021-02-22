@@ -279,7 +279,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "このメールは既に %CLOUD_NAME%に登録されています",
     "This account will get full permissions within this system.": "このアカウントはこのシステム内の完全な権限を持ちます。",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
-    "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
+    "This feature is not available on mobile devices.": "この機能はモバイルデバイスでは使用できません。",
     "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "この情報は、APIを通じてカメラが報告する内容に基づいています。このカメラが実際にサポートしているイベントの一覧とは異なる場合があります。",
     "This server must be available in the system to make the license key work": "ライセンスキーを機能させるには、このサーバーがシステムで使用可能である必要があります",
     "To": "宛先",
