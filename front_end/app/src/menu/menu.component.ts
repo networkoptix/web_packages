@@ -189,7 +189,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
             this.transition = false;
 
-            if (changes.content.currentValue.selectedSection) {
+            if (!this.applyService.locked && changes.content.currentValue.selectedSection) {
                 this.systemId = changes.content.currentValue.system?.id;
 
                 if (this.autoFit && this.scrollArea) {

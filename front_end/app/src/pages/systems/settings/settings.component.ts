@@ -1,14 +1,14 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                 from '@angular/core';
+}                                    from '@angular/core';
 import {
-    ActivatedRoute, Router, NavigationEnd
-}                                 from '@angular/router';
-import { UntilDestroy }           from '@ngneat/until-destroy';
-import { Subscription }           from 'rxjs';
-import { filter, tap }            from 'rxjs/operators';
-
+    ActivatedRoute, Router,
+    NavigationEnd
+}                                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subject, Subscription }     from 'rxjs';
+import { filter, takeUntil, tap }    from 'rxjs/operators';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -16,7 +16,8 @@ import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '@src/menu';
 import {
-    ICamera, NxSystem, NxSystemService
+    ICamera, NxSystem,
+    NxSystemService
 }                                    from '@services/system.service';
 import { NxSystemsService }          from '@services/systems.service';
 import { Account, NxAccountService } from '@services/account.service';
@@ -68,6 +69,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     headerHeight: number;
     secondaryMerge = false;
 
+    private cancelPrevious$ = new Subject();
+
     private connectionSubscription: Subscription;
     private menuSectionSubscription: Subscription;
     private menuSubSectionSubscription: Subscription;
@@ -76,6 +79,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
     private checkMergeSubscription: Subscription;
+
+    private origSelectedSection: string;
+    private origSelectedSubSection: string;
+    private origSelectedDetailSection: string;
 
     private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
@@ -88,6 +95,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private systemReady() {
         this.settingsService.system = this.system;
         this.menuVisible = true;
+    }
+
+    private canNavMenu(origTargetValue, contentTarget, selection) {
+        if (this.applyService.locked) {
+            origTargetValue = selection;
+
+            this.cancelPrevious$.next('cancel');
+            this.applyService.applyOnNavSubject.pipe(
+                takeUntil(this.cancelPrevious$)
+            ).subscribe(status => {
+                if (!['', 'canceled'].includes(status)) {
+                    this.content[contentTarget] = origTargetValue;
+                    this.content = { ...this.content }; // trigger onChange
+                }
+            });
+        } else {
+            this.content[contentTarget] = selection;
+            this.content = { ...this.content }; // trigger onChange
+        }
     }
 
     constructor(
@@ -170,22 +196,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuSectionSubscription = this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
-                this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                if (this.content.selectedSection === selection) return;
+
+                this.canNavMenu(this.origSelectedSection, 'selectedSection', selection);
             });
 
         this.menuSubSectionSubscription = this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
-                this.content.selectedSubSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.canNavMenu(this.origSelectedSubSection, 'selectedSubSection', selection);
             });
 
         this.menuSelectedDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.canNavMenu(this.origSelectedDetailSection, 'selectedDetailsSection', selection);
             });
 
         // TODO: add processes back
