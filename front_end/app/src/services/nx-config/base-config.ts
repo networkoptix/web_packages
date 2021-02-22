@@ -351,6 +351,7 @@ export interface Icons {
     devTools: string;
     backgrounds: string;
     dir: string;
+    dirDevtools: string;
     dirButtons: string;
     dirNonStandard: string;
     dirPagePlaceholder: string;
