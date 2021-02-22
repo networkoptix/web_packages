@@ -219,7 +219,7 @@ export class NxMenusService implements OnDestroy {
 
         const activeSystemMenu = new MenuNode(
             name,
-            '',
+            this.getUrl(activeSystem.id, { settings: true }),
             icon,
             nodes,
             Auth.LOGGED_IN,
