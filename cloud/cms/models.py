@@ -1691,7 +1691,7 @@ class Menu(models.Model):
 
         menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
                     if menu.id == self.id)
-        
+
         return {
             'name': menu.name,
             'depth': menu.depth,
@@ -1836,7 +1836,7 @@ class MenuNode(models.Model):
                 if depth < max_depth and node.nodes_list:
                     node_structure['nodes'] = node.generate_node_structure(
                         node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
-                        max_depth=max_depth
+                        max_depth=max_depth, include_not_accepted=include_not_accepted
                     )
                 nodes_structure.append(node_structure)
         return nodes_structure

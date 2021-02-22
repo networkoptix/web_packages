@@ -674,9 +674,10 @@ def get_asset_info(request, asset_id):
 
     state = 'Draft'
     if customization and customization != 'all':
-        latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
-        if latest_review:
-            state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+        if not asset.is_dirty:
+            latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
+            if latest_review:
+                state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
     else:
         state = None
 

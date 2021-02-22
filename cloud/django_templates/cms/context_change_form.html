@@ -60,7 +60,7 @@
                                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
                                 {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
                             </label>
-                            <div id="{{ field.name }}" class="ml-160">
+                            <div id="{{ field.name }}" class="ml-160 position-relative">
                                 {% if data_structure.has_image_field and field.value %}
                                     <div>
                                         {% if data_structure.optional and record_exists %}
@@ -390,6 +390,20 @@
             theme: 'silver',
             plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists',
             theme_advanced_resizing: true,
+            init_instance_callback : function(editor) {
+                const editorH = editor.editorContainer.offsetHeight;
+                console.log(editor.getElement());
+                $(editor.getElement())
+                    .css({
+                        'position' : 'absolute',
+                        'top'      : '50%',
+                        'height'   : 0,
+                        'width'    : 0,
+                        'opacity'  : 0,
+                        'readonly' : true
+                    })
+                    .show();
+            },
             setup: function (editor) {
                 editor.on('change', function () {
                     tinymce.triggerSave();
@@ -398,7 +412,7 @@
                 editor.on('paste', function(event) {
                     paste_handle_images(event, editor);
                 });
-                
+
                 editor.on('postProcess', function (e) {
                     const mapObj = {
                         lineargradient: "linearGradient",
