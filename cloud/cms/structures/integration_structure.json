@@ -62,11 +62,8 @@
                   "id": "automation",
                   "label": "Automation"
                 }, {
-                  "id": "videoAnalytics",
-                  "label": "Video Analytics"
-                }, {
-                  "id": "objectDetection",
-                  "label": "Object Detection"
+                  "id": "embeddedWebPage",
+                  "label": "Embedded Web Page"
                 }, {
                   "id": "eventDetection",
                   "label": "Event Detection"
@@ -74,14 +71,26 @@
                   "id": "faceRecognition",
                   "label": "Face Recognition"
                 }, {
-                  "id": "licensePlateRecognition",
-                  "label": "License Plate Recognition"
-                }, {
                   "id": "health",
                   "label": "Health Monitoring"
                 }, {
+                  "id": "licensePlateRecognition",
+                  "label": "License Plate Recognition"
+                }, {
+                  "id": "objectDetection",
+                  "label": "Object Detection"
+                }, {
+                  "id": "plugin",
+                  "label": "Plugin"
+                }, {
+                  "id": "severApi",
+                  "label": "Server API"
+                },{
                   "id": "storage",
                   "label": "Storage"
+                }, {
+                  "id": "videoAnalytics",
+                  "label": "Video Analytics"
                 }, {
                   "id": "free",
                   "label": "Free"
