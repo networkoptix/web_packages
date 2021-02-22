@@ -14,9 +14,20 @@
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
                 [queryParams]="{'state': node.state}"
                 routerLinkActive="activated-highlight"
-                [routerLinkActiveOptions]="{exact:true}"
-            >{{node.display_name || node.name}}
-            <span *ngIf="node.state"class="badge badge-{{node.state === 'pending' ? 'warning' : 'info'}} ml-2">{{node.state}}</span></div>
+                [routerLinkActiveOptions]="{exact:true}">
+                <ng-template #linkContent>
+                    <span>{{node.display_name || node.name}}</span>
+                    <span *ngIf="node.state"class="badge badge-{{node.state === 'pending' ? 'warning' : 'info'}} ml-2">{{node.state}}</span>
+                </ng-template>
+                <ng-template #externalLink>
+                    <a [href]="node.url">
+                        <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+                    </a>
+                </ng-template>
+                <a *ngIf="node.url.startsWith('/'); externalLink" [routerLink]="node.url" [queryParams]="{'state': node.state}">
+                    <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+                </a>
+            </div>
             <ng-template #noLink>
                 <div class="menu-link"
                     (click)="toggleOpen(node)"

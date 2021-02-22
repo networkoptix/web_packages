@@ -94,3 +94,13 @@
 .has-state {
     padding-left: 60px !important;
 }
+
+.menu-link > a {
+    // Forces link click area to take full with without breaking parent padding
+    margin-left: -432px;
+    padding-left: 432px;
+    display: block;
+    color: inherit;
+    text-decoration: inherit;
+    font-size: inherit;
+}
