@@ -1,4 +1,4 @@
-import { ms } from "../../../utils/type-aliases"
+import { ms, int } from "../../../utils/type-aliases"
 
 export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline' | 'Unauthorized'
 
@@ -80,6 +80,8 @@ export interface ICamera {
   hasHlsStream: boolean,
   hasLowQualityHlsStream: boolean,
   hasHighQualityHlsStream: boolean,
+
+  rotation: int
 }
 
 export default ICamera

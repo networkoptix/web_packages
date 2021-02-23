@@ -1,4 +1,4 @@
-import { ms } from '../../../utils/type-aliases'
+import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
 
@@ -6,6 +6,8 @@ import BirdViewTree from './BirdViewTree'
 export class TestCamera implements ICamera {
 
   protected _birdViewTree: BirdViewTree
+
+  public readonly rotation: int = 0
 
   public get archiveRange () {
     return this._archiveRange
