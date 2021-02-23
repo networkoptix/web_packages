@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
 import { Subscription } from 'rxjs'
@@ -17,6 +17,7 @@ import WebClientUxService, { WebclientUxState } from '../../services/webclient-u
 import { exception } from 'console'
 import { NxConfigService, IConfig } from '@services/nx-config'
 
+import sidebarLayout from '../sidebarLayout.cfg'
 
 @Component({
   selector: 'nx-system-view-index-page',
@@ -55,6 +56,29 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       : []
   }
 
+  protected _windowWidth = 1024 // should be larger than the threshold
+
+  @HostListener('window:resize', ['$event'])
+  public onResize (event) {
+    const width_threshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx
+    const newWidth = event.target.innerWidth
+    if (newWidth <= width_threshold && this._windowWidth > width_threshold) {
+      this._handleMovingFromWideInterfaceToNarrow()
+    }
+    if (newWidth > width_threshold && this._windowWidth <= width_threshold) {
+      this._handleMovingFromNarrowInterfaceToWide()
+    }
+    this._windowWidth = newWidth
+  }
+
+  protected _handleMovingFromWideInterfaceToNarrow () {
+    this.ux.isSidebarShown = false
+  }
+
+  protected _handleMovingFromNarrowInterfaceToWide () {
+    this.ux.isSidebarShown = true
+  }
+
   constructor (
     private self: ElementRef,
     protected router: Router,
@@ -77,6 +101,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange)
     this._routerParamsSubscription = this.route.params.subscribe(this._onRouteChange)
     this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
+    this.onResize({ target: { innerWidth: window.innerWidth } })
   }
 
   public ngOnDestroy (): void {
