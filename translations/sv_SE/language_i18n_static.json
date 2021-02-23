@@ -250,15 +250,15 @@
         },
         "merge": {
             "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordWrong": "Lösenord för administratörsanvändare är fel",
             "checking": "Kontrollerar...",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%cloudName%</strong> eller slå samman lokalt med <strong>%vmsName%</strong> klienten.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
+            "latestBuild": "senaste versionen",
+            "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.</p><p>Inställningar och namnet tas från <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
             "noServerFound": "Inga servrar hittades",
@@ -267,31 +267,31 @@
             "ownerCanMergeText": "Du kan bara slå samman system där du är ägare",
             "passwordRequired": "Lösenord krävs",
             "passwordWrong": "Fel lösenord",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
-            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
-            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "System {targetSystem} har en nyare programversion som är oförenlig med det nuvarande systemet. Uppdatera det nuvarande systemet till {downloadHTML} att slå samman det med {targetSystem} systemet.",
+            "primarySystemOffline": "System {primarySystem} är offline och kan inte slås samman med System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Vi rekommenderar att du rådgör med",
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "secondaryCannotMerge": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera {targetSystem} till {downloadHTML} att slå samman den med den aktuella.",
+            "secondarySystemUnavailable": "System {targetSystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server vid {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Kan inte komma åt {targetSystem} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "serverVersionOld": "Denna server har en äldre programversion som är oförenlig med det aktuella systemet. Uppdatera den till den senaste versionen för att slå samman den med den nuvarande.",
+            "serverVersionNew": "Denna server har nyare programversion än det nuvarande systemet. Uppdatera båda systemen till samma version för att slå samman dem.",
+            "systemOffline": "System {targetSystem} är offline och kan inte slås ihop med det nuvarande",
+            "systemOfflineUrl": "{targetSystem} är otillgängligt",
+            "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera %targetSystem% till {downloadHTML} att slå samman den med den aktuella.",
+            "systemVersionNew": "System {targetSystem} har en nyare programversion som är inkompatibel med det nuvarande systemet. Uppdatera det aktuella systemet till {downloadHTML} för att slå ihop det med {targetSystem} -systemet.",
+            "systemVersionsNotMatch": "Systemen har programvaruversioner som inte matchar varandra. Uppdatera båda till {downloadHTML}.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "Det kommer att finnas mer än <strong>{maxServers}</strong> servrar i det sammanslagna systemet."
         },
         "message": {
             "storageSettingsSaved": "Lagringsinställningar sparade.",
@@ -306,22 +306,22 @@
             },
             "sent": "Meddelandet har skickats.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration_feedback": "Feedback för integration {asset}",
+                "ipvd_feedback_device": "Feedback om {asset}",
                 "ipvd_feedback_page": "Feedback för kamerans sida",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Försäljningsförfrågan för {asset}",
+                "technical_inquiry": "Teknisk förfrågan för {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration": "Kontakta {companyName}",
+                "ipvd_feedback_device": "Feedback om {asset}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             }
         },
         "removeSystem": {
             "action": "Koppla från",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "Du håller på att koppla bort detta system från ditt konto. Du kommer inte att kunna komma åt detta system längre. Är du säker?",
+            "title": "Koppla från systemet?"
         },
         "titles": {
             "error": "Fel",
@@ -331,9 +331,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare?",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversDetach": "Koppla från servern \"{ title }\" från nuvarande system?",
+            "serversReset": "Återställ servern \"{ title }\" till standard?",
+            "serversRestart": "Starta om servern \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -415,28 +415,28 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This user does not exist.": "This user does not exist.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "FAIL": "System <strong>{failedSystem}</strong> är offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> är offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> kan inte nås just nu.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till {downloadHTML}.",
+        "This user does not exist.": "Denna användaren finns inte.",
+        "The user is disabled. Please contact your system administrator.": "Användaren är inaktiverad. Kontakta din systemadministratör.",
         "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
-        "fail": "{failedSystem} is inaccessible.",
+        "fail": "{failedSystem} är otillgänglig.",
         "incompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
         "unknown_error": "Ett okänt fel inträffade. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Detta konto är redan aktiverat",
         "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
         "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "accountNotActivatedAlternate": "Kontot är inte aktiverat. Logga in på <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> och följ angivna instruktioner.",
         "alreadyExists": "Det här kontot existerar redan",
         "brokenAccount": "Oväntat problem med kontot. <a href=\"/restore_password\">Återställ konto</a>",
         "cantActivatePrefix": "Kan inte aktivera ditt konto",
         "cantAddYourOwnEmail": "Det är inte tillåtet att lägga till din egen e-postadress",
         "cantChangeAccountPrefix": "Kan inte spara ändringar",
         "cantChangePasswordPrefix": "Kan inte spara lösenord",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDeleteAccountOwningSystems": "Kan inte ta bort konto som äger system",
         "cantDisconnectSystemPrefix": "Kan inte ta bort System",
         "cantEditAdmin": "Detta konto har administratörsrättigheter",
         "cantEditYourself": "Ändring av egna behörigheter är inte tillåtet",
@@ -452,16 +452,16 @@
         "emailNotFound": "Kontot existerar inte.",
         "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
-        "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "lostConnection": "Anslutning till {systemName} förlorade",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> är offline.",
         "notAuthorized": "Fel lösenord",
-        "badUsername": "Account not found",
+        "badUsername": "Konto hittades inte",
         "notFound": "Hittades inte",
         "ok": "ok",
         "oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -472,7 +472,7 @@
         "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
         "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -482,9 +482,9 @@
         "Health Monitor": "Hälsoövervakning",
         "Storage": "Lagring",
         "myIntegrationsLabel": "Mina",
-        "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "requirements": "{name} Krav",
+        "testedVersionLabel": "Testad av utvecklaren med {vmsName} version:",
+        "testedVersionsLabel": "Testat av utvecklaren med {vmsName} versioner:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avancerade PTZ-kameror",
@@ -528,8 +528,8 @@
         "b_Link": "skicka förfrågan",
         "c_Info": "för ytterligare frågor / problem angående stödda enheter."
     },
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdTopXByVolume": "Topp {value} efter volym:",
+    "ipvdDisclaimer": "Denna lista är begränsad till enheter som finns på {vmsName} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {companyName}. Ingen personlig information samlas in och varje användare förblir helt anonym.",
     "menu": {
         "titles": {
             "cameras": "Kameror",
@@ -670,8 +670,8 @@
     },
     "system": {
         "connected": "Ansluten",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "not_connected": "Inte ansluten",
+        "MERGE_FINISHES": "När sammanslagningen är klar blir alla användare och kameror från detta system tillgängliga i <strong>{targetSystemName}</strong> System, och detta system kommer att raderas.",
         "mergeUnknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
         "mySystemSearch": "JagMigMinMin",
         "settings": {
@@ -722,9 +722,9 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "Lokal",
             "usb": "USB",
-            "network": "Network, added through OS",
+            "network": "Nätverk, tillagt via OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         }
