@@ -8,7 +8,7 @@ import NxSystemViewIndexPageComponent from './pages/system-view-index/system-vie
 import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component'
 import { CookieService } from 'ngx-cookie-service'
 
-import CameraQualityStorageService from './services/camera-quality-storage.service'
+import CameraQualityStorageService from './services/cameraQualityStorage.service'
 
 import routes from './routes'
 import components from './components'

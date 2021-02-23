@@ -14,7 +14,7 @@ import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/Vm
 import FpsMeterService from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 import { NxConfigService, IConfig } from '../../../../../services/nx-config'
-import { PlaybackQuality, CameraQualityStorageService } from '../../services/camera-quality-storage.service'
+import { PlaybackQuality, CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
 
 
 @Component({
