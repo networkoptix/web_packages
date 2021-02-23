@@ -308,8 +308,6 @@ $border-color: $light6;
     > zoom-controls {
       flex-grow: 0;
       flex-shrink: 0;
-      box-shadow: 2px 0 0 0 #0003;
-      z-index: 5;
     }
 
     > timeline {
@@ -336,8 +334,6 @@ $border-color: $light6;
       flex-grow: 0;
       flex-shrink: 0;
       width: 64px;
-      box-shadow: -2px 0 0 0 #0003;
-      z-index: 5;
     }
   }
 }

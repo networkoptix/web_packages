@@ -1,7 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs'
 import { float, int } from '../../../../utils/type-aliases';
+import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
+import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+
 
 type signType = int // -1 | 0 | 1
 
@@ -12,13 +15,22 @@ type signType = int // -1 | 0 | 1
 })
 export class ZoomControlsComponent implements OnInit, OnDestroy {
 
-  protected subscription: Subscription
+  protected timelineSubscription: Subscription
+  protected vmsSubscription: Subscription
   protected state: TimelineServiceStatus
+  public disabled: boolean = true
 
   constructor (
     public timeline: TimelineService,
+    public vms: VideoManagementSystemService,
+    protected self: ElementRef,
   ) {
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
+    this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
+  }
+
+  public get $self (): HTMLElement {
+    return this.self.nativeElement as HTMLElement
   }
 
   protected _animationFrameRequestHandler: number
@@ -30,18 +42,32 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit (): void {
-    this.subscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange)
+    this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange)
+    this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange)
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public ngOnDestroy (): void {
-    this.subscription.unsubscribe()
+    this.timelineSubscription.unsubscribe()
+    this.vmsSubscription.unsubscribe()
     cancelAnimationFrame(this._animationFrameRequestHandler)
   }
 
   public onTimelineSubjectChange (s: TimelineServiceStatus) {
     this.state = s
+  }
+
+  public onVmsSubjectChange (s: VmsState) {
+    switch (s.mode) {
+      case VMS_MODE.CAMERA_SELECTED:
+        this.disabled = !s.selectedCamera.hasArchive
+        break;
+      default:
+        this.disabled = true
+    }
+    console.log('vms subject change, Disabled:', this.disabled)
+    this.$self.classList[!this.disabled ? 'add' : 'remove']('enabled')
   }
 
   public get canZoomIn (): boolean {
