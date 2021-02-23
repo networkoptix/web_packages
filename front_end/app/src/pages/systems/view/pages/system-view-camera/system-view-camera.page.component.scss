@@ -5,7 +5,7 @@ $header-foreground: white;
 
 $player-background: black;
 
-$border-color: #cdd7dc;
+$border-color: $light6;
 
 :host {
   width: 100vw;
@@ -308,12 +308,13 @@ $border-color: #cdd7dc;
     > zoom-controls {
       flex-grow: 0;
       flex-shrink: 0;
+      box-shadow: 2px 0 0 0 #0003;
+      z-index: 5;
     }
 
     > timeline {
       flex-grow: 1;
-      border-left: 1px solid $border-color;
-      border-right: 1px solid $border-color;
+      border: 1px solid $border-color;
       background-color: white;
     }
 
@@ -335,6 +336,8 @@ $border-color: #cdd7dc;
       flex-grow: 0;
       flex-shrink: 0;
       width: 64px;
+      box-shadow: -2px 0 0 0 #0003;
+      z-index: 5;
     }
   }
 }
