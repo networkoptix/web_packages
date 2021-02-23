@@ -63,10 +63,11 @@ Example for vms
             </div>
         </div>
     {% endfor %}
+    <div id="conflicts"></div>
 
     <div class="submit-row">
         <a href="{% url 'admin:pages' asset.id %}" class="btn btn-sm btn-default">Edit Content</a>
-        <button class="btn btn-sm btn-primary" type="submit" name="Upload" onclick="cookieInterval()">Upload</button>
+        <button class="btn btn-sm btn-primary" type="submit" name="Upload" id="upload" onclick="cookieInterval()">Upload</button>
     </div>
     <div class="modal" id="preparing-package">
         <div class="modal-dialog">
@@ -116,6 +117,13 @@ Example for vms
         }();
 
         function cookieInterval() {
+            const messageList = document.getElementsByClassName('messagelist')[0]
+            const infoMessages = [...messageList.getElementsByClassName('info')]
+            infoMessages.forEach(message => {
+                if (message.classList.contains('hide')) {
+                    message.classList.remove('hide')
+                }
+            }) 
             cookieCheckInterval = setInterval(checkCookie, 100);
         }
 
@@ -174,6 +182,62 @@ Example for vms
             modal.classList.remove('show')
         }
 
+        const fileName = '{{file}}'
+        if (fileName) {
+            const fileInput = document.getElementById('id_file')
+            const uploadButton = document.getElementById('upload')
+            const forceInput = document.getElementById('id_force')
+            fileInput.required = false
+            uploadButton.disabled = true
+            forceInput.addEventListener('input', event => {
+                uploadButton.disabled = !event.target.checked && !fileInput.value
+            })
+            fileInput.addEventListener('input', event => {
+                uploadButton.disabled = !event.target.value && !forceInput.checked
+            })
+        }
+        const conflicts = {{conflicts|safe}}
+        const conflictWrapper = document.getElementById('conflicts')
+        if (conflicts.length) {
+            conflictWrapper.innerHTML = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
+            const conflictList = document.createElement('ul')
+            conflicts.forEach(conflict => {
+                const conflictItem = document.createElement('li')
+                conflictItem.innerHTML = conflict
+                conflictList.appendChild(conflictItem)
+            })
+            conflictWrapper.appendChild(conflictList)
+        }
+
+        const messageList = document.getElementsByClassName('messagelist')[0]
+        if (messageList) {
+            const infoMessages = messageList.getElementsByClassName('info')
+            if (infoMessages.length && fileName) {
+                const checkForWarningsOrSuccessInterval = setInterval(() => {
+                    const warningMessages = messageList.getElementsByClassName('warning')
+                    const successMessages = messageList.getElementsByClassName('success')
+                    if (successMessages.length || warningMessages.length) {
+                        [...infoMessages].forEach(message => {
+                            messageList.removeChild(message)
+                        })
+                        clearInterval(checkForWarningsOrSuccessInterval)
+                    }
+                }, 1000)
+            } else if (!fileName) {
+                [...infoMessages].forEach(message => {
+                    if (!message.classList.contains('hide')) {
+                        message.classList.add('hide')
+                    }
+                })
+            } else {
+                [...infoMessages].forEach(message => {
+                    if (message.classList.contains('hide')) {
+                        message.classList.remove('hide')
+                    }
+                }) 
+            }
+
+        }
     </script>
 
 </form>

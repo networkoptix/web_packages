@@ -274,7 +274,7 @@ class AssetSettingsForm(forms.Form):
     file = forms.FileField(
         label="File",
         help_text="Archive with static files and images for content or structure.json file.",
-        required=True
+        required=False
     )
 
     action = forms.ChoiceField(
@@ -290,6 +290,12 @@ class AssetSettingsForm(forms.Form):
             ('update_content', 'Upload content files for asset'),
             ('import_assets_from_json', 'Create and update all assets from json file'),
         )
+    )
+
+    force = forms.BooleanField(
+        label="Force Update",
+        help_text="Updates existing records with values from JSON when conflicts exist.",
+        required=False
     )
 
     def __init__(self, *args, **kwargs):
@@ -586,7 +592,12 @@ class MenuPortForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['menu'].label_from_instance = lambda obj: obj.name
         if port_type == 'import':
-            self.fields['file'] = forms.FileField()
+            self.fields['file'] = forms.FileField(required=False)
+            self.fields['force'] = forms.BooleanField(
+                label="Force Update",
+                help_text="Updates existing records with values from JSON when conflicts exist.",
+                required=False
+            )
 
 
 class ZendeskImportForm(forms.Form):

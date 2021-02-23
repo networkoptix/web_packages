@@ -16,7 +16,7 @@ from django.utils.html import format_html
 import nested_admin
 
 from cms.forms import *
-from cms.controllers import generate_structure
+from cms.controllers import generate_structure, structure
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
 from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment
@@ -1155,6 +1155,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             raise PermissionDenied()
         form_export = None
         form_import = None
+        conflicts = []
+        menu_name = ''
         if request.method == 'POST':
             if 'export' in request.POST:
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
@@ -1180,12 +1182,24 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                                    'task': str(task)
                                    })
             elif 'import' in request.POST:
+                PACKAGE_CACHE = PackagesCache()
                 form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
                 if form_import.is_valid():
+                    task = ''
                     data = form_import.cleaned_data
                     menu = data['menu']
-                    file = json.load(request.FILES['file'])
-                    task = async_menu_import.apply_async(args=[file, menu.name, request.user.email])
+                    force = data['force']
+                    cache_key = f'{request.session.session_key}-{menu}'
+                    file = request.FILES.get('file') or PACKAGE_CACHE[cache_key]
+                    file = file if isinstance(file, (list, dict)) else json.load(file)
+                    menu_name = file.get('name')
+                    PACKAGE_CACHE[cache_key] = file
+                    conflicts = structure.check_asset_conflicts(file.get('assets', []))
+                    if not conflicts or force:
+                        conflicts = []
+                        task = async_menu_import.apply_async(args=[file, menu.name, request.user.email])
+                    else:
+                        messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',
                                   {'formExport': MenuPortForm(request.POST, request.FILES, port_type='export'),
                                    'formImport': form_import,
@@ -1201,6 +1215,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                                    'complete_message': f'Menu "{menu.name}" has been successfully imported.',
                                    'download_message': '',
                                    'file_name': '',
+                                   'conflicts': conflicts,
                                    'modal_title': 'Processing Menu Import',
                                    'task': str(task)
                                   })
@@ -1209,7 +1224,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             form_export = MenuPortForm(port_type='export')
         if not form_import:
             form_import = MenuPortForm(port_type='import')
-
+        messages.info(request, 'Checking asset names...')
         return render(request, 'cms/menu_porting.html',
                       {'formExport': form_export,
                        'formImport': form_import,
@@ -1218,6 +1233,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'site_url': admin.site.site_url,
                        'site_header': admin.site.site_header,
                        'site_title': admin.site.site_title,
+                       'conflicts': conflicts,
+                       'menu': menu_name,
                        'title': 'Export/Import Menus'})
 
     @staticmethod

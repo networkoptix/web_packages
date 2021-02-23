@@ -365,3 +365,8 @@ img.light {
 #preparing-package {
     backdrop-filter: blur(1px) brightness(.9);
 }
+
+.messagelist {
+    position: sticky;
+    top: 40px;
+}

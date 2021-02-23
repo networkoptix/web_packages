@@ -51,8 +51,9 @@
             </div>
         </div>
     {% endfor %}
+    <div id="conflicts"></div>
     <div class="form-row">
-        <button class="btn btn-sm btn-primary" type="submit" name="import">Import</button>
+        <button class="btn btn-sm btn-primary" type="submit" name="import" id="import" onclick="updateMessages()">Import</button>
     </div>
 
 </form>
@@ -155,6 +156,77 @@
     }
    </script>
 
+<script>
+    const conflicts = {{conflicts|safe}}
+    if (conflicts.length) {
+        const fileInput = document.getElementById('id_file')
+        fileInput.required = false
+    }
+    const menuName = '{{menu}}'
+    if (menuName) {
+        const fileInput = document.getElementById('id_file')
+        const importButton = document.getElementById('import')
+        const forceInput = document.getElementById('id_force')
+        fileInput.required = false
+        importButton.disabled = !!conflicts.length
+        forceInput.addEventListener('input', event => {
+            importButton.disabled = !event.target.checked && !fileInput.value && !!conflicts.length
+        })
+        fileInput.addEventListener('input', event => {
+            importButton.disabled = !event.target.value && !forceInput.checked && !!conflicts.length
+        })
+    }
+    const conflictWrapper = document.getElementById('conflicts')
+    if (conflicts.length) {
+        conflictWrapper.innerHTML = '<h4>The import for menu "{{menu}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
+        const conflictList = document.createElement('ul')
+        conflicts.forEach(conflict => {
+            const conflictItem = document.createElement('li')
+            conflictItem.innerHTML = conflict
+            conflictList.appendChild(conflictItem)
+        })
+        conflictWrapper.appendChild(conflictList)
+    }
 
+    const messageList = document.getElementsByClassName('messagelist')[0]
+    if (messageList) {
+        const infoMessages = messageList.getElementsByClassName('info')
+        if (infoMessages.length && menuName) {
+            const checkForWarningsOrSuccessInterval = setInterval(() => {
+                const warningMessages = messageList.getElementsByClassName('warning')
+                const successMessages = messageList.getElementsByClassName('success')
+                if (successMessages.length || warningMessages.length) {
+                    [...infoMessages].forEach(message => {
+                        messageList.removeChild(message)
+                    })
+                    clearInterval(checkForWarningsOrSuccessInterval)
+                }
+            }, 1000)
+        } else if (!menuName) {
+            [...infoMessages].forEach(message => {
+                if (!message.classList.contains('hide')) {
+                    message.classList.add('hide')
+                }
+            })
+        } else {
+            [...infoMessages].forEach(message => {
+                if (message.classList.contains('hide')) {
+                    message.classList.remove('hide')
+                }
+            }) 
+        }
 
+    }
+
+    function updateMessages() {
+        const messageList = document.getElementsByClassName('messagelist')[0]
+        const infoMessages = [...messageList.getElementsByClassName('info')]
+        infoMessages.forEach(message => {
+            if (message.classList.contains('hide')) {
+                message.classList.remove('hide')
+            }
+        }) 
+    }
+</script>
 {% endblock%}
+

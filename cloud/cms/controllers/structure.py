@@ -584,3 +584,8 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
                 DOC_CACHE.clear_cache()
         if increment_progress:
             increment_progress()
+
+def check_asset_conflicts(assets_list):
+    assets_dict = {asset.get('uuid'): asset for asset in assets_list}
+    asset_obj_list = Asset.objects.filter(uuid__in=dict.keys(assets_dict))
+    return [f"Existing asset <b>\"{asset.name}\"</b> name conflicts with imported asset <b>\"{assets_dict[str(asset.uuid)]['name']}\"</b>. <b class=\"help\">(UUID: {asset.uuid})</b> " for asset in asset_obj_list if assets_dict[str(asset.uuid)]['name'] != asset.name]

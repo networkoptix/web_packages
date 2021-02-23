@@ -385,15 +385,18 @@ asset_settings_wiki = "For more information please go to " \
 @api_view(["GET", "POST"])
 @permission_classes((IsSuperuser,))
 def asset_settings(request, asset_id):
+    PACKAGE_CACHE = PackagesCache()
+    form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
     asset = Asset.objects.get(pk=asset_id)
-    form = None
-    if request.method == "POST":
-        form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
-        if not form.is_valid():
-            form = None
+    file = request.FILES.get('file', None)
+    conflicts = []
+    form = form if form.is_valid() else None
+    file = PACKAGE_CACHE[form.cleaned_data['action']] if form and not file else file
+    form = form if file else None
 
     if form:
         action = form.cleaned_data['action']
+        force = form.cleaned_data['force']
         generate_json = action == 'generate_json'
         merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
@@ -401,15 +404,23 @@ def asset_settings(request, asset_id):
         import_assets_from_json = action in ('import_assets_from_json', 'import_assets_from_json_publish')
         import_assets_from_json_publish = action == 'import_assets_from_json_publish'
         update_content = action == 'update_content'
-
-        file = request.FILES["file"]
-
-        if file.name.endswith('json'):
-            if update_asset_by_json:
-                structure.update_asset_by_json(asset, json.load(file)[0], request.user)
+        is_loaded = isinstance(file, (list, dict))
+        if is_loaded or file.name.endswith('json'):
+            skip = False
+            loaded_json = file if is_loaded else json.load(file)
+            if not force and (update_asset_by_json or import_assets_from_json):
+                conflicts = structure.check_asset_conflicts(loaded_json)
+                if conflicts:
+                    skip = True
+                    PACKAGE_CACHE[action] = loaded_json
+                    messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
+            if skip:
+                pass
+            elif update_asset_by_json:
+                structure.update_asset_by_json(asset, loaded_json[0], request.user)
                 messages.success(request, "Content updated")
             elif import_assets_from_json:
-                structure.import_assets_from_json(json.load(file), request.user, publish=import_assets_from_json_publish)
+                structure.import_assets_from_json(loaded_json, request.user, publish=import_assets_from_json_publish)
                 messages.success(request, "Assets imported")
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
@@ -447,11 +458,12 @@ def asset_settings(request, asset_id):
                 messages.add_message(request, log_type, item[1])
     else:
         form = AssetSettingsForm(user=request.user)
-
+    messages.info(request, 'Checking asset names...')
     return render(request, 'cms/asset_settings.html',
                   {'asset': asset,
                    'form': form,
-
+                   'conflicts': conflicts,
+                   'file': file.name if file and not isinstance(file, (list, dict)) else '',
                    'user': request.user,
                    'has_permission': admin.site.has_permission(request),
                    'site_url': admin.site.site_url,
