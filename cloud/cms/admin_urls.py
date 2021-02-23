@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'preview/', asset.make_preview, name="preview"),
 
     url(r'^celery/check_status/(?P<task_id>.+?)/?$', celery.check_status, name="celery_check_status"),
+    url(r'^celery/download_result/(?P<task_id>.+?)/?$', celery.download_result, name="celery_download_result"),
 
     url(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
     url(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),
