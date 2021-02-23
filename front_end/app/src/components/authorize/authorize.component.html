@@ -2,6 +2,7 @@
     <div class="dialog-window" [ngSwitch]="currentState">
         <nx-authorize-email-component
             *ngSwitchCase="AuthorizeState.email"
+            [clientType]="clientType"
             [(loginEmail)]="loginEmail"
             [emailProcess]="checkEmailProcess"
             [errorCode]="emailErrorCode"
@@ -9,6 +10,7 @@
         ></nx-authorize-email-component>
         <nx-authorize-password-component 
             *ngSwitchCase="AuthorizeState.password"
+            [clientType]="clientType"
             [loginEmail]="loginEmail"
             [(loginPassword)]="loginPassword"
             [passwordProcess]="loginProcess"
@@ -49,7 +51,6 @@
             [newPasswordProcess]="resetPasswordProcess"
             [loginProcess]="loginPostNewPasswordProcess"
         ></nx-authorize-reset-password-component>
-
     </div>
     <div *ngIf="windowWideEnough">
         <div class="row">
