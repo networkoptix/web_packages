@@ -2,10 +2,11 @@
 <form #emailForm="ngForm" name="emailForm">
     <header>
         <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header.svg'" 
+            [src]="CONFIG.icons.dirSectionPlaceholder + CONFIG.isLocal ? 'local_header' : 'cloud_header' + '.svg'" 
             [svgStyle]="{'width.px': 320, 'height.px': 80}"
             [applyClass]="true"></svg-icon>
-        <h3>{{LANG.authorize.loginCloudHeader()}}</h3>
+        <h3>{{ header }}</h3>
+        <h4>{{ subHeader }}</h4>
     </header>
     <main>
         <ng-container *ngIf="!CONFIG.isLocal; else webadmin">
@@ -34,6 +35,7 @@
                 <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
                 <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
             </ng-container>
+            <p *ngIf="['connectSystemToCloud', 'setupWizard'].includes(clientType)" translate>This account will get owner access level</p>
         </ng-container>
         <ng-template #webadmin>
             <label for="authorizeLogin" translate>Login</label>
@@ -58,12 +60,19 @@
         </ng-template>
     </main>
     <footer>
-        <button class="btn svg-icon" (click)="createAccount()" type="button">
+        <button *ngIf="['loginToCloud', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)"
+            class="btn svg-icon"
+            (click)="createAccount()"
+            type="button"
+        >
             <svg-icon nx-add-svg-src 
                 [src]="CONFIG.icons.dir + 'plus.svg'" 
                 [svgStyle]="{'width.px': 24, 'height.px': 24}"
                 [applyClass]="true"></svg-icon>
             <span translate>Create Account</span>
+        </button>
+        <button *ngIf="clientType === 'setupWizard'" class="btn svg-icon" (click)="setupNonCloudSystem()" type="button">
+            <span translate>Setup Non-cloud System</span>
         </button>
         <nx-process-button
             buttonText="{{ 'Next' | translate }}"

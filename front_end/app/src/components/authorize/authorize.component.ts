@@ -56,11 +56,11 @@ export enum ClientType {
     loginWebadmin = 'loginToWebadmin',
     connect = 'connectSystemToCloud',
     setup = 'setupWizard',
-    expired = 'sessionExpired',
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb'
 };
 
+// add a param for desktop/mobile/web
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-authorize-component',
@@ -154,7 +154,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData = NxUtilsService.deepCopy(params);
             this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
             this.currentState = AuthorizeState.email;
-            this.setupComponents();
 
             // for reset password
             this.resetPasswordCode = this.route.snapshot.params.code;
@@ -273,133 +272,4 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {}
-
-    setupComponents() { // not in use yet; potential implementation
-        // this.content = {
-        //     loginToCloud: {
-        //         email: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginCloudHeader,
-        //             subHeader          : undefined,
-        //             additionalText     : undefined,
-        //             textButton         : this.LANG.authorize.createText,
-        //             backButton         : false
-        //         },
-        //         password: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginCloudHeader,
-        //             subHeader          : this.LANG.authorize.asAccountSubheader,
-        //             forgotButton       : true,
-        //             logOutButton       : false,
-        //             backButton         : true
-        //         },
-        //         error: {
-        //             placeholder    : 'error',
-        //             content        : this.LANG.authorize.loginError,
-        //             additionalText : this.LANG.authorize.loginErrorAdditional,
-        //             backButton     : false
-        //         }
-        //     },
-        //     loginToSystem: {
-        //         email: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginSystemHeader,
-        //             subHeader          : this.LANG.authorize.loginSystemSubheader,
-        //             additionalText     : undefined,
-        //             textButton         : undefined,
-        //             backButton         : false
-        //         },
-        //         password: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginSystemHeader,
-        //             subHeader          : this.LANG.authorize.asAccountSubheader,
-        //             forgotButton       : true,
-        //             logOutButton       : false,
-        //             backButton         : true
-        //         },
-        //         error: {
-        //             placeholder    : 'error',
-        //             content        : this.LANG.authorize.loginError,
-        //             additionalText : this.LANG.authorize.loginErrorAdditional,
-        //             backButton     : false
-        //         }
-        //     },
-        //     loginToWebadmin: {
-        //         email: {
-        //             headerIllustration : 'server',
-        //             header             : this.LANG.authorize.loginSystemHeader,
-        //             subHeader          : undefined,
-        //             additionalText     : undefined,
-        //             textButton         : undefined,
-        //             backButton         : false
-        //         },
-        //         password: {
-        //             headerIllustration : 'server',
-        //             header             : this.LANG.authorize.loginSystemHeader,
-        //             subHeader          : this.LANG.authorize.asAccountSubheader,
-        //             forgotButton       : false,
-        //             logOutButton       : false,
-        //             backButton         : true
-        //         },
-        //         error: {
-        //             placeholder    : 'error',
-        //             content        : this.LANG.authorize.loginError,
-        //             additionalText : this.LANG.authorize.loginErrorAdditional,
-        //             backButton     : false
-        //         }
-        //     },
-        //     connectSystem: {
-        //         email: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginCloudHeader,
-        //             subHeader          : undefined,
-        //             additionalText     : undefined,
-        //             textButton         : this.LANG.authorize.createText,
-        //             backButton         : false
-        //         },
-        //         password: {
-        //             headerIllustration : 'cloud',
-        //             header             : this.LANG.authorize.loginCloudHeader,
-        //             subHeader          : this.LANG.authorize.asAccountSubheader,
-        //             forgotButton       : true,
-        //             logOutButton       : false,
-        //             backButton         : true
-        //         },
-        //         error: {
-        //             placeholder    : 'error',
-        //             content        : this.LANG.authorize.loginError,
-        //             additionalText : this.LANG.authorize.loginErrorAdditional,
-        //             backButton     : false
-        //         }
-        //     }
-        // };
-    }
-    /**
-     * Chris' suggestion
-     * class AuthContent {
-            ... property definitions
-            constructor(
-                content: Partial<AuthContent>
-            ) {...combine content with contentDefault object}
-        }
-
-        class AuthStateContent {
-            constructor(
-                public email: AuthContent,
-                public password: AuthContent,
-                public error: ErrorContent = defaultErrorState
-            ){}
-        }
-
-        interface AuthStates {
-            [key: ClientType] : AuthStateContent
-        }
-        this.content = {
-            [ClientType.loginCloud]: new AuthStateContent(
-                new AuthContent({...}),
-                new AuthContent({...}),
-                // Error can be left empty to use default
-            )
-        }
-     */
 }

@@ -20,14 +20,17 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @Output() setCurrentState = new EventEmitter<AuthorizeState>();
-    @Input() emailProcess: Process;
-    @Input() errorCode: string;
+    @Input() clientType: string;
     @Input() loginEmail: string;
     @Output() loginEmailChange = new EventEmitter<string>();
+    @Input() emailProcess: Process;
+    @Input() errorCode: string;
+    @Output() setCurrentState = new EventEmitter<AuthorizeState>();
 
     sendEmail: any;
     @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
+    header: string;
+    subHeader: string;
 
     constructor(
         language: NxLanguageProviderService,
@@ -38,6 +41,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit(): void {
+        this.setupText();
         this.sendEmail = () => {
             this.loginEmailChange.emit(this.loginEmail);
         };
@@ -51,7 +55,41 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnDestroy(): void {}
 
+    setupNonCloudSystem() {
+        // TODO: waiting for new setup wizard
+    }
+
     createAccount() {
         this.setCurrentState.emit(AuthorizeState.create);
+    }
+
+    setupText() {
+        const auth = this.LANG.authorize;
+        const connect = {
+            header    : auth.connectHeader(),
+            subHeader : auth.connectSubheader()
+        };
+        const renew = {
+            header    : auth.expiredHeader(),
+            subHeader : auth.expiredSubheader()
+        };
+        const text = {
+            loginToCloud: {
+                header: auth.loginCloudHeader()
+            },
+            loginToSystem: {
+                header: NxLanguageProviderService.translate(
+                    auth.loginSystemHeader,
+                    { systemName: '' }),
+                subHeader: auth.loginSystemSubheader()
+            },
+            connectSystemToCloud : connect,
+            setupWizard          : connect,
+            renewSessionDesktop  : renew,
+            renewSessionWeb      : renew
+        };
+
+        this.header = text[this.clientType].header;
+        this.subHeader = text[this.clientType].subHeader;
     }
 }
