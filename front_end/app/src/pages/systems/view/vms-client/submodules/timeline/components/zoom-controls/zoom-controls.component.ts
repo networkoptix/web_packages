@@ -54,7 +54,10 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
   protected _zoomingSign: signType = 0
 
-  public startZooming (sign: signType) {
+  public startZooming ($event: MouseEvent, sign: signType) {
+    if ($event.button !== 0) {
+      return
+    }
     this._zoomingSign = sign
   }
 
