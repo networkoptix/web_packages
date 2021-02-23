@@ -1,5 +1,5 @@
 import { IConfig } from './config-types';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 export const nxConfig: IConfig = {
     alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -22,7 +22,7 @@ export const nxConfig: IConfig = {
         debug : false
     },
     credentialsValidation: {
-        emailRegex           : environment.isLocal ? '.*' : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+        emailRegex           : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
         passwordRequirements : {
             maxLength          : 255,
             minClassesCount    : 2,
