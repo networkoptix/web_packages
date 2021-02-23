@@ -366,6 +366,10 @@ img.light {
     backdrop-filter: blur(1px) brightness(.9);
 }
 
+.state-label {
+    color: white !important;
+}
+
 .messagelist {
     position: sticky;
     top: 40px;

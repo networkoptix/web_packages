@@ -3,9 +3,12 @@ async function setPreviewState(asset_id, create_id, el, state) {
     const customization = params.get('customization');
     const selectElement = $(el);
     selectElement.parent().children('.state-label').remove();
+    let reviewUrl
     if (customization && !all_customizations && asset_id) {
         if (!state) {
-            state = (await $.get(`/admin/cms/asset_info/${asset_id}?customization=${customization}`)).state;
+            asset = (await $.get(`/admin/cms/asset_info/${asset_id}?customization=${customization}`));
+            state = asset.state
+            reviewUrl = asset.review_url
         }
 
         let labelClass;
@@ -30,7 +33,9 @@ async function setPreviewState(asset_id, create_id, el, state) {
             state = 'Draft';
             labelClass = 'label-info';
         }
-        const stateLabel = `<span class="state-label label ${labelClass}">${state}</span>`;
+        const isReview = !!reviewUrl
+        const element = isReview ? 'a': 'span'
+        const stateLabel = `<${element} class="state-label label ${labelClass}" ${isReview ? `href="${reviewUrl}" target="_blank"`: ''}>${state}</${element}>`;
         selectElement.parent().append(stateLabel);
     }
 }

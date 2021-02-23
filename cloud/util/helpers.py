@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from api.models import Account
 from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language
+from django.urls import reverse
 
 
 def get_languages(customization=None):
@@ -33,7 +34,8 @@ def detect_language_by_request(request):
     # 4. Try ACCEPT_LANGUAGE header
     if not lang and 'HTTP_ACCEPT_LANGUAGE' in request.META:
         # "en-US,en;q=0.9" -> ["en-Us, en", "q=0.9"] -> "en-Us, en" -> ["en-Us", "en"]
-        request_languages = request.META['HTTP_ACCEPT_LANGUAGE'].split(';')[0].split(',')
+        request_languages = request.META['HTTP_ACCEPT_LANGUAGE'].split(';')[
+            0].split(',')
         for l in request_languages:
             if l in languages:
                 lang = l
@@ -60,3 +62,16 @@ def get_language_for_email(email, customization):
         language = default_language
 
     return language
+
+
+def get_admin_url(obj_instance):
+    """Accepts an object instance and returns the admin url for it.
+
+    Args:
+        obj_instance : Accepts a object to get admin url
+
+    Returns:
+        string: Admin Url
+    """
+    return reverse(f'admin:{obj_instance._meta.app_label}_{obj_instance._meta.model_name}_change',
+                   args=[obj_instance.id])

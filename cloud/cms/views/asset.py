@@ -1,4 +1,5 @@
 
+from util.helpers import get_admin_url
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
@@ -717,6 +718,7 @@ def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
     asset = get_object_or_404(Asset, id=asset_id)
+    review_url = None
     if not request.user.is_superuser and not (
             UserGroupsToAssetPermissions.check_customization_publish(request.user) and
             UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
@@ -729,8 +731,9 @@ def get_asset_info(request, asset_id):
             latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
             if latest_review:
                 state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+                review_url = get_admin_url(latest_review)
     else:
         state = None
 
     enabled_customizations_dict = {cust.id: cust.name for cust in asset.customizations.filter(name__in=request.user.customizations)}
-    return api_success({'state': state, 'customizations': enabled_customizations_dict})
+    return api_success({'state': state, 'customizations': enabled_customizations_dict, 'review_url': review_url})
