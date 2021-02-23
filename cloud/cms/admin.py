@@ -1323,3 +1323,8 @@ admin.site.register(ZendeskCategory, CMSAdmin)
 admin.site.register(ZendeskSection, CMSAdmin)
 admin.site.register(ZendeskArticle, CMSAdmin)
 admin.site.register(ZendeskArticleLabel, CMSAdmin)
+
+
+@admin.register(SpecialStructure)
+class SpecialStructAdmin(CMSAdmin):
+    list_display = ('name',)

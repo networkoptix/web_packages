@@ -111,6 +111,13 @@ def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
                              f"Most likely a customization with the name \"{customization}\" doesn't exist.")
 
 
+def get_vms_asset(customization=settings.CUSTOMIZATION):
+    return Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.vms
+    ).first()
+
+
 def get_asset_by_revision(version_id):
     return Asset.objects.get(contentversion__in=[version_id])
 
@@ -1124,6 +1131,11 @@ class DataStructure(models.Model):
         return self.type in [DataStructure.DATA_TYPES.file,
                              DataStructure.DATA_TYPES.external_file,
                              DataStructure.DATA_TYPES.external_image]
+
+
+class SpecialStructure(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    config = JSONField(default={}, blank=True)
 
 
 # CMS settings. Release engineer can change that
