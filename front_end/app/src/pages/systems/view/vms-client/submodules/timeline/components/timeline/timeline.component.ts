@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service'
 import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service'
 import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service'
@@ -10,6 +10,7 @@ import { px } from '@pages/systems/view/vms-client/utils/type-aliases';
 
 const CANVAS_SELECTION_HEIGHT = 50
 const MOUSE_MINIMAL_MOVE_PX = 2
+const MOUSE_HIDE_UNTIL_PX = 8
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
@@ -97,13 +98,19 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public canvasMouseMoveHandler (e: MouseEvent): void {
     this.timeUnderMouse.handleMouseMove(e)
-    // console.log('mouse move')
-    if (this.hideTimeUnderMouse) {
-      const delta = Math.abs(e.screenX - this._mouseDownScreenX)
-      // console.log('gotta check if it is time to unhide it', e.screenX, delta, delta > 2)
-      if (delta > MOUSE_MINIMAL_MOVE_PX) {
-        this.hideTimeUnderMouse = false
-      }
+    const delta = Math.abs(e.screenX - this._mouseDownScreenX)
+    if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
+      // console.log('dragging started', delta)
+      this.isDragging = true
+    }
+    if (this.isDragging) {
+      const dt = this.timeline.domWidthToDuration(e.screenX - this._mouseDownScreenX)
+      // console.log('dragging in progress', dt)
+      this.timeline.shiftVisibleRange(dt)
+      this._mouseDownScreenX = e.screenX
+    }
+    if (delta > MOUSE_HIDE_UNTIL_PX && this.hideTimeUnderMouse) {
+      this.hideTimeUnderMouse = false
     }
 
   }
@@ -117,7 +124,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   protected _mouseDownScreenX: px = 0
+  protected _mouseNotReleasedYet: boolean = false
   public hideTimeUnderMouse: boolean = false
+  public isDragging: boolean = false
 
   public canvasMouseDownHandler (e: MouseEvent): void {
     if (e.button !== 0) {
@@ -127,19 +136,28 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     e.preventDefault()
     // console.log('mouse down', e.screenX)
     this._mouseDownScreenX = e.screenX
+    this._mouseNotReleasedYet = true
   }
 
   public canvasMouseUpHandler (e: MouseEvent): void {
     const delta = Math.abs(e.screenX - this._mouseDownScreenX)
     // console.log('mouse up', e.screenX, delta)
-    if (delta < MOUSE_MINIMAL_MOVE_PX) {
+    if (!this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX) {
       const time = this.timeline.domOffsetXtoTime(e.offsetX)
       // this.selection.reset()
       this.playback.playArchive(time)
       this.hideTimeUnderMouse = true
       this._mouseDownScreenX = e.screenX
-      console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
+      // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
     }
+    this._mouseNotReleasedYet = false
+    this.isDragging = false
+  }
+
+  @HostListener('document:mouseup')
+  public documentMouseUpHandler (e: MouseEvent): void {
+    this._mouseNotReleasedYet = false
+    this.isDragging = false
   }
 
   // public canvasClickHandler (e: MouseEvent): void {
