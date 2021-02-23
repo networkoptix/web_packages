@@ -83,7 +83,7 @@ $border-color: #cdd7dc;
         left: 12px;
         border-radius: 6px;
         background-color: transparent;
-        border: 1px solid transparent;
+        border: 2px solid transparent;
         // transition: all .2s ease-in-out;
       }
     }
@@ -91,7 +91,8 @@ $border-color: #cdd7dc;
     &.isLive {
       > .glyph {
         opacity: 1.0;
-        background-color: green;
+        // background-color: green;
+        background-color: red;
       }
       &.isRecording {
         opacity: 1.0;

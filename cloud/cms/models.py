@@ -1699,9 +1699,25 @@ class Menu(models.Model):
             'assets': list(filter(lambda id: id, assets))
         }
 
-    def from_dict(self, menu_dict, user):
+    def from_dict(self, menu_dict, user, update_progress_cb = None):
         from cms.controllers.structure import import_assets_from_json
-        import_assets_from_json(menu_dict['assets'], user)
+        node_asset_count = len(menu_dict['assets'])
+        progress = 0
+
+        def increment_progress():
+            nonlocal progress
+            if not update_progress_cb:
+                return
+            progress += 1
+            update_progress_cb(progress, node_asset_count)
+
+        def get_node_count(node):
+            return 1 + sum(get_node_count(child) for child in node.get('nodes', []))
+
+        node_asset_count += get_node_count(menu_dict)
+        if update_progress_cb:
+            update_progress_cb(progress, node_asset_count)
+        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
                 new_node = False
@@ -1743,6 +1759,7 @@ class Menu(models.Model):
                     node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())
                 node_obj.save()
 
+                increment_progress()
                 if node['nodes']:
                     set_nodes(node['nodes'], node_obj)
 

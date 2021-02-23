@@ -4,7 +4,7 @@
             openNodes.concat(activeRouteNodes)
                 .includes(
                     node.parentNode.display_name || node.parentNode.name
-                )" 
+                )"
             [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
                 (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state)"
@@ -27,7 +27,7 @@
                 'left-menu-arrow': node.nodes.length,
                 'down': openNodes.concat(activeRouteNodes).includes(node.displayName || node.name),
                 'd-none': !node.nodes.length}">
-                <svg-icon nx-add-svg-src 
+                <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_expand.svg'"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
             </div>

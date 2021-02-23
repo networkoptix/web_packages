@@ -1,3 +1,4 @@
+from cms.tasks import async_menu_export, async_menu_import
 from urllib.parse import unquote, quote
 
 from django.contrib import admin, messages
@@ -695,6 +696,11 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
 
+        if extra_context['customization_reviews'].count() > 1:
+            extra_context['show_accept_all'] = True
+        else:
+            extra_context['show_accept_all'] = False
+
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
@@ -1153,14 +1159,51 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             if 'export' in request.POST:
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
                 if form_export.is_valid():
-                    return self.generate_export(form_export)
+                    menu_name = form_export.cleaned_data['menu'].name
+                    task = async_menu_export.apply_async(args=[menu_name])
+                    file_name = f'menu-{menu_name}.json'
+                    return render(request, 'cms/menu_porting.html',
+                                  {'formExport': form_export,
+                                   'formImport': MenuPortForm(request.POST, request.FILES, port_type='import'),
+                                   'user': request.user,
+                                   'has_permission': admin.site.has_permission(request),
+                                   'site_url': admin.site.site_url,
+                                   'site_header': admin.site.site_header,
+                                   'site_title': admin.site.site_title,
+                                   'title': 'Export/Import Menus',
+                                   'processing_menu': menu_name,
+                                   'queue_message': 'Menu export waiting in queue...',
+                                   'progress_message': 'Processing export asset/node CURRENT out of TOTAL',
+                                   'complete_message': f'Menu "{menu_name}" has been successfully exported. Click the download link below if download didn\'t start automatically.',
+                                   'download_message': f'Download "{file_name}"',
+                                   'modal_title': 'Processing Menu Export',
+                                   'task': str(task)
+                                   })
             elif 'import' in request.POST:
                 form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
                 if form_import.is_valid():
                     data = form_import.cleaned_data
                     menu = data['menu']
-                    menu.from_dict(json.load(request.FILES['file']), request.user)
-                    messages.success(request, 'Successfully imported menu')
+                    file = json.load(request.FILES['file'])
+                    task = async_menu_import.apply_async(args=[file, menu.name, request.user.email])
+                    return render(request, 'cms/menu_porting.html',
+                                  {'formExport': MenuPortForm(request.POST, request.FILES, port_type='export'),
+                                   'formImport': form_import,
+                                   'user': request.user,
+                                   'has_permission': admin.site.has_permission(request),
+                                   'site_url': admin.site.site_url,
+                                   'site_header': admin.site.site_header,
+                                   'site_title': admin.site.site_title,
+                                   'title': 'Export/Import Menus',
+                                   'processing_menu': menu.name,
+                                   'queue_message': 'Menu import waiting in queue...',
+                                   'progress_message': 'Processing asset/node CURRENT out of TOTAL',
+                                   'complete_message': f'Menu "{menu.name}" has been successfully imported.',
+                                   'download_message': '',
+                                   'file_name': '',
+                                   'modal_title': 'Processing Menu Import',
+                                   'task': str(task)
+                                  })
 
         if not form_export:
             form_export = MenuPortForm(port_type='export')
@@ -1177,21 +1220,37 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'site_title': admin.site.site_title,
                        'title': 'Export/Import Menus'})
 
-    def generate_export(self, form_export):
-        data = form_export.cleaned_data
-        menu_obj = data['menu']
+    @staticmethod
+    def generate_export(menu, complete_cb=None, update_progress_cb=None):
+        menu_obj = menu if not isinstance(menu, str) else Menu.objects.get(name=menu)
         menu_dict = menu_obj.to_dict()
+        filtered_assets = Asset.objects.filter(uuid__in=menu_dict['assets'])
+        progress = 0
+        total_assets = filtered_assets.count()
         assets = []
-        for asset in Asset.objects.filter(uuid__in=menu_dict['assets']):
+
+        def increment_progress():
+            nonlocal progress
+            if not update_progress_cb:
+                return
+            progress += 1
+            update_progress_cb(progress, total_assets)
+
+        for asset in filtered_assets:
             asset_dict = generate_structure.from_database(asset, True)[0]
             asset_dict['name'] = asset.name
             asset_dict['uuid'] = str(asset.uuid)
             asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
             prepare_asset_exports(asset, asset_dict)
             assets.append(asset_dict)
+            increment_progress()
+
         menu_dict['assets'] = assets
         content = json.dumps(menu_dict, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+        if complete_cb:
+            complete_cb(f'menu-{menu_obj.name}.json', content)
+        else:
+            return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
 
 
 class MenuFilter(SimpleListFilter):

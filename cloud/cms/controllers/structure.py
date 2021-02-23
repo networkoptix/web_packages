@@ -555,14 +555,18 @@ def update_asset_by_json(asset, asset_json, user):
         save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
 
 
-def import_assets_from_json(assets_list, user, publish=False):
+def import_assets_from_json(assets_list, user, publish=False, increment_progress=None):
     for asset_dict in assets_list:
         asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
         # TODO: CLOUD-6671 Ask for confirmation if asset name does not match
-        asset_obj = Asset.objects.filter(uuid=asset_dict['uuid'], asset_type=asset_type).first()
+        asset_obj = Asset.objects.filter(uuid=asset_dict['uuid']).first()
         if not asset_obj:
             asset_obj = Asset.objects.create(name=asset_dict['name'], uuid=asset_dict['uuid'], asset_type=asset_type)
             asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+        elif increment_progress and str(asset_obj.asset_type) != str(asset_type):
+            increment_progress(
+                f'Failed to import <b>"{asset_dict["name"]}"</b>, asset already exist as type <b>"{asset_obj.asset_type}"</b> but is being imported as <b>"{asset_type}"</b>')
+            continue
         asset_obj.name = asset_dict['name']
         asset_obj.save()
         update_asset_by_json(asset_obj, asset_dict, user)
@@ -578,3 +582,5 @@ def import_assets_from_json(assets_list, user, publish=False):
                 update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
             if asset_obj.is_documentation:
                 DOC_CACHE.clear_cache()
+        if increment_progress:
+            increment_progress()

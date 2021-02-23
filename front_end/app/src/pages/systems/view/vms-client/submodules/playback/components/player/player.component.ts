@@ -3,8 +3,10 @@ import PlaybackService from '../../services/playback.service'
 import { PlaybackState, PLAYBACK_MODE, ArchivePlaybackState, LivePlaybackState } from '../../datatypes/PlaybackState'
 import assertNever from '../../../../utils/assertNever'
 import { Subscription } from 'rxjs'
-import { ms } from '../../../../utils/type-aliases'
+import { ms, int } from '../../../../utils/type-aliases'
 import Hls from 'hls.js'
+import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 
 
 const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
@@ -27,10 +29,14 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _playPromise: Promise<any>
 
+  protected _camera_rotation: int = 0
+
   constructor (
     public playback: PlaybackService,
+    public vms: VideoManagementSystemService,
   ) {
-    this.onSubjectChange = this.onSubjectChange.bind(this)
+    this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
+    this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
   }
 
   public get mode () {
@@ -38,7 +44,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnInit (): void {
-    // this.subscription = this.playback.subject.subscribe(this.onSubjectChange)
+    // this.subscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
+    this.onVmsSubjectChange(this.vms.state)
   }
 
   protected _animationFrameRequestHandler: number
@@ -51,7 +58,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit (): void {
-    this.subscription = this.playback.subject.subscribe(this.onSubjectChange)
+    this.subscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
@@ -60,10 +67,42 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.unsubscribe()
   }
 
-  public onSubjectChange (s: PlaybackState) {
+  public onPlaybackSubjectChange (s: PlaybackState) {
     const prevState = { ...this.state }
     this.state = {...s}
     this._reactOnPlaybackStateChange(prevState)
+  }
+
+  public onVmsSubjectChange (s: VmsState) {
+    const rotationWas = this._camera_rotation
+    // console.log('rotationWas', rotationWas)
+    switch (s.mode) {
+      case VMS_MODE.CAMERA_SELECTED:
+        // console.log('camera got selected', s.selectedCamera.id, 'rotation is', s.selectedCamera.rotation)
+        this._camera_rotation = s.selectedCamera.rotation
+        break;
+      default:
+        this._camera_rotation = 0
+    }
+    const waitUntilThereIsVideoView = new Promise((resolve) => {
+      const nextMoment = () => {
+        if (this.videoView) {
+          // console.log('finally videoView')
+          resolve(this.videoView)
+        } else {
+          // console.log('still no videoView')
+          requestAnimationFrame(nextMoment)
+        }
+      }
+      nextMoment()
+    })
+
+    if (this._camera_rotation === 0) {
+      waitUntilThereIsVideoView.then(() => {
+        this.videoView.nativeElement.style.transform = ''
+        console.log('video rotation reset')
+      })
+    }
   }
 
   public isBuffering: boolean = false
@@ -71,7 +110,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _playVideo () {
     console.log('video play request, promise is', this._playPromise)
     this._playPromise = this.$video.play().then(() => {
-      console.log('play promise resolved')
+      console.log('play promise resolved', this._camera_rotation, this.vms.selectedCamera.rotation)
+      if (this._camera_rotation) {
+        console.log('rotation change')
+        this.videoView.nativeElement.style.transform = `rotate(${this._camera_rotation}deg)`
+      }
     }).catch(e => {
       console.log('play promise catch', e)
     }).finally(() => {
@@ -95,6 +138,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
       case PLAYBACK_MODE.STOPPED:
         console.log('PLAYBACK_MODE -> STOPPED')
         this._setPlaybackSource('')
+        this.videoView.nativeElement.style.transform = ''
+        console.log('video rotation reset')
         if (prevState.mode !== this.state.mode) {
           this._stop()
         }

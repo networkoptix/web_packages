@@ -1,4 +1,4 @@
-import { ms } from '../../../utils/type-aliases'
+import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
 
@@ -24,6 +24,8 @@ export class Camera implements ICamera {
 
   protected _mediaStreams: Array<MediaStreamInfo> = []
 
+  protected _rotation: int = 0
+
   constructor (
     public readonly id: string,
     public readonly preferredServerId: string,
@@ -46,12 +48,21 @@ export class Camera implements ICamera {
     if (ms) {
       try {
         this._mediaStreams = JSON.parse(ms.value).streams
-        console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
+        // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
       } catch (e) {
         this._mediaStreams = []
         console.error('error parsing media streams', this.id, e)
       }
     }
+    const rotation = ps.find(p => p.name === 'rotation')
+    if (rotation) {
+      this._rotation = parseInt(rotation.value) || 0
+      // console.log('got camera rotation', this._rotation)
+    }
+  }
+
+  public get rotation () {
+    return this._rotation
   }
 
   public get hasHlsStream (): boolean {
