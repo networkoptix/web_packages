@@ -8,7 +8,6 @@ $green-fill: #56E829;
   width: 100%;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 -2px 5px rgba($dark5, 0.5);
 
   > .is-live {
     opacity: 0.0;
@@ -36,7 +35,7 @@ $green-fill: #56E829;
         width: 8px;
         height: 8px;
         border-radius: 4px;
-        margin-right: 2px;
+        margin-right: 4px;
       }
 
       > .text {
@@ -55,20 +54,20 @@ $green-fill: #56E829;
       }
     }
 
-    &.recording {
-      > .line {
-        > .icon {
-          border-color: $red_main;
-        }
-      }
-      &.playing {
-        > .line {
-          > .icon {
-            background: red;
-          }
-        }
-      }
-    }
+    // &.recording {
+    //   > .line {
+    //     > .icon {
+    //       border-color: $red_main;
+    //     }
+    //   }
+    //   &.playing {
+    //     > .line {
+    //       > .icon {
+    //         background: $red_main;
+    //       }
+    //     }
+    //   }
+    // }
 
     &.active {
       opacity: 1.0;
