@@ -6,8 +6,10 @@ import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mo
 import TimelineSelectionService from '../../services/timeline.selection.service'
 import PlaybackService from '../../../playback/services/playback.service'
 import { Subscription } from 'rxjs';
+import { px } from '@pages/systems/view/vms-client/utils/type-aliases';
 
 const CANVAS_SELECTION_HEIGHT = 50
+const MOUSE_MINIMAL_MOVE_PX = 2
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
@@ -95,6 +97,15 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public canvasMouseMoveHandler (e: MouseEvent): void {
     this.timeUnderMouse.handleMouseMove(e)
+    // console.log('mouse move')
+    if (this.hideTimeUnderMouse) {
+      const delta = Math.abs(e.screenX - this._mouseDownScreenX)
+      // console.log('gotta check if it is time to unhide it', e.screenX, delta, delta > 2)
+      if (delta > MOUSE_MINIMAL_MOVE_PX) {
+        this.hideTimeUnderMouse = false
+      }
+    }
+
   }
 
   public canvasMouseEnterHandler (e: MouseEvent): void {
@@ -105,15 +116,41 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     this.timeUnderMouse.handleMouseLeave(e)
   }
 
-  public canvasClickHandler (e: MouseEvent): void {
+  protected _mouseDownScreenX: px = 0
+  public hideTimeUnderMouse: boolean = false
+
+  public canvasMouseDownHandler (e: MouseEvent): void {
+    if (e.button !== 0) {
+      return
+    }
     e.stopPropagation()
     e.preventDefault()
-    // if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
-      const time = this.timeline.domOffsetXtoTime(e.offsetX)
-      this.selection.reset()
-      this.playback.playArchive(time)
-    // }
+    // console.log('mouse down', e.screenX)
+    this._mouseDownScreenX = e.screenX
   }
+
+  public canvasMouseUpHandler (e: MouseEvent): void {
+    const delta = Math.abs(e.screenX - this._mouseDownScreenX)
+    // console.log('mouse up', e.screenX, delta)
+    if (delta < MOUSE_MINIMAL_MOVE_PX) {
+      const time = this.timeline.domOffsetXtoTime(e.offsetX)
+      // this.selection.reset()
+      this.playback.playArchive(time)
+      this.hideTimeUnderMouse = true
+      this._mouseDownScreenX = e.screenX
+      console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
+    }
+  }
+
+  // public canvasClickHandler (e: MouseEvent): void {
+  //   e.stopPropagation()
+  //   e.preventDefault()
+  //   // if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
+  //     const time = this.timeline.domOffsetXtoTime(e.offsetX)
+  //     this.selection.reset()
+  //     this.playback.playArchive(time)
+  //   // }
+  // }
 
   // public canvasMouseDownHandler (e: MouseEvent): void {
   //   if (e.offsetY <= CANVAS_SELECTION_HEIGHT) {
