@@ -248,6 +248,26 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
         hls.loadSource(sourceUrl);
         hls.attachMedia(this.$video);
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.log('HLS.js ERROR', event, data)
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                // try to recover network error
+                console.log('fatal network error encountered, try to recover');
+                hls.startLoad();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.log('fatal media error encountered, try to recover');
+                hls.recoverMediaError();
+                break;
+              default:
+                console.log('cannot recover');
+                hls.destroy();
+                break;
+            }
+          }
+        })
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           console.log('HLS manifest parsed')
           // this._playVideo()
