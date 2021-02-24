@@ -121,7 +121,6 @@
     "PRIVACY"                              :    "Privacy",
     "COPYRIGHT"                            :    "Copyright",
     "SUPPORTED DEVICES"                    :    "Supported Devices",
-
     "VIEW"                                 :    "View",
     "SETTINGS TEXT"                        :    "Settings",
     "INFORMATION TEXT"                     :    "Information",
@@ -133,7 +132,11 @@
     "DEVELOPER SUPPORT TEXT"               :    "Developers Support",
     "API DOCUMENTATION TEXT"               :    "API Documentation",
     "SERVICES TEXT"                        :    "Services",
+    "EXTERNAL LINKS TEXT"                  :    "External Links",
     "DOWNLOADS TEXT"                       :    "Downloads",
+
+    "DEVELOP WITH NX META TEXT"            :    "Develop with Nx Meta",
+
     "HEALTH VIEWER TEXT"                   :    "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT"  :    "Activate your account",
     "RESET PASSWORD EMAIL SUBJECT"         :    "Reset your password",

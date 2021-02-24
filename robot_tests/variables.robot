@@ -53,22 +53,23 @@ ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${T
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
 #Header
+${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
+${LOGO ICON}                          ${HEADER ICON LINK}/img
+${LOGO ICON SOURCE}                   ${ENV}/static/images/logo.png
 ${LARGE ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and not(contains(@class,'small-icon-overrides'))]
 ${SMALL ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and contains(@class,'small-icon-overrides')]
 ${LARGE CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and not(contains(@class, 'small-button'))]
 ${SMALL CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and contains(@class, 'small-button')]
 ${LARGE LOGIN BUTTON}                 //nx-header/header//a[contains(@class, 'login-button')]
 ${SMALL LOGIN BUTTON}                 //nx-header/header//ul[contains(@class, 'navbar-right')]//span[contains(@class, 'glyphicon-login')]
-${SYSTEM NAME HEADING}                //nx-system-admin-component//div[contains(@class,'header-title')]/h2[@id='editable-title']
-${HEADER TAB WRAPPER}                 //nx-header/header//div[contains(@class, 'tab-wrapper')]
-${HEADER TAB BUTTONS}                 ${HEADER TAB WRAPPER}/nx-header-tabs
-${HEADER TAB DROPDOWN}                ${HEADER TAB WRAPPER}/nx-nav-dropdown
-${HEADER ACTIVE TAB}                  ${HEADER TAB WRAPPER}//li[contains(@class, 'tab-link active')]/a
 ${HEADER LANGUAGE DROPDOWN}           //header//nx-header-language-select
+
+${SYSTEM NAME HEADING}                //nx-system-admin-component//div[contains(@class,'header-title')]/h2[@id='editable-title']
+#${HEADER TAB WRAPPER}                 //nx-header/header//div[contains(@class, 'tab-wrapper')]
+${HEADER TAB BUTTONS}                 //nx-header/header/nx-header-tabs
+${HEADER TAB DROPDOWN}                //nx-header/header/nx-nav-dropdown
+${HEADER ACTIVE TAB}                  //nx-header/header//li[contains(@class, 'tab-link active')]/a
 ${SYSTEMS DROPDOWN}                   //nx-header//button[@id='systemsDropdown']
-${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
-${LOGO ICON}                          ${HEADER ICON LINK}/img
-${LOGO ICON SOURCE}                   ${ENV}/static/images/logo.png
 ${SYSTEMS GRID}                       //nx-drop-menu//li[contains(@class, 'systems-grid')]
 ${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
 

@@ -246,13 +246,16 @@ Get Server Name
     END
 
 Get Server Id
-    [Arguments]    ${system url}    ${system auth}    ${server name}
+    [Arguments]    ${system url}    ${system auth}    ${server name}=${None}
+    # Pass server name if there is more than one server ins the system
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    FOR    ${server}    IN    @{resp.json()}
-        ${status}=   Run Keyword And Return Status    Should Contain    ${server name}    ${server}[name]
-        Return From Keyword If    ${status}    ${server}[id]
+    ${data}=   Evaluate    $resp.json()
+
+    Return From Keyword If   not $server_name    ${data}[0][id]
+    FOR    ${server}    IN    @{data}
+        Return From Keyword If    "${server name}" == "${server}[name]"    ${server}[id]
     END
 
 Rename Server

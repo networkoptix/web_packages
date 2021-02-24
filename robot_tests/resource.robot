@@ -470,9 +470,10 @@ Check For Alert Dismissable
     Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
 Verify In System
-    [arguments]    ${system name}
+    [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
-    Wait Until Element Is Visible    //h2[@id="editable-title" and contains(text(), '${system name}')]
+    Run Keyword If    ${editable}    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
+        ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration
@@ -643,8 +644,8 @@ User is in cloud system
 
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
-    ${is there}=   User is in cloud system    ${email}    ${system id}
-    Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
+    ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
+    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
