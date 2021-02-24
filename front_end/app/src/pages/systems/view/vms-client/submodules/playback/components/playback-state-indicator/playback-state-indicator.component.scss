@@ -10,7 +10,7 @@ $green-fill: #56E829;
   align-items: center;
 
   > .is-live {
-    opacity: 0.0;
+    opacity: 0.6;
     transition: all 0.2s ease-in-out;
     width: 100%;
     height: 100%;
@@ -75,6 +75,8 @@ $green-fill: #56E829;
       background: $light5;
       border-left: 1px solid $light8;
       border-right: 1px solid $light7;
+      box-shadow: -2px 0 0 0 #0003;
+      z-index: 5;
 
       &:hover {
         background: $light4;
