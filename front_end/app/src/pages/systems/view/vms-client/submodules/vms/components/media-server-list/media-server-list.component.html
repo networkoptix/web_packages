@@ -34,12 +34,13 @@
             offline: !camera.isOnline,
             unauthorized: !camera.isAuthorized,
             isScheduleEnabled: camera.isScheduleEnabled,
-            selected: camera.id === activeCameraId
+            selected: camera.id === activeCameraId,
+            error: previewLoaded[camera.id] === -1
           }"
         >
           <div class="preview">
             <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
-            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)">
+            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
           </div>
           <span class="name" [ngClass]="camera.status">{{ camera.name }}</span>
           <span class="ip-info">{{ camera.url | ip_info }}</span>

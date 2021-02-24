@@ -249,7 +249,8 @@
                         // }
 
                         &.offline,
-                        &.unauthorized {
+                        &.unauthorized,
+                        &.error {
                             > .name {
                                 color: $light16;
                             }
@@ -273,6 +274,12 @@
                                 // background-image: url('/static/images/icons/standard/camera_unauthorized.svg');
                                 // background-image: url('/static/images/icons/view/placeholder_camera_unauthorized.svg');
                                 background-image: url('/static/images/icons/standard/cameras_list_placeholder_unauthorized.svg');
+                            }
+                        }
+
+                        &.error {
+                            > .preview {
+                                background-image: url('/static/images/icons/view/placeholder_preview_alert.svg');
                             }
                         }
 

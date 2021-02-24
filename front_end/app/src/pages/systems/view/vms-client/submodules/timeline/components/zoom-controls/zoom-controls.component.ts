@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
 import { float, int } from '../../../../utils/type-aliases';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
@@ -80,12 +80,20 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
   protected _zoomingSign: signType = 0
 
-  public startZooming (sign: signType) {
+  public startZooming ($event: MouseEvent, sign: signType) {
+    if ($event.button !== 0) {
+      return
+    }
     this._zoomingSign = sign
   }
 
   public stopZooming () {
     this._zoomingSign = 0
+  }
+
+  @HostListener('document:mouseup')
+  public onMouseUp () {
+    this.stopZooming()
   }
 
   public performZoomingStep () {

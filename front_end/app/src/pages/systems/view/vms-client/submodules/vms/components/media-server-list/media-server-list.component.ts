@@ -23,10 +23,15 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
 
   public mediaservers: Array<MediaServer>
 
+
   public previewLoaded = {}
+
   public handlePreviewLoaded (cid) {
-    // console.log('preview loaded', cid)
     this.previewLoaded[cid] = true
+  }
+
+  public handlePreviewError (cid) {
+    this.previewLoaded[cid] = -1
   }
 
   public isServerExpanded: {
