@@ -39,6 +39,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   public initializedWithError: boolean = false
   public isSidebarShown: boolean = false
 
+  public hasCameras: boolean = true
+
   // public animated: boolean = false
 
   public handleSidebarTogglingEarClick () {
@@ -112,6 +114,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     // if (params.systemId) {
       this.systemId = params.systemId || null
       this.system = undefined
+      this.hasCameras = false
       this._setInitializationState(false, false)
       this._initSystem()
     // }
@@ -196,6 +199,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           name: ms.name,
           url: ms.url,
           cameras: ms.cameras.map(c => {
+            this.hasCameras = true
             const result = new Camera(
               c.id,
               c.preferredServerId,
@@ -218,7 +222,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             return result
           })
         })))
-        console.log(`system ${this.system.id} view initialized`)
+        console.log(`system ${this.system.id} view initialized`, this.hasCameras)
         this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {

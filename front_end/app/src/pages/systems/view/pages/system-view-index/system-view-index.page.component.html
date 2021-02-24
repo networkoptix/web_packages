@@ -9,10 +9,13 @@
     </nx-page-placeholder>
 
     <ng-template #primary>
-        <div class="nx-view-sidebar">
+        <div class="nx-view-sidebar" *ngIf="hasCameras; else noCameras">
             <media-server-list></media-server-list>
             <div class="sidebar-toggling-ear" [ngClass]="{ 'shown': isSidebarShown }" (click)="handleSidebarTogglingEarClick()"></div>
         </div>
-        <router-outlet></router-outlet>
+        <router-outlet *ngIf="hasCameras"></router-outlet>
+        <ng-template #noCameras>
+            <div class="no-cameras-placeholder">No Cameras</div>
+        </ng-template>
     </ng-template>
 </ng-template>
