@@ -17,8 +17,8 @@ class SpecialStructures:
         self.add_function("%CLOUD_LINK%", self.calc_cloud_link)
         self.add_function("%CLOUD_HOST%", self.calc_cloud_host)
         self.add_function("%licenseTypes%", self.calc_license_type)
-        self.add_function("%VMS_WIN_PATH", self.calc_vms_win_path)
-        self.add_function("%VMS_LIN_PATH", self.calc_vms_win_path)
+        self.add_function("%VMS_WIN_PATH%", self.calc_vms_win_path)
+        self.add_function("%VMS_LIN_PATH%", self.calc_vms_lin_path)
         self.add_function("%VMS_LIN_SERVICE_NAME%", self.calc_vms_lin_service_name)
         self.add_function("%VMS_COMPANY_ID%", self.calc_vms_company_id)
 
