@@ -108,8 +108,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                     // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
                                     // Can't activate license: Only one starter license is allowed per System.
                                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
-                                } else if (matchError('license ley you have entered is invalid')) {
-                                    // Can't activate license:  license ley you have entered is invalid.
+                                } else if (matchError('license key you have entered is invalid')) {
+                                    // Can't activate license:  license key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 } else if ([
                                     'requires higher software version', 'you are trying to activate a license incompatible with your software.'
