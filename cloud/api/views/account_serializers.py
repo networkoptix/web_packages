@@ -53,7 +53,7 @@ class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
     class Meta:
         model = Account
         fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser',
-                  'permissions', 'can_publish_integration')
+                  'permissions', 'can_publish_integration', 'is_authenticated')
 
     def get_can_publish_integration(self, obj):
         return UserGroupsToAssetPermissions.check_customization_publish(obj) and \

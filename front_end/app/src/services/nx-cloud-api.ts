@@ -1,10 +1,10 @@
-import { Injectable }               from '@angular/core';
+import { Injectable, Injector }     from '@angular/core';
 import {
     HttpClient, HttpHeaders, HttpParams
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
-import { catchError }               from 'rxjs/operators';
-import { EMPTY, of }                from 'rxjs';
+import { catchError, switchMap }    from 'rxjs/operators';
+import { EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -12,10 +12,43 @@ import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
 import { MenuNode }                 from './menus.service';
+import { NxSwCacheService }         from '@services/sw-cache.service';
+import { NxAccountService }         from '@services/account.service';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
     struct        : 'struct'
+};
+
+const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    descriptor.value = function(...args) {
+        return from(
+            this.accountService.get().then(account => {
+                if (account?.is_staff) {
+                    this.swBypass = true;
+                }
+                return originalMethod.apply(this, args);
+            })
+        ).pipe(switchMap((result: any) => {
+            return result;
+        }));
+    };
+};
+
+const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    descriptor.value = function(...args) {
+        const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+            return originalMethod.apply(this, args);
+        });
+
+        if (toPromise) {
+            return returnPromise;
+        } else {
+            return from(returnPromise).pipe(switchMap((result: any) => result));
+        }
+    };
 };
 
 @Injectable({
@@ -23,14 +56,21 @@ export const DOC_TYPES = {
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
+    private accountService: any;
+    public swBypass = false;
 
     constructor(
         private configService: NxConfigService,
         private http: HttpClient,
         private cacheService: NxUriCacheService,
-        private router: Router
+        private router: Router,
+        private nxSwCacheService: NxSwCacheService,
+        private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
+        setTimeout(_ => {
+            this.accountService = injector.get(NxAccountService);
+        });
     }
 
     getLanguage() {
@@ -80,6 +120,7 @@ export class NxCloudApiService {
         return this.http.get<string[]>('/static/scripts/commonPasswordsList.json');
     }
 
+    @staffSWBypass
     getIntegrations() {
         return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
     }
@@ -88,6 +129,7 @@ export class NxCloudApiService {
         return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/integration_count');
     }
 
+    @staffSWBypass
     getIntegrationBy(id: number, status: string) {
         let uri = this.CONFIG.apiBase + '/integration/' + id;
         uri += (status) ? '?' + status : '';
@@ -150,6 +192,7 @@ export class NxCloudApiService {
             { user_email: userEmail }).toPromise();
     }
 
+    @swClear('api', '/systems', true)
     renameSystem(systemId: string, systemName: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
@@ -212,6 +255,7 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
+    @swClear('api', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
@@ -222,6 +266,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @swClear('api', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
@@ -257,6 +302,7 @@ export class NxCloudApiService {
         return this.http.get<t.ILanguages>(endpoint).toPromise();
     }
 
+    @swClear('apiFresh', '/utils/language', true)
     changeLanguage(language: string) {
         return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
             language
@@ -374,6 +420,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @staffSWBypass
     getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();

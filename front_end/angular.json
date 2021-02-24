@@ -81,7 +81,9 @@
                   "maximumWarning": "200kb",
                   "maximumError": "280kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "webadmin": {
               "fileReplacements": [

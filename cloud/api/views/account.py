@@ -185,8 +185,11 @@ def logout(request):
                      ),
                      responses={"200": account__response})
 @api_view(['GET', 'POST'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 def index(request):
+    if request.user.is_anonymous:
+        return api_success({'is_authenticated': False})
+
     if request.method == 'GET':
         # validate credentials in cloud_db
         # password could be changed, ot temporary link expired

@@ -14,3 +14,5 @@ rm dist/index.html-e;
 if [ $IS_WEBADMIN ]; then
     cp ./app/customization/webadmin_logo.png ./dist/images/logo.png
 fi
+
+./node_modules/.bin/ngsw-config ./dist ./ngsw-config.json "/static"

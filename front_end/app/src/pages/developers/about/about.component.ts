@@ -6,6 +6,7 @@ import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api'
 import { NxHeaderService }      from '../../../services/nx-header.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { NxAccountService, Account } from '../../../services/account.service';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -24,10 +25,8 @@ export enum AboutTemplates {
     styleUrls   : ['about.component.scss']
 })
 export class NxAboutComponent {
-    @Input() heading: string = 'Develop with %CLOUD_NAME%';
-    @Input() lead: string = '%CLOUD_NAME% is an extensible IP Video Development Platform created for software developers who want to create new Powered-by-%VMS_NAME% products and scalable integrations.'
-
     CONFIG: IConfig;
+    account: Account
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
     baseName = '';
@@ -66,6 +65,7 @@ export class NxAboutComponent {
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
         public router: Router,
+        private accountService: NxAccountService,
         configService: NxConfigService
     ) {
         this.CONFIG = configService.config;
@@ -76,35 +76,40 @@ export class NxAboutComponent {
             return;
         }
         const { state } = this.route.snapshot.queryParams;
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(about => {
-            const mapToAboutNode = ({
-                name,
-                display_name: displayName,
-                asset_id: assetId,
-                new_window: newWindow,
-                asset,
-                assetKB,
-                url,
-                icon,
-                nodes
-            }): AboutNode => {
-                return ({
-                    title       : displayName || name || asset.title,
-                    displayName : displayName || name,
-                    nodes       : nodes && nodes.map(mapToAboutNode),
-                    url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
-                    assetId,
-                    asset,
-                    icon,
-                    newWindow
-                });
-            };
-            const mapToAboutStructure = (node):AboutStructureNode => ({
-                template : node.icon.split(' ')[0],
-                node     : mapToAboutNode(node)
-            });
 
-            this.aboutStructure = about.map(mapToAboutStructure);
+        this.accountService.get().then(account => {
+            this.account = account;
+        }).then(_ => {
+            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(about => {
+                const mapToAboutNode = ({
+                    name,
+                    display_name: displayName,
+                    asset_id: assetId,
+                    new_window: newWindow,
+                    asset,
+                    assetKB,
+                    url,
+                    icon,
+                    nodes
+                }): AboutNode => {
+                    return ({
+                        title       : displayName || name || asset.title,
+                        displayName : displayName || name,
+                        nodes       : nodes && nodes.map(mapToAboutNode),
+                        url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
+                        assetId,
+                        asset,
+                        icon,
+                        newWindow
+                    });
+                };
+                const mapToAboutStructure = (node): AboutStructureNode => ({
+                    template : node.icon.split(' ')[0],
+                    node     : mapToAboutNode(node)
+                });
+
+                this.aboutStructure = about.map(mapToAboutStructure);
+            });
         });
     }
 };

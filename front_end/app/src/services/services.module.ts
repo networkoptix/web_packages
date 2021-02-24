@@ -14,6 +14,7 @@ import { NxHeaderService }           from './nx-header.service';
 import { NxScrollMechanicsService }  from './scroll-mechanics.service';
 import { NxSearchService }           from './search.service';
 import { NxAppSourceService }        from './nx-app-source.service';
+import { NxSwCacheService }          from '@services/sw-cache.service';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { NxAppSourceService }        from './nx-app-source.service';
         NxSearchService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService
+        NxScrollMechanicsService,
+        NxSwCacheService
     ],
     exports: []
 })

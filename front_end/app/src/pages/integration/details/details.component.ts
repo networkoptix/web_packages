@@ -68,21 +68,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
-        this.pageService.setDesktopLayout();
-        this.menuDetailsSubscription = this.menuService
-            .selectedDetailsSection
-            .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            });
-
-        this.accountService.get().then(account => {
-            if (account) {
-                this.account = account;
-            }
-        });
-
+    setUpRouteSubscription() {
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {
@@ -195,6 +181,23 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         });
                 }
             });
+    }
+
+    ngOnInit(): void {
+        this.pageService.setDesktopLayout();
+        this.menuDetailsSubscription = this.menuService
+            .selectedDetailsSection
+            .subscribe(selection => {
+                this.content.selectedDetailsSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+        this.accountService.get().then(account => {
+            if (account) {
+                this.account = account;
+            }
+            this.setUpRouteSubscription();
+        });
     }
 
     ngOnDestroy() {

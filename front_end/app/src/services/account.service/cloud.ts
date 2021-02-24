@@ -74,8 +74,10 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         return this.cloudApi
             .account(true).toPromise()
             .then((account: Account|any) => {
-                this.account = account;
-                return account;
+                if (account.is_authenticated) {
+                    this.account = account;
+                }
+                return this.account;
             })
             .catch(() => {
                 return this.account;
@@ -106,8 +108,8 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                     return Promise.resolve({
                         data: {
-                            account    : result,
-                            resultCode : this.CONFIG.responseOk
+                            account: result,
+                            resultCode: this.CONFIG.responseOk
                         }
                     });
                 }
@@ -119,17 +121,17 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                 return Promise.resolve({
                     data: {
-                        account    : result,
-                        resultCode : this.CONFIG.responseOk
+                        account: result,
+                        resultCode: this.CONFIG.responseOk
                     }
                 });
             }
             // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({ error: { resultCode: result.resultCode } });
+            return Promise.reject({error: {resultCode: result.resultCode}});
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
                 // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode: result.error.resultCode });
+                return Promise.reject({resultCode: result.error.resultCode});
             }
         });
     }

@@ -88,6 +88,14 @@ urlpatterns = [
         TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
 
+    url(r'^ngsw.json$',
+        TemplateView.as_view(template_name='static/ngsw.json',
+                             content_type='application/json')),
+
+    url(r'^ngsw-worker.js$',
+        TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
+                             content_type='application/javascript')),
+
     url(r'^(?!static|preview|admin).*',
         TemplateView.as_view(template_name="static/index.html"))
 ]

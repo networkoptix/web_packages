@@ -14,6 +14,7 @@ import { NxMenusService, MenuNode }     from '@services/menus.service';
 
 import { RelatedLinks }                 from '@components/left-menu/left-menu.component';
 import { SearchFilter }                 from '@components/search/search.component';
+import { NxAccountService, Account }    from '../../../services/account.service';
 
 export enum CardClasses {
     NORMAL='text',
@@ -44,6 +45,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     kbName = '';
     assetIds = [];
     pageNode: KnowledgeNode;
+    account: Account
     search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
     searchQuery$ = new BehaviorSubject({ query: '' });
@@ -122,6 +124,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         private router: Router,
         private menusService: NxMenusService,
         private renderer2: Renderer2,
+        private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
@@ -155,7 +158,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         });
     }
 
-    findKBWithArticle(assetId, assetParam) {
+	findKBWithArticle(assetId, assetParam) {
         return this.cloudApi.findArticleKB(assetId).subscribe(({ base, kb_name }) => {
             this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
                 this.router.navigate([`/docs/${base}/${kb_name}/${assetParam}`])
@@ -163,7 +166,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
+    setupRouteSubscription() {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             startWith(''),
@@ -278,19 +281,27 @@ export class NxKnowledgeBaseComponent implements OnInit {
             }),
             untilDestroyed(this)
         ).subscribe();
+    }
 
-        this.searchQuery$.pipe(
-            switchMap(({ query }) => {
-                this.searchMode = !!query;
-                this.searchLoading = this.searchMode;
-                this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
-            }),
-            untilDestroyed(this)
-        ).subscribe((results) => {
-            this.totalSearchResultPages = results.totalPages;
-            this.searchLoading = false;
-            this.searchResults$.next(this.parseResults(results));
+    ngOnInit() {
+        this.accountService.get().then(account => {
+            this.account = account;
+
+            this.setupRouteSubscription();
+
+            this.searchQuery$.pipe(
+                switchMap(({query}) => {
+                    this.searchMode = !!query;
+                    this.searchLoading = this.searchMode;
+                    this.currentSearchResultPage = 1;
+                    return this.fetchSearchHandler({query, page: this.currentSearchResultPage});
+                }),
+                untilDestroyed(this)
+            ).subscribe((results) => {
+                this.totalSearchResultPages = results.totalPages;
+                this.searchLoading = false;
+                this.searchResults$.next(this.parseResults(results));
+            });
         });
     };
 };
