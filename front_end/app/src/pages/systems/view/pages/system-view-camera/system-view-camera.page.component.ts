@@ -15,7 +15,7 @@ import FpsMeterService from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 import { NxConfigService, IConfig } from '../../../../../services/nx-config'
 import { PlaybackQuality, CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
-
+import sidebarLayout from '../sidebarLayout.cfg'
 
 @Component({
     selector: 'nx-system-view-camera-page',
@@ -225,6 +225,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.resetQuality()
       this._getRecords()
       this._updateQualitiesAvailable()
+
+      if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
+        this.ux.isSidebarShown = false
+      }
     }
 
     protected _onVmsStateChange (s: VmsState) {

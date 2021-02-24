@@ -65,19 +65,24 @@
     }
 
     .nx-view-sidebar {
-        width: 320px;
         position: absolute;
+
+        width: 320px;
         left: -320px;
+        @media (max-width: 500px) {
+            width: 100vw;
+            left: -100vw;
+        }
+
         top: 0;
         bottom: 0;
         background-color: $additional_light2;
-        // border-right: 8px solid $light4;
-        z-index: 10;
+        z-index: 20;
 
         > .sidebar-toggling-ear {
             position: absolute;
             top: calc(50% - 40px / 2);
-            right: -24px;
+            right: -16px;
             width: 16px;
             height: 40px;
             background-color: $light4;
@@ -99,7 +104,12 @@
             &.shown {
                 transform: rotate(0deg);
                 border-radius: 0 2px 2px 0;
+
+                @media (max-width: 500px) {
+                    right: 0;
+                }
             }
+
         }
     }
 

@@ -28,7 +28,9 @@ $border-color: $light6;
   }
 
   &.sidebar-shown {
-    width: calc(100vw - 320px);
+    @media (min-width: 751px) {
+      width: calc(100vw - 320px);
+    }
   }
 
   &.controls-shown {
