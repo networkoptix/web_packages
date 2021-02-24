@@ -17,6 +17,47 @@ import { NxConfigService, IConfig } from '../../../../../services/nx-config'
 import { PlaybackQuality, CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
 import sidebarLayout from '../sidebarLayout.cfg'
 
+
+function requestFullscreen (el) {
+  if (!el) {
+    return
+  }
+  const docEl = window.document.documentElement;
+  const requestFullScreen =
+    docEl.requestFullscreen ||
+    docEl['mozRequestFullScreen'] ||
+    docEl['webkitRequestFullScreen'] ||
+    docEl['msRequestFullscreen']
+
+  if (requestFullScreen) {
+    console.log('entering full screen', requestFullScreen)
+    requestFullScreen.call(el)
+  } else {
+    console.log('can not enter full screen', docEl)
+  }
+}
+
+function exitFullscreen () {
+  const doc = window.document
+  const cancelFullScreen =
+    doc.exitFullscreen ||
+    doc['mozCancelFullScreen'] ||
+    doc['webkitExitFullscreen'] ||
+    doc['webkitCancelFullScreen'] ||
+    doc['msExitFullscreen'];
+  if (cancelFullScreen) {
+    console.log('leaving full screen', cancelFullScreen)
+    cancelFullScreen.call(doc)
+  } else {
+    console.log('can not leave fullscreen', doc)
+  }
+}
+
+function getFullscreenElement () {
+  return document.fullscreenElement || document['webkitFullscreenElement']
+}
+
+
 @Component({
     selector: 'nx-system-view-camera-page',
     templateUrl: 'system-view-camera.page.component.html',
@@ -79,12 +120,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this._animationFrameRequestHandler =
         requestAnimationFrame(this._onAnimationFrame)
 
-      document.addEventListener('fullscreenchange', e => {
-        // console.log('fullscreenchange', e, document.fullscreenElement)
-        if (this.ux.state.isFullScreen !== !!document.fullscreenElement) {
-          this.ux.isFullScreen = !!document.fullscreenElement
+      const onFSC = e => {
+        const fse = getFullscreenElement()
+        console.log('fullscreenchange', e, fse)
+        if (this.ux.state.isFullScreen !== !!fse) {
+          this.ux.isFullScreen = !!fse
+          this.self.nativeElement.classList.remove('is-full-screen')
         }
-      })
+      }
+
+      document.addEventListener('fullscreenchange', onFSC)
+      document.addEventListener('webkitfullscreenchange', onFSC)
+      document.addEventListener('mozfullscreenchange', onFSC)
 
       this._getRecords()
       this._updateQualitiesAvailable()
@@ -171,7 +218,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       // this.fpsMeter.install()
       document['fpsMeter'] = this.fpsMeter
 
-      this.ux.isFullScreen = !!document.fullscreenElement
+      this.ux.isFullScreen = !!getFullscreenElement()
     }
 
     public ngOnDestroy (): void {
@@ -205,13 +252,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
 
       setTimeout(() => {
-        if (s.isFullScreen && !document.fullscreenElement) {
+        if (s.isFullScreen && !getFullscreenElement()) {
           // console.log('+')
-          this.self.nativeElement.parentElement.requestFullscreen()
+          requestFullscreen(this.self.nativeElement.parentElement)
           this.self.nativeElement.classList.add('is-full-screen')
-        } else if (!s.isFullScreen && !!document.fullscreenElement) {
+        } else if (!s.isFullScreen && !!getFullscreenElement()) {
           // console.log('-')
-          document.exitFullscreen()
+          exitFullscreen()
           this.self.nativeElement.classList.remove('is-full-screen')
         }
       }, 0)
@@ -279,8 +326,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public toggleFullScreen ($event?) {
+      console.log('toggleFullScreen')
       $event?.stopPropagation()
-      this.ux.isFullScreen = !document.fullscreenElement
+      this.ux.isFullScreen = !getFullscreenElement()
     }
 
     public stopSettingsClickPropagation ($event) {

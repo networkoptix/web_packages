@@ -22,7 +22,14 @@ $border-color: $light6;
   &.is-full-screen {
     height: 100vh;
 
-    > player {
+    @media not all and (min-resolution: .001dpcm) {
+      @supports (-webkit-appearance: none) {
+        top: -48px; // safari only
+      }
+    }
+
+    > player,
+    > .offline-message {
       height: 100vh;
     }
   }
@@ -35,6 +42,7 @@ $border-color: $light6;
 
   &.controls-shown {
     > .controls {
+      position: relative;
       bottom: 0px;
     }
     > player,
@@ -43,7 +51,8 @@ $border-color: $light6;
     }
 
     &.is-full-screen {
-      > player {
+      > player,
+      > .offline-message {
         height: calc(100vh - 100px);
       }
     }
@@ -264,18 +273,19 @@ $border-color: $light6;
 
   > .controls {
     position: absolute;
-    bottom: 0;
+    bottom: -100px;
     // transition: all .2s ease-in-out;
     left: 0;
     right: 0;
     height: 100px;
     display: flex;
     flex-direction: row;
-    position: relative;
-    z-index: 10;
+    z-index: 100;
+    background: $additional_light2;
 
     > .controls-toggling-ear {
       position: absolute;
+      z-index: 1000;
       top: -16px;
       left: calc(50% - 40px/2);
       height: 16px;
