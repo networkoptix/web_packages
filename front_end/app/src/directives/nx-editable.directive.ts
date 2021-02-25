@@ -1,21 +1,13 @@
 import {
-    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, SimpleChanges
+    Directive, ElementRef, Input,
+    HostListener, HostBinding, OnInit,
+    EventEmitter, Output, SimpleChanges
 } from '@angular/core';
-import {
-    ControlValueAccessor, NG_VALUE_ACCESSOR
-} from '@angular/forms';
 
 @Directive({
-    selector  : '[NxEditable]',
-    providers : [
-        {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxEditableDirective),
-            multi       : true
-        }
-    ]
+    selector: '[NxEditable]'
 })
-export class NxEditableDirective implements ControlValueAccessor, OnInit {
+export class NxEditableDirective implements OnInit {
     /*
         This directive makes any text field editable and binds value. Applies default styling if none specified.
 
@@ -44,9 +36,10 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     @Input() errorClass = 'editable-directive-error';
     @Input() hasError: boolean;
     @HostBinding('attr.contenteditable') @Input() nxEditable = true;
-    @HostBinding('attr.innerHTML') innerHTML;
+    @HostBinding('attr.innerText') innerText;
 
     private _elementClass: string[] = [];
+    private contentValue : string;
 
     @Input()
     @HostBinding('class')
@@ -58,11 +51,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
         this._elementClass = val.split(' ');
     }
 
-    contentValue : string;
-
-    @Output()
-    contentChange = new EventEmitter<string>();
-
     @Input()
     get content() {
         return this.contentValue;
@@ -71,15 +59,20 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     set content(curValue) {
         this.contentValue = curValue;
         this.contentChange.emit(this.contentValue);
-        this.elementRef.nativeElement[this.propValueAccessor] = this.innerHTML = this.contentValue;
+        this.innerText = this.contentValue;
+
+        // Avoid redundant updates while editing. In FF this will cause caret repositioning to 0 - TT
+        if (this.elementRef.nativeElement[this.propValueAccessor] !== this.contentValue) {
+            this.elementRef.nativeElement[this.propValueAccessor] = this.contentValue;
+        }
     }
 
-    private onChange: (value: string) => void;
-    private onTouched: () => void;
-    private onFocus: () => void;
-    private removeDisabledState: () => void;
+    @Output()
+    contentChange = new EventEmitter<string>();
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+    constructor(
+        private elementRef: ElementRef
+    ) {
     }
 
     ngOnInit() {
@@ -91,7 +84,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     }
 
     // toggle mode handlers
-
     editOn() {
         this.addClass(this.editClass);
         this.removeClass(this.initialClass);
@@ -111,7 +103,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     }
 
     // Helper methods for updating classes
-
     addClass(...classToAdd: string[]) {
         this.elementClass = `${this.elementClass} ${classToAdd.join(' ')}`;
     }
@@ -120,93 +111,29 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
         this.elementClass = this._elementClass.filter(currentClass => !classToRemove.find(toRemove => toRemove === currentClass)).join(' ');
     }
 
-    // Save a reference of event handlers from DOM element that are  being over-ridden by directive to "this"
-
-    registerOnChange(fn: () => void): void {
-        this.onChange = fn;
-    }
-
-    registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    registerOnFocus(fn: () => void): void {
-        this.onFocus = fn;
-    }
-
     // Updated event handlers: Add event handling used by directive here then call event handler from DOM element
-
     @HostListener('input')
     callOnChange() {
         this.content = this.elementRef.nativeElement[this.propValueAccessor];
-        if (typeof this.onChange === 'function') {
-            this.onChange(
-                this.elementRef.nativeElement[this.propValueAccessor]
-            );
-        }
     }
 
     @HostListener('blur')
     callOnTouched() {
         this.editOff();
-        if (typeof this.onTouched === 'function') {
-            this.onTouched();
-        }
         this.elementRef.nativeElement.blur();
-        this.elementRef.nativeElement.innerHTML = '';
+        this.elementRef.nativeElement.innerText = '';
         setTimeout(() => {
-            this.elementRef.nativeElement.innerHTML = this.content;
-        }, 0);
+            this.elementRef.nativeElement.innerText = this.content;
+        });
     }
 
     @HostListener('focus')
     callOnFocus() {
         this.editOn();
-        if (typeof this.onFocus === 'function') {
-            this.onFocus();
-        }
     }
 
     @HostListener('keyup.enter')
     callOnEnter() {
         this.callOnTouched();
-    }
-
-    // Other methods
-
-    writeValue(value: any): void {
-        const normalizedValue = value == null ? '' : value;
-        this.renderer.setProperty(
-            this.elementRef.nativeElement,
-            this.propValueAccessor,
-            normalizedValue
-        );
-    }
-
-    setDisabledState(isDisabled: boolean): void {
-        if (isDisabled) {
-            this.renderer.setAttribute(
-                this.elementRef.nativeElement,
-                'disabled',
-                'true'
-            );
-            this.removeDisabledState = this.renderer.listen(
-                this.elementRef.nativeElement,
-                'keydown',
-                this.listenerDisabledState
-            );
-        } else {
-            if (this.removeDisabledState) {
-                this.renderer.removeAttribute(
-                    this.elementRef.nativeElement,
-                    'disabled'
-                );
-                this.removeDisabledState();
-            }
-        }
-    }
-
-    private listenerDisabledState(e: KeyboardEvent) {
-        e.preventDefault();
     }
 }
