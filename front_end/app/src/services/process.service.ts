@@ -79,7 +79,7 @@ export class Process {
         if (this.canceled) return;
         const data = await res;
         const error = this.cloudApiService.checkResponseHasError(data);
-        if (error || data?.error) {
+        if (error || data?.error && data.error !== '0') {
             this.errorHelper(error || data);
         } else {
             this.success = true;

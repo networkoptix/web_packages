@@ -54,11 +54,11 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                const offline = !this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId).length;
-                if (offline) {
+                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                if (!haveOnlineServers) {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                 }
-                this.applyService.isOnline$.next(!offline);
+                this.applyService.isOnline$.next(haveOnlineServers);
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(
@@ -133,7 +133,7 @@ export class RestartServerModalContent {
                 err => {
                     this.system.currentServerNotBusy = true;
                     this.system.currentBusyServerIds.delete(this.serverId);
-                    let message = this.LANG.servers.restartFailed;
+                    let message = this.LANG.servers.restartFailed();
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline?.();
                         this.close(this.CONFIG.servers.status.offline);

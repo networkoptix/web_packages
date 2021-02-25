@@ -11,23 +11,26 @@
     overflow-y: scroll;
     background-color: rgba($dark16, 0.8);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+
     .overlay-modal-header {
-        svg-icon {
+        .svg-placeholder {
+            width: 400px;
+            height: 200px;
             margin-top: 64px;
         }
 
         h2 {
             @include typography.medium24light1;
-            margin-top: 40px;
+            margin-top: 26px;
         }
 
         button {
             @include typography.regular16light1;
             border-radius: 2px;
-            border: 1px rgba($light4, 0.2) solid;
+            border: 1px rgba($light4, 0.2) solid !important;
             margin-top: 40px;
 
-            svg-icon {
+            svg {
                 .circular {
                     height: 22px;
                     padding-top: 2px;
@@ -95,18 +98,20 @@
                     height: 26px;
                     padding: 0 8px 0 0;
                     text-decoration: none;
-                    svg-icon {
-                        svg path.st0 {
-                            fill: $dark9 !important;
-                            fill-opacity: 1;
-                        }
+
+                    svg path.st0 {
+                        fill: $dark9 !important;
+                        fill-opacity: 1;
                     }
+
                     span.server-name {
                         @include typography.medium13dark9;
                     }
+
                     span.server-ip {
                         @include typography.regular13light;
                     }
+
                     &:hover {
                         background-color: $light3;
                         border-radius: 2px;
