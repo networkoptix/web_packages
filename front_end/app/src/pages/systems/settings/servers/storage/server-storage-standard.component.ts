@@ -150,6 +150,7 @@ export class NxSystemStorageComponent implements OnInit {
                 }
                 this.currentStorageState = state;
                 this.currentStorageState.locations.forEach((store) => {
+                    const reservedOrBeingChecked = [STORAGE_STATUS.RESERVED, STORAGE_STATUS.BEING_CHECKED].includes(store.status);
                     const storageId = store.storageId;
                     this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
                     this.cachedSizes[storageId].vms ||= store.vmsSpace;
@@ -159,15 +160,15 @@ export class NxSystemStorageComponent implements OnInit {
                         this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode);
                         this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]]);
                     } else {
-                        if (store.status === STORAGE_STATUS.RESERVED || this.previouslyReserved.has(store.storageId)) {
+                        if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                         }
                         this.modeWatchers[this.normalizeId(storageId)].value = mode;
                     }
-                    if (store.status === STORAGE_STATUS.RESERVED) {
-                        this.previouslyReserved.add(store.storageId);
-                    } else if (this.previouslyReserved.has(store.storageId)) {
-                        this.previouslyReserved.delete(store.storageId);
+                    if (reservedOrBeingChecked) {
+                        this.previouslyReserved.add(storageId);
+                    } else if (this.previouslyReserved.has(storageId)) {
+                        this.previouslyReserved.delete(storageId);
                     }
                 });
                 const backupState = await this.system.storageManager.getBackupState(
