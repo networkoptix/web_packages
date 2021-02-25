@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "nl_BE",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Account aangemaakt",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Een bevestigingsbericht met de activeringslink is verzonden naar {email}"
             },
             "activated": {
                 "title": "Account succesvol geactiveerd"
@@ -147,9 +147,9 @@
         },
         "general": "Algemeen",
         "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} meer integraties...} one{#{endTag} meer integratie...} other{#{endTag} meer integratie...}}",
         "searchCamPlaceholder": "Zoek",
-        "system": "system",
+        "system": "systeem",
         "systemHasNoCameras": "Geen camera's",
         "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
         "systemNewVersion": "Uw systeem bijwerken",
@@ -204,8 +204,8 @@
             "title": "Cloudopslag",
             "enableStorage": "Cloud-opslag inschakelen",
             "otherSystem": "Ander systeem...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "We bieden {compCapacity} gratis cloud opslag aan per systeem om je op weg te helpen.",
+            "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
             "cameras": "camera's",
             "usageLabels": {
@@ -230,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Cloud-opslag verplaatsen",
-                "success": "Storage successfully moved",
+                "success": "Opslag met succes verplaatst",
                 "errorPrefix": "Fout bij het verplaatsen van cloudopslag",
                 "notFound": "Opslag is niet gevonden. Opslag is mogelijk verplaatst of verwijderd door een andere gebruiker",
                 "status": {
@@ -246,19 +246,19 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Als u van plan was analysegegevens te verplaatsen naar een andere opslaglocatie, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> voordat u verder gaat."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
             "checking": "Controleren...",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
+            "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%cloudName%</strong> of voeg lokaal samen met <strong>%vmsName%</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
+            "latestBuild": "nieuwste build",
+            "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>Instellingen en de naam worden overgenomen van <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
             "noServerFound": "Geen server gevonden",
@@ -267,16 +267,16 @@
             "ownerCanMergeText": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent",
             "passwordRequired": "Wachtwoord is vereist",
             "passwordWrong": "Wachtwoord onjuist",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
-            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
-            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
+            "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "We raden u aan om te overleggen met",
                 "b_support": "ondersteuning",
                 "c_proceeding": "voordat u verder gaat."
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
@@ -419,8 +419,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This user does not exist.": "This user does not exist.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "This user does not exist.": "Deze gebruiker bestaat niet.",
+        "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
         "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -644,18 +644,18 @@
         "vendors": "Fabrikanten"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
+        "autoRefresh": "automatisch vernieuwen in {time}...",
         "beginDetach": "Server wordt nu losgekoppeld",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Server wordt nu gereset.",
         "detachSystemFailed": "Kan de server niet loskoppelen van het systeem. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
         "detachSystemSuccess": "De server is succesvol losgekoppeld van het systeem.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "Poortnummers minder dan 1024 zijn gereserveerd. De server kan ontoegankelijk worden.",
+        "refresh": "Vernieuwen",
+        "refreshing": "Vernieuwen...",
         "removeMediaserverFailed": "Kan de server niet van het systeem verwijderen.",
         "resetFailed": "Kan de server niet resetten. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Server {serverName} is gereset naar de standaardwaarden.",
         "restartFailed": "Er is een probleem opgetreden bij het herstarten van de server.",
         "restartSuccessful": "Server is succesvol opnieuw gestart.",
         "serverOffline": "Server is offline.",
@@ -663,15 +663,15 @@
         "status": {
             "checking": "controleren...",
             "offline": "offline",
-            "resetting": "resetting...",
+            "resetting": "resetten...",
             "restarting": "herstarten..."
         },
         "successRename": "Servernaam opgeslagen."
     },
     "system": {
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "connected": "Verbonden",
+        "not_connected": "Niet verbonden",
+        "MERGE_FINISHES": "Als het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in <strong>{targetSystemName}</strong> systeem en wordt dit systeem verwijderd.",
         "mergeUnknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
@@ -722,10 +722,10 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "Lokaal",
             "usb": "USB",
-            "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "network": "Netwerk, toegevoegd via OS",
+            "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
         }
     },
@@ -740,30 +740,30 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
-        "nameFail": "Failed to change {type} name",
+        "nameFail": "{type} naam wijzigen mislukt",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "Systeem {systemName} is succesvol verwijderd van uw account"
             },
             "disconnected": {
                 "success": "Systeem is met succes ontkoppeld van %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "success": "Systeem verbonden met %CLOUD_NAME%",
+                "failed": "Kon geen verbinding maken met systeem %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "success": "System merge completed"
+                "success": "Systeem samenvoegen voltooid"
             },
             "rename": {
                 "success": "Systeemnaam opgeslagen"
             }
         },
-        "viewingReport": "You are viewing an imported report"
+        "viewingReport": "Je bekijkt een geïmporteerd rapport"
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -796,9 +796,9 @@
             "serverNotFound": "Server niet gevonden"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} meer vereist",
             "activated": "Licentie geactiveerd",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
             "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
@@ -897,36 +897,36 @@
         "maxEventLogRecords": "Maximum logboek evenementen om in de database te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
         "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
     },
-    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "result": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+    "additionalSystems": "{count, plural, =0{+ # systemen} one{+ # Systeem} other{+ # Systemen}}",
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Herindexering hoofdopslag voltooid",
+            "backupSuccess": "Back-up herindexering voltooid",
+            "mainFailed": "Herindexering hoofdopslag mislukt",
+            "backupFailed": "Herindexering van back-upopslag mislukt"
         },
         "modes": {
-            "main": "Main",
+            "main": "Algemeen",
             "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
+            "notInUse": "Niet in gebruik",
+            "reserved": "Gereserveerd",
+            "inaccessible": "Niet toegankelijk",
+            "changing": "Modus wijzigen...",
             "disabled": "Uitgeschakeld"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Opslagpad {url} wordt al gebruikt door een andere server.",
+        "deleteExternalStorage": "Externe opslag verwijderen?",
+        "failed": "Externe opslag kon niet worden toegevoegd",
+        "invalidPath": "Ongeldig opslagpad.",
+        "stillHasArchivesPreWarning": "Opname naar deze opslaglocatie zal stoppen. Echter, verouderde beelden blijven verwijderd worden.",
+        "stillHasArchives": "Opname naar deze opslaglocatie is gestopt. Echter, verouderde beelden worden nog steeds verwijderd.",
+        "storageDeleted": "Opslag {url} verwijderd",
+        "failedRemove": "Kan externe opslag {url} niet verwijderen",
+        "reservedTooSmallTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opname, omdat deze te klein is en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "reservedSystemTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opnemen, omdat de systeemopslag en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "serverOffline": "Kan geen externe opslag toevoegen - server reageert niet",
+        "success": "Externe opslag toegevoegd",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }
