@@ -20,6 +20,7 @@ import { NxAuthorizeActivateAccountComponent } from './activate-account/activate
 import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
 import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
 import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
+import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
 
 export const authorizedRoutes: Routes = [
     {
@@ -49,7 +50,8 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeActivateAccountComponent,
         NxAuthorizeConfirmationComponent,
         NxAuthorizeResetPasswordComponent,
-        NxAuthorizeResetRequestComponent
+        NxAuthorizeResetRequestComponent,
+        NxAuthorizeConnectErrorComponent
     ],
     exports: [
         NxAuthorizeComponent

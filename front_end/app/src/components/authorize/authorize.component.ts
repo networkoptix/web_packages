@@ -122,6 +122,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginPostNewPasswordProcess: Process;
     resetPasswordProcess: Process;
 
+    errorDialog$ = new BehaviorSubject<boolean>(false);
+    errorDialogProcess: Process;
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -164,6 +167,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
+    handleCloudConnectionError(err: any, process: Process) {
+        if ([500, 503].includes(err?.status)) {
+            this.errorDialogProcess = process;
+            this.errorDialog$.next(true);
+        }
+    }
+
     initProcesses() {
         this.checkEmailProcess = this.processService.createProcess(
             async() => {
@@ -175,6 +185,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true },
             ({ emailExists, active }) => {
+                this.errorDialog$.value && this.errorDialog$.next(false);
                 if (this.currentState === AuthorizeState.email) {
                     emailExists
                         ? this.currentState = AuthorizeState.password
@@ -184,16 +195,23 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.activated$.next(false);
                 }
             },
-            err => console.error('err from checkEmailProcess', err)
+            err => {
+                console.error('err from checkEmailProcess', err);
+                this.handleCloudConnectionError(err, this.checkEmailProcess);
+            }
         );
 
         this.loginProcess = this.processService.createProcess(
             this.login,
             { ignoreError: true },
             res => {
+                this.errorDialog$.value && this.errorDialog$.next(false);
                 window.location.href = res.link;
             },
-            err => console.error('err from loginProcess', err)
+            err => {
+                console.error('err from loginProcess', err);
+                this.handleCloudConnectionError(err, this.loginProcess);
+            }
         );
 
         // use factory if account properties are not needed outside of the create component
@@ -207,6 +225,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 undefined) // code, not needed right now
             , { ignoreError: true },
             res => {
+                this.errorDialog$.value && this.errorDialog$.next(false);
                 if (res.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
                 } else if (res.resultCode === 'portalError') {
@@ -221,6 +240,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 if (err.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
                 }
+                this.handleCloudConnectionError(err, this.createProcess);
             }
         );
 
@@ -228,10 +248,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             () => this.cloudService.restorePasswordRequest(this.resetPasswordEmail),
             { ignoreError: true },
             () => {
+                this.errorDialog$.value && this.errorDialog$.next(false);
                 this.confirmRequest = true;
             },
             err => {
                 this.resetRequestErrorCode = 'accountDoesNotExist';
+                this.handleCloudConnectionError(err, this.resetRequestProcess);
                 console.error('err in reset request process', err);
             }
         );
@@ -246,9 +268,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             () => this.cloudService.restorePassword(this.resetPasswordCode, this.resetPassword),
             { ignoreError: true },
             () => {
+                this.errorDialog$.value && this.errorDialog$.next(false);
                 this.confirmReset = true;
             },
-            err => console.error(err)
+            err => {
+                console.error('err in resetPassword process', err);
+                this.handleCloudConnectionError(err, this.resetPasswordProcess);
+            }
         );
 
         this.loginPostNewPasswordProcess = this.processService.createProcess(() => {
