@@ -52,6 +52,14 @@
             [loginProcess]="loginPostNewPasswordProcess"
         ></nx-authorize-reset-password-component>
     </div>
+    <div class="dialog-overlay" *ngIf="errorDialog$.value">
+        <div class="dialog-window">
+            <nx-authorize-connect-error-component
+                [clientType]="clientType"
+                [processTryAgain]="errorDialogProcess"
+            ></nx-authorize-connect-error-component>
+        </div>
+    </div>
     <div *ngIf="windowWideEnough">
         <div class="row">
             <ul class="">
