@@ -18,6 +18,7 @@ import {
     NxSupportedTechComponent
 }                                  from './supported-tech/supported-tech.component';
 import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
+import { PipesModule }             from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
@@ -34,6 +35,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         FormsModule,
         NgbModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],

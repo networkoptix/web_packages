@@ -31,7 +31,7 @@
     <div class="integrations-wrapper">
         <div class="card info-block">
             <h3>{{integrationsNode.nodes[0].title}}</h3>
-            <p *ngFor="let block of integrationsNode.nodes[0].asset.blocks" [innerHTML]="block.contentHTML"></p>
+            <div [innerHTML]="integrationsShortDescription | safe:'html'"></div>
             <button *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].asset.title"
                 class="btn btn-default mr-auto mt-auto"
                 [routerLink]="integrationsNode.nodes[0].url"

@@ -24,6 +24,7 @@ export class NxIntegrationsComponent implements OnInit {
     currentWindowWidth: number;
     scrollIndex = 0;
     pluginCount = 0;
+    integrationsShortDescription = ''
     integrations;
 
     @HostListener('window:resize') onResize() {
@@ -92,6 +93,9 @@ export class NxIntegrationsComponent implements OnInit {
     ngOnInit() {
         this.integrations = this.integrationsDetails();
         this.currentWindowWidth = window.innerWidth;
+        this.integrationsShortDescription = (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '').split(
+            '\n'
+        ).reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
 
         const integrationsConfig = this.errorManager.buildConfig(
             ['title', 'url'],
