@@ -1,4 +1,6 @@
-<form #loginForm="ngForm" name="loginForm" novalidate>
+<form #loginForm="ngForm" name="loginForm" novalidate
+      [ngClass]="{'hide-errors': hideErrors}"
+      (submit)="hideErrors = false">
     <div class="modal-body">
         <div class="form-group">
             <label for="login_email" translate>Login</label>

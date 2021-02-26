@@ -1,4 +1,6 @@
-<form #loginForm="ngForm" name="loginForm" novalidate (submit)="hideErrors = false" [ngClass]="{'hide-errors': hideErrors}">
+<form #loginForm="ngForm" name="loginForm" novalidate
+      [ngClass]="{'hide-errors': hideErrors}"
+      (submit)="hideErrors = false">
     <div class="modal-header">
         <h1 class="modal-title" translate>Log in to %CLOUD_NAME%</h1>
         <button type="button" class="close"

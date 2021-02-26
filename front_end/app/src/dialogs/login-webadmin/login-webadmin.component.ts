@@ -33,6 +33,7 @@ export class LoginWebadminModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
+    hideErrors: boolean = true;
 
     wrongPassword: boolean;
     accountBlocked: boolean;

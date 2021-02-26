@@ -26,6 +26,7 @@ export class ResetServerModalContent {
     CONFIG: IConfig;
     resetServer: Process;
     password: string;
+    hideErrors = true;
 
     constructor(
         configService: NxConfigService,
