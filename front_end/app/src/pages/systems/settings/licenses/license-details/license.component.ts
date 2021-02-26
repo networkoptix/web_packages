@@ -4,16 +4,15 @@ import {
 }                                    from '@angular/core';
 import { DatePipe }                  from '@angular/common';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { IConfig, NxConfigService }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     InfoBlockLine, InfoBlockSection, InfoBlockStyle,
     InfoDetailClass, InfoLineStyle
-} from '../../../../../components/info-block/info-block.component';
-import { getDynamicLicense } from '../licenses.component';
+}                                    from '@components/info-block/info-block.component';
+import { getDynamicLicense }         from '../licenses.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
