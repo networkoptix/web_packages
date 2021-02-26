@@ -1716,12 +1716,12 @@ class Menu(models.Model):
         node_asset_count = len(menu_dict['assets'])
         progress = 0
 
-        def increment_progress():
+        def increment_progress(error=None):
             nonlocal progress
             if not update_progress_cb:
                 return
             progress += 1
-            update_progress_cb(progress, node_asset_count)
+            update_progress_cb(progress, node_asset_count, error=error)
 
         def get_node_count(node):
             return 1 + sum(get_node_count(child) for child in node.get('nodes', []))
@@ -1762,10 +1762,13 @@ class Menu(models.Model):
 
                 if node['asset']:
                     asset_obj = Asset.objects.filter(uuid=node['uuid'], asset_type=node['asset_type']).first()
-                    asset_obj.name = node['asset']
-                    asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
-                    asset_obj.save()
-                    node_obj.asset = asset_obj
+                    if asset_obj:
+                        asset_obj.name = node['asset']
+                        asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
+                        asset_obj.save()
+                        node_obj.asset = asset_obj
+                    else:
+                        increment_progress(f'Failed to set customizations for <b>"{node["asset"]}"</b> to due imported asset type <b>"{AssetType.ASSET_TYPES[node["asset_type"]]}"</b> not match existing assets type.')
 
                 for asset, asset_type, asset_uuid in node.get('related_assets', []):
                     node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())

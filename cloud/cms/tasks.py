@@ -31,7 +31,7 @@ def async_menu_import(menu_dict, menu_name, user_email, accept_reviews=False):
     menu = Menu.objects.get(name=menu_name)
     user = Account.objects.get(email=user_email)
     def update_progress(current, total, error = None):
-        task = AsyncResult(async_menu_import.request.id)
+        task = async_menu_import.AsyncResult(async_menu_import.request.id)
         errors = task.result.get('errors', []) if task.result else []
         if error:
             errors.append(error)
