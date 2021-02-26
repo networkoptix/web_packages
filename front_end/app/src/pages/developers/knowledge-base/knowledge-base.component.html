@@ -95,6 +95,7 @@
             [placeholder]="'Knowledge Base Search' | translate"
             layout="compact"></nx-search>
         <ng-container *ngIf="!loading; else preloader">
+            <h2 *ngIf="pageNode.title" class="page-title">{{pageNode.title}}</h2>
             <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">

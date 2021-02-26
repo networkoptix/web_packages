@@ -128,7 +128,7 @@
 }
 
 ::ng-deep .article-content {
-    margin-top: 36px;
+    margin-top: 20px;
     font-size: 1rem;
     p,li, h1, h2, h3, a {
         word-break: break-word;
@@ -140,8 +140,8 @@
         font-size: 0.8125rem !important;
     }
     h1, h2, h3 {
-        margin-block-start: 32px;
-        margin-block-end: 24px;
+        margin-block-start: 22x;
+        margin-block-end: 20px;
     }
 
     h1 {
@@ -166,4 +166,8 @@
         max-width: 100%;
         height: auto;
     }
+}
+
+.page-title {
+    margin-top: 32px;
 }
