@@ -85,13 +85,13 @@ export class NxIntegrationsComponent implements OnInit {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         this.errorManager = new ErrorStateManager(this.window);
-        this.cloudApi.getIntegrationsCount().subscribe(data => {
-            this.pluginCount = data.count || 0;
-        });
     }
 
     ngOnInit() {
-        this.integrations = this.integrationsDetails();
+        this.cloudApi.getIntegrationsCount().subscribe(data => {
+            this.pluginCount = data.count || 0;
+            this.integrations = this.integrationsDetails();
+        });
         this.currentWindowWidth = window.innerWidth;
         this.integrationsShortDescription = (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '').split(
             '\n'

@@ -10,7 +10,7 @@
 
 <ng-template #integrationsBlocks>
     <div *ngIf="integrations" class="card integrations-block">
-        <h3 translate>Examples of Integrations</h3>
+        <h3>{{integrationsNode.nodes[1].title}}</h3>
         <div class="integrations-blocks-wrapper">
             <ng-container *ngFor="let integration of integrations.plugins">
                 <ng-container *ngTemplateOutlet="integrationBlock;context{integration:integration}"></ng-container>
@@ -29,7 +29,7 @@
 <section *ngIf="!errorManager.hasErrors; else showError" class="integrations">
     <h2 class="heading-link" [routerLink]="integrationsNode.url">{{integrationsNode.title}}</h2>
     <div class="integrations-wrapper">
-        <div class="card info-block">
+        <div *ngIf="integrationsShortDescription" class="card info-block">
             <h3>{{integrationsNode.nodes[0].title}}</h3>
             <div [innerHTML]="integrationsShortDescription | safe:'html'"></div>
             <button *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].asset.title"
