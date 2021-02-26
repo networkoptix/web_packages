@@ -128,20 +128,21 @@
 }
 
 ::ng-deep .article-content {
-    margin-top: 20px;
+    margin-top: -16px;
     font-size: 1rem;
     p,li, h1, h2, h3, a {
         word-break: break-word;
     }
     p, ul, ol {
+        margin-block-start: 16px;
         margin-block-end: 16px;
     }
     p, li {
         font-size: 0.8125rem !important;
     }
-    h1, h2, h3 {
-        margin-block-start: 22x;
-        margin-block-end: 20px;
+    h1, h2 {
+        margin-block-start: 32px;
+        margin-block-end: 24px;
     }
 
     h1 {
@@ -157,6 +158,11 @@
         font-size: 0.9375em !important;
     }
 
+    h3, h4, h5, h6 {
+        margin-block-start: 24px;
+        margin-block-end: 16px;
+    }
+
     h1, h2, h3, h4, h5, h6 {
         display: block;
     }
@@ -168,6 +174,9 @@
     }
 }
 
-.page-title {
+h1.page-title {
+    font-family: $font-family-medium;
+    font-size: typography.$h2-font-size !important;
     margin-top: 32px;
+    margin-bottom: 0;
 }
