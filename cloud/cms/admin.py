@@ -1189,6 +1189,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     data = form_import.cleaned_data
                     menu = data['menu']
                     force = data['force']
+                    accept_reviews = data['accept_reviews']
                     cache_key = f'{request.session.session_key}-{menu}'
                     file = request.FILES.get('file') or PACKAGE_CACHE[cache_key]
                     file = file if isinstance(file, (list, dict)) else json.load(file)
@@ -1197,7 +1198,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     conflicts = structure.check_asset_conflicts(file.get('assets', []))
                     if not conflicts or force:
                         conflicts = []
-                        task = async_menu_import.apply_async(args=[file, menu.name, request.user.email])
+                        task = async_menu_import.apply_async(args=[file, menu.name, request.user.email, accept_reviews])
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',

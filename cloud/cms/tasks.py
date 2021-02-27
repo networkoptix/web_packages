@@ -27,7 +27,7 @@ def make_package(asset_id, preview, version_id):
 
 
 @shared_task
-def async_menu_import(menu_dict, menu_name, user_email):
+def async_menu_import(menu_dict, menu_name, user_email, accept_reviews=False):
     menu = Menu.objects.get(name=menu_name)
     user = Account.objects.get(email=user_email)
     def update_progress(current, total, error = None):
@@ -37,7 +37,7 @@ def async_menu_import(menu_dict, menu_name, user_email):
             errors.append(error)
         current_task.update_state(state='PROGRESS',
             meta={'current': current, 'total': total, 'errors': errors})
-    menu.from_dict(menu_dict, user, update_progress_cb=update_progress)
+    menu.from_dict(menu_dict, user, update_progress_cb=update_progress, accept_reviews=accept_reviews)
 
 @shared_task
 def async_menu_export(menu_name):

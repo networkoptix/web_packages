@@ -572,6 +572,7 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         update_asset_by_json(asset_obj, asset_dict, user)
 
         if publish:
+            published = False
             # Send for review
             send_version_for_review(asset_obj, user)
             asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
@@ -579,8 +580,10 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
             # Accept review
             for customization in asset_obj.customizations.all():
                 review = AssetCustomizationReview.objects.filter(version__asset=asset_obj, customization=customization).last()
-                update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
-            if asset_obj.is_documentation:
+                if review:
+                    published = True
+                    update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+            if asset_obj.is_documentation and published:
                 DOC_CACHE.clear_cache()
         if increment_progress:
             increment_progress()

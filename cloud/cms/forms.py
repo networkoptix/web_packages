@@ -598,6 +598,11 @@ class MenuPortForm(forms.Form):
                 help_text="Updates existing records with values from JSON when conflicts exist.",
                 required=False
             )
+            self.fields['accept_reviews'] = forms.BooleanField(
+                label="Auto Accept",
+                help_text="Auto accept reviews for all customizations",
+                required=False
+            )
 
 
 class ZendeskImportForm(forms.Form):

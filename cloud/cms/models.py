@@ -1711,7 +1711,7 @@ class Menu(models.Model):
             'assets': list(filter(lambda id: id, assets))
         }
 
-    def from_dict(self, menu_dict, user, update_progress_cb = None):
+    def from_dict(self, menu_dict, user, update_progress_cb = None, accept_reviews=False):
         from cms.controllers.structure import import_assets_from_json
         node_asset_count = len(menu_dict['assets'])
         progress = 0
@@ -1729,7 +1729,7 @@ class Menu(models.Model):
         node_asset_count += get_node_count(menu_dict)
         if update_progress_cb:
             update_progress_cb(progress, node_asset_count)
-        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress)
+        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
                 new_node = False
