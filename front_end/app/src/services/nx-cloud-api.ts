@@ -436,7 +436,7 @@ export class NxCloudApiService {
             params = params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }
         if (state) {
-            params = params.set('state', state.replace('pending', 'review'));
+            params = params.set('state', state);
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
