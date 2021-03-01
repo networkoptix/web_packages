@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, ViewChild
+    OnInit, Output, ViewChild, OnChanges, SimpleChanges
 }                       from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -15,7 +15,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
     templateUrl : 'connect-error.component.html',
     styleUrls   : ['connect-error.component.scss']
 })
-export class NxAuthorizeConnectErrorComponent implements OnInit, OnDestroy {
+export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -23,6 +23,11 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnDestroy {
     @Input() processTryAgain: Process;
 
     additionalText: string;
+    templateText: {
+        [clientType: string]: {
+            additionalText: string
+        }
+    }
 
     constructor(
         language: NxLanguageProviderService,
@@ -34,11 +39,18 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.setupText();
+        this.setText();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (!changes.clientType.firstChange) {
+            this.setText();
+        }
     }
 
     setupText() {
         const auth = this.LANG.authorize;
-        const text = {
+        this.templateText = {
             loginToCloud: {
                 additionalText: auth.loginErrorAdditional()
             },
@@ -53,7 +65,10 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnDestroy {
             }
         };
 
-        this.additionalText = text[this.clientType].additionalText;
+    }
+    
+    setText() {
+        this.additionalText = this.templateText[this.clientType]?.additionalText;
     }
 
     setupNonCloudSystem() {

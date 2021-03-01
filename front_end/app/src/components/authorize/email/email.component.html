@@ -5,8 +5,8 @@
             [src]="CONFIG.icons.dirSectionPlaceholder + CONFIG.isLocal ? 'local_header' : 'cloud_header' + '.svg'" 
             [svgStyle]="{'width.px': 320, 'height.px': 80}"
             [applyClass]="true"></svg-icon>
-        <h3>{{ header }}</h3>
-        <h4>{{ subHeader }}</h4>
+        <h3 class="authorize-header">{{ header }}</h3>
+        <h4 class="authorize-subheader">{{ subHeader }}</h4>
     </header>
     <main>
         <ng-container *ngIf="!CONFIG.isLocal; else webadmin">

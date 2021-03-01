@@ -30,6 +30,12 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
     header: string;
     subHeader: string;
+    templateText: {
+        [clientType: string]: {
+            header: string,
+            subHeader: string
+        }
+    };
 
     constructor(
         language: NxLanguageProviderService,
@@ -41,6 +47,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
 
     ngOnInit(): void {
         this.setupText();
+        this.setText();
         this.sendPassword = () => {
             this.loginPasswordChange.emit(this.loginPassword);
         };
@@ -49,6 +56,10 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode) {
             this.passwordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
+        }
+
+        if (!changes.clientType.firstChange) {
+            this.setText();
         }
     }
 
@@ -73,7 +84,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         const subHeader = NxLanguageProviderService.translate(
             auth.asAccountSubheader,
             { accountEmail: this.loginEmail });
-        const text = {
+        this.templateText = {
             loginToCloud: {
                 header: auth.loginCloudHeader(),
                 subHeader
@@ -89,9 +100,11 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
             renewSessionDesktop  : renew,
             renewSessionWeb      : renew
         };
-
-        this.header = text[this.clientType].header;
-        this.subHeader = text[this.clientType].subHeader;
+    }
+    
+    setText() {
+        this.header = this.templateText[this.clientType]?.header;
+        this.subHeader = this.templateText[this.clientType]?.subHeader;
     }
 
     ngOnDestroy(): void {}

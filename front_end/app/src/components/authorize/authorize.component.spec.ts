@@ -10,12 +10,13 @@ import { AngularSvgIconModule }                    from 'angular-svg-icon';
 import { CommonModule }                            from '@angular/common';
 import { of }                                      from 'rxjs';
 
-import { AuthorizeState, NxAuthorizeComponent } from './authorize.component';
+import { AuthorizeState, ClientType, NxAuthorizeComponent } from './authorize.component';
 import { NxAuthorizeEmailComponent }            from './email/email.component';
 import { NxAuthorizePasswordComponent }         from './password/password.component';
 import { NxAuthorizeCreateAccountComponent }    from './create-account/create-account.component';
 import { NxAuthorizeActivateAccountComponent }  from './activate-account/activate-account.component';
 import { NxAuthorizeConfirmationComponent }     from './confirmation/confirmation.component';
+import { NxAuthorizeConnectErrorComponent }     from './connect-error/connect-error.component';
 
 import { NxConfigService }           from '@services/nx-config';
 import { nxConfig }                  from '@services/nx-config/config';
@@ -37,13 +38,25 @@ describe('OAuth Test Suite', () => {
     const translateMock = {
         translations: {
             authorize: {
-                loginCloudHeader    : () => 'Log in to %CLOUD_NAME%',
-                activateHeader      : () => 'Activate %CLOUD_NAME% Account',
-                createdText         : () => 'Account Created!',
-                createdAdditional   : () => '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
-                activatedText       : () => 'Account Activated!',
-                activatedAdditional : () => '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
-                connectedText       : () => 'System connected to %CLOUD_NAME%'
+                loginCloudHeader        : () => 'Log in to %CLOUD_NAME%',
+                activateHeader          : () => 'Activate %CLOUD_NAME% Account',
+                createdText             : () => 'Account Created!',
+                createdAdditional       : () => '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
+                activatedText           : () => 'Account Activated!',
+                activatedAdditional     : () => '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
+                connectedText           : () => 'System connected to %CLOUD_NAME%',
+                connectHeader           : () => 'Connect System to %CLOUD_NAME%',
+                connectSubheader        : () => 'To access it from anywhere and enable additional features',
+                expiredHeader           : () => 'Your session has expired',
+                expiredAccountSubheader : () => 'Please, log in again as {accountEmail}',
+                expiredSubheader        : () => 'Please, log in again',
+                loginSystemHeader       : () => 'Log in to {systemName}',
+                loginSystemSubheader    : () => 'With your %CLOUD_NAME% Account',
+                toAccountSubheader      : () => 'To {accountEmail}',
+                asAccountSubheader      : () => 'As {accountEmail}',
+                loginErrorAdditional    : () => 'Please try again or login to the system directly with your local account.',
+                connectErrorAdditional  : () => 'Please try again later.',
+                setupErrorAdditional    : () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>'
             }
         }
     };
@@ -113,7 +126,8 @@ describe('OAuth Test Suite', () => {
                 NxAuthorizePasswordComponent,
                 NxAuthorizeCreateAccountComponent,
                 NxAuthorizeActivateAccountComponent,
-                NxAuthorizeConfirmationComponent
+                NxAuthorizeConfirmationComponent,
+                NxAuthorizeConnectErrorComponent
             ],
             imports: [
                 CommonModule, ReactiveFormsModule, FormsModule,
@@ -157,23 +171,99 @@ describe('OAuth Test Suite', () => {
         });
     });
 
-    it('should load email component', () => {
-        fixture.detectChanges();
-        const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
-        const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
-        const createButtonText = el.nativeElement.querySelector('span');
-        expect(createButtonText.innerHTML).toBe('Create Account');
+    it('should load webadmin email component', () => {
         component.CONFIG.isLocal = true;
         fixture.detectChanges();
         const loginLabel = el.nativeElement.querySelectorAll('label');
         expect(loginLabel[0].innerHTML).toBe('Login');
     });
 
-    it('should load password component', () => {
-        component.loginEmail = 'password@example.co';
+    it('should load loginCloud email component', () => {
         component.CONFIG.isLocal = false;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0].innerHTML).toBe('Create Account');
+        expect(spans.length).toBe(1);
+    });
+
+    it('should load loginSystem email component', () => {
+        fixture.detectChanges();
+        component.clientType = ClientType.loginSystem;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginSystemHeader());
+        const emailSubHeader = el.nativeElement.querySelector('h4');
+        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.loginSystemSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0]).toBeFalsy();
+    });
+
+    it('should load connectSystemToCloud email component', () => {
+        fixture.detectChanges();
+        component.clientType = ClientType.connect;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        const emailSubHeader = el.nativeElement.querySelector('h4');
+        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0].innerHTML).toBe('Create Account');
+        expect(spans.length).toBe(1);
+    });
+
+    it('should load setupWizard email component', () => {
+        fixture.detectChanges();
+        component.clientType = ClientType.setup;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        const emailSubHeader = el.nativeElement.querySelector('h4');
+        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0].innerHTML).toBe('Setup Non-cloud System');
+        expect(spans.length).toBe(1);
+    });
+
+    it('should load renewSessionDesktop email component', () => {
+        fixture.detectChanges();
+        component.clientType = ClientType.renewDesktop;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        const emailSubHeader = el.nativeElement.querySelector('h4');
+        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0]).toBeFalsy();
+    });
+
+    it('should load renewSessionWeb email component', () => {
+        fixture.detectChanges();
+        component.clientType = ClientType.renewWeb;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        const emailSubHeader = el.nativeElement.querySelector('h4');
+        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0].innerHTML).toBe('Create Account');
+        expect(spans.length).toBe(1);
+    });
+
+    it('should load loginCloud password component', () => {
         fixture.detectChanges();
         component.currentState = AuthorizeState.password;
         fixture.detectChanges();
@@ -181,12 +271,95 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('As');
-        expect(spans[1].innerHTML).toBe('password@example.co');
-        expect(spans[3].innerHTML).toBe('Forgot Password?');
-        expect(spans[4].innerHTML).toBe('Back');
-        expect(spans.length).toBe(5);
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans[2].innerHTML).toBe('Back');
+        expect(spans.length).toBe(3);
+    });
+
+    it('should load loginSystem password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.clientType = ClientType.loginSystem;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginSystemHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans[2].innerHTML).toBe('Back');
+        expect(spans.length).toBe(3);
+    });
+
+    it('should load connect password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.clientType = ClientType.connect;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans[2].innerHTML).toBe('Back');
+        expect(spans.length).toBe(3);
+    });
+
+    it('should load setupWizard password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.clientType = ClientType.setup;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans[2].innerHTML).toBe('Back');
+        expect(spans.length).toBe(3);
+    });
+
+    it('should load renew session desktop password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.clientType = ClientType.renewDesktop;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans.length).toBe(2);
+    });
+
+    it('should load renew session web password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.clientType = ClientType.renewWeb;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        const passwordSubHeader = el.nativeElement.querySelector('h4');
+        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Forgot Password?');
+        expect(spans.length).toBe(2);
     });
 
     it('should load createAccount component', () => {
@@ -230,7 +403,7 @@ describe('OAuth Test Suite', () => {
         expect(spans[1].innerHTML).toBe('Back');
         expect(spans.length).toBe(2);
         // activated = true; fromEmail = false;
-        component.activated = true;
+        component.activated$.next(true);
         fixture.detectChanges();
         activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(1);
@@ -241,7 +414,7 @@ describe('OAuth Test Suite', () => {
         spans = el.nativeElement.querySelectorAll('span');
         expect(spans.length).toBe(2);
         // activated = true; fromEmail = true;
-        component.fromEmail = true;
+        component.fromEmail$.next(true);
         fixture.detectChanges();
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
@@ -258,5 +431,64 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('OK');
         const emailHeader = el.nativeElement.querySelector('h3');
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectedText());
+    });
+
+    it('should load loginCloud cloud connect error component', () => {
+        component.errorDialog$.next(true);
+        fixture.detectChanges();
+        const headers = el.nativeElement.querySelectorAll('h3');
+        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        const additionalTexts = el.nativeElement.querySelectorAll('p');
+        expect(additionalTexts[0].innerHTML).toBe(component.LANG.authorize.loginErrorAdditional());
+        expect(additionalTexts.length).toBe(1);
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Back');
+        expect(spans.length).toBe(2);
+    });
+
+    it('should load connectSystemToCloud cloud connect error component', () => {
+        component.errorDialog$.next(true);
+        fixture.detectChanges();
+        component.clientType = ClientType.connect;
+        fixture.detectChanges();
+        const headers = el.nativeElement.querySelectorAll('h3');
+        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        const additionalTexts = el.nativeElement.querySelectorAll('p');
+        expect(additionalTexts[1].innerHTML).toBe(component.LANG.authorize.connectErrorAdditional());
+        expect(additionalTexts.length).toBe(2);
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Back');
+        expect(spans.length).toBe(2);
+    });
+
+    it('should load setupWizard cloud connect error component', () => {
+        component.errorDialog$.next(true);
+        fixture.detectChanges();
+        component.clientType = ClientType.setup;
+        fixture.detectChanges();
+        const headers = el.nativeElement.querySelectorAll('h3');
+        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        const additionalTexts = el.nativeElement.querySelectorAll('p');
+        expect(additionalTexts[1].innerHTML).toBe(component.LANG.authorize.setupErrorAdditional());
+        expect(additionalTexts.length).toBe(4);
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[1].innerHTML).toBe('Setup Non-cloud System');
+        expect(spans[2].innerHTML).toBe('Back');
+        expect(spans.length).toBe(3);
+    });
+
+    it('should load loginToWebadmin cloud connect error component', () => {
+        component.errorDialog$.next(true);
+        fixture.detectChanges();
+        component.clientType = ClientType.loginWebadmin;
+        fixture.detectChanges();
+        const headers = el.nativeElement.querySelectorAll('h3');
+        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        const additionalTexts = el.nativeElement.querySelectorAll('p');
+        expect(additionalTexts[0].innerHTML).toBe(component.LANG.authorize.loginErrorAdditional());
+        expect(additionalTexts.length).toBe(1);
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans[0].innerHTML).toBe('Back');
+        expect(spans.length).toBe(1);
     });
 });
