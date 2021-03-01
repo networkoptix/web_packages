@@ -159,7 +159,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.currentState = AuthorizeState.email;
 
             // for reset password
-            this.resetPasswordCode = this.route.snapshot.params.code;
+            this.resetPasswordCode = this.route.snapshot?.params.code;
             if (this.resetPasswordCode) {
                 this.resetPasswordEmail = atob(this.resetPasswordCode).split(':')[1];
                 this.currentState = AuthorizeState.reset;

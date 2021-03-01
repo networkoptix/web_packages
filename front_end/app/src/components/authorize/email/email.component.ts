@@ -31,6 +31,12 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
     header: string;
     subHeader: string;
+    templateText: {
+        [clientType: string]: {
+            header: string,
+            subHeader?: string
+        }
+    };
 
     constructor(
         language: NxLanguageProviderService,
@@ -42,6 +48,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnInit(): void {
         this.setupText();
+        this.setText();
         this.sendEmail = () => {
             this.loginEmailChange.emit(this.loginEmail);
         };
@@ -50,6 +57,10 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode) {
             this.emailForm?.controls.email.setErrors({ [changes.errorCode.currentValue]: true });
+        }
+
+        if (!changes.clientType.firstChange) {
+            this.setText();
         }
     }
 
@@ -73,7 +84,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             header    : auth.expiredHeader(),
             subHeader : auth.expiredSubheader()
         };
-        const text = {
+        this.templateText = {
             loginToCloud: {
                 header: auth.loginCloudHeader()
             },
@@ -88,8 +99,10 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             renewSessionDesktop  : renew,
             renewSessionWeb      : renew
         };
+    }
 
-        this.header = text[this.clientType].header;
-        this.subHeader = text[this.clientType].subHeader;
+    setText() {
+        this.header = this.templateText[this.clientType]?.header;
+        this.subHeader = this.templateText[this.clientType]?.subHeader;
     }
 }
