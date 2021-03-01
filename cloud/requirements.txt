@@ -20,7 +20,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 cryptography==3.3.2
 cssutils==1.0.2
-Django==2.2.18
+Django==2.2.19
 django-admin-tools==0.8.1
 django-autocomplete-light==3.3.4
 django-celery-beat==1.5.0
