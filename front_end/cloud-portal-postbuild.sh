@@ -16,3 +16,4 @@ if [ $IS_WEBADMIN ]; then
 fi
 
 ./node_modules/.bin/ngsw-config ./dist ./ngsw-config.json "/static"
+sed -i -e "s/static\/index.html/index.html/" dist/ngsw.json
