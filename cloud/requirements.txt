@@ -18,7 +18,7 @@ click-plugins==1.1.1
 click-repl==0.1.6
 coreapi==2.3.3
 coreschema==0.0.4
-cryptography==3.3
+cryptography==3.3.2
 cssutils==1.0.2
 Django==2.2.18
 django-admin-tools==0.8.1
