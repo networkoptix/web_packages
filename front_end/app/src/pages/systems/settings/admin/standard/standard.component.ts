@@ -108,6 +108,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         }
     }
 
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
+    }
+
     // removes watcher(s) if setting does not exist
     cleanUpWatchers(settings) {
         Object.keys(this.settingsWatchers).forEach(sw => {

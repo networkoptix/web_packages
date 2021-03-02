@@ -307,6 +307,7 @@ export class NxApplyService {
         if (form) {
             this.setForm(form);
         }
+        this.watchers = [];
         this.addWatchers(watchers);
         this.applyComponentInstance = (<NxApplyComponent> this.applyComponentRef.instance);
         setTimeout(() => {
@@ -473,6 +474,10 @@ export class NxApplyService {
                 resolve(true);
             }
         });
+    }
+
+    removeWatchers() {
+        this.watchers = [];
     }
 
     private createComponent(onlyShowSectionWatchers = false) {

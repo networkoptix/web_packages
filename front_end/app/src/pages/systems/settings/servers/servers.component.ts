@@ -133,7 +133,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
     }
 
     hideAdvancedSettings() {

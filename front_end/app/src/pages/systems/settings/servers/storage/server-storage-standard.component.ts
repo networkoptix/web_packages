@@ -237,7 +237,7 @@ export class NxSystemStorageComponent implements OnInit {
             map(_ => {
                 const state = this.system.storageManager.storageState;
                 this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId);
-                for (const location of this.currentStorageState.locations) {
+                for (const location of (this.currentStorageState?.locations || [])) {
                     if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED) && !this.updatingModes.includes(location.storageId)) {
                         location.storageStatus = location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '');
                     }
