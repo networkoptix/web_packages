@@ -196,17 +196,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 upload_errors.extend(file_errors)
                 return False
 
-            md5 = hashlib.md5()
-            for chunk in request_file.chunks():
-                md5.update(chunk)
-
-            external_file = ExternalFile(data_structure=data_structure, asset=asset)
-            external_file.save()
-
-            external_file.file = request_file
-            external_file.md5 = md5.hexdigest()
-            external_file.size = request_file.size
-            external_file.save()
+            external_file = ExternalFile.objects.create(
+                asset=asset, data_structure=data_structure, file=request_file)
 
             new_record_value = external_file.file.url
 
@@ -285,17 +276,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
     def process_html():
         def upload_image(content_file):
-            md5 = hashlib.md5()
-            for chunk in content_file.chunks():
-                md5.update(chunk)
-
-            ext_file = ExternalFile(data_structure=data_structure, asset=asset)
-            ext_file.save()
-
-            ext_file.file = content_file
-            ext_file.md5 = md5.hexdigest()
-            ext_file.size = content_file.size
-            ext_file.save()
+            ext_file = ExternalFile.objects.create(
+                asset=asset, data_structure=data_structure, file=content_file)
 
             return f'src="{ext_file.file.url}"'
 

@@ -878,11 +878,16 @@ class UserGroupsToAssetTypeAdmin(admin.ModelAdmin):
 admin.site.register(UserGroupsToAssetType, UserGroupsToAssetTypeAdmin)
 
 
+@admin.register(ExternalFile)
 class ExternalFileAdmin(CMSAdmin):
-    list_display = ('id', 'file', 'size',)
+    list_display = ('id', 'file', 'asset_ds_pair_count', 'size', 'md5')
+    readonly_fields = ('asset_ds_pair_count', 'asset_ds_pair', 'size', 'md5')
 
+    def asset_ds_pair_count(self, obj):
+        return obj.asset_ds_pair.count()
 
-admin.site.register(ExternalFile, ExternalFileAdmin)
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(ContributorAgreement)

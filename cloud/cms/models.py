@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import re
@@ -11,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.deletion import Collector
-from django.db.models.signals import post_delete, m2m_changed
+from django.db.models.signals import post_delete, m2m_changed, post_save
 from django.db.utils import ProgrammingError
 from django.dispatch import receiver
 from django.utils.functional import cached_property
@@ -286,8 +287,9 @@ def slugify(name, lowercase=False):
 
 
 def rename_file(instance, filename):
-    asset_name = slugify(instance.asset.name, True)
-    structure_name = slugify(instance.data_structure.name, True)
+    asset_ds_pair = instance.asset_ds_pair.first() if hasattr(instance, 'asset_ds_pair') else instance
+    asset_name = slugify(asset_ds_pair.asset.name, True)
+    structure_name = slugify(asset_ds_pair.data_structure.name, True)
     file_info = f"{structure_name}-{instance.id}"
     return os.path.join(asset_name, file_info, filename)
 
@@ -1405,21 +1407,90 @@ class AssetCustomizationReview(models.Model):
 def unblock_child_reviews(sender, instance, **kwargs):
     instance.update_children_reviews()
 
+class ExternalFileManager(models.Manager):
+    def create(self, asset, data_structure, file):
+        '''
+        Adds to asset_ds_pair if file already exist else creates new file.
+        '''
+        raw_bytes = b''
+        md5 = hashlib.md5()
+        for count, chunk in enumerate(file.chunks()):
+            md5.update(chunk)
+            if count < 5:
+                raw_bytes += chunk
+        md5 = md5.hexdigest()
+        asset_ds_pair = None
+        try:
+            asset_ds_pair = AssetDsPair.objects.get(
+                asset=asset, data_structure=data_structure)
+        except ObjectDoesNotExist:
+            asset_ds_pair = AssetDsPair(
+                asset=asset, data_structure=data_structure)
+            asset_ds_pair.save()
+        external_file_obj = None
+        try:
+            external_file_obj = ExternalFile.objects.get(md5=md5)
+        except:
+            external_file_obj = ExternalFile(md5=md5, size=file.size)
+            external_file_obj.save()
+            external_file_obj.file=file
+        else:
+            external_raw_bytes = b''
+            for chunk in external_file_obj.file.chunks():
+                external_raw_bytes += chunk
+            if external_raw_bytes != raw_bytes:
+                raise ValueError('md5 Hash Collision')
+        external_file_obj.asset_ds_pair.add(asset_ds_pair)
+        external_file_obj.save()
+        return external_file_obj
+
+
+
+class AssetDsPair(models.Model):
+    data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.asset.name} > {self.data_structure.name}"
+
 
 class ExternalFile(models.Model):
-    data_structure = models.ForeignKey(
-        DataStructure, default=None, null=True, on_delete=models.CASCADE)
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
     file = models.FileField(upload_to=rename_file,
                             storage=MediaStorage(), max_length=1000)
-    md5 = models.CharField(max_length=1024, default='')
-    asset = models.ForeignKey(
-        Asset, default=None, null=True, on_delete=models.CASCADE)
+    md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
+    asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
+
+    objects = ExternalFileManager()
+
+    def delete(self, *args, asset_ds_pair = None, **kwargs):
+        '''
+        Removes asset_ds_pair relation from file, deletes file if no other relations exist or if no asset_ds_pair passed.
+        '''
+        if not asset_ds_pair or not self.id or not list(self.asset_ds_pair.all()):
+            super().delete(*args, **kwargs)
+        else:
+            self.asset_ds_pair.remove(asset_ds_pair)
+            self.save()
 
     def __str__(self):
         return self.file.name
+
+def file_saved(sender, created, signal, instance, **kwargs):
+    if not created:
+        file = instance.file
+        md5 = hashlib.md5()
+        for chunk in file.file.chunks():
+            md5.update(chunk)
+        md5 = md5.hexdigest()
+        if instance.md5 != md5:
+            instance.md5 = md5
+            instance.size = file.size
+            instance.save()
+
+post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
 
 
 class DataRecord(models.Model):
@@ -1478,16 +1549,16 @@ class DataRecord(models.Model):
 @receiver(post_delete, sender=DataRecord)
 def delete_file_reverse(sender, **kwargs):
     try:
-        if kwargs['instance'].external_file:
-            f = kwargs['instance'].external_file
+        file = kwargs['instance'].external_file
+        if file:
             collector = Collector(using='default')
-            collector.collect([f], keep_parents=True)
+            collector.collect([file], keep_parents=True)
             # Check if any other object is referencing the ExternalFile
             for model, instance in collector.instances_with_model():
                 if model != ExternalFile and (model != DataRecord or instance.id != kwargs['instance'].id):
                     break
             else:
-                f.delete()
+                file.delete()
     except ObjectDoesNotExist:
         # Prevent circular deletion caused by cascading
         pass
