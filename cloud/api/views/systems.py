@@ -71,7 +71,7 @@ def list_systems(request):
 def sharing(request, system_id):
     if request.method == 'GET':
         if not request.user.is_authenticated:
-            raise APINotAuthorisedException()
+            raise APINotAuthorisedException('User is not authorized', ErrorCodes.not_authorized)
         # get authorized user here
         data = cloud_api.System.users(request.session['login'], request.session['password'], system_id)
         return api_success(data['sharing'])
