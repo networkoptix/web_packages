@@ -351,8 +351,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     storePreviousValue(e) {
-        // prevents [.+-e] from being input
-        if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
+        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
             e.preventDefault();
         }
         this.previousInputValue = this.ipPortWatcher.value;

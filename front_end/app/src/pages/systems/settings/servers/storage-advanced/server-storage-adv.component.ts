@@ -75,7 +75,13 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
         setTimeout(() => {
             storage.reservedSpace.unitsInCurrentUom = updated;
-        })
+        });
+    }
+
+    storePreviousValue(e) {
+        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
+            e.preventDefault();
+        }
     }
 
     resetWatchers() {
