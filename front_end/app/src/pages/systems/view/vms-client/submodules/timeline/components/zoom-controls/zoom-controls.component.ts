@@ -97,8 +97,9 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   }
 
   public performZoomingStep () {
-    if (this._zoomingSign)
+    if (this._zoomingSign) {
       this.wheelZoom(this._zoomingSign)
+    }
   }
 
   public wheelZoom (delta: int, offset: float = 0.5) {
