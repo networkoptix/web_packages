@@ -14,3 +14,4 @@ export interface CanvasGeometry {
 
 export type GUID = string
 
+export type sign = -1 | 0 | 1
