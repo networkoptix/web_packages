@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
-import { float, int } from '../../../../utils/type-aliases';
+import { float, int, ms } from '../../../../utils/type-aliases';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
@@ -79,15 +79,22 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   }
 
   protected _zoomingSign: signType = 0
+  protected _zoomingStartedTimestamp: ms
 
   public startZooming ($event: MouseEvent, sign: signType) {
     if ($event.button !== 0) {
       return
     }
     this._zoomingSign = sign
+    this._zoomingStartedTimestamp = Date.now()
   }
 
   public stopZooming () {
+    const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp
+    const fastClickEdge: ms = 200
+    if (sinceZoomingStarted < fastClickEdge) {
+      this.wheelZoom(40 * this._zoomingSign)
+    }
     this._zoomingSign = 0
   }
 
