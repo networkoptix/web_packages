@@ -24,7 +24,6 @@ export interface RelatedLinks {
 export class NxLeftMenuComponent {
     @Input() menuName: string;
     @Input() baseRoute: string;
-    @Input() ignoreQuery = false;
     @Input() showDefault = true;
     @Input() allowEmpty = false;
     @Output() onClick = new EventEmitter();
@@ -39,6 +38,7 @@ export class NxLeftMenuComponent {
     prefetchedDocuments = [];
     firstUrl = '';
     activeNodeUrl = '';
+    ignoreQuery = true;
 
     constructor(
         configService: NxConfigService,
@@ -149,6 +149,8 @@ export class NxLeftMenuComponent {
             // eslint-disable-next-line camelcase
             if (account?.is_superuser) {
                 this.menuNodes = this.menusService.addDraftAndPending(this.menuNodes);
+                this.ignoreQuery = false;
+                this.updateActive(this.location.path());
             }
         });
         this.router.events

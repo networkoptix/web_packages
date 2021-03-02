@@ -85,7 +85,6 @@
     <nx-left-menu *ngIf="menuName" [menuName]="menuName"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
-        [ignoreQuery]="true"
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
