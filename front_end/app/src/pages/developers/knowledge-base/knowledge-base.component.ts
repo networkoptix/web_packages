@@ -1,6 +1,6 @@
 import {
-    Component, OnInit, Renderer2, ViewChild, ElementRef, Inject
-}                                                               from '@angular/core';
+    Component, OnInit, Renderer2, ViewChild, ElementRef, Inject, OnDestroy
+} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
 import { WINDOW }                                               from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
@@ -14,9 +14,12 @@ import { NxMenusService, MenuNode }     from '@services/menus.service';
 
 import { RelatedLinks }                 from '@components/left-menu/left-menu.component';
 import { SearchFilter }                 from '@components/search/search.component';
-import { NxPageService } from '../../../services/page.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxProcessService } from '../../../services/process.service';
+import { NxUriService } from '../../../services/uri.service';
+import { NxPageService } from '../../../services/page.service';
 import { NxAccountService, Account }    from '../../../services/account.service';
 
 export enum CardClasses {
@@ -32,7 +35,7 @@ export enum CardClasses {
     templateUrl   : 'knowledge-base.component.html',
     styleUrls     : ['knowledge-base.component.scss']
 })
-export class NxKnowledgeBaseComponent implements OnInit {
+export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
     CONFIG: IConfig;
@@ -49,7 +52,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     kbName = '';
     assetIds = [];
     pageNode: KnowledgeNode;
-    account: Account
+    account: Account;
     search: SearchFilter = { query: '' };
     searchResults$ = new BehaviorSubject([]);
     searchQuery$ = new BehaviorSubject({ query: '' });
@@ -122,14 +125,17 @@ export class NxKnowledgeBaseComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
         private router: Router,
         private menusService: NxMenusService,
         private renderer2: Renderer2,
+        private ribbonService: NxRibbonService,
+        private processService: NxProcessService,
+        private uriService: NxUriService,
         private pageService: NxPageService,
-        private languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window
     ) {
@@ -165,7 +171,46 @@ export class NxKnowledgeBaseComponent implements OnInit {
         });
     }
 
-	findKBWithArticle(assetId, assetParam) {
+    showRibbon(id, reviewId?) {
+        const ribbonActions: RibbonActionInput[] = [
+            {
+                type  : 'link',
+                text  : this.LANG.ribbon.integration.backToEditText,
+                value : this.CONFIG.integration.adminLink.replace('%ID%', id)
+            }
+        ];
+        if (reviewId) {
+            const process = this.processService.createProcess(() => {
+                return this.cloudApi.acceptReview(reviewId);
+            }, {
+                successMessage : this.LANG.toastMessage.reviewAccepted?.()
+            }).then(() => {
+                const url = this.uriService.getURL();
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
+                    this.router.navigateByUrl(url);
+                });
+                this.ribbonService.hide();
+            });
+            ribbonActions.unshift(
+                {
+                    type  : 'process-button',
+                    text  : this.LANG.ribbon.integration.accept?.(),
+                    value : process
+                },
+                {
+                    type  : 'link',
+                    text  : this.LANG.ribbon.integration.reject?.(),
+                    value : `/admin/cms/assetcustomizationreview/${reviewId}/change/`
+                }
+            );
+        }
+        this.ribbonService.show(
+            this.LANG.ribbon.integration.previewRibbon(),
+            ribbonActions
+        );
+    }
+
+    findKBWithArticle(assetId, assetParam) {
         return this.cloudApi.findArticleKB(assetId).subscribe(({ base, kb_name }) => {
             this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
                 this.router.navigate([`/docs/${base}/${kb_name}/${assetParam}`])
@@ -214,6 +259,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
             }),
             switchMap(urlSegment => {
                 this.loading = true;
+                this.ribbonService.hide();
                 this.clearSearch();
                 const getFirstDoc = () => {
                     const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): string => !first ? '' : first.asset_id || traverseToFirst([...remaining, ...first.nodes]);
@@ -251,7 +297,10 @@ export class NxKnowledgeBaseComponent implements OnInit {
                         } else {
                             return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
                                 .pipe(
-                                    tap(({ title, blocks, contentHTML, script, shortDescription }) => {
+                                    tap(({ title, blocks, contentHTML, script, shortDescription, reviewId }) => {
+                                        if (state) {
+                                            this.showRibbon(this.assetId$.value, reviewId);
+                                        }
                                         this.search = { ...this.search };
                                         this.pageService.pageTitle = NxLanguageProviderService.translate(
                                             this.LANG.pageTitles.articleTitle, {
@@ -316,6 +365,10 @@ export class NxKnowledgeBaseComponent implements OnInit {
             });
         });
     };
+
+    ngOnDestroy() {
+        this.ribbonService.hide();
+    }
 };
 
 export class KnowledgeNode {

@@ -40,8 +40,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     }
 
     get showRibbon() {
-        return this.visiblity && this.headerService.currentLocation.isSystem &&
-            this.headerService.currentLocation.path !== '/systems';
+        return this.visiblity;
     }
 
     constructor(

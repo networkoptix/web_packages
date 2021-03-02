@@ -350,7 +350,7 @@ export class NxSystem extends System {
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });

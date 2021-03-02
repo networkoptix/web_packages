@@ -32,6 +32,11 @@ export const nxConfig: IConfig = {
         }
     },
     defaultLanguage : 'en_US',
+    developers : {
+        landing : {
+            adminLink : '/admin/cms/menu/%ID%/change/'
+        }
+    },
     dialogs         : {
         message: {
             subjects: {

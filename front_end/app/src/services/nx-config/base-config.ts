@@ -22,6 +22,7 @@ export interface BaseConfig {
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;
     dialogs: Dialogs;
+    developers: Developers;
     downloads: Downloads;
     healthMonitoring: HealthMonitoring;
     icons: Icons;
@@ -83,6 +84,12 @@ export interface BaseConfig {
     headerHeight: number;
     ribbonHeight: number;
     // loggersConfig: LoggersConfig;
+}
+
+export interface Developers {
+    landing: {
+        adminLink: string;
+    }
 }
 
 export interface FooterItem {

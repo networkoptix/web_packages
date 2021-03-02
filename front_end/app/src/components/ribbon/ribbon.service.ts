@@ -27,7 +27,11 @@ export class NxRibbonService {
     ) {
     }
 
-    show(message, actions: RibbonActionInput[], type?, updateFunction?) {
+    show(message, actions: RibbonActionInput[], type?, updateFunction?, systemOnly = false) {
+        if (systemOnly && !(this.headerService.currentLocation.isSystem && this.headerService.currentLocation.path !== '/systems')) {
+            this.hide();
+            return;
+        }
         actions.forEach(action => {
             if (action.type === 'link') {
                 action.text = (typeof action.text === 'function') ? action.text() : action.text;
@@ -43,7 +47,7 @@ export class NxRibbonService {
             updateFunction
         };
         this.contextSubject.next(this.context);
-        this.appStateService.ribbonVisibility = this.headerService.currentLocation.isSystem && this.headerService.currentLocation.path !== '/systems';
+        this.appStateService.ribbonVisibility = true;
     }
 
     hide() {

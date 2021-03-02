@@ -154,7 +154,6 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxSectionPlaceholderComponent,
         ToastsContainer,
         NxInfoBlockComponent,
-        NxRibbonService,
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,

@@ -1626,13 +1626,12 @@ class Menu(models.Model):
         else:
             return super().__str__()
 
-    @property
-    def preview_url(self):
+    def preview_url(self, state='draft'):
         """Preview url for menu change form.
         """
         return {
-            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft',
-            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft'
+            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}',
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
         }.get(self.type, '')
 
     @property
@@ -1640,7 +1639,7 @@ class Menu(models.Model):
         """Preview url for child menu nodes.
         """
         return {
-            self.MENU_TYPES.docs_struct: self.preview_url,
+            self.MENU_TYPES.docs_struct: self.preview_url('draft'),
             self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
         }.get(self.type, '')
 
@@ -1665,6 +1664,7 @@ class Menu(models.Model):
                 ),
                 'type': menu.type,
                 'base_url': menu.base_url,
+                'id': menu.id,
                 'title': menu.title,
                 'description': menu.short_description,
             }

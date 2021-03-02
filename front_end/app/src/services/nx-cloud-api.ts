@@ -370,10 +370,13 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    acceptIntegration(reviewId: number) {
+    acceptReview(reviewId: number) {
         return this.http.post(this.CONFIG.apiBase + '/accept_review', {
             review_id: reviewId
-        }).toPromise();
+        }).toPromise().then(response => {
+            this.cacheService.cachedData.clear();
+            return response;
+        });
     }
 
     // Cloud Storage

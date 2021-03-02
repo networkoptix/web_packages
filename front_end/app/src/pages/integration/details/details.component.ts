@@ -132,7 +132,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     if (this.plugin.pending && this.account.can_publish_integration) {
                                         this.acceptProcess = this.processService.createProcess(() => {
-                                            return this.cloudApiService.acceptIntegration(this.plugin.review_id);
+                                            return this.cloudApiService.acceptReview(this.plugin.review_id);
                                         }, {
                                             successMessage: this.LANG.account.agreementAccepted?.()
                                         }).then(() => {
