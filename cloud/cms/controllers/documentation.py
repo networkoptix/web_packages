@@ -60,6 +60,8 @@ def split_blocks(html):
 
 
 def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
+    S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
+    REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
     ds_needed = ('title', 'shortDescription', 'body', 'script', 'styling')
     doc_structures = DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.documentation, name__in=ds_needed
@@ -119,7 +121,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
-            doc_dict['blocks'] = values['body']
+            doc_dict['blocks'] = values['body'].replace(S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
             css = values['styling']
 
