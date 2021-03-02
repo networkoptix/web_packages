@@ -220,11 +220,10 @@ export class UserManager {
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         user.email = user.email.toLowerCase();
         let userCreated = false;
-        if (user.email === this.currentUserEmail) {
-            if (user.isCloud) {
-                // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
-            }
+        const isSelf = user.email === this.currentUserEmail;
+        if (isSelf && user.isCloud) {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
         }
 
         if (!user.id) {
@@ -238,7 +237,7 @@ export class UserManager {
             user = { ...existingUser, ...user };
         }
 
-        if (!user.canBeEdited && !this.isMine) {
+        if (!isSelf && !user.canBeEdited && !this.isMine) {
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }

@@ -56,6 +56,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     editMode = false;
     emptyName = false;
+    username: string;
+    role: string;
 
     get localUserName() {
         return this.localUserNameWatcher.value;
@@ -294,6 +296,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.fullName.value = this.selectedUser.fullName;
             this.email.value = this.selectedUser.email;
+            this.username = user.isCloud ? user.email : user.name;
+            this.role = !user.isCloud && user.name === 'admin' ? 'Owner' : user.role.name;
 
             this.applyService.reset();
 
@@ -314,6 +318,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             : this.LANG.accessRoles.customRole.description();
         this.selectedUser.role = role;
         this.userRole.value = role.name;
+        this.role = role.name;
     }
 
     updateEnabled(state) {

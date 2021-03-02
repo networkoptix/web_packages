@@ -524,10 +524,8 @@ export class NxApplyService {
         this.watchers = [...watchers, ...(this.watchers || [])];
         const changedWatchers$ = Object.values(
             this.watchers
-        ).map(({
-            valueSubject, originalValue
-        }) => valueSubject.pipe(
-            map(current => current !== originalValue),
+        ).map((watcher) => watcher.valueSubject.pipe(
+            map(current => current !== watcher.originalValue),
             startWith(false)
         ));
         combineLatestFrom(

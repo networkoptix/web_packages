@@ -5,18 +5,18 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of }             from 'rxjs';
 
-import { environment }                     from '../../../environments/environment';
-import { NxLanguageProviderService }       from '../../services/nx-language-provider';
+import { environment }                     from '@environments/environment';
+import { NxLanguageProviderService }       from '@services/nx-language-provider';
 import { NxConfigService, IConfig }        from '@services/nx-config';
-import { NxProcessService }                from '../../services/process.service';
-import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { NxProcessService }                from '@services/process.service';
+import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
 import { NxToastService }                  from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
 @Component({
-    selector : 'nx-modal-disconnect-content',
+    selector    : 'nx-modal-disconnect-content',
     templateUrl : 'disconnect.component.html',
-    styleUrls : []
+    styleUrls   : []
 })
 export class DisconnectModalContent {
     @Input() account;
@@ -54,6 +54,13 @@ export class DisconnectModalContent {
     }
 
     ngOnInit() {
+        const passwordError = () => {
+            this.wrongPassword = true;
+            this.auth.password = '';
+
+            this.renderer.selectRootElement('#password').focus();
+            return true;
+        };
         this.auth.password = '';
         this.account
             .get()
@@ -72,32 +79,22 @@ export class DisconnectModalContent {
             }
             return this.account.disconnect(this.system.id, this.auth.password);
         }, {
+            ignoreError        : true,
             ignoreUnauthorized : true,
             errorCodes         : {
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.auth.password = '';
-
-                    this.renderer.selectRootElement('#password').focus();
-                }
+                'Wrong password.' : passwordError,
+                wrongPassword     : passwordError
             },
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
-            if (['Wrong password.', 'Wrong username or password.'].includes(res.errorString)) {
-                this.wrongPassword = true;
-                this.auth.password = '';
-
-                this.renderer.selectRootElement('#password').focus();
-            } else {
-                this.activeModal.close(true);
-                const options = {
-                    classname : this.CONFIG.toast.success,
-                    autohide  : true,
-                    delay     : this.CONFIG.alertTimeout
-                };
-                this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
-            }
-        }, err => console.error(err));
+            this.activeModal.close(true);
+            const options = {
+                classname : this.CONFIG.toast.success,
+                autohide  : true,
+                delay     : this.CONFIG.alertTimeout
+            };
+            this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
+        }, () => { });
     }
 
     close() {

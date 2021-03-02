@@ -248,7 +248,7 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
         (error?.resultCode) ||
         (error?.type === 'error' &&
         'networkConnection') ||
-        error?.errorText || error;
+        error?.errorText || error?.errorString || error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();
     }
