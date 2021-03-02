@@ -6,6 +6,8 @@ import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api'
 import { NxHeaderService }      from '../../../services/nx-header.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { NxMenusService } from '../../../services/menus.service';
+import { NxPageService } from '../../../services/page.service';
 import { NxAccountService, Account } from '../../../services/account.service';
 
 export enum AboutTemplates {
@@ -65,6 +67,8 @@ export class NxAboutComponent {
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
         public router: Router,
+        private menusService: NxMenusService,
+        private pageService: NxPageService,
         private accountService: NxAccountService,
         configService: NxConfigService
     ) {
@@ -76,7 +80,10 @@ export class NxAboutComponent {
             return;
         }
         const { state } = this.route.snapshot.queryParams;
-
+        this.menusService.getMenu(this.menuName).subscribe(menu => {
+            this.pageService.pageTitle = menu.title;
+            this.pageService.pageDescription = menu.description;
+        });
         this.accountService.get().then(account => {
             this.account = account;
         }).then(_ => {

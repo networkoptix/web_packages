@@ -27,6 +27,16 @@
             "public": false
           },
           {
+            "name": "description",
+            "label": "Description",
+            "value": "",
+            "description": "Short description, used in meta tags for SEO",
+            "type": "long_text",
+            "optional": true,
+            "advanced": true,
+            "public": false
+          },
+          {
             "name": "text",
             "label": "Text",
             "value": "",

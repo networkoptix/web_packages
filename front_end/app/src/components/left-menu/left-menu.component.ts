@@ -9,6 +9,7 @@ import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy'
 import { NxMenusService, MenuNode }                 from '../../services/menus.service';
 import { IConfig, NxConfigService }                 from '../../services/nx-config';
 import { NxAccountService }                         from '@services/account.service';
+import { MenuStructure } from '@services/nx-config/base-config';
 
 export interface RelatedLinks {
     type: string,
@@ -140,7 +141,7 @@ export class NxLeftMenuComponent {
                 // eslint-disable-next-line camelcase
                 this.menuName, false, account?.is_superuser
             ).pipe(
-                map((menu: MenuNode[]): [MenuNode[], any] => [menu, account])
+                map((menu): [MenuNode[], any] => [menu.nodes, account])
             )),
             untilDestroyed(this)
         ).subscribe(([menu, account]) => {

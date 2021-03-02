@@ -14,6 +14,9 @@ import { NxMenusService, MenuNode }     from '@services/menus.service';
 
 import { RelatedLinks }                 from '@components/left-menu/left-menu.component';
 import { SearchFilter }                 from '@components/search/search.component';
+import { NxPageService } from '../../../services/page.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxAccountService, Account }    from '../../../services/account.service';
 
 export enum CardClasses {
@@ -33,6 +36,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     currentSearchResultPage = 0;
     totalSearchResultPages = 0;
     loadingNext = false;
@@ -124,10 +128,13 @@ export class NxKnowledgeBaseComponent implements OnInit {
         private router: Router,
         private menusService: NxMenusService,
         private renderer2: Renderer2,
+        private pageService: NxPageService,
+        private languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
     }
 
     prefetchDocument({ assetId, state = null }) {
@@ -149,7 +156,7 @@ export class NxKnowledgeBaseComponent implements OnInit {
         ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
 
         return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
-            const {content = '', matchStart = 0, matchEnd = 0} = snippets?.length ? snippets[0] : {};
+            const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
                 snippet: content ? highlight(content, matchStart, matchEnd) : shortDescription,
@@ -222,10 +229,10 @@ export class NxKnowledgeBaseComponent implements OnInit {
                                     });
                                 };
                                 this.assetIds = [];
-                                getAllIds(menu);
+                                getAllIds(menu.nodes);
                             }
                         }),
-                        map(menu => traverseToFirst(menu))
+                        map(menu => traverseToFirst(menu.nodes))
                     );
                 };
                 return getFirstDoc().pipe(
@@ -244,8 +251,13 @@ export class NxKnowledgeBaseComponent implements OnInit {
                         } else {
                             return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
                                 .pipe(
-                                    tap(({title, blocks, contentHTML, script}) => {
-                                        this.search = {...this.search};
+                                    tap(({ title, blocks, contentHTML, script, shortDescription }) => {
+                                        this.search = { ...this.search };
+                                        this.pageService.pageTitle = NxLanguageProviderService.translate(
+                                            this.LANG.pageTitles.articleTitle, {
+                                                ARTICLE_TITLE: title, VMS_NAME: this.CONFIG.vmsName
+                                            });
+                                        this.pageService.pageDescription = shortDescription;
                                         this.pageNode = KnowledgeNode.normalHeader(
                                             title,
                                             this.assetId$.value,

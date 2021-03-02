@@ -131,7 +131,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
-            this.headerService.nodes = this.menusService.cleanEmptyNodes(header);
+            this.headerService.nodes = this.menusService.cleanEmptyNodes(header.nodes);
         });
         // Updates windowWidth$ behavior subject on window resize
         this.resizeSubscription = fromEvent(this.window, 'resize').pipe(

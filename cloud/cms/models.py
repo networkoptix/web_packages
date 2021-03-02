@@ -1610,6 +1610,8 @@ class Menu(models.Model):
                            help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
+    short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
         "header": ["name","url","enabled","order","is_global","preview"],
         "details": ["asset","icon","authentication"],
@@ -1662,7 +1664,9 @@ class Menu(models.Model):
                     include_not_accepted=include_not_accepted
                 ),
                 'type': menu.type,
-                'base_url': menu.base_url
+                'base_url': menu.base_url,
+                'title': menu.title,
+                'description': menu.short_description,
             }
             for menu in menus
         }
@@ -1675,7 +1679,7 @@ class Menu(models.Model):
         customization = Customization.objects.filter(name=customization_name).first()
         menus = cls.get_prefetched_menus(menu_name)
         _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
-        return structures.get(menu_name).get('nodes')
+        return structures.get(menu_name)
 
     @classmethod
     def generate_menus(cls, customization_name=None):

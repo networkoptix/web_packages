@@ -9,7 +9,7 @@ import {
 }                                         from 'rxjs/operators';
 
 import { IConfig, NxConfigService }  from './nx-config';
-import { MenuStructure }             from './nx-config/base-config';
+import { MenuStructure, MenusStructure }             from './nx-config/base-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService }          from './session.service';
@@ -54,7 +54,7 @@ export class MenuNode {
     providedIn: 'root'
 })
 export class NxMenusService implements OnDestroy {
-    private menusStructure: MenuStructure;
+    private menusStructure: MenusStructure;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     private languageChanged$ = new BehaviorSubject('')
@@ -83,34 +83,42 @@ export class NxMenusService implements OnDestroy {
     updateMenu = (lang) => {
         this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
-            (newMenu, [name, nodes]) => {
-                newMenu[name] = nodes.map(this.translateNode(lang));
+            (newMenu, [name, { title, description, nodes }]) => {
+                newMenu[name] = {
+                    title       : title,
+                    description : description,
+                    nodes       : nodes.map(this.translateNode(lang))
+                };
                 return newMenu;
             }, {});
     }
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
-        let menu = this.menusStructure?.[name.toLowerCase()] ?? [];
+        const menu = this.menusStructure?.[name.toLowerCase()] ?? {} as MenuStructure;
         if (withCurrentSystem && this.currentSystemNode$.value) {
-            menu = [this.currentSystemNode$.value, ...menu];
+            menu.nodes = [this.currentSystemNode$.value, ...menu.nodes];
         }
         if (this.CONFIG.isLocal) {
             return from([menu]);
         }
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
-                switchMap(([login]): Promise<[string, MenuNode[]]> | Observable<[string, MenuNode[]]> => ignoreCache
+                switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
                     ? this.cloudApi.getMenu(name).pipe(
-                        map((menu): [string, MenuNode[]] => [login, menu]),
+                        map((menu): [string, MenuStructure] => [login, menu]),
                         startWith([login, menu])
                     )
                     : Promise.resolve([login, menu])
                 ),
-                map(([login, menu]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT).map(this.translateNode()))
-            ) as Observable<MenuNode[]>;
+                map(([login, menu]) => {
+                    const filteredMenu = this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT);
+                    filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
+                    return filteredMenu;
+                })
+            ) as Observable<MenuStructure>;
     }
 
-    filterMenu = (menu: MenuNode[], auth: Auth) => {
+    filterMenu = (menu: MenuStructure, auth: Auth) => {
         const checkNodes = (nodes: MenuNode[], node: MenuNode) => {
             if (node.authentication === Auth.BOTH || node.authentication === auth) {
                 if (node.nodes) {
@@ -120,7 +128,8 @@ export class NxMenusService implements OnDestroy {
             }
             return nodes;
         };
-        return menu.reduce(checkNodes, []);
+        menu.nodes = menu.nodes.reduce(checkNodes, []);
+        return menu;
     }
 
     cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu||[]).reduce((menu, node: MenuNode) => {

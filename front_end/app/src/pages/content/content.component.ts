@@ -139,6 +139,7 @@ export class NxContentComponent implements OnInit {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.pageTitle = this.title;
+                this.pageService.pageDescription = data.shortDescription;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;

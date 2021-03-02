@@ -578,6 +578,7 @@ export interface PageTitles {
     activate:               any;
     activateCode:           any;
     activateSuccess:        any;
+    articleTitle:           any;
     changePassword:         any;
     debug:                  any;
     default:                any;
@@ -1499,6 +1500,7 @@ const typeMap: any = {
         { json: "activate", js: "activate", typ: "any" },
         { json: "activateCode", js: "activateCode", typ: "any" },
         { json: "activateSuccess", js: "activateSuccess", typ: "any" },
+        { json: "articleTitle", js: "articleTitle", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
         { json: "debug", js: "debug", typ: "any" },
         { json: "default", js: "default", typ: "any" },

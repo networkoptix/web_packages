@@ -12,6 +12,7 @@ import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
 import { MenuNode }                 from './menus.service';
+import { MenuStructure } from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 
@@ -460,8 +461,8 @@ export class NxCloudApiService {
             }
         }));
     }
-	
-	getMenu(menuName: string) {
-        return this.http.get<MenuNode[]>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
+
+    getMenu(menuName: string) {
+        return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 }
