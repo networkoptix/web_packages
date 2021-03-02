@@ -130,6 +130,10 @@ export class NxMenuService implements OnDestroy {
                         }
                     });
                     if (haveNode?.level3?.length) {
+                        // remove separator if last in search result
+                        if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
+                            haveNode.level3.pop();
+                        }
                         filteredContent.push(haveNode);
                     }
                 }
