@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
 import { float, int, ms } from '../../../../utils/type-aliases';
+import PlaybackService from '../../../playback/services/playback.service';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
@@ -23,6 +24,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   constructor (
     public timeline: TimelineService,
     public vms: VideoManagementSystemService,
+    public playback: PlaybackService,
     protected self: ElementRef,
   ) {
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
@@ -116,6 +118,9 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     let durationDelta = duration * step * delta
     if (duration - durationDelta < MIN_DURATION) {
         durationDelta = duration - MIN_DURATION
+    }
+    if (!this.playback.isBeyondVisibleRange) {
+      offset = this.playback.relativeOffset
     }
     this.timeline.zoom(durationDelta, offset)
   }
