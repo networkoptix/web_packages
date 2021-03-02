@@ -116,6 +116,10 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   public fullZoomOut () {
     this.timeline.fullZoomOut()
   }
+
+  public strongZoomIn () {
+    this.wheelZoom(80)
+  }
 }
 
 export default ZoomControlsComponent
