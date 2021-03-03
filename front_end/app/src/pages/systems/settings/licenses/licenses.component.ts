@@ -201,10 +201,17 @@ export class NxSystemLicensesComponent implements OnInit {
                                                             return NxUtilsService.cleanId(server.id) === time.serverId;
                                                         }).vmsTime;
 
-                                                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date(item.info.serverTime).getTime());
+                                                        // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
+                                                        item.info.expiration = new Date(item.info.expiration.replace(/-/g, '/')).getTime();
+
+                                                        item.info.expired = item.info.expiration < item.info.serverTime; // serverTime is in milliseconds
                                                         item.info.serverName = server.name;
                                                         item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()]();
-                                                        item.info.status = item.info.serverStatus === this.LANG.license.info.online() ? item.info.status : this.LANG.license.info.error();
+                                                        item.info.status = (item.info.expired)
+                                                            ? this.LANG.license.info.expired()
+                                                            : (item.info.serverStatus === this.LANG.license.info.online())
+                                                                ? item.info.status
+                                                                : this.LANG.license.info.error();
                                                     } else {
                                                         item.info.serverName = this.LANG.license.info.serverNotFound();
                                                         item.info.serverStatus = server.status;
