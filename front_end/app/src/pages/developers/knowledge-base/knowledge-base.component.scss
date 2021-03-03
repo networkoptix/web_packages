@@ -128,7 +128,6 @@
 }
 
 ::ng-deep .article-content {
-    margin-top: -16px;
     font-size: 1rem;
     p,li, h1, h2, h3, a {
         word-break: break-word;
@@ -143,6 +142,11 @@
     h1, h2 {
         margin-block-start: 32px;
         margin-block-end: 24px;
+    }
+
+    h1.page-title {
+        font-family: $font-family-medium;
+        font-size: typography.$h2-font-size !important;
     }
 
     h1 {
@@ -172,11 +176,4 @@
         max-width: 100%;
         height: auto;
     }
-}
-
-h1.page-title {
-    font-family: $font-family-medium;
-    font-size: typography.$h2-font-size !important;
-    margin-top: 32px;
-    margin-bottom: 0;
 }

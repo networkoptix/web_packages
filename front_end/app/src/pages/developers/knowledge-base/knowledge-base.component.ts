@@ -297,14 +297,15 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                         } else {
                             return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
                                 .pipe(
-                                    tap(({ title, blocks, contentHTML, script, shortDescription, reviewId }) => {
+                                    tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
+                                        const title = originalTitle ? `<h1 class="page-title">${originalTitle}</h1>` : originalTitle;
                                         if (state) {
                                             this.showRibbon(this.assetId$.value, reviewId);
                                         }
                                         this.search = { ...this.search };
                                         this.pageService.pageTitle = NxLanguageProviderService.translate(
                                             this.LANG.pageTitles.articleTitle, {
-                                                ARTICLE_TITLE: title, VMS_NAME: this.CONFIG.vmsName
+                                                ARTICLE_TITLE: originalTitle, VMS_NAME: this.CONFIG.vmsName
                                             });
                                         this.pageService.pageDescription = shortDescription;
                                         this.pageNode = KnowledgeNode.normalHeader(

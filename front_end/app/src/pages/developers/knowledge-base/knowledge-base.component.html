@@ -8,13 +8,13 @@
 
 <ng-template #normalCard let-node="node">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="node.content | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(pageNode.title + node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
 <ng-template #contentCard let-node="node">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="node.content | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(pageNode.title + node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
@@ -94,7 +94,6 @@
             [placeholder]="'Knowledge Base Search' | translate"
             layout="compact"></nx-search>
         <ng-container *ngIf="!loading; else preloader">
-            <h1 *ngIf="pageNode.title" class="page-title">{{pageNode.title}}</h1>
             <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">
