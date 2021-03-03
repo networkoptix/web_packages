@@ -83,7 +83,7 @@ export class NxAboutComponent {
         this.baseName = this.route.snapshot.paramMap.get('name');
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
-            setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+            setTimeout(this.pageService.show404);
             return;
         }
         const { state } = this.route.snapshot.queryParams;

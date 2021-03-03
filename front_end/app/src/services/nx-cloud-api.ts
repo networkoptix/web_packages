@@ -446,7 +446,7 @@ export class NxCloudApiService {
         this.cacheService.addToCache(route);
         return this.http.get<any>(route).pipe(catchError(error => {
             if (error.status === 404) {
-                this.router.navigate([this.CONFIG.redirect.page404]);
+                this.#show404();
                 return EMPTY;
             } else {
                 return of(error);
@@ -457,12 +457,22 @@ export class NxCloudApiService {
     findArticleKB(assetId) {
         return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
             if (error.status === 404) {
-                this.router.navigate([this.CONFIG.redirect.page404]);
+                this.#show404();
                 return EMPTY;
             } else {
                 return of(error);
             }
         }));
+    }
+
+    #show404 = () => {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     getMenu(menuName: string) {

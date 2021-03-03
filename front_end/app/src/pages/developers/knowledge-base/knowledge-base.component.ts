@@ -246,12 +246,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                         }
                     } else {
                         // Navigate to 404 and replace failing url so going history back will load requesting page
-                        this.router
-                            .navigate([this.CONFIG.redirect.page404], {
-                                replaceUrl: true
-                            })
-                            .catch(_ => {});
-
+                        this.pageService.show404();
                         return;
                     }
                 }
