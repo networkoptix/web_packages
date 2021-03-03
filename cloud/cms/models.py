@@ -1626,6 +1626,15 @@ class Menu(models.Model):
         else:
             return super().__str__()
 
+    def validate_unique(self, exclude=None):
+        doc_menu = self.type is not self.MENU_TYPES.generic
+        if doc_menu and Menu.objects.filter(base_url=self.base_url, url=self.url).exclude(id=self.id).exists():
+            base_url = f'"{self.base_url}"' if self.base_url else "None"
+            url = f'"{self.url}"' if self.url else "None"
+            raise ValidationError(
+                f'Menu already exists with base_url={base_url} and url={url}. Please select a unique route.')
+        super(Menu, self).validate_unique(exclude=exclude)
+
     def preview_url(self, state='draft'):
         """Preview url for menu change form.
         """
