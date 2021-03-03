@@ -1,17 +1,17 @@
 import {
-    Component, Inject, OnDestroy, OnInit, ViewContainerRef
-} from '@angular/core';
+    Component, Inject, OnDestroy,
+    OnInit, ViewContainerRef
+}                                    from '@angular/core';
 import {
     Params, Router, ActivatedRoute
 }                                    from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 import { auditTime }                 from 'rxjs/operators';
-
 import { NxRibbonService }           from '@components/ribbon';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService }          from '@services/process.service';
 import { NxSystem, NxSystemUser }    from '@services/system.service';
 import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
@@ -25,6 +25,7 @@ import { NxToastService }            from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxApplyService, Watcher }   from '@services/apply.service';
 import { WINDOW }                    from '@services/window-provider';
+import { CookieService }             from 'ngx-cookie-service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -94,6 +95,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private cookieService: CookieService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private pageService: NxPageService,
@@ -306,7 +308,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             // User is not owner. Deleting means he'll lose access to it
             if (this.CONFIG.isLocal) {
                 return this.dialogs.removeSystem(this.system)
-                    .then((result) => result === true && setTimeout(() => this.window.location.reload(), 6000));
+                    .then((response) => {
+                        if (response) {
+                            setTimeout(() => {
+                                this.cookieService.delete('x-runtime-guid');
+                                this.window.location.reload();
+                            }, 6000);
+                        }
+                    });
             }
             this.dialogs.confirm(
                 this.LANG.dialogs.removeSystem.message(),
