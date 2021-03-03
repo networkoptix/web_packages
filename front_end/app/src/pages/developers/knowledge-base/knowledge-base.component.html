@@ -32,7 +32,7 @@
     <nx-block type="mt-3" header-style="side">
         <header>
             <div *ngIf="node.cardIcon" class="heading-icon">
-                <svg-icon nx-add-svg-src 
+                <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + node.cardIcon"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"
                 ></svg-icon>
@@ -88,7 +88,7 @@
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div class="knowledge-base">
-        <nx-search *ngIf="!previewAssetId" 
+        <nx-search *ngIf="!previewAssetId"
             [ngModel]="search"
             (ngModelChange)="updateSearchQuery($event)"
             [placeholder]="'Knowledge Base Search' | translate"
@@ -101,6 +101,7 @@
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
+                    <h1 *ngIf="pageNode.title" class="page-title">{{pageNode.title}}</h1>
                     <ng-container *ngFor="let node of pageNode.nodes">
                         <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
                         <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>

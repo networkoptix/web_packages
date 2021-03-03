@@ -120,7 +120,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     fetchSearchHandler({ query, page }) {
-        return !this.previewAssetId ? of({}) : this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+        return this.previewAssetId ? of({}) : this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -347,7 +347,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.setupRouteSubscription();
 
             this.searchQuery$.pipe(
-                switchMap(({query}) => {
+                switchMap(({ query }) => {
                     this.searchMode = !!query;
                     this.searchLoading = this.searchMode;
                     this.currentSearchResultPage = 1;
