@@ -32,12 +32,14 @@ interface IParams<Value = any> {
  * someVar.value = {data: 'test'};
  * @class
  */
-export class Watcher<T extends any> {
+export class Watcher<T extends any, Owner = any> {
     originalValue: T;
     valueSubject = new BehaviorSubject<T>(undefined);
+    identity: Symbol
 
-    constructor(value?: T) {
+    constructor(value?: T, public owner: Owner = null, identifier = 'Watcher') {
         this.value = value;
+        this.identity = Symbol(identifier);
     }
 
     get value() {
@@ -77,12 +79,15 @@ export class Watcher<T extends any> {
 export class SectionWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(undefined);
-    constructor(public watchers: Watcher<any>[]) {
+    identity: Symbol
+
+    constructor(public watchers: Watcher<any>[], public owner: any = null, identifier = 'Section Watcher') {
         this.watchers.forEach(watcher => {
             watcher.valueSubject.subscribe(_ => {
                 this.updateHash();
             });
         });
+        this.identity = Symbol(identifier);
     }
 
     get value() {
@@ -118,12 +123,13 @@ export class FormWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(false);
     changed: boolean;
+    identity: Symbol
 
     get value() {
         return this.valueSubject.value;
     }
 
-    constructor(private form: NgForm) {
+    constructor(private form: NgForm, public owner: any, identifier = 'Form Watcher') {
         form.valueChanges.subscribe((change) => {
             if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
                 this.originalValue = change;
@@ -132,6 +138,7 @@ export class FormWatcher {
                 this.valueSubject.next(change);
             }
         });
+        this.identity = Symbol(identifier);
     }
 
     hardReset = () => {
@@ -328,7 +335,8 @@ export class NxApplyService {
     createFormWatcher(
         component: ViewContainerRef | null,
         form: NgForm,
-        saveFunction: Process
+        saveFunction: Process,
+        owner?: any
     ) {
         component?.clear();
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
@@ -361,7 +369,7 @@ export class NxApplyService {
             }
         });
 
-        return new FormWatcher(form);
+        return new FormWatcher(form, owner);
     }
 
     // ... Breadcrumbs (END) ... TT
@@ -476,8 +484,9 @@ export class NxApplyService {
         });
     }
 
-    removeWatchers() {
-        this.watchers = [];
+    removeWatchers<Owner>(owner?: Owner) {
+        this.watchers = owner ? this.watchers.filter(watcher => watcher.owner !== owner) : [];
+        this.updatedWatchers$.next('update');
     }
 
     private createComponent(onlyShowSectionWatchers = false) {
@@ -524,9 +533,18 @@ export class NxApplyService {
      *     until the user saves or discards the changes.
      * @param watchers
      */
-    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
+    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
         this.updatedWatchers$.next('update');
-        this.watchers = [...watchers, ...(this.watchers || [])];
+        const watchersFilterOutCurrentOwner = (owner ? this.watchers.filter(watcher => watcher.owner !== owner) : this.watchers) || [];
+        const symbols = new Set<Symbol>();
+        const existingUniqueWatchers = [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
+            if (symbols.has(identity)) {
+                return false;
+            }
+            symbols.add(identity);
+            return true;
+        });
+        this.watchers = existingUniqueWatchers;
         const changedWatchers$ = Object.values(
             this.watchers
         ).map((watcher) => watcher.valueSubject.pipe(
@@ -547,9 +565,10 @@ export class NxApplyService {
         watchers: Watcher<any>[],
         applyFunction: Process,
         discardFunction,
-        submitFunction?
+        submitFunction?,
+        owner?
     ) {
-        this.addWatchers([...this.watchers, ...watchers]);
+        this.addWatchers([...this.watchers, ...watchers], owner);
         this.extendApplyFunction(applyFunction);
         this.extendDiscardFunction(discardFunction);
         if (submitFunction) {
