@@ -68,7 +68,7 @@ export class NxLeftMenuComponent {
             }
         };
         const relatedNodes = [];
-        const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = decodeURIComponent(url), action: string = 'update') => {
+        const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetUrl = decodeURIComponent(url), action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
                 if (node.url === targetUrl || node.asset_id === targetAssetId) {
                     if (action === 'update') {
@@ -77,15 +77,15 @@ export class NxLeftMenuComponent {
                             this.relatedLinks.emit({ type: 'next', nodes: node.parentNode?.nodes || [] });
                         } else {
                             node.related_asset_ids.forEach(id => {
-                                findActiveNode(this.menuNodes, this.baseRoute + id, 'findRelated');
+                                findActiveNode(this.menuNodes, id, this.baseRoute + id, 'findRelated');
                             });
                             this.relatedLinks.emit({ type: 'related', nodes: relatedNodes });
                         }
-                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === node.asset_id)) {
+                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === targetAssetId)) {
                         relatedNodes.push(node);
                     }
                 } else if (node.nodes?.length) {
-                    findActiveNode(node.nodes, targetUrl, action);
+                    findActiveNode(node.nodes, targetAssetId, targetUrl, action);
                 }
             };
             nodes.forEach(checkNode);
@@ -96,7 +96,7 @@ export class NxLeftMenuComponent {
         if (isNaN(targetAssetId)) {
             targetAssetId = -1;
         }
-        findActiveNode(this.menuNodes);
+        findActiveNode(this.menuNodes, targetAssetId);
         if (this.showDefault && !this.activeRouteNodes.length && this.menuNodes.length) {
             const getFirstUrl = ([first, ...remaining]: MenuNode[] = []): string => first.url || getFirstUrl([...remaining, ...first.nodes]);
             this.firstUrl = getFirstUrl(this.menuNodes);
