@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Konto zostało utworzone",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Wiadomość potwierdzająca z linkiem aktywacyjnym została wysłana do {email}"
             },
             "activated": {
                 "title": "Konto zostało poprawnie aktywowane"
@@ -230,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Przenieś magazyn w chmurze",
-                "success": "Storage successfully moved",
+                "success": "Przenoszenie elementu zakończono pomyślnie",
                 "errorPrefix": "Błąd przenoszenia magazynu w chmurze",
                 "notFound": "Nie znaleziono magazynu. Magazyn mógł zostać przeniesiony lub usunięty przez innego użytkownika.",
                 "status": {
@@ -250,14 +250,14 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
             "checking": "Sprawdzanie...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "najnowsza kompilacja",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Złącz bieżący system z",
             "mergeFailedTitle": "Łączenie systemów nie powiodło się",
@@ -277,7 +277,7 @@
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
+            "serverAtUrl": "serwer {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
@@ -306,7 +306,7 @@
             },
             "sent": "Wiadomość została wysłana.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
+                "integration_feedback": "Opinie na temat integracji {asset}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer",
                 "sales_inquiry": "Sales inquiry for {asset}",
@@ -314,14 +314,14 @@
             },
             "title": {
                 "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_device": "Opinie dotyczące {asset}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer"
             }
         },
         "removeSystem": {
             "action": "Rozłącz",
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "title": "Odłączyć system?"
         },
         "titles": {
             "error": "Błąd",
@@ -331,9 +331,9 @@
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
             "removeUser": "Usunąć użytkownika?",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
+            "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
+            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
@@ -453,7 +453,7 @@
         "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
         "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> jest offline.",
         "notAuthorized": "Nieprawidłowe hasło",
         "badUsername": "Account not found",
         "notFound": "Nie znaleziono",
@@ -545,6 +545,7 @@
         "activate": "Aktywuj konto",
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
@@ -619,8 +620,8 @@
         },
         "finishingMerge": "Finalizowanie złączania systemów",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Zatwierdź",
+            "reject": "Odrzuć",
             "backToEditText": "Powrót do edycji interfejsów",
             "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją."
         },
@@ -644,18 +645,18 @@
         "vendors": "Producenci"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "analyticsDataPolicyError": "Błąd z usuwaniem lub przechowywaniem danych analitycznych",
         "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Serwer jest teraz w trakcie odłączania",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Serwer jest resetowany.",
         "detachSystemFailed": "Nie udało się odłączyć serwera od systemu. Proszę sprawdzić, czy hasło jest prawidłowe i czy serwer jest online, i spróbować ponownie.",
         "detachSystemSuccess": "Serwer został pomyślnie odłączony od systemu.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "Odśwież",
+        "refreshing": "Odświeżanie...",
         "removeMediaserverFailed": "Nie udało się usunąć serwera z systemu.",
         "resetFailed": "Nie udało się zresetować serwera. Proszę sprawdzić, czy hasło jest prawidłowe i czy serwer jest online, i spróbować ponownie.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Serwer {serverName} został zresetowany do wartości domyślnych.",
         "restartFailed": "Wystąpił problem podczas ponownego uruchomienia serwera.",
         "restartSuccessful": "Serwer został uruchomiony ponownie.",
         "serverOffline": "Serwer jest odłączony.",
@@ -663,13 +664,13 @@
         "status": {
             "checking": "sprawdzanie...",
             "offline": "offline",
-            "resetting": "resetting...",
+            "resetting": "resetowanie...",
             "restarting": "restartowanie..."
         },
         "successRename": "Nazwa serwera została zapisana."
     },
     "system": {
-        "connected": "Connected",
+        "connected": "Połączony",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
@@ -722,11 +723,11 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "Lokalny",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "cloud": "Chmura"
         }
     },
     "systemStatuses": {
@@ -741,6 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
@@ -910,8 +912,8 @@
             "main": "Main",
             "backup": "Backup",
             "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "reserved": "Zarezerwowane",
+            "inaccessible": "Niedostępne",
             "changing": "Changing mode...",
             "disabled": "Wyłączone"
         },

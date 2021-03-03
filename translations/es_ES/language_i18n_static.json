@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Cuenta creada",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "El mensaje de confirmación con el enlace de activación se envía a {email}"
             },
             "activated": {
                 "title": "Cuenta activada con éxito"
@@ -129,7 +129,7 @@
             "unauthorized": "Autenticación necesaria"
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
-        "login": "login",
+        "login": "entrar",
         "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
         "disableMotionWarning": "El modo de grabación cambiará a \"Grabar siempre\"",
         "recordingModes": {
@@ -147,9 +147,9 @@
         },
         "general": "General",
         "inaccessibleFeatureMessage": "El sistema está fuera de línea y, por lo tanto, la información no es accesible.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "morePlugins": "¡{startTag}{count, plural, =0{#{endTag} más integraciones...} one{#{endTag} más integración...} other{#{endTag} más integraciones...}}",
         "searchCamPlaceholder": "Búsqueda",
-        "system": "system",
+        "system": "sistema",
         "systemHasNoCameras": "No hay cámaras",
         "systemHasNoCamerasMessage": "No hay cámaras accesibles para usted en el sistema. <br><br>Conecta algunas cámaras a la red local del servidor para que sean detectables o pida al administrador del sistema que cambie su nivel de acceso.",
         "systemNewVersion": "Actualizar tu sistema",
@@ -204,8 +204,8 @@
             "title": "Almacenamiento en la nube",
             "enableStorage": "Habilitar almacenamiento en la nube",
             "otherSystem": "Otro sistema...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "Te ofrecemos {compCapacity} de almacenamiento gratuito en la nube por sistema para empezar.",
+            "available": "La ubicación de almacenamiento en la nube está disponible para todos los servidores de este sistema. Puedes gestionarla utilizando el cliente {vmsName} del escritorio.",
             "camera": "cámara",
             "cameras": "cámaras",
             "usageLabels": {
@@ -545,13 +545,14 @@
         "activate": "Activar la cuenta",
         "activateCode": "Activar cuenta",
         "activateSuccess": "Cuenta Activada",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Cambiar contraseña",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
         "download": "Descargar %VMS_NAME%",
         "downloadPlatform": "Descargar %VMS_NAME% para ",
         "failedToAccessSystem": "Error al acceder al sistema",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "Integraciones de %VMS_NAME%",
         "login": "Inicia sesión",
         "pageNotFound": "Página no encontrada",
         "register": "Crear cuenta en",
@@ -567,7 +568,7 @@
         "apiTool": "API testing tool"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "El Marketplace de Integraciones es un ecosistema centralizado de productos que se integran perfectamente con productos VMS como %VMS_NAME%, todo disponible en %CLOUD_NAME% para que pueda encontrar soluciones para construir y personalizar su sistema de vídeo IP.",
         "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
@@ -739,8 +740,9 @@
         "unavailable": "no disponible"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Algo salió mal. Por favor, actualiza la página en unos 30 segundos.",
         "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
@@ -792,7 +794,7 @@
             "error": "Error",
             "expired": "Expired",
             "ok": "Aceptar",
-            "nvrError": "NVR Error",
+            "nvrError": "Error NVR",
             "serverNotFound": "Servidor no encontrado"
         },
         "messages": {

@@ -545,6 +545,7 @@
         "activate": "הפעל חשבון",
         "activateCode": "הפעל חשבון",
         "activateSuccess": "החשבון הופעל",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "שינוי סיסמא",
         "debug": "איתור באגים",
         "default": "%CLOUD_NAME%",
@@ -741,6 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"

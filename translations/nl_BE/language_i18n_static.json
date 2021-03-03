@@ -545,6 +545,7 @@
         "activate": "Activeer account",
         "activateCode": "Activeer account",
         "activateSuccess": "Account geactiveerd",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -741,6 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "Systeem {systemName} is succesvol verwijderd van uw account"
