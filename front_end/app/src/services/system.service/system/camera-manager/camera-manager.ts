@@ -79,7 +79,7 @@ export class CameraManager {
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
-            const motionEnabled = camera.motionType !== MotionType.noMotion;
+            const motionEnabled = ![MotionType.noMotion, MotionType.none].includes(camera.motionType);
             let { hasDualStreaming, bitrateInfos } = parsedAddParams;
             let defaultRatio = 0;
             if (bitrateInfos) {

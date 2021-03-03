@@ -300,7 +300,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get motionEnabled() {
-        return this.motionEnabledWatcher.value !== MotionType.noMotion;
+        return ![MotionType.noMotion, MotionType.none].includes(this.motionEnabledWatcher.value as MotionType);
     }
 
     set motionEnabled(enabled) {
@@ -327,7 +327,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get motionType(): MotionType {
-        return this.motionEnabledWatcher.value as MotionType;
+        const motionType = this.motionEnabledWatcher.value as MotionType;
+        return parseInt(motionType) ? motionType : MotionType[motionType];
     }
 
     constructor(
@@ -494,7 +495,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
-                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
 
