@@ -469,7 +469,7 @@
         "phoneNumberWithLabel": "Tel: {{number}}",
         "requirements": "{{name}} requisitos",
         "testedVersionLabel": "Probado por el desarrollador con la versión {{vmsName}}:",
-        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
+        "testedVersionsLabel": "Probado por el desarrollador con {{vmsName}} versiones:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Cámaras PTZ avanzadas",
@@ -535,7 +535,7 @@
         "download": "Descargar %VMS_NAME%",
         "downloadPlatform": "Descargar %VMS_NAME% para ",
         "failedToAccessSystem": "Error al acceder al sistema",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "Integraciones de %VMS_NAME%",
         "login": "Inicia sesión",
         "pageNotFound": "Página no encontrada",
         "register": "Crear cuenta en",
@@ -551,9 +551,9 @@
         "view": "Ver cámaras"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
-        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
+        "integrations": "El Marketplace de Integraciones es un ecosistema centralizado de productos que se integran perfectamente con productos VMS como %VMS_NAME%, todo disponible en %CLOUD_NAME% para que pueda encontrar soluciones para construir y personalizar su sistema de vídeo IP.",
+        "integrationSetup": "Instrucciones de configuración para {{pluginName}}. {{pluginShortDecr}}",
+        "integrationDetails": "{{pluginName}} para {{pluginShortDecr}}"
     },
     "passwordRequirements": {
         "common": "muy común",
@@ -707,7 +707,7 @@
         "unavailable": "no disponible"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Algo salió mal. Por favor, actualiza la página en unos 30 segundos.",
         "system": {
             "deleted": {
                 "success": "Sistema {{systemName}} se ha eliminado de su cuenta"
@@ -749,7 +749,7 @@
             "iomodule": "Módulo E/S",
             "bridge": "Bridge",
             "nvr": "NVR",
-            "nvrError": "NVR Error",
+            "nvrError": "Error NVR",
             "serverNotFound": "Servidor no encontrado"
         },
         "messages": {
