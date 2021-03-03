@@ -386,7 +386,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
         this.setSystemStorageChosen(newStorage);
 
-        if (newStorage.id === this.currentAnalyticsDbId) return;
+        if (newStorage.id === this.currentAnalyticsDbId) {
+            this.saveStorageWatcher.value = false;
+            return;
+        };
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
         const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();
