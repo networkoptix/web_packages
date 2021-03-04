@@ -129,7 +129,7 @@ export class FormWatcher {
         return this.valueSubject.value;
     }
 
-    constructor(private form: NgForm, public owner: any, identifier = 'Form Watcher') {
+    constructor(private form: NgForm, public owner: any = null, identifier = 'Form Watcher') {
         form.valueChanges.subscribe((change) => {
             if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
                 this.originalValue = change;
@@ -535,7 +535,7 @@ export class NxApplyService {
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
         this.updatedWatchers$.next('update');
-        const watchersFilterOutCurrentOwner = (owner ? this.watchers.filter(watcher => watcher.owner !== owner) : this.watchers) || [];
+        const watchersFilterOutCurrentOwner = (owner ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner) : this.watchers) || [];
         const symbols = new Set<Symbol>();
         const existingUniqueWatchers = [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
             if (symbols.has(identity)) {
