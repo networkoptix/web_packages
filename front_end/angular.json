@@ -157,6 +157,28 @@
             "browserTarget": "front-end:build"
           }
         },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "app/test.ts",
+            "polyfills": "app/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "app/favicon.ico",
+              "app/assets"
+            ],
+            "styles": [
+              "app/styles/main.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/"
+              ]
+            },
+            "scripts": []
+          }
+        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {

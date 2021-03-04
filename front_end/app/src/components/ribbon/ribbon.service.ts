@@ -2,7 +2,7 @@ import { Injectable }      from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { RibbonAction }      from './ribbon.component';
-import { NxAppStateService } from '../../services/nx-app-state.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService }   from '@services/nx-header.service';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{

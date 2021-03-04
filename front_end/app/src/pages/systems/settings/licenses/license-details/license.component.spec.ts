@@ -1,18 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement, NgModule, SimpleChange, SimpleChanges }      from '@angular/core';
-import { describe, expect, jest, beforeEach, it }                   from '@jest/globals';
-
-import { NxLicenseDetailComponent }       from './license.component';
-import { NxConfigService }                from '@services/nx-config';
-import { nxConfig }                       from '@services/nx-config/config';
-import { NxLanguageProviderService }      from '@services/nx-language-provider';
-import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { FormsModule }                    from '@angular/forms';
-import { TranslateModule }                from '@ngx-translate/core';
-import { DatePipe }                       from '@angular/common';
-import { NxInfoBlockComponent }           from '@components/info-block/info-block.component';
-import { NxSystem }                       from '../../../../../services/system.service';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { DebugElement, NgModule }                  from '@angular/core';
+import { TranslateModule }                         from '@ngx-translate/core';
+import { NxLicenseDetailComponent }                from './license.component';
+import { nxConfig }                                from '@services/nx-config/config';
+import { NxContentBlockComponent }                 from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent }          from '@components/content-block/section/section.component';
+import { NxInfoBlockComponent }                    from '@components/info-block/info-block.component';
+import { FormsModule }                             from '@angular/forms';
+import { NxLanguageProviderService }               from '@services/nx-language-provider';
+import { NxConfigService }                         from '@services/nx-config';
+import { NxSystem }                                from '@services/system.service';
+import { DatePipe }                                from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -107,39 +105,39 @@ describe('Licenses (Details)', () => {
             }];
             component.LANG.license = {
                 info: {
-                    channels       : jest.fn(() => 'Channels'),
-                    deactivations  : jest.fn(() => 'Deactivation left'),
-                    error          : jest.fn(() => 'Error'),
-                    expired        : jest.fn(() => 'Expired'),
-                    expires        : jest.fn(() => 'Expires'),
-                    hwid           : jest.fn(() => 'Hardware ID'),
-                    nvrError       : jest.fn(() => 'NVR Error'),
-                    ok             : jest.fn(() => 'OK'),
-                    online         : jest.fn(() => 'Online'),
-                    server         : jest.fn(() => 'Server'),
-                    serverNotFound : jest.fn(() => 'Server not found'),
-                    status         : jest.fn(() => 'Status'),
-                    type           : jest.fn(() => 'Type')
+                    channels       : () => 'Channels',
+                    deactivations  : () => 'Deactivation left',
+                    error          : () => 'Error',
+                    expired        : () => 'Expired',
+                    expires        : () => 'Expires',
+                    hwid           : () => 'Hardware ID',
+                    nvrError       : () => 'NVR Error',
+                    ok             : () => 'OK',
+                    online         : () => 'Online',
+                    server         : () => 'Server',
+                    serverNotFound : () => 'Server not found',
+                    status         : () => 'Status',
+                    type           : () => 'Type'
                 },
                 licenseTypeTitles: {
-                    Analog           : jest.fn(() => 'Analog'),
-                    'Analog Encoder' : jest.fn(() => 'Analog Encoder'),
-                    Bridge           : jest.fn(() => 'Bridge'),
-                    Edge             : jest.fn(() => 'Edge'),
-                    'IO Module'      : jest.fn(() => 'IO Module'),
-                    NVR              : jest.fn(() => 'NVR'),
-                    Professional     : jest.fn(() => 'Professional'),
-                    Starter          : jest.fn(() => 'Starter'),
-                    Time             : jest.fn(() => 'Time'),
-                    Trial            : jest.fn(() => 'Trial'),
-                    VMAX             : jest.fn(() => 'VMAX'),
-                    'Video Wall'     : jest.fn(() => 'Video Wall')
+                    Analog           : () => 'Analog',
+                    'Analog Encoder' : () => 'Analog Encoder',
+                    Bridge           : () => 'Bridge',
+                    Edge             : () => 'Edge',
+                    'IO Module'      : () => 'IO Module',
+                    NVR              : () => 'NVR',
+                    Professional     : () => 'Professional',
+                    Starter          : () => 'Starter',
+                    Time             : () => 'Time',
+                    Trial            : () => 'Trial',
+                    VMAX             : () => 'VMAX',
+                    'Video Wall'     : () => 'Video Wall'
                 },
                 messages: {
-                    activated      : jest.fn(() => 'License key activated'),
-                    inuse          : jest.fn(() => 'License key has already been activated and bound to server with hardware ID {hwid} in another system'),
-                    required       : jest.fn(() => '{number} more required'),
-                    trialActivated : jest.fn(() => 'Trial license activated. Starting today, you can record up to 4 cameras for 30 days.')
+                    activated      : () => 'License key activated',
+                    inuse          : () => 'License key has already been activated and bound to server with hardware ID {hwid} in another system',
+                    required       : () => '{number} more required',
+                    trialActivated : () => 'Trial license activated. Starting today, you can record up to 4 cameras for 30 days.'
                 }
             };
             component.CONFIG.licenseTypes = [
@@ -207,10 +205,6 @@ describe('Licenses (Details)', () => {
             component['orderedDetails'](component.licenses[0].info);
 
             fixture.detectChanges();
-        });
-
-        it('should render if license(s) provided', () => {
-            expect(fixture).toMatchSnapshot();
         });
 
         it('should render only one tile', () => {

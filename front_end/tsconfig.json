@@ -31,16 +31,13 @@
       "node_modules/@types"
     ],
     "types": [
-      "jest",
+      "jasmine",
       "node"
     ]
   },
   "angularCompilerOptions": {
     "enableIvy": true
   },
-  "files": [
-    "app/setupJest.ts"
-  ],
   "include": [
     "app/main.ts",
     "app/polyfills.ts"

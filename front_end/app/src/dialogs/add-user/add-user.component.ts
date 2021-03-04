@@ -103,7 +103,6 @@ export class AddUserModalContent {
         this.accessDescription = this.getRoleDescription();
 
         this.addUser = this.processService.createProcess(() => {
-            debugger;
             this.hideErrors = false;
             const userExists: boolean = this.system.users.some(item => {
                 return item.email === this.user.email;

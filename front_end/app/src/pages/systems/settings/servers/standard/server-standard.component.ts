@@ -30,7 +30,8 @@ interface DropdownStorage {
     isWritable: boolean,
     isNotSystem: boolean,
     selected: boolean,
-    value: string
+    value: string,
+    freeSpace: number
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -383,7 +384,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.systemStorageChosen = hasMultipleStorages && storage && !storage.isNotSystem;
     }
 
-    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+    async changeAnalyticsStorage(newStorage) {
         this.setSystemStorageChosen(newStorage);
 
         if (newStorage.id === this.currentAnalyticsDbId) {
