@@ -30,7 +30,7 @@ Merge Systems Local
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
     &{data}=   Create Dictionary    name=${name}    customization=${customization}
-    Create Digest Session    bind session    ${cloud url}    auth=${auth}    disable_warnings=1
+    Create Session    bind session    ${cloud url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    bind session    /cdb/system/bind    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -83,7 +83,7 @@ Rename System
 Share
     [Arguments]    ${auth}    ${system id}    ${access role}    ${account email}
     &{data}=   Create Dictionary    systemId=${system id}    accessRole=${access role}    accountEmail=${account email}
-    Create Digest Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Share session    /cdb/system/share    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -98,7 +98,7 @@ Get Cloud System Settings
 Get Cloud System Users
     [Arguments]    ${auth}    ${system id}
     ${data}=   Create Dictionary    systemId=${system id}
-    Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
