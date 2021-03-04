@@ -386,14 +386,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         this.CONFIG.isLocal
                             ? this.system.update()
                             : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).then(() => {
-                        if (!this.system.isOnline) {
+                    ).then(
+                        () => system.isAvailable ? this.system.getInfoAndPermissions(false).catch(() => {}) : Promise.resolve()
+                    ).then(() => {
+                        if (!this.system.isOnline || !this.system.isAvailable) {
                             this.showPreloader = false;
                             this.alertsLoaded = true;
                             this.noCameras = this.system.cameras && this.system.cameras.length === 0;
+                            this.canSeeInfo = false;
+                        } else {
+                            this.canSeeInfo = this.system.canViewInfo();
                         }
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
-                        this.canSeeInfo = this.system.canViewInfo();
                         this.initUpdateProcess();
                     });
 
