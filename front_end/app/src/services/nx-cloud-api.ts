@@ -193,7 +193,7 @@ export class NxCloudApiService {
             { user_email: userEmail }).toPromise();
     }
 
-    @swClear('api', '/systems', true)
+    @swClear('cloudSystemAPI', '/systems', true)
     renameSystem(systemId: string, systemName: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
@@ -256,7 +256,7 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
-    @swClear('api', '/account', true)
+    @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
@@ -267,7 +267,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    @swClear('api', '/account', true)
+    @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
