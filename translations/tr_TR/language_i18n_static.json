@@ -545,7 +545,7 @@
         "activate": "Hesabı aktif et",
         "activateCode": "Hesabı aktif et",
         "activateSuccess": "Hesap aktif edildi",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} için {VMS_NAME}",
         "changePassword": "Şifre değiştir",
         "debug": "Hata ayıklama",
         "default": "%CLOUD_NAME%",
@@ -742,7 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
-        "reviewAccepted": "The review has been accepted",
+        "reviewAccepted": "İnceleme silindi",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"

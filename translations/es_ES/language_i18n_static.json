@@ -230,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Mover almacenamiento en la nube",
-                "success": "Storage successfully moved",
+                "success": "Almacenamiento movido correctamente",
                 "errorPrefix": "Error al mover el almacenamiento en la nube",
                 "notFound": "Almacenamiento no encontrado. El almacenamiento puede haber sido movido o eliminado por otro usuario",
                 "status": {
@@ -246,17 +246,17 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Si quieres mover los datos analíticos a otra ubicación de almacenamiento, ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a> antes de continuar."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordTitle": "Ingrese la contraseña de la cuenta del propietario en <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "La contraseña para el usuario admin es incorrecta",
             "checking": "Comprobación...",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "commonText": "Error al combinar sistemas <strong>{primarySystem}</strong> y <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Conecte el sistema que desea combinar con éste a <strong>%cloudName%</strong> o fusionar localmente usando <strong>%vmsName%</strong> Cliente.",
             "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Fusionar el sistema actual con",

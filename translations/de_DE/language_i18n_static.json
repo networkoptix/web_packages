@@ -545,7 +545,7 @@
         "activate": "Account aktivieren",
         "activateCode": "Account aktivieren",
         "activateSuccess": "Account aktiviert",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} für {VMS_NAME}",
         "changePassword": "Passwort ändern",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -742,7 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "nameFail": "Fehler beim Ändern des {type} Namens",
-        "reviewAccepted": "The review has been accepted",
+        "reviewAccepted": "Die Bewertung wurde akzeptiert",
         "system": {
             "deleted": {
                 "success": "Das System {systemName} wurde erfolgreich von Ihrem Account gelöscht"
