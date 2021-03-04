@@ -367,6 +367,20 @@
 
         tinymce.init({
             selector: '#{{ field.id_for_label }}',
+            paste_preprocess : function(plugin, args) {
+                const validPasteElements = ['span', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+                function replaceElements(matched, tagName) {
+                    if (validPasteElements.indexOf(tagName) === -1) {
+                        return '';
+                    }
+                    return matched;
+                }
+
+                args.content = args.content.replace(/<\/?([^\s>]*?)>/g, replaceElements);
+                args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, "");
+            },
             paste_postprocess: function(plugin, args) {
                 $(args.node).find('img').each(function () {
                     $(this).on('error', function() {
@@ -399,8 +413,6 @@
             plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists',
             theme_advanced_resizing: true,
             init_instance_callback : function(editor) {
-                const editorH = editor.editorContainer.offsetHeight;
-                console.log(editor.getElement());
                 $(editor.getElement())
                     .css({
                         'position' : 'absolute',
