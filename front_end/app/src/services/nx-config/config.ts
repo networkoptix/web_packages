@@ -505,11 +505,12 @@ export const nxConfig: IConfig = {
         useSystemTime               : true
     },
     settingsConfig: {
-        auditTrailEnabled          : { type: 'checkbox', hiddenInAdvanced: true },
-        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
-        defaultMotionMask          : '5,0,0,44,32',
-        disabledVendors            : { type: 'text' },
-        ec2AliveUpdateIntervalSec  : {
+        auditTrailEnabled                  : { type: 'checkbox', hiddenInAdvanced: true },
+        cameraSettingsOptimization         : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        cloudConnectUdpHolePunchingEnabled : { type: 'checkbox' },
+        defaultMotionMask                  : '5,0,0,44,32',
+        disabledVendors                    : { type: 'text' },
+        ec2AliveUpdateIntervalSec          : {
             type  : 'number',
             alert : 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"'
         },

@@ -94,7 +94,7 @@ export class NxMenusService implements OnDestroy {
     }
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
-        const menu = this.menusStructure?.[name.toLowerCase()] ?? {} as MenuStructure;
+        const menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu.nodes = [this.currentSystemNode$.value, ...menu.nodes];
         }
@@ -132,7 +132,7 @@ export class NxMenusService implements OnDestroy {
         return menu;
     }
 
-    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu||[]).reduce((menu, node: MenuNode) => {
+    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu || []).reduce((menu, node: MenuNode) => {
         const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
         return nodes.length || (checkAsset && node.asset_id) || node.url ? [...menu, { ...node, nodes }] : menu;
     }, []);
@@ -143,7 +143,7 @@ export class NxMenusService implements OnDestroy {
             node.nodes = this.addDraftAndPending(node.nodes);
         }
         if (node.accepted) {
-            nodes.push({...node, indented});
+            nodes.push({ ...node, indented });
             indented = true;
         }
         if (node.pending) {

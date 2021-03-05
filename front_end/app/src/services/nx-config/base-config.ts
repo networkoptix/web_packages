@@ -599,6 +599,7 @@ export interface Setting {
 export interface SettingsConfig {
     auditTrailEnabled: Setting,
     cameraSettingsOptimization: Setting,
+    cloudConnectUdpHolePunchingEnabled: Setting,
     defaultMotionMask: string,
     disabledVendors: Setting,
     ec2AliveUpdateIntervalSec: Setting,
