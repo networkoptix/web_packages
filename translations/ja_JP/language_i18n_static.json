@@ -413,12 +413,12 @@
         "fail": "{{failedSystem}} はアクセスできません。",
         "incompatible": "このサーバーには互換性のないソフトウェアバージョンがあります。両方のシステムを同じビルドに更新して統合します。",
         "unknown_error": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に問い合わせください。",
-        "accountAlreadyActivated": "このアカウントは既にアクティベートされています",
+        "accountAlreadyActivated": "このアカウントは既に有効化されています",
         "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
-        "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
+        "accountNotActivated": "このアカウントはまだ有効化されていません。 <a href=\"/activate\"> 有効化リンクを再送信</a>",
         "alreadyExists": "このアカウントは既に存在します",
         "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
-        "cantActivatePrefix": "アカウントをアクティベートできません",
+        "cantActivatePrefix": "アカウントを有効化できません",
         "cantAddYourOwnEmail": "自分のメールアドレスを追加することはできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
@@ -526,9 +526,9 @@
     "pageTitles": {
         "about": "について",
         "account": "アカウント設定",
-        "activate": "アクティベート アカウント",
-        "activateCode": "アクティベート アカウント",
-        "activateSuccess": "アカウント アクティベート",
+        "activate": "アカウント有効化",
+        "activateCode": "アカウント有効化",
+        "activateSuccess": "アカウントが有効化されました",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
@@ -551,7 +551,7 @@
         "view": "カメラを表示"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",
         "integrationSetup": "{{pluginName}} のセットアップ手順。 {{pluginShortDecr}}",
         "integrationDetails": "{{pluginName}} ： {{pluginShortDecr}}"
     },
@@ -698,10 +698,10 @@
         }
     },
     "systemStatuses": {
-        "activated": "アクティベート済",
+        "activated": "有効化済み",
         "incompatible": "互換性なし",
         "merging": "統合中",
-        "notActivated": "アクティベートされていません",
+        "notActivated": "有効化されていません",
         "offline": "オフライン",
         "online": "オンライン",
         "unavailable": "利用できません"
@@ -746,7 +746,7 @@
             "videowall": "ビデオウォール",
             "analogencoder": "アナログエンコーダー",
             "starter": "スターター",
-            "iomodule": "IOモジュール",
+            "iomodule": "I/Oモジュール",
             "bridge": "ブリッジ",
             "nvr": "NVR",
             "nvrError": "NVRエラー",
@@ -754,8 +754,8 @@
         },
         "messages": {
             "required": "追加で {{number}} 必要",
-            "activated": "ライセンスキーがアクティベートされました",
-            "inuse": "ライセンスキーは既にアクティベートされ、別のシステムでハードウェアID {{hwid}} を持つサーバーに結び付けられています",
+            "activated": "ライセンスキーが有効化されました",
+            "inuse": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID {{hwid}} を持つサーバーに登録されています。",
             "trialActivated": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。"
         }
     },
