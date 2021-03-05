@@ -1,17 +1,16 @@
 <ng-template #detailsBlock let-block="block" let-columnIndex="columnIndex" let-blockIndex="blockIndex">
     <div class="block">
         <h6 *ngIf="block.heading">{{block.heading}}</h6>
-        <div class="block-section mw-100 w-100">
+        <div class="block-section mw-100 w-100" #thisSection (resize)="check(columnIndex, blockIndex, thisSection)">
             <div class="block-section-keys"
                  [style.max-width.%]="block.maxParamWidth || 100"
                 [ngClass]="{'clear-flex' : infoLineStyle == 'condensed'}">
 
                 <p *ngFor="let line of block.lines; let lineIndex=index"
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
-                    [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
+                    [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                     [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                     [title]="line.name"
-                    (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)"
                 >{{line.name}}</p>
             </div>
             <div class="block-section-values">
@@ -20,16 +19,14 @@
                    [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
                    [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                    [title]="line.tooltip || line.name + '-' + line.value"
-                   (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)">
-                    {{line.value}}
+                >{{line.value}}
                     <svg-icon *ngIf="line.icon"
                               nx-add-svg-src
                               [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
                               [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
                               style="height: 16px"
                               class="pl-1">
-                    </svg-icon>
-                </p>
+                    </svg-icon></p>
             </div>
         </div>
     </div>
