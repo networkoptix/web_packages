@@ -309,19 +309,19 @@
                 "integration_feedback": "Comentarios para la integración {asset}",
                 "ipvd_feedback_device": "Comentarios sobre {asset}",
                 "ipvd_feedback_page": "Comentarios para la página de cámaras",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Consulta de ventas para {asset}",
+                "technical_inquiry": "Consulta técnica para {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration": "Póngase en contacto con {companyName}",
+                "ipvd_feedback_device": "Comentarios sobre {asset}",
                 "ipvd_feedback_page": "Comentarios para la página de cámaras"
             }
         },
         "removeSystem": {
             "action": "Desconectar",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "Está a punto de desconectar este sistema de su cuenta. Ya no podrá acceder a este sistema. ¿Está seguro?",
+            "title": "¿Desconectar el sistema?"
         },
         "titles": {
             "error": "Error",
@@ -331,7 +331,7 @@
             "loggedFromOtherAccount": "Se iniciará sesión con una cuenta diferente",
             "noClientDetected": "Instale %VMS_NAME% para ver su sistema",
             "removeUser": "¿Eliminar usuario?",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversDetach": "¿Separar el servidor \"{ title }\" del sistema actual?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
             "serversRestart": "Restart server \"{ title }\"?"
         },
