@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { NxMenuService }                           from '@src/menu';
 
 /* Usage
  */
@@ -16,7 +17,7 @@ export class NxLevel2ItemComponent implements OnInit {
     itemPath: string;
     isEnabled: boolean;
 
-    constructor() {
+    constructor(private menuService: NxMenuService) {
     }
 
     ngOnInit() {
@@ -28,8 +29,12 @@ export class NxLevel2ItemComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.item?.currentValue) {
             this.isEnabled = changes.item.currentValue.isEnabled;
-            this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
-                ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
+            this.item.label = this.menuService.escapeBrackets(this.item.label);
+            this.item.additionalText = this.menuService
+                .escapeBrackets((typeof changes.item.currentValue.additionalLabel === 'function')
+                    ? changes.item.currentValue.additionalLabel()
+                    : changes.item.currentValue.additionalLabel
+                );
         }
     }
 }

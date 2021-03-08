@@ -153,6 +153,10 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
+    escapeBrackets(text) {
+        return text.replace('<', '&lt;').replace('>', '&gt;');
+    }
+
     private setHighlightPattern(model) {
         let pattern = (model.queryExactMatch ||
             model.queryEndsWith ||
