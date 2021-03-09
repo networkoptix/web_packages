@@ -128,7 +128,7 @@ export class NxMenusService implements OnDestroy {
             }
             return nodes;
         };
-        menu.nodes = menu.nodes.reduce(checkNodes, []);
+        menu.nodes = (menu.nodes || []).reduce(checkNodes, []);
         return menu;
     }
 
