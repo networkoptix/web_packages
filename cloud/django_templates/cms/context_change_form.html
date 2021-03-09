@@ -340,12 +340,20 @@
         if (pasteEvent.clipboardData.types.includes('text/html')) {
             retrieveImageFromClipboardAsBase64(pasteEvent, function (b64Image) {
                 if (b64Image) {
-                    const imageData = b64Image;
                     const imageSrc = /src="(.*?)"/igm.exec(clipContent)[1];
-                    $(editor.getBody()).find(`img[src="${imageSrc}"]`).each(function () {
-                        $(this).attr('src', imageData);
-                        this.dataset.mceSrc = imageData;
-                    });
+                    const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
+                    // This isn't efficient and can be slow
+                    // TODO: CLOUD-6917: Upload images in the background
+                    if (pastedImg.length) {
+                        $(pastedImg).each(function() {
+                            $(this).attr('src', b64Image);
+                            this.dataset.mceSrc = b64Image;
+                        });
+                    } else {
+                        // CSP or something else blocked it, so we reinsert the image without the URL this time
+                        const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
+                        editor.insertContent(newContent);
+                    }
                 }
             })
         }
