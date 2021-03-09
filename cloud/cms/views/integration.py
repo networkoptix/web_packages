@@ -41,7 +41,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
     if cloud_portal:
         S3_STRUCTURE_TYPES = [DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
         S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-        REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/integrations"
+        REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
         state = 'release'
         if show_pending:
             state = 'review'

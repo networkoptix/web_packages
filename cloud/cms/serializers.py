@@ -88,6 +88,7 @@ class DocumentationPageSerializer(serializers.Serializer):
     blocks = DocumentationBlock(many=True)
     script = serializers.CharField(label='Script', allow_blank=True)
     id = serializers.CharField(label='Id')
+    reviewId = serializers.IntegerField(required=False)
 
 
 class DocumentsSerializer(serializers.Serializer):

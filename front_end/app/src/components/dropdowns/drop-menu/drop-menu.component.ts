@@ -50,9 +50,7 @@ export class NxDropMenu extends BaseDropdown {
         super(languageService, configService);
         this.menusService.currentSystemNode$.subscribe(_ => {
             this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                .subscribe(header => {
-                    this.menuNodes$.next(this.menusService.cleanEmptyNodes(header));
-                });
+                .subscribe(header => this.menuNodes$.next(this.menusService.cleanEmptyNodes(header.nodes)));
         });
     }
 

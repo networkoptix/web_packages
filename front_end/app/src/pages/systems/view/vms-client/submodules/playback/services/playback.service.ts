@@ -12,7 +12,7 @@ import {
   ArchivePlaybackState
 } from '../datatypes/PlaybackState'
 
-import { ms } from '../../../utils/type-aliases'
+import { ms, percentage } from '../../../utils/type-aliases'
 
 import VideoManagementSystemService from '../../vms/services/vms.service'
 import { VMS_MODE } from '../../vms/datatypes/VmsState'
@@ -220,6 +220,19 @@ export class PlaybackService {
           || this._state.currentTime > this.timeline.visibleRange.end
       default:
         return false
+    }
+  }
+
+  public get relativeOffset (): percentage {
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        return 0.0
+      case PLAYBACK_MODE.LIVE:
+        return 1.0
+      case PLAYBACK_MODE.ARCHIVE:
+        return (this._state.currentTime - this.timeline.visibleRange.start) / this.timeline.visibleRange.duration
+      default:
+        return 0.0
     }
   }
 

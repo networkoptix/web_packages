@@ -107,6 +107,12 @@ export class LoginWebadminModalContent implements OnInit {
             this.next = nextUrl[1];
         }
         this.password = '';
+        const showWrongLoginError = () => {
+            this.wrongPassword = true;
+            this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
+            this.password = '';
+            this.renderer.selectRootElement('#login_password').focus();
+        };
 
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
@@ -118,13 +124,9 @@ export class LoginWebadminModalContent implements OnInit {
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                notAuthorized: () => {
-                    this.wrongPassword = true;
-                    this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
-                    this.password = '';
-                    this.renderer.selectRootElement('#login_password').focus();
-                },
-                accountBlocked: () => {
+                'This user does not exist.' : showWrongLoginError,
+                notAuthorized               : showWrongLoginError,
+                accountBlocked              : () => {
                     this.loginForm.controls.login_password.markAsPristine();
                     this.loginForm.controls.login_password.markAsUntouched();
 

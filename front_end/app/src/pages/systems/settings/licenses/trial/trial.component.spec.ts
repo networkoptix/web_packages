@@ -1,7 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement, NgModule }                                   from '@angular/core';
-import { describe, expect, jest, beforeEach, it }                   from '@jest/globals';
-
+import {
+    waitForAsync, ComponentFixture,
+    TestBed
+}                                         from '@angular/core/testing';
+import { DebugElement, NgModule }         from '@angular/core';
 import { NxLicenseTrialComponent }        from './trial.component';
 import { NxConfigService }                from '@services/nx-config';
 import { nxConfig }                       from '@services/nx-config/config';
@@ -13,6 +14,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { FormsModule }                    from '@angular/forms';
 import { NxProcessButtonComponent }       from '@components/process-button/process-button.component';
 import { TranslateModule }                from '@ngx-translate/core';
+import { NxSystem }                       from '@services/system.service';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -30,20 +32,19 @@ describe('Licenses (Trial)', () => {
         translations: {}
     };
     const configMock = { getConfig: () => nxConfig };
-    const processMock = {
-        run: jest.fn(() => {
-            return {};
-        })
-    };
-    const potentialMock = {
-        getConfig     : jest.fn(),
-        createProcess : jest.fn()
-    };
 
     let form;
     let button;
 
+    let systemSpy: jasmine.SpyObj<NxSystem>;
+    let processServiceSpy: jasmine.SpyObj<NxProcessService>;
+    let dialogsServiceSpy: jasmine.SpyObj<NxDialogsService>;
+
     beforeEach(waitForAsync(() => {
+        const spyCreateProcess = jasmine.createSpyObj('NxProcessService', ['createProcess']);
+        const spySystem = jasmine.createSpyObj('NxSystem', ['activateLicense']);
+        const spyDialogs = jasmine.createSpyObj('NxDialogsService', ['notify']);
+
         TestBed.configureTestingModule({
             declarations: [
                 NxLicenseTrialComponent, NxContentBlockComponent,
@@ -53,14 +54,19 @@ describe('Licenses (Trial)', () => {
             providers : [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
-                { provide: NxProcessService, useValue: potentialMock },
-                { provide: NxDialogsService, useValue: {} }
+                { provide: NxSystem, useValue: spySystem },
+                { provide: NxProcessService, useValue: spyCreateProcess },
+                { provide: NxDialogsService, useValue: spyDialogs }
             ]
         }).compileComponents()
             .then(() => {
                 fixture = TestBed.createComponent(NxLicenseTrialComponent);
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
+
+                systemSpy = TestBed.inject(NxSystem) as jasmine.SpyObj<NxSystem>;
+                processServiceSpy = TestBed.inject(NxProcessService) as jasmine.SpyObj<NxProcessService>;
+                dialogsServiceSpy = TestBed.inject(NxDialogsService) as jasmine.SpyObj<NxDialogsService>;
             })
             .catch(err => console.error(err));
     }));
@@ -81,7 +87,7 @@ describe('Licenses (Trial)', () => {
         });
 
         it('should hide if no trial license provided', () => {
-            expect(fixture).toMatchSnapshot();
+            expect(el.nativeElement.querySelector('nx-block')).toBeFalsy();
         });
     });
 
@@ -93,19 +99,13 @@ describe('Licenses (Trial)', () => {
         });
 
         it('should render if trial license provided', () => {
-            expect(fixture).toMatchSnapshot();
+            expect(el.nativeElement.querySelector('nx-block')).toBeTruthy();
         });
 
         describe('Have elements', () => {
             beforeEach(() => {
-                form = fixture.debugElement.nativeElement.querySelector('form[id=trialLicenseForm]');
-                button = fixture.debugElement.nativeElement.querySelector('nx-process-button').querySelector('button');
-            });
-
-            it('should have button w/ caption', () => {
-                expect(button).toBeTruthy();
-                // nx-process-button caption will contain extra html which at this point is commented out
-                expect(button.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('Activate Trial License');
+                form = el.nativeElement.querySelector('form[id=trialLicenseForm]');
+                button = el.nativeElement.querySelector('nx-process-button button');
             });
 
             it('should have form and description', () => {
@@ -116,14 +116,46 @@ describe('Licenses (Trial)', () => {
                 expect(line1.innerHTML).toBe('You have an unused trial license.');
                 expect(line2.innerHTML).toBe('Once activated, it will allow you to record up to 4 cameras for 30 days.');
             });
+
+            it('should have button w/ caption', () => {
+                expect(button).toBeTruthy();
+                // nx-process-button caption will contain extra html which at this point is commented out
+                expect(button.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('Activate Trial License');
+            });
         });
-        // TODO: Figure out how to mock NxProcessService
-        // it.skip('should register trial license', fakeAsync(() => {
-        //     jest.mock('Process');
-        //     const button = fixture.debugElement.nativeElement.querySelector('nx-process-button').querySelector('button');
-        //     button.click();
-        //     tick();
-        //     expect(processMock.run.mock.calls.length).toBe(1);
-        // }));
+
+        it('should proceed if successful registration (response.reply)', () => {
+            systemSpy.activateLicense.and.resolveTo({ response: { reply: 'ok' } });
+            systemSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+                component.haveTrialLicense = true;
+                fixture.detectChanges();
+                dialogsServiceSpy.notify('Test', 'success');
+
+                expect(dialogsServiceSpy.notify.calls.count()).toBe(1, 'notify method should be called once');
+                expect(el.nativeElement.querySelector('nx-block')).toBeFalsy();
+            });
+        });
+
+        it('should proceed if unsuccessful registration (response.error)', () => {
+            systemSpy.activateLicense.and.resolveTo({ response: { error: '1' } });
+            systemSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+                fixture.detectChanges();
+                dialogsServiceSpy.notify('Error', 'danger');
+
+                expect(dialogsServiceSpy.notify.calls.count()).toBe(1, 'notify method should be called once');
+            });
+        });
+
+        it('should proceed if request fail', () => {
+            systemSpy.activateLicense.and.rejectWith({ error: { type: 'error' } });
+            systemSpy.activateLicense('{serverId}', 'license_key').catch((response) => {
+                fixture.detectChanges();
+                if (response.error.type === 'error') {
+                    dialogsServiceSpy.notify('Error', 'danger');
+
+                    expect(dialogsServiceSpy.notify.calls.count()).toBe(1, 'notify method should be called once');
+                }
+            });
+        });
     });
 });

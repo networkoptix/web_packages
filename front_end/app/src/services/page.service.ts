@@ -1,5 +1,6 @@
 import { Injectable }               from '@angular/core';
 import { Title, Meta }              from '@angular/platform-browser';
+import { Router }                   from '@angular/router';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
@@ -14,7 +15,8 @@ export class NxPageService {
     constructor(
         configService: NxConfigService,
         private title: Title,
-        private meta: Meta
+        private meta: Meta,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -68,5 +70,15 @@ export class NxPageService {
 
     setDesktopLayout() {
         this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
+    }
+
+    public show404() {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 }

@@ -124,6 +124,7 @@
     top: 0px;
     bottom: 0px;
     width: 100%;
+    overflow: hidden;
     @include bootstrap.media-breakpoint-down(xs) {
         display: none !important;
     }

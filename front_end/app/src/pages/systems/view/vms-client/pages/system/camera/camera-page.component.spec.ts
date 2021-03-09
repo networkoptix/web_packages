@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CameraPageComponent } from './camera-page.component';
 
-describe('CameraPageComponent', () => {
+xdescribe('CameraPageComponent', () => {
   let component: CameraPageComponent;
   let fixture: ComponentFixture<CameraPageComponent>;
 

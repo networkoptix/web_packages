@@ -6,7 +6,7 @@ import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mo
 import TimelineSelectionService from '../../services/timeline.selection.service'
 import PlaybackService from '../../../playback/services/playback.service'
 import { Subscription } from 'rxjs';
-import { px } from '@pages/systems/view/vms-client/utils/type-aliases';
+import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
 
 const CANVAS_SELECTION_HEIGHT = 50
 const MOUSE_MINIMAL_MOVE_PX = 2
@@ -148,6 +148,18 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
       this.playback.playArchive(time)
       this.hideTimeUnderMouse = true
       this._mouseDownScreenX = e.screenX
+
+      const edgeWidth: px = 80
+      const edgeFixWidth: px = 160
+      const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth)
+      if (e.offsetX < edgeWidth) {
+        // console.log('left edge fix')
+        this.timeline.jumpScrollTo(time - offset, true)
+      } else if (e.offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+        // console.log('right edge fix')
+        this.timeline.jumpScrollTo(time - this.timeline.visibleRange.duration + offset, true)
+      }
+
       // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
     }
     this._mouseNotReleasedYet = false

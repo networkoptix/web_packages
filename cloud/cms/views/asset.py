@@ -205,8 +205,10 @@ def accept_review(request):
     asset = asset_review.version.asset
     customization = asset_review.customization
 
-    if asset.asset_type.type != AssetType.ASSET_TYPES.integration:
-        raise APIException('Can only accept integrations')
+    if asset.asset_type.type not in [
+        AssetType.ASSET_TYPES.integration, AssetType.ASSET_TYPES.documentation, AssetType.ASSET_TYPES.article
+    ]:
+        raise APIException('Can only accept integrations and articles')
 
     has_asset_type_permission = UserGroupsToAssetType.check_asset_type(
         request.user, asset.asset_type, 'cms.publish_version'

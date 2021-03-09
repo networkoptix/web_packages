@@ -300,7 +300,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get motionEnabled() {
-        return this.motionEnabledWatcher.value !== MotionType.noMotion;
+        return ![MotionType.noMotion, MotionType.none].includes(this.motionEnabledWatcher.value as MotionType);
     }
 
     set motionEnabled(enabled) {
@@ -327,7 +327,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get motionType(): MotionType {
-        return this.motionEnabledWatcher.value as MotionType;
+        const motionType = this.motionEnabledWatcher.value as MotionType;
+        return parseInt(motionType) ? motionType : MotionType[motionType];
     }
 
     constructor(
@@ -385,14 +386,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         this.CONFIG.isLocal
                             ? this.system.update()
                             : Promise.resolve()
-                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).then(() => {
-                        if (!this.system.isOnline) {
+                    ).then(
+                        () => system.isAvailable ? this.system.getInfoAndPermissions(false).catch(() => {}) : Promise.resolve()
+                    ).then(() => {
+                        if (!this.system.isOnline || !this.system.isAvailable) {
                             this.showPreloader = false;
                             this.alertsLoaded = true;
                             this.noCameras = this.system.cameras && this.system.cameras.length === 0;
+                            this.canSeeInfo = false;
+                        } else {
+                            this.canSeeInfo = this.system.canViewInfo();
                         }
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
-                        this.canSeeInfo = this.system.canViewInfo();
                         this.initUpdateProcess();
                     });
 
@@ -494,7 +499,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
-                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
 

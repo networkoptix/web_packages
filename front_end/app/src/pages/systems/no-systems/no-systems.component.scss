@@ -1,6 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
-@use 'bootstrap_utils' as bootstrap;
+@use '../../../styles/bootstrap_utils' as bootstrap;
 
 nx-no-systems {
     .no-data-panel {

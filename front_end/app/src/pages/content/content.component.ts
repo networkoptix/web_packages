@@ -139,6 +139,7 @@ export class NxContentComponent implements OnInit {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.pageTitle = this.title;
+                this.pageService.pageDescription = data.shortDescription;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;
@@ -154,9 +155,7 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.router
-                        .navigate([this.CONFIG.redirect.page404])
-                        .catch(_ => {});
+                    this.pageService.show404();
                 }
             });
     }
@@ -176,9 +175,7 @@ export class NxContentComponent implements OnInit {
                 this.sessionStorage.store('staticContent', JSON.stringify(this.staticContent));
             }).catch((e) => {
                 if (e.status === 404) {
-                    this.router
-                        .navigate([this.CONFIG.redirect.page404])
-                        .catch(_ => {});
+                    this.pageService.show404();
                 }
                 console.error(e);
             });

@@ -4,20 +4,19 @@
     "outDir": "./out-tsc/spec",
     "module": "commonjs",
     "types": [
-      "jest",
-      "jquery",
-      "jsdom",
+      "jasmine",
       "node"
     ],
     "esModuleInterop": true,
     "emitDecoratorMetadata": true
   },
   "files": [
-    "app/setupJest.ts",
+    "app/test.ts",
     "app/polyfills.ts"
   ],
   "include": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "app/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

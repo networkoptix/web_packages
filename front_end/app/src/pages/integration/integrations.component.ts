@@ -90,13 +90,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                             .then(() => {
                                 this.setIntegrations(result);
                             })
-                            .catch(() => {
-                                this.router
-                                    .navigate([this.CONFIG.redirect.page404])
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            });
+                            .catch(this.pageService.show404);
                     } else {
                         this.setIntegrations(result);
                     }
@@ -105,11 +99,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 }
             }, error => {
                 console.error('Integration plugins error -> ', error);
-                this.router
-                    .navigate([this.CONFIG.redirect.page404])
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.pageService.show404();
             });
     }
 

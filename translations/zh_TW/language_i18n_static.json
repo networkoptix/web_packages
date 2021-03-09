@@ -545,6 +545,7 @@
         "activate": "啟用帳號",
         "activateCode": "啟用帳號",
         "activateSuccess": "帳號已啟用",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "變更密碼",
         "debug": "除錯",
         "default": "%CLOUD_NAME%",
@@ -741,6 +742,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"

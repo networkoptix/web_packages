@@ -578,6 +578,7 @@ export interface PageTitles {
     activate:               any;
     activateCode:           any;
     activateSuccess:        any;
+    articleTitle:           any;
     changePassword:         any;
     debug:                  any;
     default:                any;
@@ -818,6 +819,7 @@ export interface SystemStatuses {
 export interface ToastMessage {
     cloudUnavailable: any;
     nameFail:         any;
+    reviewAccepted:   any;
     system:           ToastMessageSystem;
     viewingReport:    any;
 }
@@ -1499,6 +1501,7 @@ const typeMap: any = {
         { json: "activate", js: "activate", typ: "any" },
         { json: "activateCode", js: "activateCode", typ: "any" },
         { json: "activateSuccess", js: "activateSuccess", typ: "any" },
+        { json: "articleTitle", js: "articleTitle", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
         { json: "debug", js: "debug", typ: "any" },
         { json: "default", js: "default", typ: "any" },
@@ -1713,6 +1716,7 @@ const typeMap: any = {
     "ToastMessage": o([
         { json: "cloudUnavailable", js: "cloudUnavailable", typ: "any" },
         { json: "nameFail", js: "nameFail", typ: "any" },
+        { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
         { json: "viewingReport", js: "viewingReport", typ: "any" },
     ], false),

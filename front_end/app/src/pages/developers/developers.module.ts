@@ -64,7 +64,7 @@ const appRoutes: Routes = [
                         ]
                     }
                 ]
-            },
+            }
         ]
     }
 ];

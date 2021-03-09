@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 import { BehaviorSubject }  from 'rxjs';
 
@@ -6,6 +6,11 @@ import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api'
 import { NxHeaderService }      from '../../../services/nx-header.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxMenusService } from '../../../services/menus.service';
+import { NxPageService } from '../../../services/page.service';
 import { NxAccountService, Account } from '../../../services/account.service';
 
 export enum AboutTemplates {
@@ -26,7 +31,8 @@ export enum AboutTemplates {
 })
 export class NxAboutComponent {
     CONFIG: IConfig;
-    account: Account
+    account: Account;
+    LANG: LanguageI18NStaticTypes;
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
     baseName = '';
@@ -65,22 +71,30 @@ export class NxAboutComponent {
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
         public router: Router,
+        private ribbonService: NxRibbonService,
+        languageService: NxLanguageProviderService,
+        private menusService: NxMenusService,
+        private pageService: NxPageService,
         private accountService: NxAccountService,
         configService: NxConfigService
     ) {
         this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
         this.baseName = this.route.snapshot.paramMap.get('name');
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
-            setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+            setTimeout(this.pageService.show404);
             return;
         }
         const { state } = this.route.snapshot.queryParams;
-
+        this.menusService.getMenu(this.menuName).subscribe(menu => {
+            this.pageService.pageTitle = menu.title;
+            this.pageService.pageDescription = menu.description;
+        });
         this.accountService.get().then(account => {
             this.account = account;
         }).then(_ => {
-            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(about => {
+            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(({ nodes: about, id }) => {
                 const mapToAboutNode = ({
                     name,
                     display_name: displayName,
@@ -109,8 +123,29 @@ export class NxAboutComponent {
                 });
 
                 this.aboutStructure = about.map(mapToAboutStructure);
+                if (state) {
+                    this.showRibbon(id);
+                }
             });
         });
+    }
+
+    showRibbon(id) {
+        const ribbonActions: RibbonActionInput[] = [
+            {
+                type  : 'link',
+                text  : this.LANG.ribbon.integration.backToEditText,
+                value : this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
+            }
+        ];
+        this.ribbonService.show(
+            this.LANG.ribbon.integration.previewRibbon(),
+            ribbonActions
+        );
+    }
+
+    ngOnDestroy() {
+        this.ribbonService.hide();
     }
 };
 

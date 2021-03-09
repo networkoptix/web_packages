@@ -48,12 +48,26 @@ export class NxInfoBlockComponent implements OnInit {
     }
 
     getLookup(columnIndex: number, blockIndex: number, lineIndex: number) {
-        return `${columnIndex}-${blockIndex}-${lineIndex}`
+        if (!this.heightCache) return undefined;
+        return this.heightCache[`${columnIndex}-${blockIndex}-${lineIndex}`];
     }
 
-    updateHeight = (columnIndex: number, blockIndex: number, lineIndex: number, { height }: { height: number }) => {
-        const lookup = this.getLookup(columnIndex, blockIndex, lineIndex);
-        this.heightCache[lookup] = Math.max(this.heightCache[lookup] || 0, height, 16);
+    check(columnIndex, blockIndex, section) {
+        this.heightCache = {};
+        setTimeout(() => this.getRowsHeight(columnIndex, blockIndex, section));
+    }
+
+    private getRowsHeight(columnIndex, blockIndex, section) {
+        const keys = [...section.querySelectorAll('div.block-section-keys p')];
+        const values = [...section.querySelectorAll('div.block-section-values p')];
+        keys.map((key, idx) => {
+            const lookup = `${columnIndex}-${blockIndex}-${idx}`;
+            this.heightCache[lookup] = Math.max(
+                this.heightCache[lookup] || 0,
+                keys[idx].clientHeight,
+                values[idx].clientHeight,
+                16);
+        });
     }
 }
 

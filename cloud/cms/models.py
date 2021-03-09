@@ -1610,6 +1610,8 @@ class Menu(models.Model):
                            help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
+    short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
         "header": ["name","url","enabled","order","is_global","preview"],
         "details": ["asset","icon","authentication"],
@@ -1624,13 +1626,21 @@ class Menu(models.Model):
         else:
             return super().__str__()
 
-    @property
-    def preview_url(self):
+    def validate_unique(self, exclude=None):
+        doc_menu = self.type is not self.MENU_TYPES.generic
+        if doc_menu and Menu.objects.filter(base_url=self.base_url, url=self.url).exclude(id=self.id).exists():
+            base_url = f'"{self.base_url}"' if self.base_url else "None"
+            url = f'"{self.url}"' if self.url else "None"
+            raise ValidationError(
+                f'Menu already exists with base_url={base_url} and url={url}. Please select a unique route.')
+        super(Menu, self).validate_unique(exclude=exclude)
+
+    def preview_url(self, state='draft'):
         """Preview url for menu change form.
         """
         return {
-            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft',
-            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state=draft'
+            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}',
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
         }.get(self.type, '')
 
     @property
@@ -1638,7 +1648,7 @@ class Menu(models.Model):
         """Preview url for child menu nodes.
         """
         return {
-            self.MENU_TYPES.docs_struct: self.preview_url,
+            self.MENU_TYPES.docs_struct: self.preview_url('draft'),
             self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
         }.get(self.type, '')
 
@@ -1662,7 +1672,10 @@ class Menu(models.Model):
                     include_not_accepted=include_not_accepted
                 ),
                 'type': menu.type,
-                'base_url': menu.base_url
+                'base_url': menu.base_url,
+                'id': menu.id,
+                'title': menu.title,
+                'description': menu.short_description,
             }
             for menu in menus
         }
@@ -1675,7 +1688,7 @@ class Menu(models.Model):
         customization = Customization.objects.filter(name=customization_name).first()
         menus = cls.get_prefetched_menus(menu_name)
         _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
-        return structures.get(menu_name).get('nodes')
+        return structures.get(menu_name)
 
     @classmethod
     def generate_menus(cls, customization_name=None):
@@ -1832,7 +1845,7 @@ class Menu(models.Model):
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node['asset']:
-                    asset_obj = Asset.objects.filter(uuid=node['uuid'], asset_type=node['asset_type']).first()
+                    asset_obj = Asset.objects.filter(uuid=node['uuid']).first()
                     if asset_obj:
                         asset_obj.name = node['asset']
                         asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))

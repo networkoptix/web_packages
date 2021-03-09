@@ -29,11 +29,11 @@
 .tab-link {
     &:hover {
         background: theme_variables.$dark15;
-        border-bottom: 1px solid transparent;
+        border: 1px solid transparent;
     }
     &:active {
         background: theme_variables.$dark13;
-        border-bottom: 1px solid transparent;
+        border: 1px solid transparent;
     }
     & > * {
         color: theme_variables.$additional_light1 !important;

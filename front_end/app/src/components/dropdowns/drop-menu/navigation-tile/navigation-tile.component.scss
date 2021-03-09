@@ -50,6 +50,7 @@
         max-width   : calc(100% - 32px);
         margin-left :32px;
         height: 24px;
+        line-height: 22px;
         @extend #link;
 
         &.no-link:hover {
@@ -68,17 +69,16 @@
     .nav-links {
         @include typography.regular13dark9;
         @extend #link;
+        height: 24px !important;
 
         &:active {
             @extend .active;
         }
 
         & > a {
-            display         : inline-flex;
-            align-items     : center;
-            margin          : -1px auto;
-            color           : inherit !important;
-            min-height      : 24px !important;
+            color           : $dark9;
+            height          : 24px !important;
+            line-height     : 22px !important;
             text-decoration : inherit !important;
             @include ellipsis;
         }

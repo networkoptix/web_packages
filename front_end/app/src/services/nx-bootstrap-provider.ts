@@ -96,7 +96,11 @@ export class NxBootstrapProvider {
         if (this.CONFIG.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             this.CONFIG.dynamicMenus = data.dynamicMenus?.reduce((menu, { name, nodes }) => {
-                menu[name] = nodes;
+                menu[name] = {
+                    title      : name,
+                    desription : '',
+                    nodes      : nodes
+                };
                 return menu;
             }, {});
             this.CONFIG.company = {

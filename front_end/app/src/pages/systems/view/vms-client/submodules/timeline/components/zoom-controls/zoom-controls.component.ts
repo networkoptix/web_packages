@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
-import { float, int } from '../../../../utils/type-aliases';
+import { float, int, ms } from '../../../../utils/type-aliases';
+import PlaybackService from '../../../playback/services/playback.service';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
@@ -23,6 +24,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   constructor (
     public timeline: TimelineService,
     public vms: VideoManagementSystemService,
+    public playback: PlaybackService,
     protected self: ElementRef,
   ) {
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
@@ -79,15 +81,22 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   }
 
   protected _zoomingSign: signType = 0
+  protected _zoomingStartedTimestamp: ms
 
   public startZooming ($event: MouseEvent, sign: signType) {
     if ($event.button !== 0) {
       return
     }
     this._zoomingSign = sign
+    this._zoomingStartedTimestamp = Date.now()
   }
 
   public stopZooming () {
+    const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp
+    const fastClickEdge: ms = 200
+    if (sinceZoomingStarted < fastClickEdge) {
+      this.wheelZoom(40 * this._zoomingSign)
+    }
     this._zoomingSign = 0
   }
 
@@ -97,8 +106,9 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
   }
 
   public performZoomingStep () {
-    if (this._zoomingSign)
+    if (this._zoomingSign) {
       this.wheelZoom(this._zoomingSign)
+    }
   }
 
   public wheelZoom (delta: int, offset: float = 0.5) {
@@ -109,11 +119,18 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     if (duration - durationDelta < MIN_DURATION) {
         durationDelta = duration - MIN_DURATION
     }
+    if (!this.playback.isBeyondVisibleRange) {
+      offset = this.playback.relativeOffset
+    }
     this.timeline.zoom(durationDelta, offset)
   }
 
   public fullZoomOut () {
     this.timeline.fullZoomOut()
+  }
+
+  public strongZoomIn () {
+    this.wheelZoom(80)
   }
 }
 

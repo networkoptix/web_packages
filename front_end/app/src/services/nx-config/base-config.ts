@@ -22,6 +22,7 @@ export interface BaseConfig {
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;
     dialogs: Dialogs;
+    developers: Developers;
     downloads: Downloads;
     healthMonitoring: HealthMonitoring;
     icons: Icons;
@@ -55,7 +56,7 @@ export interface BaseConfig {
     localSystemName: string;
     localServerId: string;
     company: Company;
-    dynamicMenus: MenuStructure;
+    dynamicMenus: MenusStructure;
     docMenuMap: DocMenuMap;
     licenseTypes: LicenseTypes;
     googleTagManagerId: string;
@@ -85,6 +86,12 @@ export interface BaseConfig {
     // loggersConfig: LoggersConfig;
 }
 
+export interface Developers {
+    landing: {
+        adminLink: string;
+    }
+}
+
 export interface FooterItem {
     name: string;
     url: string;
@@ -93,7 +100,13 @@ export interface FooterItem {
 }
 
 export interface MenuStructure {
-    [key: string]: MenuNode[]
+    title: string,
+    description: string,
+    nodes: MenuNode[]
+}
+
+export interface MenusStructure {
+    [menuName: string]: MenuStructure
 }
 
 export interface DocMenuMap {
@@ -586,6 +599,7 @@ export interface Setting {
 export interface SettingsConfig {
     auditTrailEnabled: Setting,
     cameraSettingsOptimization: Setting,
+    cloudConnectUdpHolePunchingEnabled: Setting,
     defaultMotionMask: string,
     disabledVendors: Setting,
     ec2AliveUpdateIntervalSec: Setting,

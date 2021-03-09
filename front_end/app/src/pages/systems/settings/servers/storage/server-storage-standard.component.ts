@@ -88,7 +88,7 @@ export class NxSystemStorageComponent implements OnInit {
     )
 
     isBackupOn = new Watcher(false);
-    modeWatchers: {[key: string]: Watcher<any>} = {};
+    modeWatchers: {[key: string]: Watcher<any, NxSystemStorageComponent>} = {};
 
     ddWidth: number;
     modes: any;
@@ -157,8 +157,8 @@ export class NxSystemStorageComponent implements OnInit {
                     this.cachedSizes[storageId].total ||= store.totalSpace;
                     const mode = this.selectMode(store)?.value || 'modeNotUsed';
                     if (!this.modeWatchers[this.normalizeId(storageId)]) {
-                        this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode);
-                        this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]]);
+                        this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode, this);
+                        this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]], this);
                     } else {
                         if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
@@ -237,7 +237,7 @@ export class NxSystemStorageComponent implements OnInit {
             map(_ => {
                 const state = this.system.storageManager.storageState;
                 this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId);
-                for (const location of this.currentStorageState.locations) {
+                for (const location of (this.currentStorageState?.locations || [])) {
                     if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED) && !this.updatingModes.includes(location.storageId)) {
                         location.storageStatus = location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '');
                     }
@@ -309,7 +309,9 @@ export class NxSystemStorageComponent implements OnInit {
             this.applyService.addWatchersAndFunctionsFromChild(
                 [this.isBackupOn, ...Object.values(this.modeWatchers)],
                 this.saveSettings,
-                this.resetWatchers
+                this.resetWatchers,
+                null,
+                this
             );
         } else {
             this.applyService.addWatchersAndFunctionsFromChild(

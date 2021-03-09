@@ -94,8 +94,13 @@ def get_agreement(request):
                 asset=agreement, version_id=version, draft=draft or review,
                 customization_name=settings.CUSTOMIZATION
             )
+            short_description = agreement_structures.filter(name='description').first().find_actual_value(
+                asset=agreement, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
+            )
             agreement_dict = {
                 "title": title,
+                "shortDescription": short_description,
                 "body": body,
                 'id': agreement.id,
                 'review_id': agreement_review.id if agreement_review else 0,
