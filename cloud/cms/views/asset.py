@@ -714,28 +714,59 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
         return asset
 
 
+def prepare_asset_info(request, customization, asset, ignore_error = False):
+    review_url = None
+    if (
+        not request.user.is_superuser
+        and not (
+            UserGroupsToAssetPermissions.check_customization_publish(
+                request.user
+            )
+            and UserGroupsToAssetType.check_asset_type(
+                request.user, asset.asset_type, 'cms.publish_version'
+            )
+        )
+        and not ignore_error
+    ):
+        raise APIException('Cannot access state for this asset')
+    state = 'Draft'
+    if customization and customization != 'all':
+        if not asset.is_dirty:
+            latest_review = AssetCustomizationReview.objects.filter(
+                customization__name=customization, version__asset=asset).last()
+            if latest_review:
+                state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
+                review_url = get_admin_url(latest_review)
+    else:
+        state = None
+    enabled_customizations_dict = {cust.id: cust.name for cust in asset.customizations.filter(
+        name__in=request.user.customizations)}
+    return {'state': state, 'customizations': enabled_customizations_dict, 'review_url': review_url}
+
+
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
     asset = get_object_or_404(Asset, id=asset_id)
-    review_url = None
-    if not request.user.is_superuser and not (
-            UserGroupsToAssetPermissions.check_customization_publish(request.user) and
-            UserGroupsToAssetType.check_asset_type(request.user, asset.asset_type, 'cms.publish_version')
-    ):
-        raise APIException('Cannot access state for this asset')
+    asset_info = prepare_asset_info(request, customization, asset)
+    return api_success(asset_info)
 
-    state = 'Draft'
-    if customization and customization != 'all':
-        if not asset.is_dirty:
-            latest_review = AssetCustomizationReview.objects.filter(customization__name=customization, version__asset=asset).last()
-            if latest_review:
-                state = AssetCustomizationReview.REVIEW_STATES[latest_review.state]
-                review_url = get_admin_url(latest_review)
-    else:
-        state = None
 
-    enabled_customizations_dict = {cust.id: cust.name for cust in asset.customizations.filter(name__in=request.user.customizations)}
-    return api_success({'state': state, 'customizations': enabled_customizations_dict, 'review_url': review_url})
+def prepare_asset_info_for_menu(request, menu_id):
+    customization = request.GET.get('customization')
+    menu = get_object_or_404(Menu, id=menu_id)
+    assets = Asset.objects.filter(id__in=menu.all_asset_ids)
+    return {
+        asset.id: prepare_asset_info(request, customization, asset, True)
+        for asset in assets
+    }
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_asset_info_by_menu(request, menu_id):
+    require_params(request, ('customization',))
+    return api_success(prepare_asset_info_for_menu(request, menu_id))
+

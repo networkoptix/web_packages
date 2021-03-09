@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'asset_settings/(?P<asset_id>.+?)/$', asset.asset_settings, name="asset_settings"),
     url(r'get_asset_ids/?$', asset.get_asset_ids_by_asset_type, name="asset_ids_by_type"),
     path('asset_autocomplete', asset.MenuAssetAutocomplete.as_view(create_field='name'), name='asset_autocomplete'),
-    path('asset_info/<int:asset_id>', asset.get_asset_info, name='asset_info')
+    path('asset_info/<int:asset_id>', asset.get_asset_info, name='asset_info'),
+    path('asset_info/by_menu/<int:menu_id>', asset.get_asset_info_by_menu, name='asset_info_by_menu')
 ]

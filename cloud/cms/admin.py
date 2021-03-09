@@ -19,7 +19,7 @@ from cms.forms import *
 from cms.controllers import generate_structure, structure
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
-from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment
+from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu 
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -1025,9 +1025,6 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     form = MenuChangeForm
     change_form_template = 'cms/menu_change_form.html'
 
-    class Media:
-        js = ('js/menuChange.js',)
-
     def eval_url(self, obj: Menu):
         if obj.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase] and obj.base_url:
             return f'/docs/{obj.base_url}/{obj.url}'
@@ -1059,6 +1056,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         menu = Menu.objects.get(id=object_id)
         extra_context['preview_url_draft'] = menu.preview_url('draft')
         extra_context['preview_url_review'] = menu.preview_url('pending')
+        extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(

@@ -28,5 +28,8 @@
         <div id="menuPreviewErrors"></div>
         <iframe class="previewFrame" src="{{ preview_url_draft }}" style="width: 100%; height: 80vh"></iframe>
     {% endif %}
+    <script type="text/javascript">
+        const assetInfo = JSON.parse('{{asset_info|safe}}')
+    </script>
     <script src="{% static 'js/menuChange.js' %}"></script>
 {% endblock %}

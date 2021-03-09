@@ -1867,11 +1867,12 @@ class Menu(models.Model):
         if menu_dict['nodes']:
             set_nodes(menu_dict.get('nodes', []), self)
 
-    @property
-    def all_node_ids(self):
+    def extract_from_nodes(self, process_node_callback):
         def append_nodes(nodes):
             for node in nodes:
-                all_nodes.append(node.id)
+                extracted = process_node_callback(node)
+                if extracted:
+                    all_nodes.append(extracted)
                 if hasattr(node, 'nodes_list'):
                     append_nodes(node.nodes_list)
 
@@ -1880,6 +1881,16 @@ class Menu(models.Model):
         if hasattr(prefetched_menu, 'nodes_list'):
             append_nodes(prefetched_menu.nodes_list)
         return all_nodes
+
+
+    @property
+    def all_node_ids(self):
+        return self.extract_from_nodes(lambda node: node.id)
+
+
+    @property
+    def all_asset_ids(self):
+        return self.extract_from_nodes(lambda node: node.asset and node.asset.id)
 
 
 class MenuNode(models.Model):

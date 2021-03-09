@@ -6,7 +6,7 @@ async function setPreviewState(asset_id, create_id, el, state) {
     let reviewUrl
     if (customization && !all_customizations && asset_id) {
         if (!state) {
-            asset = (await $.get(`/admin/cms/asset_info/${asset_id}?customization=${customization}`));
+            asset = assetInfo[parseInt(asset_id)];
             state = asset.state
             reviewUrl = asset.review_url
         }
