@@ -1,10 +1,11 @@
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement }                       from '@angular/core';
-import { NxRibbonComponent, RibbonAction }    from './ribbon.component';
-import { NxRibbonService, RibbonActionInput } from './ribbon.service';
+import { DebugElement }                                    from '@angular/core';
+import { NxRibbonComponent, RibbonAction }                 from './ribbon.component';
+import { NxRibbonService, RibbonActionInput }              from './ribbon.service';
 import { nxConfig }                                        from '@services/nx-config/config';
 import { NxConfigService }                                 from '@services/nx-config';
 import { NxHeaderService }                                 from '@services/nx-header.service';
+import { RouterLinkDirectiveStub }                         from '@src/_testing';
 
 
 describe('NxRibbonComponent', () => {
@@ -18,7 +19,7 @@ describe('NxRibbonComponent', () => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
 
         TestBed.configureTestingModule({
-            declarations : [NxRibbonComponent],
+            declarations : [NxRibbonComponent, RouterLinkDirectiveStub],
             providers    : [
                 NxRibbonService,
                 { provide: NxHeaderService, useValue: spyHeader },

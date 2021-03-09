@@ -231,6 +231,7 @@ describe('Licenses (Details)', () => {
                 // Last item "Deactivations should be hidden
                 expect(properties.length).toBe(7);
 
+
                 // ? value for class is empty
                 // expect(properties[0].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.class);
                 expect(properties[1].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.count);

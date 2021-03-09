@@ -8,11 +8,11 @@ describe('NxCheckboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed
-                .configureTestingModule({
-                    declarations: [NxCheckboxComponent],
-                    providers: []
-                })
-                .compileComponents();
+            .configureTestingModule({
+                declarations : [NxCheckboxComponent],
+                providers: []
+            })
+            .compileComponents();
     }));
 
     beforeEach(() => {

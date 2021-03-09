@@ -67,11 +67,11 @@ module.exports = function(config) {
         logLevel: config.LOG_INFO,
 
         // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: false,
+        autoWatch: true,
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true, // Angular cli doesn't expose this property - this is the reason of having 2 configs --TT
+        singleRun: false, // Angular cli doesn't expose this property - this is the reason of having 2 configs --TT
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
