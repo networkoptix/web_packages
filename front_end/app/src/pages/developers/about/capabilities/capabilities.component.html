@@ -5,9 +5,11 @@
 <ng-template #capabilityBlock let-capability="capability">
     <div class="card capability-card" [routerLink]="capability.url">
         <header [ngStyle]="{
+            minHeight: minHeaderHeight + 'px',
             backgroundColor: capability.icon.split(' ')[2] || '#35464f',
             backgroundImage: 'linear-gradient(to right, ' + (capability.icon.split(' ')[3] || '#35464f') + ' 25%, rgba(53, 70, 79, 0)), url(' + CONFIG.icons.backgrounds + capability.icon.split(' ')[1]
-        }">
+        }"
+        (resize)="setMinHeight($event)">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon.split(' ')[0]"></svg-icon>
             <div class="intro-line">{{capability.title}}</div>
             <h3>{{capability.asset.title}}</h3>
