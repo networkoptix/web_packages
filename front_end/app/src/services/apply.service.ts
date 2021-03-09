@@ -133,6 +133,8 @@ export class FormWatcher {
         form.valueChanges.subscribe((change) => {
             if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
                 this.originalValue = change;
+                this.changed = false;
+                this.valueSubject.next(change);
             } else {
                 this.changed = !NxUtilsService.isEqual(this.originalValue, change);
                 this.valueSubject.next(change);
@@ -148,6 +150,7 @@ export class FormWatcher {
     }
 
     reset = () => {
+        this.valueSubject.next(this.originalValue);
         this.form.reset(this.originalValue);
     }
 
