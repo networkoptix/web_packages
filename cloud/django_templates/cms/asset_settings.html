@@ -196,49 +196,10 @@ Example for vms
                 uploadButton.disabled = !event.target.value && !forceInput.checked
             })
         }
-        const conflicts = {{conflicts|safe}}
-        const conflictWrapper = document.getElementById('conflicts')
-        if (conflicts.length) {
-            conflictWrapper.innerHTML = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
-            const conflictList = document.createElement('ul')
-            conflicts.forEach(conflict => {
-                const conflictItem = document.createElement('li')
-                conflictItem.innerHTML = conflict
-                conflictList.appendChild(conflictItem)
-            })
-            conflictWrapper.appendChild(conflictList)
-        }
-
-        const messageList = document.getElementsByClassName('messagelist')[0]
-        if (messageList) {
-            const infoMessages = messageList.getElementsByClassName('info')
-            if (infoMessages.length && fileName) {
-                const checkForWarningsOrSuccessInterval = setInterval(() => {
-                    const warningMessages = messageList.getElementsByClassName('warning')
-                    const successMessages = messageList.getElementsByClassName('success')
-                    if (successMessages.length || warningMessages.length) {
-                        [...infoMessages].forEach(message => {
-                            messageList.removeChild(message)
-                        })
-                        clearInterval(checkForWarningsOrSuccessInterval)
-                    }
-                }, 1000)
-            } else if (!fileName) {
-                [...infoMessages].forEach(message => {
-                    if (!message.classList.contains('hide')) {
-                        message.classList.add('hide')
-                    }
-                })
-            } else {
-                [...infoMessages].forEach(message => {
-                    if (message.classList.contains('hide')) {
-                        message.classList.remove('hide')
-                    }
-                }) 
-            }
-
-        }
+        window.conflicts = {{conflicts|safe}}
+        window.menuName = ''
+        window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
     </script>
-
+    <script src="{% static 'js/assetImportConflicts.js' %}"></script>
 </form>
 {% endblock%}
