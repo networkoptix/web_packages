@@ -91,15 +91,13 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             else:
                 continue
 
+        pending_review = None
         if review:
             pending_review = AssetCustomizationReview.objects.filter(
                 version__id__gt=version, version__asset=doc, customization__name=settings.CUSTOMIZATION,
                 state=AssetCustomizationReview.REVIEW_STATES.pending).last()
             if pending_review:
                 version = pending_review.version.id
-            else:
-                # Requested state is review, but no review version exists
-                continue
         elif draft:
             version = None
         elif version == 0:
@@ -133,6 +131,9 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
 
             doc_dict['id'] = doc.id
+
+            if review and pending_review:
+                doc_dict['reviewId'] = pending_review.id
 
             if not draft:
                 DOC_CACHE[cache_key] = doc_dict

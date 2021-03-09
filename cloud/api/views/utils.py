@@ -18,7 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType 
+    cached_doc_menu_map, LicenseType
 
 logger = logging.getLogger(__name__)
 
@@ -365,8 +365,7 @@ def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
         del settings_object['version_id']
-    menus = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
-    settings_object['menus'] = {k: v['nodes'] for k, v in menus.items()}
+    settings_object['menus'] = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
     settings_object['docMenuMap'] = cached_doc_menu_map(customization_name=settings.CUSTOMIZATION)
     settings_object['licenseTypes'] = LicenseType.get_license_types()
 

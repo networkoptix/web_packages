@@ -1049,7 +1049,6 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
         return (main, advanced) if request.user.is_superuser else (main,)
 
-
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         filters_dict = caches['filters'].get(request.user.id) or {}
@@ -1058,7 +1057,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if not query_params and cached_path:
             return redirect(f'{request.path_info}?{cached_path}')
         menu = Menu.objects.get(id=object_id)
-        extra_context['preview_url'] = menu.preview_url
+        extra_context['preview_url_draft'] = menu.preview_url('draft')
+        extra_context['preview_url_review'] = menu.preview_url('pending')
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(

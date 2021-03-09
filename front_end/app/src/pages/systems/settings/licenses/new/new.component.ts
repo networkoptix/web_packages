@@ -164,7 +164,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+    }
 
+    ngOnInit() {
         this.setupDefaults();
     }
 

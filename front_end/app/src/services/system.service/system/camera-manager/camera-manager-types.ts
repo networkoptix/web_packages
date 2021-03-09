@@ -56,10 +56,15 @@ export interface ICamera {
 }
 
 export enum MotionType {
-    hardwareGrid = '1',
-    softwareGrid = '2',
-    motionWindow = '4',
-    noMotion = '8'
+    hardwareGrid = 'hardware',
+    softwareGrid = 'software',
+    noMotion = 'none',
+    // String enums above are returned from 4.3 systems getCamerasEx, enums below used for saving on all systems
+    default = '2',
+    hardware = '1',
+    software = '2',
+    motionWIndow = '4',
+    none = '8',
 }
 
 export interface IMediaCapabilities {

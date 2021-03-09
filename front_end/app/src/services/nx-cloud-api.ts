@@ -12,6 +12,7 @@ import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
 import { MenuNode }                 from './menus.service';
+import { MenuStructure } from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 
@@ -192,7 +193,7 @@ export class NxCloudApiService {
             { user_email: userEmail }).toPromise();
     }
 
-    @swClear('api', '/systems', true)
+    @swClear('cloudSystemAPI', '/systems', true)
     renameSystem(systemId: string, systemName: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
@@ -255,7 +256,7 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
-    @swClear('api', '/account', true)
+    @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
@@ -266,7 +267,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    @swClear('api', '/account', true)
+    @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
@@ -369,10 +370,13 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    acceptIntegration(reviewId: number) {
+    acceptReview(reviewId: number) {
         return this.http.post(this.CONFIG.apiBase + '/accept_review', {
             review_id: reviewId
-        }).toPromise();
+        }).toPromise().then(response => {
+            this.cacheService.cachedData.clear();
+            return response;
+        });
     }
 
     // Cloud Storage
@@ -442,7 +446,7 @@ export class NxCloudApiService {
         this.cacheService.addToCache(route);
         return this.http.get<any>(route).pipe(catchError(error => {
             if (error.status === 404) {
-                this.router.navigate([this.CONFIG.redirect.page404]);
+                this.#show404();
                 return EMPTY;
             } else {
                 return of(error);
@@ -453,15 +457,25 @@ export class NxCloudApiService {
     findArticleKB(assetId) {
         return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
             if (error.status === 404) {
-                this.router.navigate([this.CONFIG.redirect.page404]);
+                this.#show404();
                 return EMPTY;
             } else {
                 return of(error);
             }
         }));
     }
-	
-	getMenu(menuName: string) {
-        return this.http.get<MenuNode[]>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
+
+    #show404 = () => {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    getMenu(menuName: string) {
+        return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 }

@@ -9,6 +9,7 @@ import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy'
 import { NxMenusService, MenuNode }                 from '../../services/menus.service';
 import { IConfig, NxConfigService }                 from '../../services/nx-config';
 import { NxAccountService }                         from '@services/account.service';
+import { MenuStructure } from '@services/nx-config/base-config';
 
 export interface RelatedLinks {
     type: string,
@@ -24,7 +25,6 @@ export interface RelatedLinks {
 export class NxLeftMenuComponent {
     @Input() menuName: string;
     @Input() baseRoute: string;
-    @Input() ignoreQuery = false;
     @Input() showDefault = true;
     @Input() allowEmpty = false;
     @Output() onClick = new EventEmitter();
@@ -39,6 +39,7 @@ export class NxLeftMenuComponent {
     prefetchedDocuments = [];
     firstUrl = '';
     activeNodeUrl = '';
+    ignoreQuery = true;
 
     constructor(
         configService: NxConfigService,
@@ -140,7 +141,7 @@ export class NxLeftMenuComponent {
                 // eslint-disable-next-line camelcase
                 this.menuName, false, account?.is_superuser
             ).pipe(
-                map((menu: MenuNode[]): [MenuNode[], any] => [menu, account])
+                map((menu): [MenuNode[], any] => [menu.nodes, account])
             )),
             untilDestroyed(this)
         ).subscribe(([menu, account]) => {
@@ -149,6 +150,8 @@ export class NxLeftMenuComponent {
             // eslint-disable-next-line camelcase
             if (account?.is_superuser) {
                 this.menuNodes = this.menusService.addDraftAndPending(this.menuNodes);
+                this.ignoreQuery = false;
+                this.updateActive(this.location.path());
             }
         });
         this.router.events

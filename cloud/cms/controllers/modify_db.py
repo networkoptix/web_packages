@@ -490,6 +490,8 @@ def generate_preview_link(context=None, asset=None, state=""):
                     url = f'/docs/{menu.base_url}'
                     if menu.url:
                         url += f'/{menu.url}'
+                    if menu.type == Menu.MENU_TYPES.docs_struct:
+                        return f'{url}?{params}'
                     url += f'/{asset.id}?{params}'
                     return url
             return f'/docs/kb-preview/{asset.id}?{params}'

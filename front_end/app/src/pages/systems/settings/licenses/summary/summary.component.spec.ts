@@ -3,7 +3,6 @@ import {
     TestBed
 }                                           from '@angular/core/testing';
 import { DebugElement, NgModule }           from '@angular/core';
-import { describe, expect, beforeEach, it } from '@jest/globals';
 import { NxLicenseSummaryComponent }        from './summary.component';
 import { NxConfigService }                  from '@services/nx-config';
 import { nxConfig }                         from '@services/nx-config/config';
@@ -20,7 +19,7 @@ import { TranslateModule }                  from '@ngx-translate/core';
 class TranslateTestingModule {
 }
 
-describe('Licenses (New)', () => {
+describe('Licenses (Summary)', () => {
     let component: NxLicenseSummaryComponent;
     let fixture: ComponentFixture<NxLicenseSummaryComponent>;
     let el: DebugElement;
@@ -76,10 +75,6 @@ describe('Licenses (New)', () => {
             fixture.detectChanges();
         });
 
-        it('should not render if license summary empty', () => {
-            expect(fixture).toMatchSnapshot();
-        });
-
         it('should not render summary tile', () => {
             expect(fixture.debugElement.nativeElement.querySelectorAll('nx-block').length).toBe(0);
         });
@@ -89,24 +84,20 @@ describe('Licenses (New)', () => {
         beforeEach(() => {
             component.licenses = [
                 {
-                    count     : 12,
-                    countAvail: 12,
-                    required  : 0,
-                    type      : 'NVR'
+                    count      : 12,
+                    countAvail : 12,
+                    required   : 0,
+                    type       : 'NVR'
                 },
                 {
-                    count     : 12,
-                    countAvail: 6,
-                    required  : 0,
-                    type      : 'Professional'
+                    count      : 12,
+                    countAvail : 6,
+                    required   : 0,
+                    type       : 'Professional'
                 }
             ];
 
             fixture.detectChanges();
-        });
-
-        it('should render if license summary provided', () => {
-            expect(fixture).toMatchSnapshot();
         });
 
         it('should render only one tile', () => {

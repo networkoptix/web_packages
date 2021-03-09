@@ -34,9 +34,9 @@
     </div>
     <ng-template #preloader>
         <ng-template #offlinePlaceholder>
-            <nx-page-placeholder class="placeholder-section" type="SERVER_OFFLINE"></nx-page-placeholder>
+            <nx-page-placeholder *ngIf="system.isAvailable" class="placeholder-section" type="SERVER_OFFLINE"></nx-page-placeholder>
         </ng-template>
-        <div *ngIf="!serverOffline; else offlinePlaceholder" class="col-12 placeholder-section">
+        <div *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder" class="col-12 placeholder-section">
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>

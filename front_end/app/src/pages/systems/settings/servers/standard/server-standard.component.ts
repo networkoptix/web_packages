@@ -30,7 +30,8 @@ interface DropdownStorage {
     isWritable: boolean,
     isNotSystem: boolean,
     selected: boolean,
-    value: string
+    value: string,
+    freeSpace: number
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -181,8 +182,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
-
-        this.renameDisabled = !this.system.permissions.editAdmins;
+        this.renameDisabled = !this.system.permissions.isAdmin;
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
@@ -383,10 +383,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.systemStorageChosen = hasMultipleStorages && storage && !storage.isNotSystem;
     }
 
-    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+    async changeAnalyticsStorage(newStorage) {
         this.setSystemStorageChosen(newStorage);
 
-        if (newStorage.id === this.currentAnalyticsDbId) return;
+        if (newStorage.id === this.currentAnalyticsDbId) {
+            this.saveStorageWatcher.value = false;
+            return;
+        };
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
         const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();

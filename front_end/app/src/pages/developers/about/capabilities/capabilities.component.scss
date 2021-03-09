@@ -39,7 +39,7 @@
 .capability-card {
     height: 280px;
     flex: 1 0 30%;
-    min-width: 275px;
+    min-width: 228px;
     margin: 0 16px 16px 0;
     cursor: pointer;
 
@@ -67,9 +67,9 @@
         & > .intro-line {
             @include typography.medium14light1-50;
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start;
             flex-direction: column;
-            flex: 1 1 100%;
+            flex-grow: 0;
             margin-bottom: 3px;
         }
         & > h3 {

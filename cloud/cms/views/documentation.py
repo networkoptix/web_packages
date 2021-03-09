@@ -39,7 +39,7 @@ id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STR
 @handle_exceptions
 def get_page(request, doc_id):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'pending'
+    review = request.query_params.get('state') == 'review'
     language = get_language_object_from_request(request)
 
     doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()
@@ -261,18 +261,21 @@ def menu_to_endpoint(request, name):
     state = request.GET.get('state', '')
     menu_dict = not state and DOC_CACHE[cache_id]
     if not menu_dict:
-        menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
-        if not menu:
+        draft = state == 'draft' and request.user.is_superuser
+        review = state == 'review' and request.user.is_superuser
+        if (draft or review) and request.user.is_superuser:
+            menu_dict = Menu.generate_menu(menu_name=name, customization_name=settings.CUSTOMIZATION)
+        else:
+            menu_dict = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
+        if not menu_dict:
             raise APINotFoundException(f'Menu {name} not found')
-        menu_dict = menu['nodes']
-        base_url = menu['base_url']
+        base_url = menu_dict['base_url']
         cloud_portal = get_cloud_portal_asset()
         global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-        draft = state == 'draft'
-        review = state == 'pending'
+
         prepare_menu_dict(
-            menu_dict,
+            menu_dict['nodes'],
             base_url,
             language=language,
             global_contexts=global_contexts,
@@ -280,5 +283,6 @@ def menu_to_endpoint(request, name):
             draft=draft,
             review=review
         )
-        DOC_CACHE[cache_id] = menu_dict
+        if not (draft or review):
+            DOC_CACHE[cache_id] = menu_dict
     return api_success(menu_dict)

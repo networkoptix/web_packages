@@ -10,6 +10,7 @@ import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { ModuleInformationReply, NormalResponse } from '@services/system-api.types';
+import {NxAppStateService} from "@services/nx-app-state.service";
 
 @Component({
     selector    : 'nx-modal-reset-server-content',
@@ -32,6 +33,7 @@ export class ResetServerModalContent {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
+        private appState: NxAppStateService,
         private processService: NxProcessService,
         private toastService: NxToastService
     ) {
@@ -50,18 +52,34 @@ export class ResetServerModalContent {
             this.toastService.show(this.LANG.servers.resetFailed?.(), options);
         };
 
+        const wrongPasswordHandler = () => {
+            this.toastService.show(this.LANG.servers.resetFailed?.(), options);
+            return false;
+        };
+
         this.resetServer = this.processService
             .createProcess(() => {
                 return this.system.restoreFactorySettings(this.serverId, this.password).toPromise();
             }, {
-                ignoreError    : true,
-                successMessage : this.LANG.servers.beginReset?.()
+                ignoreError        : true,
+                ignoreUnauthorized : true,
+                successMessage     : this.LANG.servers.beginReset?.(),
+                errorCodes         : {
+                    'Wrong password.' : wrongPasswordHandler,
+                    wrongPassword     : wrongPasswordHandler
+                }
             }, async() => {
                 let moduleInfo: NormalResponse<ModuleInformationReply>;
                 try {
                     moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise();
                 } catch (err) {
-                    handleResetFailError('getModuleInfo', err);
+                    if (![503, 504].includes(err.status)) {
+                        return handleResetFailError('getModuleInfo', err);
+                    } else if (this.CONFIG.isLocal) {
+                        // If we failed to get module info the system probably has only one server.
+                        this.activeModal.close();
+                        this.appState.systemAvailable$.next(false);
+                    }
                 }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
                 return this.system.restartServer(this.serverId)
@@ -100,8 +118,6 @@ export class ResetServerModalContent {
                             );
                     })
                     .catch(err => handleResetFailError('restartServer', err));
-            }, (err) => {
-                return handleResetFailError('restoreFactorySettings', err);
             });
     }
 

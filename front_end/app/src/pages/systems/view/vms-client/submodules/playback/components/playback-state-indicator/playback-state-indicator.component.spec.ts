@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import PlaybackStateIndicatorComponent from './playback-state-indicator.component';
 
-describe('PlaybackStateIndicatorComponent', () => {
+xdescribe('PlaybackStateIndicatorComponent', () => {
   let component: PlaybackStateIndicatorComponent;
   let fixture: ComponentFixture<PlaybackStateIndicatorComponent>;
 

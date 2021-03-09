@@ -65,7 +65,7 @@ export class NxDevToolsComponent implements OnInit {
             });
             this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct)
                 .pipe(takeWhile(_ => !this.devToolsNode))
-                .subscribe(devTools => {
+                .subscribe(({ nodes: devTools }) => {
                     this.devToolsNode = {
                         nodes: devTools.map(mapToDevToolsNode)
                     };
