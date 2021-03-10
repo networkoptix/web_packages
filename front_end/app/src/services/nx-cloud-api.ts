@@ -3,7 +3,7 @@ import {
     HttpClient, HttpHeaders, HttpParams
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
-import { catchError, switchMap }    from 'rxjs/operators';
+import { catchError, concatMap, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
@@ -45,9 +45,23 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
         });
 
         if (toPromise) {
-            return returnPromise;
+            return returnPromise.then(response => {
+                // Clear a second time to handle small chance of race condition
+                return this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+                    return response;
+                });
+            });
         } else {
-            return from(returnPromise).pipe(switchMap((result: any) => result));
+            return from(returnPromise)
+                .pipe(
+                    switchMap((result: any) => result),
+                    concatMap(response => {
+                        // Clear a second time to handle small chance of race condition
+                        return this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+                            return response;
+                        });
+                    })
+                );
         }
     };
 };
@@ -86,6 +100,7 @@ export class NxCloudApiService {
         return false;
     }
 
+    @swClear('cloudSystemAPI', '/systems', false)
     disconnect(systemId: string, password: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
             system_id: systemId,
@@ -93,6 +108,7 @@ export class NxCloudApiService {
         });
     }
 
+    @swClear('cloudSystemAPI', '/systems', true)
     connect(systemName, email, password) {
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
             name     : systemName,
@@ -142,10 +158,12 @@ export class NxCloudApiService {
         return this.http.get<t.IPVDCameras>(this.CONFIG.apiBase + '/ipvd');
     }
 
+    @swClear('cloudSystemAPI', '/systems', false)
     getSystemAuth(systemId: string) {
         return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
 
+    @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
             master_system_id : masterSystemId,

@@ -11,6 +11,7 @@ import { LocalStorageService }      from 'ngx-webstorage';
 import { WINDOW }                   from './window-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { Router } from '@angular/router';
+import { NxSwCacheService } from '@services/sw-cache.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -29,6 +30,7 @@ export class NxLanguageProviderService {
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
         private cacheService: NxUriCacheService,
+        private swCacheService: NxSwCacheService,
         private router: Router,
         @Inject(WINDOW) private window: Window
     ) {
@@ -131,9 +133,11 @@ export class NxLanguageProviderService {
         });
         this.cacheService.cachedData.clear();
         // Reload current component
-        const currentUrl = this.router.url;
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
-            this.router.navigateByUrl(currentUrl);
+        this.swCacheService.clearAllCache().then(_ => {
+            const currentUrl = this.router.url;
+            this.router.navigateByUrl('/', { skipLocationChange : true }).then(_ => {
+                this.router.navigateByUrl(currentUrl);
+            });
         });
     }
 }
