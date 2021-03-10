@@ -2,23 +2,23 @@ import {
     Component, Inject, OnInit,
     Input, ViewChild, Renderer2
 }                                    from '@angular/core';
-import {
-    DOCUMENT, Location
-}                                    from '@angular/common';
+import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+
 import { NxModalGenericComponent }   from '../generic/generic.component';
-import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxUtilsService }            from '../../services/utils.service';
 import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxStorageService }          from '../../services/storage.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @Component({
-    selector: 'ngbd-modal-content',
-    templateUrl: 'login.component.html',
-    styleUrls: [],
+    selector    : 'ngbd-modal-content',
+    templateUrl : 'login.component.html',
+    styleUrls   : []
 })
 export class LoginModalContent implements OnInit {
     @Input() account;
@@ -27,14 +27,16 @@ export class LoginModalContent implements OnInit {
     @Input() closable;
     @Input() keepPage;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
-    auth: any;
+    locationService: Location;
+    auth;
     next: string;
     password: string;
     remember: boolean;
-    location: any;
+    loginProcess: any;
+    hideErrors = true;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -42,55 +44,61 @@ export class LoginModalContent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.localStorage.get('email') };
+        this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
     }
 
-    constructor(private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private localStorage: LocalStorageService,
-                private activeModal: NgbActiveModal,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private genericModal: NxModalGenericComponent,
-                private renderer: Renderer2,
-                private router: Router,
-                location: Location,
-                @Inject(DOCUMENT) private document: any,
+    constructor(
+        configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        locationService: Location,
+        private processService: NxProcessService,
+        private storageService: NxStorageService,
+        private genericModal: NxModalGenericComponent,
+        private renderer: Renderer2,
+        private router: Router,
+        public activeModal: NgbActiveModal,
+        @Inject(DOCUMENT) private document: any,
+        @Inject(WINDOW) protected window: Window
     ) {
-        this.setupDefaults();
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.languageService.translations;
+        this.locationService = locationService;
 
-        this.location = location;
+        this.setupDefaults();
     }
 
     resendActivation(email) {
         this.activeModal.close();
 
         this.processService.createProcess(() => {
-            return this.cloudApiService.reactivate(email);
+            return this.account.reactivate(email);
         }, {
             errorCodes: {
-                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
-                notFound: this.LANG.errorCodes.emailNotFound
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated(),
+                notFound  : this.LANG.errorCodes.emailNotFound()
             },
-            holdAlerts: true,
-            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
+            holdAlerts  : true,
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix()
         })
-        .run()
-        .then(() => {
-            this.genericModal.openConfirm(
+            .run()
+            .then(() => {
+                this.genericModal.openConfirm(
                     'Check your inbox and visit provided link to activate account',
                     'Activation email sent',
                     'OK');
-        });
+            });
     }
 
     resetForm() {
+        const { errors } = this.loginForm.controls.login_email;
+        if (errors) {
+            delete errors.not_activated;
+            this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
+        }
         if (!this.loginForm.valid) {
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
@@ -100,27 +108,33 @@ export class LoginModalContent implements OnInit {
 
     setEmail(email) {
         this.auth.email = email;
-        this.localStorage.set('email', this.auth.email);
+        this.storageService.email = this.auth.email;
     }
 
     ngOnInit() {
-        // Check the url queryparams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        // Check the url queryParams for next. if it exists set next equal to it.
+        const nextUrl = /\?next=(.*)/.exec(decodeURIComponent(this.document.location.search));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
         this.password = '';
 
-        this.login = this.processService.createProcess(() => {
+        this.loginProcess = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
 
+            if (this.password === '') {
+                this.loginForm.controls.login_password.setErrors({ required: true });
+                this.renderer.selectRootElement('#login_password').focus();
+                return Promise.reject();
+            }
+
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
-            ignoreUnauthorized: true,
-            errorCodes: {
+            ignoreUnauthorized : true,
+            errorCodes         : {
                 accountNotActivated: () => {
                     this.password = '';
                     this.loginForm.controls.login_password.markAsPristine();
@@ -135,7 +149,6 @@ export class LoginModalContent implements OnInit {
                     this.password = '';
 
                     this.renderer.selectRootElement('#login_password').focus();
-
                 },
                 notFound: () => {
                     this.password = '';
@@ -154,32 +167,41 @@ export class LoginModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.LANG.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount()
             }
         }).then((result) => {
+            if (this.CONFIG.isLocal) {
+                return this.activeModal.close(result);
+            }
+            this.languageService.currentLang = result.data.account.language;
             this.activeModal.close();
+            const isRootPath = ['/', ''].includes(this.locationService.path());
+
             if (this.keepPage) {
-                if (this.location.path() === '') {
-                    this.location.go(this.CONFIG.redirectAuthorised);
-                    // ensure language reload as translations are loaded on page load
-                    window.location.reload();
-                } else {
-                    // TODO: remove window reload once we separate session state from account service
-                    window.location.reload();
+                if (isRootPath) {
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 }
             } else if (this.next) {
                 // sanitize this.next
-                this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.location.go(this.next);
-                window.location.reload(); // ensure language reload
+                this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
+                if (this.next.startsWith('/admin')) {
+                    this.window.location.href = this.next;
+                } else {
+                    this.router
+                        .navigate([this.next])
+                        .then(() => {
+                            // *** window.location.reload(); // ensure language reload as translations are loaded on page load
+                            // *** admin section is not a part of Angular project
+                            this.router.navigate([this.next]);
+                        });
+                }
             } else {
                 setTimeout(() => {
-                    this.location.go(this.CONFIG.redirectAuthorised);
-                    window.location.reload(); // ensure language reload
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 });
             }
         }, (error) => {
-            if (error.resultCode === 'portalError') {
+            if (error?.resultCode === 'portalError') {
                 // close dialog ... process will show toaster
                 this.activeModal.close();
             }
@@ -189,8 +211,8 @@ export class LoginModalContent implements OnInit {
     close() {
         // prevent unnecessary reload
         this.activeModal.close('canceled');
-        if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
-            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+        if (!this.keepPage) { // && this.accountService.email === undefined) {
+            return this.router.navigate([this.CONFIG.redirect.unauthorised]);
         }
     }
 }

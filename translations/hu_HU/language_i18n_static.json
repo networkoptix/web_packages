@@ -1,506 +1,934 @@
 {
-	"account": {
-		"accountSavedSuccess": "A fiók mentése sikeres",
-		"activationLinkSent": "Aktiválási link elküldve",
-		"passwordChangedSuccess": "A fiók mentése sikeres",
-		"changePassword": "Jelszómódosítás",
-		"newPasswordLabel": "Új jelszó",
-		"saveChanges": "Mentés",
-		"accountSettings": "Fiókbeállítások"
-	},
-	"activeActions": {
-		"sendConfirm": "Aktiválási link újraküldése",
-		"resetPassword": "Jelszó visszaállítása",
-		"setNewPassword": "Jelszó mentése",
-		"setNewPasswordLabel": "Új jelszó"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "Keresés",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
-		"Any": "Any",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "Manufacturers",
-		"hardwareType": "Típus",
-		"hardwareTypes": "Types",
-		"minResolution": "Minimum Resolution",
-		"analytics": "analitika",
-		"analyticsSelected": "analitikai események"
-	},
-	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "Windows"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "Kliens és szerver",
-			"camera_sdk": "Video Source SDK",
-			"client": "Csak kliens",
-			"metadata_sdk": "Metadata SDK",
-			"package": "Package",
-			"server": "Csak szerver",
-			"servertool": "Konfigurációs eszköz",
-			"storage_sdk": "Tároló SDK",
-			"video_source_sdk": "Video Source SDK"
-		},
-		"releasesTypes": {
-			"beta": "Béta",
-			"betas": "Béták",
-			"rc": "Kiadásra jelölt",
-			"release": "Kiadás",
-			"releases": "Kiadások",
-			"patch": "Javítás",
-			"patches": "Javítások"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "Terület",
-		"count": "Count",
-		"vendor": "Manufacturer",
-		"model": "Modell",
-		"hardwareType": "Típus",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
-		"primaryCodec": "Kodek",
-		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "2-way Audio",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Halszem",
-		"isMdSupported": "Mozgás",
-		"isIoSupported": "I/O",
-		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "analitika",
-		"camera": "Kamera",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
-		"dvr": "DVR",
-		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
-		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
-		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
-	},
-	"integration": {
-		"myIntegrationsLabel": "Mine",
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"requirements": "{{name}} Requirements",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
-		"Drone": "Drone",
-		"Health Monitor": "Állapotfigyelés",
-		"Storage": "Tároló"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
-	},
-	"pageTitles": {
-		"template": "{{title}} - %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "About",
-		"registerSuccess": "Üdvözöljük",
-		"register": "Fiók létrehozása itt",
-		"changePassword": "Change password",
-		"account": "Account settings",
-		"systems": "Systems",
-		"system": "System",
-		"systemName": "{{systemName}}",
-		"systemShare": "Share System",
-		"activate": "Activate account",
-		"activateSent": "Activate account",
-		"activateSuccess": "Account activated",
-		"activateCode": "Activate account",
-		"restorePassword": "Reset password",
-		"restorePasswordSuccess": "Password saved",
-		"restorePasswordCode": "Reset password",
-		"view": "View cameras",
-		"debug": "Hibakeresés",
-		"login": "Log in",
-		"download": "%VMS_NAME% letöltése",
-		"downloadPlatform": "Download %VMS_NAME% for ",
-		"pageNotFound": "Az oldal nem található",
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
-	},
-	"dialogs": {
-		"okButton": "OK",
-		"cancelButton": "Mégse",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
-		"loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
-		"loginButton": "Bejelentkezés",
-		"logoutAuthorisedTitle": "Már bejelentkezett",
-		"logoutAuthorisedContinueButton": "Folyatatás",
-		"logoutAuthorisedLogoutButton": "Kijelentkezés",
-		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
-		"download": "%VMS_NAME% letöltése",
-		"merge": {
-			"commonText": "A rendszerek <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>egyesítése sikertelen.",
-			"connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"mergeFailedTitle": "A rendszeregyesítés sikertelen",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel.",
-			"systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra",
-			"recommendSupport": {
-				"a_recommend": "Javasoljuk, hogy konzultáljon erről",
-				"b_support": "támogatás",
-				"c_proceeding": "mielőtt folytatná."
-			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
-		},
-		"message": {
-			"failedToSend": "Message has failed to send.",
-			"sent": "Message has been sent.",
-			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{asset}}"
-			},
-			"subject": {
-				"sales_inquiry": "Sales inquiry for {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
-				"integration_feedback": "Feedback for integration {{asset}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{asset}}"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "Ha megváltoztatja a rendszertulajdonost, érvényteleníti a tulajdonjogot ehhez a fiókhoz. Ez a művelet nem fordítható vissza. Folytatja?",
-			"shareTitle": "Hozzáadás",
-			"shareConfirmButton": "Hozzáadás",
-			"editShareTitle": "Engedélyek szerkesztése",
-			"editShareConfirmButton": "Mentés",
-			"permissionsSaved": "Új engedélyek mentve"
-		}
-	},
-	"errorCodes": {
-		"ok": "ok",
-		"cantSendActivationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
-		"cantDisconnectSystemPrefix": "A rendszer törlése nem lehetséges",
-		"cantUnshareWithMeSystemPrefix": "A rendszer törlése nem lehetséges",
-		"cantSharePrefix": "A rendszer megosztása nem lehetséges",
-		"cantGetUsersListPrefix": "A felhasználólista nem érhető el",
-		"cantGetSystemsListPrefix": "A rendszerlista nem érhető el",
-		"cantRegisterPrefix": "Hiba történt",
-		"cantGetSystemInfoPrefix": "A rendszerinformáció nem érhető el",
-		"cantChangeAccountPrefix": "A módosítások nem menthetők el",
-		"cantChangePasswordPrefix": "Jelszó mentése nem lehetséges",
-		"cantActivatePrefix": "A fiók aktiválása nem lehetséges",
-		"cantSendConfirmationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
-		"notAuthorized": "Hibás jelszó",
-		"brokenAccount": "Váratlan probléma a fiókkal. <a href=\"/restore_password\">Fiók visszaállítása</a>",
-		"wrongParameters": "Néhány paraméter hibás",
-		"wrongCode": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
-		"wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
-		"wrongAuthCode": "Code is expired or incorrect",
-		"forbidden": "Nincs engedélye erre a műveletre",
-		"accountNotActivated": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",
-		"accountBlocked": "A fiók zárolva van. Próbálja újra pár perc múlva.",
-		"notFound": "Nem található",
-		"alreadyExists": "Ez a fiük már létezik",
-		"unknownError": "Váratlan hiba történt",
-		"accountAlreadyActivated": "Ez a fiók már aktiválva van",
-		"emailNotFound": "A fiók nem létezik.",
-		"EmailAlreadyExists": "Ez az e-mail már regisztrálva van",
-		"oldPasswordMistmatch": "A jelenlegi jelszó helytelen.",
-		"passwordMismatch": "Hibás jelszó",
-		"cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",
-		"cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
-		"lostConnection": "{{systemName}} kapcsolat megszakadt",
-		"thisSystem": "a rendszer",
-		"oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",
-		"DUPLICATE_MEDIASERVER_FOUND": "Egyes szerverlisták mindkét rendszerben léteznek - a kiválasztott és az aktuális rendszerben.<br>Távolítsa el az offline és inkompatibilis kiszolgálókat minden egyes rendszerből, és próbálja újra.",
-		"mergedSystemIsOffline": "A rendszer <strong>{{failedSystem}}</strong> offline állapotban van.",
-		"INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
-		"FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
-		"unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-	},
-	"passwordRequirements": {
-		"good": "jó",
-		"fair": "elegendő",
-		"fairMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében",
-		"minLength": "túl rövid",
-		"minLengthMessage": "A jelszónak legalább 8 karakterből kell állnia",
-		"required": "nem megfelelő",
-		"requiredMessage": "Csak latin betűket, számokat és billentyűzet szimbólumok használhatók, kerülje a szóközöket",
-		"weak": "gyenge",
-		"weakMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében",
-		"strongMessage": "Erős jelszó!",
-		"common": "túl gyakori",
-		"commonMessage": "Ez a jelszó a leggyakoribb jelszavak egyike",
-		"missingMessage": "Jelszó megadása szükséges"
-	},
-	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
-	},
-	"system": {
-		"yourSystem": "Az Ön rendszere",
-		"mySystemSearch": "IMeMyMine",
-		"unavailable": "Rendszer nem elérhető",
-		"offline": "A rendszer offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "%VMS_NAME% Megnyitása",
-		"openClientNoSystem": "%VMS_NAME% Megnyitása",
-		"confirmMergeAction": "Összefésülés",
-		"mergeSystemTitle": "Rendszerek összevonása",
-		"confirmRenameTitle": "Rendszer neve",
-		"confirmRenameAction": "Mentés",
-		"successRename": "Rendszer neve mentve",
-		"confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
-		"confirmDisconnectAction": "Szétkapcsolás",
-		"confirmUnshareFromMe": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
-		"confirmUnshareFromMeTitle": "Leválasztja a rendszert?",
-		"confirmUnshareFromMeAction": "Szétkapcsolás",
-		"confirmUnshare": "Ez a felhasználó nem fog tudni csatlakozni a rendszerhez. Folytatja?",
-		"confirmUnshareTitle": "Remove user?",
-		"confirmUnshareAction": "Törlés",
-		"successDisconnected": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát",
-		"successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
-		"mergeFailed": "A rendszeregyesítés sikertelen",
-		"mergeStart": "A rendszerek egyesülnek",
-		"mergeSuccess": "A rendszer egyesítése befejeződött",
-		"permissionsRemoved": "{{email}} engedélyei vissavonva",
-		"unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "órák",
-				"minutes": "percek"
-			},
-			"warningMessages": {
-				"videoEncryption": "A videoforgalom titkosítása jelentősen növeli a CPU használatát."
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "aktiválva",
-		"incompatible": "inkompatibilis",
-		"merging": "egyesülő",
-		"notActivated": "nincs aktiválva",
-		"online": "online",
-		"offline": "offline",
-		"unavailable": "nem elérhető"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "Letiltva",
-			"description": "Felhasználó le van tiltva, és nem tud bejelentkezni a rendszerbe"
-		},
-		"Owner": {
-			"label": "Tulajdonos",
-			"description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást"
-		},
-		"Viewer": {
-			"label": "Felhasználó",
-			"description": "Élő videó megtekintése és rögzített visszajátszása"
-		},
-		"Live Viewer": {
-			"label": "Felhasználó (élő)",
-			"description": "Csak élőkép megtekintése"
-		},
-		"Advanced Viewer": {
-			"label": "Speciális felhasználó",
-			"description": "Élőkép megtekintése, keresés archívban, PTZ vezérlés, stb"
-		},
-		"Administrator": {
-			"label": "Adminisztrátor",
-			"description": "Korlátlan hozzáférést biztosít, beleértve a megosztást"
-		},
-		"Custom": {
-			"label": "Egyéni",
-			"description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst"
-		},
-		"cloudAdmin": {
-			"label": "Adminisztrátor",
-			"description": "Rendszerkonfigurálás és megosztás"
-		},
-		"customRole": {
-			"label": "Egyéni szerepkör",
-			"description": "Rendszerben megadott egyéni szerepkör"
-		},
-		"owner": {
-			"label": "Tulajdonos",
-			"description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást"
-		},
-		"viewer": {
-			"label": "Felhasználó",
-			"description": "Élő videó megtekintése és rögzített visszajátszása"
-		},
-		"liveViewer": {
-			"label": "Felhasználó (élő)",
-			"description": "Csak élőkép megtekintése"
-		},
-		"advancedViewer": {
-			"label": "Speciális felhasználó",
-			"description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb..."
-		},
-		"custom": {
-			"label": "Egyéni",
-			"description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "Elsődleges stream",
-			"lowStream": "Másodlagos stream",
-			"transcoding": "Transzkódolás",
-			"unknown": "Ismeretlen",
-			"copyToClipboard": "másolás vágólapra",
-			"copyDefaultText": "másolás",
-			"copyActiveText": "vágólapra másolva"
-		},
-		"systemOffline": "A rendszer offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
-		"systemServerError": "Belső Szerverhiba",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-		"systemHasNoCameras": "NINCSENEK KAMERÁK",
-		"systemUnreachable": "SYSTEM IS UNREACHABLE",
-		"cameraStates": {
-			"offline": "Offline",
-			"error": "Hiba",
-			"errorLoading": "Hiba történt a videó betöltése közben.",
-			"unauthorized": "Hitelesítés szükséges",
-			"noData": "Nincs adat",
-			"iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",
-			"flashRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a> a videók lejátszásához.",
-			"flashOrWebmRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a>vagy<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> a videó Internet Explorerben történő lejátszásához.",
-			"noArmSupport": "Ez a böngésző vagy eszköz nem támogatja az ARM-alapú szerverről történő videofájl lejátszást.",
-			"noFormat": "Ez a böngésző nem támogatja erről a kameráról történő videofájl lejátszást.",
-			"ieNoWebm": "Kérjük telepítsen <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> at Internet Explorerben.",
-			"ieWin10": "Kérjük, használjon Microsoft Edge vagy Google Chrome böngészőt.",
-			"ubuntuNX": "Ez a böngésző nem támogatja a videók ARM-alapú szerverről való lejátszását. Használjon helyette Chromium böngészőt."
-		},
-		"searchCamPlaceholder": "Keresés",
-		"resolution": {
-			"auto": "Auto",
-			"high": "Elsődleges",
-			"low": "Alacsony"
-		},
-		"chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
-		"voiceCommands": {
-			"play": "letjátszás",
-			"pause": "szünet",
-			"live": "élőbe menni | mutatsd élőben",
-			"view": "nézet + [kamera neve]",
-			"search": "keresés + [szöveg a keresősávhoz]",
-			"clear search": "keresés törlése",
-			"expand server": "szerver kibontása + [szerver neve]",
-			"collapse server": "szerver összecsukása + [szerver neve]",
-			"expand all servers": "összes szerver kibontása",
-			"collapse all servers": "összes szerver összecsukása",
-			"stop listening": "figyelés leállítása",
-			"help": "súgó | parancsok megjelenítése"
-		}
-	},
-	"systemAdministration": "Rendszer Adminisztrátor",
-	"users": "Felhasználók",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
-	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
-	"Integrations": "Integrations",
-	"Privacy": "Biztonság",
-	"Support": "Támogatás",
-	"Supported Devices": "Supported Devices",
-	"Terms": "Feltételek",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% nem kapcsolódik egy rendszeréhez sem",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Kattintson a \"Felhő\" fülre \"Rendszer adminisztráció\" lapon",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+    "language": "en_US",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
+    "Download %VMS_NAME%": "%VMS_NAME% letöltése",
+    "For developers": "For developers",
+    "Integrations (β)": "Integrációk (béta)",
+    "Privacy": "Biztonság",
+    "Support": "Támogatás",
+    "Terms": "Feltételek",
+    "accessRoles": {
+        "Administrator": {
+            "description": "Korlátlan hozzáférést biztosít, beleértve a megosztást",
+            "label": "Adminisztrátor"
+        },
+        "Advanced Viewer": {
+            "description": "Élőkép megtekintése, keresés archívban, PTZ vezérlés, stb",
+            "label": "Speciális felhasználó"
+        },
+        "Custom": {
+            "description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst",
+            "label": "Egyéni"
+        },
+        "Live Viewer": {
+            "description": "Csak élőkép megtekintése",
+            "label": "Felhasználó (élő)"
+        },
+        "Owner": {
+            "description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást",
+            "label": "Tulajdonos"
+        },
+        "Viewer": {
+            "description": "Élő videó megtekintése és rögzített visszajátszása",
+            "label": "Felhasználó"
+        },
+        "advancedViewer": {
+            "description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb...",
+            "label": "Speciális felhasználó"
+        },
+        "cloudAdmin": {
+            "description": "Rendszerkonfigurálás és megosztás",
+            "label": "Adminisztrátor"
+        },
+        "custom": {
+            "description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst",
+            "label": "Egyéni"
+        },
+        "customRole": {
+            "description": "Rendszerben megadott egyéni szerepkör",
+            "label": "Egyéni szerepkör"
+        },
+        "disabled": {
+            "description": "Felhasználó le van tiltva, és nem tud bejelentkezni a rendszerbe",
+            "label": "Letiltva"
+        },
+        "liveViewer": {
+            "description": "Csak élőkép megtekintése",
+            "label": "Felhasználó (élő)"
+        },
+        "owner": {
+            "description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást",
+            "label": "Tulajdonos"
+        },
+        "viewer": {
+            "description": "Élő videó megtekintése és rögzített visszajátszása",
+            "label": "Felhasználó"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "A fiók mentése sikeres",
+        "accountSettings": "Fiókbeállítások",
+        "activationLinkSent": "Aktiválási link elküldve",
+        "agreementAccepted": "A megállapodást elfogadták",
+        "changePassword": "Jelszómódosítás",
+        "newPasswordLabel": "Új jelszó",
+        "passwordChangedSuccess": "Jelszó sikeresen frissítve",
+        "saveChanges": "Mentés"
+    },
+    "activeActions": {
+        "resetPassword": "Jelszó visszaállítása",
+        "sendConfirm": "Aktiválási link újraküldése",
+        "setNewPassword": "Jelszó mentése",
+        "setNewPasswordLabel": "Új jelszó"
+    },
+    "cameraFilters": {
+        "H265": "H.265 kamerák",
+        "IO": "I/O modulok",
+        "TwWayAudio": "Kétutas audio eszközök",
+        "aptz": "Kamerák fejlett PTZ-vel",
+        "audio": "Kamerák audioval",
+        "encoder": "Jeladók",
+        "fisheye": "Halszemoptikás kamerák",
+        "highRes": "Extra nagy felbontású kamerák",
+        "multiSensor": "Többérzékelős kamerák",
+        "ptz": "PTZ kamerák"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Fiók létrehozva",
+                "message": "Confirmation message with the activation link is sent to {email}"
+            },
+            "activated": {
+                "title": "A fiók aktiválása sikeres"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "vágólapra másolva",
+            "copyDefaultText": "másolás",
+            "copyToClipboard": "másolás vágólapra",
+            "highStream": "Elsődleges stream",
+            "lowStream": "Másodlagos stream",
+            "transcoding": "Transzkódolás",
+            "unknown": "Ismeretlen"
+        },
+        "cameraStates": {
+            "error": "Hiba",
+            "errorLoading": "Hiba történt a videó betöltése közben.",
+            "flashOrWebmRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a>vagy<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> a videó Internet Explorerben történő lejátszásához.",
+            "flashRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a> a videók lejátszásához.",
+            "iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",
+            "ieNoWebm": "Kérjük telepítsen <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> at Internet Explorerben.",
+            "ieWin10": "Kérjük, használjon Microsoft Edge vagy Google Chrome böngészőt.",
+            "noArmSupport": "Ez a böngésző vagy eszköz nem támogatja az ARM-alapú szerverről történő videofájl lejátszást.",
+            "noData": "Nincs adat",
+            "noFormat": "Ez a böngésző nem támogatja erről a kameráról történő videofájl lejátszást.",
+            "offline": "Offline",
+            "ubuntuNX": "Ez a böngésző nem támogatja a videók ARM-alapú szerverről való lejátszását. Használjon helyette Chromium böngészőt.",
+            "unauthorized": "Hitelesítés szükséges"
+        },
+        "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
+        "login": "login",
+        "recordingSettingsWarning": "Kérjük, frissítse a hiányzó felvételi beállításokat.",
+        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "recordingModes": {
+            "always": "Folyamatos rögzítés",
+            "motion": "Csak a mozgást rögzítse",
+            "motionLowRes": "Mozgás + alacsony felbontás"
+        },
+        "resolution": {
+            "various": "- Különböző értékek -",
+            "auto": "Auto",
+            "best": "Legjobb",
+            "high": "Elsődleges",
+            "medium": "Közepes",
+            "low": "Alacsony"
+        },
+        "general": "Általános",
+        "inaccessibleFeatureMessage": "A rendszer offline állapotban van, tehát az információk nem érhetők el.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "searchCamPlaceholder": "Keresés",
+        "system": "system",
+        "systemHasNoCameras": "Nincsenek kamerák",
+        "systemHasNoCamerasMessage": "A rendszerben nincs elérhető kamera. <br><br>Csatlakoztasson néhány kamerát a szerver helyi hálózatához, hogy azok felderítésre kerüljenek, vagy kérje meg a rendszergazdát, hogy változtassa meg a hozzáférési szintet.",
+        "systemNewVersion": "Frissítse a rendszerét",
+        "systemNewVersionMessage": "A jelenlegi verzió nem kompatibilis ezzel a funkcióval. Kérjük, frissítse a szervereit a legújabb verzióra a szolgáltatás használatához.",
+        "systemNoAlerts": "Nincsenek figyelmeztetések",
+        "systemNoAlertsMessage": "A rendszere jól működik!",
+        "systemOffline": "A rendszer offline",
+        "systemOfflineMessage": "Ez a rendszer offline állapotban van, és jelenleg nem érhető el.",
+        "systemServerError": "Belső Szerverhiba",
+        "systemServerErrorMessage": "Hiba történt. Próbálja újra később. Ha a probléma továbbra is fennáll, kérjük, forduljon a támogatási csoporthoz.",
+        "systemUnreachable": "A rendszer nem elérhető",
+        "unknown": "Ismeretlen",
+        "vendor": "Gyártó",
+        "model": "Modell",
+        "ip": "IP cím",
+        "server": "Szerver",
+        "os": "OS",
+        "version": "Verzió",
+        "voiceCommands": {
+            "clear search": "keresés törlése",
+            "collapse all servers": "összes szerver összecsukása",
+            "collapse server": "szerver összecsukása + [szerver neve]",
+            "expand all servers": "összes szerver kibontása",
+            "expand server": "szerver kibontása + [szerver neve]",
+            "help": "súgó | parancsok megjelenítése",
+            "live": "élőbe menni | mutatsd élőben",
+            "pause": "szünet",
+            "play": "letjátszás",
+            "search": "keresés + [szöveg a keresősávhoz]",
+            "stop listening": "figyelés leállítása",
+            "view": "nézet + [kamera neve]"
+        },
+        "viewingOutdatedReport": "Ön elavult jelentést tekint meg."
+    },
+    "dialogs": {
+        "addUser": {
+            "alreadyExists": "Ezt az e-mailt már regisztrálták a %systemName% rendszerben"
+        },
+        "buttons": {
+            "cancel": "Mégse",
+            "createAccount": "Új Fiók Létrehozása",
+            "delete": "Törlés",
+            "deleteAccount": "Fiók törlése",
+            "download": "%VMS_NAME% letöltése",
+            "logoutAuthorised": "Kijelentkezés",
+            "ok": "OK",
+            "remove": "Törlés",
+            "stayAs": "Maradjon naplózva, mint {email} ",
+            "stayLoggedIn": "Maradjon bejelentkezve"
+        },
+        "cloudStorage": {
+            "title": "Cloud tárolás",
+            "enableStorage": "Felhő-tárolás engedélyezése",
+            "otherSystem": "Más rendszerek...",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "camera": "kamera",
+            "cameras": "kamerák",
+            "usageLabels": {
+                "currentRecordings": "Jelenlegi felvételek",
+                "whenFullyUsed": "Teljes felhasználás esetén",
+                "amountUsed": "Használt mennyiség",
+                "archiveFrom": "Archívum innen",
+                "recordingBitrate": "Felvételi bitráta",
+                "delayFromLive": "Késés az élőhöz képest"
+            },
+            "remove": {
+                "success": "A felhőalapú tárolást sikeresen eltávolítottuk a rendszerből",
+                "errorPrefix": "Hiba a felhőtároló eltávolításakor"
+            },
+            "activationError": {
+                "title": "A felhőalapú tárolást nem lehet engedélyezni",
+                "message": "Már összesen <volume> felhőtároló van hozzáadva a rendszeréhez, és nem tud hozzáadni többet. <br/><br/>Ehelyett törölheti a tárolóhelyet egy másik rendszerből, vagy áthelyezheti ebbe a rendszerbe. "
+            },
+            "systemDisconnectError": {
+                "title": "Nem lehet lekapcsolni a rendszert a %CLOUD_NAME%",
+                "message": "A rendszernek felhőalapú tárolása van, és rajta van néhány archívum. <br/><br/>A felhő tárolását manuálisan kell törölni, mielőtt a rendszert leválasztják a %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Felhő-tárolás átmozgatása",
+                "success": "Storage successfully moved",
+                "errorPrefix": "Hiba a felhőtároló áthelyezésekor",
+                "notFound": "A tárhely nem található. Lehet, hogy egy tárolót egy másik felhasználó helyezte át vagy törölte",
+                "status": {
+                    "offline": "A felhőalapú tárolást nem lehet áthelyezni offline rendszerekbe."
+                }
+            },
+            "enableCloudStorage": {
+                "success": "Felhőtárolás engedélyezve",
+                "errorPrefix": "Hiba a felhőalapú tárolás engedélyezésekor"
+            },
+            "noOtherSystemsError": {
+                "message": "A felhőalapú tárolást csak azon rendszerek között mozgathatja, amelyek tulajdonosa. <br/><br/>Csatlakoztasson egy rendszert %CLOUD_NAME% a felhőalapú fiókjával, hogy felhőalapú tárhelyet tudjon rá helyezni."
+            }
+        },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
+            "checking": "Ellenőrzés...",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "differentOwners": "Mind a kiválasztott, mind a jelenlegi rendszer %CLOUD_NAME% csatlakoztatva van, és különböznek a tulajdonosok. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+            "duplicateServers": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "mergeSystemsTitle": "Egyesítse a jelenlegi rendszert a",
+            "mergeFailedTitle": "A rendszeregyesítés sikertelen",
+            "noServerFound": "Nem találhatók szerverek",
+            "newSystemDisplayName": "Új rendszer",
+            "otherSystem": "Más rendszerek...",
+            "ownerCanMergeText": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos",
+            "passwordRequired": "Jelszó megadása szükséges",
+            "passwordWrong": "Hibás jelszó",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "Javasoljuk, hogy konzultáljon",
+                "b_support": "támogatás",
+                "c_proceeding": "mielőtt folytatná."
+            },
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotYours": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "urlEmpty": "Adja meg a szerver címét",
+            "urlNotValid": "Adjon meg érvényes URL-t",
+            "unknownError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+        },
+        "message": {
+            "storageSettingsSaved": "A tárolási beállítások mentve.",
+            "storageSettingsNotSaved": "Nem sikerült menteni a tárolási beállításokat.",
+            "settingsSaved": "Beállítások mentve.",
+            "settingsNotSaved": "Nem sikerült menteni a beállításokat.",
+            "logLevelsSaved": "Naplószint (ek) mentve.",
+            "logLevelsNotSaved": "A naplózási szinteket nem sikerült menteni.",
+            "failedToSend": "Nem sikerült az üzenet küldése.",
+            "placeholders": {
+                "feedback": "Ne felejtse el megadni a kamera modelljét és gyártóját..."
+            },
+            "sent": "Üzenet elküldve.",
+            "subject": {
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Visszajelzés a kamerákról",
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
+            },
+            "title": {
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Visszajelzés a kamerákról"
+            }
+        },
+        "removeSystem": {
+            "action": "Szétkapcsolás",
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
+        },
+        "titles": {
+            "error": "Hiba",
+            "success": "Sikeres",
+            "changeAccount": "Már be van jelentkezve, mint {email}",
+            "deleteUser": "Törli a felhasználót?",
+            "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
+            "noClientDetected": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
+            "removeUser": "Eltávolítja a felhasználót?",
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "Kliens és szerver",
+            "camera_sdk": "Videó forráskód (SDK)",
+            "client": "Csak kliens",
+            "metadata_sdk": "Metaadatok SDK",
+            "package": "Csomag",
+            "server": "Csak szerver",
+            "servertool": "Konfigurációs eszköz",
+            "storage_sdk": "Tároló SDK",
+            "video_source_sdk": "Video forráskód SDK"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "Windows"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "Béta",
+            "betas": "Béták",
+            "patch": "Javítás",
+            "patches": "Javítások",
+            "rc": "Kiadásra jelölt",
+            "release": "Kiadás",
+            "releases": "Kiadások"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Egyes szerverlisták mindkét rendszerben léteznek - a kiválasztott és az aktuális rendszerben.<br>Távolítsa el az offline és inkompatibilis kiszolgálókat minden egyes rendszerből, és próbálja újra.",
+        "EmailAlreadyExists": "Ez az e-mail már regisztrálva van",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "cloud_systems_have_different_owners": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
+        "fail": "{failedSystem} is inaccessible.",
+        "incompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Frissítse mindkét rendszert ugyanarra a verzióra, hogy egyesíthető legyen.",
+        "unknown_error": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
+        "accountAlreadyActivated": "Ez a fiók már aktiválva van",
+        "accountBlocked": "A fiók zárolva van. Próbálja újra pár perc múlva.",
+        "accountNotActivated": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "alreadyExists": "Ez a fiük már létezik",
+        "brokenAccount": "Váratlan probléma a fiókkal. <a href=\"/restore_password\">Fiók visszaállítása</a>",
+        "cantActivatePrefix": "A fiók aktiválása nem lehetséges",
+        "cantAddYourOwnEmail": "Saját e-mail hozzáadása nem megengedett",
+        "cantChangeAccountPrefix": "A módosítások nem menthetők el",
+        "cantChangePasswordPrefix": "Jelszó mentése nem lehetséges",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDisconnectSystemPrefix": "A rendszer törlése nem lehetséges",
+        "cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
+        "cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",
+        "cantGetSystemInfoPrefix": "A rendszerinformáció nem érhető el",
+        "cantGetSystemsListPrefix": "A rendszerlista nem érhető el",
+        "cantGetUsersListPrefix": "A felhasználólista nem érhető el",
+        "cantOpenClient": "%VMS_NAME% alkalmazás nem található.",
+        "cantRegisterPrefix": "Hiba történt",
+        "cantSendActivationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
+        "cantSendConfirmationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
+        "cantSharePrefix": "A rendszer megosztása nem lehetséges",
+        "cantUnshareWithMeSystemPrefix": "A rendszer törlése nem lehetséges",
+        "emailNotFound": "A fiók nem létezik.",
+        "failedToAccessSystem": "Ez a link nem érhető el rendszerrel. Ez akkor fordulhat elő, ha a rendszert lekapcsolják a %CLOUD_NAME%, visszavonják a rendszerhez való hozzáférést, vagy ha helytelen fiókba jelentkezett be.",
+        "forbidden": "Nincs engedélye erre a műveletre",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "notAuthorized": "Hibás jelszó",
+        "badUsername": "Account not found",
+        "notFound": "Nem található",
+        "ok": "ok",
+        "oldPasswordMistmatch": "A jelenlegi jelszó helytelen.",
+        "oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",
+        "passwordMismatch": "Hibás jelszó",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "thisSystem": "a rendszer",
+        "unknownError": "Váratlan hiba történt",
+        "unknownMergeError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
+        "wrongAuthCode": "A kód lejárt vagy helytelen",
+        "wrongCode": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
+        "wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
+        "wrongParameters": "Néhány paraméter hibás",
+        "licenseFail": "A licenc aktiválása nem sikerült. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
+        "licenseTimeout": "A licenc aktiválása a kapcsolat időtúllépése miatt nem sikerült. Kérjük, ellenőrizze, hogy a kiszolgáló online-e, és próbálkozzon újra.",
+        "licenseServerError": "A licenc aktiválása nem sikerült. A licencszerver nem válaszolt. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+    },
+    "integration": {
+        "Access Control": "Hozzáférés vezérlés",
+        "Connector": "Csatlakozó",
+        "Data Analytics": "Adat Analitika",
+        "Drone": "Drón",
+        "Health Monitor": "Állapotfigyelés",
+        "Storage": "Tároló",
+        "myIntegrationsLabel": "Saját",
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "PTZ kamerák",
+        "Cameras supporting H.265": "A H.265-et támogató kamerák",
+        "Cameras with 2-way audio": "Kamerák 2 irányú audioval",
+        "Extra high resolution cameras": "Extra nagy felbontású kamerák",
+        "Fisheye Cameras": "Halszemoptikás kamerák",
+        "I / O modules": "I/O modulok",
+        "Multisensor Cameras": "Többérzékelős kamerák",
+        "PTZ cameras": "PTZ kamerák",
+        "camera": "Kamera",
+        "count": "Mennyiség",
+        "dvr": "DVR",
+        "encoder": "Jeladók",
+        "hardwareType": "Típus",
+        "isAnalyticsSupported": "Analitika",
+        "isAptzSupported": "Speciális PTZ",
+        "isAptzSupportedShort": "Spec. PTZ",
+        "isAudioSupported": "Audio",
+        "isDualStreamingSupported": "Kettős streaming",
+        "isFisheye": "Halszem",
+        "isH265": "H.265",
+        "isIoSupported": "I/O",
+        "isMdSupported": "Mozgásérzékelés",
+        "isMultiSensor": "Több érzékelő",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "Kétirányú audio",
+        "maxFps": "FPS (max)",
+        "maxResolution": "Felbontás (max)",
+        "model": "Modell",
+        "multiSensorCamera": "Többérzékelős kamerák",
+        "other": "Egyéb",
+        "primaryCodec": "Kodek",
+        "resolutionArea": "Terület",
+        "sndResolution": "Másodlagos stream",
+        "vendor": "Gyártó",
+        "sortKey": ""
+    },
+    "ipvdFeedback": {
+        "a_Please": "Kérem",
+        "b_Link": "kérelem benyújtása",
+        "c_Info": "további kérdések / aggályok a támogatott eszközökkel kapcsolatban."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "menu": {
+        "titles": {
+            "cameras": "Kamerák",
+            "systemAdministration": "Rendszer Adminisztrátor",
+            "general": "Általános",
+            "licenses": "Licencek",
+            "users": "Felhasználók"
+        }
+    },
+    "pageTitles": {
+        "about": "Névjegy",
+        "account": "Fiókbeállítások",
+        "activate": "Fiók aktiválása",
+        "activateCode": "Fiók aktiválása",
+        "activateSuccess": "Fiók aktiválva",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "changePassword": "Jelszó módosítása",
+        "debug": "Hibakeresés",
+        "default": "%CLOUD_NAME%",
+        "download": "%VMS_NAME% letöltése",
+        "downloadPlatform": "%VMS_NAME% letöltése ",
+        "failedToAccessSystem": "Belépés sikertelen",
+        "integrations": "%VMS_NAME% Integrations",
+        "login": "Bejelentkezés",
+        "pageNotFound": "Az oldal nem található",
+        "register": "Fiók létrehozása itt",
+        "registerSuccess": "Üdvözöljük",
+        "restorePassword": "Jelszó visszaállítása",
+        "restorePasswordSuccess": "Jelszó elmentve",
+        "supportedDevices": "Támogatott eszközök",
+        "system": "Rendszer",
+        "systemShare": "Rendszer megosztása",
+        "systems": "Rendszerek",
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Kamerák megtekintése",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+    },
+    "passwordRequirements": {
+        "common": "túl gyakori",
+        "commonMessage": "Ez a jelszó a leggyakoribb jelszavak egyike",
+        "fair": "elegendő",
+        "fairMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében",
+        "good": "jó",
+        "minLength": "túl rövid",
+        "minLengthMessage": "A jelszónak legalább 8 karakterből kell állnia",
+        "missingMessage": "Jelszó megadása szükséges",
+        "required": "nem megfelelő",
+        "requiredMessage": "Csak latin betűket, számokat és billentyűzet szimbólumok használhatók, kerülje a szóközöket",
+        "strongMessage": "Erős jelszó!",
+        "weak": "gyenge",
+        "weakMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében"
+    },
+    "placeholderTexts": {
+        "noSettings": {
+            "title": "Az oldal nem található",
+            "message": "Győződjön meg arról, hogy szerverek online-ak, és próbálkozzon újra."
+        },
+        "merge": {
+            "title": "This system is being merged to {systemName}.",
+            "message": {
+                "dependingOnSize": "Az adatbázis méretétől függően ez akár több óráig is eltarthat.",
+                "untilFinished": "Amíg az egyesítés befejeződik, be tud jelentkezni a rendszerbe és megtekinthet videókat, de közben nem módosíthatja a beállításokat.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+            }
+        },
+        "server": {
+            "title": "A szerver nem érhető el",
+            "message": "A rendszer offline állapotban van, tehát az információk nem érhetők el."
+        }
+    },
+    "pleaseSelect": "Kérem válasszon...",
+    "privacyPolicy": {
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME% zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
+    },
+    "registration": {
+        "agreement": "Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "egyesítik ezt a rendszert",
+            "mayTake": "Az adatbázis méretétől függően ez akár több óráig is eltarthat."
+        },
+        "finishingMerge": "Rendszeregyesítés befejezése",
+        "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
+            "backToEditText": "Vissza a szerkesztő felületekhez",
+            "previewRibbon": "Ez az oldal a legfrissebb változások előnézete, és nem egyezik meg a nyilvánosan elérhető verzióval."
+        },
+        "systemOffline": "A rendszer offline állapotban van. Előfordulhat, hogy egyes beállítások nem érhetők el.",
+        "systemsMerging": "Ez a rendszer jelenleg részt vesz egy egyesítési műveletben."
+    },
+    "search": {
+        "Any": "Bármely",
+        "Search": "Keresés",
+        "analytics": "Analitika",
+        "analyticsSelected": "analitikai események",
+        "filter applied": "alkalmazott szűrő",
+        "filters applied": "alkalmazott szűrők",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "hardwareType": "Típus",
+        "hardwareTypes": "Típusok",
+        "minResolution": "Minimális felbontás",
+        "search_ipvd": "Keresés modell vagy gyártó szerint",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "vendor": "Gyártó",
+        "vendors": "Gyártók"
+    },
+    "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
+        "beginDetach": "A szerver leválasztásra kerül",
+        "beginReset": "Server is now resetting.",
+        "detachSystemFailed": "Nem sikerült kiszolgálót leválasztani a rendszerről. Ellenőrizze, hogy a megadott jelszó helyes-e, és a kiszolgáló online, - és próbálkozzon újra.",
+        "detachSystemSuccess": "A szervert sikeresen leválasztottuk a rendszertől.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
+        "removeMediaserverFailed": "Nem sikerült eltávolítani a kiszolgálót a rendszerből.",
+        "resetFailed": "A szerver visszaállítása nem sikerült. Ellenőrizze, hogy a megadott jelszó helyes-e, és a kiszolgáló online, - és próbálkozzon újra.",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "restartFailed": "Hiba történt a szerver újraindításakor.",
+        "restartSuccessful": "A szerver sikeresen újraindult.",
+        "serverOffline": "A szerver offine.",
+        "servers": "Szerverek",
+        "status": {
+            "checking": "ellenőrzés...",
+            "offline": "offline",
+            "resetting": "resetting...",
+            "restarting": "újraindítás..."
+        },
+        "successRename": "A szerver neve mentve."
+    },
+    "system": {
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "mergeUnknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)",
+        "mySystemSearch": "IMeMyMine",
+        "settings": {
+            "notAbleToLoadStorageInfo": "Nem sikerült betölteni a tárolási információkat.",
+            "notAbleToLoadSecurity": "Nem sikerült betölteni a biztonsági beállításokat.",
+            "notAbleToLoadSystem": "Nem sikerült betölteni a rendszerbeállításokat.",
+            "sessionLimitDuration": {
+                "hours": "órák",
+                "minutes": "percek"
+            },
+            "warningMessages": {
+                "videoEncryption": "A videoforgalom titkosítása jelentősen növeli a CPU használatát."
+            }
+        },
+        "status": {
+            "offline": "A rendszer offline",
+            "unavailable": "Rendszer nem elérhető"
+        },
+        "users": {
+            "cloudDelete": "Felhasználó eltávolítása",
+            "localDelete": "Felhasználó törlése"
+        },
+        "yourSystem": "Az Ön rendszere",
+        "loggers": {
+            "none": {
+                "text": "Semmi",
+                "help": "(naplózás letiltva)"
+            },
+            "error": {
+                "text": "Hiba",
+                "help": "(csak naplózási hibák)"
+            },
+            "warning": {
+                "text": "Figyelmeztetés",
+                "help": "(napló figyelmeztetések és hibák)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(napló figyelmeztetések, hibák és minden üzenet)"
+            },
+            "debug": {
+                "text": "Hibakeresés",
+                "help": "(naplózza az összes rendszerüzenetet és hibakeresési információt)"
+            },
+            "verbose": {
+                "text": "Részletes",
+                "help": "(naplózza az összes rendelkezésre álló információt)"
+            }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
+        }
+    },
+    "systemStatuses": {
+        "activated": "aktiválva",
+        "incompatible": "inkompatibilis",
+        "merging": "egyesülő",
+        "notActivated": "nincs aktiválva",
+        "offline": "offline",
+        "online": "online",
+        "unavailable": "nem elérhető"
+    },
+    "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
+        "system": {
+            "deleted": {
+                "success": "System {systemName} is successfully deleted from your account"
+            },
+            "disconnected": {
+                "success": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát"
+            },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
+            "merge": {
+                "failed": "A rendszeregyesítés sikertelen",
+                "success": "System merge completed"
+            },
+            "rename": {
+                "success": "Rendszer neve mentve"
+            }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
+    },
+    "license": {
+        "licenseTypeTitles": {
+            "Time": "Idő",
+            "Trial": "Próba",
+            "Professional": "Professzionális",
+            "Analog": "Analóg",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "Video fal",
+            "Analog Encoder": "Analóg enkóder",
+            "Starter": "Indító",
+            "IO Module": "I/O modul",
+            "Bridge": "Bridge",
+            "NVR": "NVR"
+        },
+        "info": {
+            "type": "Típus",
+            "channels": "Csatornák",
+            "server": "Szerver",
+            "hwid": "Hardver ID",
+            "status": "Állapot",
+            "expires": "Lejár",
+            "deactivations": "A deaktiválás maradt",
+            "online": "Online",
+            "error": "Hiba",
+            "expired": "Lejárt",
+            "ok": "OK",
+            "nvrError": "NVR Error",
+            "serverNotFound": "Server not found"
+        },
+        "messages": {
+            "required": "{number} more required",
+            "activated": "A licenckulcs aktiválva",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "trialActivated": "A próba licenc aktiválva. Ma kezdve akár 4 kamerát is felvehet 30 napig."
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "További helyi FS-típusok",
+        "autoDiscoveryResponseEnabled": "Automatikus felderítés válasza",
+        "crossdomainEnabled": "Domainek közötti",
+        "defaultExportVideoCodec": "Alapértelmezett exportáló videokodek",
+        "defaultVideoCodec": "Alapértelmezett video tömörítés",
+        "downloaderPeers": "Letöltő kapcsolatok",
+        "lastMergeMasterId": "Utolsó egyesített MasterID",
+        "lastMergeSlaveId": "Utolsó egyesített SlaveID",
+        "ldapSearchTimeoutS": "LDAP keresési időtúllépés (mp)",
+        "licenseServer": "Licenc szerver",
+        "lowQualityScreenVideoCodec": "Alacsony minőségű képernyő-videó kodek",
+        "maxP2pAllClientsSizeBytes": "Max. P2P összes ügyfél méretű byte-ja",
+        "maxRtpRetryCount": "Max. RTP újrapróbálkozási szám",
+        "metadataStorageChangePolicy": "Metaadat-tárolási változási politika",
+        "pushNotificationsLanguage": "Push értesítések nyelve",
+        "resourceFileUri": "Forrásfájl URL",
+        "sessionLimitMinutes": "Időszak korlát (perc)",
+        "specificFeatures": "Sajátos jellemzők",
+        "systemName": "Rendszer neve",
+        "webSocketEnabled": "Web socket",
+        "arecontRtspEnabled": "Arecont RTSP engedélyezve",
+        "auditTrailEnabled": "Audit napló engedélyezve",
+        "auditTrailPeriodDays": "Audit napló időszak nap",
+        "autoDiscoveryEnabled": "Automatikus eszközfelderítés engedélyezése",
+        "autoUpdateThumbnails": "A miniatűrök automatikus frissítése",
+        "backupNewCamerasByDefault": "Alapértelmezés szerint készítsen biztonsági másolatot az új kamerákról",
+        "backupQualities": "Biztonsági mentés minősége",
+        "cameraSettingsOptimization": "Eszköz beállításának optimalizálásának engedélyezése",
+        "clientStatisticsSettingsUrl": "Kliens statisztika relatív url",
+        "cloudAccountName": "Felhő-tulajdonos fiókja",
+        "cloudConnectRelayingEnabled": "Felhőkapcsolathoz irányítás engedélyezése",
+        "cloudConnectUdpHolePunchingEnabled": "Felhőkapcsolathoz UDP nyitás engedélyezése",
+        "cloudHost": "Felhő host",
+        "cloudSystemID": "Felhő rendszerazonosító",
+        "disabledVendors": "Tiltott beszállítók",
+        "ec2AliveUpdateIntervalSec": "A rendszer ellenőrzés frissítési intervalluma (másodperc)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Élő kapcsolat időtúllépése (másodperc)",
+        "ec2KeepAliveProbeCount": "A kapcsolat életben tartás problémák (másodperc)",
+        "emailFrom": "E-mail küldő",
+        "emailSignature": "E-mail aláírás",
+        "emailSupportEmail": "Ügyfélszolgálati e-mail",
+        "enableEdgeRecording": "Edge rögzítés engedélyezése",
+        "eventLogPeriodDays": "Eseménynapló időszak (nap)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP kereső bázis",
+        "ldapSearchFilter": "LDAP kereső szűrő",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Helyirendszer ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Maximális különbség a szinkronizált és az internetes idő között (milisec)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Maximális különbség a szinkronizált és avhelyi idő között (milisec)",
+        "maxP2pQueueSizeBytes": "A P2P sor maximális mérete (byte)",
+        "maxRecordQueueSizeBytes": "Max. rekord sorméret (bájt)",
+        "maxRecordQueueSizeElements": "Max. rekord sorméret (elem)",
+        "maxRemoteArchiveSynchronizationThreads": "Rögzített videók távoli szinkronizálása max. szála",
+        "maxRtspConnectDurationSeconds": "Maximum Rtsp kapcsolat időtartama másodpercben",
+        "maxSceneItems": "Max. elemszám (0 alapértelmezett)",
+        "proxyConnectTimeoutSec": "Proxy kapcsolat időtúllépés (másodperc)",
+        "rtpTimeoutMs": "RTP időtúllépés (millisec)",
+        "sequentialFlirOnvifSearcherEnabled": "Használjon szekvenciális Flir Onvif keresőt",
+        "serverDiscoveryPingTimeoutSec": "A szerver felderítés időtúllépése",
+        "smtpConnectionType": "SMTP kapcsolat típusa",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP egyszerű",
+        "smtpTimeout": "SMTP időtúllépés",
+        "smtpUser": "SMTP felhasználó",
+        "statisticsAllowed": "Névtelen használati statisztikák és hibajelentések küldése",
+        "statisticsReportLastNumber": "Statisztikai jelentés - utolsó szám",
+        "statisticsReportLastTime": "Statisztikai jelentés - utolsó alkalommal",
+        "statisticsReportLastVersion": "Statisztikai jelentés - utolsó verzió",
+        "statisticsReportServerApi": "Statisztikai szerver api",
+        "statisticsReportTimeCycle": "Statisztikai jelentés intervallum",
+        "statisticsReportUpdateDelay": "Statisztikai jelentés - frissítéskésleltetés",
+        "synchronizeTimeWithInternet": "Időt szinkronizálása az internettel",
+        "SystemName": "Rendszer neve",
+        "takeCameraOwnershipWithoutLock": "Kamera tulajdonjogok átvétele lezárás nélkül",
+        "timeSynchronizationEnabled": "Időszinkronizálás engedélyezve",
+        "primaryTimeServer": "Elsődleges időszinkronizáló szerver",
+        "osTimeChangeCheckPeriodMs": "OS időváltozási ellenőrzési időszak",
+        "syncTimeExchangePeriod": "A hálózati kérések szinkronizálási időszaka",
+        "syncTimeEpsilon": "Epsilon szinkronizálása. Az új érték nem kerül alkalmazásra, ha a delta idő kevesebb, mint epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max hordozható kamera archív szinkronszálak",
+        "updateNotificationsEnabled": "Frissítések értesítései engedélyezve",
+        "upnpPortMappingEnabled": "Az UPNP port hozzárendelés engedélyezve",
+        "useTextEmailFormat": "Egyszerű szöveges e-mailek küldése",
+        "useWindowsEmailLineFeed": "Használja a Windows feed-et e-mailben",
+        "trafficEncryptionForced": "Kényszerített forgalom titkosítás",
+        "videoTrafficEncryptionForced": "Kényszerített videó forgalom titkosítás",
+        "updateStatus": "Állapotfrissítés",
+        "watermarkSettings": "Vízjel beállítások",
+        "maxWebMTranscoders": "A WEBM kapcsolatok maximális száma a szerveren. A Chrome egyszerre 2 kapcsolatot nyit meg, majd bezárja az elsőt. Tehát javasoljuk, hogy ezen a paraméternél állítson be >= 2 értéket.",
+        "maxEventLogRecords": "Az adatbázisban tárolható maximális eseménynapló-nyilvántartások. A nem törölt rekordok valódi mennyisége akár 20% -kal is magasabb lehet, mint a megadott érték.",
+        "forceLiveCacheForPrimaryStream": "Az elsődleges stream képkockáinak gyorsítótárazása. Értékek: \"igen\" - mindig engedélyezve (sok RAM-ot használhat), \"nem\" - mindig letiltva, kivéve, ha a lejátszás megköveteli (pl. HLS), \"auto\" - hasonlóan a \"nem\" -hez, de bekapcsolva, amikor javítja a felhasználói élmény (pl. amikor egy Analytics plugin működik a kamerán)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Letiltva"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
+    }
 }

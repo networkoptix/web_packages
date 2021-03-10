@@ -1,0 +1,29 @@
+*** Settings ***
+Resource    ../smoke_check_resource.robot
+Suite Setup      Customizations Suite Setup
+Suite Teardown   Close Browser
+
+*** Keywords ***
+Customizations Suite Setup
+    Open browser and go to URL    ${ENV}    False    False
+    ${customizations}=   Get Customizations    ${cloud auth}
+    Set Suite Variable    ${customizations}
+
+*** Test Cases ***
+Check Customizations
+    ${open portal failed}=   Create List
+    ${log in failed}=   Create List
+    FOR    ${host}    IN    @{customizations}
+        Go To    https://${host}
+        ${status}=   Run Keyword and return status    Wait until elements are visible
+        ...    //div[@class="mainContainer"]
+        ...    //a[@role="button" and contains(@href, "register")]
+        ...    //span[contains(@class, "login")]/..
+        Run Keyword Unless   ${status}    Append To List    ${open portal failed}    ${host}
+
+        ${status}=   Run Keyword and return status    CloudPortalAPI.Log In     https://${host}    ${email customizations}    ${password}
+        Run Keyword Unless   ${status}    Append To List    ${log in failed}    ${host}
+
+    END
+    Run Keyword If    ${log in failed}    Fail    Fail to log in: ${log in failed}
+    Run Keyword If    ${open portal failed}    Fail    Fail to open portal: ${open portal failed}

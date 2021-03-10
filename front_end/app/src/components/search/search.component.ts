@@ -1,20 +1,29 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, OnDestroy
-}                                                  from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { ActivatedRoute, Router }         from '@angular/router';
-import { Location }                       from '@angular/common';
-import { Subject }                        from 'rxjs/Subject';
-import { isArray }                        from 'rxjs/internal-compatibility';
-import { NxConfigService }                from '../../services/nx-config';
-import { NxUriService }                   from '../../services/uri.service';
-import { NxLanguageProviderService }      from '../../services/nx-language-provider';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { NxScrollMechanicsService }       from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
-import { debounceTime }                   from 'rxjs/operators';
-import { NxUtilsService }                 from '../../services/utils.service';
+    forwardRef, ViewEncapsulation,
+    OnDestroy, EventEmitter, Output
+}                                           from '@angular/core';
+import {
+    NG_VALUE_ACCESSOR,
+    ControlValueAccessor
+}                                           from '@angular/forms';
+import { ActivatedRoute }                   from '@angular/router';
+import { Location }                         from '@angular/common';
+import { UntilDestroy }                     from '@ngneat/until-destroy';
+import {
+    Subscription, SubscriptionLike, Subject
+}                                           from 'rxjs';
+import { debounceTime }                     from 'rxjs/operators';
+import { isArray }                          from 'rxjs/internal-compatibility';
+
+import { NxLanguageProviderService }        from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }         from '../../services/nx-config';
+import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
+import { NxUriService }                     from '../../services/uri.service';
+import { NxUtilsService }                   from '../../services/utils.service';
+import { ButtonArrowType, NxSearchService } from '../../services/search.service';
+import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
+
 /* Usage
  <nx-search
      name="NAME"
@@ -22,6 +31,7 @@ import { NxUtilsService }                 from '../../services/utils.service';
      (ngModelChange)="modelChanged($event)"
      layout?="[compact | full]"     <- DEFAULT to "full"
      [placeholder]?="placeholder"   <- DEFAULT to "Search"
+     instant?                       <- no debounce for search criteria DEFAULT to CONFIG.search.debounceTime
      ngDefaultControl?>
  </nx-search>
 
@@ -30,69 +40,91 @@ import { NxUtilsService }                 from '../../services/utils.service';
  - will show advanced search and selected filters buttons (tags)
 
  * "Compact" layout (used in Integration page)
-    - will hide labels and adjust spacing
-    - will not show advanced search and filters selected buttons
+ - will hide labels and adjust spacing
+ - will not show advanced search and filters selected buttons
 
  * "Full" layout (used in IPVD page)
-    - will show labels and adjust spacing
-    - will show advanced search and selected filters buttons (tags)
+ - will show labels and adjust spacing
+ - will show advanced search and selected filters buttons (tags)
 
  */
 
-interface Params {
-    [key: string]: any;
+interface IParams<Value = any> {
+    [key: string]: Value;
 }
 
-@AutoUnsubscribe()
+export interface SearchTag {
+    id: string,
+    label: string,
+    value: boolean,
+}
+
+export interface SearchFilter {
+    query?: string,
+    tags?: SearchTag[],
+    selects?: any,
+    multiselects?: any,
+    search?: any
+}
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector     : 'nx-search',
-    templateUrl  : './search.component.html',
-    encapsulation: ViewEncapsulation.None,
-    providers    : [{
-        provide    : NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NxSearchComponent),
-        multi      : true
+    selector      : 'nx-search',
+    templateUrl   : './search.component.html',
+    encapsulation : ViewEncapsulation.None,
+    providers     : [{
+        provide     : NG_VALUE_ACCESSOR,
+        useExisting : forwardRef(() => NxSearchComponent),
+        multi       : true
     }],
-    styleUrls    : ['./search.component.scss']
+    styleUrls: ['./search.component.scss']
 })
 
 export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
-    @Input() layout: any;
-    @Input() layoutMod: any;    // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
-    @Input() placeholder: any;
+    @Input() layout;
+    @Input() layoutMod; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
+    @Input() placeholder;
+    @Input() instant;
     @Input() dataLoaded: boolean;
 
+    @Output() onFocus: EventEmitter<any> = new EventEmitter();
+    @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
+
+    public placeholderText: string;
     public numberFilters = 0;
-    public filterSelected: any;
-    public localFilter: any = {};
+    public filterSelected;
+    public localFilter: SearchFilter = {};
 
-    CONFIG: any;
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
+    private debounceTime: number;
     private searchSubscription: Subscription;
     private locationSubscription: SubscriptionLike;
     private modelSubscription: SubscriptionLike;
-
     private params: any = {};
-    private showAdvancedOptions: boolean;
-
-    public advSearch = false;
-
     private searchUpdated: any = Subject;
     private modelUpdated: any = Subject;
 
-    constructor(
-            private _router: Router,
-            private _route: ActivatedRoute,
-            private location: Location,
-            private uri: NxUriService,
-            private configService: NxConfigService,
-            private language: NxLanguageProviderService,
-            private scrollMechanicsService: NxScrollMechanicsService,
-    ) {
+    showAdvancedOptions: boolean;
+    buttonArrowTypeUp: ButtonArrowType;
+    buttonArrowTypeDown: ButtonArrowType;
+    advSearch = false;
 
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private _route: ActivatedRoute,
+        private location: Location,
+        private uri: NxUriService,
+        private searchService: NxSearchService,
+        private scrollMechanicsService: NxScrollMechanicsService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+
+        this.buttonArrowTypeUp = ButtonArrowType.up;
+        this.buttonArrowTypeDown = ButtonArrowType.down;
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update
@@ -107,8 +139,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
+
         this.dataLoaded = this.dataLoaded === undefined ? true : this.dataLoaded;
-        this.placeholder = this.placeholder || '';  // optional param
+        this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
+        this.debounceTime = (this.instant !== undefined) ? 0 : this.CONFIG.search.debounceTime; // optional param
         this.layout = (this.layout !== undefined) ? this.layout : 'full';
         this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout
         this.filterSelected = '';
@@ -121,25 +155,27 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         });
 
         this.searchSubscription = this.searchUpdated
-            .pipe(debounceTime(this.CONFIG.search.debounceTime))
-            .subscribe(data => {
+            .pipe(debounceTime(this.debounceTime))
+            .subscribe((data: string) => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
 
         this.modelSubscription = this.modelUpdated
-            .pipe(debounceTime(this.CONFIG.search.debounceTime))
+            .pipe(debounceTime(this.debounceTime))
             .subscribe(data => {
                 this.modelChanged();
             });
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
     private onTouchedCallback = () => {
     };
+
     private onChangeCallback = (_: any) => {
     };
 
@@ -157,18 +193,22 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     updateFilter(params?, resetUri?) {
-        if (params && params.value) {
+        if (params?.value) {
             this.params = params.value;
         }
 
-        this.localFilter.query = '';
+        this.localFilter.query = this.localFilter.search || '';
 
         if (this.params.search && this.params.search.length > 0) {
             this.localFilter.query = this.params.search;
+
+            this.searchService.getMatchPatterns(this.localFilter);
         }
 
         if (this.localFilter.tags && this.localFilter.tags.length) {
-            this.localFilter.tags.forEach(tag => tag.value = false);
+            this.localFilter.tags.forEach(tag => {
+                tag.value = false;
+            });
             if (this.params.tags) {
                 this.params.tags
                     .split(',')
@@ -216,17 +256,18 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     writeValue(value: any): void {
         // Avoid localFilter update if filter in not initialized (page refresh)
         if (value &&
-            ((value.tags && value.tags.length) ||
-             (value.selects && value.selects.length) ||
-             (value.multiselects && value.multiselects.length))) {
-
-            if (JSON.stringify(this.localFilter) === JSON.stringify(value)) {
+            ((value.tags?.length) ||
+                (value.selects?.length) ||
+                    (value.multiselects?.length) ||
+                    (value.tags?.length !== this.localFilter.tags?.length))
+        ) {
+            if (NxUtilsService.isEqual(this.localFilter, value)) {
                 return;
             }
             this.localFilter = NxUtilsService.deepCopy(value);
             this.advSearch = (this.localFilter.selects && this.localFilter.selects.length) ||
-                    (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
-                    (this.localFilter.tags && this.localFilter.tags.length);
+                (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
+                (this.localFilter.tags && this.localFilter.tags.length);
 
             // Update model with query params
             this.params = this._route.snapshot.queryParams;
@@ -256,13 +297,13 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
 
-        this.placeholder = this.placeholder || this.LANG.search.Search;  // optional param
+        this.placeholder = this.placeholder || this.LANG.search.Search(); // optional param
         this.numberFilters = 0;
         this.filterSelected = '';
 
-        let flag = 0;
-        let tagsSelected = '';
-        let selectsSelected = '';
+        let flag                 = 0;
+        let tagsSelected         = '';
+        let selectsSelected      = '';
         let multiSelectsSelected = '';
 
         if (this.localFilter.tags) {
@@ -270,7 +311,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 if (filter.value) {
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied'];
+                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied']?.();
                     } else {
                         tagsSelected = filter.label;
                     }
@@ -284,7 +325,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 if (select.selected && select.selected.value !== '0') { // not default value
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied'];
+                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied']?.();
                     } else {
                         selectsSelected = select.label + '&nbsp;&ndash;&nbsp;' + select.selected.name;
                     }
@@ -295,7 +336,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
             this.localFilter.multiselects.forEach((select) => {
-
                 this.numberFilters += select.selected.length;
 
                 if (select.selected.length > 0) {
@@ -318,7 +358,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                         multiSelectsSelected = label + select.items.find(item => {
                             return (item.label.name || item.id) === select.selected[0];
                         }).label;
-
                     } else {
                         if (select.searchLabel || select.searchLabel === '') {
                             label = select.searchLabel;
@@ -334,10 +373,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (flag === 1) {
             this.filterSelected = tagsSelected || selectsSelected || multiSelectsSelected;
         } else {
-            const str = (this.numberFilters === 1) ?
-                    ' ' + this.LANG.search['filter applied'] :
-                    ' ' + this.LANG.search['filters applied'];
-            this.filterSelected = this.numberFilters + str;
+            this.filterSelected = this.LANG.search.appliedFilters({ count: this.numberFilters });
         }
     }
 
@@ -374,8 +410,16 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.modelChanged(true);
     }
 
+    setOnFocus() {
+        this.onFocus.emit();
+    }
+
+    setOnFocusOut() {
+        this.onFocusOut.emit();
+    }
+
     setRouteParams(resetUri?): Promise<any> {
-        const queryParams: Params = {};
+        const queryParams: IParams = {};
 
         let selectedTags;
         queryParams.tags = undefined;
@@ -403,13 +447,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
             this.localFilter.multiselects.forEach((select) => {
                 queryParams[select.id] = undefined;
-                if (select.selected && select.selected.length) {
+                if (select.selected?.length) {
                     queryParams[select.id] = select.selected.join(',');
                 }
             });
         }
-
         this.uri.pageOffset = window.pageYOffset;
+        // make sure we reset page on new model
+        queryParams.page = undefined;
 
         return this.uri.updateURI(this.uri.getURL(), queryParams);
     }
@@ -420,5 +465,24 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 this.numberOfOptionsSelected();
                 this.onChangeCallback(this.localFilter);
             });
+    }
+
+    canShowSelectors() {
+        return this.localFilter.selects && this.localFilter.selects.length ||
+            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
+
+    canShowSelectorsAndTags() {
+        return this.localFilter.tags && this.localFilter.tags.length ||
+            this.localFilter.selects && this.localFilter.selects.length ||
+            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
+
+    navArrow(direction) {
+        this.searchService.navDirection = direction;
+    }
+
+    navSelect() {
+        this.searchService.navSelected();
     }
 }

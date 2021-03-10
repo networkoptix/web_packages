@@ -1,5 +1,6 @@
 <div class="ipvd" [ngClass]="{'extended': showAnalytics}">
-    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
+    <h1 class="screen-reader-only" translate>List of cameras by manufacturer and device type</h1>
+    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'" #searchContainer>
         <nx-search
                 name="filterModel"
                 [ngModel]="filterModel"
@@ -18,30 +19,30 @@
             Nothing Found
         </div>
 
-        <div class="order-1 order-md-0 m-0 p-0" #tableContainer
-             *ngIf="camerasTable.length"
-             [ngClass]="{'toggle': toggleCamview, 'pr-2' : toggleCamview, 'col-12': !toggleCamview, 'col-md-7 col-xl-9' : toggleCamview}"
-             [style.display]="mobileDetailMode ? 'none' : 'block'">
+        <ng-container *ngIf="camerasTable.length">
+            <div class="order-1 order-md-0 m-0 p-0" #tableContainer
+                [ngClass]="{'toggle': toggleCamview, 'pr-2' : toggleCamview, 'col-12': !toggleCamview, 'col-md-7 col-xl-9' : toggleCamview}"
+                [style.display]="mobileDetailMode ? 'none' : 'block'">
 
-            <nx-cam-table
-                    [elements]="camerasTable"
-                    [allowedParameters]="allowedParameters"
-                    [activeCamera]="activeCamera"
-                    [params]="params"
-                    (onFeedbackClick)="openFeedback($event)"
-                    (onRowClick)="activateCamera($event)">
-            </nx-cam-table>
-        </div>
+                <nx-cam-table
+                        [elements]="camerasTable"
+                        [allowedParameters]="allowedParameters"
+                        [activeCamera]="activeCamera"
+                        [params]="params"
+                        (onFeedbackClick)="openFeedback($event)"
+                        (onRowClick)="activateCamera($event)">
+                </nx-cam-table>
+            </div>
 
-        <div class="row m-0 pt-3 pb-3 pl-0"
-             *ngIf="camerasTable.length"
-             [style.display]="!mobileDetailMode ? 'none' : 'block'">
+            <div class="row m-0 pt-3 pb-3 pl-0"
+                [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
-            <button class="btn btn-default btn-back" (click)="resetActiveCamera()">
-                <span class="back-arrow"></span>
-                <span translate>All results</span>
-            </button>
-        </div>
+                <button class="btn btn-default btn-back" (click)="resetActiveCamera()">
+                    <span class="back-arrow"></span>
+                    <span translate>All results</span>
+                </button>
+            </div>
+        </ng-container>
 
         <div class="order-0 order-md-1 pb-3 pl-0 pl-md-2 pr-0 col-12 col-md-5 col-xl-3"
              *ngIf="activeCamera" #viewContainer>
@@ -59,9 +60,7 @@
         Nothing Found
     </div>
 
-    <div class="row px-3 m-0"
-         *ngIf="vendors && !camerasTable.length && !noResult && hasNoSearch">
-
+    <div class="row px-3 m-0" *ngIf="vendors && !camerasTable.length && !noResult && hasNoSearch">
         <nx-vendor-list
                 [vendors]="vendors"
                 [cameras]="cameras.length"
@@ -69,18 +68,14 @@
                 (ngModelChange)="modelChanged($event)">
         </nx-vendor-list>
         <div>
-            <p class="m-0" *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                <span [translate]="'ipvd.disclaimer'"
-                      [translateParams]="{companyName: CONFIG.company, vmsName: CONFIG.vmsName}">
-                </span>
-                <span>
-                    {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')"
-                                                       >{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
-                </span>
+            <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
+                <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
+                <ng-container>
+                    {{LANG.ipvdFeedback.a_Please()}}&nbsp;
+                    <a href (click)="openFeedback('page')">{{LANG.ipvdFeedback.b_Link()}}</a>&nbsp;
+                    {{LANG.ipvdFeedback.c_Info()}}</ng-container>
             </p>
-            <button *ngIf="debug" >reset</button>
         </div>
-
         <div class="row p-0 m-0">
             <nx-footer></nx-footer>
         </div>

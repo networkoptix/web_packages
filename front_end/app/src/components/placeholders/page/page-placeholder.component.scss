@@ -1,9 +1,6 @@
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/buttons';
 
 $preloader_circle_color          : $light;
 $preloader_circle_size           : 16px;
@@ -72,12 +69,14 @@ $preloader_small_circle_distance : 8px;
     }
 }
 
-.section-placeholder {}
+.show-preloader {
+    height: 284px;
+}
 
 .page-placeholder {
-    width            : 100%;
-    height           : 100%;
-
+    margin           : 0 auto;
+    min-height       : 400px;
+    height           : calc(100% - 48px);
     z-index          : 1;
     /*This is used for the preloaders.
                      It should always be higher than the video,
@@ -91,63 +90,70 @@ $preloader_small_circle_distance : 8px;
         opacity          : 1;
     }
 
-    .placeholder-content {
-        text-align    : center;
+    &.with-footer {
+        height     : calc(100% - 100px);
+        min-height : 250px;
+    }
+}
 
-        position      : relative;
-        top           : 50%;
-        transform     : translateY(-65%);
-        -ms-transform : translateY(-65%);
+.placeholder-content {
+    display         : flex;
+    flex-direction  : column;
+    justify-content : space-around;
+    align-items     : center;
+    text-align      : center;
+    position        : relative;
+    margin          : 0 auto;
+    width           : 100%;
+    height          : 100%;
+    font-size       : 130%;
+    font-weight     : 300;
+    line-height     : 30px;
+    color           : $light;
 
-        font-size     : 130%;
-        font-weight   : 300;
-        line-height   : 30px;
-        color         : $light;
+    a {
+        color           : $light12;
+        text-decoration : underline;
 
-        @include media-breakpoint-down(sm) {
-            top : 50%;
-        }
-
-        & > * {
-            text-align : center;
-            margin     : auto;
-        }
-
-        .placeholder-icon {
-            margin-bottom : 24px;
-
-            svg{
-                .brand_element {
-                    fill : $brand_core;
-                }
-            }
-        }
-
-        .placeholder-title {
-            @extend #medium24;
-            line-height    : rem(40px);
-            text-align     : center;
-            margin-bottom  : 1rem;
-            justify-content: center;
-        }
-
-        .placeholder-message {
-            @extend #regular15;
-            line-height   : 24px;
-            margin-bottom : rem(40px);
-        }
-
-        a {
-            color           : $light12;
-            text-decoration : underline;
-
-            &:hover, &:active {
-                color : $light1;
-            }
-        }
-
-        .placeholder-preloader {
-            @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+        &:hover, &:active {
+            color : $light1;
         }
     }
 }
+
+
+.placeholder-icon {
+    margin-bottom : 24px;
+
+    svg {
+        .brand_element {
+            fill : $brand_core;
+        }
+    }
+}
+
+.placeholder-title {
+    @include typography.medium24dark9;
+    text-align      : center;
+    margin-bottom   : 1rem;
+    justify-content : center;
+    max-width       : 560px;
+}
+
+.placeholder-message {
+    @include typography.regular15dark9;
+    line-height : 24px;
+    max-width   : 560px;
+}
+
+.placeholder-preloader {
+    @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+}
+
+.main-button {
+    margin-top: 40px !important;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+  }

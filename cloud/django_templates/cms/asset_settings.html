@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock %}
 
@@ -16,10 +16,15 @@
 {% block content%}
 <div>
     <h3>Download package for asset</h3>
-    <p><a href="{% url 'download_package' asset.id %}" download>Download package (zip)</a></p>
-    <p><a href="{% url 'download_package' asset.id %}?draft" download>Download package draft (zip)</a></p>
+    <p><a href="{% url 'download_package' asset.id %}"
+          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}
+    >Download package (zip)</a></p>
+    <p><a href="{% url 'download_package' asset.id %}?draft"
+          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}
+    >Download package draft (zip)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}" download>Download structure (json)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}?format=html" download>Download structure (html)</a></p>
+    <p><a href="{% url 'download_all_asset_structures' asset.asset_type.type %}" download>Download all {{ asset.asset_type }} assets (json)</a></p>
 </div>
 <h3>Update Asset</h3>
 <div>
@@ -58,11 +63,35 @@ Example for vms
             </div>
         </div>
     {% endfor %}
+    <div id="conflicts"></div>
 
     <div class="submit-row">
         <a href="{% url 'admin:pages' asset.id %}" class="btn btn-sm btn-default">Edit Content</a>
-        <button class="btn btn-sm btn-primary" type="submit" name="Upload" onclick="cookieInterval()">Upload</button>
+        <button class="btn btn-sm btn-primary" type="submit" name="Upload" id="upload" onclick="cookieInterval()">Upload</button>
     </div>
+    <div class="modal" id="preparing-package">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preparing Package</h5>
+            </div>
+            <div class="modal-body">
+                <div id="pending">
+                    <p id="context-status">Processing contexts...</p>
+                    <div class="progress progress-popup">
+                        <div class="progress-bar custom-download-transition"></div>
+                    </div>
+                    <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+                </div>
+                <div id="done">
+                    <p>The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.</p>
+                    <a class="btn btn-success" id="download-button" href="" download="">Download Package</a>
+                    <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+                </div>
+            </div>
+          </div>
+        </div>
+       </div>
     <script>
         /*
             The checkCookie function starts on a 100ms interval once the user uploads a file.
@@ -71,21 +100,106 @@ Example for vms
             The check cookie function keeps checking the cookies until it a changed.
             Afterwards it reloads the page so that the user can see any error messages with the file upload
          */
+        const pollingInterval = 1000
+        const modal = document.getElementById('preparing-package')
+        const progressBar = modal.getElementsByClassName('progress-bar')[0]
+        const contextStatus = document.getElementById('context-status')
         var cookieCheckInterval = undefined;
         var checkCookie = function () {
             var lastCookie = document.cookie;
             return function () {
                 var currentCookie = document.cookie;
-                if (currentCookie != lastCookie) {
+                if (currentCookie !== lastCookie) {
                     clearInterval(cookieCheckInterval);
                     window.location.reload();
                 }
             };
         }();
+
         function cookieInterval() {
+            const messageList = document.getElementsByClassName('messagelist')[0]
+            const infoMessages = [...messageList.getElementsByClassName('info')]
+            infoMessages.forEach(message => {
+                if (message.classList.contains('hide')) {
+                    message.classList.remove('hide')
+                }
+            }) 
             cookieCheckInterval = setInterval(checkCookie, 100);
         }
-    </script>
 
+        function togglePending (showPending) {
+            const pending = document.getElementById('pending')
+            const done = document.getElementById('done')
+            console.log({pending, done})
+            if (showPending) {
+                pending.style = "display:block;"
+                done.style = "display:none;"
+            } else {
+                pending.style = "display:none;"
+                done.style = "display:block;"
+            }
+        }
+
+        togglePending(true)
+
+        function pollPackage (isDraft, taskId = null) {
+            const packageUrl = "{% url 'download_package' asset.id %}" + (isDraft ? '?draft=True' : '');
+            const downloadUrl = "{% url 'download_package_async' asset.id %}" + (isDraft ? '?draft=True' : '')
+            const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
+            if(taskId) {
+                return fetch(generateStatusUrl(taskId)).then(
+                    res => res.json()
+                ).then(status => {
+                    if(status.current && status.current < status.total) {
+                        contextStatus.innerText = `Processing context ${status.current} out of ${status.total}`
+                        progressBar.style = `width: ${Math.round(status.current / status.total * 100)}%;`
+                        setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
+                    } else if(status === 'SUCCESS'){
+                        togglePending(false)
+                        document.getElementById('download-button').href = downloadUrl
+                        window.open(downloadUrl)
+                    } else {
+                        alert('Some unknown error occurred')
+                    }
+                })
+            }
+            fetch(packageUrl).then(
+                res => res.json()
+            ).then(({is_ready: isReady, task_id: taskId}) => {
+                if (isReady) {
+                    window.open(downloadUrl)
+                } else {
+                    if(!modal.classList.contains('show')) {
+                        modal.classList.add('show')
+                        togglePending(true)
+                    }
+                    setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
+                }
+            })
+        }
+
+        function closeModal() {
+            modal.classList.remove('show')
+        }
+
+        const fileName = '{{file}}'
+        if (fileName) {
+            const fileInput = document.getElementById('id_file')
+            const uploadButton = document.getElementById('upload')
+            const forceInput = document.getElementById('id_force')
+            fileInput.required = false
+            uploadButton.disabled = true
+            forceInput.addEventListener('input', event => {
+                uploadButton.disabled = !event.target.checked && !fileInput.value
+            })
+            fileInput.addEventListener('input', event => {
+                uploadButton.disabled = !event.target.value && !forceInput.checked
+            })
+        }
+        window.conflicts = {{conflicts|safe}}
+        window.menuName = ''
+        window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
+    </script>
+    <script src="{% static 'js/assetImportConflicts.js' %}"></script>
 </form>
 {% endblock%}

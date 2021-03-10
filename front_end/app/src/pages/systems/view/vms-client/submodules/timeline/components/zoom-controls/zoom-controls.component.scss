@@ -1,0 +1,58 @@
+@import 'styles/_theme_palette';
+
+
+:host {
+  display: inline-block;
+  box-sizing: border-box;
+  background-color: $additional_light2;
+  width: 40px;
+  overflow: hidden;
+  padding: 6px 1px;
+  border-left: 1px solid $light4;
+  border-top: 1px solid $light4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  &.enabled {
+    box-shadow: 2px 0 0 0 #0003;
+    z-index: 5;
+  }
+
+  > .button {
+    display: block;
+    flex-grow: 1;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    font-size: 25px;
+
+    color: $light4;
+
+    user-select: none;
+
+    // transition: all .2s ease-in-out;
+
+    &.enabled {
+      cursor: pointer;
+      color: $light16;
+
+      &:hover {
+        background-color: $light4;
+      }
+
+      &:hover {
+        background-color: $additional_light3;
+      }
+      &:active {
+        background-color: $light5 !important;
+      }
+    }
+  }
+}

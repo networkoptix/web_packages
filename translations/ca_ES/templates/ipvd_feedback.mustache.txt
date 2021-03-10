@@ -1,0 +1,3 @@
+Hola, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) va enviar els suggeriments següents{{#message.asset}} per a {{ message.asset }}{{/message.asset}}:
+<pre>{{ message.message }}</pre>

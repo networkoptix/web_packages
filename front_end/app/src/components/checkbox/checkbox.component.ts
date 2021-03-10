@@ -1,66 +1,71 @@
 import {
     Component, Input, Output,
     EventEmitter, forwardRef,
-    OnInit, ViewEncapsulation
+    OnInit, ViewEncapsulation, SimpleChanges, OnChanges
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR, ControlValueAccessor,
-    NG_VALIDATORS, NG_ASYNC_VALIDATORS,
-    FormControl, Validator, Validators
+    NG_VALIDATORS,
+    FormControl, Validator
 } from '@angular/forms';
 
 /* Usage
-<nx-checkbox
-      name="remember" id="remember"
-      [(ngModel)]="user.remember_me"
-      (click)?="onClick($event)"
-      checked?
-      disabled? | [disabled]='isDisabled'?
-      required?>
-</nx-checkbox>
-*/
+ <nx-checkbox
+     name="remember" componentId="remember"
+     [(ngModel)]="user.remember_me"
+     (click)?="onClick($event)"
+     checked?
+     disabled? | [disabled]='isDisabled'?
+     required?>
+ </nx-checkbox>
+ */
 
 @Component({
-    selector: 'nx-checkbox',
-    templateUrl: 'checkbox.component.html',
-    styleUrls: ['checkbox.component.scss'],
-    providers: [
+    selector    : 'nx-checkbox',
+    templateUrl : 'checkbox.component.html',
+    styleUrls   : ['checkbox.component.scss'],
+    providers   : [
         {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxCheckboxComponent),
-            multi: true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxCheckboxComponent),
+            multi       : true
         },
         {
-            provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => NxCheckboxComponent),
-            multi: true,
-        },
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxCheckboxComponent),
+            multi       : true
+        }
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Validator {
+export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @Input() required: any;
-    @Input() checked: any;
-    @Input() disabled: any;
+    @Input() required;
+    @Input() checked;
+    @Input() disabled;
     @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
+    public value: any;
+    public state: string;
+
     private touched: boolean;
     private invalid: boolean;
-    private state: string;
-    private value: any;
+
     private cbxStates = {
-        false: 'unchecked',
-        true: 'checked',
-        disabled: 'disabled',
-        undefined: 'tristate'
+        false     : 'unchecked',
+        true      : 'checked',
+        disabled  : 'disabled',
+        undefined : 'tristate'
     };
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: any) => {};
+    private onTouchedCallback = () => {
+    };
+
+    private onChangeCallback = (_: any) => {
+    };
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
@@ -82,7 +87,7 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     ngOnInit() {
-        this.required = (this.required !== undefined);  // optional param
+        this.required = (this.required !== undefined);// optional param
         this.description = this.description || undefined;
 
         setTimeout(() => {
@@ -94,12 +99,19 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
         });
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.checked) {
+            this.value = changes.checked.currentValue;
+            this.state = this.cbxStates[this.value];
+        }
+    }
+
     /**
      * Write a new (model) value to the element.
      */
     writeValue(value: any) {
-        if (value !== null && !this.disabled
-            || this.disabled && value === false) {
+        if (value !== null && !this.disabled ||
+            this.disabled && !value) {
             this.value = value;
             this.state = this.cbxStates[this.value];
         }

@@ -6,30 +6,30 @@
     "emailSubject": "Sei stato invitato a %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Richiesta commerciale per {{message.asset}}"
+    "emailSubject": "Richiesta commerciale per {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Richiesta tecnica per {{message.asset}}"
+    "emailSubject": "Richiesta tecnica per {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback per {{message.asset}}"
+    "emailSubject": "Feedback per {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Pagina feedback telecamera{{#message.asset}} per {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Feedback pagina telecamera{{#message.asset}} per {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} ha una nuova versione da revisionare"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} ha una nuova versione da revisionare"
   },
   "restore_password": {
     "emailSubject": "Reimpostare la password"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} ti invita a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Il sistema video {{message.system_name}} è stato condiviso con te{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} ti invita a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Il sistema video {{{message.system_name}}} è stato condiviso con te{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Il sistema video {{message.system_name}} stato condiviso con te"
+    "emailSubject": "Il sistema video {{{message.system_name}}} è stato condiviso con te"
   }
 }

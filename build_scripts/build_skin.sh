@@ -27,12 +27,14 @@ dir=../skins/$SKIN
         npm run setSkin $SKIN
         npm run build
         rm -rf dist/src
+        rm -rf dist/customization
         # Save the repository info.
         echo "Create version.txt"
         if [ -d "$2/.hg" ]; then
             hg log -r . --repository "$2" | head -n 7 > dist/version.txt
         elif [ -d "$2/.git" ]; then
             git -C "$2" log -n 1 > dist/version.txt
+            git -C "$2" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
         else
             echo "Neither git nor hg has been detected in $2" && exit 1
         fi
@@ -52,6 +54,7 @@ dir=../skins/$SKIN
 
     echo "Move front_end to destination"
     mv ../front_end/dist $TARGET_DIR/$SKIN/static
+    cp -R $TARGET_DIR/$SKIN/static/scripts/. $TARGET_DIR/$SKIN/static/
 
     echo "Building front_end finished"
 
@@ -68,6 +71,10 @@ dir=../skins/$SKIN
     do
         lang_dir=${lang_dir%*/}
         LANG=${lang_dir/..\/translations\//}
+
+        if [ -n "$LOCAL_ENV_ENG_ONLY" ] && [ "$LANG" != "en_US" ]; then
+          continue
+        fi
 
         echo "$TARGET_DIR/$SKIN/templates/lang_$LANG"
 
@@ -101,6 +108,10 @@ dir=../skins/$SKIN
         lang_dir=${lang_dir%*/}
         LANG=${lang_dir/..\/translations\//}
 
+        if [ -n "$LOCAL_ENV_ENG_ONLY" ] && [ "$LANG" != "en_US" ]; then
+          continue
+        fi
+
         echo "$TARGET_DIR/$SKIN/static/lang_$LANG/views/"
 
         mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/views
@@ -112,24 +123,30 @@ dir=../skins/$SKIN
         cp -rf $lang_dir/views $TARGET_DIR/$SKIN/static/lang_$LANG || true
 
 
-        mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
+#        mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
-        echo "Copy web_common default views - untranslatable"
-        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
+#        echo "Copy web_common default views - untranslatable"
+#        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
-        echo "Generate language.json"
-        pushd $TARGET_DIR/$SKIN
-        python ../../../../build_scripts/generate_language_json.py $LANG
-        popd
+        if [ "$SKIN" = "blue" ] ; then
+            echo "Generate language.json"
+            pushd $TARGET_DIR/$SKIN
+            python ../../../../build_scripts/generate_language_compiled_json.py $LANG
+            popd
+        else
+            echo "Copy language.json from blue skin"
+            cp $TARGET_DIR/blue/static/lang_$LANG/language_compiled.json $TARGET_DIR/$SKIN/static/lang_$LANG/language_compiled.json
+        fi
+
         echo
 
     done
 
     pushd $TARGET_DIR/$SKIN
-    python ../../../../build_scripts/generate_all_languages_json.py
+    python ../../../../build_scripts/generate_languages_json.py
     popd
 
-    rm -rf $TARGET_DIR/$SKIN/static/{views,web_common/views}
+    rm -rf $TARGET_DIR/$SKIN/static/views
     echo "Localization success"
 
 echo "$SKIN Done"

@@ -1,15 +1,19 @@
-import json
+from json.decoder import JSONDecodeError
 from django import forms
+from django.db.models import Q
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.db.models import When, Case
 from django.template.loader import render_to_string
-from .models import *
-from api.models import Account
-from .controllers.modify_db import are_asset_datarecords_unique
-
+from django.urls import reverse
 from dal import autocomplete
+from urllib.parse import quote
 
-from cloud import settings
+from api.models import Account
+from cms.models import *
+from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
+from cms.controllers.special_structures import SpecialStructures
+from cms.widgets import BootstrapMultiSelect
 
 BYTES_TO_MEGABYTES = 1048576.0
 
@@ -45,26 +49,36 @@ def get_languages_list():
         is_default = ""
         if language[0] == default_language_code:
             is_default = " - default"
-        return language[0], "{} - {}{}".format(language[0], language[1], is_default)
+        return language[0], f"{language[0]} - {language[1]}{is_default}"
 
     customization = Customization.objects.get(name=settings.CUSTOMIZATION)
     default_language_code = customization.default_language.code
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
-def generate_branding_variables(datastructure):
+def get_branding_shortcuts():
     cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
-                                       asset_type=get_cloud_portal_asset().asset_type)
+                                     asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
-
+    brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
+    vals = DataStructure.find_actual_values(brand_structures, asset=cloud_portal)
     brands = [
-        (ds, ds.find_actual_value(asset=cloud_portal))
-        for ds in branding_context.datastructure_set.all()
-        if 'shortcut' in ds.meta_settings
+        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+        for ds in brand_structures
     ]
 
+    brands.append((
+        {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
+        SpecialStructures.calc_cloud_link(cloud_portal)
+    ))
+    return brands
+
+
+def generate_branding_variables(datastructure, branding_shortcuts=None):
+    if not branding_shortcuts:
+        branding_shortcuts = get_branding_shortcuts()
     return render_to_string(
-        'cms/widgets/branding_variables.html', context={'brands': brands, 'datastructure': datastructure}
+        'cms/widgets/branding_variables.html', context={'brands': branding_shortcuts, 'datastructure': datastructure}
     )
 
 
@@ -73,8 +87,11 @@ class CustomContextForm(forms.Form):
         widget=forms.Select, label="Language")
 
     def __init__(self, *args, **kwargs):
+        self.order = kwargs.pop('order', None)
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
+        self.fieldsets = {}
+        self.branding_shortcuts = get_branding_shortcuts()
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -82,6 +99,12 @@ class CustomContextForm(forms.Form):
 
     def add_fields(self, asset, context, language, user):
         data_structures = context.datastructure_set.all()
+        fieldsets = {None: []}
+        if self.order:
+            data_structures = data_structures.order_by(Case(
+                When(**{self.order: ''}, then='name'),
+                default=self.order
+            ))
 
         if len(data_structures) < 1:
             return
@@ -90,7 +113,7 @@ class CustomContextForm(forms.Form):
             self.remove_language()
 
         is_published = asset.version_id() > 0
-        can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
+        can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
 
         for data_structure in data_structures:
             ds_label = data_structure.label if data_structure.label else data_structure.name
@@ -100,7 +123,7 @@ class CustomContextForm(forms.Form):
             if data_structure.meta_settings:
                 ds_description += convert_meta_to_description(data_structure.meta_settings)
                 if 'brand_vars' in data_structure.meta_settings and data_structure.meta_settings['brand_vars']:
-                    ds_description += generate_branding_variables(data_structure)
+                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts)
 
             if data_structure.type == DataStructure.DATA_TYPES.guid:
                 ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
@@ -131,7 +154,7 @@ class CustomContextForm(forms.Form):
                 widget_type = forms.Textarea(
                     attrs={'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': data_structure.placeholder})
 
-            elif data_structure.type == DataStructure.DATA_TYPES.image:
+            elif data_structure.has_image_field:
                 if not record_value:
                     record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.ImageField(label=ds_label,
@@ -144,9 +167,7 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
-            elif data_structure.type in [DataStructure.DATA_TYPES.file,
-                                         DataStructure.DATA_TYPES.external_file,
-                                         DataStructure.DATA_TYPES.external_image]:
+            elif data_structure.has_file_field:
                 if not record_value:
                     record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.FileField(label=ds_label,
@@ -161,7 +182,7 @@ class CustomContextForm(forms.Form):
                 continue
 
             elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-                options = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
+                options = data_structure.meta_settings.get('options', [])
                 choices = []
                 for choice in options:
                     if type(choice) == dict:
@@ -204,26 +225,56 @@ class CustomContextForm(forms.Form):
                 widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
 
             validator = RegexValidator('')
-            if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
-                pattern = data_structure.meta_settings['regex']
-                if not pattern.endswith('$'):
-                    pattern = f'{pattern}$'
-                validator = RegexValidator(pattern)
+            pattern = None
+            char_limit = None
+            if data_structure.type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text]:
+                if 'regex' in data_structure.meta_settings:
+                    pattern = data_structure.meta_settings['regex']
+                    if not pattern.endswith('$'):
+                        pattern = f'{pattern}$'
+                    validator = RegexValidator(pattern)
+                if 'char_limit' in data_structure.meta_settings:
+                    char_limit = data_structure.meta_settings['char_limit']
+            elif data_structure.type == DataStructure.DATA_TYPES.guid:
+                pattern = GUID_REGEXP
 
-            self.fields[data_structure.name] = forms.CharField(required=False,
+            self.fields[data_structure.name] = forms.CharField(required=not data_structure.optional,
                                                                label=ds_label,
                                                                help_text=ds_description,
                                                                initial=record_value,
                                                                widget=widget_type,
                                                                disabled=disabled,
                                                                validators=[validator])
+            if pattern:
+                self.fields[data_structure.name].widget.attrs['pattern'] = pattern
+                pattern_description = f'Regex pattern: {pattern}'
+                self.fields[data_structure.name].widget.attrs['title'] = pattern_description
+                self.fields[data_structure.name].help_text += f'<br>{pattern_description}'
+            if char_limit:
+                self.fields[data_structure.name].widget.attrs['maxlength'] = char_limit
+
+        if self.fields.get('language', None):
+            fieldsets[None].append('language')
+
+        for data_structure in data_structures:
+            if data_structure.name in self.fields:
+                fieldset = data_structure.fieldset or None
+                if fieldset in fieldsets:
+                    fieldsets[fieldset].append(data_structure.name)
+                else:
+                    fieldsets[fieldset] = [data_structure.name]
+
+        if not fieldsets[None]:
+            del fieldsets[None]
+
+        self.fieldsets = fieldsets
 
 
 class AssetSettingsForm(forms.Form):
     file = forms.FileField(
         label="File",
         help_text="Archive with static files and images for content or structure.json file.",
-        required=True
+        required=False
     )
 
     action = forms.ChoiceField(
@@ -235,13 +286,28 @@ class AssetSettingsForm(forms.Form):
             ('update_structure',
              'Update CMS structure and default values based on archive with structure.json and asset_type template, '
              'or upload just the structure.json'),
-            ('update_content', 'Upload content files for asset')
+            ('update_asset_by_json', 'Update data records from a json file'),
+            ('update_content', 'Upload content files for asset'),
+            ('import_assets_from_json', 'Create and update all assets from json file'),
         )
     )
+
+    force = forms.BooleanField(
+        label="Force Update",
+        help_text="Updates existing records with values from JSON when conflicts exist.",
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user and user.is_superuser:
+            self.fields['action'].choices += ('import_assets_from_json_publish', 'Create and update all assets from json file and publish/accept reviews'),
 
 
 class AssetForm(forms.ModelForm):
     publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), label='Parent Menu', required=False)
 
     class Meta:
         model = Asset
@@ -333,4 +399,236 @@ class CustomizationForm(forms.ModelForm):
         if data and not Customization.objects.exclude(id__in=self.instance.get_children_ids(self.instance)). \
                 exclude(id=self.instance.id).filter(id=data.id).exists():
             raise ValueError('Invalid customization was selected')
+        return data
+
+
+class LanguageForm(forms.ModelForm):
+    customizations = forms.ModelMultipleChoiceField(
+        queryset=Customization.objects.all(),
+        widget=FilteredSelectMultiple('customizations', False)
+    )
+
+    class Meta:
+        model = Language
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['customizations'].initial = self.instance.customization_set.all()
+
+
+class ContributorAgreementForm(forms.ModelForm):
+    class Meta:
+        model = ContributorAgreement
+        exclude = []
+        widgets = {
+            'user': autocomplete.ModelSelect2(url='account-autocomplete',
+                                              attrs={
+                                                  # Set some placeholder
+                                                  'data-placeholder': 'Email ...',
+                                                  # Only trigger autocomplete after 2 characters have been typed
+                                                  'data-minimum-input-length': 2
+                                              })
+        }
+
+
+class MenuChangeForm(forms.ModelForm):
+    customization_view = forms.ChoiceField(required=False, help_text='Make sure to save any changes before changing the view')
+    admin_config = forms.CharField(widget=forms.Textarea,
+        help_text='Configures which fields to display on inline menu nodes. Should be a dict with properties, header, details, and advanced. Each contains an array of fields to show.')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            customization_choices = tuple((name, name) for name in self.user_customizations)
+            if len(self.user_customizations) > 1:
+                customization_choices = (('all', 'All'),) + customization_choices
+            self.fields['customization_view'].choices = customization_choices
+            self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
+    
+    def clean_admin_config(self):
+        config = self.cleaned_data['admin_config']
+        updated_config = {'header': [], 'details': [], 'advanced': []}
+        invalid_config = 'Invalid config structure:'
+        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'is_global']
+        validation_errors = []
+        try:
+            parsed_config = json.loads(config)
+            for key in dict.keys(updated_config):
+                field_value = parsed_config.get(key, [])
+                is_list = isinstance(field_value, list)
+                non_strings = list(filter(lambda val: not isinstance(val, str), field_value))
+                if is_list and not len(non_strings):
+                    invalid_values = list(filter(lambda field_name: field_name not in valid_fields, field_value))
+                    if len(invalid_values):
+                        for value in invalid_values:
+                            validation_errors += [f'Invalid values for property "{key}": {invalid_values}']
+
+                    updated_config[key] = field_value
+                else:
+                    if invalid_config not in validation_errors:
+                        validation_errors += [invalid_config]
+                    validation_errors += [f'Invalid value type on property "{key}": {field_value}']
+        except JSONDecodeError:
+            validation_errors += ['Invalid JSON format']
+
+        if validation_errors:
+            raise ValidationError(validation_errors)
+
+        return json.dumps(updated_config)
+
+
+class MenuNodeChangeForm(forms.ModelForm):
+
+    class Media:
+        js = ('js/menuNode.js',)
+
+    def clean_enabled(self):
+        enabled = self.cleaned_data['enabled']
+        available = self.cleaned_data['available']
+        is_global = self.cleaned_data['is_global']
+        available_ids = available.values_list('id', flat=True)
+        if not is_global:
+            if enabled.filter(~Q(id__in=available_ids)):
+                raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
+        return enabled
+
+
+class MenuNodeInlineForm(forms.ModelForm):
+    class Meta:
+        widgets = {
+            'enabled': BootstrapMultiSelect(field_name='enabled', options={
+                'includeSelectAllOption': True,
+                'maxHeight': 300,
+                'selectAllText': 'All',
+                'selectAllNumber': True,
+                'enableFiltering': True,
+                'nonSelectedText': 'Disabled',
+                'allSelectedText': 'All enabled',
+                'selectAllJustVisible': True,
+            }),
+            'permissions': autocomplete.ModelSelect2Multiple(
+                url='permission-autocomplete', attrs={
+                    'data-placeholder': 'None required',
+                    'data-minimum-input-length': 2
+                }
+            ),
+            'related_assets': autocomplete.ModelSelect2Multiple(
+                url='asset_autocomplete', attrs={
+                    'data-placeholder': 'Select related articles',
+                    'data-minimum-input-length': 2
+                }
+            ),
+            'asset': autocomplete.ModelSelect2(
+                url='asset_autocomplete', attrs={
+                    'data-placeholder': 'Select article',
+                    'data-minimum-input-length': 2
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        parent_menu = self.instance.get_parent()
+        custom_preview_url = parent_menu and quote(parent_menu.node_preview_url)
+        self.fields['asset'].widget.can_add_related = True
+        self.fields['asset'].widget.get_related_url = lambda *_: (
+            reverse('admin:pages_custom_preview', kwargs={'asset_id': '__fk__', 'custom_preview': custom_preview_url}) if custom_preview_url
+            else reverse('admin:pages', kwargs={'asset_id': '__fk__'}))
+        if self.current_customization == 'all':
+            self.fields['enabled'].queryset = Customization.objects.filter(name__in=self.user_customizations).order_by('name')
+            self.fields['enabled'].widget.can_add_related = False
+            self.fields['enabled'].help_text = 'Choose which customizations this menu item should be enabled in'
+            if self.instance.asset:
+                self.initial['enabled'] = self.instance.asset.customizations.all() & self.fields['enabled'].queryset
+        else:
+            enabled = False
+            if self.instance.asset:
+                enabled = self.instance.asset.customizations.filter(
+                    id=self.current_customization.id
+                ).exists()
+            elif self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
+                enabled = True
+
+            self.fields['enabled'] = forms.BooleanField(required=False)
+            self.initial['enabled'] = enabled
+        if 'permissions' in self.fields:
+            self.fields['permissions'].label_from_instance = lambda obj: obj.name
+            self.fields['permissions'].help_text = 'Choose which permissions are required to see this menu item'
+        if 'related_assets' in self.fields:
+            self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
+
+    def clean_enabled(self):
+        if self.cleaned_data.get('asset', None):
+            old_enabled = set(self.cleaned_data['asset'].customizations.all().values_list('name', flat=True))
+        elif self.instance.pk:
+            old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))
+        else:
+            old_enabled = set()
+
+        if self.current_customization == 'all':
+            val = set(self.cleaned_data['enabled'].values_list('name', flat=True))
+            possible_customizations = set(self.user_customizations)
+        else:
+            val = {self.current_customization.name} if self.cleaned_data['enabled'] else set()
+            possible_customizations = {self.current_customization.name}
+
+        new_enabled = old_enabled.difference(possible_customizations)
+
+        new_enabled = new_enabled.union(set(val))
+        new_enabled = Customization.objects.filter(name__in=new_enabled)
+        return new_enabled
+
+
+class MenuPortForm(forms.Form):
+    menu = forms.ModelChoiceField(
+        queryset=Menu.objects.filter(allow_porting=True),
+        help_text='Enable "Allow porting" on a menu for it to be available here.'
+    )
+
+    def __init__(self, *args, **kwargs):
+        port_type = kwargs.pop('port_type', 'export')
+        super().__init__(*args, **kwargs)
+        self.fields['menu'].label_from_instance = lambda obj: obj.name
+        if port_type == 'import':
+            self.fields['file'] = forms.FileField(required=False)
+            self.fields['force'] = forms.BooleanField(
+                label="Force Update",
+                help_text="Updates existing records with values from JSON when conflicts exist.",
+                required=False
+            )
+            self.fields['accept_reviews'] = forms.BooleanField(
+                label="Auto Accept",
+                help_text="Auto accept reviews for all customizations",
+                required=False
+            )
+
+
+class ZendeskImportForm(forms.Form):
+    menu = forms.ModelChoiceField(
+        queryset=Menu.objects.filter(allow_porting=True),
+        help_text='Enable "Allow porting" on a menu for it to be available here.'
+    )
+    domain = forms.CharField(required=False, help_text='Ex: support.networkoptix.com')
+    zendesk_category_name = forms.CharField(required=False, help_text='Ex: Develop with Nx Meta')
+    api_token = forms.CharField(required=False, help_text='Credentials are optional if zendesk is public')
+    zendesk_email = forms.CharField(required=False)
+    zendesk_password = forms.CharField(required=False, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        if args and 'import' in args[0]:
+            self.importing = True
+        else:
+            self.importing = False
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super().clean()
+        if self.importing:
+            if not data['domain']:
+                raise ValidationError('Domain required if importing')
+
+            if not data['zendesk_category_name']:
+                raise ValidationError('Zendesk Category Name required if importing')
         return data

@@ -4,13 +4,14 @@ import re
 import io
 import json
 from collections import OrderedDict
-from PIL import Image  # get Pillow
 from zipfile import ZipFile
-from ..models import Context, DataStructure, AssetType
+import logging
+
+from PIL import Image  # get Pillow
 from cms.serializers import AssetTypeSerializer
 from cms.controllers.modify_db import GUID_REGEXP
+from cms.models import Context, DataStructure, AssetType
 
-import logging
 logger = logging.getLogger(__name__)
 
 IGNORE_DIRECTORIES = ('help',)
@@ -79,10 +80,11 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
         label = ""
         placeholder = ""
         protected = False
+        fieldset = ""
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
-            value = DataStructure.cast_value(data_structure, value)
+            value = DataStructure.cast_value(db_structure, value)
 
             if db_structure.description:
                 description = db_structure.description
@@ -92,6 +94,7 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
             optional = db_structure.optional
             protected = db_structure.protected
             placeholder = db_structure.placeholder
+            fieldset = db_structure.fieldset
 
         data_structure = OrderedDict([
             ("label", label),
@@ -103,7 +106,8 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
             ("advanced", advanced),
             ("optional", optional),
             ("public", True),
-            ("protected", protected)
+            ("protected", protected),
+            ("fieldset", fieldset)
         ])
 
         if DataStructure.get_type_by_name(structure_type) == DataStructure.DATA_TYPES.image or\

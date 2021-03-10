@@ -1,35 +1,35 @@
 {
   "activate_account": {
-    "emailSubject": "Activez votre compte"
+    "emailSubject": "Activer votre compte"
   },
   "cloud_invite": {
     "emailSubject": "Vous avez été invité à %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Demande de vente pour {{message.asset}}"
+    "emailSubject": "Demande de vente pour {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Demande technique pour {{message.asset}}"
+    "emailSubject": "Demande technique pour {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Commentaires pour {{message.asset}}"
+    "emailSubject": "Commentaires pour {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Commentaire page caméra {{#message.asset}} pour {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Commentaire sur la page de la caméra{{#message.asset}} pour {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} a une nouvelle version à revoir"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} a une nouvelle version à réviser"
   },
   "restore_password": {
-    "emailSubject": "Réinitialisez votre mot de passe"
+    "emailSubject": "Réinitialiser votre mot de passe"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vous invite à %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Système Vidéo {{message.system_name}} a été partagé avec vous{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vous invite à %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}} Le système vidéo {{{message.system_name}} a été partagé avec vous{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Système vidéo {{message.system_name}} a été partagé avec vous"
+    "emailSubject": "Le système vidéo {{{message.system_name}}} a été partagé avec vous"
   }
 }

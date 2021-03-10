@@ -1,109 +1,128 @@
 import {
-    Component, OnInit, ViewEncapsulation, Input,
-    forwardRef, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR }               from '@angular/forms';
-import { NxLanguageProviderService }                             from '../../../services/nx-language-provider';
+    Component, ViewEncapsulation,
+    Input, forwardRef, EventEmitter,
+    Output, SimpleChanges, ViewChild, ElementRef
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-const noop = () => {
-};
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { Watcher }                   from '../../../services/apply.service';
 
 /* Usage
-<nx-select name="permissions"
-           [items]="accessRoles"
-           label="optionLabel"          <- which property should be shown
-           [(ngModel)]="user.role.name"
-           (ngModelChange)="onModelChange($event)"
-           [selected]="user.role.name ? user.role.name : null"
-           required>
-</nx-select>
-*/
+ <nx-select [id]="select.id"
+     [name]="permissions"
+     [items]="accessRoles"
+     label="optionLabel"          <- which property should be shown
+     [(ngModel)]="user.role.name"
+     (ngModelChange)="onModelChange($event)"
+     [selected]="user.role.name ? user.role.name : null"
+     required>
+ </nx-select>
+ */
 
 @Component({
-    selector: 'nx-select',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers: [
+    selector      : 'nx-select',
+    templateUrl   : 'dropdown.component.html',
+    styleUrls     : ['dropdown.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
         {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxGenericDropdown),
-            multi: true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxGenericDropdown),
+            multi       : true
         }
     ]
 })
 
-export class NxGenericDropdown implements OnInit, ControlValueAccessor {
-    // items should have at least name ex [{name: 'a', id: 1}, {name: 'b', id:3}]
-    @Input() items: any;
-    @Input() selected: any;
+export class NxGenericDropdown extends BaseDropdown {
+    // items should have at least "name"
+    // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
+    @Input() id;
+    @Input() items: DropdownItem[];
+    @Input() selected;
+    @Input() merge: boolean;
+    @Input() ellipsisMargin: boolean;
+    @Input() hrMargin: boolean;
+    @Input() stillLoading: boolean;
+    @Input() type: string;
+    @Input() forcePosition: {left?: number, top?: number, width?: number}
+
     @Output() onSelected = new EventEmitter<string>();
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
+    dropdownType: string;
+    nativeElementTop = 0
 
-    LANG: any = {};
+    @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
-    message: string;
-    show: boolean;
-
-    constructor(private language: NxLanguageProviderService) {
-        this.show = false;
-        this.LANG = this.language.getTranslations();
-        this.message = this.LANG.pleaseSelect;
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        public ref: ElementRef
+    ) {
+        super(languageService, configService);
     }
-
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
 
     ngOnInit(): void {
+        this.id = this.id || 'genericSelect';
+
+        this.items.forEach((item) => {
+            if (item.help && !item.name.includes(item.help)) {
+                item.name += `<span class="additional-help">${item.help}</span>`;
+            }
+        });
+
+        this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
     }
 
-    trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.value;
+    ngAfterViewInit() {
+        Promise.resolve().then(() => {
+            this.nativeElementTop = this.forcePosition ? this.ref.nativeElement.parentElement.parentElement.offsetTop : this.ref.nativeElement.offsetHeight;
+        });
     }
 
     change(item) {
-        this.selected = item;
+        this._selectedItem = item;
         this.onSelected.emit(item);
-        this.onChangeCallback(this.selected);
+        this.onChangeCallback(this._selectedItem);
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.items && changes.items.currentValue) {
+            this.items.forEach((item) => {
+                if (item.help && !item.name.includes(item.help)) {
+                    item.name += `<span class="additional-help">${item.help}</span>`;
+                }
+            });
+        }
         // detect changes in list of items and changes in selected to support clear option
-        if (changes.selected.currentValue) {
-            this.selected = changes.selected.currentValue;
-        } else if (!this.selected) {
-            this.selected = { name: this.message, value: '0' };
+        if (changes.selected && changes.selected.currentValue) {
+            if (changes.selected.currentValue.help &&
+                changes.selected.currentValue.name.indexOf('additional-help') === -1) {
+                changes.selected.currentValue.name += `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
+            }
+
+            this._selectedItem = changes.selected.currentValue;
+        } else if (!this.selected && !changes.selected.firstChange) {
+            this._selectedItem = { name: this.message, value: '0' };
         }
     }
 
-    /**
-     * Write a new (model) value to the element.
-     */
-    writeValue(value: any) {
-        if (value !== null && typeof value !== 'undefined') {
-            this.selected = value;
+    handleKeyup(ev, item) {
+        if (ev.which === 13) {
+            this.show = false;
+            this.change(item);
         }
-    }
-
-    /**
-     * Set the function to be called
-     * when the control receives a change event.
-     */
-    registerOnChange(fn) {
-        this.onChangeCallback = fn;
-    }
-
-    /**
-     * Set the function to be called
-     * when the control receives a touch event.
-     */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
     }
 }
 
+export class DropdownItem {
+    constructor(
+        public name: string,
+        public help?: string,
+        public value?: string,
+        public state?: string,
+        public disabled?: boolean
+    ) {}
+}

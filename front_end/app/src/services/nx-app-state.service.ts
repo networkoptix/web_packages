@@ -1,30 +1,43 @@
 import { Injectable }                from '@angular/core';
-import { NxConfigService }            from './nx-config';
 import { BehaviorSubject }           from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAppStateService {
-    CONFIG: any;
+    private readySubject = new BehaviorSubject(false);
+    private ribbonSubject = new BehaviorSubject(false);
 
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
-    readySubject = new BehaviorSubject(false);
+    systemAvailable$ = new BehaviorSubject(true);
+    lastErrorStatus$ = new BehaviorSubject(undefined);
 
-    constructor(private config: NxConfigService) {
-        this.CONFIG = this.config.getConfig();
+    // Header height is hardcoded everywhere to 48px :(
+    // Ribbon height is 33px ... for one row
+    // Do we have multiple row ribbon? -- TT
+    heightWithRibbon = 'calc(100% - 81px)';
+    heightWithoutRibbon = 'calc(100% - 48px)';
+
+    constructor() {}
+
+    setFooterVisibility(visible: boolean) {
+        this.footerVisibleSubject.next(visible);
     }
 
-    setFooterVisibility(visibile) {
-        this.footerVisibleSubject.next(visibile);
+    setHeaderVisibility(visible: boolean) {
+        this.headerVisibleSubject.next(visible);
     }
 
-    setHeaderVisibility(visibile) {
-        this.headerVisibleSubject.next(visibile);
+    set ribbonVisibility(visible: boolean) {
+        this.ribbonSubject.next(visible);
     }
 
-    set ready(ready) {
+    get ribbonVisibility() {
+        return this.ribbonSubject.getValue();
+    }
+
+    set ready(ready: boolean) {
         this.readySubject.next(ready);
     }
 

@@ -13,6 +13,9 @@
     </div>
 {% endblock %}
 {% block content %}
+{% if group and user.is_superuser %}
+    <a href={% url 'admin:api_proxygroup_change' group.pk%} target="_blank">Edit "{{group.name}}" group</a>
+{% endif %}
     {% if errors %}
         <p class="errornote">
             {% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}

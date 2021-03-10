@@ -1,6 +1,7 @@
-import { Injectable }                      from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NxConfigService }                 from '../../services/nx-config';
+import { Injectable }               from '@angular/core';
+import { BehaviorSubject }          from 'rxjs';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
 
 @Injectable({
     providedIn: 'root'
@@ -19,23 +20,27 @@ export class NxHealthService {
     tableReadySubject = new BehaviorSubject(undefined);
 
     importedData: boolean;
-    tableHeaders: any;
-    panelParams: any;
+    tableHeaders;
+    panelParams;
 
-    alertsValues: any;
+    alertsValues;
     alertsCount = {
-        warning: 0,
-        error: 0
+        warning : 0,
+        error   : 0
     };
 
     resourceNames = {};
 
     ready: boolean;
+    lastUpdate: number;
 
-    CONFIG: any;
+    CONFIG: IConfig;
 
-    constructor(private configService: NxConfigService) {
-        this.CONFIG = this.configService.getConfig();
+    constructor(
+        configService: NxConfigService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+    ) {
+        this.CONFIG = configService.getConfig();
         this.importedData = false;
     }
 
@@ -79,14 +84,23 @@ export class NxHealthService {
         this.tableReadySubject.next(tableReady);
     }
 
+    getPanelWidth() {
+        // values are set from CSS values in $grid-panel-width and $grid-super-wide-panel-width
+        if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxxxl)) {
+            return 450;
+        }
+
+        return 350;
+    }
+
     pad(n) {
         return n < 10 ? '0' + n : n;
     }
 
     secondsToTime(seconds, format = 'duration') {
         const timeUnits = ['d', 'h', 'm', 's'];
-        const timeDivisors = {d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1};
-        const timeValues = {d: 0, h: 0, m: 0, s: 0};
+        const timeDivisors = { d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1 };
+        const timeValues = { d: 0, h: 0, m: 0, s: 0 };
         let time = '';
 
         for (const unit of timeUnits) {
@@ -150,9 +164,9 @@ export class NxHealthService {
         }
 
         return {
-            text: retValue,
-            format: header.format || '',
-            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
+            text        : retValue,
+            format      : header.format || '',
+            formatClass : this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
             value
         };
     }
@@ -167,7 +181,7 @@ export class NxHealthService {
                     return (c.searchTags.includes(queryTerm));
                 } else {
                     // If no dash in query -> include results with and without dash
-                    return (c.searchTags.replace(/-/g, '').includes(queryTerm));
+                    return c.searchTags.replace(/-/g, '').includes(queryTerm);
                 }
             });
         }
@@ -177,10 +191,10 @@ export class NxHealthService {
         } else {
             const query = filter.query.toLowerCase();
             const queryTerms = query.trim()
-                                    .split(/[\s\+]+/)
-                                    .filter((elm) => {
-                                        return elm !== '';
-                                    });
+                .split(/[\s\+]+/)
+                .filter((elm) => {
+                    return elm !== '';
+                });
 
             Object.entries(values).forEach(([metric, value]) => {
                 if (filterItem(value, queryTerms)) {
@@ -197,17 +211,17 @@ export class NxHealthService {
         let types;
         let servers;
 
-        const typeAlert = filter.selects && filter.selects.find(x => x.id === NxHealthService.ALERTS);
+        const typeAlert = filter.selects?.find(x => x.id === NxHealthService.ALERTS);
         if (typeAlert !== undefined) {
             alarms = typeAlert.selected;
         }
 
-        const typeTypes = filter.selects && filter.selects.find(x => x.id === NxHealthService.TYPES);
+        const typeTypes = filter.selects?.find(x => x.id === NxHealthService.TYPES);
         if (typeTypes !== undefined) {
             types = typeTypes.selected;
         }
 
-        const typeServers = filter.selects && filter.selects.find(x => x.id === NxHealthService.SERVERS);
+        const typeServers = filter.selects?.find(x => x.id === NxHealthService.SERVERS);
         if (typeServers !== undefined) {
             servers = typeServers.selected;
         }
@@ -226,9 +240,9 @@ export class NxHealthService {
     }
 
     findEntityName(entity) {
-        if (entity._ && entity._.name) {
+        if (entity._?.name) {
             return entity._.name.text;
-        } else if (entity.info && entity.info.name) {
+        } else if (entity.info?.name) {
             return entity.info.name.text;
         } else {
             return '−';

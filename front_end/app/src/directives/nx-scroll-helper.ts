@@ -1,15 +1,15 @@
 import { Directive, HostListener }  from '@angular/core';
+
 import { NxScrollMechanicsService } from '../services/scroll-mechanics.service';
 
-@Directive({selector: '[nxScrollHelper]'})
+@Directive({ selector: '[nxScrollHelper]' })
 export class NxScrollHelperDirective {
-
     constructor(
-            private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {}
 
     @HostListener('scroll', ['$event'])
     public onListenerTriggered(event: any): void {
-        this.scrollMechanicsService.setWindowScroll(event.target.scrollTop);
+        this.scrollMechanicsService.windowScroll = event.target.scrollTop;
     }
 }

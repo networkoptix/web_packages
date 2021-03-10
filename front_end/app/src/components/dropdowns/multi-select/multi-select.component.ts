@@ -1,17 +1,17 @@
 import {
-    Component, OnInit, ViewEncapsulation,
-    Input, forwardRef, OnChanges, SimpleChanges,
-    ViewChild, ElementRef, Output, EventEmitter
-}                                                  from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NxLanguageProviderService }               from '../../../services/nx-language-provider';
+    Component, ViewEncapsulation,
+    Input, forwardRef, SimpleChanges
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-const noop = () => {
-};
+import { BaseDropdown }              from '../injDropdown';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
 
 /* Usage
  <nx-multi-select
-     name="permissions"
+     [id]="select.id"
+     [name]="permissions"
      canSelectAll?
      canSearch?
      description="Roles"
@@ -35,56 +35,51 @@ const noop = () => {
     ]
 })
 
-export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnChanges {
-    @Input('items') itemsOrig: any;
-    @Input() canSelectAll: any;
-    @Input() canSearch: any;
+export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
+    @Input() id: string;
+    @Input('items') itemsOrig: Item[];
+    @Input() canSelectAll: boolean;
+    @Input() canSearch: boolean;
 
-    public items: any = {};
+    public items: Item[] = [];
     public filter: string;
-    public show: boolean;
     public textSelected: any = {};
 
-    LANG: any = {};
+    private innerValue;
 
-    private innerValue: any;
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
+    ) {
+        super(languageService, configService);
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
-
-    constructor(private language: NxLanguageProviderService) {
-        this.LANG = this.language.getTranslations();
-        this.show = false;
         this.filter = '';
     }
 
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
-
     ngOnInit(): void {
+        this.id = this.id || 'multiSelect';
         this.canSelectAll = (this.canSelectAll !== undefined);
         this.canSearch = (this.canSearch !== undefined);
     }
 
     clearSelected() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = false;
-            const index = this.innerValue.indexOf(item.id);
+            const index   = this.innerValue.indexOf(item.id);
             if (index > -1) {
                 this.innerValue.splice(index, 1);
             }
         });
 
         // ensure 'change' will be triggered as checkboxes didn't fire click event
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
         this.updateModel();
 
         // break anchor nav event
         return false;
     }
 
-    change(evt, item) {
+    change(evt, item: any) {
         const index = this.innerValue.indexOf(item.id);
         if (index > -1) {
             this.innerValue.splice(index, 1);
@@ -102,31 +97,28 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
     applyLocalFilter(value) {
         this.filter = value;
 
-        this.items = this.itemsOrig.filter((item) => {
+        this.items = this.itemsOrig.filter((item: any) => {
             return item.id.toLowerCase().includes(value.toLowerCase());
         });
     }
 
-    trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+    trackItem(index, item: any) {
+        return item ? item.id : undefined;
     }
 
     updateItems() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
         });
 
         // ensure 'change' will be triggered
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
     }
 
     updateLabel() {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
-                this.textSelected = this.items.find(item => {
+                this.textSelected = this.items.find((item: any) => {
                     return (item.label.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list
@@ -135,11 +127,11 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any;
+                this.textSelected = this.LANG.search.Any();
                 break;
             }
             default: {
-                this.textSelected = this.innerValue.length + ' ' + this.LANG.search.selected;
+                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
                 break;
             }
         }
@@ -159,7 +151,7 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
     }
 
     /**
-     * Write a new (model) value to the element.
+     * Overwrite
      */
     writeValue(value: any) {
         if (value !== null) {
@@ -168,21 +160,4 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
             this.updateItems();
         }
     }
-
-    /**
-     * Set the function to be called
-     * when the control receives a change event.
-     */
-    registerOnChange(fn) {
-        this.onChangeCallback = fn;
-    }
-
-    /**
-     * Set the function to be called
-     * when the control receives a touch event.
-     */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
-    }
 }
-

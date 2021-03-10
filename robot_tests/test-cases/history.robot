@@ -24,8 +24,7 @@ Open New Browser On Failure
 
 Log in to downloads/history
     Go To    ${url}/downloads/releases
-    Log In    ${email}    ${password}    button=None
-    Validate Log In
+    Log In If Needed    ${email}    ${password}   
 
 loop expanders
     #get the first release number for targeting purposes
@@ -58,8 +57,7 @@ loop links
 *** Test Cases ***
 History link is not in the downloads page for user without access
     [tags]    Passing_19.2
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
+    Log In If Needed    ${EMAIL VIEWER}    ${password}
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     Register Keyword To Run On Failure    NONE
@@ -68,8 +66,7 @@ History link is not in the downloads page for user without access
 
 History link is in the downloads page for user with access and takes you to /downloads/releases
     [tags]    Passing_19.2
-    Log In    ${email}    ${password}
-    Validate Log In
+    Log In If Needed    ${email}    ${password}
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
@@ -88,30 +85,28 @@ Going to the history page anonymous asks for login and closing takes you to 404
 
 Going to the history page anonymous asks for login and login shows history page
     Go To    ${url}/downloads/releases
-    Log In    ${email}   ${password}    button=None
-    Validate Log In
+    Log In If Needed    ${email}   ${password} 
     Wait Until Element Is Visible    ${RELEASES TAB}
     Wait Until Location is    ${url}/downloads/releases
 
 Going to the history page anonymous and logging in with someone who doesn't have access takes you to 404
     Go To    ${url}/downloads/releases
-    Log In    ${EMAIL VIEWER}   ${password}    button=None
-    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
+    Log In If Needed    ${EMAIL VIEWER}   ${password}  
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}    ${404 ICON}
     Sleep    1
     Wait Until Location is    ${url}/404
 
 Going to the history page while logged in as someone who doesn't have access takes you to 404
     [tags]    Passing_19.2
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
+    Log In If Needed    ${EMAIL VIEWER}    ${password}
     Go To    ${url}/downloads/releases
-    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
+    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}    ${404 ICON}
     Wait Until Location is    ${url}/404
 
 #Make sure each tab changes to a unique release number
 Make sure expandable sections show options
     Log in to downloads/history
-
+    
     Wait Until Element Is Visible    ${PATCHES TAB}
     loop expanders
     Click Link    ${PATCHES TAB}

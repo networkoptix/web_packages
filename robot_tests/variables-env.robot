@@ -4,13 +4,11 @@ ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx
 ${CLOUD DEV3}                         https://dev3.cloud.hdw.mx
-${CLOUD DEV3 AUTO SYSTEM}             http://10.1.5.160:7001
 ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 @{AUTO SYS AUTH}                      admin    qweasd 123
-${SCREENSHOTDIRECTORY}                \Screenshots
 
 ${BROWSER}                            Chrome
 
@@ -27,13 +25,49 @@ ${EMAIL OWNER}                        ${TEST EMAIL}+owner${BASE EMAIL DOMAIN}
 ${EMAIL NOT OWNER}                    ${TEST EMAIL}+notowner${BASE EMAIL DOMAIN}
 ${EMAIL ADMIN}                        ${TEST EMAIL}+admin${BASE EMAIL DOMAIN}
 ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
+${EMAIL CUSTOM CAMERAS}               ${TEST EMAIL}+customcameras${BASE EMAIL DOMAIN}
+${EMAIL CUSTOM CAMERAS LIMITED}       ${TEST EMAIL}+customcameraslimited${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
+${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
+
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
+${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
+&{AUTO TESTS USERS}
+...    ${EMAIL VIEWER}=viewer
+...    ${EMAIL ADV VIEWER}=advancedViewer
+...    ${EMAIL LIVE VIEWER}=liveViewer
+...    ${EMAIL NOT OWNER}=viewer
+...    ${EMAIL ADMIN}=cloudAdmin
+...    ${EMAIL CUSTOM}=custom
+...    ${EMAIL AUTO TESTS ANCHOR}=viewer
+
+&{permissions}
+...    cloudAdmin=GlobalAdminPermission
+...    viewer=GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission
+...    liveViewer=GlobalAccessAllMediaPermission
+...    advancedViewer=GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
+...    custom=NoGlobalPermissions
+    
+&{role names}
+...    cloudAdmin=${ADMIN TEXT}
+...    viewer=${VIEWER TEXT}
+...    liveViewer=${LIVE VIEWER TEXT}
+...    advancedViewer=${ADV VIEWER TEXT}
+...    custom=${CUSTOM TEXT}
+
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 3.0}              ${TEST EMAIL}+mergeowner3.0${BASE EMAIL DOMAIN}
-@{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}
+@{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}
 ${ALT BASE EMAIL}                     qaburbank@gmail.com
 ${ALT EMAIL VIEWER}                   qaburbank+viewer@gmail.com
 ${ALT EMAIL ADV VIEWER}               qaburbank+advviewer@gmail.com
@@ -62,11 +96,21 @@ ${SYSTEM NAME AUTO TESTS HEADER}      //header//li/a/span[text()="${AUTO TESTS}"
 ${SYSTEMS TILE}                       //div[contains(@class,'system-button')]
 ${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL NOT OWNER}')]
 ${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
+${USER IN SYSTEM}                     //nx-level-3-item//span[contains(@class,'user') and contains(text(),'%user%')]
 
 ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
+&{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin    custom=custom
 
 #AUTO TESTS 2 is an offline system used for testing offline status on the systems page and offline status on the system page
 ${AUTO TESTS 2}                       Auto Tests 2
 ${AUTO TESTS OFFLINE TITLE}           ${SYSTEMS TILE}//h2[text()='${AUTO TESTS 2}']
 ${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibling::nx-tag/div[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
 ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button
+
+#Cameras
+${NOAUTH CAMERA PASSWORD}             qweasd123
+
+#Docker server machine info
+${QA BURBANK IP}                      10.1.5.238
+${QA BURBANK USER}                    qaburbank
+${QA BURBANK PASS}                    QABurbank777$ 

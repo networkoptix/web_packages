@@ -1,7 +1,5 @@
-@import '../../../styles/custom/custom_palette';
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 
 nx-vendor-list {
     width : 100%;
@@ -19,8 +17,7 @@ nx-vendor-list {
         height : 24px;
 
         a {
-            @extend #regular15;
-            color           : $light16;
+            @include typography.regular15light;
             height          : 24px;
             text-decoration : none;
 

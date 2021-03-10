@@ -1,55 +1,49 @@
-import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { NxUtilsService }                                                            from '../../../services/utils.service';
-import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
-import { NxCloudApiService }                                                         from '../../../services/nx-cloud-api';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor }                                   from '@angular/forms';
+import {
+    Component, ViewEncapsulation,
+    Input, forwardRef, Directive
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-@Component({
-    selector: 'nx-language-select',
-    templateUrl: 'language.component.html',
-    styleUrls: ['language.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxLanguageDropdown),
-            multi: true
-        }
-    ]
-})
+import { BaseDropdown }              from '../injDropdown';
+import { environment }               from '@environments/environment';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService }           from '@services/nx-config';
+import { ILanguage, ILanguages }     from '@services/nx-cloud-api.types';
+import { LocalStorageService }       from 'ngx-webstorage';
 
-export class NxLanguageDropdown implements OnInit {
-    @Input() instantReload: any;
-    @Input() instantApply: any;
-    @Input() dropup: any;
-    @Input() short: any;
-    @Input() altStyle: any;
+@Directive()
+class BaseLanguageDropdown extends BaseDropdown {
+    @Input() instantReload;
+    @Input() instantApply;
+    @Input() dropup;
+    @Input() short;
+    @Input() altStyle;
 
     currentLang: string;
     show: boolean;
     direction: string;
     langCode: string;
-    activeLanguage = {
-        language: '',
-        name: ''
+    activeLanguage: ILanguage = {
+        language : '',
+        name     : ''
     };
-    languages = [];
+
+    languages: ILanguages = [];
     languagesCol1 = [];
     languagesCol2 = [];
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: any) => {};
-
-    constructor(private cloudApi: NxCloudApiService,
-                private language: NxLanguageProviderService,
+    constructor(
+        configService: NxConfigService,
+        private cloudApi: NxCloudApiService,
+        private languageService: NxLanguageProviderService,
+        private localStorageService: LocalStorageService
     ) {
-        this.currentLang = this.language.getLang();
-        this.show = false;
-    }
+        super(languageService, configService);
 
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
+        this.currentLang = languageService.currentLanguage;
+    }
 
     private splitLanguages() {
         if (this.languages.length > 12) {
@@ -76,15 +70,21 @@ export class NxLanguageDropdown implements OnInit {
 
             if (this.instantApply && this.instantReload) {
                 /*  TODO: Currently this is not needed because the language file will
-                be loaded during page reload. Once we transfer everything to Angular 5
-                we should use this for seamless change of language
-                // this.translate.use(lang.replace('_', '-'));
-                */
-                this.cloudApi
-                    .changeLanguage(this.langCode)
-                    .then((response) => {
-                        window.location.reload();
-                    });
+                 be loaded during page reload. Once we transfer everything to Angular 5
+                 we should use this for seamless change of language
+                 // this.translate.use(lang.replace('_', '-'));
+                 */
+                if (this.CONFIG.isLocal) {
+                    this.languageService.currentLang = this.langCode;
+                    window.location.reload();
+                } else {
+                    this.cloudApi
+                        .changeLanguage(this.langCode)
+                        .then(_ => {
+                            this.localStorageService.store('language', this.langCode);
+                            this.languageService.currentLang = this.langCode;
+                        });
+                }
             }
         }
     }
@@ -93,24 +93,26 @@ export class NxLanguageDropdown implements OnInit {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
+        this.cloudApi.getLanguages().then((data) => {
+            this.languages = this.CONFIG.supportedLanguages.length === 0
+                ? data
+                : data.filter((language) => this.CONFIG.supportedLanguages.includes(language.language));
+            this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
+                return lang.language;
+            }, NxUtilsService.sortASC));
 
-        this.cloudApi
-            .getLanguages()
-            .then((data: any) => {
-                this.languages = data;
-                this.languages.sort(NxUtilsService.byParam((lang) => {
-                    return lang.language;
-                }, NxUtilsService.sortASC));
+            this.splitLanguages();
 
-                this.splitLanguages();
-
-                this.activeLanguage = this.languages.find(lang => {
-                    return (lang.language === this.currentLang);
-                });
-                this.onChangeCallback(this.activeLanguage.language);
+            this.activeLanguage = this.languages.find(lang => {
+                return (lang.language === this.currentLang);
             });
+            this.onChangeCallback(this.activeLanguage?.language);
+        });
     }
 
+    /**
+     * Overwrite
+     */
     writeValue(langCode: any) {
         this.langCode = langCode;
         if (langCode) {
@@ -118,15 +120,37 @@ export class NxLanguageDropdown implements OnInit {
         }
     }
 
-    registerOnChange(fn) {
-        this.onChangeCallback = fn;
-    }
-
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
-    }
-
     onBlur() {
         this.onTouchedCallback();
     }
 }
+
+@Component({
+    selector      : 'nx-language-select',
+    templateUrl   : 'language.component.html',
+    styleUrls     : ['language.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
+        {
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxLanguageDropdown),
+            multi       : true
+        }
+    ]
+})
+export class NxLanguageDropdown extends BaseLanguageDropdown {}
+
+@Component({
+    selector      : 'nx-header-language-select',
+    templateUrl   : 'language.component.html',
+    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
+        {
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxLanguageDropdown),
+            multi       : true
+        }
+    ]
+})
+export class NxHeaderLanguageDropdown extends BaseLanguageDropdown {}

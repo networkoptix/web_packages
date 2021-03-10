@@ -1,13 +1,17 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { Location }                                    from '@angular/common';
-import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
-import { DomSanitizer }                                from '@angular/platform-browser';
+import {
+    Component, OnInit, Input,
+    ViewEncapsulation
+}                                                from '@angular/core';
+import { DomSanitizer }                          from '@angular/platform-browser';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-generic-content',
+    selector   : 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls: ['generic.component.scss']
+    styleUrls  : ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -21,8 +25,7 @@ export class GenericModalContent implements OnInit {
     @Input() closable;
     @Input() footerClass;
 
-    constructor(public activeModal: NgbActiveModal,
-    ) {}
+    constructor(public activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         this.footerClass = this.footerClass || '';
@@ -40,31 +43,30 @@ export class GenericModalContent implements OnInit {
 }
 
 @Component({
-    selector: 'nx-modal-general',
-    template: '',
+    selector     : 'nx-modal-general',
+    template     : '',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: []
+    styleUrls    : []
 })
-
-export class NxModalGenericComponent implements OnInit {
+export class NxModalGenericComponent {
     modalRef: NgbModalRef;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
-    constructor(private domSanitizer: DomSanitizer,
-                private location: Location,
-                private modalService: NgbModal,
-                private language: NxLanguageProviderService,
+    constructor(
+        language: NxLanguageProviderService,
+        private domSanitizer: DomSanitizer,
+        private modalService: NgbModal
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.translations;
     }
 
     private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,
-                   hasFooter?, cancellable?, closable?) {
+        hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
+            {
+                windowClass : 'modal-holder',
+                backdrop    : 'static'
+            });
 
         this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
         this.modalRef.componentInstance.title = title;
@@ -94,17 +96,13 @@ export class NxModalGenericComponent implements OnInit {
 
     openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
-            this.LANG.dialogs.okButton,
+            this.LANG.dialogs.buttons.ok(),
             null,
-            this.LANG.dialogs.cancelButton,
+            this.LANG.dialogs.buttons.cancel(),
             footerClass,
             true,
             true,
             true)
             .result;
-
-    }
-
-    ngOnInit() {
     }
 }

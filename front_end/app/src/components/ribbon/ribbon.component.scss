@@ -1,14 +1,11 @@
-@import '../../../styles/custom/custom_palette';
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 
 .ribbon {
-    @extend #regular13;
-    color            : $light1;
+    @include typography.regular13light1;
     background-color : $brand_d1;
     line-height      : 1rem;
-    border-top       : 1px solid $brand_d2;
+    //border-top       : 1px solid $brand_d2;
     border-bottom    : 1px solid $brand_d2;
     padding          : .5rem 1rem;
     display          : flex;
@@ -16,6 +13,16 @@
 
     .message {
         flex : 70%;
+        &-content {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &-wrapper {
+                position: relative;
+            }
+        }
     }
 
     .action {
@@ -23,28 +30,64 @@
         text-align : right;
 
         a {
-            @extend #regular13;
-            color           : $light1;
+            @include typography.regular13light1;
             text-decoration : underline;
 
             &:hover {
                 opacity : .8;
             }
         }
+
+        & > * {
+            margin-left: 1rem;
+        }
     }
 }
 
 .alert-ribbon {
-    border-top: 1px solid #EEDC9E;
+    //border-top: 1px solid #EEDC9E;
     border-bottom: 1px solid #EEDC9E;
     background-color: #FFEEB5 !important;
 
     .message {
         color: $dark9;
         text-align: center;
+        .larger {
+            @include typography.regular18dark9;
+        }
     }
 
     a:hover {
         opacity: .8;
+    }
+}
+.message-content-wrapper {
+    display: flex;
+    align-items: center;
+    .action-link {
+        display: flex;
+        align-items: center;
+        margin-left: 32px;
+        cursor: pointer;
+
+        span {
+            text-decoration: underline;
+            margin-left: 2px;
+            color: $blue10;
+            cursor: pointer;
+        }
+
+        &:hover {
+            span {
+                color: $blue9;
+            }
+            svg * {
+                fill: $blue9;
+            }
+        }
+
+        svg * {
+            fill: $blue10;
+        }
     }
 }

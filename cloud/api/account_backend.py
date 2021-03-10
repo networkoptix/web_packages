@@ -1,15 +1,15 @@
 import logging
+import zlib
 
+from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 
-from api.models import *
+from api.models import AccountLoginHistory, AccountManager, Account
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
-
-from cloud import settings
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,12 @@ IP_MAX_LENGTH = 255
 def get_ip(request):
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
     if settings.LOCAL_ENVIRONMENT and not ip:  # When ran locally there is no http_x_forwared_for
-        return ''
+        ip = request.META.get('REMOTE_ADDR')
 
-    return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
+    if ip:
+        return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
+    else:
+        return ''
 
 
 class AccountBackend(ModelBackend):
@@ -39,7 +42,6 @@ class AccountBackend(ModelBackend):
                 if username != user['email']:  # code and email from cloud_db are wrong
                     raise APILogicException('Login does not match users email', ErrorCodes.wrong_code)
             elif username.find('-') > -1:  # CLOUD-1661 - temp login now has format: guid-crc32(accountEmail)
-                import zlib
                 (uuid, temp_crc32) = username.split('-')
                 email_crc32 = zlib.crc32(user['email'].encode('utf-8')) & 0xffffffff  # convert signed to unsigned crc32
                 if email_crc32 != int(temp_crc32):
@@ -60,18 +62,22 @@ class AccountBackend(ModelBackend):
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info('User logged in: {}, IP: {}'.format(user.email, ip))
+    logger.info(f'User logged in: {user.email}, IP: {ip}')
     AccountLoginHistory.objects.create(action='user_logged_in', ip=ip, email=user.email)
 
 
 @receiver(user_logged_out)
 def user_logged_out_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info('User logged out: {}, IP: {}'.format(user.email, ip))
+    logger.info(f'User logged out: {user.email}, IP: {ip}')
     AccountLoginHistory.objects.create(action='user_logged_out', ip=ip, email=user.email)
 
 
 @receiver(user_login_failed)
-def user_login_failed_callback(sender, credentials, **kwargs):
-    logger.info('Failed login attempt: {}'.format(credentials.get('username', None)))
-    AccountLoginHistory.objects.create(action='user_login_failed', email=credentials.get('username', None))
+def user_login_failed_callback(sender, credentials, request, **kwargs):
+    ip = None
+    if request:
+        ip = get_ip(request)
+    user_name = credentials.get('username', None)
+    logger.info(f'Failed login attempt: %{user_name}, IP: {ip}')
+    AccountLoginHistory.objects.create(action='user_login_failed', ip=ip, email=user_name)

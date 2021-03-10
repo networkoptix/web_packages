@@ -1,16 +1,23 @@
-import requests
-from requests.auth import HTTPDigestAuth
 from hashlib import md5, sha256
 import base64
 import random
 import string
-from cloud import settings
-from api.helpers.exceptions import validate_response, ErrorCodes, APIRequestException, APINotAuthorisedException
-
 import logging
+
+import requests
+from requests.auth import HTTPDigestAuth
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework import status
+
+from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
+                                    APINotAuthorisedException, APINotFoundException)
+
 logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
+CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
+CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
 
 
 def lower_case_email(func):
@@ -24,13 +31,20 @@ def salt_machine(char_pool=string.ascii_lowercase + string.digits, size=15):
     return ''.join(random.choice(char_pool) for _ in range(size))
 
 
+def delete_wrapper(url, auth=None, headers=None):
+    default_params = {'salt': salt_machine()}
+    logger.info(f'\nDELETE: {url}\n Query Parameters: {default_params}')
+
+    return requests.delete(url, auth=auth, headers=headers)
+
+
 def get_wrapper(url, params=None, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
 
     if params:
         default_params.update(params)
 
-    logger.info('\nGET: {}\n Query Parameters: {}'.format(url, default_params))
+    logger.info(f'\nGET: {url}\n Query Parameters: {default_params}')
 
     return requests.get(url, params=default_params, auth=auth, headers=headers)
 
@@ -41,9 +55,19 @@ def post_wrapper(url, params=None, auth=None, json=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info('\nPOST: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
+    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}')
 
     return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
+
+
+def put_wrapper(url, params=None, auth=None, json=None, headers=None):
+    default_params = {'salt': salt_machine()}
+
+    if params:
+        default_params.update(params)
+
+    logger.info(f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
+    return requests.put(url, params=default_params, auth=auth, json=json, headers=headers)
 
 
 @validate_response
@@ -304,6 +328,13 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
+    def delete(email, password):
+        request = CLOUD_DB_URL + '/account/self'
+        return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
     def update(email, password, first_name, last_name):
         params = {
             'fullName': ' '.join((first_name, last_name))
@@ -323,3 +354,134 @@ class Account(object):
 
         request = CLOUD_DB_URL + '/account/get'
         return get_wrapper(request, auth=HTTPDigestAuth(email, password), headers=headers)
+
+
+class Storage(object):
+    """
+    Api calls to cloud storage service.
+    Link to documentation on wiki:
+    https://networkoptix.atlassian.net/wiki/spaces/PM/pages/751501328/Cloud+storage+service
+
+    Storage object
+    {
+        "id": "storage_id_1",
+        "totalSpace": dddddd, // bytes
+        "region": "us-east-1",
+        "ioDevice": {
+        "type": "awss3",
+        "url": "https://nx-cloud-storage.s3.amazonaws.com/{id}"
+        },
+        "systems": [
+            // IDs of associated systems.
+        ]
+    }
+    """
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def _delete(email, password, storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}"
+        return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def _merge(email, password, master_storage_id, slave_storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/"
+        body = {
+            "slaveStorageId": slave_storage_id
+        }
+        return put_wrapper(request, json=body, auth=(HTTPDigestAuth(email, password)))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def _move(email, password, system_id, storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/"
+        body = {
+            "id": system_id
+        }
+        return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def _remove_from_system(email, password, system_id, storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
+        return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def create(email, password, system_id, storage_size):
+        request = f"{CLOUD_STORAGES_URL}/"
+        body = {
+            "systems": [system_id],
+            "totalSpace": storage_size
+        }
+        return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def delete_from_system(email, password, system_id):
+        storages = Storage.list_system_storages(email, password, system_id)
+        logger.debug(f"Delete storage for system.\tEmail: {email} Password: {password} SystemId: {system_id}")
+        for storage in storages:
+            storage_id = storage.get('id')
+            logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
+            Storage._remove_from_system(email, password, system_id, storage_id)
+            Storage._delete(email, password, storage_id)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def list_system_storages(email, password, system_id):
+        request = f"{CLOUD_STORAGES_URL}/"
+        params = {
+            "system-id": system_id
+        }
+        return get_wrapper(request, params=params, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def list_cameras(email, password, storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/cameras"
+        return get_wrapper(request, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def move(email, password, destination_system_id, source_system_id):
+        try:
+            source_storages = Storage.list_system_storages(email, password, source_system_id)
+        except APINotFoundException:
+            raise APIRequestException('Source System has no storages')
+
+        try:
+            destination_storages = Storage.list_system_storages(email, password, destination_system_id)
+        except APINotFoundException:
+            destination_storages = []
+
+        if len(destination_storages) == 0:
+            for storage in source_storages:
+                storage_id = storage['id']
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._move(email, password, destination_system_id, storage_id)
+
+        else:
+            destination_storage_id = destination_storages[0]['id']
+            for storage in source_storages:
+                storage_id = storage['id']
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._merge(email, password, destination_storage_id, storage_id)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def statistics(email, password, storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
+        return get_wrapper(request, auth=HTTPDigestAuth(email, password))

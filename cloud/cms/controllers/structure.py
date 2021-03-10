@@ -1,15 +1,23 @@
 import base64
+from io import BytesIO
+import glob
 import json
-import codecs
+import logging
 import os
 import re
-
+import requests
+import uuid
 from zipfile import ZipFile
 
-from ..controllers.generate_structure import templatify_json
-from ..models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType
+from django.conf import settings
+from django.core.files.base import ContentFile
 
-import logging
+from cms.controllers.documentation import DOC_CACHE
+from cms.controllers.generate_structure import templatify_json
+from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
+from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
+    Menu, AssetCustomizationReview, Permission
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,20 +63,26 @@ def find_or_add_context(context_name, old_name, asset_type, has_language, is_glo
     return context
 
 
-def find_or_add_data_structure(name, old_name, context_id, has_language):
+def find_or_add_data_structure(name, old_name, context, has_language):
     if old_name:
-        record = DataStructure.objects.filter(name=old_name, context_id=context_id).first()
-        if record:
-            record.name = name
-            record.save()
-            return record
+        data_structure = DataStructure.objects.filter(name=old_name, context_id=context.id).first()
+        if data_structure:
+            data_structure.name = name
+            data_structure.save()
+            return data_structure
 
-    data = DataStructure.objects.filter(name=name, context_id=context_id).first()
-    if not data:
-        data = DataStructure(name=name, context_id=context_id,
-                             translatable=has_language, default=name)
-        data.save()
-    return data
+    data_structure = DataStructure.objects.filter(name=name, context_id=context.id).first()
+    if not data_structure and context.is_global:
+        data_structure = DataStructure.objects.filter(
+            name=name, context__is_global=True, context__asset_type=context.asset_type
+        ).first()
+        if data_structure:
+            data_structure.context = context
+            data_structure.save()
+    if not data_structure:
+        data_structure = DataStructure(name=name, context=context, translatable=has_language, default=name)
+        data_structure.save()
+    return data_structure
 
 
 def update_from_object(asset_type_structure, asset_type=None, preserve_files=False):
@@ -89,13 +103,97 @@ def update_from_object(asset_type_structure, asset_type=None, preserve_files=Fal
             order += 1
 
 
-def read_structure_json(filename):
-    with codecs.open(filename, 'r', 'utf-8') as file_descriptor:
-        cms_structure = json.load(file_descriptor)
-        for asset_type_structure in cms_structure:
-            asset_type_type = AssetType.get_type_by_name(asset_type_structure["type"])
-            asset_type = find_or_add_asset_type(asset_type_type)
-            update_from_object(asset_type_structure, asset_type)
+def merge_structures(existing, new):
+    if 'contexts' not in existing and 'contexts' in new:
+        existing['contexts'] = []
+    existing['contexts'] += new['contexts']
+
+    # Handle remaining values
+    for key, val in new.items():
+        if key not in existing:
+            existing[key] = val
+
+
+def read_structure_files():
+    cms_structure = []
+    for filename in glob.glob('cms/structures/*_structure.json'):
+        with open(filename, 'r', encoding='utf-8') as file_descriptor:
+            new_struct = json.load(file_descriptor)
+            existing_struct = next((struct for struct in cms_structure if struct['type'] == new_struct['type']), None)
+            if existing_struct:
+                merge_structures(existing_struct, new_struct)
+            else:
+                cms_structure.append(new_struct)
+
+    return cms_structure
+
+
+def read_structure_json():
+    cms_structure = read_structure_files()
+    for asset_type_structure in cms_structure:
+        asset_type_type = AssetType.get_type_by_name(asset_type_structure["type"])
+        asset_type = find_or_add_asset_type(asset_type_type)
+        update_from_object(asset_type_structure, asset_type)
+
+
+def process_node(node_obj, node_struct):
+    if not node_obj.touched:
+        node_obj.name = node_struct['name']
+        node_obj.url = node_struct.get('url', '')
+        node_obj.new_window = node_struct.get('new_window', False)
+        node_obj.condition = node_struct.get('condition', '')
+        node_obj.authentication = MenuNode.AUTH_CHOICES.__getattr__(node_struct.get('authentication', 'both'))
+        node_obj.icon = node_struct.get('icon', '')
+        if node_struct.get('asset', False) and not node_obj.asset:
+            asset_type = AssetType.objects.filter(
+                type=AssetType.ASSET_TYPES.__getattr__(node_struct.get('asset_type', 'documentation')), name=''
+            ).order_by('pk').first()
+            asset = Asset.objects.create(name=node_obj.name, asset_type=asset_type)
+            asset.customizations.set(Customization.objects.all())
+            node_obj.asset = asset
+        node_obj.save(touched=False)
+        node_obj.permissions.set(list(Permission.objects.filter(codename__in=node_struct.get('permissions', []))))
+
+        enabled = node_struct.get('enabled', False)
+        if node_obj.is_global:
+            if type(enabled) is list:
+                customizations = Customization.objects.filter(name__in=enabled)
+            elif enabled is True:
+                customizations = Customization.objects.all()
+            else:
+                customizations = []
+
+            if node_obj.asset:
+                node_obj.asset.customizations.set(customizations)
+            else:
+                node_obj.enabled.set(customizations)
+
+    for inner_node_structure in node_struct.get('nodes', []):
+        inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
+        if not inner_node_obj:
+            last_node = node_obj.nodes.order_by('id').last()
+            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
+        process_node(inner_node_obj, inner_node_structure)
+
+
+def read_menu_structure(filename):
+    with open(filename, 'r', encoding='utf-8') as file_descriptor:
+        menu_structure = json.load(file_descriptor)
+        for menu in menu_structure:
+            menu_obj = Menu.objects.filter(name=menu['name']).first()
+            if not menu_obj:
+                menu_obj = Menu(name=menu['name'], depth=menu['depth'])
+            else:
+                menu_obj.depth = max(menu_obj.depth, menu['depth'])
+            menu_obj.save()
+
+            for node_structure in menu.get('nodes', []):
+                node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
+                if not node_obj:
+                    last_node = menu_obj.nodes.order_by('id').last()
+                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
+                process_node(node_obj, node_structure)
+    Menu.cache_all_customizations()
 
 
 def process_data_structure_type(data_structure, name, value):
@@ -169,7 +267,9 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
             name = name.replace(root, "")
 
         # try to find relevant context
-        context = Context.objects.filter(file_path=name, asset_type=asset_type).first()
+        context = Context.objects.filter(
+            file_path=name, asset_type=asset_type
+        ).prefetch_related('datastructure_set').first()
         if context:
             try:
                 file_content = zip_file.read(zip_name).decode("utf-8")
@@ -221,6 +321,8 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
                 context_template_lines = context_template.split("\n")
 
+                current_values = DataStructure.find_actual_values(context.datastructure_set.all(), asset, draft=True)
+                current_values = {ds.id: val for ds, val in current_values.items()}
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
                         continue
@@ -286,7 +388,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                         value = json.loads(value)
 
                     # if there is a value - compare it with latest draft
-                    current_value = structure.find_actual_value(asset, draft=True)
+                    current_value = current_values[structure.id]
                     if value == current_value:
                         continue
 
@@ -370,7 +472,7 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
     label = record.get("label", "")
     old_name = record.get("old_name", None)
 
-    data_structure = find_or_add_data_structure(name, old_name, context.id, has_lang)
+    data_structure = find_or_add_data_structure(name, old_name, context, has_lang)
     data_structure.label = label
     data_structure.order = order
     data_structure.advanced = record.get("advanced", False)
@@ -381,6 +483,7 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
     data_structure.unique = record.get("unique", False)
     data_structure.description = record.get("description", "")
     data_structure.placeholder = record.get("placeholder", "")
+    data_structure.fieldset = record.get("fieldset", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})
@@ -395,3 +498,97 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.can_preview = asset_type_structure.get("can_preview", False)
     asset_type.single_customization = asset_type_structure.get('single_customization', False)
     asset_type.save()
+
+
+def external_file_to_content_file(url):
+    file_content = requests.get(url).content
+    filename = url.split('/')[-1]
+    return ContentFile(file_content, name=filename)
+
+
+def generate_kb_path_from_var(article_dict):
+    base_path = article_dict['base']
+    kb_path = article_dict['kb']
+    uuid = article_dict['asset_uuid']
+    name = article_dict['asset_name']
+    param_name = article_dict['param_name']
+    if param_name and not param_name.startswith('-'):
+        param_name = '-' + param_name
+    asset, created = Asset.objects.get_or_create(uuid=uuid)
+    if created:
+        asset.name = name
+        asset.save()
+
+    return f'{base_path}/{kb_path}/{asset.id}{param_name}'
+
+
+def sub_vars(match_obj):
+    var_dict = json.loads(match_obj.group(1))
+    if var_dict.get('type', '') == 'kb_article':
+        return generate_kb_path_from_var(var_dict)
+
+
+def update_asset_by_json(asset, asset_json, user):
+    def sub_image_sources(match_obj):
+        file_id = str(uuid.uuid4())
+        files[file_id] = external_file_to_content_file(match_obj[1])
+        return f'src="{{image_import:{file_id}}}"'
+
+    asset_type = asset.asset_type
+    for context in asset_json["contexts"]:
+        context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        data_records = {}
+        files = {}
+        for ds in context["values"]:
+            ds_obj = context_model.datastructure_set.filter(name=ds['name']).first()
+            if ds_obj:
+                ds_type = DataStructure.get_type_by_name(ds['type'])
+                if ds_type not in [DataStructure.DATA_TYPES.file,
+                                   DataStructure.DATA_TYPES.image]:
+                    if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                        files[ds['name']] = external_file_to_content_file(ds['value'])
+                    elif ds_type == DataStructure.DATA_TYPES.html:
+                        if ds_obj.meta_settings.get('upload_data_images', False):
+                            ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                        ds["value"] = re.sub(r'{%(.*?)%}', sub_vars, ds["value"])
+                    data_records[ds["name"]] = ds["value"]
+        save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
+
+
+def import_assets_from_json(assets_list, user, publish=False, increment_progress=None):
+    for asset_dict in assets_list:
+        asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
+        # TODO: CLOUD-6671 Ask for confirmation if asset name does not match
+        asset_obj = Asset.objects.filter(uuid=asset_dict['uuid']).first()
+        if not asset_obj:
+            asset_obj = Asset.objects.create(name=asset_dict['name'], uuid=asset_dict['uuid'], asset_type=asset_type)
+            asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+        elif increment_progress and str(asset_obj.asset_type) != str(asset_type):
+            increment_progress(
+                f'Failed to import <b>"{asset_dict["name"]}"</b>, asset already exist as type <b>"{asset_obj.asset_type}"</b> but is being imported as <b>"{asset_type}"</b>')
+            continue
+        asset_obj.name = asset_dict['name']
+        asset_obj.save()
+        update_asset_by_json(asset_obj, asset_dict, user)
+
+        if publish:
+            published = False
+            # Send for review
+            send_version_for_review(asset_obj, user)
+            asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
+
+            # Accept review
+            for customization in asset_obj.customizations.all():
+                review = AssetCustomizationReview.objects.filter(version__asset=asset_obj, customization=customization).last()
+                if review:
+                    published = True
+                    update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+            if asset_obj.is_documentation and published:
+                DOC_CACHE.clear_cache()
+        if increment_progress:
+            increment_progress()
+
+def check_asset_conflicts(assets_list):
+    assets_dict = {asset.get('uuid'): asset for asset in assets_list}
+    asset_obj_list = Asset.objects.filter(uuid__in=dict.keys(assets_dict))
+    return [f"Existing asset <b>\"{asset.name}\"</b> name conflicts with imported asset <b>\"{assets_dict[str(asset.uuid)]['name']}\"</b>. <b class=\"help\">(UUID: {asset.uuid})</b> " for asset in asset_obj_list if assets_dict[str(asset.uuid)]['name'] != asset.name]

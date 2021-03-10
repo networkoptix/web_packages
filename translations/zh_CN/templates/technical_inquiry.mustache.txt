@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following support question for the {{ message.asset }}:
+您好， {{ message.userFullName }}
+{{ message.sender_name}} （{{ message.sender_email }}）提出了关于 {{ message.asset }}的技术问题：
 <pre>{{ message.message }}</pre>

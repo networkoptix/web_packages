@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
-import { NxConfigService } from './nx-config';
-import { BehaviorSubject } from 'rxjs';
-import { WINDOW } from "./window-provider";
+import { Inject, Injectable }       from '@angular/core';
+import { BehaviorSubject }          from 'rxjs';
+
+import { WINDOW }                   from './window-provider';
 
 enum GRID_BREAKPOINTS {
     xs = 0,
@@ -18,61 +18,73 @@ enum GRID_BREAKPOINTS {
     providedIn: 'root'
 })
 export class NxScrollMechanicsService {
-    CONFIG: any;
-    windowSizeSubject = new BehaviorSubject({height: 0, width: 0});
+    windowSizeSubject = new BehaviorSubject({ height: 0, width: 0 });
     windowScrollSubject = new BehaviorSubject(0);
     elementTableWidthSubject = new BehaviorSubject(0);
     elementViewWidthSubject = new BehaviorSubject(0);
-    offsetSubject = new BehaviorSubject(undefined);
-    panelSubject = new BehaviorSubject(false);
+    searchViewHeightSubject = new BehaviorSubject(0);
+    private panelSubject = new BehaviorSubject(false);
 
+    // trigger offset change
+    offsetSubject = new BehaviorSubject(undefined);
+
+    public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
     public static MEDIA = GRID_BREAKPOINTS;
 
     constructor(
-            private config: NxConfigService,
-            @Inject(WINDOW) private window: Window,
-    ) {
+        @Inject(WINDOW) private window: Window
+    ) {}
 
-        this.CONFIG = this.config.getConfig();
-    }
-
-    setOffset(height: number) {
-        this.offsetSubject.next(height);
-    }
-
-    setElementTableWidth(width: number) {
+    set elementTableWidth(width: number) {
         this.elementTableWidthSubject.next(width);
     }
 
-    setElementViewWidth(width: number) {
+    get elementTableWidth() {
+        return this.elementTableWidthSubject.getValue();
+    }
+
+    set elementViewWidth(width: number) {
         this.elementViewWidthSubject.next(width);
     }
 
-    setWindowSize(height, width) {
-        this.windowSizeSubject.next({ height, width });
-        // this.setMediaSize(width);
+    get elementViewWidth() {
+        return this.elementViewWidthSubject.getValue();
     }
 
-    setWindowScroll(value) {
+    set searchViewHeight(height: number) {
+        this.searchViewHeightSubject.next(height);
+    }
+
+    get searchViewHeight() {
+        return this.searchViewHeightSubject.getValue();
+    }
+
+    setWindowSize(height: number, width: number) {
+        this.windowSizeSubject.next({ height, width });
+    }
+
+    set windowScroll(value: number) {
         this.windowScrollSubject.next(value);
     }
 
-    getElementOffset(el) {
-        const rect = el.getBoundingClientRect();
-
-        return rect.top + window.pageYOffset;
+    get windowScroll() {
+        return this.windowScrollSubject.getValue();
     }
 
-    panelVisible(value) {
+    get panelVisible() {
+        return this.panelSubject.getValue();
+    }
+
+    set panelVisible(value: boolean) {
         this.panelSubject.next(value);
     }
 
-    mediaQueryMax(media) {
+    mediaQueryMax(media: number) {
         return this.window.matchMedia('(max-width: ' + media + 'px)').matches;
     }
 
-    mediaQueryMin(media) {
+    mediaQueryMin(media: number) {
         return this.window.matchMedia('(min-width: ' + media + 'px)').matches;
     }
 }

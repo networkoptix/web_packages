@@ -1,0 +1,44 @@
+<div class="navigation-tile" [style.width.px]="width">
+    <div class="d-flex align-middle">
+        <svg-icon
+                class="section-title-icon"
+                *ngIf="node.icon"
+                [src]="iconsDir + node.icon"
+                [svgStyle]="{
+                    'width.px': 24,
+                    'height.px': 24,
+                    'position': 'absolute',
+                    'top.px': 0,
+                    'left.px': 10,
+                    'display': 'inline-block'}"></svg-icon>
+        <h5 class="section-title"
+            [ngClass]="{'no-link': node.url == ''}"
+            [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined">{{node.name}}</h5>
+    </div>
+
+    <ul *ngIf="node.nodes && node.nodes.length" class="list-unstyled nav-links-section">
+        <ng-container *ngFor="let link of node.nodes" >
+            <li class="nav-links"
+                [style.padding-right.px]="link.new_window || link.icon ? 0 : 8"
+                [ngClass]="{'active': headerService.currentLocation.path === link.url || checkActive(link.url) }">
+                <ng-template #internalLink>
+                    <a [routerLink]="link.url">
+                        {{link.name}}
+                    </a>
+                </ng-template>
+                <a *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink" [href]="link.url" [target]="link.new_window ? '_blank' : '_self'">
+                    {{link.name}}
+                </a>
+                <svg-icon
+                        style="width: 24px; height: 24px; float: right;"
+                        *ngIf="link.new_window || link.icon"
+                        [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
+                        [svgStyle]="{
+                            'margin-top.px': -1,
+                            'width.px': 24,
+                            'height.px': 24,
+                            'display': 'inline-block'}"></svg-icon>
+            </li>
+        </ng-container>
+    </ul>
+</div>

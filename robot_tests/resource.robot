@@ -1,23 +1,30 @@
 *** Settings ***
-Library      SeleniumLibrary    run_on_failure=Failure Tasks
-Library      String
-Library      Collections
-Library      NoptixImapLibrary
-Library      NoptixLibrary
-Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
+Resource     Resources/front-end-resources.robot
+Resource     Resources/cms-resources.robot
+Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
+Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      SSHLibrary
+Library      String
+Library      DateTime
+Library      Collections
+Library      OperatingSystem
+Library      NoptixImapLibrary
+Library      NoptixLibrary
+Library      NoptixLibrary/CloudPortalAPI.py
+Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
+Library      pabot.PabotLib
 
 *** Variables ***
-${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
-@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless
+@{chrome_arguments}    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -25,34 +32,39 @@ ${selenium_timeout}    30
 
 *** Keywords ***
 Open Browser and go to URL
-    [Arguments]    ${url}
-    Run Keyword If    "${options}"=="false" or "${headless}"=="false"    Regular Open Browser
+    [Arguments]    ${url}    ${import IDs}=${True}    ${check language}=${True}
+    Run Keyword If    ${import IDs}    Run Keywords
+        ...    Acquire Lock    MyLock    AND
+        ...    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}    AND
+        ...    Release Lock    MyLock
+    Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
-    Check Language Anonymous
+    Run Keyword If    ${check language}    Run Keywords
+       ...    Go To    ${ENV}    AND
+       ...    Check Language Anonymous
     Go To    ${url}
 
 Regular Open Browser
-    Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
+    #Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
-    Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
+    #Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options Headless
-    ${system}=    Evaluate    platform.system()    platform
-    Run Keyword if    "${system}"=="Darwin"      Create Webdriver    Chrome    chrome_options=${chrome_options}    executable_path=/usr/local/bin/chromedriver
-    ...            ELSE    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
-    Go to    ${ENV}
+   # Go to    ${ENV}
 
 Open page anonymously
     [Arguments]    ${url}    ${title}
     Go To    ${url}
     Location should be    ${url}
+    Sleep   3
     Title should be    ${title}
 
 Set Chrome Options
@@ -78,7 +90,7 @@ Check Language Anonymous
     Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
 Check Language Logged In
-    [Arguments]    ${email}    ${password}
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
@@ -89,13 +101,13 @@ Set Language Anonymous
     Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
-    Click Element    ${LANGUAGE TO SELECT}
+    Wait Until Element Is Visible    //header//nx-header-language-select//span[@lang='${lang}']/..
+    Click Element    //header//nx-header-language-select//span[@lang='${lang}']/..
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${cms}=${False}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
@@ -107,9 +119,8 @@ Log In
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}    password=${password}
+    Run Keyword If    ${validate} == ${True} and ${cms}==${True}    Validate cms Log In
     Sleep    0.5
 
 Log In With Remember Me
@@ -124,15 +135,25 @@ Log In With Remember Me
     Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
-    Validate Log In
+    Validate Log In    ${email}
+
+Log in to Auto Tests System
+    [Arguments]    ${email}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${EDITABLE TITLE}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
-    [Arguments]    ${timeout}=${selenium_timeout}
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
+    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
+    Check Language Logged In    ${email}    ${password}
 
 Check Log In
-    [arguments]    ${button}=${LOG IN NAV BAR}
+    [Arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
@@ -142,7 +163,7 @@ Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
     Wait Until Page Contains Element    ${LOG OUT BUTTON}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    Sleep    .05    #Ubuntu was clicking too soon
+    Sleep    .25    #Ubuntu was clicking too soon
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
     Click Link    ${LOG OUT BUTTON}
@@ -153,33 +174,53 @@ Validate Log Out
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
     Check Language Anonymous
 
+Log Out No Language
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+    Wait Until Page Contains Element    ${LOG OUT BUTTON}
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    .05    #Ubuntu was clicking too soon
+    Click Button    ${ACCOUNT DROPDOWN}
+    Wait Until Element Is Visible    ${LOG OUT BUTTON}
+    Click Link    ${LOG OUT BUTTON}
+    Validate Log Out
+
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
 Register
-    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
     Run Keyword If    '${from}'=='desktop'    Go To    ${ENV}/register
     Run Keyword If    '${from}'=='mobile'     Go To    ${ENV}/register/?from=mobile
     Run Keyword If    '${from}'=='client'     Go To    ${ENV}/register/?from=client
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
-    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    5
+    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
     Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
 
+Verify in Account Page
+    Wait Until Elements are Visible
+    ...    ${ACCOUNT EMAIL}
+    ...    ${ACCOUNT FIRST NAME}
+    ...    ${ACCOUNT LAST NAME}
+    ...    ${ACCOUNT LANGUAGE DROPDOWN}
+    ...    ${ACCOUNT DROPDOWN}
+    ...    ${DELETE ACCOUNT BUTTON}
+    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    sleep    .5
 
 Validate Register Success
-    [arguments]    ${location}=${url}/register/success
+    [Arguments]    ${location}=${ENV}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Wait Until Location Is    ${location}
     Run keyword and continue on failure    Title should be    ${WELCOME TEXT} ${PRODUCT_NAME}
 
 Validate Register Email Received
-    [arguments]    ${recipient}
+    [Arguments]    ${recipient}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -188,7 +229,7 @@ Validate Register Email Received
     Close Mailbox
 
 Get Email Link
-    [arguments]    ${recipient}    ${link type}    ${timeout}=120
+    [Arguments]    ${recipient}    ${link type}    ${timeout}=120
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
     Run Keyword If    "${link type}"=="activate"    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -203,29 +244,48 @@ Get Email Link
     Return From Keyword    ${links}
 
 Activate
-    [arguments]    ${email}
+    [Arguments]    ${email}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     Go To    ${ENV}/activate/${code}
-    Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
+    Wait Until Elements Are Visible
+    ...    ${ACTIVATION SUCCESS}
+    ...    ${ACTIVATION SUCCESS ICON}
+    ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
     Location Should Be    ${ENV}/activate/success
+
+Validate Activation Success
+    ${current url}=   Get Location
+    Wait Until Location Contains    ${current url}
+    Wait Until Elements Are Visible
+    ...    ${ACTIVATION SUCCESS}
+    ...    ${ACTIVATION SUCCESS ICON}
+    ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
 
 Register And Activate Account
     [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
     Run Keyword If    '${reg}'=='api'    Register Account    ${first name}    ${last name}    ${email}    ${password}
     Run Keyword If    '${reg}'=='ui'     Register    ${first name}    ${last name}    ${email}    ${password}
+    Sleep    1
     Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
     Run Keyword If    '${act}'=='ui'     Activate    ${email}
     Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
 
 Register and activate account with random email
-    [Arguments]    ${first name}    ${last name}    ${password}
+    [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
     ${email}=    Get Random Email    ${BASE EMAIL}
-    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    act=${act}
     [Return]    ${email}
+
+Disconnect all systems from account
+    [Arguments]    ${email}     ${password}
+    ${systems}=   Get Account Systems    ${ENV}    ${email}    ${password}
+    FOR    ${sys}    IN    @{systems}
+        Disconnect    ${ENV}    ${email}    ${password}    ${sys}
+    END
 
 # Replaced with "Restore password using API"
 Restore password
-    [arguments]    ${email}
+    [Arguments]    ${email}
     #log in to user to make sure their language is set to the current
     Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
     # Open Browser and go to URL    ${url}
@@ -264,32 +324,47 @@ Go to Users List
     Go To    ${location}/users
 
 Go to System Administration
-    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
+    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}    timeout=30
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
-    [arguments]    ${email}    ${permissions}
+    [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${email}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${email}
+    Wait Until Element Is Visible    ${ADD USER PERMISSIONS DROPDOWN}
     Sleep    1
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Button    ${ADD USER BUTTON MODAL}
+    ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}
+    Run Keyword If    '${alert}'=='success'    Wait Until Element is Not Visible    ${ADD USER MODAL}
+    ...    ELSE IF   '${alert}'=='fail'    Run Keywords
+    ...    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}     border-color    ${ERROR COLOR}    AND
+    ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND
+    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}
+    ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
+    Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
+
+Rename System or hardware
+    [Arguments]    ${name}
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${name}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
-    Wait Until Element Is Not Visible    ${SHARE MODAL}
+    Wait Until Element Is Not Visible    ${ADD USER MODAL}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
     Select user in Users List    ${user email address}
+    Sleep    3
     Change User Permissions    ${permissions}
     Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
     Wait Until Element Is Visible    ${ACCOUNT SAVE}
@@ -311,21 +386,45 @@ Check User Permissions
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT CUSTOM}
+    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
+
+Get Cloud User Role
+    [Arguments]    ${auth}    ${email}    ${system id}
+    @{users}=   Get Cloud System Users   ${auth}    ${system id}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    ${user}[accessRole]
+    END
+
+Get Cloud User Id By Email
+   [Arguments]    ${auth}    ${email}    ${system id}
+   @{users}=   Get Cloud System Users    ${auth}    ${system id}
+   FOR    ${user}    IN    @{users}
+       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
+   END
+
+Get System User Id By Email
+    [Arguments]    ${email}
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${email}'    Run Keywords
+        ...    Set Test Variable    ${id}    ${user}[id]
+        ...    AND     Exit For Loop
+    END
+    [Return]    ${id}
 
 Change User Permissions
     [arguments]    ${permissions}
@@ -345,13 +444,12 @@ Remove User Permissions
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element Is Visible    ${REMOVE BUTTON}
     Click Button    ${REMOVE BUTTON}
-    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
+#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
     Wait Until Element Is Not Visible    ${User In List}
 
 Select user in Users List
     [arguments]    ${user email address}
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${SHARE BUTTON SYSTEMS}   5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
     Run Keyword Unless    ${status}   Go To Users List
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
     Wait Until Element Is Visible    ${User In List}
@@ -372,19 +470,27 @@ Check For Alert Dismissable
     Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
 Verify In System
-    [arguments]    ${system name}
+    [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
-    Wait Until Element Is Visible    //h2[contains(@class,"system-name") and contains(text(), '${system name}')]
+    Run Keyword If    ${editable}    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
+        ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Sleep    5
+#    Sleep    5
+
+Disconnect from my account
+    Go to System Administration
+    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Click Button    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
 
 Failure Tasks
     [timeout]    5 minutes
@@ -401,6 +507,12 @@ Wait Until Elements Are Visible
         Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
     END
 
+Wait Until Elements Are Enabled
+    [Arguments]    @{elements}    ${timeout}=5
+    FOR     ${element}  IN  @{elements}
+        Run Keyword And Continue On Failure    Wait Until Element Is Enabled    ${element}    timeout=${timeout}
+    END
+
 Elements Should Not Be Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
@@ -412,6 +524,27 @@ Wait Until Page Does Not Contain Elements
     FOR     ${element}  IN  @{elements}
         Wait Until Page Does Not Contain Element    ${element}    ${timeout}
     END
+
+Wait Until Elements Are Not Visible
+    [Arguments]    @{elements}
+    FOR    ${element}    IN    @{elements}
+        Wait Until Element Is Not Visible    ${element}
+    END
+
+Wait Until Elements Are Disabled
+    [Arguments]    @{elements}    ${timeout}=10
+    FOR    ${element}    IN    @{elements}
+        ${status}=   Element Should Be Disabled    ${element}
+        Run Keyword Unless    ${status}    Run Keywords
+            ...    Sleep    ${timeout}
+            ...    AND    Element Should Be Disabled    ${element}
+    END
+
+Slow
+    [Arguments]    ${keyword}    @{args}    ${timeout}=0.1
+    Sleep    ${timeout}
+    Run Keyword    ${keyword}    @{args}
+    Sleep    ${timeout}
 
 #Reset resources
 Clean up email noperm
@@ -466,11 +599,11 @@ Reset user noperm first/last name
     Close Browser
 
 Add notowner
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
-    Click Button    ${SHARE BUTTON MODAL}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${EMAIL NOT OWNER}
+    Click Button    ${ADD USER BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
     Check User Permissions    ${EMAIL NOT OWNER}    ${CUSTOM TEXT}
     Close Browser
@@ -501,22 +634,29 @@ Make sure viewer is in the system
     Close Browser
 
 User is in cloud system
-    [Arguments]    ${user email}    ${system id}
+    [Arguments]    ${user email}    ${system id}    ${auth}=${auth}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        ${status}=   Run keyword and return status    Should be equal as strings   '&{user}[accountEmail]'    '${user email}'
+        ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
         Run Keyword If   ${status}    Exit For Loop
     END
     [Return]    ${status}
 
 Add user to cloud system if not there
-    [Arguments]    ${system id}    ${access role}    ${email}
-    ${is there}=   User is in cloud system    ${email}    ${system id}
-    Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
+    [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
+    ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
+    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}
+
+Connect system to cloud if not
+    [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
+    Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
+    [Return]    ${current cloud system id}
 
 Reset System Names
-    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
-    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${AUTO TESTS 2}
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    ${AUTO TESTS}
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}
@@ -567,11 +707,12 @@ Get All Descendant WebElements
     ...    by=xpath    value=.//*
     [Return]    ${descendants}
 
-Wait Until Number Of Tabs Are Open
-    [Arguments]    ${number}
-    @{tabs}=   Get Window Handles
-    ${current tabs}=   Get length    ${tabs}
-    Wait For Condition       return ${current tabs}==${number}
+#Wait Until Number Of Tabs Are Open
+#    [Arguments]    ${number}
+#    FOR    
+#    @{tabs}=   Get Window Handles
+#    ${current tabs}=   Get length    ${tabs}
+#    Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
     #${saved cookie1} =     Get Cookie    _ga
@@ -628,3 +769,331 @@ Convert Code
     ${code}=   Replace String Using Regexp    ${code}    %3D    =
     ${code}=   Replace String Using Regexp    ${code}    %2B    +
     [Return]    ${code}
+
+Get the link from email
+    [Arguments]    ${email host}    ${email receipient}    ${password}    ${path}    ${timeout}=120
+    Open Mailbox    host=${BASE HOST}    password=${password}    port=${BASE PORT}    user=${email host}    is_secure=True
+    ${email index}=   Wait For Email    recipient=${email receipient}    timeout=${timeout}    status=UNSEEN
+    ${link}=   Get Nx Links From Email    ${email index}    ${path}
+    Delete Email    ${email index}
+    Close Mailbox
+    [Return]    ${link}
+
+Get Key from Value
+    [Arguments]    ${dict}   ${value}
+    @{dict keys} =    Get Dictionary Keys    ${dict}
+    FOR    ${key}     IN     @{dict keys}
+        Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
+    END
+
+Create Local Users via API
+    [Arguments]    ${auth}    ${server}    ${local users}    ${password}
+    FOR    ${user}    IN    @{local users}
+        Save User    ${auth}    ${server}    ${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+    END
+    [return]    @{local users}
+
+Delete All Local Users
+    [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
+    Wait Until Element is Visible    ${locator}
+    ${local users} =    Get Element Count     ${locator}
+    #Click Element    ${locator}[1]
+    FOR    ${node}   IN RANGE   ${local users}
+        Wait Until Element is Visible    ${locator}
+        Click Element    ${locator}
+        Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
+        Click Button    ${LOCAL USER DELETE BUTTON}
+        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON}
+        Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Sleep    2
+        Reload Page
+    END
+    Wait Until Element is Visible    //span[text()="admin"]
+    Page Should Not Contain Element     ${locator}
+
+Check Password Badge
+    [arguments]    ${pass}    ${new focus}
+    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}     Wait Until Element Is Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}          Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
+
+    Mouse Over    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO SHORT TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
+
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge stays    ${PASSWORD INCORRECT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Move focus and check badge stays    ${PASSWORD IS TOO SHORT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}         Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
+
+Move focus and check badge disappears
+    [Arguments]    ${badge}    ${new focus}
+    Element Should Be Visible    ${badge}
+    Click Element    ${new focus}
+    Wait Until Element Is Not Visible    ${badge}
+
+Move focus and check badge stays
+    [Arguments]    ${badge}    ${new focus}
+    Element Should Be Visible    ${badge}
+    Click Element    ${new focus}
+    Element Should Be Visible    ${badge}
+
+Move focus and check element
+    [Arguments]    ${element}    ${new focus}
+    Click Element    ${new focus}
+    Wait Until Element is Visible    ${element}
+
+Check New Password Outline and Error Message
+    [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
+    Click Element    ${new focus}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
+    ...    Element Style Should Be    ${input}    border-color    ${ERROR COLOR}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
+    ...    Element Style Should Be    ${input}    color    ${ERROR COLOR WITH OPACITY}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
+    ...    //nx-password-input[@name='${input name}' and contains(@class, 'ng-invalid')]//input[@id="${input name}"]
+    # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${new focus}
+    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Move focus and check element    ${PASSWORD TOO SHORT}    ${new focus}
+    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${new focus}
+    ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
+    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
+# ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
+
+Check System Text
+    [Arguments]    ${user}    ${sysId}
+    Log Out
+    Log in to user and system    ${user}    ${sysId}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+
+Get Lang List
+    ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
+    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
+    [Return]    ${lang dict}
+    
+Log In If Needed
+    [Arguments]    ${email}    ${password}
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Log In    ${email}    ${password}    button=None    AND
+    ...    Validate Log In    ${email}
+
+Register and Activate Generic Users
+    [Arguments]    ${password}=${BASE PASSWORD}
+    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
+    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
+    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
+    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
+    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
+    &{generic users}=    Create Dictionary     admin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advViewer=${adv viewer}    custom=${custom}
+    [Return]    &{generic users}
+
+Create Docker Server
+    [Arguments]    ${name}     ${image}=4.1_test    ${storage string}=${EMPTY}
+    ${mac}=   Get Random MAC
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --privileged --mac-address=${mac} ${storage string} ${image}
+    ${results}    Execute Command    docker container port ${name}
+    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    [Return]    ${port1}
+
+Setup Docker Server
+    [Arguments]    ${image}=4.1_test
+    ${server}=   Create Dictionary
+    Acquire Lock   create_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 ${image}
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    ${port info}=   Execute Command    docker container port ${id}
+    ${port info}=   Split String    ${port info}    :
+    Set to Dictionary    ${server}    port=${port info}[1]
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   create_server_lock
+    [Return]    ${server}
+
+Setup Custom Docker Server
+    [Arguments]    ${network}=host    ${image}=4.1_test
+    ${server}=   Create Dictionary
+    ${mac}=   Get Random MAC
+    Acquire Lock   create_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
+    ...    ELSE   Set Local Variable    ${vms}    new
+    # Get random available port
+    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
+                  ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    Set to Dictionary    ${server}    port=${port}
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   create_server_lock
+    [Return]    ${server}
+
+Setup Docker System
+    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
+    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
+    Set To Dictionary    ${system}    cont=${system}[cont]
+    ${auth}=   Create List    admin    ${base password}
+    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+    Return From Keyword If    not $cloud_email    ${system}
+
+#   Connect system to cloud if email is provided
+    Set To Dictionary    ${system}    owner=${cloud email}
+    ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
+    Set To Dictionary    ${system}    id=${id}
+    [Return]    ${system}
+
+Create Base Cloud System
+    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${add users}=${True}
+    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
+    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
+    ...               where "Create Base Cloud System" is called
+
+    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
+    ${local auth}=   Create List    admin    ${base password}
+    ${cloud auth}=   Create List    ${owner}    ${base password}
+    Set Suite Variable    ${cloud auth}
+    Set Suite Variable    ${local auth}
+    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
+    Set Suite Variable    ${system}
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
+    Return From Keyword If    not $add_users
+
+    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
+    Set Suite Variable    ${email noperm}
+    ${users}=   Create Dictionary
+    FOR    ${role}    IN    @{permissions.keys()}
+        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
+        Sleep    1
+        Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+        Set To Dictionary    ${users}    ${role}=${email}
+    END
+    Set Suite Variable    ${users}
+
+Delete Base Cloud System
+    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
+    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
+    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
+        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+    END
+    Delete Docker Server    ${system}[cont]
+
+Create Custom Network
+    [Arguments]    ${name}    ${num}
+    ${driver}=   Set Variable    bridge
+    ${subnet}=   Set Variable    192.28.${num}.0/24
+    ${ip range}=   Set Variable    192.28.${num}.0/24
+    ${gateway}=    Set Variable    192.28.${num}.254
+    ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
+    Execute Command Remotely    ${cmd}
+    [Return]    ${net id}
+
+Remove Custom Network
+    [Arguments]    ${net id}
+    Execute Command Remotely    docker network rm ${net id}
+    [Return]    ${net id}
+
+Delete Docker Server
+    [Arguments]    ${name}
+    Execute Command Remotely    docker rm -f ${name}
+    [Return]    ${False}
+
+Start Docker Server
+    [Arguments]    ${name}
+    Execute Command Remotely    docker start ${name}
+
+Stop Docker Server
+    [Arguments]    ${name}
+    Execute Command Remotely    docker stop ${name}
+
+Restart Docker Server
+    [Arguments]    ${port}    ${name}    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    Sleep    10
+    Acquire Lock   restart_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   restart_server_lock
+    [Return]    ${port info}[1]
+
+Get container port by name
+    [Arguments]    ${name}
+    Acquire Lock   get_port_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${port info}=   Execute Command    docker container port ${name}
+    ${port info}=   Split String    ${port info}    :
+    Close Connection
+    Release Lock   get_port_lock
+    [Return]    ${port info}[1]
+
+Get container id by name
+    [Arguments]    ${name}
+    Acquire Lock    get_id_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${id}=   Execute Command    docker ps -qaf "name=^${name}"
+    Close Connection
+    Release Lock    get_id_lock
+    [Return]    ${id}
+
+Page Should Not Contain Elements
+    [Arguments]    @{locators}
+    FOR    ${loc}    IN    @{locators}
+        Page Should Not Contain Element    ${loc}
+    END
+
+Execute Command Remotely
+    [Arguments]    ${command}    ${host ip}=${QA BURBANK IP}    ${host user}=${QA BURBANK USER}    ${host password}=${QA BURBANK PASS}
+    Acquire Lock    exec_cmd_lock
+    Open Connection    ${host ip}
+    SSHLibrary.Login    ${host user}    ${host password}
+    ${result}=   Execute Command    ${command}
+    Close Connection
+    Release Lock    exec_cmd_lock
+    [Return]    ${result}
+
+Wait Until Element is Visible with Retry
+    [Arguments]    ${element}    ${timeout}=120
+    ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
+    Run Keyword If    ${load} == ${FALSE}    Reload Page
+    Wait Until Element is Visible    ${element}   timeout=${timeout}
+    
+Verify No Horizontal Scrollbar
+    [Arguments]    ${outer element}    ${inner element}
+    ${width out}    ${height out} =    Get Element Size    ${outer element}
+    ${width in}     ${height in} =    Get Element Size    ${inner element}
+    Should Be Equal As Numbers    ${width out}    ${width in} 
+    
+Verify Horizontal Scrollbar Exists
+    [Arguments]    ${outer element}    ${inner element}
+    ${width out}    ${height out} =    Get Element Size    ${outer element}
+    ${width in}     ${height in} =    Get Element Size    ${inner element}
+    Should Be True    ${width out} < ${width in}    
+    

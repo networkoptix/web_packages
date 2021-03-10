@@ -1,0 +1,11 @@
+<h1>Hola, {{message.userFullName}}</h1>
+
+{{#message.sharer_name}}
+<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> ha compartit l'accés al sistema de gestió de vídeo "{{message.system_name}}" amb vós.</p>
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+<p>Se us ha atorgat accés al sistema de gestió de vídeo "{{message.system_name}}.</p>
+{{/message.sharer_name}}
+
+<a class="btn" href="{{config.portal_url}}/systems/{{message.system_id}}">Mostra al portal de %CLOUD_NAME%</a>

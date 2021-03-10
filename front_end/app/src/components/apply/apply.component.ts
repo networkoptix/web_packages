@@ -1,30 +1,38 @@
-import { Component, forwardRef, Input, HostListener, ViewChild } from '@angular/core';
+import {
+    Component, forwardRef, Input,
+    HostListener, ViewChild
+}                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
-import { NxProcessButtonComponent } from '../process-button/process-button.component';
+
+import { NxProcessButtonComponent }  from '../process-button/process-button.component';
 
 
 @Component({
-    selector: 'nx-apply',
+    selector   : 'nx-apply',
     templateUrl: 'apply.component.html',
-    styleUrls: ['apply.component.scss'],
-    providers: [
+    styleUrls  : ['apply.component.scss'],
+    providers  : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxApplyComponent),
-            multi: true
+            multi      : true
         }
     ],
 })
 export class NxApplyComponent {
-    @ViewChild(NxProcessButtonComponent, {static: false}) processButton: NxProcessButtonComponent;
-
-    @Input() show: boolean;
-    @Input() save: any;
-    @Input() discard: any;
+    @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;
+    @Input() save;
+    @Input() discard;
     @Input() warn: string;
     @Input() form: NgForm;
+    @Input() submitFn: () => any = () => null;
+    @Input() showSectionWarning = false;
+    @Input() showDiscard = false;
 
-    applyVisible: boolean;
+    show = false;
+    applyVisible = false;
+    isOnline = false;
+    ready = false
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {

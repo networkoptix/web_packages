@@ -1,5 +1,5 @@
 <div class="container" >
-    <div class="form-horizontal" novalidate >
+    <form class="form-horizontal" novalidate >
         <h1>Debug new proxy</h1>
 
         <div class="form-group">
@@ -23,9 +23,7 @@
             </div>
 
             <div class="col-sm-4">
-                <p class="help-block">
-                    {{debugProxySettings.systemId.value}}
-                </p>
+                <p class="help-block">{{debugProxySettings.systemId.value}}</p>
             </div>
         </div>
 
@@ -90,9 +88,7 @@
             </div>
 
             <div class="col-sm-4">
-                <p class="help-block">
-                    {{mergeSettings.masterSystemId}}
-                </p>
+                <p class="help-block">{{mergeSettings.masterSystemId}}</p>
             </div>
         </div>
 
@@ -108,9 +104,7 @@
             </div>
 
             <div class="col-sm-4">
-                <p class="help-block">
-                    {{mergeSettings.slaveSystemId}}
-                </p>
+                <p class="help-block">{{mergeSettings.slaveSystemId}}</p>
             </div>
         </div>
 
@@ -307,5 +301,5 @@
                 <pre *ngIf="result" [innerHTML]="result"></pre>
             </div>
         </div>
-    </div>
+    </form>
 </div>

@@ -6,30 +6,30 @@
     "emailSubject": "Bạn đã được mời đến %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Yêu cầu bán hàng cho {{message.asset}}"
+    "emailSubject": "Yêu cầu bán hàng cho {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "Yêu cầu kỹ thuật cho {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Phản hồi cho {{message.asset}}"
+    "emailSubject": "Phản hồi cho {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Phản hồi Trang camera{{#message.asset}} cho {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Phản hồi trang camera{{#message.asset}} cho {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} có phiên bản mới để xem xét"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} có phiên bản mới để xem xét"
   },
   "restore_password": {
     "emailSubject": "Đặt lại mật khẩu của bạn"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} mời bạn sử dụng hệ thống %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}hiện hệ thống {{message.system_name}} đã được chia sẻ với bạn{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} mời bạn đến %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Hệ thống video {{{message.system_name}}} đã được chia sẻ với bạn{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Hệ thống video {{message.system_name}} đã được chia sẻ với bạn"
+    "emailSubject": "Hệ thống video {{{message.system_name}}} đã được chia sẻ với bạn"
   }
 }

@@ -1,0 +1,14 @@
+*** Settings ***
+Resource     front-end-variables/system-server-variables.robot
+Resource     front-end-variables/health-monitor-variables.robot
+Resource     front-end-variables/restore-pass-variables.robot
+Resource     front-end-variables/change-pass-variables.robot
+Resource     front-end-variables/register-variables.robot
+Resource     front-end-variables/system-camera-variables.robot
+Resource     front-end-variables/system-admin-variables.robot
+Resource     front-end-variables/systems-page-variables.robot
+Resource     front-end-variables/licenses-variables.robot
+Resource     front-end-variables/ipvd-variables.robot
+Resource     front-end-variables/integrations-variables.robot
+Resource     front-end-variables/header-variables.robot
+Resource     front-end-variables/system-settings-menu-variables.robot

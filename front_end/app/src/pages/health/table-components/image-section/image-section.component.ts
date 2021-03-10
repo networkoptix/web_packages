@@ -1,8 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { NxHealthService } from '../../health.service';
+import {
+    AfterViewInit, Component,
+    ElementRef, Input, OnChanges,
+    OnDestroy, ViewChild
+}                                  from '@angular/core';
+import { UntilDestroy }            from '@ngneat/until-destroy';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { debounceTime }            from 'rxjs/operators';
+
+import { NxHealthService }         from '../../health.service';
 
 interface ThumbNail {
     loaded: boolean;
@@ -10,15 +15,15 @@ interface ThumbNail {
     url: string;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-image-section',
-    templateUrl: './image-section.component.html',
-    styleUrls: ['./image-section.component.scss']
+    selector    : 'nx-image-section',
+    templateUrl : './image-section.component.html',
+    styleUrls   : ['./image-section.component.scss']
 })
 export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
-    @Input() cameraInfo: any;
-    @ViewChild('imageWidth', {static: false}) imageSize: ElementRef;
+    @Input() cameraInfo;
+    @ViewChild('imageWidth', { static: false }) imageSize: ElementRef;
     cameraId: string;
     changeRow: boolean;
     ready: boolean;
@@ -45,7 +50,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
     }
 
     ngOnChanges(changes: any) {
-        const cameraInfo = changes.cameraInfo && changes.cameraInfo.currentValue;
+        const cameraInfo = changes.cameraInfo?.currentValue;
         if (!cameraInfo) {
             return;
         }
@@ -58,9 +63,9 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             .map((cameraProp: any) => {
                 const time = cameraProp.thumbnail.text;
                 return {
-                    loaded: false,
+                    loaded : false,
                     time,
-                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
+                    url    : this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
                 };
             }).sort((a: any, b: any) => {
                 if (a.time === 'now') {
@@ -72,8 +77,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             });
     }
 
-
     showPreloader() {
-        setTimeout(() => this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded));
+        setTimeout(() => { this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded); });
     }
 }

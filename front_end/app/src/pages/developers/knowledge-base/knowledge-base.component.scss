@@ -1,0 +1,179 @@
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/typography';
+@use 'bootstrap_utils' as bootstrap;
+
+.page-wrapper {
+    display: grid;
+    grid-column-gap: 1rem;
+    grid-template-columns: repeat(12, 1fr);
+    background: $light1;
+    padding: 1rem;
+    min-height: 100%;
+    grid-auto-rows: min-content;
+    @include bootstrap.media-breakpoint-up(md) {
+        grid-auto-rows: auto;
+    }
+    nx-left-menu {
+        background: $additional_light2;
+        margin: -1rem -1rem 1rem -1rem;
+        padding: 1rem;
+        grid-column: span 12;
+        grid-row: 1 / -1;
+
+        ::ng-deep .menu-level-2 > .menu-link {
+            font-size: 13px !important;
+        }
+
+        @include bootstrap.media-breakpoint-up(md) {
+            position: sticky;
+            overflow-y: auto;
+            max-height: calc(100vh - 3rem);
+            top: 0;
+            margin: -1rem 0 -1rem -1rem;
+            grid-column: span 4;
+        }
+        @include bootstrap.media-breakpoint-up(lg) {
+            grid-column: span 3;
+        }
+        @include bootstrap.media-breakpoint-up(xl) {
+            grid-column: span 2;
+        }
+    }
+}
+
+.narrow-section {
+    grid-column: span 12;
+    @include bootstrap.media-breakpoint-up(lg) {
+        grid-column: span 8;
+    }
+    @include bootstrap.media-breakpoint-up(lg) {
+        grid-column: span 7;
+    }
+    @include bootstrap.media-breakpoint-up(xl) {
+        grid-column: span 6;
+    }
+}
+
+.wide-section {
+    grid-column: span 12;
+    @include bootstrap.media-breakpoint-up(lg) {
+        grid-column: span 8;
+    }
+}
+
+.knowledge-base {
+    display: grid;
+    column-gap: 1rem;
+    grid-column: span 12;
+    grid-auto-rows: min-content;
+    grid-template-columns: repeat(12, 1fr);
+    & > *:not(.narrow-section) {
+        grid-column: 1 / -1;
+    }
+    @include bootstrap.media-breakpoint-up(md) {
+        grid-template-columns: repeat(8, 1fr);
+        grid-column: span 8;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+    @include bootstrap.media-breakpoint-up(lg) {
+        grid-template-columns: repeat(9, 1fr);
+        grid-column: span 9;
+    }
+    @include bootstrap.media-breakpoint-up(xl) {
+        grid-template-columns: repeat(10, 1fr);
+        grid-column: span 10;
+    }
+}
+
+.results-heading {
+    font-size: 1.375em !important;
+    margin: 1.375em 0 .75em 0;
+}
+
+.doc-link {
+    @include typography.medium15dark9;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.more-results {
+    @extend .narrow-section;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.results-preloader {
+    height: 80px;
+}
+
+.related-section {
+    @extend .narrow-section;
+    margin: 1rem;
+    padding: 2rem 0 1rem 0;
+    border-top: 2px solid $additional_light2;
+
+    & > h4 {
+        @include typography.medium15dark17;
+        letter-spacing: 0.64px;
+    }
+
+    a {
+        display: block;
+    }
+}
+
+::ng-deep .article-content {
+    font-size: 1rem;
+    p,li, h1, h2, h3, a {
+        word-break: break-word;
+    }
+    p, ul, ol {
+        margin-block-start: 16px;
+        margin-block-end: 16px;
+    }
+    p, li {
+        font-size: 0.8125rem !important;
+    }
+    h1, h2 {
+        margin-block-start: 32px;
+        margin-block-end: 24px;
+    }
+
+    h1.page-title {
+        font-family: $font-family-medium;
+        font-size: typography.$h2-font-size !important;
+    }
+
+    h1 {
+        font-size: 1.5em !important;
+    }
+
+    h2 {
+        font-size: 1.375em !important;
+    }
+
+    h3 {
+        font-family: $font-family-medium;
+        font-size: 0.9375em !important;
+    }
+
+    h3, h4, h5, h6 {
+        margin-block-start: 24px;
+        margin-block-end: 16px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        display: block;
+    }
+
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}

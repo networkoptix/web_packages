@@ -1,16 +1,11 @@
 *** Settings ***
-Resource          ../ipvd_resource.robot
-Suite Setup       Open Browser and go to URL    ${url}/ipvd
+Library           OperatingSystem
+Library           DateTime
+Resource          ../resource.robot
+Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        Restart
-Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser on Failure
 Suite Teardown    Close All Browsers
-Force Tags        Threaded File
-
-*** Variables ***
-${url}         ${ENV}
-
-*** Keywords ***
-
+Force Tags        Threaded 
 
 *** Test Cases ***
 IPVD Page loads without Login
@@ -18,35 +13,32 @@ IPVD Page loads without Login
 
 IPVD Page loads while Logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Validate Log In
     Go To IPVD Page
 
 IPVD landing page actions
-    [Tags]    C48791    IPVD
-
+    [Tags]    C48791
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
-    ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
     Validate on IPVD Page
-    Should Be Equal as Strings    ${search_placeholder}    ${IPVD SEARCH PLACEHOLDER TEXT}
-    ...    ignore_case=true
-    Element should contain    ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}
-    ...    ignore_case=true
-    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    ${IPVD ADV FILTER MFRS}
-    ...    ignore_case=true
-    ${numVendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
-    Should Not Be Equal As Numbers  ${numVendors}   0
-    Element should contain      ${IPVD DEVICES PANE}//header/span    ${IPVD DEVICES TEXT}
-    ...    ignore_case=true
-    ${numDeviceTypes}=   Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
-    Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}
-    ...    ignore_case=true
+    ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
+    Should Be Equal as Strings    ${search_placeholder}    ${SEARCH PLACEHOLDER TEXT}    ignore_case=true
+    Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
+    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    ${IPVD ADV FILTER MFRS}    ignore_case=true
+    ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    Should Not Be Equal As Numbers  ${num vendors}   0
+    Element should contain      ${IPVD DEVICES PANE}//header/span[2]    ${IPVD DEVICES TEXT}    ignore_case=true
+    ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/a
+    Should Be Equal As Numbers  ${num device types}   10
+    Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}    ignore_case=true
 
     Log    Step 2 - Validate filtering by manufacturer
     ${vendor}=  Set variable    Axis
-    Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
+    Click Element    ${IPVD MANUFACTURERS PANE}//a[contains(text(), '${vendor}')]
+    Wait Until Element Is Visible    ${IPVD TABLE}
     Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
+    
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
     Validate Landing Page Objects are not Visible
 
@@ -55,9 +47,11 @@ IPVD landing page actions
     Validate on IPVD page
 
     Log    Step 4 - Validate filtering by device type
-    Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
+    Click Element    ${IPVD DEVICES PANE}//a[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
+    Sleep    5
     Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[3]
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    Encoder
     Validate Landing Page Objects are not Visible
 
@@ -69,10 +63,6 @@ IPVD landing page actions
     Click Link    ${IPVD SUBMIT A REQUEST LINK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
-#Submit request can be closed by 'X', cancel, and escape
-#Submit request cannot be close by clicking outside the form
-#Submit request correctly sends request
-
 Text search correctly finds Manufacturers
     Go To IPVD Page
     IPVD Text Search    hanwha
@@ -80,52 +70,43 @@ Text search correctly finds Manufacturers
     ...    1
     ...    Hanwha    #used to be "Hanwha Techwin (Samsung)" but last entry in the table is "Hanwha techwin" and it would fail.
 
-
-#Text search correctly finds models
-#Text search correctly finds resolutions
-#Selecting manufacturer from landing page shows cameras for that manufacturer
-#Selecting device from landing page shows cameras with the appropriate feature
-#Selecting a device from the landing page with two filters works correctly
-#Advanced search Minimum Resoltion dropdown applies filter correctly
-#Advanced search Manufacturers dropdown applies filter(s) correctly
-#Advanced search Types dropdown applies filter(s) correctly
-#Advanced search Feature selection applies filter correctly
-#Advanced search 2-way Audio and Audio filters interact correctly
-#Advanced search PTZ and Advanced PTZ filters interact correctly
-#Advanced search Minimum Res and Manufacturers interact correctly
-#Advanced search Manufacturers and Types interact correctly
-#Advanced search Types and Features interact correctly
-#Clear search button clears all filters
-#Column sorting for each column works as expected
-#Data in table matches data in camera details
-#Clicking the 'X' closes camera details
-#Search in google works
-#Page can be changed by next, previous, and clicking on visible numbers
-#Export all to CSV works
-
 Request Form Basic Validations
-    [tags]    C48969    IPVD
+    [Tags]    C48969
+    Log    Step 1
     Go To IPVD Page
     Wait until Element is Visible    ${IPVD SUBMIT A REQUEST}
     Click Element    ${IPVD SUBMIT A REQUEST}
     Wait until Element is Visible    ${IPVD FEEDBACK}
     Validate Request Form Initial State
     Validate Privacy Policy
+
+    Log    Step 2
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
     #Name, email, message, and agreeing to privacy policy fields turn red
     Validate Input Field State    ${IPVD FEEDBACK YOUR NAME}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK EMAIL}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
+
+    Log    Step 3
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
+    Wait until Element is Not Visible    ${IPVD FEEDBACK}
+
+    Log    Step 4
     Click Element    ${IPVD SUBMIT A REQUEST}
     Wait until Element is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
+    Wait until Element is Not Visible    ${IPVD FEEDBACK}
+
 
 Feedback Form Basic Validations
-    [tags]    C54182    IPVD
-    #IPVD Page    Login=True
-    #Wait until Element is Not Visible    ${LOG IN MODAL}
-    Open IPVD Page and Log In
+    [Tags]    C54182
+    Log    Step 1
+    # First step changed due to CLOUD-4773
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    validate=${False}
+    Go To    ${ENV}/ipvd
+    Sleep   10
+    Validate on IPVD page
+
     IPVD Text Search    Axis
     IPVD Select Device from Table Randomly
     Wait until Element is Visible    ${IPVD SEND DEVICE FEEDBACK}
@@ -133,21 +114,28 @@ Feedback Form Basic Validations
     Wait until Element is Visible    ${IPVD FEEDBACK}
     Validate Request Form Initial State
     Validate Privacy Policy
+
+    Log   Step 2
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
     #Name, email, message, and agreeing to privacy policy fields turn red
     Validate Input Field State    ${IPVD FEEDBACK YOUR NAME}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK EMAIL}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
+
+    Log    Step 3
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
+    Wait until Element is Not Visible    ${IPVD FEEDBACK}
     #TODO: Verify Table of devices and camera info panel did not change
+
+    Log    Step 4
     Click Element    ${IPVD SUBMIT A REQUEST}
     Wait until Element is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
+    Wait until Element is Not Visible    ${IPVD FEEDBACK}
     #TODO: Verify Table of devices and camera info panel did not change
 
 Text search
-    [tags]    C48967    IPVD
-
+    [Tags]    C48967
     Log    Step 1
     Go To IPVD Page
     ${baseurl}=   Set Variable    ${ENV}/ipvd
@@ -160,20 +148,22 @@ Text search
     Log    Step 2
     IPVD Text Search    h
     Location should be    ${baseurl}?search=h
+    Wait until element is visible    ${IPVD CLEAR TEXT SEARCH BUTTON}
     Validate IPVD Device Table Not Empty
 
     Log    Step 3
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
     Click Element    ${IPVD NEXT PAGE BUTTON}
-    Location should be    ${baseurl}?search=h&page=2
+    Wait Until Location Is    ${baseurl}?search=h&page=2
     Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
 
     Log    Step 4
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
-    Location should be    ${baseurl}?search=h
+    Wait Until Location Is    ${baseurl}?search=h
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
 
     Log    Step 5
+    Wait Until Element Is Visible    ${IPVD LAST PAGE BUTTON}
     Click Element    ${IPVD LAST PAGE BUTTON}
     Wait Until Element Has Class    ${IPVD NEXT PAGE BUTTON}    disabled
 
@@ -293,14 +283,15 @@ Text search
     ...    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
 
 Text in Search Input is kept after clicking X on Applied Features filter indicator
-    [tags]    C49362    IPVD
-
+    [Tags]    C49362    IPVD
     Log    Step 1
     Go To IPVD Page
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
+    Wait Until Element Is Visible    ${IPVD TABLE}
     IPVD Text Search    Axis
-    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
-    Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}/span    2 ${IPVD FILTERS APPLIED TEXT}
+    #${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
+    #Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
@@ -317,39 +308,41 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
 Advanced search
-    [tags]    C48968    IPVD
-
+    [Tags]    C48968
     Log    Step 1
     Go To IPVD Page
     Verify IPVD Advanced Search is Closed
     Click Element    ${IPVD ADV SEARCH BUTTON}
+    Sleep    5
     Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgba(255, 255, 255, 1)
+    Capture Page Screenshot
     Verify IPVD Advanced Search is Open
 
     Log    Step 2
     Click Element    ${IPVD ADV FEATURES PTZ}
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    color
     ...    rgba(255, 255, 255, 1)
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
 
     Log    Step 3
-    Verify Button Arrow Direction   ${IPVD ADV FILTERS MIN RES}    Down
+    Wait Until Element Is Visible    ${IPVD TABLE}
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    down
     Click Element    ${IPVD ADV FILTERS MIN RES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    up
     Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    ${IPVD ADV FEATURES PTZ}/a
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MIN RES}    down
     Element Text should be    ${IPVD ADV FILTERS MIN RES}    1080p
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
@@ -359,7 +352,7 @@ Advanced search
     Log    Step 4
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    ${IPVD ADV FILTER MIN RES}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    1080p
 
@@ -374,22 +367,23 @@ Advanced search
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
     Log    Step 6
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    down
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    up
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Hikvision']
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
+    Sleep    30
+    Filter Arrow Should Point    ${IPVD ADV FILTERS MFRS}    down
     Wait Until Element Contains    ${IPVD ADV FILTERS MFRS}    2 ${IPVD FILTERS SELECTED TEXT}
     Wait Until Element Contains   ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    down
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Up
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    up
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE CAMERA}']
     Element Text should be    ${IPVD ADV FILTERS TYPES}    ${IPVD ADV TYPE CAMERA}
@@ -400,7 +394,7 @@ Advanced search
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE DVR}']
     Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
+    Filter Arrow Should Point    ${IPVD ADV FILTERS TYPES}    down
     Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
@@ -438,48 +432,98 @@ Advanced search
     Log    Step 12
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/a    badge-selected
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Element Text Should Be        ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.
 
 # I have commented these out as they are causing errors on a part of the code that is
 # only accessible in debug mode.  Once analytics is a standard then we will revisit.
-    # Log    Step 13
-    # Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
-    # Validate on IPVD Page
-    # Go To IPVD Page with arguments    ?debug=true
-    # Click Element    ${IPVD ADV SEARCH BUTTON}
-    # Verify IPVD Advanced Search is Open
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Click Element
-    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Entering the area']
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
-    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    Entering the area
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+#     Log    Step 13
+#     Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
+#     Validate on IPVD Page
+#     Go To IPVD Page with arguments    ?debug=true
+#     Click Element    ${IPVD ADV SEARCH BUTTON}
+#     Verify IPVD Advanced Search is Open
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Click Element
+#     ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Entering the area']
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
+#     Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    Entering the area
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+#
+#     Log    Step 14
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Click Element
+#     ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    2 ${IPVD FILTERS SELECTED TEXT}
+#     Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS ANALYTICS TEXT}
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+#
+#     Log    Step 15
+#     Click Element    ${IPVD ADV FEATURES PTZ}
+#     Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+#
+#     Log    Step 16
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Click Element
+#     ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
+#     Click Element    ${IPVD ADV FILTERS ANALYTICS}
+#     Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
+#     Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
+#     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
 
-    # Log    Step 14
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Click Element
-    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    2 ${IPVD FILTERS SELECTED TEXT}
-    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS ANALYTICS TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+Camera Info panel
+    [Tags]    C48973
+    Log    Step 1
+    Go To    ${ENV}/ipvd
+    Validate on IPVD Page
+    IPVD Text Search    PNM-9080VQ
+    IPVD Select Device from Table by Row Number
+    Sleep    1
+    ${current url}=   Get Location
+    Should be equal as strings    ${current url}    ${ENV}/ipvd?search=PNM-9080VQ&camera=PNM-9080VQ
+    ${camera class}=   Get Element Attribute    ${IPVD TABLE FIRST ITEM}    class
+    Should Contain    ${camera class}    selected
+    Validate Camera Info Panel
 
-    # Log    Step 15
-    # Click Element    ${IPVD ADV FEATURES PTZ}
-    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+#Commented out due to CLOUD-4775.
+#    ${number of firmwares}=   Get Element Count    ${IPVD DEVICE FIRMWARE VERSIONS}
+#Number of firmwares = 6 - 2(firmware version and show all block)
+#    Should be equal as numbers    ${number of firmwares}    6
 
-    # Log    Step 16
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Click Element
-    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
-    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
-    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
+    Log    Step 2
+    Click Link     ${IPVD DEVICE SHOW ALL LINK}
+    Wait until element is visible   ${IPVD DEVICE COLLAPSE LINK}
+    Click Link    ${IPVD DEVICE COLLAPSE LINK}
+    ${number of firmwares}=   Get Element Count    ${IPVD DEVICE FIRMWARE VERSIONS}
+    Should be equal as numbers    ${number of firmwares}    6
+
+    Log    Step 3
+    ${google search href}=   Get Element Attribute    ${IPVD DEVICE GOOGLE LINK}    href
+    Should be equal as strings    ${google search href}    https://www.google.com/search?q=Hanwha%20Techwin%20(Samsung)+PNM-9080VQ
+
+    Log    Step 4
+    Click Element    ${IPVD CLOSE DETAILS BUTTON}
+    ${current url}=   Get Location
+    Should be equal as strings    ${current url}    ${ENV}/ipvd?search=PNM-9080VQ
+    ${camera class}=   Get Element Attribute    ${IPVD TABLE FIRST ITEM}    class
+    Should Not Contain    ${camera class}    selected
+
+#Here should be tests for analytics events block on Camera panel, but it's not yet implemented
+
+Export to CSV
+    [Tags]     C46930
+    Go To    ${ENV}/ipvd?vendors=Hanwha%20Techwin%20(Samsung)&resolution=1310720&hardwareTypes=camera,encoder&tags=isTwAudioSupported&search=A&camera=PNF-9010RV
+    Wait until element is visible    ${IPVD EXPORT TO CSV LINK}
+    Click Link    ${IPVD EXPORT TO CSV LINK}
+    Sleep    5
+    ${current date}=   Get Current Date
+    ${date}    ${time}=    Split String    ${current date}    ${SPACE}    1
+#TODO Make chromedriver downloading the files
+#    File Should Exist    ~/Downloads/camera_list_${date}.csv

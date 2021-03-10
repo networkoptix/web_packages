@@ -1,0 +1,20 @@
+<div
+  #selectedRange
+  class="selected-range"
+  (mousedown)="selectedRangeMouseDownHandler($event)"
+>
+  <div
+    class="ear left"
+    (mousedown)="leftEarMouseDownHandler($event)"
+  >
+    <span class="date">{{ dateStrings.left.date }}</span>
+    <span class="date">{{ dateStrings.left.time }}</span>
+  </div>
+  <div
+    class="ear right"
+    (mousedown)="rightEarMouseDownHandler($event)"
+  >
+    <span class="date">{{ dateStrings.right.date }}</span>
+    <span class="date">{{ dateStrings.right.time }}</span>
+  </div>
+</div>

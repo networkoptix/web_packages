@@ -1,10 +1,6 @@
-@import '../../../../app/styles/native-theme/theme_palette';
-@import '../../../../app/styles/custom/custom_palette';
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables'as *;
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .ipvd {
@@ -31,8 +27,7 @@
     }
 
     .text-placeholder {
-        @extend #regular20;
-        color       : $light16;
+        @include typography.regular20light;
         height      : 2rem;
     }
 
@@ -55,12 +50,9 @@
                 //white-space: normal;
 
                 .caption {
+                    @include typography.medium13dark9;
                     line-height : 1rem;
                     align-items : flex-end;
-
-                    .nav-arrow {
-                        height: 18px;
-                    }
                 }
 
                 &:nth-child(1) {

@@ -1,506 +1,934 @@
 {
-	"account": {
-		"accountSavedSuccess": "Uw account is succesvol opgeslagen",
-		"activationLinkSent": "Activatielink verzonden",
-		"passwordChangedSuccess": "Uw account is succesvol opgeslagen",
-		"changePassword": "Wachtwoord wijzigen",
-		"newPasswordLabel": "Nieuw wachtwoord",
-		"saveChanges": "Opslaan",
-		"accountSettings": "Accountinstellingen"
-	},
-	"activeActions": {
-		"sendConfirm": "Activatielink opnieuw verzenden",
-		"resetPassword": "Reset wachtwoord",
-		"setNewPassword": "Wachtwoord opslaan",
-		"setNewPasswordLabel": "Nieuw wachtwoord"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "Zoek",
-		"search_ipvd": "Zoeken op model of fabrikant",
-		"filter applied": "filter toegepast",
-		"filters applied": "filters toegepast",
-		"Any": "Elk",
-		"selected": "gekozen",
-		"vendor": "Fabrikant",
-		"vendors": "Fabrikanten",
-		"hardwareType": "Type",
-		"hardwareTypes": "Types",
-		"minResolution": "Minimale resolutie",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics evenementen"
-	},
-	"cameraFilters": {
-		"ptz": "PTZ camera's",
-		"aptz": "Camera's met geavanceerde PTZ",
-		"fisheye": "Fisheye camera 's",
-		"H265": "H.265 Cameras",
-		"IO": "I/O modules",
-		"multiSensor": "Multi-Sensor Camera's",
-		"TwWayAudio": "2-weg audio-apparaten",
-		"audio": "Camera's met audio",
-		"encoder": "Encoders",
-		"highRes": "Extra hoge resolutie camera's"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "Windows"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "Client en Server",
-			"camera_sdk": "Video Bron SDK",
-			"client": "Alleen client",
-			"metadata_sdk": "Metadata SDK",
-			"package": "Pakket",
-			"server": "Alleen server",
-			"servertool": "Configuratie tool",
-			"storage_sdk": "Storage SDK",
-			"video_source_sdk": "Video Bron SDK"
-		},
-		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Kandidaat",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Update",
-			"patches": "Updates"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "Gebied",
-		"count": "Tellen",
-		"vendor": "Fabrikant",
-		"model": "Model",
-		"hardwareType": "Type",
-		"maxResolution": "<span>Max</span><br><span>Resolutie</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
-		"primaryCodec": "Codec",
-		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "2-weg audio",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Geavanceerde PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Fisheye",
-		"isMdSupported": "Beweging",
-		"isIoSupported": "I/O",
-		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
-		"camera": "Camera",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
-		"dvr": "DVR",
-		"other": "Andere",
-		"PTZ cameras": "PTZ camera's",
-		"Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
-		"Fisheye Cameras": "Fisheye camera 's",
-		"Cameras supporting H.265": "Camera's die H.265 ondersteunen",
-		"I / O modules": "I/O modules",
-		"Multisensor Cameras": "Multisensor camera's",
-		"Cameras with 2-way audio": "Camera's met 2-weg audio",
-		"Extra high resolution cameras": "Extra hoge resolutie camera's",
-		"feedback": {
-			"a_Please": "Alstublieft",
-			"b_Link": "een aanvraag indienen",
-			"c_Info": "voor aanvullende vragen / opmerkingen over ondersteunde apparaten."
-		},
-		"disclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {{vmsName}}, waar gebruikers automatisch rapporteren van gebruiksinformatie naar {{companyName}} hebben toegestaan. Geen persoonlijke informatie wordt verzameld en elke gebruiker blijft volledig anoniem."
-	},
-	"integration": {
-		"myIntegrationsLabel": "Mijn",
-		"previewRibbonText": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie.",
-		"backToEditText": "Terug naar de bewerkingsinterfaces",
-		"requirements": "{{name}} Vereisten",
-		"Access Control": "Toegangscontrole",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analyse",
-		"Drone": "Drone",
-		"Health Monitor": "Server monitor",
-		"Storage": "Opslag"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
-	},
-	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "Over",
-		"registerSuccess": "Welkom bij",
-		"register": "Maak een account aan in",
-		"changePassword": "Wachtwoord wijzigen",
-		"account": "Account instellingen",
-		"systems": "Systemen",
-		"system": "Systeem",
-		"systemName": "{{systemName}}",
-		"systemShare": "Deel Systeem",
-		"activate": "Activeer account",
-		"activateSent": "Activeer account",
-		"activateSuccess": "Account geactiveerd",
-		"activateCode": "Activeer account",
-		"restorePassword": "Reset wachtwoord",
-		"restorePasswordSuccess": "Wachtwoord opgeslagen",
-		"restorePasswordCode": "Reset wachtwoord",
-		"view": "Bekijk camera's",
-		"debug": "Debug",
-		"login": "Inloggen",
-		"download": "Download %VMS_NAME%",
-		"downloadPlatform": "Download %VMS_NAME% voor ",
-		"pageNotFound": "Pagina niet gevonden",
-		"supportedDevices": "Ondersteunde apparaten",
-		"integrations": "Integraties"
-	},
-	"dialogs": {
-		"okButton": "Oké",
-		"cancelButton": "Annuleren",
-		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "U bent al ingelogd als {email}",
-		"loggedFromOther": "U wordt met een ander account ingelogd",
-		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
-		"loginButton": "Log in",
-		"logoutAuthorisedTitle": "U bent reeds ingelogd",
-		"logoutAuthorisedContinueButton": "Doorgaan",
-		"logoutAuthorisedLogoutButton": "Uitloggen",
-		"noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
-		"stayAs": "Blijf aangemeld als {email} ",
-		"stayLoggedIn": "Ingelogd blijven",
-		"download": "Download %VMS_NAME%",
-		"merge": {
-			"commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>.",
-			"connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "U staat op het punt om systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
-			"mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
-			"primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
-			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met {{targetSystem}}.",
-			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
-			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met de huidige.",
-			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met",
-			"recommendSupport": {
-				"a_recommend": "We raden aan om te overleggen met",
-				"b_support": "ondersteuning",
-				"c_proceeding": "voordat u verder gaat."
-			},
-			"warning": "Er zullen meer dan <strong>{{maxServers}}</strong> servers in het samengevoegde systeem zijn."
-		},
-		"message": {
-			"failedToSend": "Bericht kan niet worden verzonden.",
-			"sent": "Bericht is verzonden.",
-			"title": {
-				"integration": "Neem contact op met {{companyName}}",
-				"ipvd_feedback_page": "Feedback voor camera's pagina",
-				"ipvd_feedback_device": "Feedback over {{asset}}"
-			},
-			"subject": {
-				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-				"technical_inquiry": "Technische aanvraag voor {{asset}}",
-				"integration_feedback": "Feedback voor integratie {{asset}}",
-				"ipvd_feedback_page": "Feedback voor camera's pagina",
-				"ipvd_feedback_device": "Feedback over {{asset}}"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "Als u de eigenaar van het systeem wijzigt, trekt u het eigendom in van het uw account voor dit systeem. Deze actie is onomkeerbaar. Weet je het zeker?",
-			"shareTitle": "Toevoegen",
-			"shareConfirmButton": "Toevoegen",
-			"editShareTitle": "Wijzig machtigingen",
-			"editShareConfirmButton": "Opslaan",
-			"permissionsSaved": "Nieuwe machtigingen opgeslagen"
-		}
-	},
-	"errorCodes": {
-		"ok": "ok",
-		"cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
-		"cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
-		"cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
-		"cantSharePrefix": "Kan het systeem niet delen",
-		"cantGetUsersListPrefix": "Gebruikerslijst is niet beschikbaar",
-		"cantGetSystemsListPrefix": "Systeemlijst is niet beschikbaar",
-		"cantRegisterPrefix": "Fout opgetreden",
-		"cantGetSystemInfoPrefix": "Systeeminformatie is niet beschikbaar",
-		"cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
-		"cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
-		"cantActivatePrefix": "Kan uw account niet activeren",
-		"cantSendConfirmationPrefix": "Kan geen bevestigingsmail versturen",
-		"notAuthorized": "Wachtwoord onjuist",
-		"brokenAccount": "Onverwacht probleem met account. <a href=\"/restore_password\"> account herstellen</a>",
-		"wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-		"wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
-		"wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
-		"wrongAuthCode": "Code is verlopen of onjuist",
-		"forbidden": "U hebt geen rechten om deze actie uit te voeren",
-		"accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
-		"accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
-		"notFound": "Niet gevonden",
-		"alreadyExists": "Deze account bestaat al",
-		"unknownError": "Er is een onverwachte fout opgetreden",
-		"accountAlreadyActivated": "Deze account is al geactiveerd",
-		"emailNotFound": "Account bestaat niet.",
-		"EmailAlreadyExists": "Dit Email is al geregistreerd",
-		"oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
-		"passwordMismatch": "Wachtwoord onjuist",
-		"cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
-		"cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
-		"cantOpenClient": "%VMS_NAME% applicatie is niet gedetecteerd.",
-		"lostConnection": "Verbinding met {{systemName}} verloren",
-		"thisSystem": "het systeem",
-		"oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
-		"DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
-		"mergedSystemIsOffline": "Systeem <strong>{{failedSystem}}</strong> is offline.",
-		"INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
-		"FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
-		"unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-	},
-	"passwordRequirements": {
-		"good": "goed",
-		"fair": "redelijk",
-		"fairMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-		"minLength": "te kort",
-		"minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
-		"required": "onjuist",
-		"requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
-		"weak": "zwak",
-		"weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-		"strongMessage": "Sterk wachtwoord!",
-		"common": "te algemeen",
-		"commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
-		"missingMessage": "Wachtwoord is vereist"
-	},
-	"registration": {
-		"agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
-	},
-	"system": {
-		"yourSystem": "Uw systeem",
-		"mySystemSearch": "IMeMyMine",
-		"unavailable": "Systeem is onbereikbaar",
-		"offline": "Systeem is offline",
-		"offlineAlertRibbon": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
-		"openClient": "Open in %VMS_NAME%",
-		"openClientNoSystem": "Open %VMS_NAME%",
-		"confirmMergeAction": "Samenvoegen",
-		"mergeSystemTitle": "Systemen samenvoegen",
-		"confirmRenameTitle": "Systeemnaam",
-		"confirmRenameAction": "Opslaan",
-		"successRename": "Systeemnaam opgeslagen",
-		"confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
-		"confirmDisconnectAction": "Verbinding verbreken",
-		"confirmUnshareFromMe": "U staat op het punt om dit systeem uit uw account te verbreken. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
-		"confirmUnshareFromMeTitle": "Systeem loskoppelen?",
-		"confirmUnshareFromMeAction": "Verbinding verbreken",
-		"confirmUnshare": "Deze gebruiker heeft geen toegang tot het systeem. Weet je het zeker?",
-		"confirmUnshareTitle": "Gebruiker verwijderen?",
-		"confirmUnshareAction": "Verwijder",
-		"successDisconnected": "Systeem is met succes ontkoppeld van %CLOUD_NAME%",
-		"successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
-		"mergeFailed": "Het samenvoegen van systemen is mislukt",
-		"mergeStart": "Systemen zijn begonnen met het samenvoegen",
-		"mergeSuccess": "Systeem samenvoegen voltooid",
-		"permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
-		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
-		"shareOffline": "Kan het systeem niet delen terwijl het offline is",
-		"shareUnauthorized": "U heeft geen toestemming om dit systeem te delen",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "uren",
-				"minutes": "minuten"
-			},
-			"warningMessages": {
-				"videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "geactiveerd",
-		"incompatible": "niet compatibel",
-		"merging": "samenvoegen",
-		"notActivated": "niet geactiveerd",
-		"online": "online",
-		"offline": "offline",
-		"unavailable": "niet beschikbaar"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "Uitgeschakeld",
-			"description": "Gebruiker is uitgeschakeld en kan niet aanmelden in het systeem"
-		},
-		"Owner": {
-			"label": "Eigenaar",
-			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
-		},
-		"Viewer": {
-			"label": "Viewer",
-			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
-		},
-		"Live Viewer": {
-			"label": "Live Viewer",
-			"description": "Kan alleen live video bekijken"
-		},
-		"Advanced Viewer": {
-			"label": "Geavanceerde Viewer",
-			"description": "Kan live video bekijken, bladeren in het archief, PTZ bedienen, enz"
-		},
-		"Administrator": {
-			"label": "Administrator",
-			"description": "Onbeperkt toegang inclusief de mogelijkheid om te delen"
-		},
-		"Custom": {
-			"label": "Aangepast",
-			"description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
-		},
-		"cloudAdmin": {
-			"label": "Administrator",
-			"description": "Kan systeem configureren en delen"
-		},
-		"customRole": {
-			"label": "Aangepaste rollen",
-			"description": "Aangepaste gebruikersrol die is opgegeven in systeem"
-		},
-		"owner": {
-			"label": "Eigenaar",
-			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
-		},
-		"viewer": {
-			"label": "Viewer",
-			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
-		},
-		"liveViewer": {
-			"label": "Live Viewer",
-			"description": "Kan alleen live video bekijken"
-		},
-		"advancedViewer": {
-			"label": "Geavanceerde Viewer",
-			"description": "Kan live video bekijken, zoeken in opgenomen beelden, camera configureren, PTZ, enz. bedienen"
-		},
-		"custom": {
-			"label": "Aangepast",
-			"description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "Hoge stroom",
-			"lowStream": "Lage stroom",
-			"transcoding": "Transcoding",
-			"unknown": "Onbekend",
-			"copyToClipboard": "kopiëren naar klembord",
-			"copyDefaultText": "kopiëren",
-			"copyActiveText": "gekopieerd naar het klembord"
-		},
-		"systemOffline": "Systeem Offline",
-		"systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
-		"systemNoAlerts": "Geen meldingen",
-		"systemNoAlertsMessage": "Uw systeem moet het goed doen!",
-		"systemServerError": "Interne Server Fout",
-		"systemServerErrorMessage": "Er is een fout opgetreden. Probeer het later opnieuw. Er is een fout opgetreden, probeer het later opnieuw. Neem contact op met uw ondersteuningsteam als het probleem zich blijft voordoen.",
-		"systemNewVersion": "Uw systeem bijwerken",
-		"systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
-		"systemHasNoCameras": "GEEN CAMERA'S",
-		"systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
-		"cameraStates": {
-			"offline": "Offline",
-			"error": "Fout",
-			"errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
-			"unauthorized": "Authentication required",
-			"noData": "Geen data",
-			"iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
-			"flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
-			"flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
-			"noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
-			"noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
-			"ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
-			"ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
-			"ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser."
-		},
-		"searchCamPlaceholder": "Zoek",
-		"resolution": {
-			"auto": "Automatisch",
-			"high": "Hoog",
-			"low": "Lage"
-		},
-		"chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
-		"voiceCommands": {
-			"play": "afspelen",
-			"pause": "pauze",
-			"live": "ga naar Live | live weergeven",
-			"view": "bekijk + [camera naam]",
-			"search": "vind + [text for searchbar]",
-			"clear search": "zoekopdracht wissen",
-			"expand server": "vouw server + [servernaam] uit",
-			"collapse server": "vouw server + [servernaam] samen",
-			"expand all servers": "vouw alle servers uit",
-			"collapse all servers": "vouw alle servers samen",
-			"stop listening": "stoppen met luisteren",
-			"help": "help | show commands"
-		}
-	},
-	"systemAdministration": "Systeem Administratie",
-	"users": "Gebruikers",
-	"testedVersionLabel": "Getest op {{vmsName}} versie:",
-	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
-	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
-	"Download %VMS_NAME%": "Download %VMS_NAME%",
-	"Integrations": "Integraties",
-	"Privacy": "Privacy",
-	"Support": "Ondersteuning",
-	"Supported Devices": "Ondersteunde apparaten",
-	"Terms": "Voorwaarden",
-	"pleaseSelect": "Selecteer...",
-	"WHEN_MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",
-	"FAILED_SYSTEM_DESCR": "Deze link is ongeldig, <br>het systeem kan worden losgekoppeld van %CLOUD_NAME%, <br>toegang tot dit systeem kan zijn ingetrokken, <br>of u bent reeds ingelogd bij een ander account.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "U heeft geen systemen verbonden met %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Log in op uw systeem met %VMS_NAME%",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Ga naar het tabblad 'Cloud' in het dialoogvenster 'Systeembeheer'",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} per volume:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+    "language": "nl_BE",
+    "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+    "Download %VMS_NAME%": "Download %VMS_NAME%",
+    "For developers": "Voor ontwikkelaars",
+    "Integrations (β)": "Integraties (ß)",
+    "Privacy": "Privacy",
+    "Support": "Ondersteuning",
+    "Terms": "Voorwaarden",
+    "accessRoles": {
+        "Administrator": {
+            "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",
+            "label": "Administrator"
+        },
+        "Advanced Viewer": {
+            "description": "Kan live video bekijken, bladeren in het archief, PTZ bedienen, enz",
+            "label": "Geavanceerde Viewer"
+        },
+        "Custom": {
+            "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
+            "label": "Aangepast"
+        },
+        "Live Viewer": {
+            "description": "Kan alleen live video bekijken",
+            "label": "Live Viewer"
+        },
+        "Owner": {
+            "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
+            "label": "Eigenaar"
+        },
+        "Viewer": {
+            "description": "Kan live video bekijken en zoeken in opgenomen beelden",
+            "label": "Viewer"
+        },
+        "advancedViewer": {
+            "description": "Kan live video bekijken, zoeken in opgenomen beelden, camera configureren, PTZ, enz. bedienen",
+            "label": "Geavanceerde Viewer"
+        },
+        "cloudAdmin": {
+            "description": "Kan systeem configureren en delen",
+            "label": "Administrator"
+        },
+        "custom": {
+            "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
+            "label": "Aangepast"
+        },
+        "customRole": {
+            "description": "Aangepaste gebruikersrol die is opgegeven in systeem",
+            "label": "Aangepaste rollen"
+        },
+        "disabled": {
+            "description": "Gebruiker is uitgeschakeld en kan niet aanmelden in het systeem",
+            "label": "Uitgeschakeld"
+        },
+        "liveViewer": {
+            "description": "Kan alleen live video bekijken",
+            "label": "Live Viewer"
+        },
+        "owner": {
+            "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
+            "label": "Eigenaar"
+        },
+        "viewer": {
+            "description": "Kan live video bekijken en zoeken in opgenomen beelden",
+            "label": "Viewer"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "Uw account is succesvol opgeslagen",
+        "accountSettings": "Accountinstellingen",
+        "activationLinkSent": "Activatielink verzonden",
+        "agreementAccepted": "De overeenkomst is geaccepteerd",
+        "changePassword": "Wachtwoord wijzigen",
+        "newPasswordLabel": "Nieuw wachtwoord",
+        "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
+        "saveChanges": "Opslaan"
+    },
+    "activeActions": {
+        "resetPassword": "Reset wachtwoord",
+        "sendConfirm": "Activatielink opnieuw verzenden",
+        "setNewPassword": "Wachtwoord opslaan",
+        "setNewPasswordLabel": "Nieuw wachtwoord"
+    },
+    "cameraFilters": {
+        "H265": "H.265 Cameras",
+        "IO": "I/O modules",
+        "TwWayAudio": "2-weg audio-apparaten",
+        "aptz": "Camera's met geavanceerde PTZ",
+        "audio": "Camera's met audio",
+        "encoder": "Encoders",
+        "fisheye": "Fisheye camera 's",
+        "highRes": "Extra hoge resolutie camera's",
+        "multiSensor": "Multi-Sensor Camera's",
+        "ptz": "PTZ camera's"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Account aangemaakt",
+                "message": "Een bevestigingsbericht met de activeringslink is verzonden naar {email}"
+            },
+            "activated": {
+                "title": "Account succesvol geactiveerd"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "gekopieerd naar het klembord",
+            "copyDefaultText": "kopiëren",
+            "copyToClipboard": "kopiëren naar klembord",
+            "highStream": "Hoge stroom",
+            "lowStream": "Lage stroom",
+            "transcoding": "Transcoding",
+            "unknown": "Onbekend"
+        },
+        "cameraStates": {
+            "error": "Fout",
+            "errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
+            "flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+            "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+            "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+            "ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+            "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+            "noData": "Geen data",
+            "noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
+            "offline": "Offline",
+            "ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser.",
+            "unauthorized": "Authentication required"
+        },
+        "chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
+        "login": "login",
+        "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
+        "disableMotionWarning": "De opnamemodus wordt gewijzigd in 'Altijd opnemen'",
+        "recordingModes": {
+            "always": "Altijd opnemen",
+            "motion": "Neem alleen beweging op",
+            "motionLowRes": "Beweging + Lage-Res"
+        },
+        "resolution": {
+            "various": "- Verschillende waarden -",
+            "auto": "Automatisch",
+            "best": "Beste",
+            "high": "Hoog",
+            "medium": "Gemiddeld",
+            "low": "Lage"
+        },
+        "general": "Algemeen",
+        "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} meer integraties...} one{#{endTag} meer integratie...} other{#{endTag} meer integratie...}}",
+        "searchCamPlaceholder": "Zoek",
+        "system": "systeem",
+        "systemHasNoCameras": "Geen camera's",
+        "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
+        "systemNewVersion": "Uw systeem bijwerken",
+        "systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
+        "systemNoAlerts": "Geen meldingen",
+        "systemNoAlertsMessage": "Uw systeem moet het goed doen!",
+        "systemOffline": "Systeem Offline",
+        "systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
+        "systemServerError": "Interne Server Fout",
+        "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
+        "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+        "unknown": "Onbekend",
+        "vendor": "Fabrikant",
+        "model": "Model",
+        "ip": "IP Adres",
+        "server": "Server",
+        "os": "OS",
+        "version": "Versie",
+        "voiceCommands": {
+            "clear search": "zoekopdracht wissen",
+            "collapse all servers": "vouw alle servers samen",
+            "collapse server": "vouw server + [servernaam] samen",
+            "expand all servers": "vouw alle servers uit",
+            "expand server": "vouw server + [servernaam] uit",
+            "help": "help | show commands",
+            "live": "ga naar Live | live weergeven",
+            "pause": "pauze",
+            "play": "afspelen",
+            "search": "vind + [text for searchbar]",
+            "stop listening": "stoppen met luisteren",
+            "view": "bekijk + [camera naam]"
+        },
+        "viewingOutdatedReport": "U bekijkt een verouderd rapport."
+    },
+    "dialogs": {
+        "addUser": {
+            "alreadyExists": "Deze e-mail is al geregistreerd in het %systemName% systeem"
+        },
+        "buttons": {
+            "cancel": "Annuleren",
+            "createAccount": "Creëer een nieuw account",
+            "delete": "Verwijder",
+            "deleteAccount": "Account Verwijderen",
+            "download": "Download %VMS_NAME%",
+            "logoutAuthorised": "Uitloggen",
+            "ok": "Oké",
+            "remove": "Verwijder",
+            "stayAs": "Blijf aangemeld als {email} ",
+            "stayLoggedIn": "Ingelogd blijven"
+        },
+        "cloudStorage": {
+            "title": "Cloudopslag",
+            "enableStorage": "Cloud-opslag inschakelen",
+            "otherSystem": "Ander systeem...",
+            "initial": "We bieden {compCapacity} gratis cloud opslag aan per systeem om je op weg te helpen.",
+            "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
+            "camera": "camera",
+            "cameras": "camera's",
+            "usageLabels": {
+                "currentRecordings": "Huidige opnamen",
+                "whenFullyUsed": "Wanneer volledig gebruikt",
+                "amountUsed": "Gebruikte hoeveelheid",
+                "archiveFrom": "Archief van",
+                "recordingBitrate": "Bitrate van de opnames",
+                "delayFromLive": "Vertraging vanaf live"
+            },
+            "remove": {
+                "success": "Cloudopslag is succesvol verwijderd uit het systeem",
+                "errorPrefix": "Fout bij verwijderen cloudopslag"
+            },
+            "activationError": {
+                "title": "Kan cloudopslag niet inschakelen",
+                "message": "U heeft al in totaal <volume> cloud opslag toegevoegd aan uw systemen en kan er niet meer toevoegen. <br/><br/>U kunt in plaats daarvan opslag verwijderen van een ander systeem of verplaatsen naar deze. "
+            },
+            "systemDisconnectError": {
+                "title": "Kan de verbinding voor het systeem niet verbreken van %CLOUD_NAME%",
+                "message": "Dit systeem heeft nog date op de cloudopslag. <br/><br/>De cloudopslag moet handmatig worden geleerd voordat u het systeem loskoppelt van %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Cloud-opslag verplaatsen",
+                "success": "Opslag met succes verplaatst",
+                "errorPrefix": "Fout bij het verplaatsen van cloudopslag",
+                "notFound": "Opslag is niet gevonden. Opslag is mogelijk verplaatst of verwijderd door een andere gebruiker",
+                "status": {
+                    "offline": "Cloud opslag kan niet worden verplaatst naar offline systemen."
+                }
+            },
+            "enableCloudStorage": {
+                "success": "Cloud opslag ingeschakeld",
+                "errorPrefix": "Fout bij inschakelen van cloudopslag"
+            },
+            "noOtherSystemsError": {
+                "message": "Je kunt alleen cloud opslag verplaatsen tussen systemen waar je eigenaar van bent. <br/><br/>Verbind een systeem met %CLOUD_NAME% door gebruik te maken van uw cloud-account om er gebruik van te kunnen maken."
+            }
+        },
+        "changeStorage": {
+            "support": "Als u van plan was analysegegevens te verplaatsen naar een andere opslaglocatie, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> voordat u verder gaat."
+        },
+        "merge": {
+            "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
+            "checking": "Controleren...",
+            "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
+            "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%cloudName%</strong> of voeg lokaal samen met <strong>%vmsName%</strong> Client.",
+            "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
+            "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
+            "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
+            "latestBuild": "nieuwste build",
+            "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>Instellingen en de naam worden overgenomen van <strong>{primarySystem}</strong>.</p>",
+            "mergeSystemsTitle": "Voeg het huidige systeem samen met",
+            "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
+            "noServerFound": "Geen server gevonden",
+            "newSystemDisplayName": "Nieuw systeem",
+            "otherSystem": "Ander systeem...",
+            "ownerCanMergeText": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent",
+            "passwordRequired": "Wachtwoord is vereist",
+            "passwordWrong": "Wachtwoord onjuist",
+            "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
+            "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "We raden u aan om te overleggen met",
+                "b_support": "ondersteuning",
+                "c_proceeding": "voordat u verder gaat."
+            },
+            "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "urlEmpty": "Voer het serveradres in",
+            "urlNotValid": "Voer een geldige URL in",
+            "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+        },
+        "message": {
+            "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
+            "storageSettingsNotSaved": "Kan opslaginstellingen niet opslaan.",
+            "settingsSaved": "Instellingen opgeslagen.",
+            "settingsNotSaved": "Instellingen konden niet worden opgeslagen.",
+            "logLevelsSaved": "Log level(s) opgeslagen.",
+            "logLevelsNotSaved": "Kan logboekniveau(s) niet opslaan.",
+            "failedToSend": "Bericht kan niet worden verzonden.",
+            "placeholders": {
+                "feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
+            },
+            "sent": "Bericht is verzonden.",
+            "subject": {
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Feedback voor camera's pagina",
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
+            },
+            "title": {
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Feedback voor camera's pagina"
+            }
+        },
+        "removeSystem": {
+            "action": "Verbinding verbreken",
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
+        },
+        "titles": {
+            "error": "Fout",
+            "success": "Succes",
+            "changeAccount": "U bent al ingelogd als {email}",
+            "deleteUser": "Gebruiker verwijderen?",
+            "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
+            "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
+            "removeUser": "Gebruiker verwijderen?",
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "Client en Server",
+            "camera_sdk": "Video Bron SDK",
+            "client": "Alleen client",
+            "metadata_sdk": "Metadata SDK",
+            "package": "Pakket",
+            "server": "Alleen server",
+            "servertool": "Configuratie tool",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Bron SDK"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "Windows"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "Beta",
+            "betas": "Betas",
+            "patch": "Update",
+            "patches": "Updates",
+            "rc": "Release Kandidaat",
+            "release": "Release",
+            "releases": "Releases"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
+        "EmailAlreadyExists": "Dit Email is al geregistreerd",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "Deze gebruiker bestaat niet.",
+        "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
+        "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
+        "fail": "{failedSystem} is inaccessible.",
+        "incompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
+        "unknown_error": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "accountAlreadyActivated": "Deze account is al geactiveerd",
+        "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
+        "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "alreadyExists": "Deze account bestaat al",
+        "brokenAccount": "Onverwacht probleem met account. <a href=\"/restore_password\"> account herstellen</a>",
+        "cantActivatePrefix": "Kan uw account niet activeren",
+        "cantAddYourOwnEmail": "Je eigen e-mailadres toevoegen is niet toegestaan",
+        "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
+        "cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
+        "cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
+        "cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
+        "cantGetSystemInfoPrefix": "Systeeminformatie is niet beschikbaar",
+        "cantGetSystemsListPrefix": "Systeemlijst is niet beschikbaar",
+        "cantGetUsersListPrefix": "Gebruikerslijst is niet beschikbaar",
+        "cantOpenClient": "%VMS_NAME% applicatie is niet gedetecteerd.",
+        "cantRegisterPrefix": "Fout opgetreden",
+        "cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
+        "cantSendConfirmationPrefix": "Kan geen bevestigingsmail versturen",
+        "cantSharePrefix": "Kan het systeem niet delen",
+        "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
+        "emailNotFound": "Account bestaat niet.",
+        "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
+        "forbidden": "U hebt geen rechten om deze actie uit te voeren",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "notAuthorized": "Wachtwoord onjuist",
+        "badUsername": "Account not found",
+        "notFound": "Niet gevonden",
+        "ok": "ok",
+        "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
+        "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
+        "passwordMismatch": "Wachtwoord onjuist",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "thisSystem": "het systeem",
+        "unknownError": "Onverwachte fout opgetreden",
+        "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "wrongAuthCode": "Code is verlopen of onjuist",
+        "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
+        "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
+        "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
+        "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
+        "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
+        "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+    },
+    "integration": {
+        "Access Control": "Toegangscontrole",
+        "Connector": "Connector",
+        "Data Analytics": "Data Analyse",
+        "Drone": "Drone",
+        "Health Monitor": "Server monitor",
+        "Storage": "Opslag",
+        "myIntegrationsLabel": "Mijn",
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
+        "Cameras supporting H.265": "Camera's die H.265 ondersteunen",
+        "Cameras with 2-way audio": "Camera's met 2-weg audio",
+        "Extra high resolution cameras": "Extra hoge resolutie camera's",
+        "Fisheye Cameras": "Fisheye camera 's",
+        "I / O modules": "I/O modules",
+        "Multisensor Cameras": "Multisensor camera's",
+        "PTZ cameras": "PTZ camera's",
+        "camera": "Camera",
+        "count": "Tellen",
+        "dvr": "DVR",
+        "encoder": "Encoder",
+        "hardwareType": "Type",
+        "isAnalyticsSupported": "Analytics",
+        "isAptzSupported": "Geavanceerde PTZ",
+        "isAptzSupportedShort": "Adv. PTZ",
+        "isAudioSupported": "Audio",
+        "isDualStreamingSupported": "Dual Streaming",
+        "isFisheye": "Fisheye",
+        "isH265": "H.265",
+        "isIoSupported": "I/O",
+        "isMdSupported": "Bewegingsdetectie",
+        "isMultiSensor": "Multi Sensor",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "2-weg audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolutie(max)",
+        "model": "Model",
+        "multiSensorCamera": "Multi-Sensor Camera",
+        "other": "Andere",
+        "primaryCodec": "Codec",
+        "resolutionArea": "Gebied",
+        "sndResolution": "Secundaire Stream",
+        "vendor": "Fabrikant",
+        "sortKey": ""
+    },
+    "ipvdFeedback": {
+        "a_Please": "Alstublieft",
+        "b_Link": "een aanvraag indienen",
+        "c_Info": "voor aanvullende vragen / opmerkingen over ondersteunde apparaten."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "menu": {
+        "titles": {
+            "cameras": "Camera's",
+            "systemAdministration": "Systeem Administratie",
+            "general": "Algemeen",
+            "licenses": "Licenties",
+            "users": "Gebruikers"
+        }
+    },
+    "pageTitles": {
+        "about": "Over",
+        "account": "Account instellingen",
+        "activate": "Activeer account",
+        "activateCode": "Activeer account",
+        "activateSuccess": "Account geactiveerd",
+        "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
+        "changePassword": "Wachtwoord wijzigen",
+        "debug": "Debug",
+        "default": "%CLOUD_NAME%",
+        "download": "Download %VMS_NAME%",
+        "downloadPlatform": "Download %VMS_NAME% voor ",
+        "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
+        "integrations": "%VMS_NAME% Integraties",
+        "login": "Inloggen",
+        "pageNotFound": "Pagina niet gevonden",
+        "register": "Maak een account aan in",
+        "registerSuccess": "Welkom bij",
+        "restorePassword": "Reset wachtwoord",
+        "restorePasswordSuccess": "Wachtwoord opgeslagen",
+        "supportedDevices": "Ondersteunde apparaten",
+        "system": "Systeem",
+        "systemShare": "Deel Systeem",
+        "systems": "Systemen",
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Bekijk camera's",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+    },
+    "passwordRequirements": {
+        "common": "te algemeen",
+        "commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
+        "fair": "redelijk",
+        "fairMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
+        "good": "goed",
+        "minLength": "te kort",
+        "minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
+        "missingMessage": "Wachtwoord is vereist",
+        "required": "onjuist",
+        "requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
+        "strongMessage": "Sterk wachtwoord!",
+        "weak": "zwak",
+        "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken"
+    },
+    "placeholderTexts": {
+        "noSettings": {
+            "title": "Deze pagina kan niet worden geladen",
+            "message": "Zorg ervoor dat uw servers online zijn en probeer het opnieuw."
+        },
+        "merge": {
+            "title": "This system is being merged to {systemName}.",
+            "message": {
+                "dependingOnSize": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
+                "untilFinished": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+            }
+        },
+        "server": {
+            "title": "Server niet toegankelijk",
+            "message": "Systeem is offline en daarom zijn servers niet toegankelijk."
+        }
+    },
+    "pleaseSelect": "Selecteer...",
+    "privacyPolicy": {
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+    },
+    "registration": {
+        "agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "wordt samengevoegd naar dit systeem",
+            "mayTake": "Afhankelijk van de grootte van de database kan dit enkele uren duren."
+        },
+        "finishingMerge": "Samenvoegen van systemen voltooid",
+        "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
+            "backToEditText": "Terug naar de bewerkingsinterfaces",
+            "previewRibbon": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie."
+        },
+        "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
+        "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
+    },
+    "search": {
+        "Any": "Elk",
+        "Search": "Zoek",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics evenementen",
+        "filter applied": "filter toegepast",
+        "filters applied": "filters toegepast",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "hardwareType": "Type",
+        "hardwareTypes": "Types",
+        "minResolution": "Minimale resolutie",
+        "search_ipvd": "Zoeken op model of fabrikant",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "vendor": "Fabrikant",
+        "vendors": "Fabrikanten"
+    },
+    "servers": {
+        "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
+        "autoRefresh": "automatisch vernieuwen in {time}...",
+        "beginDetach": "Server wordt nu losgekoppeld",
+        "beginReset": "Server wordt nu gereset.",
+        "detachSystemFailed": "Kan de server niet loskoppelen van het systeem. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
+        "detachSystemSuccess": "De server is succesvol losgekoppeld van het systeem.",
+        "portWarning": "Poortnummers minder dan 1024 zijn gereserveerd. De server kan ontoegankelijk worden.",
+        "refresh": "Vernieuwen",
+        "refreshing": "Vernieuwen...",
+        "removeMediaserverFailed": "Kan de server niet van het systeem verwijderen.",
+        "resetFailed": "Kan de server niet resetten. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
+        "resetSuccessful": "Server {serverName} is gereset naar de standaardwaarden.",
+        "restartFailed": "Er is een probleem opgetreden bij het herstarten van de server.",
+        "restartSuccessful": "Server is succesvol opnieuw gestart.",
+        "serverOffline": "Server is offline.",
+        "servers": "Servers",
+        "status": {
+            "checking": "controleren...",
+            "offline": "offline",
+            "resetting": "resetten...",
+            "restarting": "herstarten..."
+        },
+        "successRename": "Servernaam opgeslagen."
+    },
+    "system": {
+        "connected": "Verbonden",
+        "not_connected": "Niet verbonden",
+        "MERGE_FINISHES": "Als het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in <strong>{targetSystemName}</strong> systeem en wordt dit systeem verwijderd.",
+        "mergeUnknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
+        "mySystemSearch": "IMeMyMine",
+        "settings": {
+            "notAbleToLoadStorageInfo": "Kan opslaginformatie niet laden.",
+            "notAbleToLoadSecurity": "Kan beveiligingsinstellingen niet laden.",
+            "notAbleToLoadSystem": "Kan systeeminstellingen niet laden.",
+            "sessionLimitDuration": {
+                "hours": "uren",
+                "minutes": "minuten"
+            },
+            "warningMessages": {
+                "videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
+            }
+        },
+        "status": {
+            "offline": "Systeem is offline",
+            "unavailable": "Systeem is onbereikbaar"
+        },
+        "users": {
+            "cloudDelete": "Gebruiker verwijderen",
+            "localDelete": "Verwijder gebruiker"
+        },
+        "yourSystem": "Uw systeem",
+        "loggers": {
+            "none": {
+                "text": "Geen",
+                "help": "(log uitgeschakeld)"
+            },
+            "error": {
+                "text": "Fout",
+                "help": "(alleen logfouten)"
+            },
+            "warning": {
+                "text": "Waarschuwing",
+                "help": "(log waarschuwingen en fouten)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(log waarschuwingen, fouten en alle berichten)"
+            },
+            "debug": {
+                "text": "Debug",
+                "help": "(log elk systeembericht en debug-informatie)"
+            },
+            "verbose": {
+                "text": "Uitgebreid",
+                "help": "(log alle beschikbare informatie)"
+            }
+        },
+        "storageToolTips": {
+            "local": "Lokaal",
+            "usb": "USB",
+            "network": "Netwerk, toegevoegd via OS",
+            "smb": "Netwerk (smb), toegevoegd door VMS",
+            "cloud": "Cloud"
+        }
+    },
+    "systemStatuses": {
+        "activated": "geactiveerd",
+        "incompatible": "niet compatibel",
+        "merging": "samenvoegen",
+        "notActivated": "niet geactiveerd",
+        "offline": "offline",
+        "online": "online",
+        "unavailable": "niet beschikbaar"
+    },
+    "toastMessage": {
+        "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
+        "nameFail": "{type} naam wijzigen mislukt",
+        "reviewAccepted": "De review is verwijderd",
+        "system": {
+            "deleted": {
+                "success": "Systeem {systemName} is succesvol verwijderd van uw account"
+            },
+            "disconnected": {
+                "success": "Systeem is met succes ontkoppeld van %CLOUD_NAME%"
+            },
+            "cloudConnect": {
+                "success": "Systeem verbonden met %CLOUD_NAME%",
+                "failed": "Kon geen verbinding maken met systeem %CLOUD_NAME%"
+            },
+            "merge": {
+                "failed": "Het samenvoegen van systemen is mislukt",
+                "success": "Systeem samenvoegen voltooid"
+            },
+            "rename": {
+                "success": "Systeemnaam opgeslagen"
+            }
+        },
+        "viewingReport": "Je bekijkt een geïmporteerd rapport"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"
+    },
+    "license": {
+        "licenseTypeTitles": {
+            "Time": "Tijd",
+            "Trial": "Test",
+            "Professional": "Professional",
+            "Analog": "Analoog",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "Video Wall",
+            "Analog Encoder": "Analoge Encoder",
+            "Starter": "Starter",
+            "IO Module": "I/O module",
+            "Bridge": "Bridge",
+            "NVR": "NVR"
+        },
+        "info": {
+            "type": "Type",
+            "channels": "Kanalen",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Verloopt",
+            "deactivations": "Resterende deactivering",
+            "online": "Online",
+            "error": "Fout",
+            "expired": "Verlopen",
+            "ok": "Oké",
+            "nvrError": "NVR fout",
+            "serverNotFound": "Server niet gevonden"
+        },
+        "messages": {
+            "required": "{number} meer vereist",
+            "activated": "Licentie geactiveerd",
+            "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Extra lokale FS types",
+        "autoDiscoveryResponseEnabled": "Resultaten automatische ontdekking",
+        "crossdomainEnabled": "Cross domein",
+        "defaultExportVideoCodec": "Standaard video codec export",
+        "defaultVideoCodec": "Standaard video codec",
+        "downloaderPeers": "Downloader connecties",
+        "lastMergeMasterId": "Laatste merge masterId",
+        "lastMergeSlaveId": "Laatste merge slaveID",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "Licentieserver",
+        "lowQualityScreenVideoCodec": "Lage kwaliteit scherm video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P alle clients bytes grootte",
+        "maxRtpRetryCount": "Max. Aantal RTP-pogingen",
+        "metadataStorageChangePolicy": "Verandering van beleid voor Meta-opslag",
+        "pushNotificationsLanguage": "Taal voor pushmeldingen",
+        "resourceFileUri": "Bronbestand URI",
+        "sessionLimitMinutes": "Sessie limiet (minuten)",
+        "specificFeatures": "Specifieke functies",
+        "systemName": "Systeemnaam",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP ingeschakeld",
+        "auditTrailEnabled": "Audit historiek ingeschakeld",
+        "auditTrailPeriodDays": "Periode van audittrail",
+        "autoDiscoveryEnabled": "Schakel automatische detectie van apparaten in",
+        "autoUpdateThumbnails": "Auto-update voorbeeldweergaves",
+        "backupNewCamerasByDefault": "Maak standaard een back-up van nieuwe camera's",
+        "backupQualities": "Backup Kwaliteit",
+        "cameraSettingsOptimization": "Optimalisatie van apparaatinstellingen toestaan",
+        "clientStatisticsSettingsUrl": "Relatieve url van klantstatistieken",
+        "cloudAccountName": "Cloud eigenaar-account",
+        "cloudConnectRelayingEnabled": "Schakel relaying in voor cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Schakel UDP hole punching in voor de cloud verbinding",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud systeem id",
+        "disabledVendors": "Uitgeschakelde leveranciers",
+        "ec2AliveUpdateIntervalSec": "Systeem actief polling interval (seconden)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connectie verbinding-time-out (seconden)",
+        "ec2KeepAliveProbeCount": "Verbinding connectie keep alive (seconden)",
+        "emailFrom": "E-mail van",
+        "emailSignature": "Email handtekening",
+        "emailSupportEmail": "Ondersteuning e-mail",
+        "enableEdgeRecording": "Edge opname inschakelen",
+        "eventLogPeriodDays": "Gebeurtenislogboek periode (dagen)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP zoekbasis",
+        "ldapSearchFilter": "LDAP zoekfilter",
+        "ldapUri": "LDAP uri",
+        "localSystemId": "Lokale systeem ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
+        "maxP2pQueueSizeBytes": "Max P2P wachtrijgrootte (bytes)",
+        "maxRecordQueueSizeBytes": "Max records wachtrijgrootte (bytes)",
+        "maxRecordQueueSizeElements": "Max records wachtrijgrootte (elementen)",
+        "maxRemoteArchiveSynchronizationThreads": "Max externe opname synchronisatie taken",
+        "maxRtspConnectDurationSeconds": "Max. Rtsp connectie duur seconden",
+        "maxSceneItems": "Max scène items (0 betekent standaard)",
+        "proxyConnectTimeoutSec": "Time-out voor proxyverbinding (seconden)",
+        "rtpTimeoutMs": "RTP timeout (milliseconden)",
+        "sequentialFlirOnvifSearcherEnabled": "Gebruik sequentiële Flir Onvif-zoeker",
+        "serverDiscoveryPingTimeoutSec": "Server discovery time-out",
+        "smtpConnectionType": "SMTP-verbindingstype",
+        "smtpHost": "SMTP-host",
+        "smtpPort": "SMTP poort",
+        "smtpSimple": "SMTP eenvoudig",
+        "smtpTimeout": "SMTP-time-out",
+        "smtpUser": "SMTP-gebruiker",
+        "statisticsAllowed": "Verzend anonieme gebruiksstatistieken en crashmeldingen",
+        "statisticsReportLastNumber": "Statistiekenrapport - laatste nummer",
+        "statisticsReportLastTime": "Statistiekenrapport - laatste keer",
+        "statisticsReportLastVersion": "Statistiekenrapport - laatste versie",
+        "statisticsReportServerApi": "Statistieken server api",
+        "statisticsReportTimeCycle": "Statistiekenrapport interval",
+        "statisticsReportUpdateDelay": "Statistieken verslag - update vertraging",
+        "synchronizeTimeWithInternet": "Synchroniseer tijd met internet",
+        "SystemName": "Systeemnaam",
+        "takeCameraOwnershipWithoutLock": "Neem controle over camera's zonder vergrendeling",
+        "timeSynchronizationEnabled": "Tijdsynchronisatie ingeschakeld",
+        "primaryTimeServer": "Primaire tijdsynchronisatieserver",
+        "osTimeChangeCheckPeriodMs": "Controle van de tijd van het besturingssysteem",
+        "syncTimeExchangePeriod": "Synchroniseer tijd synchronisatie interval voor netwerkverzoeken",
+        "syncTimeEpsilon": "Synchroniseer tijd epsilon. Nieuwe waarde wordt niet toegepast als delta tijd minder is dan epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max. aantal draagbare camera archief synchronisatie verbindingen",
+        "updateNotificationsEnabled": "Update meldingen ingeschakeld",
+        "upnpPortMappingEnabled": "UPNP-poorttoewijzing ingeschakeld",
+        "useTextEmailFormat": "Verstuur e-mails met onbewerkte tekst",
+        "useWindowsEmailLineFeed": "Gebruik Windows line feed in e-mails",
+        "trafficEncryptionForced": "Forceer Dataverkeer encryptie",
+        "videoTrafficEncryptionForced": "Forceer videoverkeer encryptie",
+        "updateStatus": "Status bijwerken",
+        "watermarkSettings": "Watermerk instellingen",
+        "maxWebMTranscoders": "Maximaal aantal WEBM-verbindingen voor de server. Chrome opent twee verbindingen tegelijk en sluit vervolgens de eerste. Het is dus aan te raden om waarde> = 2 in te stellen op deze parameter.",
+        "maxEventLogRecords": "Maximum logboek evenementen om in de database te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
+        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
+    },
+    "result": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+    "additionalSystems": "{count, plural, =0{+ # systemen} one{+ # Systeem} other{+ # Systemen}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Herindexering hoofdopslag voltooid",
+            "backupSuccess": "Back-up herindexering voltooid",
+            "mainFailed": "Herindexering hoofdopslag mislukt",
+            "backupFailed": "Herindexering van back-upopslag mislukt"
+        },
+        "modes": {
+            "main": "Algemeen",
+            "backup": "Backup",
+            "notInUse": "Niet in gebruik",
+            "reserved": "Gereserveerd",
+            "inaccessible": "Niet toegankelijk",
+            "changing": "Modus wijzigen...",
+            "disabled": "Uitgeschakeld"
+        },
+        "alreadyUsed": "Opslagpad {url} wordt al gebruikt door een andere server.",
+        "deleteExternalStorage": "Externe opslag verwijderen?",
+        "failed": "Externe opslag kon niet worden toegevoegd",
+        "invalidPath": "Ongeldig opslagpad.",
+        "stillHasArchivesPreWarning": "Opname naar deze opslaglocatie zal stoppen. Echter, verouderde beelden blijven verwijderd worden.",
+        "stillHasArchives": "Opname naar deze opslaglocatie is gestopt. Echter, verouderde beelden worden nog steeds verwijderd.",
+        "storageDeleted": "Opslag {url} verwijderd",
+        "failedRemove": "Kan externe opslag {url} niet verwijderen",
+        "reservedTooSmallTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opname, omdat deze te klein is en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "reservedSystemTooltip": "Deze opslaglocatie kan niet worden gebruikt voor opnemen, omdat de systeemopslag en er andere grotere opslaglocaties beschikbaar zijn voor opname.",
+        "serverOffline": "Kan geen externe opslag toevoegen - server reageert niet",
+        "success": "Externe opslag toegevoegd",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
+    }
 }

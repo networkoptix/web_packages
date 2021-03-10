@@ -1,10 +1,12 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-
-from .models import CloudNotification, PushSubscription
-from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
-
+from django.contrib.auth import get_user_model
 from dal import autocomplete
+
+from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
+from notifications.models import CloudNotification, PushSubscription
+
+User = get_user_model()
 
 
 class CloudNotificationAdminForm(forms.ModelForm):
@@ -16,6 +18,18 @@ class CloudNotificationAdminForm(forms.ModelForm):
         queryset=Customization.objects.values_list('name', flat=True),
         required=False,
         widget=FilteredSelectMultiple('customizations', False)
+    )
+    test_users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        # Use the pretty 'filter_horizontal widget'.
+        widget=autocomplete.ModelSelect2Multiple(url='account-autocomplete',
+                                                 attrs={
+                                                     # Set some placeholder
+                                                     'data-placeholder': 'Email ...',
+                                                     # Only trigger autocompletion after 2 characters have been typed
+                                                     'data-minimum-input-length': 2
+                                                 })
     )
 
     def __init__(self, *args, **kwargs):

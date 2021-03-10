@@ -1,4 +1,4 @@
-@import '../../styles/typography';
+@use '../../styles/typography';
 
 .foreground-messages-content {
   max-height: 800px;
@@ -6,12 +6,29 @@
 
 .footnote {
   font-style: italic;
-  color: $gray-light;
+  color: typography.$gray-light;
   font-size: 11px;
 }
 
-.table td {
-  height: 32px;
+table {
+  display: table !important;
+}
+
+thead {
+  display: table-header-group !important;
+}
+
+tbody {
+  display: table-row-group !important;
+}
+
+tr {
+  display: table-row !important;
+  height: 44px;
+}
+
+th, td {
+  display: table-cell !important;
 }
 
 .devices table {
@@ -37,4 +54,8 @@
   overflow-x: auto;
   width: 100%;
   white-space: nowrap;
+
+  th, td {
+    max-width: 100px;
+  }
 }

@@ -33,12 +33,12 @@ Add Then Remove
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     FOR    ${x}    IN RANGE    ${how many}
-        Click Button    ${SHARE BUTTON SYSTEMS}
-        Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-        Input Text    ${SHARE EMAIL}    @{emails}[${x}]
-        Click Button    ${SHARE BUTTON MODAL}
+        Click Button    ${ADD USER BUTTON SYSTEMS}
+        Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+        Input Text    ${ADD USER EMAIL}    @{emails}[${x}]
+        Click Button    ${ADD USER BUTTON MODAL}
         Check For Alert2    ${NEW PERMISSIONS SAVED}
     END
     Register Keyword To Run On Failure    Capture Page Screenshot

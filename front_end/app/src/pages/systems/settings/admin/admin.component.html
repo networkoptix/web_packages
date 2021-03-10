@@ -2,43 +2,45 @@
 
 <div *ngIf="system" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
-        <nx-block header-style="extended">
+
+        <nx-block header-style="extended" type="mb-3" *ngIf="CONFIG.isLocal">
             <header>
-                <h2 class="system-name mb-2">{{system.info.name}}</h2>
-                <span class="system-owner">
-                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                    <span>
-                        <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
-                        <span *ngIf="!system.isMine">
-                            <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
-                            ({{system.info.ownerAccountEmail}})
-                        </span>
+                <div class="system-cloud-tag float-right">
+                    <nx-tag static type="success" *ngIf="CONFIG.cloudSystemId">{{LANG.system.connected() | uppercase}}</nx-tag>
+                    <nx-tag static *ngIf="!CONFIG.cloudSystemId">{{LANG.system.not_connected() | uppercase}}</nx-tag>
+                </div>
+                <div class="float-left">
+                    <h2 class="system-name mb-2" translate>%CLOUD_NAME%</h2>
+                    <span class="system-owner">
+                        <a [href]="CONFIG.cloudHost" target="_blank">{{CONFIG.cloudHost}}</a>
                     </span>
-                </span>
+                </div>
             </header>
 
-            <nx-section *ngIf="system.permissions.isAdmin">
+            <nx-section *ngIf="system.permissions.isAdmin && ((system.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)">
                 <div class="row m-0">
-                    <div class="col-xl-7 pl-0">
-                        <div class="float-left mr-2">
-                            <button class="btn btn-default"
-                                    [disabled]="settings.renameDisabled"
-                                    (click)="rename()"><span class="ellipsis" translate>Rename</span>
-                            </button>
-                        </div>
-                        <div class="float-left mr-2" *ngIf="settings.showMerge">
-                            <button class="btn btn-default"
-                                    [disabled]="settings.mergeDisabled"
-                                    (click)="mergeSystems()">
-                                <span class="ellipsis" translate>Merge with Another System</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-xl-5 p-0 mt-2 mt-xl-0">
-                        <div class="float-xl-right" *ngIf="system.isMine">
+                    <div class="col-12 pl-0">
+                        <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
                             <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
-                                    (click)="disconnect()">
+                                    (click)="connectLocalToCloud()">
+                                <span class="ellipsis" translate>Connect to %CLOUD_NAME%</span>
+                            </button>
+                        </div>
+                        <div *ngIf="CONFIG.cloudSystemId">
+                            <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                            <span>
+                                <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
+                                <span *ngIf="!system.isMine">
+                                    <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                                    <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                                </span>
+                            </span>
+                            <button *ngIf="system.isMine"
+                                    [disabled]="settings.disconnectDisabled"
+                                    title="BOOM!"
+                                    class="btn btn-default mt-3"
+                                    (click)="disconnectFromCloud()">
                                 <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
                             </button>
                         </div>
@@ -46,209 +48,85 @@
                 </div>
             </nx-section>
         </nx-block>
-        <nx-block type="mt-3" *ngIf="!system.isMine">
-            <nx-section>
-                <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
-                    <span class="name" [innerHTML]="updateUserRole()"></span>
+
+        <nx-block header-style="extended">
+            <header>
+                <div class="d-flex">
+                    <nx-editable-settings-heading
+                            (editModeState)="editMode = $event"
+                            [nameWatcher]="systemNameWatcher"
+                            [editEnabled]="system.isOnline && system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
+                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [textOnly]="true"></nx-client-button>
+                </div>
+
+                <span class="system-owner" *ngIf="!CONFIG.isLocal">
+                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                    <span>
+                        <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
+                        <ng-container *ngIf="!system.userManager.isMine">
+                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                            <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                        </ng-container>
+                    </span>
                 </span>
-                <div class="mt-2">
-                    <button [disabled]="settings.disconnectDisabled"
-                            class="btn btn-default"
-                            (click)="delete()" translate>Disconnect from My Account</button>
+            </header>
+
+            <nx-section *ngIf="system.isMine; else notOwner">
+                <div class="row m-0">
+                    <div class="col-xl-7 pl-0">
+                        <div class="float-left mr-2">
+                            <button class="btn btn-default"
+                                    [disabled]="(merging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
+                                    (click)="mergeSystems()">
+                                <span class="ellipsis" translate>Merge with Another System</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!CONFIG.isLocal && !CONFIG.cloudSystemId">
+                        <div class="float-xl-right">
+                            <button [disabled]="settings.disconnectDisabled"
+                                    class="btn btn-default"
+                                    (click)="disconnectFromCloud()">
+                                <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </nx-section>
-        </nx-block>
-        <nx-block type="mt-3" *ngIf="system.permissions.isAdmin">
-            <header>
-                <h4 translate>System Settings</h4>
-            </header>
-            <div class="placeholder" *ngIf="system && !system.isAvailable; else systemSettings">
-                <svg-icon
-                    [svgStyle]="{ 'width.px': '64', 'pointer-events': 'none' }"
-                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
-                <span translate>Can't load system settings</span>
-            </div>
-            <ng-template #systemSettings>
-                <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
-                <nx-section *ngIf="settingsWatchersSet">
-                    <div class="m-0">
-                    <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
-                        novalidate autocomplete="off">
-                        <div class="form-check pl-0">
-                            <ng-container *ngIf="settingsWatchers.autoDiscoveryEnabled !== undefined">
-                                <div class="d-flex checkbox-block align-items-center">
-                                    <nx-checkbox
-                                        name="autoDiscoveryEnabled"
-                                        componentId="autoDiscoveryEnabled"
-                                        [(ngModel)]="settingsWatchers.autoDiscoveryEnabled.value"
-                                        #autoDiscoveryEnabled="ngModel"
-                                        description="autoDiscoveryEnabledHelpBlock">
-                                    </nx-checkbox>
-                                    <label class="control-label mb-0" for="autoDiscoveryEnabled">
-                                        <span translate>Enable auto discovery of cameras and servers</span>
-                                    </label>
-                                </div>
-                                <label id="autoDiscoveryEnabledHelpBlock"
-                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                    for="autoDiscoveryEnabled"
-                                    translate>
-                                    When enabled, system will discover new cameras and servers. Also,
-                                    it will automatically and persistently send discovery requests to
-                                    cameras in order to get the camera's status update.
-                                    Failover enabled on some servers ignore status check prohibition.
-                                </label>
-                            </ng-container>
-                            <ng-container *ngIf="settingsWatchers.statisticsAllowed !== undefined">
-                                <div class="d-flex checkbox-block align-items-center mt-1">
-                                    <nx-checkbox
-                                        name="statisticsAllowed"
-                                        componentId="statisticsAllowed"
-                                        [(ngModel)]="settingsWatchers.statisticsAllowed.value"
-                                        #statisticsAllowed="ngModel"
-                                        description="statisticsAllowedHelpBlock">
-                                    </nx-checkbox>
-
-                                    <label class="control-label mb-0" for="statisticsAllowed">
-                                        <span translate>Send anonymous usage and crash statistics to developers</span>
-                                    </label>
-                                </div>
-                                <label id="statisticsAllowedHelpBlock"
-                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                    for="statisticsAllowed"
-                                    translate>
-                                    Includes information about the System, such as camera modules,
-                                    firmware versions, number of servers, etc.
-                                    Does not include any personal information and is completely anonymous.
-                                </label>
-                            </ng-container>
-                            <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.cameraSettingsOptimization !== undefined">
-                                <nx-checkbox
-                                    name="cameraSettingsOptimization"
-                                    componentId="cameraSettingsOptimization"
-                                    [(ngModel)]="settingsWatchers.cameraSettingsOptimization.value"
-                                    #cameraSettingsOptimization="ngModel">
-                                </nx-checkbox>
-
-                                <label class="control-label mb-0" for="cameraSettingsOptimization">
-                                    <span translate>Allow system to optimize camera settings</span>
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <ng-template #notOwner>
+                <nx-section>
+                    <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
+                        <span class="name" [innerHTML]="updateUserRole()"></span>
+                    </span>
+                    <div class="mt-2" *ngIf="user.isCloud">
+                        <button [disabled]="settings.disconnectDisabled"
+                                class="btn btn-default"
+                                (click)="delete()" translate>Disconnect from My Account</button>
+                    </div>
                 </nx-section>
             </ng-template>
         </nx-block>
-        <nx-block type="mt-3" *ngIf="system.permissions.isAdmin">
-            <header>
-                <h4 translate>Security</h4>
-            </header>
-            <div class="placeholder" *ngIf="system && !system.isAvailable; else securitySettings">
-                <svg-icon
-                    [svgStyle]="{ 'width.px': '64', 'pointer-events': 'none' }"
-                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
-                <span translate>Can't load security settings</span>
-            </div>
-            <ng-template #securitySettings>
-                <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
-                <nx-section *ngIf="settingsWatchersSet">
-                    <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
-                        <div class="form-check p-0 mr-4">
-                            <ng-container *ngIf="settingsWatchers.auditTrailEnabled !== undefined">
-                                <div class="d-flex checkbox-block align-items-center">
-                                    <nx-checkbox
-                                        name="auditTrailEnabled"
-                                        componentId="auditTrailEnabled"
-                                        [(ngModel)]="settingsWatchers.auditTrailEnabled.value"
-                                        #auditTrailEnabled="ngModel"
-                                        description="auditTrailEnabledHelpBlock">
-                                    </nx-checkbox>
 
-                                    <label class="control-label mb-0" for="auditTrailEnabled">
-                                        <span translate>Enable audit trail</span>
-                                    </label>
-                                </div>
-                                <label id="auditTrailEnabledHelpBlock"
-                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                    for="auditTrailEnabled"
-                                    translate>
-                                    Tracks and logs all user actions.
-                                </label>
-                            </ng-container>
-                            <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.trafficEncryptionForced !== undefined">
-                                <nx-checkbox
-                                    name="trafficEncryptionForced"
-                                    componentId="trafficEncryptionForced"
-                                    [(ngModel)]="settingsWatchers.trafficEncryptionForced.value"
-                                    (click)="resetVideoEncryptionIfDisabled()"
-                                    #trafficEncryptionForced="ngModel">
-                                </nx-checkbox>
+        <nx-system-standard-admin-component
+                *ngIf="system.isAdmin"
+                [system]="system"
+                [settings]="settingsForSystem">
+        </nx-system-standard-admin-component>
 
-                                <label class="control-label mb-0" for="trafficEncryptionForced">
-                                    <span translate>Allow only secure connections</span>
-                                </label>
-                            </div>
-                            <ng-container *ngIf="settingsWatchers.videoTrafficEncryptionForced !== undefined">
-                                <div class="d-flex checkbox-block align-items-center mt-1">
-                                    <nx-checkbox
-                                        name="videoTrafficEncryptionForced"
-                                        componentId="videoTrafficEncryptionForced"
-                                        [(ngModel)]="settingsWatchers.videoTrafficEncryptionForced.value"
-                                        [disabled]="!settingsWatchers.trafficEncryptionForced.value"
-                                        (click)="setWarningMessageThroughApplyService()"
-                                        #videoTrafficEncryptionForced="ngModel">
-                                    </nx-checkbox>
+        <nx-alert-block
+                class="d-block mt-3"
+                *ngIf="system.currentUser?.isAdmin && advanced"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="'Settings displayed below are advanced.' | translate"
+                [line2]="'Changing them may cause server to work incorrectly.' | translate"
+                [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+                [btnCaption]="'Hide Advanced Settings' | translate"
+                (onAction)="hideAdvancedSettings()">
+        </nx-alert-block>
 
-                                    <label class="control-label mb-0"
-                                        [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-label' : ''"
-                                        for="videoTrafficEncryptionForced">
-                                        <span translate>Encrypt video traffic</span>
-                                    </label>
-                                </div>
-                                <label id="videoTrafficEncryptionForcedHelpBlock"
-                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                    [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-helper-block' : ''"
-                                    for="videoTrafficEncryptionForced"
-                                    translate>
-                                    Only client-server video traffic can be encrypted.
-                                </label>
-                            </ng-container>
-                            <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.sessionLimitMinutes !== undefined"
-                                (click)="setDefaultIfNotInitialized()">
-                                <nx-checkbox
-                                    name="sessionLimitMinutes"
-                                    componentId="sessionLimitMinutes"
-                                    [(ngModel)]="settingsWatchers.sessionLimitToggle.value"
-                                    #sessionLimitMinutes="ngModel">
-                                </nx-checkbox>
-
-                                <label class="control-label mb-0" for="sessionLimitMinutes">
-                                    <span translate>Limit session duration to</span>
-                                </label>
-                            </div>
-                            <div *ngIf="settingsWatchers.sessionLimitToggle && settingsWatchers.sessionLimitToggle.value" 
-                                class="row ml-4 mt-2">
-                                <input #timeUnitTracker
-                                        [(ngModel)]="timeUnitCount"
-                                        (change)="updateTimeUnitWatcher()"
-                                        [ngModelOptions]="{standalone: true}"
-                                        (keydown)="storePreviousValue($event)"
-                                        (keyup)="validationCheckForInput()"
-                                        type="number"
-                                        min="1"
-                                        class="form-control time-unit-input">
-                                <nx-select class="time-unit-select"
-                                        [items]="limitSessionTimeUnits"
-                                        [selected]="selectedTimeUnit"
-                                        (onSelected)="updateTimeUnitInput($event)"></nx-select>
-                            </div>
-                        </div>
-                    </form>
-                </nx-section>
-            </ng-template>
-        </nx-block>
+        <nx-system-advanced-admin-component
+                *ngIf="system.currentUser?.isAdmin && advanced"
+                [system]="system">
+        </nx-system-advanced-admin-component>
     </div>
 </div>

@@ -1,22 +1,44 @@
-from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException, APIForbiddenException
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
-    DataStructure
 from django.conf import settings
-from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from util.helpers import detect_language_by_request
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
+from api.helpers.exceptions import (
+    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language,
+                        AssetCustomizationReview, DataStructure)
+from util.base_cache import BaseCache
+from util.helpers import get_language_object_from_request
+
+from cms.serializers import ArticleSerializer
+
+state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
+                                       description="State of the article. Ex: draft, published, or review",
+                                       type=openapi.TYPE_STRING)
+id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
+                                     description="Route in the url that points to the article.",
+                                     type=openapi.TYPE_STRING)
 
 
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns an article based on params",
+                     manual_parameters=[state__query_param, id__query_param, url__route_param],
+                     responses={'200': openapi.Response('Article', ArticleSerializer)})
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
-@handle_exceptions
 def get_article(request, url_param, **kwargs):
-    draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'review'
+    ARTICLE_CACHE = BaseCache(cache_key='article')
+    state = request.query_params.get('state') or 'accepted'
+    draft =  state == 'draft'
+    review = state == 'pending'
     article_id = request.query_params.get('id')
+    language = get_language_object_from_request(request)
     article = None
+    version = None
+    cached_article = None
 
     if article_id:
         # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
@@ -33,16 +55,21 @@ def get_article(request, url_param, **kwargs):
             # Check that that the asset's current url still matches
             article = article_review.version.asset
             version = article.version_id(settings.CUSTOMIZATION)
-            url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
-            if url_ds.find_actual_value(asset=article, version_id=version) != url_param:
-                article = None
+            ARTICLE_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{url_param}-{state}-{version if not draft else "latest"}'
+            cached_article = ARTICLE_CACHE.get_cached_item()
 
+            if not cached_article:
+                url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
+                if url_ds.find_actual_value(asset=article, version_id=version,
+                                            customization_name=settings.CUSTOMIZATION) != url_param:
+                    article = None
     # If article is not found, then return a 404
-    if article:
+    if article or cached_article:
         if (draft or review) and not (request.user.is_superuser or article.created_by == request.user):
             raise APIForbiddenException(error_data={'url_param': url_param},
                                         error_text='Not allowed to view this preview')
-
+        if cached_article:
+            return api_success(cached_article)
         # Set version based on draft or pending query params
         version = article.version_id()
         if review:
@@ -56,29 +83,37 @@ def get_article(request, url_param, **kwargs):
 
         # If version is 0, then article has no acceptable version and the request isn't for a draft
         if version != 0:
-            language = Language.by_code(detect_language_by_request(request))
+            article_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.article)
 
             # Get values for title and body of article for this version
-            title = DataStructure.objects.filter(name='title').first().find_actual_value(asset=article,
-                                                                                         language=language,
-                                                                                         version_id=version,
-                                                                                         draft=draft or review)
-            body = DataStructure.objects.filter(name='body').first().find_actual_value(asset=article,
-                                                                                       language=language,
-                                                                                       version_id=version,
-                                                                                       draft=draft or review)
+            title = article_structures.filter(name='title').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
+            )
+            body = article_structures.filter(name='body').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
+            )
+            short_description = article_structures.filter(name='description').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
+            )
             article_dict = {
                 "title": title,
+                "shortDescription": short_description,
                 "body": body
             }
 
             # Get global contexts and fill any matching variables in datarecords
             cloud_portal = get_cloud_portal_asset()
-            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
-                                    global_contexts, global_contexts_dict)
+                                    global_contexts, global_contexts_dict, language=language)
+            ARTICLE_CACHE.set_cached_item(article_dict)
 
-            return api_success(article_dict)
+            ser = ArticleSerializer(data=article_dict)
+            ser.is_valid()
+            return api_success(ser.data)
 
     raise APINotFoundException(error_data={'url_param': url_param}, error_text='Article not found')

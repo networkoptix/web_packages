@@ -1,10 +1,6 @@
-@import '../../../../app/styles/native-theme/theme_palette';
-@import '../../../../app/styles/custom/custom_palette';
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .installers {
@@ -79,11 +75,11 @@
 .download-button {
     max-width        : fit-content;
     margin           : 0 0 8px 0;
-    padding          : 0 12px 0 0;
-    height           : auto;
-    box-shadow       : none;
+    padding          : 0 12px 0 0 !important;
+    height           : auto !important;
+    box-shadow       : none !important;
     background-color : transparent !important;
-    border           : 1px solid $light5;
+    border           : 1px solid $light5 !important;
 
     &:hover {
         border-color     : $light8 !important;
@@ -132,7 +128,48 @@
 }
 
 h2.version-number {
-    @extend #medium32;
+    @include typography.medium32dark9;
     line-height : 34px;
     margin      : 0 0 8px 0;
 }
+
+.nx-tab-set {
+    &-tabs {
+        .nav-item {
+
+            height : rem(48px);
+
+            .nav-link {
+                border-top-left-radius  : 2px;
+                border-top-right-radius : 2px;
+                color                   : $dark12;
+                font-size               : $h5-font-size;
+                font-family             : $font-family-medium;
+                line-height             : 26px;
+                padding                 : 10px 20px;
+                text-decoration         : none;
+
+                &.active {
+                    background-color : $light1 !important;
+                    border-bottom    : 1px solid transparent;
+
+                    .tab-heading {
+                        border-bottom : 1px solid #d7dfe3;
+                        padding       : 14px 0;
+                    }
+                }
+
+                &:hover {
+                    background-color : transparentize($light5, 0.75);
+                }
+            }
+        }
+    }
+
+    &-content {
+        .card {
+            border-top : none;
+        }
+    }
+}
+

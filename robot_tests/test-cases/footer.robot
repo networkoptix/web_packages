@@ -4,6 +4,7 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Teardown     Restart
 Suite Teardown    Close All Browsers
+Force Tags    threaded
 
 *** Variables ***
 ${email}           ${EMAIL OWNER}
@@ -21,7 +22,6 @@ About page is correctly displayed
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
-    ...    ${FOOTER ABOUT LINK}
     Wait Until Element Has Style
     ...    ${CREATE ACCOUNT BODY}
     ...    background-color
@@ -31,7 +31,6 @@ About page is correctly displayed
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
-    ...    ${FOOTER ABOUT LINK}
     Wait Until Element Has Style
     ...    ${CREATE ACCOUNT BODY}
     ...    background-color
@@ -56,8 +55,8 @@ Support leads to the proper support site
     Click Link    ${FOOTER SUPPORT LINK}
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
-    Wait Until Location Is    ${SUPPORT URL}
+    Select Window    ${tabs}[1]
+    Wait Until Location Contains    ${SUPPORT URL}
 
 Terms leads to the proper EULA site
     [tags]    C41545    Threaded    C30824    smoke
@@ -66,7 +65,7 @@ Terms leads to the proper EULA site
     Click Link    ${FOOTER TERMS LINK}
     Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Is    ${ENV}${TERMS URL}
 
 Privacy leads to the proper page
@@ -76,8 +75,8 @@ Privacy leads to the proper page
     Click Link    ${FOOTER PRIVACY LINK}
     Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
-    Wait Until Location Is    ${ENV}${PRIVACY POLICY URL HREF}
+    Select Window    ${tabs}[1]
+    Wait Until Location Is    ${PRIVACY POLICY URL HREF}
 
 Copyright leads to the proper site
     [tags]    C41547    Threaded
@@ -86,5 +85,5 @@ Copyright leads to the proper site
     Click Link    ${FOOTER COPYRIGHT LINK}
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Is    ${COPYRIGHT URL}

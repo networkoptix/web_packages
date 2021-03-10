@@ -7,8 +7,9 @@ import { FormsModule }          from '@angular/forms';
 
 import { NxRightMenuComponent } from './right-menu.component';
 
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule }      from '@ngx-translate/core';
+import { ComponentsModule }     from '../../components/components.module';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     {
@@ -26,7 +27,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         FormsModule,
-
+        DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers      : [],
@@ -34,9 +35,6 @@ const appRoutes: Routes = [
         NxRightMenuComponent,
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxRightMenuComponent
-    ],
     exports        : [
         NxRightMenuComponent
     ]

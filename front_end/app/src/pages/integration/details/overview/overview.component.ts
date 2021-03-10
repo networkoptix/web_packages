@@ -1,34 +1,45 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
-import { NxConfigService }              from '../../../../services/nx-config';
 
+import { IntegrationService }           from '../../integration.service';
+import { NxMenuService }                from '../../../../menu';
+import { NxConfigService, IConfig }     from '../../../../services/nx-config';
+import { NxPageService }                from '../../../../services/page.service';
+import { SubscriptionLike } from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'overview-component',
-    templateUrl: 'overview.component.html',
-    styleUrls: ['overview.component.scss']
+    selector    : 'overview-component',
+    templateUrl : 'overview.component.html',
+    styleUrls   : ['overview.component.scss']
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {
+    plugin: any;
+    pluginSubscription: SubscriptionLike;
 
-    plugin: any = {};
-
-    CONFIG: any;
+    CONFIG: IConfig;
 
     private setupDefaults() {
-        this.plugin = this.integrationService.getIntegrationPlugin();
-        this.menuService.setDetailsSection('how-it-works');
-        this.CONFIG = this.configService.getConfig();
+        this.menuService.detail = 'how-it-works';
     }
 
-    constructor(private integrationService: IntegrationService,
-                private menuService: NxMenuService,
-                private configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        private pageService: NxPageService,
+        private integrationService: IntegrationService,
+        private menuService: NxMenuService
+    ) {
+        this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = this.plugin.information?.shortDescription;
+        });
     }
 
     ngOnDestroy() {
@@ -37,4 +48,3 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     onSubmit() {
     }
 }
-

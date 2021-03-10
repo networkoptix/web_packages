@@ -1,3 +1,15 @@
+<ng-container *ngIf="registerSuccess">
+    <div class="status-wrapper" *ngIf="!activated">
+        <nx-page-placeholder type="ACCOUNT_CREATED"
+            [message]="'common.account.created.message' | translate: { email: accountInfo.email || accountService.email }">
+        </nx-page-placeholder>
+    </div>
+    <div class="status-wrapper" *ngIf="activated">
+        <nx-page-placeholder type="ACCOUNT_ACTIVATED">
+            <button class="btn btn-primary login-button mx-auto" (click)="login()" translate>Log In</button>
+        </nx-page-placeholder>
+    </div>
+</ng-container>
 <div class="container auth-hidden">
     <div *ngIf="!registerSuccess && fromClient" style="max-width: 991px;" class="m-auto">
         <div class="jumbotron">
@@ -8,20 +20,12 @@
         </div>
     </div>
 
-    <h1 class="process-success d-flex align-items-center flex-column mt-5"
-        *ngIf="registerSuccess && !activated">
-        <span translate>Account is created.</span>
-        <span translate>Confirmation message is sent to</span>
-        <span><strong>{{accountInfo.email}}</strong></span>
-    </h1>
-
-    <h1 class="process-success d-flex align-items-center flex-column mt-5"
-        *ngIf="registerSuccess && activated">
-        <span translate>Account is successfully created.</span>
-    </h1>
-
-    <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
-          *ngIf="!registerSuccess" novalidate autocomplete="off">
+    <form id="registerForm"
+        class="form-horizontal"
+        #registerForm="ngForm"
+        (submit)="hideErrors = false"
+        [ngClass]="{'hide-errors': hideErrors}"
+        *ngIf="!registerSuccess" novalidate autocomplete="off">
 
         <h1 *ngIf="!fromClient" translate>Create account</h1>
 
@@ -39,7 +43,7 @@
                        [(ngModel)]="accountInfo.firstName"
                        #firstName="ngModel"
                        id="firstName" name="firstName" maxlength="255"
-                       required autocomplete="off" nxFocusMe>
+                       required autocomplete="off" nxFocusMe [timeout]="500">
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
@@ -72,6 +76,7 @@
                             class="form-component"
                             name="registerEmail"
                             componentId="registerEmail"
+                            [hideErrors]="hideErrors"
                             [(ngModel)]="accountInfo.email"
                             [lockEmail]="lockEmail"
                             [form]="registerForm"
@@ -80,100 +85,49 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required" translate>Email is required</span>
-                </div>
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.pattern" translate>Please enter a valid Email</span>
-                </div>
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%</span>
-                </div>
+                <ng-container *ngIf="registerEmail.errors">
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.touched && registerEmail.errors.required" translate>Email is required</span>
+                    </div>
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.touched && registerEmail.errors.pattern" translate>Please enter a valid Email</span>
+                    </div>
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%</span>
+                    </div>
+                </ng-container>
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="registerPassword" class="text-left text-md-right control-label" translate>
-                    Password
-                </label>
+                <label for="registerPassword" class="text-left text-md-right control-label" translate>Password</label>
             </div>
 
             <div class="col-md-4">
                 <div class="input-group has-addon">
                     <nx-password-input
                             class="form-component"
+                            [hideErrors]="hideErrors"
                             name="registerPassword"
                             componentId="registerPassword"
                             [(ngModel)]="accountInfo.password"
                             [form]="registerForm"
+                            [component]="registerPassword"
                             #registerPassword="ngModel">
                     </nx-password-input>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <span class="help-block" *ngIf="registerPassword.valid && LANG.passwordRequirements">
-                    <nx-tag type="success" class="mt-2 mt-md-0" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</nx-tag>
-                    <nx-tag type="warning" class="mt-2 mt-md-0" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
-                          title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</nx-tag>
-                </span>
-
-                <span class="help-block" *ngIf="!registerPassword.valid && !registerPassword.touched">
-                    <nx-tag type="danger" class="mt-2 mt-md-0"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.weak &&
-                                 !registerPassword.errors.common &&
-                                 !registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</nx-tag>
-                    <nx-tag type="danger" class="mt-2 mt-md-0"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.common &&
-                                 !registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength &&
-                                 !registerPassword.errors.required"
-                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</nx-tag>
-                    <nx-tag type="danger" class="mt-2 mt-md-0"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.minlength &&
-                                 !registerPassword.errors.pattern"
-                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</nx-tag>
-                    <nx-tag type="danger" class="mt-2 mt-md-0"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.required}}</nx-tag>
-                </span>
-
-                <span class="help-block" *ngIf="!registerPassword.valid && registerPassword.touched">
-                    <span class="input-error"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.weak &&
-                                 !registerPassword.errors.common &&
-                                 !registerPassword.errors.pattern &&
-                                 !registerPassword.errors.required &&
-                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.weakMessage}}</span>
-
-                    <span class="input-error"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.common &&
-                                 !registerPassword.errors.required">{{ LANG.passwordRequirements.commonMessage}}</span>
-
-                    <span class="input-error"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}</span>
-                    <span class="input-error"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.requiredMessage}}</span>
-                    <span class="input-error"
-                          *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.required">{{ LANG.passwordRequirements.missingMessage}}</span>
-                </span>
+                <nx-password-input-validation
+                        [hideErrors]="hideErrors"
+                        [forElement]="registerPassword"
+                        [value]="accountInfo.password">
+                </nx-password-input-validation>
             </div>
         </div>
 
@@ -190,7 +144,7 @@
                 <label for="accept" class="m-0" [innerHTML]="'registration.agreement' | translate"></label>
             </div>
             <div class="col-md-4">
-                <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError">
+                <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError && !hideErrors">
                     <span class="help-block input-error" translate>
                         Please review and agree to the Terms and Conditions and Privacy policy in order to proceed
                     </span>
@@ -211,5 +165,3 @@
 
     <nx-footer center="true"></nx-footer>
 </div>
-
-

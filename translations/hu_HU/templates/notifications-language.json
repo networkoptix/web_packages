@@ -6,30 +6,30 @@
     "emailSubject": "Meghívást kapott a %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{message.asset}}"
+    "emailSubject": "Értékesítési kérdés {{{message.asset}}}-ról"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "Technikai kérdés {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.asset}}"
+    "emailSubject": "Visszajelzés {{{message.asset}}}-tól"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Visszajelzés a kamera oldaláról{{#message.asset}} {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} új verzióval rendelkezik, amelyet felül kell vizsgálni"
   },
   "restore_password": {
     "emailSubject": "A jelszó alaphelyzetbe állítása"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} meghívja Önt %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Hozzáférést kapott {{message.system_name}} videó rendszerhez{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} meghívja Önt %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video rendszert {{{message.system_name}}} megosztotta Önnel{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Hozzáférést kapott {{message.system_name}} videó rendszerhez"
+    "emailSubject": "Hozzáférést kapott {{{message.system_name}}} videó rendszerhez"
   }
 }

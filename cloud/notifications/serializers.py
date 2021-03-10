@@ -1,23 +1,37 @@
-from api.controllers.cloud_api import System
-from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+import json
+
+from django.conf import settings
 from rest_framework import serializers
 
-from .models import PushSubscription, PushDevice
+from api.controllers.cloud_api import System
+from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from notifications.models import PushSubscription, PushDevice, PushNotification
+
+PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
+
+FCM_ERRORS = {
+    'MismatchSenderId': 'Device token does not match with the current configuration',
+    'InvalidRegistration': 'Device token is invalid',
+    'NotRegistered': 'Device token is no longer valid',
+    'InvalidApnsCredential': 'APNs key is not valid for this device'
+}
 
 
 class NotificationSerializer(serializers.Serializer):
-    systemId = serializers.UUIDField(allow_null=False)
-    targets = serializers.ListField(child=serializers.CharField(min_length=1))
-    notification = serializers.DictField()
+    class NotificationDataSerializer(serializers.Serializer):
+        title = serializers.CharField(required=False, allow_blank=True, max_length=255, default='')
+        body = serializers.CharField(required=False, allow_blank=True, default='')
+        payload = serializers.DictField(required=False, default={})
+        options = serializers.DictField(required=False, default={})
 
-    def validate_notification(self, value):
-        if 'title' not in value or 'body' not in value:
-            raise serializers.ValidationError('Title and body are required')
-        elif not isinstance(value['title'], str) or not isinstance(value['body'], str):
-            raise serializers.ValidationError('Title and body must be strings')
-        elif not value['title'] or not value['body']:
-            raise serializers.ValidationError('Title and body cannot be blank')
-        return value
+        def validate(self, data):
+            if len(data['title'] + data['body'] + json.dumps(data['payload'])) > PushNotification.SIZE_LIMIT:
+                raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
+            return data
+
+    systemId = serializers.UUIDField(allow_null=False, label='ID of target system')
+    targets = serializers.ListField(child=serializers.CharField(min_length=1), label='List of emails')
+    notification = NotificationDataSerializer()
 
 
 class RegisterDeviceSerializer(serializers.Serializer):
@@ -33,33 +47,28 @@ class UnregisterDeviceSerializer(serializers.Serializer):
 class SubscriptionSerializer(serializers.Serializer):
     systems = serializers.ListField(required=False)
     deviceToken = serializers.CharField(required=True)
-    oldToken = serializers.CharField(required=False)
     isEnabled = serializers.BooleanField(required=False)
     deviceInfo = serializers.DictField(required=False)
-
-    # def __init__(self, instance=None, data=empty, **kwargs):
-    #     self.authenticated = kwargs.pop('authenticated', False)
-    #     super().__init__(instance, data, **kwargs)
-
-    def validate_oldToken(self, value):
-        if value is not None:
-            if PushDevice.objects.filter(registration_id=value).exists():
-                return value
-            else:
-                raise serializers.ValidationError('Old token does not exist')
-        else:
-            return value
+    type = serializers.ChoiceField(choices=PUSHDEVICE_TYPES, required=False)
 
     def validate_deviceToken(self, value):
         if self.instance:
             return value
         else:
-            device = PushDevice(registration_id=value, cloud_message_type='FCM', user=self.context['request'].user)
+            device = PushDevice(
+                registration_id=value, cloud_message_type='FCM', user=self.context['request'].user,
+                application_id=settings.CUSTOMIZATION
+            )
             response = device.send_message(message='', dry_run=True)
             if response['success'] == 1:
                 return value
             else:
-                raise serializers.ValidationError("Token could not be validated")
+                fcm_error = response['results'][0]['error']
+                raise serializers.ValidationError({
+                    'message': 'Token could not be validated',
+                    'code': fcm_error,
+                    'error': FCM_ERRORS.get(fcm_error, fcm_error)
+                })
 
     def validate_systems(self, value):
         if value is not None:
@@ -110,32 +119,29 @@ class SubscriptionSerializer(serializers.Serializer):
                 instance.name = device_info['name']
             if 'model' in device_info:
                 instance.model = device_info['model']
+            if 'os' in device_info:
+                instance.os = getattr(PushDevice.OS, device_info['os'], PushDevice.OS.web)
         return instance
 
     def create(self, validated_data):
-        if 'oldToken' in validated_data:
-            device = PushDevice.objects.get(registration_id=validated_data['oldToken'])
-            subscriptions = list(device.subscriptions.all())
-            device.registration_id = validated_data['deviceToken']
-            device.pk = None
-            device.id = None
-            device.save()
-            device.subscriptions.set(subscriptions)
-        else:
-            device = PushDevice(
-                registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
-                user=self.context['request'].user
-            )
-            systems = validated_data.get('systems', ['all'])
-            is_enabled = validated_data.get('isEnabled', True)
-            device_info = validated_data.get('deviceInfo', {})
+        device = PushDevice(
+            registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
+            user=self.context['request'].user, application_id=settings.CUSTOMIZATION
+        )
+        systems = validated_data.get('systems', ['all'])
+        is_enabled = validated_data.get('isEnabled', True)
+        device_info = validated_data.get('deviceInfo', {})
+        device_type = validated_data.get('type', None)
 
-            device.active = is_enabled
+        if device_type is not None:
+            device.type = getattr(PushDevice.TYPES, device_type)
 
-            device = self.assign_device_info(device, device_info)
-            device.save()
+        device.active = is_enabled
 
-            self.assign_systems(device, systems)
+        device = self.assign_device_info(device, device_info)
+        device.save()
+
+        self.assign_systems(device, systems)
 
         return device
 
@@ -143,9 +149,13 @@ class SubscriptionSerializer(serializers.Serializer):
         systems = validated_data.get('systems', None)
         is_enabled = validated_data.get('isEnabled', None)
         device_info = validated_data.get('deviceInfo', None)
+        device_type = validated_data.get('type', None)
 
         if is_enabled is not None:
             instance.active = is_enabled
+
+        if device_type is not None:
+            instance.type = getattr(PushDevice.TYPES, device_type)
 
         instance = self.assign_device_info(instance, device_info)
         instance.save()
@@ -159,16 +169,17 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
     systems = serializers.SerializerMethodField()
     deviceInfo = serializers.SerializerMethodField()
     isEnabled = serializers.BooleanField(required=False, source='active')
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = PushDevice
-        fields = ['deviceInfo','systems', 'isEnabled']
+        fields = ['type', 'deviceInfo','systems', 'isEnabled']
 
     def get_systems(self, obj):
         return [sub.system_id for sub in obj.subscriptions.all()]
 
     def get_deviceInfo(self, obj):
-        return {'name': obj.name, 'model': obj.model}
+        return {'name': obj.name, 'model': obj.model, 'os': PushDevice.OS[obj.os]}
 
-
-
+    def get_type(self, obj):
+        return PushDevice.TYPES[obj.type]

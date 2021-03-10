@@ -1,4 +1,4 @@
-<ng-container *ngIf="account.email; else preloader">
+<ng-container *ngIf="account?.id || account?.email; else preloader">
 
     <div class="col-12 p-0">
         <nx-block>
@@ -7,7 +7,7 @@
             </header>
 
             <nx-section>
-                <form #accountForm="ngForm" name="accountForm" class="form" novalidate>
+                <form #accountForm="ngForm" name="accountForm" class="form" novalidate [ngClass]="{'hide-errors': hideErrors}">
                     <div class="inputs d-block d-md-table w-100 mw-100">
                         <div class="form-group d-block d-md-table-row mb-2">
                             <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
@@ -57,6 +57,21 @@
                         </div>
                     </div>
                 </form>
+            </nx-section>
+            <nx-section>
+                <div class="float-right">
+                    <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount() : ''">
+                        <button class="btn btn-default"
+                                id="accountSettingsDeleteButton"
+                                [disabled]="isSystemOwner"
+                                (click)="deleteUser()">
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
+                                [svgStyle]="{'width.px': '24', 'height.px': '24'}"
+                                class="ml-n2 mr-1"></svg-icon>
+                            <ng-container>{{ LANG.dialogs.buttons.deleteAccount() }}</ng-container>
+                        </button>
+                    </div>
+                </div>
             </nx-section>
         </nx-block>
     </div>

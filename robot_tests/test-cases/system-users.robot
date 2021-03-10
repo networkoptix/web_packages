@@ -1,96 +1,91 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Setup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Close All Browsers
-Force Tags        system
+Suite Teardown    users Teardown
+Force Tags        system    Threaded
 
 *** Variables ***
-${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+@{TMP USERS}
+@{server auth}    admin    qweasd 123
 
 *** Keywords ***
-Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-
-Check System Text
-    [Arguments]    ${user}
-    Log Out
-    Log in to Auto Tests System    ${user}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
-
-Reset DB and Open New Browser On Failure
-    Close Browser
-    Reset System Names
-#    Make sure notowner is in the system
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
+Setup
+    ${owner}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Set Suite Variable    ${owner}          ${owner}
+    @{auth}=    Create List    ${owner}    ${password}
+    Set Suite Variable    @{auth}    @{auth}
     Open Browser and go to URL    ${url}
+    FOR   ${i}    IN RANGE    1    3
+        ${server}=   Setup Docker Server    image=4.3
+        Set Suite Variable    ${cont ${i}}    ${server}[name]
+        Set Suite Variable    ${cont id ${i}}    ${server}[id]
+        Set Suite Variable    ${port ${i}}    ${server}[port]
+        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
+        Set Suite Variable    ${server name ${i}}    ${server name}
+    END
+    &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}
+    &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${port 2}
+    Setup Local System    https://${QA BURBANK IP}:${server 1['port']}    ${BASE PASSWORD}    usertest1
+    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    usertest1    ${owner}    ${BASE PASSWORD}
+    Set Suite Variable    ${sysId1}    ${sysId1}
+    
+    Save User Role    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
+
+    Setup Local System    https://${QA BURBANK IP}:${server 2['port']}    ${BASE PASSWORD}    usertest2
+    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${owner}    ${BASE PASSWORD}
+    Set Suite Variable    ${sysId2}    ${sysId2}
+
+    @{cloud auth}=   Create List    ${owner}    ${password}
+    @{cloud auth}=   Set Suite Variable    @{cloud auth}    @{cloud auth}
+
+    Open Browser and go to URL    ${url}
+    Log in to user and system    ${owner}    ${sysId1}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=95
+    Log Out
+    Pop From Dictionary    ${role names}    custom    #due to bug 4960
+
+    &{users}    Register and Activate Generic Users
+    ${client custom}=          Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Set Suite Variable    ${admin}          ${users}[admin]
+    Set Suite Variable    ${viewer}         ${users}[viewer]
+    Set Suite Variable    ${live viewer}    ${users}[liveViewer]
+    Set Suite Variable    ${adv viewer}     ${users}[advViewer]
+    Set Suite Variable    ${custom}         ${users}[custom]
+    Set Suite Variable    ${client custom}     ${client custom}
+
+    Add user to cloud system if not there    ${sysId1}    cloudAdmin        ${admin}            auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    viewer            ${viewer}           auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    advancedViewer    ${adv viewer}       auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    custom            ${custom}           auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    liveViewer        ${live viewer}      auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    viewer            ${client custom}    auth=${auth}    
+    
+Users Teardown
+    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop usertest1 usertest2
+    ${results}    Execute Command    docker container rm usertest1 usertest2
+    Close Connection
+    #Remove Temporary Users
+    Close All Browsers
 
 Restart
     Common Restart Logout    ${url}
 
-Share with Adminstrator
-    [Arguments]    ${random email}
-    Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${random email}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    ${admin selector}=   /following-sibling::div/button/span[text()='${ADMIN TEXT}']
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}${admin selector}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}${admin selector}/..
-    Click Button    ${SHARE BUTTON MODAL}
-
-Check Special Hint
-    [Arguments]    ${type}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
-    Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()="${type}"]
-    Wait Until Element is Visible    ${dropdown type}
-    Sleep    1
-    Click Link    ${dropdown type}/..
-    ${type}    Convert To Uppercase    ${type}
-    Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
-    ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
-    ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT VIEWER}
-    ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT LIVE VIEWER}
-    ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
-
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
-    Log In    ${EMAIL OWNER}    ${password}
+    ${random user}    Register and activate account with random email    mark    hamil    ${password}
+    Share    ${cloud auth}    ${sysId1}    ${ACCESS ROLES}[viewer]    ${random user}
 
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Sleep    .5
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
-    Wait Until Element Contains    ${SHARE PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
-    Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
-
-    Log Out
-    Log In To Auto Tests System    ${EMAIL NOT OWNER}
+    Log in to user and system    ${random user}    ${sysId1}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL CANCEL}
@@ -103,291 +98,274 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${MODAL DIALOG}    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    ${SYSYEM DELETED FROM ACCOUNT}    Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${AUTO TESTS}
+    ${SYSYEM DELETED FROM ACCOUNT}    Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    usertest1
     Check For Alert    ${SYSYEM DELETED FROM ACCOUNT}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
-
     Log Out
-    Log In    ${EMAIL OWNER}    ${password}
 
+    Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
 
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
-    Wait Until Element Contains    ${SHARE PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
-    Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
+    # Verify the user is removed from the list via API
+    ${users}=   Get Cloud System Users    ${auth}    ${sysId1}
+    ${is there}=   Set Variable    ${False}
+    FOR    ${obj}    IN    @{users}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${EMAIL NOT OWNER}'    ${True}
+    END
+    Should Not Be True    ${is there}
 
-should display same user data as user provided during registration
-    [Tags]    email    Threaded
-#create user
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${COMBO TEXT}    ${COMBO TEXT}    ${random email}    ${password}
-    Activate    ${random email}
-#share system with new user
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Share To    ${random email}    ${ADMIN TEXT}
+Owner / user can unlink offline System from Cloud / Account
+    [Tags]    C41897    C41898
+    Log    Prepare offline system with owner and viewer
+    #${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${user email}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${user 2 email}=   Register and activate account with random email    firstName    lastName    ${password}
+    Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user email}
+    Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user 2 email}
+    # Make the system offline
+    Restore Factory Defaults    https://${QA BURBANK IP}:${server 2['port']}    ${auth}
+
+    Log    C41898: Step 1
+    Go To    ${url}/systems/${sysId2}
+    Log In    ${user email}    ${password}    button=None
+    Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
+    Disconnect from my account
+    Log out
+
+    Log    C41898: Step 2
+    ${users}=   Get Cloud System Users    ${auth}    ${sysId2}
+    ${is there}=   Set Variable    ${False}
+    FOR    ${obj}    IN    @{users}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${user email}'    ${True}
+    END
+    Should Not Be True    ${is there}
+
+    Go To    ${url}/systems/${sysId2}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Element Is Visible    ${SYSTEM OFFLINE}
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    Run keyword and expect error    *    Select user in Users List    ${user email}
+
+    Log    C41897: Step 1 - add user and disconnect system from cloud
+    Disconnect from cloud
     Log Out
 
-#verify user was added with appropriate name
-    Log In    ${random email}    ${password}
+    Log    C41897: Step 2 - make sure viewer has no systems
+    ${systems}=   Get Account Systems    ${ENV}    ${user 2 email}    ${password}
+    Should Be Empty    ${systems}
+    Log In   ${user 2 email}    ${password}
+    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+
+Should display same user data as user provided during registration
+    [Tags]    email
+    ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+
+#verify user name displayed correctly in users list
+    Log in    ${random email}    ${password}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-#click link containing user's email
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
     Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
-#verify name displayed
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
-
-#remove new user from system
-    Log Out
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Remove User Permissions    ${random email}
-    # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    # Delete All Emails
-    # Close Mailbox
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Should display same user data as shown in user account
-    [Tags]    email    C41573    C41842    Threaded
-#create user
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${random email}    ${password}
-    Activate    ${random email}
-#share system with new user
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Share To    ${random email}    ${VIEWER TEXT}
-    Log Out
+    [Tags]    email    C41573    C41842
+    ${random email}=   Register and activate account with random email    mark    hamill    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[viewer]    ${random email}
+    Set Account Name    ${url}    ${random email}    ${password}    ${COMBO TEXT}    ${COMBO TEXT}
 
-    Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
-    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill
-    # sometimes the text field refills itself if I don't wait a second
-    sleep    1
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${COMBO TEXT}
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    ${COMBO TEXT}
-    sleep    .15
-    Wait Until Element Is Visible    ${ACCOUNT SAVE}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Log Out
-
-    Log in to Auto Tests System    ${email}
+    Log in to user and system    ${owner}    ${sysId1}
     Go to Users List
 #click link containing user's email
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
-    Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
+    Select user in Users List    ${random email}
 #verify name displayed
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
-
-    #remove new user from system
-    Log Out
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Remove User Permissions    ${random email}
-    # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    # Delete All Emails
-    # Close Mailbox
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[@class="user-name" and contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Share button - opens dialog
-    [Tags]    C41888    Threaded
-    Log in to Auto Tests System    ${email}
+    [Tags]    C41888
+    Log in to user and system    ${owner}    ${sysId1}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE MODAL}
-    Click Button    ${SHARE CLOSE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER MODAL}
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 
-Sharing link for anonymous - first ask login, then show share dialog
-    [Tags]    Threaded
-    Log in to Auto Tests System    ${email}
-    ${location}    Get Location
-    Log Out
-    Go To    ${location}/share
-    Log In    ${email}    ${password}    button=None
-    Wait Until Element is Visible    ${SHARE MODAL}
-    Click Button    ${SHARE CLOSE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+Check Cancel and 'X' buttons
+    [Tags]    C78228
+    Log in to user and system    ${owner}    ${sysId1}
+    ${user}=   Get Random Email    ${BASE EMAIL}
+    Log    Check Cancel Button
+    Go To    ${url}/systems/${sysId1}/users
+    Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
+    Click Button  ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
+    Input Text    ${ADD USER EMAIL}    ${user}
+    Click Button    ${ADD USER CANCEL}
+    Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
-After closing dialog, called by link - clear link
-    [Tags]    C41888    Threaded    CLOUD-3733
-    Log in to Auto Tests System    ${email}
-
-#Check Cancel Button
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
-    Click Button    ${SHARE CANCEL}
-    Wait Until Element is Not Visible    ${SHARE MODAL}
-    Wait Until Location contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
-
-#Check 'X' Button
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
-    Wait Until Element is Visible    ${SHARE CLOSE}
-    Click Button    ${SHARE CLOSE}
-    Wait Until Element is Not Visible    ${SHARE MODAL}
-    Wait Until Location Contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
+    Log    Check 'X' Button
+    Click Button  ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
+    Input Text    ${ADD USER EMAIL}    ${user}
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Element is Not Visible    ${ADD USER MODAL}
+    Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
 Sharing roles are ordered: more access is on top of the list with options
-    [Tags]    Threaded
-    Log in to Auto Tests System    ${email}
+    [Tags]
+    Log in to user and system    ${owner}    ${sysId1}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Element    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
-    Click Button    ${SHARE CLOSE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Element    ${ADD USER PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 
 When user selects role - special hint appears
-    [Tags]    C41901    Threaded
-    Log in to Auto Tests System    ${email}
+    [Tags]    C41901
+    Log in to user and system    ${owner}    ${sysId1}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER PERMISSIONS DROPDOWN}    ${ADD USER PERMISSIONS HINT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
+    Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
     FOR    ${type}    IN    @{USER TYPE LIST}
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
-    Click Button    ${SHARE CANCEL}
-
-Sharing works
-    Log in to Auto Tests System    ${email}
-    ${random email}=   Get Random Email    ${BASE EMAIL}
-    Go To Users List
-    Share To    ${random email}    ${ADMIN TEXT}
-    Check User Permissions    ${random email}    ${ADMIN TEXT}
-    Remove User Permissions    ${random email}
+    Click Button    ${ADD USER CANCEL}
 
 Admin cannot delete or edit self
-    [Tags]    C41904    Threaded
-    Log in to Auto Tests System    ${EMAIL ADMIN}
+    [Tags]    C41904
+    Log in to user and system    ${admin}    ${sysId1}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Select user in Users List    ${EMAIL ADMIN}
+    Select user in Users List    ${admin}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
-Admin cannot edit self via share
-    [Tags]    C41904    Threaded
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL ADMIN}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element is Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-    Sleep    1
-    Click Link
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
-    Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
-    Wait Until Element is Visible    ${SHARE CANCEL}
-    Click Button    ${SHARE CANCEL}
+Admin and owner cannot edit self and other users via share
+    @{admins}=   Create List    ${owner}    ${admin}
+    @{all users}=   Create List    ${owner}    ${admin}    ${viewer}    ${adv viewer}    ${live viewer}    ${custom}
 
-Owner cannot edit self via share
-    [Tags]    C41904    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL OWNER}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element is Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-    Sleep    1
-    Click Link
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
-    Sleep    1
-    Click Button    ${SHARE BUTTON MODAL}
-    Click Button    ${SHARE CLOSE}
-    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    FOR    ${user}    IN    @{admins}
+        Log    Step 1
+        Log in to user and system    ${user}    ${sysId1}
+        Select user in users list    ${user}
+        Elements should not be visible    ${REMOVE USER BUTTON}    ${ACCESS LEVEL DROPDOWN}
 
-Admin cannot delete or edit other admins
+        Log    Step 2
+        Share To    ${owner}    ${CUSTOM TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Share To    ${admin}    ${LIVE VIEWER TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Share To    ${viewer}    ${ADV VIEWER TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Share To    ${adv viewer}    ${CUSTOM TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Share To    ${live viewer}    ${CUSTOM TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Share To    ${custom}    ${VIEWER TEXT}    fail    system=usertest1
+        Click Button    ${ADD USER CANCEL}
+        Log Out
+    END
+
+    Log    Step 3
+    FOR    ${user}    IN    @{all users}
+        ${role}=   Get Cloud User Role    ${auth}    ${user}    ${sysId1}
+        Run Keyword If    '${user}'=='${owner}'          Should be equal as strings    ${role}    owner
+        Run Keyword If    '${user}'=='${admin}'          Should be equal as strings    ${role}    cloudAdmin
+        Run Keyword If    '${user}'=='${viewer}'         Should be equal as strings    ${role}    viewer
+        Run Keyword If    '${user}'=='${adv viewer}'     Should be equal as strings    ${role}    advancedViewer
+        Run Keyword If    '${user}'=='${live viewer}'    Should be equal as strings    ${role}    liveViewer
+        Run Keyword If    '${user}'=='${custom}'         Should be equal as strings    ${role}    custom
+    END
+
+Admin cannot delete or edit other admins or owner
     [Tags]    C41905
-    Go To    ${url}/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    harmill    ${random email}    ${password}
-    Activate    ${random email}
-    Log in to Auto Tests System    ${email}
-    Share To    ${random email}    ${ADMIN TEXT}
-    Log Out
-    Log in to Auto Tests System    ${random email}
-    Select user in Users List    ${EMAIL ADMIN}
+    ${random email}=   Register and activate account with random email    mark    harmill    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+
+    Log in to user and system    ${random email}    ${sysId1}
+    Select user in Users List    ${admin}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
-    Log Out
-    Log in to Auto Tests System    ${email}
-    Remove User Permissions    ${random email}
+    Select user in Users List    ${owner}
+    Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin cannot invite another admin
-    [Tags]    C41905    Threaded
-    Log in to Auto Tests System    ${EMAIL ADMIN}
+    [Tags]    C41905
+    Log in to user and system    ${admin}    ${sysId1}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
     Sleep    2
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
     Wait Until Element is Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
     Element Should Not Be Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE CANCEL}
+    ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER CANCEL}
 
 Edit permission works
-    [Tags]    C41900
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    # Maximize Browser Window
-    Log in to Auto Tests System    ${email}
+    [Tags]    C41900    C30657    C47041
+    ${random email}=   Get Random Email    ${BASE EMAIL}
+    Log in to user and system    ${owner}    ${sysId1}
     Share To    ${random email}    ${ADMIN TEXT}
-    Edit User Permissions In Systems    ${random email}    ${CUSTOM TEXT}
-    Check User Permissions    ${random email}    ${CUSTOM TEXT}
+
+    # Check that the user's role is added correctly in vms
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
+        ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
+        ...    AND     Exit For Loop
+    END
+
+    Edit User Permissions In Systems    ${random email}    ${VIEWER TEXT}
+    Check User Permissions    ${random email}    ${VIEWER TEXT}
+
+    # Check that the user's role has changed in vms
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
+        ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[viewer]
+        ...    AND     Exit For Loop
+    END
+
     Edit User Permissions In Systems    ${random email}    ${ADMIN TEXT}
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
 
 Delete user works
     [Tags]    email    C41903
-    Go To    ${url}/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    harmill    ${random email}    ${password}
-    Activate    ${random email}
-    Log in to Auto Tests System    ${email}
-    Share To    ${random email}    ${ADMIN TEXT}
-    Check User Permissions    ${random email}    ${ADMIN TEXT}
-    Log Out
-    Validate Log Out
-    Log in to Auto Tests System    ${random email}
-    Log Out
-    Log in to Auto Tests System    ${email}
+    ${random email}=   Register and activate account with random email    mark    harmill    ${password}
+    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+
+    Log in to user and system    ${owner}    ${sysId1}
     Select user in Users List    ${random email}
     Wait Until Element Is Visible    ${REMOVE USER BUTTON}
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element is Visible    ${REMOVE CANCEL BUTTON}
     Click Button    ${REMOVE CANCEL BUTTON}
     Remove User Permissions    ${random email}
+    Sleep    1
     Go To    ${url}
     Log Out
     Log In    ${random email}    ${password}
@@ -395,15 +373,19 @@ Delete user works
 
 Share with registered user works and sends him notification
     [Tags]    email    C41888
-    #log in as noperm to check language and change its language to the current testing language
-    #otherwise it may receive the notification in another language and fail the email subject comparison
-    Log In    ${EMAIL NOPERM}    ${password}
-    Sleep    1
-    Log Out
-    Log in to Auto Tests System    ${email}
-    Verify In System    Auto Tests
-    Share To    ${EMAIL NOPERM}    ${ADMIN TEXT}
-    Check User Permissions    ${EMAIL NOPERM}    ${ADMIN TEXT}
+    ${random email}=    Register and activate account with random email    mark     hamil    ${password}
+    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
+    Append to List    ${TMP USERS}    ${random email}
+    Log in to user and system    ${owner}    ${sysId1}
+    Verify In System    usertest1
+    ${random email}    Register and activate account with random email    mark     hamil    ${password}
+    Share To    ${random email}    ${ADMIN TEXT}
+    # Might not be necessary after CLOUD-6113
+    Sleep   10
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+    Sleep    10
+
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
@@ -413,8 +395,17 @@ Share with registered user works and sends him notification
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    ${AUTO TESTS}
-    ${emailID}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120
+    ...    usertest1
+    # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
+    # Check Email Subject
+    # ...    ${emailID}
+    # ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    # ...    ${BASE EMAIL}
+    # ...    ${BASE EMAIL PASSWORD}
+    # ...    ${BASE HOST}
+    # ...    ${BASE PORT}
+    # Delete Email    ${emailID}
+    ${emailID}    Wait For Email    recipient=${random email}    timeout=120
     Check Email Subject
     ...    ${emailID}
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
@@ -424,80 +415,138 @@ Share with registered user works and sends him notification
     ...    ${BASE PORT}
     Delete Email    ${emailID}
     Close Mailbox
-    Log Out
-    Log in to Auto Tests System    ${EMAIL NOPERM}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Check User Permissions    ${EMAIL NOPERM}    ${ADMIN TEXT}
-    Log Out
-    Log in to Auto Tests System    ${email}
-    Remove User Permissions    ${EMAIL NOPERM}
+
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+
+Share with registered user gives user access to system
+    [Tags]    email    C41888
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    ${auth}=    Create List    ${owner}    ${password}
+    Share    ${auth}    ${sysId1}    viewer    ${random email}
+    Log In    ${random email}    ${password}
+
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    mark hamil    
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${owner}")]    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
+    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
+    Element Should Not Be Visible    ${RENAME SYSTEM}
+    Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Log in to Auto Tests System    ${email}
-    Verify In System    Auto Tests
-    Share To    ${random email}    ${ADMIN TEXT}
-    Check User Permissions    ${random email}    ${ADMIN TEXT}
-    Log Out
-    ${link}    Get Email Link    ${random email}    register
-    Go To    ${link}
-    Register
-    ...    ${TEST FIRST NAME}
-    ...    ${TEST LAST NAME}
-    ...    ${random email}
-    ...    ${password}
-    Validate Log In
+    Log    Step 1
+    ${random email}=   Get Random Email    ${BASE EMAIL}
+    Append To List    ${TMP USERS}    ${random email}
+    Log in to user and system    ${owner}    ${sysId1}
+    Go To Users List
+    Share To    ${random email}    Administrator
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+    
+    ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
 
-Sharing system with a user who is already in the list updates their permissions
-    [Tags]    C41892
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Log in to Auto Tests System    ${email}
-    Verify In System    Auto Tests
-    Share To    ${random email}    ${ADMIN TEXT}
-    Open Mailbox
-    ...    host=${BASE HOST}
-    ...    password=${BASE EMAIL PASSWORD}
-    ...    port=${BASE PORT}
-    ...    user=${BASE EMAIL}
-    ...    is_secure=True
-  # TOOD Fix the next line intermittently failing.
-    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=30
-    # Delete All Emails
-    Check User Permissions    ${random email}    ${ADMIN TEXT}
-    Share To    ${random email}    ${VIEWER TEXT}
-    ${email}=   Wait For Email    recipient=${random email}    timeout=120
+    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    Should Be Empty    ${text}
+    Log Out
+    
+    Log    Step 2
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email text}    Get Email Body    ${email}
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
+
+    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
+    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
+    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
+    Should Contain    ${email text}    mark hamil
+   
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    mark hamil
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
+    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Log    Step 3-4
+    ${links}    Get Links From Email    ${email}
+    @{expected links}    Set Variable    mailto:${owner}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate   
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
     Delete Email    ${email}
     Close Mailbox
-    Check User Permissions    ${random email}    ${VIEWER TEXT}
-    Remove User Permissions    ${random email}
 
-Check share email for registered user
-    [Tags]    C47297
-    #log in as noperm to check language and change its language to the current testing language
-    #otherwise it may receive the notification in another language and fail the email subject comparison
-    Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
-    Sleep    1
+    Log    Step 5-6
+    Go To    ${url}/register/${code}
+    Wait Until Elements Are Visible
+    ...    ${REGISTER FIRST NAME INPUT}
+    ...    ${REGISTER LAST NAME INPUT}
+    ...    ${REGISTER PASSWORD INPUT}
+    ...    ${CREATE ACCOUNT BUTTON}
+
+    ${populated email}=   Get Value    ${REGISTER EMAIL INPUT}
+    Should be equal as strings    ${populated email}    ${random email}
+    Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}
+    Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
+    Input Text    ${REGISTER PASSWORD INPUT}    ${password}
+    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
+    Click Button    ${CREATE ACCOUNT BUTTON}
+    # New user gets logged in right away
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    ${SYSTEM NAME}
+    Element Text Should Be    ${SYSTEM NAME}    usertest1
+    Log    Step 7 skipped thick client login
+    Log    Step 8
     Log Out
-    Log in to Auto Tests System    ${email}
-    Verify In System    Auto Tests
-    Share To    ${EMAIL NOPERM}    ${ADMIN TEXT}
-    Check User Permissions    ${EMAIL NOPERM}    ${ADMIN TEXT}
+    Log in to user and system    ${owner}    ${sysId1}
+    Go To Users List
+    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
+    Click Element    //span[contains(text(),"${random email}")]
+    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
+    
+Share System with the same user twice
+    [Tags]    C41892
+    Log in to user and system    ${owner}    ${sysId1}
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
     ...    port=${BASE PORT}
     ...    user=${BASE EMAIL}
     ...    is_secure=True
+    Delete All Emails
+    Share To    ${admin}    ${ADV VIEWER TEXT}    fail    system=usertest1
+    Run Keyword And Expect Error    *    Wait For Email    recipient=${admin}    timeout=120
+    Close Mailbox 
+    
+Check share email for registered user
+    [Tags]    C47297
+    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120
+    Check Email Subject
+    ...    ${email}
+    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    ...    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
+    Delete email    ${email}
+
+    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
+    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
+
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    ${AUTO TESTS}
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120
+    ...    usertest1
+    ${email}    Wait For Email    recipient=${random email}    timeout=120
     ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Subject
     ...    ${email}
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
@@ -510,94 +559,128 @@ Check share email for registered user
     ...    ${SUPPORT URL}
     ...    ${WEBSITE URL}
     ...    ${ENV}
-    ...    ${ENV}/systems/${AUTO_TESTS SYSTEM ID}
-    ...    mailto:${EMAIL OWNER}
+    ...    ${ENV}/systems/${sysId1}
+    ...    mailto:${owner}
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
     END
     Delete Email    ${email}
     Close Mailbox
-    Remove User Permissions    ${EMAIL NOPERM}
+
+Users should be able to disconnect themselves from cloud
+    [Tags]
+    ${roles}=   Get Dictionary Values    ${ACCESS ROLES}
+    FOR    ${role}    IN    @{roles}
+        ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+        Append To List    ${TMP USERS}    ${random email}
+        Share     ${auth}    ${sysId1}    ${role}    ${random email}
+
+        Log In    ${random email}    ${password}
+        Wait until element is visible    ${SYSTEM NAME}
+        Disconnect from my account
+        Log out
+    END
 
 User with client custom settings has access to system
-    [Tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
-    Location Should Be    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Verify In System    ${AUTO TESTS}
+    [Tags]
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${auth}
+    #FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
+    #    Share    ${auth}   ${sysId1}    ${user role}    ${user email}
+    #END
+    FOR    ${role}    IN    @{custom roles}
+        &{client custom permissions}=   Set Variable If    '''${role["name"]}'''=='''Client Custom'''    ${role}
+        Exit For Loop If    '''${role["name"]}'''=='''Client Custom'''
+    END
+    ${users}    Get Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']} 
+    log    ${users}
+    ${user id}=   Get Cloud User Id By Email    ${auth}    ${client custom}    ${sysId1}
+    Save User Existing
+    ...    ${server auth}
+    ...    https://${QA BURBANK IP}:${server 1['port']}
+    ...    ${client custom}
+    ...    ${client custom permissions["permissions"]}
+    ...    ${client custom}
+    ...    ${client custom permissions["id"]}
+    ...    ${user id}
+
+    Log in to user and system    ${client custom}    ${sysId1}
+    Location Should Be    ${url}/systems/${sysId1}
+    Verify In System    usertest1
 
 User can be invited with client custom permissions
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    Log in to user and system    ${owner}    ${sysId1}
+    ${random email}=   Get Random Email    ${BASE EMAIL}
+    Append To List    ${TMP USERS}    ${random email}
     Share To    ${random email}    Client Custom
+    
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+
     ${email}=   Wait For Email    recipient=${random email}    timeout=120
     Check User Permissions    ${random email}    Client Custom
-    Sleep    2
-    Remove User Permissions    ${random email}
     Delete Email    ${email}
     Close Mailbox
 
 Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     [Tags]    C63390
-    # Step 1
+
     Log    Step 1
-    Log in to Auto Tests System    ${email}
-    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
-    # Step 2
+    Log in to user and system    ${owner}    ${sysId1}
+    Check User Permissions    ${viewer}    ${VIEWER TEXT}
+
     Log    Step 2
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Check User Permissions    ${viewer}    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    # Step 3
+
     Log    Step 3
     Log Out
     Go To    ${ENV}/systems
-    Log In   ${EMAIL NOT OWNER}    ${BASE PASSWORD}    button=None
+    Log In   ${viewer}    ${BASE PASSWORD}    button=None
     Wait Until Location Is    ${ENV}/systems
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
-    # Step 4
+
     Log    Step 4
     Log Out
-    Log in to Auto Tests System    ${email}
-    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Log in to user and system    ${owner}    ${sysId1}
+    Check User Permissions    ${viewer}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Check User Permissions    ${viewer}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
-    # Step 5
+
     Log    Step 5
     Log Out
-    Log in to Auto Tests System    ${EMAIL NOT OWNER}
+    Log in to user and system    ${viewer}    ${sysId1}
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
 
 Administrator can add, disable and enable Viewer
     [Tags]    C63391
-    # Prep - create new user to be added to autotest system
-    Log    Prep
-    Go To    ${url}/register
-    ${random email} =    Get Random Email    ${BASE EMAIL}
-    Register    mark    harmill    ${random email}    ${BASE PASSWORD}
-    Activate    ${random email}
-    # Step 1 & 2
+    ${random email}=   Register and activate account with random email    mark    harmill    ${BASE PASSWORD}
     Log    Steps 1 & 2
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Share To    ${random email}   ${VIEWER TEXT}
+    Log in to user and system    ${admin}    ${sysId1}
+    Share To    ${random email}   ${VIEWER TEXT}    system=usertest1
     Select user in Users List    ${random email}
-    # Step 3
+
     Log    Step 3
     Log Out
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
-    # Step 4
+    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //nx-section//span[contains(text(),'${VIEWER TEXT}')]
+
     Log     Step 4
     Log Out
-    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Log in to user and system    ${admin}    ${sysId1}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -605,17 +688,17 @@ Administrator can add, disable and enable Viewer
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    # Step 5
+
     Log    Step 5
     Log Out
     Go To    ${ENV}/systems
     Log In   ${random email}    ${BASE PASSWORD}    button=None
     Wait Until Location Is    ${ENV}/systems
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
-    # Step 6
+
     Log    Step 6
     Log Out
-    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Log in to user and system    ${admin}    ${sysId1}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -623,55 +706,610 @@ Administrator can add, disable and enable Viewer
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
-    # Step 7
+
     Log    Step 7
     Log Out
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
+    Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[@class="name" and contains(text(),'${VIEWER TEXT}')]
 
-Only Admin and Owner can access the share URL
-    Log     Owner test
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Click Button    ${SHARE CANCEL}
-    Log Out
+Cloud Owner Can Change Local User Login
+    [Tags]    local_user    C76244
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
+    Verify In Local Users UI    ${local users}    ${owner}
+    @{new locals} =    Create List
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+	    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
+        # Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        # Click Button    ${ACCOUNT SAVE}
+        # Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        Wait Until Element is Visible    //span[text()="${new login}"]
+	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
+	    ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
+        Append To List    ${new locals}    ${new local}
+    END
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
-    Log     Admin test
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Click Button    ${SHARE CANCEL}
-    Log Out
+Cloud Owner Can Change Local User Full Name
+    [Tags]    local_user    C76244
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
+    Verify In Local Users UI    ${local users}    ${owner}
+    @{new locals} =    Create List
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER NAME}
+	    ${new full name} =    Change Full Name for Local User     ${user}    Changed User
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        ${name} =   Convert To Lowercase    local+${user}
+        &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=${permissions}[${user}]
+        Append To List    ${new locals}    ${new local}
+    END
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
-    Log     Viewer test
-    Log in to Auto Tests System    ${EMAIL VIEWER}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-    Log Out
+Cloud Owner Can Change Local User Email
+    [Tags]    local_user    C76244
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    @{new locals} =    Create List
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER EMAIL}
+        ${new local user email} =     Change Email for Local User    ${user}    ${EMAIL VIEWER}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        ${name} =   Convert To Lowercase    local+${user}
+        &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=${permissions}[${user}]
+        Append To List    ${new locals}    ${new local}
+    END
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
-    Log     Custom test
-    Log in to Auto Tests System    ${EMAIL CUSTOM}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-    Log Out
+Cloud Owner Can Change Local User Permissions
+    [Tags]    local_user    C76243
+    Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    @{new locals} =    Create List
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        ${new permission} =    Change Permission Level for Local User     ${user}    ${owner}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        ${user} =    Convert To Lowercase    ${user}
+        Wait Until Element is Visible    //span[text()="local+${user}"]/following-sibling::span[text()="${new permission}"]
+	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
+        ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        ${name} =   Convert To Lowercase    local+${user}
+        &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=${permissions}[${reverse permission}]
+        Append To List    ${new locals}    ${new local}
+    END
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
-    Log     Client Custom test
-    Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-    Log Out
+Cloud Owner Can Change Local User Password
+    [Tags]    local_user    C76246
+    Log    Same test as testrail "Cloud owner can change local user password (positive)"
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    FOR    ${user}    IN    @{local users}
+        Log    Change password for ${user}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+        Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
+        Wait Until Element is Not Visible    //input[@id="newPassword"]
+        Sleep    5
+        ${user} =    Convert To Lowercase    ${user}
+        @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+    END
 
-    Log     Advanced Viewer test
-    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-    Log Out
+Cloud owner can change local users' information
+    [Tags]    local_user    C76239
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    ${new locals} =    Modify Local Users via Cloud UI    ${local users}    ${owner}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 
-    Log     Live Viewer test
-    Log in to Auto Tests System    ${EMAIL LIVE VIEWER}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+Cloud owner can enable/disable local user (positive)
+    [Tags]    C76245    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Wait Until Element is Visible    //span[contains(text(),"Local+")]
+    Click Element    //span[contains(text(),"Local+")]
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
+    ${name} =    Get Text    ${EDITABLE TITLE}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${False}
+    END
+    Should Be True   ${state} == ${False}
+    Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Page Should Not Contain Element   ${USER DISABLED MSG}
+    ${name} =    Get Text    ${EDITABLE TITLE}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${True}
+    END
+    Should Be True    ${state} == ${True}
+
+Cloud administrator cannot change local administrator's or owner's information
+    [Tags]    local_user    C76240
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${admin}
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER NAME}
+	    ${user role} =    Get Text    //span[text()="Local+${user}"]/following-sibling::span
+	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${admin}
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${admin}
+        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
+        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+    END
+    Run Keyword and Expect Error    *    Delete All Local Users    //span[contains(text(),"ocal+")]
+    Log    Step 2
+    Wait Until Element is Visible    //span[text()="admin"]
+    Click Element    //span[text()="admin"]
+    Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${admin}
+    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+
+Local User Removed on Server is Removed From UI
+    [Tags]    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${user to delete} =    Set Variable    Local+viewer
+    FOR    ${user}    IN    @{users}
+        ${user id} =    Set Variable If    '${user}[name]' == '${user to delete}'    ${user}[id]
+        Run Keyword If    '${user id}' != 'None'    Exit For Loop
+    END
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
+    Reload Page
+    Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
+    Page Should Not Contain    //span[text()="${user to delete}"]
+    
+Verify Local Users Deleted On Server
+    [Tags]    local_user    C76242
+    Log    This case performs the same test known in testrail as "Cloud owner can delete any local user (positive)."
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${deleted user} =    Set Variable    Local
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
+    END
+    
+Adding New Local User Appears on Cloud Portal
+    [Tags]    C76237    local_user
+    Log    Preconditions
+    @{locals} =    Create List 
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+    END
+    Delete All Local Users via API    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
+    Log    Step 1
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${owner}
+    
+Cloud owner cannot change local owner's information
+    [Tags]    C76238    local_user
+    Log    Step 1
+    Log in to user and system    ${owner}    ${sysId1}
+    Go To Users List
+    Log    Step 2
+    Wait Until Element is Visible    //span[text()="admin"]
+    Click Element    //span[text()="admin"]
+    Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${email}
+    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+
+Unsaved changes are not sent to the server
+    [Tags]    C76241    local_user
+    Log    Preconditions
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify In Local Users UI    ${local users}    ${owner}
+    
+    Log    Step 1
+    Click Element    //span[text()="Local+advancedViewer"]
+    
+    Log    Step 2
+    Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
+    Click Button    ${ACCESS LEVEL DROPDOWN}
+    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"] 
+    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${VIEWER TEXT}"]
+    Sleep    .1
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # Click Element    ${EDITABLE TITLE}
+    # Sleep    1
+    # Input Content Editable Text    ${EDITABLE TITLE}    C76241
+    # Sleep    30
+    Input Text    ${LOCAL USER NAME}    C76241
+    Input Text    ${LOCAL USER EMAIL}    C76241
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+    
+    Log    Step 3
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Lists Should Be Equal     ${check info}    ${locals}  
+    
+    Log    Step 4
+    Click Button    ${ACCOUNT CANCEL}
+    Sleep    .1
+    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
+    Page Should Not Contain Element   ${USER DISABLED MSG}
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
+    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
+	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
+	
+	Log    Step 5
+	@{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Lists Should Be Equal     ${check info}    ${locals}
+    
+Local User Login Field Cannot Be Left Blank
+    [Tags]    C76248    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+            
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${owner}
+    Click Element    //span[text()="Local+advancedViewer"]
+    
+    Log    Step 2
+    Wait Until Element is Visible     ${EDITABLE TITLE}   
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${EMPTY}
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Click Button     ${ACCOUNT SAVE} 
+    Page Should Contain    ${LOGIN IS REQUIRED TEXT}
+    # Page Should Contain Element   ${ACCOUNT SAVE} 
+    # Page Should Contain Element   ${ACCOUNT CANCEL}
+    Element Style Should Be    ${EDITABLE TITLE}     border-color    ${ERROR COLOR}
+    
+    Log    Step 3
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Lists Should Be Equal     ${check info}    ${locals}
+
+    Log    Step 4
+    Click Element    //label[@for="permissionsSelect"] 
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
+    
+    Log    Step 5
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Lists Should Be Equal     ${check info}    ${locals} 
+    
+Local User name field can be left blank
+    [Tags]    C76249    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${owner}
+    Click Element    //span[text()="Local+advancedViewer"]
+    
+    Log    Step 2
+    Input Text    ${LOCAL USER NAME}    ${EMPTY}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    
+    Log    Step 3
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${user}    IN    @{check info}
+        ${full name} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[fullName]
+        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+    END 
+    Should Be Equal    ${full name}    ${EMPTY}   
+     
+Local User email field can be left blank
+    [Tags]    C76250    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${owner}
+    Click Element    //span[text()="Local+advancedViewer"]
+    
+    Log    Step 2
+    Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    
+    Log    Step 3
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${user}    IN    @{check info}
+        ${email field} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[email]
+        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
+    END 
+    Should Be Equal    ${email field}    ${EMPTY}
+    
+User list is available for owner and administrator
+    [Tags]    C76233    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${owner}
     Log Out
+    Log    Step 2
+    Log in to user and system    ${admin}    ${sysId1}
+    Go To Users List
+    Verify In Local Users UI    ${local users}    ${admin}
+    
+User list is not available for advanced viewer & lower
+    [Tags]    C76462
+    Log    Step 1
+    Log in to user and system    ${custom}    ${sysId1}
+    Element Should Not Be visible    ${USERS LIST LINK}
+    Log Out
+    Log    Step 2
+    Log in to user and system    ${adv viewer}    ${sysId1}
+    Element Should Not Be visible    ${USERS LIST LINK} 
+    
+Cloud Administrator Can Delete Local User(positive)
+    [Tags]    C76524    local_user
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${admin}
+    Click Element    //span[text()="Local+advancedViewer"]
+    Log    Step 2
+    Click Button    ${LOCAL USER DELETE BUTTON}
+    Wait Until Elements Are Visible    ${LOCAL USER DELETE CONFIRM BUTTON}    ${LOCAL USER DELETE CANCEL BUTTON}
+    Log    Step 3
+    Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
+    Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
+    Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
+    Log    Step 4
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${deleted user} =    Set Variable    Local+advancedViewer
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    "${user}[name]" was found on server
+    END
+    
+Cloud administrator can change local user's login permissions, name and email (positive)
+    [Tags]    C76526    C76525    local_user
+    @{new locals} =    Create List
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${admin}
+    Click Element    //span[text()="Local+advancedViewer"]
+    Log    Step 2 and 3
+    ${new local} =    Modify All Local User Info    advancedViewer    ${admin}
+    Append To List    ${new locals}    ${new local}
+    Log    Step 4
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}    local user=ocal+advancedviewer    
+    
+Cloud administrator can enable/disable any viewer local user (positive)
+    [Tags]    C76527    local_user
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${admin}
+    Click Element    //span[text()="Local+advancedViewer"]
+    Log    Step 2   
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Log    Step 3
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # switching focus
+    Click Element    //span[text()="Local+viewer"]
+    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
+    Click Element    //span[text()="local+advancedviewer"]
+    Log    Step 4
+    ${name} =    Get Text    ${EDITABLE TITLE}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${False}
+    END
+    Should Be True   ${state} == ${False}
+    Log    Step 5
+    Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Page Should Not Contain Element   ${USER DISABLED MSG}
+    Log    Step 6
+    ${name} =    Get Text    ${EDITABLE TITLE}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${True}
+    END
+    Should Be True    ${state} == ${True}
+    
+Cloud administrator can change local user password (positive)
+    [Tags]    C76530    local_user
+    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    Verify In Local Users UI    ${local users}    ${admin}
+
+    Log    Step 1
+    Click Element    //span[text()="Local+advancedViewer"]
+    Wait Until Elements Are Visible
+    ...    ${EDITABLE TITLE}
+    
+    Log    Step 2
+    Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${LOCAL USER CHANGE PASSWORD SAVE}
+    
+    Log    Step 3
+    Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+    Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
+    Wait Until Element is Not Visible    //input[@id="newPassword"]
+    Sleep    5
+    
+    Log    Step 4
+    @{old auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
+    Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
+    
+    Log    Step 5
+    @{new auth} =    Create List    local+advancedviewer     ${ALT PASSWORD}
+    ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+    
+Changes made in thick client appear on cloud portal
+    [Tags]    C76251    local_user
+    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+advancedViewer   
+        ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
+        Exit For Loop If    '${id}' != 'None'             
+    END
+    Log    Step 1 - 3
+    Verify In Local Users UI    ${local users}    ${owner}
+    Click Element    //span[text()="Local+advancedViewer"]
+    Log    Step 4
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_advancedViewer@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
+    Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=45
+    Log    Step 5
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
+    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
+    Log    Step 6
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
+    Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
+    Log    Step 7
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
+    ...    is enabled=${False}
+    Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
+    Log    Step 8
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}
+    Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
+    Log    Step 9
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+    Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
+    
+    Log    Step 10
+    Save User    
+    ...    ${auth}    
+    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    Local+newApiUser   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_advancedViewer@gmail.com    
+    ...    New Api   
+    ...    ${BASE PASSWORD}    
+    ...    is cloud=${False}      
+    Wait Until Elements Are Visible    
+    ...    //span[text()="Local+newApiUser"]    
+    ...    //span[text()="Local+newApiUser"]//preceding-sibling::${LOCAL USER ICON}
+    ...    timeout=45   
+    Element Should Contain    //span[text()="Local+newApiUser"]/following-sibling::span    ${role names}[advancedViewer]
+    Element Should Not Be Visible     //span[text()="${owner}"]//preceding-sibling::${LOCAL USER ICON}
+    Click Element    //span[text()="Local+newApiUser"]
+    Wait Until Elements Are Visible
+    ...    ${EDITABLE TITLE}
+    ...    ${LOCAL USER NAME}
+    ...    ${LOCAL USER EMAIL}    
+    ...    ${DISABLE USER SWITCH}
+    ...    ${LOCAL USER DELETE BUTTON}
+    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+    Wait Until Element Contains    ${EDITABLE TITLE}    Local+newApiUser
+    Wait Until Textfield Contains    ${LOCAL USER NAME}    New Api
+    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
+    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]    
+    
+    Log    Clean up
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+newApiUser   
+        ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
+        Exit For Loop If    '${id}' != 'None'             
+    END
+    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+    
+Local user list is not available for offline system
+    [Tags]    C76234    local_user    System-offline
+    Log    Preconditions
+    @{local users} =   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}
+    Log in to user and system    ${owner}    ${sysId2}
+    Go To Users List
+    FOR    ${user}    IN    @{local users}
+        Element Should Not Be Visible    //span[text()="Local+${user}"]
+    END    
+    Log    Step 2   
+    ${results}    Execute Command    docker container start usertest2
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element Is Visible   //span[text()="Local+${user}"]    65
+    END   
+    Log    Step 3
+    ${results}    Execute Command    docker container stop usertest2
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    65
+    Reload Page   
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element Is Not Visible   //span[text()="Local+${user}"]
+    END   
+    Log    Clean up
+    ${results}    Execute Command    docker container start usertest2

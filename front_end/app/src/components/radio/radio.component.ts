@@ -1,6 +1,7 @@
 import {
     Component, Input, Output,
-    EventEmitter, forwardRef, OnInit, ViewEncapsulation
+    EventEmitter, forwardRef,
+    OnInit, ViewEncapsulation, ViewChild
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR, ControlValueAccessor,
@@ -8,23 +9,23 @@ import {
 } from '@angular/forms';
 
 /* Usage
-<nx-radio name="groupName" id="groupID"
-      [(ngModel)]="user.remember_me"
-      (click)?="onClick($event)"
-      value="SOME_VALUE"
-      disabled?>LABEL
-</nx-radio>
-*/
+ <nx-radio name="groupName" id="groupID"
+     [(ngModel)]="user.remember_me"
+     (click)?="onClick($event)"
+     value="SOME_VALUE"
+     disabled?>LABEL
+ </nx-radio>
+ */
 
 @Component({
-    selector: 'nx-radio',
-    templateUrl: 'radio.component.html',
-    styleUrls: ['radio.component.scss'],
-    providers: [
+    selector     : 'nx-radio',
+    templateUrl  : 'radio.component.html',
+    styleUrls    : ['radio.component.scss'],
+    providers    : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxRadioComponent),
-            multi: true
+            multi      : true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -33,17 +34,19 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() componentId: string;
     @Input() name: string;
     @Input() label: string;
-    @Input() value: string;
-    @Input() disabled: any;
+    @Input() value: 'tristate' | string;
+    @Input() disabled;
     @Output() onClick = new EventEmitter<string>();
 
-    private state: string;
-    private _value: any;    // ngModel representation
+    @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;
+
+    public state: string;
+    private _value; // ngModel representation
     private _rbxStates = {
-        rbFalse: 'unchecked',
-        rbTrue: 'checked',
-        rbDisabled: 'disabled',
-        rbOrElse: 'tristate'
+        rbFalse    : 'unchecked',
+        rbTrue     : 'checked',
+        rbDisabled : 'disabled',
+        rbOrElse   : 'tristate'
     };
 
     // the method set in registerOnChange to emit changes back to the form
@@ -56,9 +59,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     }
 
     ngOnInit() {
-        if (this.disabled === undefined) {
-            this.disabled = false;
-        }
+        this.disabled = (this.disabled === undefined) ? false : this.disabled;
         this.state = this._rbxStates.rbFalse; // 'unchecked'
     }
 
@@ -66,7 +67,9 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Write a new value to the element.
      */
     writeValue(value: any) {
-        if ((value && this.value === value)) {
+        if (value === 'tristate' || value === 1) {
+            this.state = this._rbxStates.rbOrElse; // 'checked'
+        } else if ((value && this.value === value)) {
             this.state = this._rbxStates.rbTrue; // 'checked'
         } else {
             // clear other radio buttons
@@ -86,7 +89,8 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: () => void): void {}
+    registerOnTouched(fn: () => void): void {
+    }
 
     changeState() {
         if (this.disabled) {

@@ -1,0 +1,11 @@
+.sectional-div {
+    width           : 100%;
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+
+    &.licenses-placeholder {
+        height     : 400px;
+        margin-top : 40px;
+    }
+}

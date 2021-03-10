@@ -1,0 +1,241 @@
+import { Injectable } from '@angular/core'
+import { Subject } from 'rxjs'
+
+import TimeRange from './TimeRange'
+import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases'
+import cfg from './timeline.config'
+
+
+export interface TimelineServiceStatus {
+  fullRange: TimeRange,
+  visibleRange: TimeRange,
+  canvasGeometry: CanvasGeometry,
+  zoom: {
+    canZoomIn: boolean,
+    canZoomOut: boolean,
+  },
+  canvasGeometryUpdateRequested: boolean,
+}
+
+
+@Injectable({
+  providedIn: 'root',
+ })
+export class TimelineService {
+  protected _fullRange: TimeRange = new TimeRange(0, 0)
+  protected _visibleRange: TimeRange = new TimeRange(0, 0)
+  protected _canvasGeometry: CanvasGeometry = { width: 0, height: 0, dpr: 1 }
+
+  protected _subject = new Subject<TimelineServiceStatus>()
+  protected _canvasGeometryUpdateRequested: boolean = true
+
+  public constructor () {
+    this._onAnimationFrame = this._onAnimationFrame.bind(this)
+    requestAnimationFrame(this._onAnimationFrame)
+  }
+
+  public get canvasGeometryUpdateRequested () {
+    return this._canvasGeometryUpdateRequested
+  }
+
+  public requestCanvasGeometryUpdate () {
+    this._canvasGeometryUpdateRequested = true
+  }
+
+  protected _emit () {
+    this._subject.next({
+      fullRange: this.fullRange,
+      visibleRange: this.visibleRange,
+      canvasGeometry: this.canvasGeometry,
+      zoom: this.zoomStatus,
+      canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested,
+    })
+  }
+
+  public get zoomStatus () {
+    return {
+      canZoomIn: (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
+      canZoomOut: this._visibleRange.duration < this._fullRange.duration,
+    }
+  }
+
+  public get subject () {
+    return this._subject
+  }
+
+  public get fullRange (): TimeRange {
+    return this._fullRange.clone()
+  }
+
+  public get visibleRange (): TimeRange {
+    return this._visibleRange.clone()
+  }
+
+  public get canvasGeometry (): CanvasGeometry {
+    return { ...this._canvasGeometry }
+  }
+
+  public reset (start: ms, end: ms): void {
+    this._fullRange.start = start
+    this._fullRange.end = end
+    this._visibleRange.start = start
+    this._visibleRange.end = end
+  }
+
+  public extendToNow (): void {
+    const now = Date.now()
+    if (this._fullRange.end - this._visibleRange.end < cfg.STICK_TO_LIVE_TRESHOLD) {
+      const visibleRangeDurationWas = this._visibleRange.duration
+      this._visibleRange.end = now
+      if (this._visibleRange.start - this._fullRange.start > cfg.STICK_TO_LIVE_TRESHOLD) {
+        this._visibleRange.start = this._visibleRange.end - visibleRangeDurationWas
+      }
+    }
+    this._fullRange.end = now
+    this._emit()
+  }
+
+  public setCanvasGeometry (width: px, height: px, dpr: int): void {
+    // console.log(this.id, 'setCanvasGeometry', width, height, dpr)
+    this._canvasGeometry.width = width
+    this._canvasGeometry.height = height
+    this._canvasGeometry.dpr = dpr
+    this._canvasGeometryUpdateRequested = false
+    this._emit()
+  }
+
+  public get msPerCanvasPx (): float {
+    // console.log(this.id, 'msPerCanvasPx', this._visibleRange.duration, this._canvasGeometry.width)
+    return this._visibleRange.duration / this._canvasGeometry.width
+  }
+
+  public domOffsetXtoTime (x: px): ms {
+    return this.canvasOffsetXtoTime(x * this._canvasGeometry.dpr)
+  }
+
+  public canvasOffsetXtoTime (x: px): ms {
+    return Math.round(this._visibleRange.start + this.msPerCanvasPx * x)
+  }
+
+  public timeToDomOffsetX (t: ms): px {
+    return Math.round((t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr))
+  }
+
+  public timeToCanvasOffsetX (t: ms): px {
+    return Math.round((t - this._visibleRange.start) / this.msPerCanvasPx)
+  }
+
+  public durationToCanvasWidth (d: ms): px {
+    return Math.round(d / this.msPerCanvasPx)
+  }
+
+  public durationToDomWidth (d: ms): px {
+    return Math.round(this.durationToCanvasWidth(d) / this._canvasGeometry.dpr)
+  }
+
+  public domWidthToDuration (w: px): ms {
+    return this.canvasWidthToDuration(w * this._canvasGeometry.dpr)
+  }
+
+  public canvasWidthToDuration (w: px): ms {
+    return Math.round(w * this.msPerCanvasPx)
+  }
+
+  public shiftVisibleRange (offset: ms) {
+    this._visibleRange.shift(offset)
+    this._emit()
+  }
+
+  public zoom (durationDelta: ms, offset: float) {
+    const MIN_DURATION = this.canvasGeometry.width * this.canvasGeometry.dpr
+    const duration = this.visibleRange.duration
+    if (duration - durationDelta < MIN_DURATION) {
+        durationDelta = duration - MIN_DURATION
+    }
+    this._visibleRange.zoom(durationDelta, offset, this._fullRange)
+    this._emit()
+  }
+
+  public fullZoomOut () {
+    this._visibleRange.start = this._fullRange.start
+    this._visibleRange.end = this._fullRange.end
+    this._emit()
+  }
+
+  protected _sanitizeScrollStartTimeAim (targetT: ms): ms {
+    if (targetT > this._fullRange.end - this._visibleRange.duration) {
+      targetT = this._fullRange.end - this._visibleRange.duration
+    }
+    if (targetT < this._fullRange.start) {
+      targetT = this._fullRange.start
+    }
+    return targetT
+  }
+
+  public stepScrollToStartTime (targetT: ms, step=cfg.SCROLL_STEP) {
+    targetT = this._sanitizeScrollStartTimeAim(targetT)
+    const dt = targetT - this._visibleRange.start
+    const offset = Math.round(dt * step)
+    this._visibleRange.shift(offset)
+    // TODO: check why not calling emit() here
+  }
+
+  protected _scrollAnimationStartTime: ms
+  protected _initialScrollMs: ms
+  protected _targetScrollMs: ms
+  protected _animationStep: int = 0
+
+  public get targetScrollMs () {
+    return this._targetScrollMs || this.visibleRange.start
+  }
+
+  public jumpScrollTo (targetT: ms, animate: boolean = false) {
+    if (animate) {
+      this._scrollAnimationStartTime = Date.now()
+      this._initialScrollMs = this._visibleRange.start
+      this._targetScrollMs = targetT
+    } else {
+      this.stepScrollToStartTime(targetT, 1.0)
+    }
+  }
+
+  protected _sanitizeVisibleRangePosition () {
+    let diff = this._visibleRange.end - this._fullRange.end
+    if (diff > 0) {
+      this._visibleRange.shift(-diff)
+    }
+    diff = this._fullRange.start - this._visibleRange.start
+    if (diff > 0) {
+      this._visibleRange.shift(diff)
+    }
+  }
+
+  protected _changeVisibleDurationStart (t: ms) {
+    const duration = this._visibleRange.duration
+    this._visibleRange.start = t
+    this._visibleRange.end = t + duration
+    this._sanitizeVisibleRangePosition()
+  }
+
+  protected _onAnimationFrame () {
+    const now = Date.now()
+    const diff = now - this._scrollAnimationStartTime
+    if (diff < cfg.SCROLL_ANIMATION_DURATION_MS) {
+      this._animationStep ++
+      const percentage = diff / cfg.SCROLL_ANIMATION_DURATION_MS
+      const diffMs = (this._targetScrollMs - this._initialScrollMs)
+      const dMs = Math.round(diffMs * percentage)
+      const current = this._initialScrollMs + dMs
+      this._changeVisibleDurationStart(current)
+      this._emit()
+    } else if (this._targetScrollMs) {
+      this._changeVisibleDurationStart(this._targetScrollMs)
+      this._targetScrollMs = undefined
+      this._animationStep = 0
+      this._emit()
+    }
+    requestAnimationFrame(this._onAnimationFrame)
+  }
+}
+
+export default TimelineService

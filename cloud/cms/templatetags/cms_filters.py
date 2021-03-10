@@ -1,7 +1,8 @@
-from django import template
-from ..models import *
-
 import json
+
+from django import template
+
+from cms.models import *
 
 register = template.Library()
 
@@ -9,16 +10,6 @@ register = template.Library()
 @register.filter
 def portal_name(customization):
     return get_cloud_portal_asset(customization).name
-
-
-@register.filter
-def is_ImageField(field):
-    return type(field.field).__name__ == "ImageField"
-
-
-@register.filter
-def is_FileField(field):
-    return type(field.field).__name__ == "FileField"
 
 
 @register.simple_tag
@@ -89,3 +80,13 @@ def modulo(value, arg):
 @register.filter
 def nice_multiselect(multiselect_record):
     return ', '.join(json.loads(multiselect_record.value))
+
+
+@register.filter
+def get_form_item(form, key):
+    return form[key]
+
+
+@register.filter
+def dict_key(d, key):
+    return d.get(key, None)

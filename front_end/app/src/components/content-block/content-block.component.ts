@@ -1,45 +1,48 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges,
+    ViewChild, ViewEncapsulation
+} from '@angular/core';
 
 /* Usage
-<nx-block type?="gray | ...more to come" fixed-height? hoverable? header-style="extended | slim"?>
-    <header>
+ <nx-block type?="gray | simple-alert ...more to come" fixed-height? hoverable? header-style="extended | slim"?>
+     <header>
         TITLE
-    </header>
-    <nx-section>
+     </header>
+     <nx-section>
         BODY
-    </nx-section>
+     </nx-section>
 
-    <!-- ngFor -->
-    <nx-section>
-        <header>
+     <!-- ngFor -->
+     <nx-section>
+         <header>
             Section title
-        </header>
+         </header>
         Section body
-    </nx-section>
+     </nx-section>
 
-    <nx-section>
+     <nx-section>
         SECTION without header
-    </nx-section>
-    <!-- ngFor -->
+     </nx-section>
+     <!-- ngFor -->
 
-    <footer>
+     <footer>
         footer content
-    </footer>
-</nx-block>
-*/
+     </footer>
+ </nx-block>
+ */
 
 @Component({
-    selector   : 'nx-block',
-    templateUrl: 'content-block.component.html',
-    styleUrls  : [ 'content-block.component.scss' ],
-    encapsulation: ViewEncapsulation.None,
+    selector     : 'nx-block',
+    templateUrl  : 'content-block.component.html',
+    styleUrls    : ['content-block.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class NxContentBlockComponent implements OnInit {
+export class NxContentBlockComponent implements OnInit, OnChanges {
     @Input('type') type: string;
-    @Input('fixed-height') fixedHeight: any;
-    @Input('hoverable') hoverable: any;
-    @Input('header-style') headerStyle: any;
-    @Input('header-class') headerClass: any;
+    @Input('fixed-height') fixedHeight;
+    @Input('hoverable') hoverable;
+    @Input('header-style') headerStyle;
+    @Input('header-class') headerClass;
 
     haveHeader: boolean;
     haveFooter: boolean;
@@ -54,7 +57,7 @@ export class NxContentBlockComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.haveHeader = (this.headerWrapper.nativeElement.childNodes[ 0 ].childNodes.length > 0);
+        this.haveHeader = (this.headerWrapper.nativeElement.childNodes[0].childNodes.length > 0);
         this.haveFooter = (this.footerWrapper.nativeElement.childNodes.length > 0);
 
         this.fixedHeight = (this.fixedHeight !== undefined);
@@ -64,5 +67,11 @@ export class NxContentBlockComponent implements OnInit {
         this.headerClass = (this.headerClass) ? this.headerClass : '';
 
         this.headerClasses = this.headerStyle + this.headerClass;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.layout?.currentValue) {
+            this.haveHeader = (changes.layout.currentValue !== '');
+        }
     }
 }

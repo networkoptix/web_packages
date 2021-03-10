@@ -1,51 +1,57 @@
 import {
-    Component, OnInit, Input,
-    SimpleChanges, OnChanges
-}                          from '@angular/core';
-import { NxConfigService } from '../../../services/nx-config';
-import { Router }          from '@angular/router';
+    Component, Input, SimpleChanges
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
-    selector: 'nx-active-system',
+    selector   : 'nx-active-system',
     templateUrl: 'active-system.component.html',
-    styleUrls: ['active-system.component.scss']
+    styleUrls  : ['active-system.component.scss']
 })
 
-export class NxActiveSystemDropdown implements OnInit, OnChanges {
-    @Input() activeSystem: any;
-    CONFIG: any;
+export class NxActiveSystemDropdown extends BaseDropdown {
+    @Input() activeSystem;
 
     canViewInfo: boolean;
-    params: any;
+    params;
     show: boolean;
     active = {
-        health: false,
-        settings: false,
-        view: false,
+        health   : false,
+        settings : false,
+        view     : false
     };
 
-    constructor(private config: NxConfigService,
-                private router: Router,
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private router: Router
     ) {
-        this.CONFIG = this.config.getConfig();
-        this.show = false;
+        super(languageService, configService);
     }
 
-    private updateActive(endpoint = 'settings') {
+    updateActiveByUri() {
+        this.updateActive(this.router.url.split('/').filter(String)[2]); // .filter(String) <- remove leading "/"
+    }
+
+    updateActive(endpoint = 'settings') {
         this.active.health = (endpoint === 'health');
         this.active.view = (endpoint === 'view');
         this.active.settings = (endpoint === 'settings');
-        this.show = false;
     }
 
     ngOnInit(): void {
-        this.updateActive(this.router.url.split('/')[2]);
+        this.updateActiveByUri();
+        this.show = false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
-                this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)
+                this.activeSystem = { id: '0' }; // Avoid JS timing error (in console)
             } else if (changes.activeSystem.currentValue.id !== '0') {
                 this.canViewInfo = this.CONFIG.accessRoles.adminAccess
                     .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());

@@ -1,15 +1,15 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    ViewEncapsulation, Inject, OnDestroy
-} from '@angular/core';
+    Component, OnInit, Input,
+    ViewEncapsulation, OnDestroy
+}                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxConfigService }           from '../../services/nx-config';
+
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxProcessService, Process } from '../../services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector     : 'nx-client-button',
@@ -18,27 +18,29 @@ import { NxProcessService }          from '../../services/process.service';
     encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
+    @Input() system;
+    @Input() customClass;
+    @Input() actionType;
+    @Input() textOnly;
 
-    @Input() system: any;
-    @Input() customClass: any;
-    @Input() actionType: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    CONFIG: any = {};
-    LANG: any = {};
-
-    location: any;
+    location;
     canceled: boolean;
     modalActive: boolean;
-    openClient: any;
+    openClient: Process;
 
-    constructor(private processService: NxProcessService,
+    constructor(configService: NxConfigService,
+                private processService: NxProcessService,
                 private urlProtocol: NxUrlProtocolService,
-                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
-                private router: Router) {
-
+                private router: Router
+    ) {
         this.location = location;
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.translations;
     }
 
     ngOnDestroy(): void {
@@ -46,8 +48,6 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
         this.modalActive = false;
         this.canceled = false;
 
@@ -68,19 +68,23 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
             this.modalActive = true;
             return this.dialogs
                 .confirm(
-                    this.LANG.errorCodes.cantOpenClient,
-                    this.LANG.dialogs.noClientDetectedTitle,
-                    this.LANG.dialogs.download,
+                    this.LANG.errorCodes.cantOpenClient?.(),
+                    this.LANG.dialogs.titles.noClientDetected?.(),
+                    this.LANG.dialogs.buttons.download?.(),
                     'btn-primary',
-                    this.LANG.dialogs.cancelButton
+                    this.LANG.dialogs.buttons.cancel?.()
                 )
                 .then((result) => {
                     if (result === true) {
-                        this.router.navigate(['/download']);
+                        this.router
+                            .navigate(['/download'])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                 }).finally(() => {
                     this.modalActive = false;
                 });
-            });
+        });
     }
 }

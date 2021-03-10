@@ -6,30 +6,30 @@
     "emailSubject": "Вас запросили до %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Запит на продаж {{message.asset}}"
+    "emailSubject": "Запит на продаж {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Технічний запит на {{message.asset}}"
+    "emailSubject": "Технічне звернення на {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Зворотній зв'язок для {{message.asset}}"
+    "emailSubject": "Зворотній зв'язок для {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Зворотній зв'язок зі сторінкою камери{{#message.asset}} для {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Відгук про сторінку камери{{#message.asset}} для {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} має нову версію для перегляду"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} має нову версію для розгляду"
   },
   "restore_password": {
     "emailSubject": "Відновити пароль"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} запрошує вас приєднатися до %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Вам відкритий досту до системи {{message.system_name}}{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} запрошує вас приєднатися до %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Вам відкритий досту до системи {{{message.system_name}}} {{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Вам відкритий доступ до системи {{message.system_name}}"
+    "emailSubject": "Вам відкритий доступ до системи {{{message.system_name}}}"
   }
 }

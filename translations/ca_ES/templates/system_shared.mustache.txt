@@ -1,0 +1,11 @@
+Hola, {{message.userFullName}}
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) ha compartit l'accés al sistema de gestió de vídeo "{{message.system_name}}" amb vós.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Us han atorgat accés al sistema de gestió de vídeo "{{message.system_name}}".
+{{/message.sharer_name}}
+
+Mostra al portal de %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}

@@ -1,336 +1,120 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Setup       Systems Page Suite Setup
+Test Setup        Common Restart Logout    ${ENV}
+Suite Teardown    Systems Page Suite Teardown
 Force Tags        system
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Check Systems Text
-    [Arguments]    ${user}
-    Sleep    1
-    Log Out
-    Log In    ${user}    ${password}
-    Wait Until Page Contains Element    ${AUTO TESTS USER}
-    Element Text Should Be    ${AUTO TESTS USER}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Wait Until Element Is Not Visible    //h2[.='${YOUR SYSTEM TEXT}']
-
-Reset DB and Open New Browser On Failure
-    Close Browser
-    Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL VIEWER}
-    Clean up email noperm
-    Open Browser and go to URL    ${url}
-
-Restart
-    Common Restart Logout    ${url}
-
 *** Test Cases ***
-Should show list of Systems
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${ACCOUNT DROPDOWN}    ${SYSTEMS TILE}
-
-Has system name, owner and OpenInNx button visible on systems page
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-
-Should show Open in NX client button for online system
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-
-Should not show Open in NX client button for offline system
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTOTESTS OFFLINE}
-
-Should show system's state for systems if they are offline. Otherwise - button Open in Nx
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    ${systems}    Get WebElements    //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']
-    Check Online Or Offline    ${systems}    ${AUTOTESTS OFFLINE TEXT}
+System tiles represent actual information
+    [Tags]    C41893    threaded
+    Log in    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Validate Tile    ${system}[name]    ${YOUR SYSTEM TEXT}
+    Validate Tile    ${extra system}[name]    Another Owner
+    FOR    ${sys}    IN    @{offline systems}
+        Validate Tile    ${sys}[name]    ${YOUR SYSTEM TEXT}    offline=True
+    END
+    Verify Number Of Tiles Is Correct    9
 
 Should show the no systems connected message when you have no systems
-    [Tags]    C41866    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
+    [Tags]    C41866    threaded
+    Log In    ${email noperm}    ${base password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
-
-Should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
-    [Tags]    C41569    Threaded    123
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
-    Click Button    ${OPEN IN NX BUTTON}
-    Log Out
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Remove User Permissions    ${EMAIL NOPERM}
-
-User have several systems linked to his account
-    [Tags]    C41570    Threaded
-    Log    Step 1
-    Log In    ${EMAIL OWNER}    ${password}
-    # Expected Result
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    ${count1}=   Get Text    ${SYSTEMS DROPDOWN}
-    ${count1}=   Remove String Using Regexp    ${count1}    \\D
-    Should Be True    ${count1} > 12
-    ...    The Systems count was expected to be more than 12, but is ${count1}.
-
-    Log    Step 2
-    Click Element    ${SYSTEMS DROPDOWN}
-    # Expected Result
-    Wait Until Elements Are Visible
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU}
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
-    ...    ${ALL SYSTEMS}
-    ${count2}=   Get Element Count
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
-
-    Should Be Equal As Integers   ${count1}    ${count2}
-    ${elements}=   Get WebElements    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
-    # Confirm height of dropdown menu list is less than total height of all list items within
-    ${ulWidth}    ${ulHeight}=   Get Element Size    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}
-    ${e}=   Get From List    ${elements}    0
-    ${liWidth}    ${liHeight}=   Get Element Size    ${e}
-    Should be True    ${ulHeight} < (${liHeight}*${count1})
-
-    Log    Step 3
-    ${r}=   Evaluate    random.randint(0, ${count1})    modules=random
-    ${r1}=   Evaluate    ${r}+1
-    Log    r1: ${r1}
-    ${x}=   Get From List    ${elements}    ${r}
-    ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
-    # Removed becuse the element no longer has an href attribute
-    # ${h}=   Get Element Attribute    ${l}/a    href
-    ${n}=   Get Text    ${l}//span[@class='system-name']
-    Wait Until Element Is Visible    ${x}
-    Scroll Element Into View    ${x}
-    Click Element    ${x}
-    # Expected Result
-    # Location Should Contain    ${h}
-    Wait Until Element Contains    ${SYSTEM NAME}    ${n}
-    ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[contains(@class,'ellipsis')]
-    Should Be Equal As Strings    ${n}    ${system}
-
-    Log    Step 4
-    Click Element    ${SYSTEMS DROPDOWN}
-    # Expected Result
-    Wait Until Elements Are Visible
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU}
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
-    ${l}=   Set Variable
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}//span[@class='system-name']
-    ${elements}=   Get WebElements    ${l}
-    #Should Contain X Times    ${elements}    ${n}    1
-    ${x}=   Set Variable    0
-    FOR    ${element}    IN     @{elements}
-        ${n2}=   Get Text    ${element}
-        ${x1}=   Evaluate    ${x}+1
-        ${x}=   Set Variable If    "${n2}" == "${n}"    ${x1}    ${x}
-    END
-    Should Be Equal As Integers    ${x}    1    Expected only 1 System named ${n}, but found ${x}
-
-    Log    Step 5
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Element    ${ALL SYSTEMS}
-    # Expected Result
-    ${l}=   Get Location
-    Should End With    ${l}    /systems
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}//span[text()]/span/..
-    ${count3}=   Get Text    ${SYSTEMS DROPDOWN}//span[text()]/span/..
-    ${count3}=   Remove String Using Regexp    ${count3}    \\D
-    Should Be True    ${count3} > 12
-    ...    The Systems count was expected to be more than 12, but is ${count3}.
-    Should Be Equal As Integers    ${count1}    ${count3}
+    Validate Header Button Text    0
 
 Should show the system page instead of all systems when user only has one
-    [Tags]    C41878
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
-    Wait Until Element Is Visible    ${SYSTEM NAME}
-    Log Out
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Remove User Permissions    ${EMAIL NOPERM}
+    [Tags]    C41878    threaded
+    Log In    ${extra system}[owner]    ${base password}
+    Wait until Location Is    ${ENV}/systems/${extra system}[id]
+    Validate Header Button Text    ${extra system}[name]    systems=False
 
 Should open system page when clicked on system
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    # Sometimes the name fields refill if you empty them too fast
-    sleep    2
-    Wait Until Page Does Not Contain Element    //div[@class='preloader']
-    Click Element    ${AUTO TESTS TITLE}
-    Verify In System    Auto Tests
+    [Tags]    C41893    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Click Element    //h2[contains(text(), "${system}[name]")]
+    Verify In System    ${system}[name]
+    Validate Header Button Text    ${system}[name]    systems=False
 
 Should show your system for owner and owner name for non-owners
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Element Text Should Be    ${AUTO TESTS USER}    ${YOUR SYSTEM TEXT}
-    :FOR    ${user}    IN    @{EMAILS LIST}
-    \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
-
-# should be removed and updated for what the dropdown should show with other systems
-Should not show systems dropdown with no systems
-    [Tags]    C41568    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
-    Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
+    [Tags]    C41893    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Validate Tile    ${system}[name]    ${YOUR SYSTEM TEXT}
+    Validate Tile    ${extra system}[name]    Another Owner
 
 Search should highlight system name
-    [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Input Text    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS}
-    Wait Until Element Is Visible    //span[@class="highlighted" and text()="${AUTO TESTS}"]
+    [Tags]    C41891    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+
+    Log    Search for the system and check ther result
+    Input Text    ${SYSTEMS SEARCH INPUT}    ${system}[name]
+    Page Should Contain    ${FOUND TEXT}
+    Wait Until Element Is Visible    //span[@class="highlighted" and text()="${system}[name]"]
+    Verify Number Of Tiles Is Correct    1
+
+    Log    Clear input, search for another system and check the result
+    Click Link    ${SYSTEM SEARCH X BUTTON}
+    Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
+    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
+    Input Text    ${SYSTEMS SEARCH INPUT}    ${extra system}[name]
+    Page Should Contain    ${FOUND TEXT}
+    Wait Until Element Is Visible    //span[@class="highlighted" and text()="${extra system}[name]"]
+    Verify Number Of Tiles Is Correct    1
 
 Search should highlight owner name
-    [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Input Text    ${SYSTEMS SEARCH INPUT}    ${TEST FIRST NAME}
-    Wait Until Element Is Visible    //span[@class="highlighted" and text()="${TEST FIRST NAME}"]
+    [Tags]    C41891    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Input Text    ${SYSTEMS SEARCH INPUT}    Another Owner
+    Wait Until Element Is Visible    //span[@class="highlighted" and text()="Another Owner"]
+    Verify Number Of Tiles Is Correct    1
 
 Search can be cleared by x button
-    [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    ${tiles}    Get WebElements    //div[contains(@class,"card ")]
-    ${len}    Get Length    ${tiles}
+    [Tags]    C41891    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Verify Number Of Tiles Is Correct    9
+
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
-    Input Text    ${SYSTEMS SEARCH INPUT}    Tests
-    Wait For Condition    return document.getElementsByClassName('card ').length < ${len}    30
-    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    Tests
+    Input Text    ${SYSTEMS SEARCH INPUT}    Not Existing
+    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    Not Existing
+    Verify Number Of Tiles Is Correct    0
     Wait Until Element Is Visible    ${SYSTEM SEARCH X BUTTON}
     Click Link    ${SYSTEM SEARCH X BUTTON}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}
+    Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
-    ${tiles2}    Get WebElements    //div[contains(@class,"card ")]
-    ${len2}    Get Length    ${tiles2}
-    Should Be Equal    ${len}    ${len2}
+    Verify Number Of Tiles Is Correct    9
 
 Searching for owner email should only show systems with that owner
-    [Tags]    C41891    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
-    Wait Until Element Is Not Visible    ${DIFFERENT OWNER TITLE}
+    [Tags]    C41891    threaded
+    Log In    ${system}[owner]    ${base password}
+    Validate on Systems Page
+    Input Text    ${SYSTEMS SEARCH INPUT}    ${system}[owner]
+    Verify Number Of Tiles Is Correct    8
+    Run Keyword and Expect Error    *    Validate Tile    ${extra system}[name]    Another Owner
+
+Should open systems page in anonymous state
+    [Tags]    threaded
+    Go To    ${ENV}/systems
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Log In    ${system}[owner]    ${base password}    button=None
+
+Should update owner name in systems list, if it's changed
+    [Tags]    threaded
+    Set Account Name    ${ENV}    ${extra system}[owner]    ${base password}    newFirstName    newLastName
+
+    Log In    ${system}[owner]     ${base password}
+    Go To    ${ENV}/systems
+    Validate on Systems Page
+    Validate Tile    ${extra system}[name]    newFirstName newLastName
 
 Search should only be visible with 9 or more systems
     [Tags]    C41890
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
-    Sleep    15
-   # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-   # Sleep    15
-   # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-   # ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180   status=UNSEEN
-   # Delete Email    ${email}
-   # Close Mailbox
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Go to Users List
-    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
-    Remove User Permissions    ${EMAIL VIEWER}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
-    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
-    Log Out
-
-Should open systems page in anonymous state
-    [Tags]    anonymous
-    Go To    ${url}/systems
-    Location should be    ${url}/systems
-    Wait Until Element Is Visible    ${LOG IN MODAL}
-    Check Log In    button=None
-
-Should update owner name in systems list, if it's changed
-    [Tags]
-    Go To    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}
-    #Sleep added here because the account page was populating the first/lastname fields again after Selenium changed it.
-    Sleep    1
-    Element Text Should Be    ${ACCOUNT EMAIL}    ${EMAIL OWNER}
-    Textfield Value Should Be    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    newFirstName
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    newLastName
-    Wait Until Element Is Visible    ${ACCOUNT SAVE}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Log Out
-    Log In    ${EMAIL ADMIN}    ${password}
-    Go To    ${url}/systems
-    Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
-    Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Disconnect from account    ${ENV}    ${system}[owner]    ${base password}    ${extra system}[id]
+    Log In    ${system}[owner]    ${base password}
+    Go To    ${ENV}/systems
+    Validate on Systems Page    search=False
+    Verify Number Of Tiles Is Correct    8

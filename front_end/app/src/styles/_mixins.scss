@@ -1,28 +1,29 @@
-@import 'theme/_variables';
-@import '../../styles/theme_variables';
+@use '../../styles/theme_variables';
+@use '../styles/typography';
+@forward '../../styles/theme_variables';
 
 // Placeholder text
-@mixin placeholder($color: $input-color-placeholder) {
+@mixin placeholder($color: theme_variables.$input-color-placeholder) {
     // Firefox
     &::-moz-placeholder {
         color   : $color;
-        font-family: $font-family-regular;
+        font-family: theme_variables.$font-family-regular;
         opacity : 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
     }
     // Internet Explorer 10+
     &:-ms-input-placeholder {
         color : $color;
-        font-family: $font-family-regular;
+        font-family: theme_variables.$font-family-regular;
     }
     // Microsoft Edge
     ::-ms-input-placeholder {
-        color : red;
-        font-family: $font-family-regular;
+        color : $color;
+        font-family: theme_variables.$font-family-regular;
     }
     // Safari and Chrome
     &::-webkit-input-placeholder {
         color : $color;
-        font-family: $font-family-regular;
+        font-family: theme_variables.$font-family-regular;
     }
 }
 
@@ -45,20 +46,20 @@
     }
 }
 
-#selected-tag {
-    color         : $light1 !important;
+@mixin selected-tag {
+    color         : theme_variables.$light1 !important;
     padding-left  : 12px;
     padding-right : 0;
 }
 
 @mixin badge-selected($default, $hover, $active) {
-    @extend #selected-tag;
+    @include selected-tag;
     background-color : $default;
-    
+
     & > span.close-button:hover {
         background-color : $hover;
     }
-    
+
     & > span.close-button:active {
         background-color : $active;
     }
@@ -107,16 +108,52 @@
     @-webkit-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-moz-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-o-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @keyframes #{$animation-name} {
         @content;
+    }
+}
+
+@mixin details-buttons {
+    flex: 0 0 auto;
+    &:hover, &:hover > span {
+        color: theme_variables.$dark15 !important;
+        svg-icon {
+            svg {
+                g,
+                path {
+                    fill: theme_variables.$dark15 !important;
+                }
+            }
+        }
+    }
+    @include typography.regular13light;
+    // flex: 0 0 auto;
+    background-color: inherit;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-left: 8px;
+    padding-right: 0px;
+    svg-icon {
+        svg {
+            height: 20px;
+            g,
+            path {
+                fill: theme_variables.$light16 !important;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
     }
 }

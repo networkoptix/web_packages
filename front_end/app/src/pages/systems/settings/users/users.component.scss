@@ -1,24 +1,38 @@
-@import '../../../../styles/mixins';
-@import '../../../../styles/typography';
+@use '../../../../styles/typography';
+@use '../../../../styles/mixins';
+@use '../../../../../styles/theme_variables' as *;
 
 .user-name {
-    @include ellipsis;
-    //width     : 20%;
-    // max-width : 175px;
-    @extend #regular13;
+    @include mixins.ellipsis;
+    @include typography.regular13dark9;
 }
 
-.user-email {
-    @include ellipsis;
-    //width     : 30%;
-    // max-width : 240px;
-    font-family : $font-family-medium;
-    line-height: 1.2;
+.heading-style {
+    font-family: $font-family-medium;
+    line-height: 40px;
+    vertical-align: middle;
+    height: 40px;
+    font-size: 24px;
+}
+
+.header-title {
+    text-align: left !important;
+    position: relative;
+    h2 {
+        @extend .heading-style;
+    }
+}
+
+.edit-button {
+    width: 40px;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
 .user-role {
-    @include ellipsis;
-    //width     : 20%;
+    @include mixins.ellipsis;
     max-width : 120px;
 }
 
@@ -33,4 +47,27 @@
     background-color : transparent;
     color            : $light16;
     padding          : .5rem 0 0;
+}
+
+.user-settings-form {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+    padding: 6px 0 6px 8px;
+    .user-form-labels {
+        width: 1px;
+        margin-right: 0.5rem;
+        color: $dark9;
+    }
+    input:disabled {
+        background-color: $light2;
+        border: 1px solid $light6;
+    }
+}
+
+.edit-padding {
+    padding-left: 6px !important;
+}
+
+.user-status-switch-wrappper {
+    padding-top: 10px;
 }

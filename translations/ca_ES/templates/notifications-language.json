@@ -1,0 +1,35 @@
+{
+  "activate_account": {
+    "emailSubject": "Activeu el compte"
+  },
+  "cloud_invite": {
+    "emailSubject": "Us han convidat a %CLOUD_NAME%"
+  },
+  "cloud_notification": {
+    "emailSubject": "{{{message.subject}}}"
+  },
+  "sales_inquiry": {
+    "emailSubject": "Consulta de vendes per a {{{message.asset}}}"
+  },
+  "technical_inquiry": {
+    "emailSubject": "Consulta tècnica per a {{{message.asset}}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Suggeriments per a {{{message.asset}}}"
+  },
+  "ipvd_feedback": {
+    "emailSubject": "Comentaris sobre la pàgina de la càmera {{#message.asset}} per a {{{message.asset}}}{{/message.asset}}"
+  },
+  "review_version": {
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} té una nova versió que cal revisar"
+  },
+  "restore_password": {
+    "emailSubject": "Restableix la contrasenya"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} us convida a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}El sistema de vídeo {{{message.system_name}}} s'ha compartit amb vós{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "El sistema de vídeo {{{message.system_name}}} s'ha compartit amb vós"
+  }
+}

@@ -7,17 +7,16 @@
 
     <nx-section>
         <div class="mb-2"
-             *ngIf="vendors.length !== allVendors.length"
-             [translate]="'topXByVolume'"
-             [translateParams]="{value: CONFIG.ipvd.vendorsShown}">
-        </div>
+             *ngIf="vendors.length !== allVendors.length">{{'ipvdTopXByVolume' | translate:topXByVolume}}</div>
         <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors; trackBy: trackItem">
             <nx-tag element="btn"
                     size="large"
-                    (click)="setVendor(vendor)"
+                    link="/ipvd"
+                    [linkParam]="{vendors: vendor.name}"
                     [value]="null">{{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
             </nx-tag>
         </div>
+
         <div class="manufacture-info">
             <button class="btn btn-default" #buttonElement (click)="toggleVendorsShown(buttonElement)">Show All</button>
         </div>
@@ -26,7 +25,7 @@
 
 <nx-block *ngIf="cameras" id="cameras">
     <header>
-        {{ cameras }} <span translate>devices</span>
+        <span>{{ cameras }} </span><span translate>devices</span>
     </header>
 
     <nx-section>
@@ -35,7 +34,7 @@
                     size="large"
                     (click)="setFilter(filter)"
                     [value]="null">
-                {{filter.label | translate}}
+                <ng-container>{{filter.label | translate}}</ng-container>
             </nx-tag>
         </div>
     </nx-section>

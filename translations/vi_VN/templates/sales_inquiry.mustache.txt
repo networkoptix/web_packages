@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.asset }}:
+Xin chào, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) có câu hỏi bán hàng sau đây về {{ message.asset }}:
 <pre>{{ message.message }}</pre>

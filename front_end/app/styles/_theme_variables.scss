@@ -6,7 +6,7 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 @import '~sass-rem/rem';
 @import '_theme_palette';
-@import '/native-theme/_theme_palette';
+@import './native-theme/theme_palette';
 @import 'custom/custom_palette';
 
 // Brand colors
@@ -68,9 +68,10 @@ $font-size-lg : $font-size-base * 1.25;
 $font-size-sm : rem(12px); //$font-size-base * .785;
 
 
-$h1-font-size : rem(22px); // $font-size-base * 1.4;
-$h2-font-size : rem(22px); // $font-size-base * 1.3;
+$h1-font-size : rem(32px); // $font-size-base * 1.4;
+$h2-font-size : rem(24px); // $font-size-base * 1.3;
 $h3-font-size : rem(18px); // $font-size-base * 1.2;
+$h3-alt-size  : rem(17px);
 $h4-font-size : rem(15px); // $font-size-base * 1;
 $h5-font-size : rem(14px); // $font-size-base;
 $h6-font-size : rem(14px); // $font-size-base * .875;
@@ -100,8 +101,11 @@ $line-height-computed : floor(($font-size-base * $line-height-base)); // ~20px
 $brand-primary : $brand_core;
 $brand-info : $brand_l2;
 $brand-success : $green_main;
+$brand-success-bright : $green_l2;
 $brand-warning : $yellow_d1;
+$brand-warning-bright : $yellow_main;
 $brand-danger : $red_main;
+$brand-danger-bright : $red_l2;
 $jumbotron-color : tranparent;
 // ********************************************************
 
@@ -130,11 +134,11 @@ $modal-backdrop-bg:         $dark15;
 $modal-backdrop-opacity:    0.2;
 $modal-content-bg:          $light1;
 $modal-title-font-weight:   600;
-$modal-title-line-height:   24px;
-$modal-title-padding:       12px;
-$modal-inner-padding:       12px;
+$modal-title-line-height:   rem(24px);
+$modal-title-padding:       rem(12px);
+$modal-inner-padding:       rem(12px);
 
-$form-group-margin-bottom:  12px;
+$form-group-margin-bottom:  rem(12px);
 
 $state-success-text:             $green3;
 $state-success-bg:               $green2;
@@ -188,12 +192,13 @@ $dropdown-link-active-color: $brand_core;
 
 $collapse-first-width  : 920px;
 $collapse-second-width : 768px;
+$collapse-webadmin-width: 440px;
 
-#outline {
+@mixin outline {
     box-shadow : 0 0 0 2px transparentize($brand_l2, 0.4) !important;
 }
 
-#inset-outline {
+@mixin inset-outline {
     box-shadow : inset 0 0 0 2px transparentize($brand_l2, 0.4) !important;
 }
 
@@ -240,3 +245,5 @@ $grid-narrow-table-width: calc(100% - 350px - 1rem);
 $grid-narrow-panel-width: 350px;
 $grid-super-wide-table-width: calc(100% - 450px - 1rem);
 $grid-super-wide-panel-width: 450px;
+
+$input-color-placeholder : $light16 !default;

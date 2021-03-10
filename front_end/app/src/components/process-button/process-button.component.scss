@@ -1,11 +1,14 @@
-@import '../../../styles/native-theme/_theme_palette';
-@import '../../../styles/_theme_palette';
-@import '../../../styles/custom/_custom_palette';
-@import '../../../styles/_theme_variables';
-@import '../../styles/mixins';
+@use '../../../styles/_theme_variables' as *;
+@use '../../styles/typography';
+@use '../../styles/mixins';
 
 nx-process-button {
-    @include keyframe(bubblingG) {
+    .full-width {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    @include mixins.keyframe(bubblingG) {
         0% {
             opacity:1;
     	}
@@ -23,7 +26,7 @@ nx-process-button {
         height : 32px; // IE11 cannot calculate it :(
         display  : inline-block;
         position : relative;
-        
+
         .btn + .btn {
             margin-left : 0; /* Overwrite for modal-footer bootstrap style */
         }
@@ -112,5 +115,26 @@ nx-process-button {
                 white-space : nowrap;
             }
         }
+
+        .white-svg {
+            .st0 {
+                fill: $light1;
+            }
+        }
+    }
+
+    .small-button {
+        height: 22px !important;
+
+        button {
+            height: 22px !important;
+            font-size: 0.8rem;
+        }
+    }
+
+    .header-button-span {
+        @include mixins.details-buttons;
+        @include typography.regular13light;
+        cursor: pointer;
     }
 }

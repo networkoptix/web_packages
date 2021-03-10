@@ -16,19 +16,17 @@ Including another URLconf
 
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.shortcuts import redirect
-from django.views.generic.base import TemplateView
+from django.shortcuts import redirect, render
+from django.views.generic.base import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from notifications import urls as notifications_urls
-
-admin.site.index_template = 'admin/index.html'
-admin.site.site_header = 'Cloud Administration'
-admin.site.site_title = 'Cloud Administration'
-admin.site.index_title = 'Cloud Administration'
 
 
 def redirect_login(request):
@@ -45,9 +43,26 @@ def health_check(request):
     return HttpResponse(status=status)
 
 
+def view_404(request, *args, **kwargs):
+    return render(request, 'static/index.html')
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Cloud Portal API",
+      default_version='v1',
+      description="Api calls for cloud portal"
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
+
 urlpatterns = [
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^health/', health_check),
     url(r'^admin/login/', redirect_login),
+    url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
     url(r'^admin/cms/', include('cms.admin_urls')),
     url(r'^admin/notifications/', include('notifications.admin_urls')),
     url(r'^admin/', admin.site.urls),
@@ -73,10 +88,20 @@ urlpatterns = [
         TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
 
-    url(r'^(?!static|preview).*',
+    url(r'^ngsw.json$',
+        TemplateView.as_view(template_name='static/ngsw.json',
+                             content_type='application/json')),
+
+    url(r'^ngsw-worker.js$',
+        TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
+                             content_type='application/javascript')),
+
+    url(r'^(?!static|preview|admin).*',
         TemplateView.as_view(template_name="static/index.html"))
 ]
 
 if settings.LOCAL_ENVIRONMENT:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
+    urlpatterns.insert(0, url(r'^profiler/', include('silk.urls')))
 
+handler404 = 'cloud.urls.view_404'

@@ -1,0 +1,702 @@
+*** Settings ***
+Resource          ../resource.robot
+Suite Setup       System Admin Suite Setup
+Test Setup        Common Restart Logout    ${ENV}
+Test Teardown     Run Keyword If Test Failed    System Admin Test Restart
+Suite Teardown    System Admin Suite Teardown
+Force Tags        system
+
+*** Test Cases ***
+Should show system settings and security settings and they should match settings on server
+    [Tags]    system settings    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
+    Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
+    Element Text Should Be    //label[@id="statisticsAllowedHelpBlock"]    ${SEND ANONYMOUS USAGE DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="cameraSettingsOptimization"]//span    ${ALLOW SYSTEM OPTIMIZE TEXT}
+
+    Element Text Should Be    //label[@for="auditTrailEnabled"]//span    ${ENABLE AUDIT TRAIL TEXT}
+    Element Text Should Be    //label[@id="auditTrailEnabledHelpBlock"]    ${ENABLE AUDIT TRAIL DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
+    Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
+    Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
+
+    Settings on page should match settings on server
+
+Changing the Setting * changes it on the server
+    [Tags]    system settings    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+
+    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization    auditTrailEnabled    trafficEncryptionForced
+        Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
+    END
+
+Changing the Setting 'Encrypt video traffic' changes it on the server
+    [Tags]    system settings    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    ${selected}=   Change Setting Encrypt video traffic
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
+
+Changing the Setting 'Limit session duration to' changes it on the server
+    [Tags]    system settings    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}     sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit
+
+Change Time Interval And Verify on Server
+    [Tags]    system settings    C65722    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
+    Run Keyword If    ${status}==False    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+    Reload Page
+    Wait Until Settings Are Visible
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+
+Changing Several Random Checkboxes Works
+    [Tags]    system settings    threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Changing Several Settings at Random    ${SAVE BUTTON}
+    Changing Several Settings at Random    ${CANCEL BUTTON}
+    
+Systems Settings Block is Available for Administrator or Owner
+    [Tags]    C69736    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Settings Are Visible
+        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Checkbox should be selected     ${ENABLE AUTO DISCOVERY CHECKBOX}
+        Checkbox should be selected     ${SEND ANONYMOUS USAGE CHECKBOX}
+        Checkbox should be selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+        Log Out
+    END
+
+System and Security Settings block is not available for other users
+    [Tags]    C69737    C65698    system settings     threaded
+    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]     ${users}[custom]
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Elements Are Visible
+        ...    //h2[contains(text(), "${system}[name]")]
+        ...    ${DISCONNECT FROM MY ACCOUNT}
+        Wait until elements are not visible
+        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
+        Log Out
+    END
+    
+Cancel changes in System Settings block
+    [Tags]    C69738    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected    ${setting}    ${True}
+        Change Setting    ${setting}
+        Slow    Click Button    ${CANCEL BUTTON}    timeout=0.5
+        Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+        Elements Should Not Be Visible    ${SYSTEM SAVE}    ${CANCEL BUTTON}
+        Checkbox Is Selected    ${setting}    ${True}
+    END
+
+Moving to a different page after making changes in System Settings without saving them first
+    [Tags]    C69739    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${True}
+    END
+    FOR    ${setting}    IN    @{tested settings}
+        Change Setting     ${setting}
+    END
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+
+    Log    Step 2
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+
+    Log    Step 3
+    Click Button    ${DISCARD CHANGES BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Location is    ${env}/systems/${system}[id]/health/alerts
+
+    Log    Step 4
+    Go To    ${env}/systems/${system}[id]
+    Wait Until Settings Are Visible
+    FOR    ${setting}    IN    @{tested settings}
+        Change Setting     ${setting}
+    END
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+
+    Log    Step 5
+    Click Button    ${CANCEL CHANGES BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${False}
+    END
+
+    Log    Step 6
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON} 
+
+    Log    Step 7
+    Click Button    ${APPLY CHANGES CLOSE BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${False}
+    END
+
+    Log    Step 8
+    Reload Page
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    FOR    ${setting}    IN    @{tested settings}
+        Checkbox Is Selected     ${setting}    ${True}
+    END
+
+Changing All Checkboxes Works
+    [Tags]    system settings    C65722    threaded
+    Log    Testrail: Changes in the security block are displayed in the thick client
+    Log    Testrail: Changes in the System Settings block are displayed in the thick client
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    Log    Steps 1 - 8
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible    timeout=60
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Changing All Settings    ${SAVE BUTTON}
+    Changing All Settings    ${CANCEL BUTTON}
+
+Changes made in the thick client are displayed in System Settings block in Cloud Portal
+    [Tags]    C69741    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    Log    Step 1
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+
+    Log    Step 2
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+
+    Log    Step 3
+    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    false
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+
+    Log    Step 4
+    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+
+    Log    Step 5
+    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    false
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
+
+    Log    Step 6
+    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
+    Log    Step 7
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=false   statisticsAllowed=false    cameraSettingsOptimization=false
+    Set System Settings    ${local auth}    ${server url}    ${settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
+
+    Log    Step 8
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
+Checking the dependency of system settings checkboxes
+    [Tags]    C69742    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
+    Log    Step 1
+    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
+    Log    Step 2
+    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+
+    Log    Step 3
+    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
+
+    Log    Step 4
+    Reload Page
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+    
+Changes made in the thick client are displayed in the security block in Cloud Portal
+    [Tags]    C65723    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+
+    Log    Step 1
+    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
+
+    Log    Step 2
+    Set System Settings via API    ${local auth}    ${server url}    auditTrailEnabled    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+
+    Log    Step 3
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
+
+    Log    Step 4
+    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    true
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
+
+    Log    Step 5
+    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+
+    Log    Step 6
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+
+    Log    Step 7
+    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    30
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 30    Fail
+    
+    Log    Step 8
+    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    Reload Page
+    Wait Until Settings Are Visible
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+
+Security block is available for administrator or owner
+    [Tags]    C65697    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
+    Log    Step 1, 2
+    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+    Log in to user and system    ${user}    ${system}[id]
+        Wait Until Settings Are Visible    timeout=60
+        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+        Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+        Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+        Log Out
+    END
+
+System Settings block is not available when the system is offline
+    [Tags]    C69744    system settings    threaded
+    Stop Docker Server    ${system}[cont]
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT FROM NX}
+    ...    ${MERGE BUTTON SYSTEM}
+    ...    ${PLACEHOLDER ICON}
+    ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
+    Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
+    Start Docker Server    ${system}[cont]
+
+System settings block view for different System versions
+    [Tags]    C69743    C65829    system settings    threaded
+    ${4.0 system}=   Setup Docker System    image=${image 4.0}    cloud email=${EMAIL OWNER}
+    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
+    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
+    ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[id]
+    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
+    Common Restart Logout    ${ENV}
+    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
+        Set System Settings    ${local auth}    ${url}     ${default settings}
+        Log in to user and system    ${EMAIL OWNER}    ${id}
+        Reload Page
+        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
+        ...    ELSE    Wait Until Settings Are Visible    timeout=60    old system=False
+        Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+        Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+
+        Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX}    autoDiscoveryEnabled    ${url}
+        Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX}    statisticsAllowed    ${url}
+        Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    cameraSettingsOptimization    ${url}
+        Changing setting changes it on server    ${ENABLE AUDIT TRAIL CHECKBOX}    auditTrailEnabled    ${url}
+        Log Out
+    END
+
+    Delete Docker Server    ${4.0 cont}
+
+Cancel changes in Security block
+    [Tags]    C65724    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 2
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+    
+    Log    Step 3
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
+    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
+    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+    
+Checking the dependency of security settings checkboxes
+    [Tags]    C65700    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible    timeout=60
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+
+    Log    Step 2
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
+    Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    
+    Log    Step 3
+    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
+    Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
+    Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
+    
+    Log    Step 4
+    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}    buttons=False
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+
+    Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+
+Check Limit session duration
+    [Tags]    C65703    system settings    threaded
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    
+    Log    Step 2
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    0
+    Sleep    1
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    
+    Log    Step 3
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    hjkl
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    
+    Log    Step 4
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    "&*("
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1    
+    Page Should Not Contain Element     ${SAVE BUTTON}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    
+    Log    Step 5
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    654
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Wait Until Elements Are Visible	 ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button     ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    65
+        
+    Log    Step 6
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    1
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    1
+    
+    Log    Step 7
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION HOURS}
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    600  
+    Sleep    1
+    Click Button     ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${minutes} =    Evaluate    600*60
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    ${minutes}
+    
+    Log    Step added by auto qa (CLOUD-5221 found)
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    600
+    
+    Log    Step 8
+    Clear Element Text    ${TIME NUMBER INPUT}
+    Input Text    ${TIME NUMBER INPUT}    5
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button     ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 5   Fail    Interval not 5 minutes as expected
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    5
+
+Check HTTPS traffic encryption
+    [Tags]    C65701    system settings    threaded
+    Log    Preconditions
+    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Change Setting And Save   ${ALLOW ONLY SECURE CHECKBOX}
+
+    Log    Step 2
+    Go To    ${server url}
+    Wait until location is    ${server url}/static/index.html#/
+
+    Log    Step 3
+    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+
+    Log    Step 4
+    ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
+    Should Be Equal As Strings    ${resp}    200
+
+    Log    Step 5
+    Go To    ${env}/systems/${system}[id]
+    Wait Until Settings Are Visible
+    Change Setting And Save    ${ALLOW ONLY SECURE CHECKBOX}
+
+    Log    Step 6
+    Go To    http://${QABURBANK IP}:${system}[port]
+    Run keyword and continue on failure    Wait until location contains    ${server url}
+
+    Log    Step 7
+    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+
+    Log    Step 8
+    ${resp}=   Check Connection    ${server url}
+    Should Be Equal As Strings    ${resp}    SSL Error
+
+    Log    Step 9
+    ${resp}=   Check Connection    ${server url}    verify=False
+    Should Be Equal As Strings    ${resp}    200
+
+    Go To    ${ENV}
+
+Security block view for 3 dot 2 System
+    [Tags]    C65829    system settings    threaded
+    Log    Preconditions
+    Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
+    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
+
+    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
+    Wait Until Settings Are Visible    old system=True
+    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+
+Changes in System Settings block are displayed in thick client
+    [Tags]    C69740    threaded    system settings
+    Log    Preconditions
+    Set System Settings    ${local auth}    ${server url}     ${default settings}
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Settings Are Visible
+
+    Log    Steps 1-6
+    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization
+        Repeat Keyword    2 times    Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
+    END
+
+    Log    Step 7, 8
+    Repeat Keyword    2 times    Changing All Settings    ${SAVE BUTTON}

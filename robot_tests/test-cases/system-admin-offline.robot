@@ -1,0 +1,193 @@
+*** Settings ***
+Resource          ../resource.robot
+Suite Setup       System Offline Suite Setup
+Test Setup        Restart
+Suite Teardown    System Offline Suite Teardown
+Force Tags        system
+
+*** Keywords ***
+System Offline Suite Setup
+    Create Base Cloud System
+    Stop Docker Server    ${system}[cont]
+    ${extra system}=   Setup Docker System    cloud email=${system}[owner]
+    Set Suite Variable    ${extra system}
+    Sleep    30
+    Open browser and go to URL    ${ENV}
+
+System Offline Suite Teardown
+    Delete Base Cloud System
+    Run keyword and ignore error    Disconnect    ${ENV}    ${extra system}[owner]    ${base password}    ${extra system}[id]
+    Delete Docker Server  ${extra system}[cont]
+    Close All Browsers
+
+Restart
+    Common Restart Logout    ${ENV}
+    Log in to user and system   ${system}[owner]    ${system}[id]
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
+
+*** Test Cases ***
+The page is opened and shows the user list to owner
+    [Tags]    C41881    Threaded    system_offline
+    Click Link    ${USERS LIST LINK}
+    Wait Until Element Is Visible    ${USERS LIST}
+
+Should confirm, if owner deletes system
+    [Tags]    Threaded    system_offline
+    Click Button    ${DISCONNECT FROM NX}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
+    Click Element    ${DISCONNECT FORM}
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+
+Offline system should confirm, if not owner deletes system
+    [Tags]    Threaded    system_offline
+    Log Out
+    Log in to user and system    ${users}[viewer]    ${system}[id]
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM MY ACCOUNT}
+    Click Button    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible
+        ...    ${DISCONNECT MODAL WARNING}
+        ...    ${DISCONNECT MODAL DISCONNECT BUTTON}
+        ...    ${DISCONNECT MODAL CANCEL}
+    Click Button    ${DISCONNECT MODAL CANCEL}
+    Wait Until Page Does Not Contain Element    ${MODAL DIALOG}
+
+Share and Merge buttons should be disabled
+    [Tags]    C41881    Threaded    system_offline
+    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Elements Are Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
+
+#Open in nx button should be disabled
+#    [Tags]    C41881    Threaded    system_offline
+#    Log in to Autotests 2 System    ${EMAIL OWNER}
+#    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+#    Click Element    ${SYSTEMS DROPDOWN}
+#    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
+#    Log Out
+#    Log in to Autotests 2 System    ${EMAIL VIEWER}
+#    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+#    Click Element    ${SYSTEMS DROPDOWN}
+#    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
+
+Should show offline next to system name
+    [Tags]    C41881    Threaded    system_offline
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
+
+Should not be able to delete/edit users
+    [Tags]    Threaded    system_offline    CLOUD-6615
+    Click Link    ${USERS LIST LINK}
+    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${users}[viewer]']
+    Wait Until Element Is Visible    ${viewer}
+    Click Element    ${viewer}
+    Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
+    Element Should Be Disabled    ${ACCESS LEVEL DROPDOWN}
+    Element Should Be Disabled    ${REMOVE USER BUTTON}
+
+Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
+    [Tags]    Threaded    system_offline
+    Log Out
+    Go To    ${ENV}/systems/${system}[id]
+    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Click Button    ${LOG IN CLOSE BUTTON}
+    Wait Until Element Is Visible    ${JUMBOTRON}
+    Wait Until Location Contains    ${ENV}
+
+Offline system should open System page by link to not authorized user and show it, after owner logs in
+    [Tags]    Threaded    system_offline
+    Log Out
+    Go To    ${ENV}/systems/${system}[id]
+    Log In    ${system}[owner]    ${base password}    button=None
+    Wait until element is visible    //h2[contains(text(), "${system}[name]")]
+
+Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
+    [Tags]    C41572    Threaded    system_offline
+    Log Out
+    Log In    ${email noperm}    ${base password}
+    Go To    ${ENV}/systems/${system}[id]
+    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
+    Slow   Click Button    ${TAKE ME HOME}    timeout=0.5
+    Wait Until Location Is    ${ENV}/systems
+
+Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
+    [Tags]    Threaded    system_offline
+    Log Out
+    Go To    ${ENV}/systems/${system}[id]
+    Log In    ${email noperm}    ${base password}    button=None
+    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
+
+#See CLOUD-6592: offline system cannot be renamed
+#Owner is able to rename offline system via Cloud
+#    [Tags]    C41899    system_offline
+#    ${new name}=   Get random system name
+#    Change System Name    ${new name}
+#    Log Out
+#
+#    # Make sure new name is saved
+#    Log in to user and system    ${system}[owner]    ${system}[id]
+#    ${current name}=   Get Text    //h2[@id="editable-title"]
+#    ${system info}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+#    Should be equal as strings    ${system}[name]     ${new name}
+#    Should be equal as strings    ${current name}     ${new name}
+#
+#    # Return to initial name
+#    Rename System    ${auth}    ${system}[id]    ${system}[name]
+#
+#    # Make sure old name is saved
+#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[id]
+#    Should be equal as strings    ${system info}[name]     ${system}[name]
+
+Does not show Share button to viewer, advanced viewer, live viewer
+    [Tags]    threaded    system_offline
+    Log Out
+    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Element is Visible    //h2[contains(text(), "${system}[name]")]
+        Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
+        Log Out
+    END
+
+Your permissions is shown for non-owners
+    [Tags]    threaded    C41881    system_offline
+    Log Out
+    ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
+    ${users emails}=   Create List    ${users}[cloudAdmin]    ${users}[viewer]    ${users}[liveViewer]    ${users}[advancedViewer]    ${users}[custom]
+    ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
+    FOR    ${user}  ${text}  IN ZIP  ${users emails}  ${users text}
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Elements Are Visible
+           ...    ${current owner name}
+           ...    //span[contains(text(), "${system}[owner]")]
+           ...    ${YOUR ACCESS LEVEL}
+           ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),"${text}")]
+        Log Out
+    END
+
+Should show (you) for owner and (owner's name & email) for non-owners
+    [Tags]    C41881    threaded    system_offline
+    ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
+    Wait Until Element Is Visible    ${current owner name}
+    Log Out
+
+    Log in to user and system    ${users}[viewer]    ${system}[id]
+    ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
+    Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
+
+System changes state to offline if all its Servers goes offline
+    [Tags]    C41894    system_offline
+    Log Out
+
+    Log    Step 1
+    Log in to user and system    ${extra system}[owner]    ${extra system}[id]
+    ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
+    Wait Until Element Is Visible    ${current owner name}
+
+    Log    Step 2
+    Stop Docker Server    ${extra system}[cont]
+    Reload Page
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
+
+    Log    Step 3
+    Start Docker Server    ${extra system}[cont]
+    Reload Page
+    Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}

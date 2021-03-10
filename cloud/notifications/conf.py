@@ -1,9 +1,24 @@
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import caches
+from push_notifications.conf.legacy import LegacyConfig
 
 from cms.models import Asset, AssetType
-from push_notifications.conf.legacy import LegacyConfig
+
+
+CLOUD_NOTIFICATIONS_USERS_TEMPLATE = \
+    "<div>" \
+    "    {{#users_by_customization}}" \
+    "    <div class=\"panel panel-default\">" \
+    "        <div class=\"panel-heading\" onclick=\"toggleUserList('{{name}}_users')\">" \
+    "            <h3 class=\"panel-title\">{{name}}</h3>" \
+    "        </div>" \
+    "        <div class=\"panel-body\" id=\"{{name}}_users\">" \
+    "            {{users}}" \
+    "        </div>" \
+    "    </div>" \
+    "    {{/users_by_customization}}" \
+    "</div>"
 
 
 class empty(object):
@@ -11,8 +26,8 @@ class empty(object):
 
 
 class PushConfig(LegacyConfig):
-    DEFAULT_SETTINGS = django_settings.PUSH_NOTIFICATIONS_SETTINGS
     PUSH_CONFIG_CACHE = caches['push_config']
+    DEFAULT_SETTINGS = django_settings.PUSH_NOTIFICATIONS_SETTINGS
 
     def _get_application_settings(self, application_id, settings_key, error_message):
         value = self._read_from_cache(application_id, settings_key) or self.DEFAULT_SETTINGS.get(settings_key, empty)

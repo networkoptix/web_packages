@@ -1,54 +1,53 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    forwardRef,
-    ViewEncapsulation
-} from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+    Component, Input,
+    forwardRef, ViewEncapsulation
+}                                    from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator,
-    FormControl
+    Validator, FormControl
 }                                    from '@angular/forms';
 
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+
 @Component({
-    selector   : 'nx-email-input',
-    templateUrl: 'email.component.html',
-    styleUrls  : ['email.component.scss'],
-    providers  : [
+    selector    : 'nx-email-input',
+    templateUrl : 'email.component.html',
+    styleUrls   : ['email.component.scss'],
+    providers   : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxEmailComponent),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxEmailComponent),
+            multi       : true
         },
         {
-            provide    : NG_VALIDATORS,
-            useExisting: forwardRef(() => NxEmailComponent),
-            multi      : true,
-        },
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxEmailComponent),
+            multi       : true
+        }
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator {
-
-    @Input() form: any;
+export class NxEmailComponent implements ControlValueAccessor, Validator {
+    @Input() form;
     @Input() componentId: string;
     @Input() lockEmail: boolean;
+    @Input() hideErrors = false;
+    @Input() setFocus = false;
 
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    CONFIG: any = {};
-    LANG: any = {};
-
-    private value: string;
+    public value: string;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    public onTouchedCallback = () => {
     };
+
     private onChangeCallback = (_: any) => {
     };
 
@@ -60,7 +59,7 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
             };
         }
 
-        const EMAIL_REGEXP = new RegExp(this.CONFIG.emailRegex);
+        const EMAIL_REGEXP = new RegExp(this.CONFIG.credentialsValidation.emailRegex);
         if (!EMAIL_REGEXP.test(c.value)) {
             return {
                 pattern: true
@@ -70,19 +69,16 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
         return null; // valid
     }
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private language: NxLanguageProviderService) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.translations;
     }
 
-    setValue() {
+    setValue(newValue) {
         // update the form
-        this.onChangeCallback(this.value);
+        this.onChangeCallback(newValue);
         this.form.form.get(this.componentId).markAsUntouched();
-    }
-
-    ngOnInit() {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
     }
 
     /**
@@ -109,5 +105,4 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
     registerOnTouched(fn: any): void {
         this.onTouchedCallback = fn;
     }
-
 }

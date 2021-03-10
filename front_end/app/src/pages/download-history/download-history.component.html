@@ -11,13 +11,15 @@
             <ngb-tab *ngFor="let type of noteTypes"
                      [id]="type">
                 <ng-template ngbTabTitle>
-                    <span class="tab-heading">{{LANG.downloads.releasesTypes[type] || type.name}}</span>
+                    <span class="tab-heading">{{ LANG.downloads.releasesTypes[type]() || type.name}}</span>
                 </ng-template>
                 <ng-template ngbTabContent>
                     <div class="card card-default">
                         <div class="card-body" *ngIf="activeBuilds">
                             <div *ngFor="let release of activeBuilds">
-                                <nx-release [lang]="LANG" [linkbase]="linkbase" [release]="release"></nx-release>
+                                <nx-release [LANG]="LANG"
+                                            [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)" [linkbase]="linkbase"
+                                            [release]="release"></nx-release>
                             </div>
                         </div>
                     </div>

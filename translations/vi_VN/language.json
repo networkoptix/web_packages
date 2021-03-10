@@ -17,7 +17,7 @@
     "cantActivatePrefix": "Không thể kích hoạt tài khoản của bạn",
     "cantSendConfirmationPrefix": "Không thể gửi Email xác nhận",
     "notAuthorized": "Sai mật khẩu",
-    "brokenAccount": "Vấn đề không mong muốn với tài khoản. <a href=\"/restore_password\">Khôi phục tài khoản</a>",
+    "brokenAccount": "Unexpected problem with this account. <a href=\"/restore_password\">Restore account</a>",
     "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
     "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
     "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
@@ -35,14 +35,14 @@
     "passwordMismatch": "Sai mật khẩu",
     "cantEditYourself": "Không cho phép thay đổi quyền riêng tư",
     "cantEditAdmin": "Người dùng này có quyền quản trị viên",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
-    "lostConnection": "Kết nối với {{systemName}} bị mất",
+    "cantOpenClient": "%VMS_NAME% ứng dụng không được phát hiện. <a href=\"/download\">Tải xuống</a>",
+    "lostConnection": "Connection to {systemName} lost",
     "thisSystem": "hệ thống",
     "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
     "DUPLICATE_MEDIASERVER_FOUND": "Một số máy chủ liệt kê tồn tại trong cả hệ thống được chọn và hệ thống hiện tại.<br>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi Hệ thống và thử lại.",
-    "mergedSystemIsOffline": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
+    "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
     "INCOMPATIBLE": "Hệ thống đang có các phiên bản phần mềm khác nhau. Vui lòng cập nhật tất cả lên <a href=\"/download\">phiên bản mới nhất</a>.",
-    "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
+    "FAIL": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few moments or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
   },
   "common": {
@@ -61,7 +61,7 @@
     "cameraStates": {
       "offline": "Ẩn",
       "error": "Lỗi",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Đã xảy ra lỗi khi tải video này.",
       "unauthorized": "Yêu cầu xác thực",
       "noData": "Không có dữ liệu",
       "iOSVideoTooLarge": "ios không hỗ trợ video lớn hơn fullHD (2MP: 1920x1080).",
@@ -76,23 +76,23 @@
     "searchCamPlaceholder": "Tìm kiếm",
     "resolution": {
       "auto": "tự động",
-      "high": "cao (H)",
-      "low": "Cao (H)"
+      "high": "Cao",
+      "low": "Thấp"
     },
     "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
     "voiceCommands": {
       "play": "broadcast",
       "pause": "giờ nghĩ giảo lao",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "đi sống | cho tôi xem trực tiếp",
+      "view": "xem + [tên camera]",
+      "search": "tìm + [văn bản cho thanh tìm kiếm]",
       "clear search": "xóa tìm kiếm",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "mở rộng máy chủ + [tên máy chủ]",
+      "collapse server": "sập máy chủ + [tên máy chủ]",
       "expand all servers": "mở rộng tất cả các máy chủ",
       "collapse all servers": "tất cả máy chủ mất ổn định",
       "stop listening": "dừng nghe",
-      "help": "help | show commands"
+      "help": "giúp đỡ | hiển thị lệnh"
     }
   },
   "system": {

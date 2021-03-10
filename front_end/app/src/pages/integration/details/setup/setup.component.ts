@@ -1,34 +1,54 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
-import { NxConfigService }              from '../../../../services/nx-config';
 
+import { IntegrationService }           from '../../integration.service';
+import { NxMenuService }                from '../../../../menu';
+import { NxConfigService, IConfig }     from '../../../../services/nx-config';
+import { NxPageService }                from '../../../../services/page.service';
+import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
+import { SubscriptionLike }             from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'setup-component',
-    templateUrl: 'setup.component.html',
-    styleUrls: ['setup.component.scss']
+    selector    : 'setup-component',
+    templateUrl : 'setup.component.html',
+    styleUrls   : ['setup.component.scss']
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     plugin: any = {};
-
-    CONFIG: any;
+    pluginSubscription: SubscriptionLike;
 
     private setupDefaults() {
-        this.plugin = this.integrationService.getIntegrationPlugin();
-        this.menuService.setDetailsSection('how-to-setup');
-        this.CONFIG = this.configService.getConfig();
+        this.menuService.detail = 'how-to-setup';
     }
 
-    constructor(private integrationService: IntegrationService,
-                private menuService: NxMenuService,
-                private configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private pageService: NxPageService,
+        private integrationService: IntegrationService,
+        private menuService: NxMenuService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = NxLanguageProviderService.translate(
+                this.LANG.pageDescriptions.integrationSetup, {
+                    PLUGIN_NAME              : this.plugin.information?.name,
+                    PLUGIN_SHORT_DESCRIPTION : this.plugin.information?.shortDescription
+                });
+        });
     }
 
     ngOnDestroy() {
@@ -37,4 +57,3 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     onSubmit() {
     }
 }
-

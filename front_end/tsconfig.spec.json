@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "module": "commonjs",
+    "types": [
+      "jasmine",
+      "node"
+    ],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
+  },
+  "files": [
+    "app/test.ts",
+    "app/polyfills.ts"
+  ],
+  "include": [
+    "**/*.spec.ts",
+    "app/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "test",
+    "**/*.spec.js"
+  ]
+}

@@ -3,7 +3,6 @@
     <nx-page-placeholder
             *ngSwitchCase="0"
             placeholderTitle="No {{metricName}}"
-
             class="section-placeholder">
     </nx-page-placeholder>
 
@@ -33,7 +32,7 @@
                                 [ngModel]="filterModel"
                                 (ngModelChange)="modelChanged($event)"
                                 layout="compact"
-                                [placeholder]="LANG.search.Search"
+                                [placeholder]="LANG.search.Search()"
                                 ngDefaultControl>
                         </nx-search>
                     </div>
@@ -50,7 +49,7 @@
 
         <div class="gridMetricContentPanelComponent"
              *ngIf="healthLayoutService.activeEntity"
-             [ngStyle]="{'visibility': healthService.tableReady && layoutReady ? undefined : 'hidden'}">
+             [style.visibility]="healthService.tableReady && layoutReady ? undefined : 'hidden'">
 
             <div class="gridMetricContentPanelComponentWrapper pb-3">
                 <div class="mb-3 all-results-btn"

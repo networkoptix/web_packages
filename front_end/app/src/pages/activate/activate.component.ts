@@ -1,17 +1,17 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { Location }                  from '@angular/common';
+import { SessionStorageService }     from 'ngx-webstorage';
 
-import { NxUriService }              from '../../services/uri.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { SessionStorageService }     from 'ngx-store';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-activate-component',
@@ -24,19 +24,19 @@ export class NxActivateComponent implements OnInit {
     @Input() uriParam;
     @Input() uriParamCode;
 
-    location: any;
-    CONFIG: any;
-    LANG: any = {};
+    location;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     accountInfo: any = {};
-    activate: any;
-    reactivate: any;
-    activated: any;
-    code: any;
-    session: any;
-    context: any;
+    activate: Process;
+    reactivate: Process;
+    activated;
+    code;
+    session;
+    context;
     loading: boolean;
-    reactivating: any;
-    activationSuccess: any;
+    reactivating;
+    activationSuccess;
 
     private setupDefaults() {
         this.context = {
@@ -44,55 +44,60 @@ export class NxActivateComponent implements OnInit {
         };
 
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.activate);
+        this.LANG = this.languageService.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.activate?.();
 
         this.activate = this.processService.createProcess(() => {
             this.loading = true;
             return this.cloudApiService.activate(this.accountInfo.activateCode);
         }, {
-            errorCodes : {
-                notFound : () => {
-                    this.sessionStorage.set('activationSuccess', '');
+            errorCodes: {
+                notFound: () => {
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
-                notAuthorized : () => {
-                    this.sessionStorage.set('activationSuccess', '');
+                notAuthorized: () => {
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
-                accountActivated : () => {
-                    this.sessionStorage.set('activationSuccess', '');
+                accountActivated: () => {
+                    this.sessionStorage.store('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 }
             },
-            errorPrefix: this.LANG.errorCodes.cantActivatePrefix
+            errorPrefix: this.LANG.errorCodes.cantActivatePrefix?.()
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
-            this.sessionStorage.set('activationSuccess', true);
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
+            this.sessionStorage.store('activationSuccess', true);
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
-            this.uriService.updateURI('/activate/success', {}, true);
+
+            this.uriService
+                .updateURI('/activate/success', {}, true)
+                .catch(error => {
+                    console.error(error);
+                });
         });
 
         this.reactivate = this.processService.createProcess(() => {
             return this.cloudApiService.reactivate(this.accountInfo.email);
         }, {
-            errorCodes : {
-                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
-                notFound : this.LANG.errorCodes.emailNotFound
+            errorCodes: {
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated?.(),
+                notFound  : this.LANG.errorCodes.emailNotFound?.()
             },
-            holdAlerts : true,
-            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
+            holdAlerts  : true,
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix?.()
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
-            this.dialogs.notify(this.LANG.account.activationLinkSent, 'success');
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
+            this.dialogs.notify(this.LANG.account.activationLinkSent?.(), 'success');
         });
     }
 
@@ -107,9 +112,8 @@ export class NxActivateComponent implements OnInit {
                 private router: Router,
                 private languageService: NxLanguageProviderService,
                 private configService: NxConfigService,
-                private pageService: NxPageService,
+                private pageService: NxPageService
     ) {
-
         this.setupDefaults();
     }
 
@@ -118,23 +122,22 @@ export class NxActivateComponent implements OnInit {
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
 
-
         this.accountInfo = {
-            newPassword : '',
-            email       : '', // moved to init()
-            activateCode: this.uriParamCode
+            newPassword  : '',
+            email        : '', // moved to init()
+            activateCode : this.uriParamCode
         };
 
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        if (this.uriParam !== 'activating' && !this.sessionStorage.get(this.uriParam)) {
+        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
             this.activationSuccess = false;
             this.accountService.redirectToHome();
 
             return;
         } else {
-            this.sessionStorage.set('activationSuccess', '');
+            this.sessionStorage.store('activationSuccess', '');
         }
 
         this.loading = true;
@@ -143,7 +146,7 @@ export class NxActivateComponent implements OnInit {
             this.accountService.redirectAuthorised();
         }
 
-        this.accountInfo.email = this.accountService.getEmail();
+        this.accountInfo.email = this.accountService.email;
 
         if (this.accountInfo.activateCode) {
             this.accountService.logoutAuthorised();
@@ -153,7 +156,7 @@ export class NxActivateComponent implements OnInit {
 
     private checkActivate() {
         if (this.accountInfo.activateCode) {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateCode);
+            this.pageService.pageTitle = this.LANG.pageTitles.activateCode?.();
             this.activate.run();
         }
     }
@@ -162,4 +165,3 @@ export class NxActivateComponent implements OnInit {
         this.dialogs.login(this.accountService, false, true);
     }
 }
-

@@ -1,6 +1,6 @@
 Üdvözöljük!
 
-Meghívást kapott a %CLOUD_NAME%.
+Meghívást kapott a %CLOUD_NAME%-hoz.
 {{#message.message}}
 
 {{ message.message }}
@@ -9,4 +9,4 @@ Meghívást kapott a %CLOUD_NAME%.
 Kérjük, hozzon létre fiókot a %CLOUD_NAME%on
 használja az aktuális e-mail címét, és kövesse a további utasításokat.
 
-Regisztrálja fiókját ezen a linken: {{ config.portal_url }}/ register /{{ message.code }}
+Regisztrálja fiókját az alábbi linken: {{ config.portal_url }}/ register /{{ message.code }}

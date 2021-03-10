@@ -1,69 +1,76 @@
 import {
+    AfterViewInit,
     Component, ElementRef, Inject,
     OnInit, PLATFORM_ID, ViewChild,
     ViewEncapsulation
-} from '@angular/core';
-import { isPlatformBrowser, Location }           from '@angular/common';
-import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { CamerasService }                         from '../../services/cameras.service';
-import { IpvdSearchService }                      from './ipvd-search.service';
+}                                              from '@angular/core';
+import { isPlatformBrowser, Location }         from '@angular/common';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import {
+    ActivatedRoute, NavigationEnd, Router
+}                                              from '@angular/router';
+import { SubscriptionLike }                    from 'rxjs';
+import { isArray }                             from 'rxjs/internal-compatibility';
+import { delay }                               from 'rxjs/operators';
+import { UntilDestroy }                        from '@ngneat/until-destroy';
+
 import { MessageParams }             from '../../dialogs/message/message.component';
-import { NxConfigService }           from '../../services/nx-config';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
-import { SubscriptionLike }          from 'rxjs';
-import { isArray }                   from 'rxjs/internal-compatibility';
+import { NxPageService }             from '../../services/page.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUriService }              from '../../services/uri.service';
+import { IpvdSearchService }         from './ipvd-search.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxUtilsService }            from '../../services/utils.service';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector     : 'ipvd',
-    templateUrl  : 'ipvd.component.html',
-    styleUrls    : ['ipvd.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'ipvd',
+    templateUrl   : 'ipvd.component.html',
+    styleUrls     : ['ipvd.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 
-export class NxIpvdComponent implements OnInit {
-    LANG: any = {};
-    CONFIG: any = {};
+export class NxIpvdComponent implements OnInit, AfterViewInit {
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     placeholder: string;
-    data: any;
+    data;
     company: string;
     vmsName: string;
     vendors: any = [];
     resolution: string;
     itemsPerPage: number;
     query: string;
-    cameras: any;
-    analytics: any;
-    activeCamera: any;
+    cameras;
+    analytics;
+    activeCamera;
     showAll: boolean;
     hardwareTypes: any[];
-    resolutions: any;
-    camerasTable: any;
+    resolutions;
+    camerasTable;
     allowedParameters: string[];
-    filterModel: any;
+    filterModel;
     toggleCamview: boolean;
-    params: any;
+    params;
     mobileDetailMode: boolean;
     noResult: boolean;
     hasNoSearch: boolean;
-    debug: any;
-    beta: any;
+    debug;
+    beta;
     uriPath: string;
     breakpoint: string;
     showAnalytics: boolean;
+    disclaimerParams: any = {};
 
     breakpointSubscription: SubscriptionLike;
     routerSubscription: SubscriptionLike;
@@ -71,9 +78,12 @@ export class NxIpvdComponent implements OnInit {
     cameraReloadSubscription: SubscriptionLike;
     cameraGetSubscription: SubscriptionLike;
     windowSizeSubscription: SubscriptionLike;
+    offsetSubscription: SubscriptionLike;
+    getIPVDSubscription: SubscriptionLike;
 
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
+    @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -109,25 +119,34 @@ export class NxIpvdComponent implements OnInit {
         this.resolutions = [];
         this.hardwareTypes = [];
 
-        this.uriPath = '/' + this.route.snapshot.url.map(e => e.path).join('/');
+        this.uriPath = '/' + this.route.snapshot.parent.url.map(e => e.path).join('/');
+
+        this.disclaimerParams = {
+            companyName : this.CONFIG.company.name,
+            vmsName     : this.CONFIG.vmsName
+        };
     }
 
-    constructor(private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private cameraService: CamerasService,
-                private cameraSearchService: IpvdSearchService,
-                // TODO: Use dialog service when it is not being downgraded
-                private dialogs: NxDialogsService,
-                private uri: NxUriService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private breakpointObserver: BreakpointObserver,
-                private router: Router,
-                private pageService: NxPageService,
-                private accountService: NxAccountService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                @Inject(PLATFORM_ID) private platformId: object,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private cloudApi: NxCloudApiService,
+        private cameraSearchService: IpvdSearchService,
+        // TODO: Use dialog service when it is not being downgraded
+        private dialogs: NxDialogsService,
+        private uri: NxUriService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private breakpointObserver: BreakpointObserver,
+        private router: Router,
+        private pageService: NxPageService,
+        private accountService: NxAccountService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        @Inject(PLATFORM_ID) private platformId: object
     ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
+
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
@@ -149,18 +168,16 @@ export class NxIpvdComponent implements OnInit {
         this.windowSizeSubscription = this.scrollMechanicsService
             .windowSizeSubject
             .subscribe(() => {
-
-                if (this.viewContainer && this.viewContainer.nativeElement) {
-                    this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+                if (this.viewContainer?.nativeElement) {
+                    this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
                 }
-                if (this.tableContainer && this.tableContainer.nativeElement) {
+
+                if (this.tableContainer?.nativeElement) {
                     let width = this.tableContainer.nativeElement.clientWidth;
                     width = (this.activeCamera) ? width - 8 : width; /* -gutter */
-                    this.scrollMechanicsService.setElementTableWidth(width);
+                    this.scrollMechanicsService.elementTableWidth = width;
                 }
             });
-
-        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit() {
@@ -177,31 +194,61 @@ export class NxIpvdComponent implements OnInit {
             this.resetFilterModel();
         }
 
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
+        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices?.();
 
-        this.company = this.CONFIG.companyName;
+        this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
-        this.placeholder = this.LANG.search.search_ipvd;
+        this.placeholder = this.LANG.search.Search();
 
         // add hardware types and tags
         this.addFilterTags();
         this.addFilterTypes();
         this.addFilterResolutions();
 
-        this.activate();
+        this.getIPVDData();
 
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
+
+        this.offsetSubscription = this.scrollMechanicsService
+            .offsetSubject.pipe(delay(0))
+            .subscribe(() => {
+                this.scrollMechanicsService.searchViewHeight = this.searchContainer.nativeElement.clientHeight;
+            });
+    }
+
+    ngAfterViewInit() {
+        if (this.searchContainer?.nativeElement) {
+            this.scrollMechanicsService.searchViewHeight = this.searchContainer.nativeElement.clientHeight;
+        }
     }
 
     ngOnDestroy() {}
 
-    updateFilterModel() {
+    findVendorForCamera(name) {
+        const camera = this.cameras.find((camera) => {
+            return camera.model === name;
+        });
 
+        if (camera) {
+            const queryParams: Params = {};
+            queryParams.vendors = camera.vendor;
+            this.uri
+                .updateURI(this.uri.getURL(), queryParams, true)
+                .catch(error => {
+                    console.error(error);
+                });
+
+            return camera.vendor;
+        }
+
+        return '';
+    }
+
+    updateFilterModel() {
         this.filterModel.query = '';
 
         if (this.params.search && this.params.search.length > 0) {
@@ -209,26 +256,29 @@ export class NxIpvdComponent implements OnInit {
         }
 
         if (this.filterModel.tags && this.filterModel.tags.length) {
-            this.filterModel.tags.forEach(tag => tag.value = false);
+            this.filterModel.tags.forEach((tag: any) => {
+                tag.value = false;
+            });
             if (this.params.tags) {
+                const tags = {};
                 this.params.tags
                     .split(',')
                     .forEach((tagName) => {
-                        this.filterModel.tags.find((tag) => {
-                            if (tag.id === tagName) {
-                                tag.value = true;
-                            }
-                        });
+                        tags[tagName] = true;
                     });
+                this.filterModel.tags.forEach((tag) => {
+                    if (tags[tag.id]) {
+                        tag.value = true;
+                    }
+                });
             }
         }
 
         if (this.filterModel.selects && this.filterModel.selects.length) {
-            this.filterModel
-                .selects
-                .find((select) => {
+            this.filterModel.selects
+                .forEach((select) => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) => item.name === this.params[select.id]);
+                        select.selected = select.items.find((item) => item.value === this.params[select.id]);
                     } else {
                         if (!select.selected) {
                             select.selected = { value: '0', name: 'All' };
@@ -238,13 +288,19 @@ export class NxIpvdComponent implements OnInit {
         }
 
         if (this.filterModel.multiselects && this.filterModel.multiselects.length) {
-            this.filterModel
-                .multiselects
-                .find((select) => {
+            this.filterModel.multiselects
+                .forEach((select) => {
                     if (this.params[select.id]) {
                         select.selected = isArray(this.params[select.id]) ? this.params[select.id] : this.params[select.id].split(',');
                     } else {
-                        select.selected = [];
+                        if (select.id === 'vendors' && this.params.camera) { // direct navigation to camera
+                            select.selected = this.findVendorForCamera(this.params.camera);
+                            if (select.selected === '') { // not found. wrong camera model? try search...
+                                this.filterModel.search = this.params.camera;
+                            }
+                        } else {
+                            select.selected = [];
+                        }
                     }
                 });
         }
@@ -270,35 +326,35 @@ export class NxIpvdComponent implements OnInit {
             });
         }
 
-        this.filterModel = {...this.filterModel};
+        this.filterModel = { ...this.filterModel };
     }
 
     addFilterResolutions() {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
         this.filterModel.selects.push(
-                {
-                    id      : 'resolution',
-                    label   : this.LANG.search.minResolution,
-                    items   : this.resolutions,
-                    selected: this.resolutions[0]
-                });
+            {
+                id       : 'resolution',
+                label    : this.LANG.search.minResolution(),
+                items    : this.resolutions,
+                selected : this.resolutions[0]
+            });
     }
 
     addAnalyticsEvents() {
         if (this.showAnalytics && this.analytics) {
             this.filterModel.multiselects.push(
-                    {
-                        id                 : 'analytics',
-                        label              : this.LANG.search.analytics,
-                        searchLabel        : this.LANG.search.analyticsSelected,
-                        searchLabelSingular: '',
-                        items              : this.analytics
-                                                 .map(v => (
-                                                    { id: v, label: v })
-                                                 ),
-                        selected           : []
-                    });
+                {
+                    id                  : 'analytics',
+                    label               : this.LANG.search.analytics(),
+                    searchLabel         : this.LANG.search.analyticsSelected(),
+                    searchLabelSingular : '',
+                    items               : this.analytics
+                        .map(v => (
+                            { id: v, label: v })
+                        ),
+                    selected: []
+                });
         }
     }
 
@@ -317,40 +373,53 @@ export class NxIpvdComponent implements OnInit {
             this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'isAnalyticsSupported');
         }
 
-        this.filterModel.tags.forEach(tag => tag.label = this.LANG.ipvd[tag.id]);
+        this.filterModel.tags.forEach((tag: any) => {
+            tag.label = this.LANG.ipvd[tag.id]();
+        });
     }
 
     addFilterTypes() {
         this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
-            type.label = this.LANG.ipvd[type.id];
+            type.label = this.LANG.ipvd[type.id]();
         });
 
         this.filterModel.multiselects = [
             {
-                id      : 'hardwareTypes',
-                label   : this.LANG.search.hardwareTypes,
-                singular: this.LANG.search.hardwareType,
-                items   : this.hardwareTypes,
-                selected: []
+                id       : 'hardwareTypes',
+                label    : this.LANG.search.hardwareTypes(),
+                singular : this.LANG.search.hardwareType(),
+                items    : this.hardwareTypes,
+                selected : []
             }
             // vendors will be added later
         ];
     }
 
     modelChanged(model) {
-        this.filterModel = NxUtilsService.deepCopy(model);
-        this.searchVendor();
+        // Avoid unnecessary model update
+        if (!NxUtilsService.isEqual(this.filterModel, model)) {
+            this.filterModel = NxUtilsService.deepCopy(model);
+            this.searchVendor();
+        }
     }
 
-    reset() {
-        this.cameraReloadSubscription = this.cameraService
-            .reloadIPVD()
-            .subscribe();
+    getIPVDData() {
+        if (this.debug) {
+            this.cameraReloadSubscription = this.cloudApi
+                .reloadIPVD()
+                .subscribe(() => {
+                    this.activate();
+                },
+                ex => console.error(ex));
+            return;
+        }
+
+        this.activate();
     }
 
     activate() {
-        this.cameraGetSubscription = this.cameraService
+        this.getIPVDSubscription = this.cloudApi
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
@@ -358,11 +427,12 @@ export class NxIpvdComponent implements OnInit {
                 this.analytics = data.analytics;
 
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.cameraSearchService.showAnalytics = this.showAnalytics;
                 this.addAnalyticsEvents();
                 this.addFilterTags();
 
                 this.vendors = data.vendors;
-                this.vendors.sort(NxUtilsService.byParam((elm) => {
+                this.vendors.sort(NxUtilsService.byParam((elm: any) => {
                     return elm.name.toLowerCase();
                 }, NxUtilsService.sortASC));
 
@@ -370,20 +440,21 @@ export class NxIpvdComponent implements OnInit {
                 this.filterModel
                     .multiselects.unshift(
                         {
-                            id      : 'vendors',
-                            label   : this.LANG.search.vendors,
-                            singular: this.LANG.search.vendor,
-                            items   : this.vendors.map(v => (
-                                    { id: v.name, label: v.name }
+                            id       : 'vendors',
+                            label    : this.LANG.search.vendors(),
+                            singular : this.LANG.search.vendor(),
+                            items    : this.vendors.map(v => (
+                                { id: v.name, label: v.name }
                             )),
                             selected: []
                         });
 
                 this.updateFilterModel();
-                this.searchVendor();
                 // Trigger model change for search component
                 this.filterModel = { ...this.filterModel };
-            });
+                this.searchVendor();
+            },
+            ex => console.error(ex));
     }
 
     // restrict the parameters to be passed and viewed for to cam-table (based on allowedParameters)
@@ -392,11 +463,11 @@ export class NxIpvdComponent implements OnInit {
         const filteredCameras = [];
         values.forEach(camera => {
             const filteredCamera = Object.keys(camera)
-                                         .filter(key => this.allowedParameters.indexOf(key) > -1 || key === 'sortKey')
-                                         .reduce((obj, key) => {
-                                             obj[key] = camera[key];
-                                             return obj;
-                                         }, {});
+                .filter(key => this.allowedParameters.indexOf(key) > -1 || key === 'sortKey')
+                .reduce((obj, key) => {
+                    obj[key] = camera[key];
+                    return obj;
+                }, {});
             filteredCameras.push(filteredCamera);
         });
         return filteredCameras;
@@ -405,7 +476,7 @@ export class NxIpvdComponent implements OnInit {
     filterEmpty() {
         let tags = false;
         if (this.filterModel.tags) {
-            tags = this.filterModel.tags.find(tag => tag.value === true);
+            tags = this.filterModel.tags.find(tag => tag.value);
         }
 
         let multiselect = false;
@@ -418,7 +489,7 @@ export class NxIpvdComponent implements OnInit {
         let singleselect = false;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
-                singleselect = singleselect || (select.selected.value > 0); // 0 is default choice
+                singleselect = singleselect || (select.selected && select.selected.value > 0); // 0 is default choice
             });
         }
 
@@ -432,11 +503,11 @@ export class NxIpvdComponent implements OnInit {
 
         if (this.cameras && this.cameras.length) {
             if (this.filterEmpty()) {
-                const cameras = this.cameraSearchService.ipvdSearch(this.cameras, this.filterModel);
+                const filteredCameras: any = this.cameraSearchService.ipvdSearch(this.cameras, this.filterModel);
 
-                this.noResult = (cameras.length === 0);
+                this.noResult = (filteredCameras.length === 0);
                 if (!this.noResult) {
-                    this.camerasTable = this.preFilterCameraTable(cameras);
+                    this.camerasTable = this.preFilterCameraTable(filteredCameras);
                 } else {
                     this.camerasTable = [];
                 }
@@ -455,7 +526,6 @@ export class NxIpvdComponent implements OnInit {
 
                 this.params = queryParams;
             }
-
         }
     }
 
@@ -482,12 +552,19 @@ export class NxIpvdComponent implements OnInit {
         if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
             return;
         }
-        this.activeCamera = {... selectedCamera};
         this.showAll = false;
 
         const queryParams: Params = {};
         queryParams.camera = selectedCamera.model || selectedCamera.value.model;
-        this.uri.updateURI(this.uriPath, queryParams);
+
+        this.uri
+            .updateURI(this.uriPath, queryParams)
+            .then(() => {
+                this.activeCamera = { ...selectedCamera };
+            })
+            .catch(error => {
+                console.error(error);
+            });
 
         if (this.breakpointObserver.isMatched(this.breakpoint)) {
             this.mobileDetailMode = true;
@@ -495,18 +572,19 @@ export class NxIpvdComponent implements OnInit {
 
         this.toggleCamview = true;
         setTimeout(() => {
-            this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
-            this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
+            if (this.viewContainer?.nativeElement && this.tableContainer?.nativeElement) {
+                this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
+                this.scrollMechanicsService.elementTableWidth = this.tableContainer.nativeElement.clientWidth - 8/* -gutter */;
+            }
         }, 500);
     }
 
-
     openFeedback(param) {
-        const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
+        const type = (param === 'device') ? this.CONFIG.dialogs.message.type.ipvd_device : this.CONFIG.dialogs.message.type.ipvd_page;
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
-            disclaimer: this.LANG.privacyPolicy.ipvd,
-            asset: device,
+            disclaimer : this.LANG.privacyPolicy.ipvd(),
+            asset      : device
         };
         this.dialogs
             .message(this.accountService, type, data)
@@ -524,13 +602,18 @@ export class NxIpvdComponent implements OnInit {
         if (!skipUpdateURI) {
             const queryParams: Params = {};
             queryParams.camera = undefined;
-            this.uri.updateURI(this.uriPath, queryParams);
+
+            this.uri
+                .updateURI(this.uriPath, queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
 
         this.activeCamera = undefined;
         this.mobileDetailMode = false;
         this.toggleCamview = false;
 
-        this.scrollMechanicsService.setElementTableWidth(0);
+        this.scrollMechanicsService.elementTableWidth = 0;
     }
 }

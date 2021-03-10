@@ -6,30 +6,30 @@
     "emailSubject": "Du har blivit inbjuden till %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Försäljningsförfrågan för {{message.asset}}"
+    "emailSubject": "Försäljningsförfrågan för {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Teknisk fråga för {{message.asset}}"
+    "emailSubject": "Teknisk förfrågan för {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback för {{message.asset}}"
+    "emailSubject": "Feedback för {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Kamerasida återkoppling{{#message.asset}} för {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Kamerasida Feedback{{#message.asset}} för {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} har en ny version att granska"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} har en ny version att granska"
   },
   "restore_password": {
     "emailSubject": "Återställ ditt lösenord"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} inbjuder till %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videosystem {{message.system_name}} delades med dig {{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} bjuder in dig till %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videosystem {{{message.system_name}}} delades med dig{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Videosystemet {{message.system_name}} delades med dig"
+    "emailSubject": "Videosystemet {{{message.system_name}}} delades med dig"
   }
 }

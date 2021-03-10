@@ -6,9 +6,12 @@ import email.header
 import imaplib
 import os
 import re
+import socket
+import subprocess
 import time
+import uuid
+
 from datetime import date
-from email.parser import HeaderParser
 from platform import system
 from random import *
 from requests import head
@@ -17,13 +20,12 @@ from robot.api import logger
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs)
+from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
+from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr, timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
-
+from selenium.webdriver.chrome.options import Options
 
 class NoptixLibrary(object):
 
@@ -46,35 +48,51 @@ class NoptixLibrary(object):
                 return element
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
-            
+
+    def get_hidden_inner_html(self, locator):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        element = seleniumlib.driver.find_element_by_xpath(locator)
+        text = element.get_attribute('innerHTML')
+        return text
+
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
+        if self.get_os() == "MacOS":
             locator.send_keys(Keys.SHIFT, Keys.UP)
             locator.send_keys(Keys.CONTROL, Keys.INSERT)
-        else:    
+        else:
             locator.send_keys(Keys.CONTROL + 'a')
             locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
+        if self.get_os() == "MacOS":
             locator.send_keys(Keys.SHIFT, Keys.INSERT)
-        else:    
+        else:
             locator.send_keys(Keys.CONTROL + 'v')
 
     def delete_all_text(self, locator):
-        locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
-            locator.send_keys(Keys.SHIFT, Keys.UP)
-            locator.send_keys(Keys.BACKSPACE)
-        else:     
-            locator.send_keys(Keys.CONTROL + 'a')
-            locator.send_keys(Keys.BACKSPACE)
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        element = seleniumlib.find_element(locator)
+        text = seleniumlib.get_value(locator)
+        logger.debug(text)
+        element.send_keys(Keys.END)
+        for x in range(len(text)):
+            element.send_keys(Keys.BACKSPACE)
+
+    def input_content_editable_text(self, locator, text):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        element = seleniumlib.find_element(locator)
+        # locator = self.convert_locator_to_webelement(locator)
+        text = seleniumlib.get_text(locator)
+        element.send_keys(Keys.END)
+        for x in range(len(text)):
+            element.send_keys(Keys.BACKSPACE)
+        element.send_keys(text)
 
     def get_random_email(self, email):
         index = email.find('@')
-        email = email[:index] + '+' + str(randint(1, 100)) + str(time.time()) + email[index:]
+        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + email[index:]
         return email
 
     def get_many_random_emails(self, how_many, email):
@@ -87,7 +105,7 @@ class NoptixLibrary(object):
     def get_random_symbol_email(self, email):
         index = email.find('@')
         email = email[:index] + \
-            "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
+                "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
 
     def get_code_from_email_link(self, url):
@@ -104,18 +122,18 @@ class NoptixLibrary(object):
         try:
             element = seleniumlib.find_element(locator)
             value = element.value_of_css_property(styleAttribute)
-            print('style: ' + styleAttribute + ', value: ' + value)
+            logger.info('style: ' + styleAttribute + ', value: ' + value)
             return value
         except:
             not_found = f"No element found with style attribute {styleAttribute}"
-            raise AssertionError(not_found)
+        raise AssertionError(not_found)
 
     def element_style_should_be(self, locator, styleAttribute, expectedValue):
         observedValue = self.get_element_style(locator, styleAttribute)
         if observedValue == expectedValue:
             pass
         else:
-            raise AssertionError("Expected: " + expectedValue + "\nObserved: " + observedValue)
+            raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
 
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -131,19 +149,37 @@ class NoptixLibrary(object):
             except:
                 pass
             time.sleep(.2)
-        raise Exception("No element found with text " + expected)
+        raise Exception(f"No element found with text {expected}")
 
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
         timeout = timeout + time.time()
         not_found = "No element found with style " + expected
-
+        value = ""
         while time.time() < timeout:
             try:
                 value = self.get_element_style(locator, styleAttribute)
+                logger.debug(value)
                 if value == expected:
                     return
-            except:
-                pass
+            except Exception as e:
+                print(e)
+                not_found = f"{value} does not equal the expected {expected}"
+            time.sleep(.2)
+        raise AssertionError(not_found)
+
+    def wait_until_element_contains_style(self, locator, styleAttribute, expected, timeout=10):
+        timeout = timeout + time.time()
+        not_found = "No element found with style " + expected
+        value = ""
+        while time.time() < timeout:
+            try:
+                value = self.get_element_style(locator, styleAttribute)
+                logger.debug(value)
+                if expected in value:
+                    return
+            except Exception as e:
+                print(e)
+                not_found = f"{value} does not contains the expected {expected}"
             time.sleep(.2)
         raise AssertionError(not_found)
 
@@ -159,7 +195,7 @@ class NoptixLibrary(object):
                 if expected in classAttribute:
                     return
             except:
-                not_found = "No element found with class " + expected
+                not_found = f"No element found with class {expected}"
             time.sleep(.2)
         raise AssertionError(not_found)
 
@@ -175,7 +211,38 @@ class NoptixLibrary(object):
                 if expected not in classAttribute:
                     return
             except:
-                found = "Element found with class '" + expected + "' when it was not expected"
+                found = f"Element found with class '{expected}' when it was not expected"
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_table_cell_does_not_contain_text(self, locator, expected, row, column, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+
+        while time.time() < timeout:
+            try:
+                text = seleniumlib.get_table_cell(locator, row, column)
+                if text != expected:
+                    return
+            except:
+                found = f"Table cell still had '{expected}' in it."
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_number_of_tabs_are_open(self, number, timeout=30):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+        while time.time() < timeout:
+            try:
+                handles = seleniumlib.get_window_handles()
+                logger.debug(len(handles))
+                logger.debug(number)
+                if str(len(handles)) == str(number):
+                    return
+            except:
+                found = f"Looking for {number} tabs, found {len(handles)} tabs."
             time.sleep(.2)
         raise AssertionError(found)
 
@@ -194,7 +261,7 @@ class NoptixLibrary(object):
         navArrows = "//div[@class='nav-arrow']/span"
         logger.debug('navArrows: ' + navArrows)
 
-        locators = locator+navArrows
+        locators = locator + navArrows
         logger.debug('locators: ' + locators)
 
         # 'rotate(45deg)'
@@ -202,8 +269,8 @@ class NoptixLibrary(object):
         # 'rotate(-45deg)'
         neg = 'matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, 0)'
 
-        logger.debug('pos: '+pos)
-        logger.debug('neg: '+neg)
+        logger.debug('pos: ' + pos)
+        logger.debug('neg: ' + neg)
 
         # First, find parent element
         to = timeout + time.time()
@@ -315,7 +382,8 @@ class NoptixLibrary(object):
 
     def check_file_exists(self, url):
         linkInfo = head(url)
-        if int(linkInfo.status_code) == 200: #and int(linkInfo.headers['Content-Length']) > 1000:
+        print(linkInfo)
+        if int(linkInfo.status_code) == 200 and 'Content-Length' in linkInfo.headers.keys() and int(linkInfo.headers['Content-Length']) > 1000:
             return
         else:
             raise Exception("File does not appear to be available.")
@@ -360,36 +428,128 @@ class NoptixLibrary(object):
         if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
+    # def create_custom_network(self, network_name, num, internal=False):
+    #     client = docker.from_env()
+    #     ipam_pool = docker.types.IPAMPool(
+    #         subnet=f'192.28.{num}.0/24',
+    #         iprange=f'192.28.{num}.0/24',
+    #         gateway=f'192.28.{num}.254'
+    #     )
+    #     ipam_config = docker.types.IPAMConfig(
+    #         pool_configs=[ipam_pool]
+    #     )
+    #     net = client.networks.create(
+    #         f'{network_name}',
+    #         driver='bridge',
+    #         ipam=ipam_config,
+    #         internal=internal
+    #     )
+    #
+    #     return net.id
+
+    # def remove_custom_network(self, network_id):
+    #     client = docker.from_env()
+    #     net = client.networks.get(network_id)
+    #     net.remove()
+
     def build_image(self, env):
         version = ""
+        suffix = "test"
         if env == "https://cloud-test.hdw.mx":
-            version = "4.1.0.30149"
+            version = "4.1.0.30618"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
         elif env == "https://test4.cloud.hdw.mx":
             version = "4.1.0.30298"
+        elif env == "https://dev2.cloud.hdw.mx":
+            version = "4.1.0.30308"
+            suffix = "dev"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
-                            tag="mediaserver",
-                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
+                                   tag="mergemediaserver",
+                                   buildargs={
+                                       "mediaserver_deb": f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
 
-    def run_container(self, image, port, network):
-        tmp = {'/run':'', '/run/lock':''}
-        vol = {'/sys/fs/cgroup': {
-                    'bind':'/sys/fs/cgroup',
-                    'mode':'rw'}
-                }
-        prt = {7001:port}
+    def get_image_id(self, image_name):
         client = docker.from_env()
-        cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=time.time())
-        return cont
+        image = client.images.get(image_name)
+        return image.id
+
+    @staticmethod
+    def get_random_mac():
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
+        return random_mac
+
+    @staticmethod
+    def is_port_in_use(port):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(('localhost', port)) == 0
+
+    @staticmethod
+    def get_random_port():
+        in_use = True
+        while in_use:
+            port = random_port()
+            in_use = NoptixLibrary.is_port_in_use(port)
+        return port
+
+    def run_container(self, image_name, port, network='host'):
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
+        if network == 'host':
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always -e PORT={port} --network={network} -t {image_name}'
+        else:
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always --mac-address={random_mac} -p {port}:7001 --network={network} -t {image_name}'
+
+        subprocess.run(cmd, shell=True)
+
+        client = docker.client.from_env()
+        running_containers = client.containers.list()
+        for c in running_containers:
+            if c.name == f'{image_name}_{port}':
+                return c.name
+        else:
+            return 'Container is not running'
+
+    def start_container(self, name):
+        client = docker.client.from_env()
+        container = client.containers.get(name)
+        running_containers = client.containers.list()
+        if container not in running_containers:
+            container.start()
+            time.sleep(10)
+
+    def stop_container(self, name, remove=False):
+        client = docker.from_env()
+        container = client.containers.get(name)
+        running_containers = client.containers.list()
+        if container in running_containers:
+            container.stop()
+        if remove:
+            all_containers = client.containers.list(all=True)
+            if container in all_containers:
+                container.remove()
+
+    def get_container_id(self, name):
+        """ First 12 symbols of the container id """
+        client = docker.from_env()
+        container = client.containers.get(name)
+        all_containers = client.containers.list(all=True)
+        if container in all_containers:
+            return container.id[:12]
+        else:
+            return 'Container not found'
 
     def stop_containers(self, allContainers=True):
         client = docker.from_env()
         conts = client.containers.list()
         if allContainers:
             for cont in conts:
-                cont.stop()
+                if "mergemediaserver" in cont.name:
+                    cont.stop()
         else:
             conts[0].stop()
 
@@ -399,6 +559,93 @@ class NoptixLibrary(object):
 
     def remove_images(self):
         client = docker.from_env()
-        imgs = client.images.list()
+        imgs = client.images.list(name="mergemediaserver")
         for img in imgs:
             client.images.remove(img.id)
+
+    def chrome_options_for_push_notifications(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-infobars")
+        options.add_argument("start-maximized")
+        options.add_argument("--disable-extensions")
+        # options.add_argument("--disable-gpu")
+        # options.add_argument("--headless")
+        options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.notifications": 1,
+        })
+        return options
+
+    def push_notifications_swarm(self, slaves, users, ramp, seconds):
+        txtFile = str(uuid.uuid1())
+        f = open(f"{txtFile}.txt", "w+")
+        f.write("1\n")
+        f.close()
+        os.environ['LOCUSTTEXT'] = txtFile
+        users = int(users)
+        ramp = int(ramp)
+        slaves = int(slaves)
+        seconds = int(seconds)
+        #        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
+        #        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
+        cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"
+        print(cmd)
+        os.system(cmd)
+
+    def push_notification_pabot_command(self, max):
+        txtFile = str(uuid.uuid1())
+        f = open(f"{txtFile}.txt", "w+")
+        f.write("LOG OF RESPONSES\n\n")
+        f.close()
+        os.environ['LOCUSTTEXT'] = txtFile
+        cmd = f"pabot --testlevelsplit --processes 10 --variable max:{max} --outputdir Load-Testing Load-Testing/push_notifications_pabot.robot"
+        #       print(cmd)
+        os.system(cmd)
+
+    def systems_to_check(self, systemsCount):
+        return min(4, systemsCount)
+
+    def show_additional(self, systemTileCount, systemTilesToShow):
+        return systemTileCount > systemTilesToShow
+
+    def get_tiles_to_show(self, systemCount, maxSystems):
+        return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
+        
+    def check_grid_size(self, gridSize, tileSize, columns):
+        return gridSize > (tileSize * columns)
+
+    def check_if_match_and_criteria(self, locator, criteria):
+        queries = set(criteria.lower().split())
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                matches = set()
+                for highlight in highlights:
+                    matches.add(highlight.get_attribute('innerHTML').lower())
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+            if len(queries - matches) > 0 or len(matches - queries) > 0:
+                raise InvalidArgumentException("Matches found don't reflect search")
+
+        return True
+
+    def check_if_match_or_criteria(self, locator, criteria):
+        queries = criteria.lower().split("|")
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                for highlight in highlights:
+                    if highlight.get_attribute('innerHTML').lower() not in queries:
+                        raise InvalidArgumentException("Matches found don't reflect search")
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+        return True

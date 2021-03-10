@@ -1,10 +1,10 @@
 *** Settings ***
-Resource          ../ipvd_resource.robot
+Resource          resource.robot
 Suite Setup       Open IPVD Page
 Test Template     Test Submit Feedback Message
 Test Teardown     NONE
 Suite Teardown    Close All Browsers
-Force Tags        form    Threaded File
+Force Tags        form    Threaded
 
 *** Variables ***
 ${url}                  ${ENV}

@@ -1,53 +1,49 @@
-@import '../../../styles/typography';
-@import '../../../../styles/theme_variables';
-@import '~bootstrap/scss/bootstrap';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as variables;
+@use '../../../styles/buttons' as buttons;
+@use 'bootstrap_utils' as bootstrap;
 
 nx-block {
-  .user-email,
-  .system-name {
-    font-family: $font-family-medium;
-  }
+	.user-email,
+	.system-name {
+		font-family : variables.$font-family-medium;
+	}
 
-  .user-name,
-  .system-owner {
-    @extend #regular13;
-  }
+	.user-name,
+	.system-owner {
+		@include typography.regular13dark9;
+	}
 
-  .name {
-    font-family: $font-family-bold;
-  }
+	.name {
+		font-family : variables.$font-family-bold;
+	}
 }
 
-.fixed-sidebar{
-  @include media-breakpoint-down(sm) {
-    height: auto !important;
+.fixed-sidebar {
+	margin        : 0 !important;
+	padding-left  : 1rem !important;
+	padding-right : 0 !important;
+
+  @include bootstrap.media-breakpoint-down(lg) {
+    height: auto;
+    padding-right : 1rem !important;
   }
 
   // replicate col-md-4
-  @include media-breakpoint-up(md) {
+  @include bootstrap.media-breakpoint-up(lg) {
     position: fixed;
     left: 0;
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 3)
+    width: calc((100% - #{variables.$scrollbar-height}) / 3)
   }
 
   // replicate col-xl-3
-  @include media-breakpoint-up(xl) {
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4);
-    max-width:  calc((#{$fluid-container-max-width} - #{$grid-gutter-width}) / 4);
+  @include bootstrap.media-breakpoint-up(xl) {
+    width: calc((100% - #{variables.$scrollbar-height}) / 4);
+    max-width:  calc(#{variables.$fluid-container-max-width} / 4);
   }
   nx-menu {
-    max-height: 100%;
+    height: 100%;
   }
 }
 
-//.fill-screen-height {
-//  @include media-breakpoint-up(md) {
-//    height: calc(100vh - 80px);
-//  }
-//}
-//
-//.fill-screen-height-alert {
-//  @include media-breakpoint-up(md) {
-//    height: calc(100vh - 116px);
-//  }
-//}
+

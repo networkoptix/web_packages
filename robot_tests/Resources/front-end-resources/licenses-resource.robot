@@ -1,0 +1,205 @@
+*** Keywords ***
+LM Suite Set Up
+    FOR   ${i}    IN RANGE    1    4
+        ${server}=   Setup Docker Server
+        Set Suite Variable    ${cont ${i}}    ${server}[name]
+        Set Suite Variable    ${cont id ${i}}    ${server}[id]
+        Set Suite Variable    ${LM PORT ${i}}    ${server}[port]
+        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
+        Set Suite Variable    ${server ${i}}    ${server name}
+        ${sys id}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${LM PORT ${i}}    System ${i}    ${LM OWNER}    ${BASE PASSWORD}
+        Set Suite Variable    ${sys id ${i}}    ${sys id}
+        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${i}}   ${LM HOST}
+    END
+    Sleep    120
+    Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
+    Sleep    90
+
+    FOR    ${role}    IN    @{LM USERS.keys()}
+        Share    ${cloud auth}    ${sys id 1}    ${role}    ${LM USERS}[${role}]
+    END
+
+    Open Browser and go to URL    ${ENV}
+
+LM Suite Teardown
+    ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
+    FOR   ${sys id}    IN    @{systems}
+        Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys id}
+    END
+    FOR   ${i}    IN RANGE    1    4
+        Delete Docker Server    ${cont ${i}}
+    END
+    Close All Browsers
+
+LM Test Restart
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
+    Run Keyword If    ${status}    Log Out via API
+    FOR    ${i}    IN RANGE    1    4
+        ${port}=   Start Docker Server    ${cont ${i}}
+        Set Suite Variable    ${LM PORT ${i}}    ${port}
+        Sleep    10
+        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${lm port ${i}}    ${LM HOST}
+    END
+
+Remove all keys from system
+    [Arguments]    ${port}    ${name}
+    ${licenses}=   Get Licenses    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}
+    FOR    ${lic}    IN    @{licenses}
+        Remove License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]
+    END
+    ${port}=   Restart Docker Server    ${port}    ${name}    ${CLOUD AUTH}
+    [Return]    ${port}
+
+Open Licenses Page
+    Wait Until Element Is Visible    ${LICENSES LINK}
+    Click Link    ${LICENSES LINK}
+
+Validate Licenses Page
+    [Documentation]    trial left = activation of trial license is available, clean = no regular keys activated
+    [Arguments]    ${several servers}=${False}    ${trial left}=${False}    ${clean}=${True}
+    Wait Until Elements Are Visible
+    ...    ${NEW LICENSE HEADER}
+    ...    ${LICENSE KEY INPUT}
+    ...    ${ACTIVATE BUTTON}
+    ...    timeout=90
+
+    Run Keyword If    ${several servers}    Wait Until Elements Are Visible
+        ...    ${BIND TO SERVER DROPDOWN}
+        ...    ${SERVER MUST BE AVAILABLE}
+        ...    timeout=90
+        ...    ELSE    Wait Until Elements Are Not Visible
+             ...    ${BIND TO SERVER DROPDOWN}
+             ...    ${SERVER MUST BE AVAILABLE}
+
+    Run Keyword If    ${trial left}    Wait Until Elements Are Visible
+        ...    ${ACTIVATE TRIAL TEXT}
+        ...    ${ACTIVATE TRIAL BUTTON}
+        ...    timeout=90
+        ...    ELSE    Wait Until Elements Are Not Visible
+             ...    ${ACTIVATE TRIAL TEXT}
+             ...    ${ACTIVATE TRIAL BUTTON}
+
+    Run Keyword If    ${clean}    Wait Until Elements Are Not Visible
+        ...    ${LICENSES SUMMARY BLOCK}
+        ...    ${LICENSES SUMMARY HEADER}
+        ...    ${LICENSES SUMMARY THEAD}
+        ...    ${LICENSES SUMMARY RECORD}
+        ...    ELSE    Wait Until Elements Are Visible
+            ...    ${LICENSES SUMMARY BLOCK}
+            ...    ${LICENSES SUMMARY HEADER}
+            ...    ${LICENSES SUMMARY THEAD}
+            ...    ${LICENSES SUMMARY RECORD}
+            ...    timeout=90
+
+Activate Key
+    [Arguments]    ${key}    ${success}=${True}    ${server name}=${EMPTY}    ${error text}=${EMPTY}
+    Input Text    ${LICENSE KEY INPUT}    ${key}
+    Run Keyword Unless    '${server name}' == '${EMPTY}'    Run Keywords
+    ...    Click Button    ${BIND TO SERVER DROPDOWN}
+    ...    AND    Sleep    2
+    ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
+    Sleep    2    # To avoid clicking the button before key is completely input
+    Click Button    ${ACTIVATE BUTTON}
+    Run Keyword If    ${success}    Run Keywords
+        ...    Check For Alert    ${LICENSE IS ACTIVATED TEXT}
+        ...    AND    Verify license is listed first    ${key}
+        ...    AND    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(@class, "input-error")]
+    Run Keyword Unless    '${error text}' == '${EMPTY}'   Validate Input Error     ${error text}
+
+Activate Trial
+    Wait Until Elements Are Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
+    Slow    Click Button    ${ACTIVATE TRIAL BUTTON}    timeout=1
+    Check For Alert    ${TRIAL LICENSE ACTIVATED TEXT}
+    Wait Until Elements Are Not Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
+#    Commented out due to CLOUD-5714
+#    ${input val}=   Get Formatted Key Input
+#    Should Be Equal As Strings    ${input val}    ${EMPTY}
+
+Get Formatted Key Input
+    ${formatted key}=   Get Hidden Inner HTML    ${FORMATTED KEY}
+    [Return]    ${formatted key}
+
+Validate Input Error
+    [Arguments]    ${error text}
+    Wait Until Element Is Visible   ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]
+    ${class}=   Get Element Attribute    ${LICENSE KEY INPUT}    class
+    FOR    ${val}    IN    ng-dirty    ng-touched    ng-invalid
+        Should Contain    ${class}    ${val}
+    END
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
+
+Validate Input Normal State
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    rgba(18, 21, 23, 1)
+    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    rgb(47, 162, 219)
+
+# Licenses Summary
+Number of Channels
+    [Arguments]      ${type}
+    ${num}=   Get Text    ${LICENSES SUMMARY RECORD}//td[contains(text(), "${type}")]/following-sibling::td[1]
+    ${num}=   Convert To Integer    ${num}
+    [Return]    ${num}
+
+Number of Channels Available
+    [Arguments]      ${type}
+    ${num}=   Get Text    ${LICENSES SUMMARY RECORD}//td[contains(text(), "${type}")]/following-sibling::td[2]
+    ${num}=   Convert To Integer    ${num}
+    [Return]    ${num}
+
+Validate Summary Record
+    [Arguments]    ${type}    ${activated}    ${available}
+    ${act}=   Number of Channels    ${type}
+    ${av}=   Number of Channels Available    ${type}
+    Should Be Equal As Numbers    ${act}    ${activated}
+    Should Be Equal As Numbers    ${av}    ${available}
+
+# Licenses Details
+Verify license is listed first
+    [Arguments]    ${key}
+    ${first license}=   Get Text    ${FIRST LICENSE}
+    Should Be Equal As Strings    ${first license}    ${key}
+
+Get Key Server
+    [Arguments]    ${key}
+    ${server path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
+    ${server}=   Get Text    ${server path}
+    ${class}=   Get Element Attribute    ${server path}    class
+    Run Keyword If    '''${server}''' == '''Server not found'''    Run Keywords
+        ...    Should Contain    ${class}    error
+        ...    AND    Wait Until Element Has Style    ${server path}    color    ${ERROR COLOR WITH OPACITY}
+    [Return]    ${server}
+
+Get Key Status
+    [Arguments]    ${key}
+    ${status path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
+    ${status}=   Get Text    ${status path}
+    ${class}=   Get Element Attribute    ${status path}    class
+    Run Keyword If    '${status}' in ['Error', 'Expired']    Run Keywords
+        ...    Should Contain    ${class}    error
+        ...    AND    Wait Until Element Has Style    ${status path}    color    ${ERROR COLOR WITH OPACITY}
+    [Return]    ${status}
+
+Validate License Info
+    [Documentation]   Verify the key's info on server is the same as on cloud
+    [Arguments]    ${key}    ${status}=OK    ${server num}=1
+    ${key info}=   Get key info from server    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${server num}}    ${key}
+    ${key params}=   Get Child WebElements    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]
+
+    @{supp_params}=   Create List    Status    Server
+    FOR    ${p}    IN    @{key params}
+        ${style}=   Get Element Attribute    ${p}    style
+        ${visible}=   Run Keyword And Return Status    Should Not Contain    ${style}    display: none
+        Run Keyword Unless    ${visible}    Continue For Loop
+
+        ${title}=   Get Element Attribute    ${p}    title
+        @{kv}=  Split String    ${title}    separator=-
+        ${k}=   Set Variable    ${kv}[0]
+        ${v}=   Set Variable    ${kv}[1]
+        Run Keyword Unless    $k in $supp_params   Should Be Equal As Strings    ${v}    ${key info}[${k}]
+    END
+
+    ${key status}=   Get Key Status    ${key}
+    ${key server}=   Get Key Server    ${key}
+    Should Be Equal As Strings    ${key status}    ${status}
+    Should Be Equal As Strings    ${key server}    ${server ${server num}}

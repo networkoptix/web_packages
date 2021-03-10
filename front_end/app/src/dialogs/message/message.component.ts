@@ -1,15 +1,16 @@
 import {
     Component, Inject, Input, OnInit,
     Renderer2, ViewChild
-} from '@angular/core';
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }    from '@angular/forms';
-import { NxConfigService }           from '../../services/nx-config';
-import { WINDOW }                    from '../../services/window-provider';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NgForm }                    from '@angular/forms';
 
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { WINDOW }                    from '../../services/window-provider';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 export interface MessageParams {
     disclaimer: string;
@@ -25,9 +26,9 @@ interface Subject {
 }
 
 @Component({
-    selector: 'nx-modal-message-content',
-    templateUrl: 'message.component.html',
-    styleUrls: []
+    selector    : 'nx-modal-message-content',
+    templateUrl : 'message.component.html',
+    styleUrls   : []
 })
 export class MessageModalContent implements OnInit {
     @Input() account;
@@ -35,11 +36,11 @@ export class MessageModalContent implements OnInit {
     @Input() data;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
-    config: any;
     placeholder: string;
-    sendMessage: any;
+    sendMessage: Process;
     userName: string;
     userEmail: string;
     message: string;
@@ -52,31 +53,31 @@ export class MessageModalContent implements OnInit {
 
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
-    constructor(private activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private language: NxLanguageProviderService,
-                private configService: NxConfigService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                @Inject(WINDOW) private window: Window,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.placeholder = '';
         this.subject = '';
         this.subjectMessage = '';
         this.url = this.window.location.href;
-        this.config = configService.getConfig();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
-        this.LANG = this.language.getTranslations();
-
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
 
-            return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
+            return this.account.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail);
         }, {
-            successMessage: this.LANG.dialogs.message.sent
+            successMessage: this.LANG.dialogs.message.sent?.()
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -88,20 +89,21 @@ export class MessageModalContent implements OnInit {
 
     initForm() {
         this.placeholder = '';
-        if (this.messageType === this.config.messageType.ipvd_page) {
-            this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
+        if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
+            this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
-        if (this.messageType !== this.config.messageType.integration) {
-            this.title = title.replace('{{asset}}', this.data.asset);
+
+        if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
+            this.title = NxLanguageProviderService.translate(title, { asset: this.data.asset });
         } else {
-            this.title = title.replace('{{companyName}}', this.data.to);
+            this.title = NxLanguageProviderService.translate(title, { companyName: this.data.to });
         }
-        this.subjects = this.config.messageSubjects[this.messageType].map((subject) => {
+        this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
-                value: subject,
-                name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
+                value : subject,
+                name  : NxLanguageProviderService.translate(this.LANG.dialogs.message.subject[subject], { asset: this.data.asset })
             };
         });
 

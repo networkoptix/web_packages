@@ -40,23 +40,14 @@ if [[ ! $PWD =~ $REPO ]]; then
         echo "Blindly Copying cloud_portal"
         rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
     fi
-
-    mkdir -p webadmin
-    pushd webadmin
-        [ -d 'app/styles' ] && rm -rf app/styles
-        mkdir -p app/styles && cp -pr $VMS_REPOSITORY/webadmin/app/styles/* "$_"
-
-        [ -e 'package.json' ] && rm -rf 'package.json'
-        cp $VMS_REPOSITORY/webadmin/package.json ./
-    popd
-    cd cloud_portal
+    pushd cloud_portal
 else
     echo "In repository skip copying sources"
-    cd $VMS_REPOSITORY/cloud_portal
+    pushd $VMS_REPOSITORY/cloud_portal
 fi
 
 echo "pip install requirements"
-[ ! -d "env" ] && virtualenv env -p python3.7
+[ ! -d "env" ] && virtualenv env -p python3
 . ./env/bin/activate
 pip install -r build_scripts/requirements.txt
 
@@ -64,13 +55,22 @@ pip install -r build_scripts/requirements.txt
 pushd front_end
     echo "npm install cloud portal"
     npm install
+
+    echo "Auditing npm packages"
+    AUDIT=$(npm audit | grep -E "(High|Medium)" || true)
+    if [[ "$AUDIT" != "" ]]
+    then
+        echo "Some npm packages are out of date. Please notify the webteam."
+        exit 1
+    fi
 popd
-pushd ../webadmin
-    echo "npm install webadmin"
+
+pushd cloud
+    echo "npm install cloud portal backend"
     npm install
 popd
 
-cd build_scripts
+pushd build_scripts
 
 TARGET_DIR="../cloud/static"
 
@@ -86,11 +86,14 @@ do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
     ./build_skin.sh $SKIN $VMS_REPOSITORY
+    if [ -n "$LOCAL_ENV" ]; then
+      break
+    fi
 done
 
 cp ../cloud/cloud/cloud_portal.yaml $TARGET_DIR/_source
 
-BAN_LIST="nx\ |nxvms"
+BAN_LIST="^nx\ |nxvms"
 echo "Checking files for mentions of nx with the following patterns: ${BAN_LIST}"
 branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif},{commonPasswordsList,downloads}.json} ${TARGET_DIR}/_source) || true
 if [[ -z ${branding} ]]
@@ -104,6 +107,14 @@ else
     done
     echo -e "\nPlease notify Boris and Web Team!"
     exit 1
+fi
+
+echo "Checking mustache templates"
+if ! python check_mustache_templates.py; then
+    echo "There were template translation errors. Please notify the web team and Boris"
+    # exit 1 # Will add way to notify admins
+else
+    echo "No template errors"
 fi
 
 echo "Cloud portal build is finished"

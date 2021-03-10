@@ -1,3 +1,5 @@
+@use '../../../styles/theme_variables' as *;
+
 .placeholder {
     &-wrapper {
         height   : 200px;
@@ -8,6 +10,10 @@
         height    : 30px;
         display   : flex;
         transform : translateY(-50%);
+        &.merge-wrapper {
+            height: 86px;
+            transform: translateY(+20%);
+        }
     }
 
     &.small {
@@ -26,5 +32,20 @@
     }
     &.hm-camera-preview{
         height: 177px;
+    }
+    &.generic-camera-preview{
+        height: 120px;
+        .placeholder-preloader {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: auto 0;
+        }
+        .circleG {
+            background: $light10;
+            margin: auto 3px;
+            height: 8px !important;
+            width: 8px !important;
+        }
     }
 }

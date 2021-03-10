@@ -3,12 +3,13 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Open New Browser and Reset DB On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keywords    Close All Browsers
 Force Tags        Threaded
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Restart
@@ -16,8 +17,6 @@ Restart
 
 Open New Browser and Reset DB On Failure
     Close Browser
-    Run Keyword If Test Failed    Clean up random emails
-    Run Keyword If Test Failed    Clean up email noperm
     Open Browser and go to URL    ${url}
 
 Clear Register Fields
@@ -48,7 +47,7 @@ Should open register page in anonymous state by clicking Register button on home
     Open Browser and go to URL    ${url}
     Wait Until Element Is Visible    ${CREATE ACCOUNT BODY}
     Click Link    ${CREATE ACCOUNT BODY}
-    Location Should Be    ${url}/register
+    Wait Until Location Is    ${url}/register
 
 #I am assuming this means directly going to the /register url and not clicking a button
 Should open register page in anonymous state
@@ -85,9 +84,10 @@ With valid inputs no errors are displayed
     Click Element    ${REGISTER FORM}
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email" and contains(text(),'${EMAIL INVALID TEXT}')]
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-    @{list}    Set Variable    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD SPECIAL CHARS}    ${PASSWORD TOO SHORT}    ${PASSWORD TOO COMMON}    ${PASSWORD IS WEAK}    ${EMAIL INVALID}
-    : FOR    ${element}    IN    @{list}
-    \    Element Should Not Be Visible    ${element}
+    @{list}    Set Variable    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD SPECIAL CHARS}    ${PASSWORD IS WEAK}    ${EMAIL INVALID}
+    FOR    ${element}    IN    @{list}
+            Element Should Not Be Visible    ${element}
+    END
 
 Displays password masked, shows password and changes eye icon when clicked
     [tags]    C24211
@@ -121,42 +121,45 @@ Should respond to Tab key
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
+    Sleep    1
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
-    Press Keys    ${REGISTER FIRST NAME INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
-    Press Keys    ${REGISTER LAST NAME INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER EMAIL INPUT}
     Sleep    1
-    Press Keys    ${REGISTER EMAIL INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER PASSWORD INPUT}
-    Press Keys    ${REGISTER PASSWORD INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
-    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"checked")]
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
-    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
+# Press keys ${SPACE} doesn't really hit space -> replaced by ASCII code
+    Press Keys    None    SPACE
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[@class="tick checked"]
+    Press Keys    None    SPACE
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[contains(@class,"unchecked")]
 
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    Press Keys    None    TAB
     get locations
-    Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
+    Press Keys    None    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[1]
+    Switch Window    ${tabs}[1]
     Location Should Be    ${url}${TERMS URL}
-    Switch Window    @{tabs}[0]
-    Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
+    Switch Window    ${tabs}[0]
+    Press Keys    None    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
+    Press Keys    None    ENTER
+    Sleep    5
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[3]
+    Switch Window    ${tabs}[2]
     Location Should Be    ${PRIVACY POLICY URL FULL}
-    Switch Window    @{tabs}[0]
+    Switch Window    ${tabs}[0]
 
     Clear Register Fields
-    Press Keys    ${PRIVACY POLICY LINK}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
-    Press Keys    ${CREATE ACCOUNT BUTTON}    ENTER
+    Press Keys    None    ENTER
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 
@@ -167,7 +170,7 @@ Should open Terms and conditions in a new page
     Click Link    ${TERMS AND CONDITIONS LINK}
     Sleep    2    #This is specifically for Firefox
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[1]
+    Switch Window    ${tabs}[1]
     Location Should Be    ${url}/content/eula
 
 Should open Privacy Policy in a new page
@@ -177,12 +180,11 @@ Should open Privacy Policy in a new page
     Click Link    ${PRIVACY POLICY LINK}
     Sleep    2    #This is specifically for Firefox
     ${windows}    Get Window Handles
-    Switch Window    @{windows}[1]
+    Switch Window    ${windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 Should suggest user to create new account, if he was logged in and goes to registration link
     Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
@@ -205,14 +207,14 @@ Should not display promo-block, if user goes to registration not from native app
     Element Should Not Be Visible    ${JUMBOTRON}
 
 Should remove promo-block on registration form successful submitting form when from=client
-    [Tags]    qwe
+    [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=client
     Validate Register Success    ${url}/register/success?from=client
     Element Should Not Be Visible    ${JUMBOTRON}
 
 Should remove promo-block on registration form successful submitting form when from=mobile
-    [Tags]    qwe
+    [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=mobile
     Validate Register Success    ${url}/register/success?from=mobile
@@ -230,24 +232,24 @@ Should not allow to access /register/success /activate/success by direct input
 Cannot register email that is already registered
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    hamill    ${email}    ${password}
+    Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
+    Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Check registration email links, colors, cloud name, and user name
-    [tags]    C24211
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${random email}    ${password}
+    [tags]    C24211    C43021    Customizations
+    ${email}    Get Random Email    ${BASE EMAIL}
+    Check Language Anonymous
+    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
 
@@ -257,31 +259,34 @@ Check registration email links, colors, cloud name, and user name
 
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    Nx Cloud
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
     ${links}    Get Links From Email    ${email}
     @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate
-    : FOR    ${link}  IN  @{links}
-    \    check in list    ${expected links}    ${link}
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
     Delete Email    ${email}
     Close Mailbox
 
-Check automatic loggout when registering new account while logged in
+Check automatic logout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
-    Validate Log In
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
+    Validate Log Out
     Wait Until Location Is    ${ENV}/register
     Wait Until Elements Are Visible    ${REGISTER FORM}

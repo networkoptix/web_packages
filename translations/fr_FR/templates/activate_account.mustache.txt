@@ -1,8 +1,8 @@
 Bonjour {{message.userFullName}},
 
-  S.V.P ouvrir le lien ci-dessous pour confirmer votre courriel et activer le compte.
+  S. V. P ouvrir le lien ci-dessous pour confirmer votre email et activer le compte.
 
 {{config.portal_url}}/activer/{{message.code}}
 
-Si vous n'avez pas enregistré sur %CLOUD_NAME%, ignorez ce courriel.
+Si vous n'avez pas enregistré sur %CLOUD_NAME%, ignorez cette email.
 Ne partagez pas le message ou le lien avec qui que ce soit.

@@ -1,25 +1,23 @@
-@import '../../styles/custom/custom_palette';
-@import '../../styles/theme_palette';
-@import '../../styles/theme_variables';
-@import 'mixins';
-@import 'typography';
+@use './typography';
+@use '../../styles/theme_variables' as *;
+@use './mixins';
 
 .form-control {
-    display          : block;
-    width            : 100%;
-    height           : 32px;
-    font-size        : rem(14px);
-    line-height      : 1.428571429;
-    color            : $dark9;
-    background-color : $light1;
-    background-image : none;
-    border           : 1px solid $light6;
-    border-radius    : 2px;
-    transition       : none;
-    box-shadow       : none;
-    padding          : $padding-base-vertical $padding-input-horizontal;
+    display          : block !important;
+    width            : 100% !important;
+    height           : 32px !important;
+    font-size        : rem(14px) !important;
+    line-height      : 1.428571429 !important;
+    color            : $dark9 !important;
+    background-color : $light1 !important;
+    background-image : none !important;
+    border           : 1px solid $light6 !important;
+    border-radius    : 2px !important;
+    transition       : none !important;
+    box-shadow       : none !important;
+    padding          : $padding-base-vertical $padding-input-horizontal !important;
 
-    @include placeholder ();
+    @include mixins.placeholder ();
 
     &[disabled], &[readonly],
     fieldset[disabled] & {
@@ -39,9 +37,9 @@
         box-shadow   : none;
     }
 
-    &[class*="ng-invalid"]:not(.ng-untouched) {
-        border-color : $error;
-        color        : $error;
+    &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
+        border-color : $error !important;
+        color        : $error !important;
 
         + .input-group-addon {
             border-color     : transparent;
@@ -51,10 +49,17 @@
 }
 
 .form-component {
+    &.ng-untouched {
+        input {
+            border-color : $light6 !important;
+            color        : $dark9 !important;
+        }
+    }
+
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
-            border-color : $error;
-            color        : $error;
+            border-color : $error !important;
+            color        : $error !important;
 
             + .input-group-addon {
                 border-color     : transparent;
@@ -62,18 +67,10 @@
             }
         }
     }
-
-    &.ng-untouched {
-        input {
-            border-color : $light6 !important;
-            color        : $dark9 !important;
-        }
-    }
 }
 
 .input-error {
-    @extend #regular13;
-    color       : $error !important;
+    @include typography.regular13error;
     line-height : 1rem;
 
     @include media-breakpoint-down(sm) {
@@ -90,7 +87,7 @@
 }
 
 .btn.form-control {
-    text-align : left;
+    text-align : left !important;
     .caret {
         float      : right;
         margin-top : 8px;
@@ -101,4 +98,50 @@ select.form-control {
     -webkit-appearance : none;
     -moz-appearance    : none;
     background-color   : transparent;
+}
+
+
+// This is used to implement updated validation handling where errors aren't shown until submit
+// See register.component for implementation example.
+.override-error-style {
+    border-color: $light6 !important;
+    color: $dark9 !important;
+}
+input.hide-errors {
+    @extend .override-error-style;
+}
+.hide-errors {
+    & .input-error {
+        display: none;
+    }
+    & .ng-invalid , & > input {
+        @extend .override-error-style;
+    }
+}
+
+.text-area-input {
+    display          : block !important;
+    width            : 100% !important;
+    font-size        : rem(14px) !important;
+    line-height      : 1.428571429 !important;
+    color            : $dark9 !important;
+    background-color : $light1 !important;
+    background-image : none !important;
+    border           : 1px solid $light6 !important;
+    border-radius    : 2px !important;
+    transition       : none !important;
+    box-shadow       : none !important;
+    padding          : $padding-base-vertical $padding-input-horizontal !important;
+    @include mixins.placeholder ();
+
+    &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
+        border-color : $error !important;
+        color        : $error !important;
+
+        + .input-group-addon {
+            border-color     : transparent;
+            background-color : transparent;
+        }
+    }
+
 }

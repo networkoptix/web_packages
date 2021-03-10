@@ -1,34 +1,47 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import {
+    Component, EventEmitter, forwardRef,
+    Input, OnInit, Output, SimpleChanges
+} from '@angular/core';
+import {
+    ControlValueAccessor, FormControl,
+    NG_VALUE_ACCESSOR, Validator
+} from '@angular/forms';
 
 @Component({
-    selector: 'nx-switch',
+    selector   : 'nx-switch',
     templateUrl: 'switch.component.html',
-    styleUrls: ['switch.component.scss'],
-    providers: [
+    styleUrls  : ['switch.component.scss'],
+    providers  : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxSwitchComponent),
-            multi: true
+            multi      : true
         }
-    ],
+    ]
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @Input() name: string;
     @Input() required: boolean;
-    @Input() value: boolean;
+    @Input() checked: boolean;
     @Input() disabled: any;
+    @Input() label: string;
+    @Input() showWarning: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
-    private checked: boolean;
-    private invalid: boolean;
-    private touched: boolean;
+    @Output() onSwitch = new EventEmitter<boolean>();
+
+    private _invalid: boolean;
+    private _touched: boolean;
+
+    _value: boolean;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: any) => {};
+    private onTouchedCallback = () => {
+    };
+
+    private onChangeCallback = (_: any) => {
+    };
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
@@ -38,27 +51,27 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
             }
         };
 
-        this.touched = c.touched;
+        this._touched = c.touched;
 
         if (this.required && !c.value) {
-            this.invalid = true;
+            this._invalid = true;
             return err;
         } else {
-            this.invalid = false;
+            this._invalid = false;
             return null; // valid
         }
     }
 
     ngOnInit() {
-        this.disabled = (this.disabled !== undefined);  // optional param
-        this.required = (this.required !== undefined);  // optional param
+        this.disabled = (this.disabled !== undefined) ? this.disabled : false; // optional param
+        this.required = (this.required !== undefined); // optional param
 
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {
-                this.value = this.checked;
+                this._value = this.checked;
             }
-            this.setState();
+            // this.setState();
         });
     }
 
@@ -67,7 +80,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
      */
     writeValue(value: any) {
         if (value !== null && !this.disabled) {
-            this.value = value;
+            this._value = value;
         }
     }
 
@@ -87,20 +100,31 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
         this.onTouchedCallback = fn;
     }
 
-    private setState() {
-        // update the form
-        this.onChangeCallback(this.value);
-
-        this.onClick.emit(this.value);
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.checked) {
+            this._value = changes.checked.currentValue;
+        }
     }
 
-    changeState(event) {
+    private setState() {
+        // update the form
+        this.onChangeCallback(this._value);
+        this.onSwitch.emit(this._value);
+    }
+
+    preventBubbling(event: Event) {
+        event.stopPropagation();
+    }
+
+    changeState() {
         if (this.disabled) {
+            // tell parent I'm "disabled"
+            this.onSwitch.emit(undefined);
             return;
         }
 
         this.onTouchedCallback();
-        this.value = !this.value;
+        this._value = !this._value;
         this.setState();
     }
 

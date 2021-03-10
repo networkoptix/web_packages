@@ -1,24 +1,51 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es2015", "es2016", "es2017", "dom", "es2018.promise"],
-    "module": "commonjs",
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "removeComments": false,
+    "removeComments": true,
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
+    "baseUrl": "app",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@directives/*": ["src/directives/*"],
+      "@dialogs/*": ["src/dialogs/*"],
+      "@environments/*": ["environments/*"],
+      "@pages/*": ["src/pages/*"],
+      "@guards/*": ["src/routeGuards/*"],
+      "@services/*": ["src/services/*"],
+      "@src/*": ["src/*"],
+      "@app/*": ["*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],
     "types": [
-      "jest",
+      "jasmine",
       "node"
     ]
   },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
+  "include": [
+    "app/main.ts",
+    "app/polyfills.ts"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "app/**/*.spec.ts",
+    "app/**/*.test.ts",
+    ".eslintrc.js"
   ]
 }

@@ -1,6 +1,5 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .card {
@@ -21,7 +20,7 @@
     }
 
     &--header {
-        height           : unset;
+        height           : 3rem;
         display          : flex;
         align-items      : center;
         background-color : $additional_light1;
@@ -83,6 +82,101 @@
                 }
             }
         }
+
+        & .nx-panel-row {
+            .nx-panel {
+                display : flex;
+                height  : fit-content;
+
+                .row-title {
+                    height      : fit-content;
+                    width       : fit-content;
+                    width       : -moz-fit-content;
+                    float       : left;
+                    z-index     : 9;
+                    max-width   : calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
+                    line-height : 16px;
+                    margin      : 4px 0;
+
+                    span {
+                        background-color : $light4;
+                        padding-right    : 4px;
+                        word-break       : keep-all;
+                    }
+                }
+
+                .row-line {
+                    border-bottom : 1px dotted $light7;
+                    width         : calc(100% - 1rem);
+                    position      : absolute;
+                    bottom        : 6px;
+                    height        : 14px;
+                }
+            }
+
+            .row-value {
+                line-height : 16px;
+                margin      : 4px 0;
+                word-break  : break-all;
+
+                &.error {
+                    color : $error;
+                }
+            }
+        }
+
+        table {
+            display         : grid;
+            border-collapse : collapse;
+            min-width       : 100%;
+            //grid-template-columns : 10% 20% 20% auto; <- set this in your component
+        }
+
+        .table-row-spacer {
+            height  : .5rem;
+            //grid-column-end : span 6; <- set this in your component
+            display : grid;
+        }
+
+        thead,
+        tbody,
+        tr {
+            display : contents;
+        }
+
+        th,
+        td {
+            overflow      : hidden;
+            text-overflow : ellipsis;
+            white-space   : nowrap;
+        }
+
+        th {
+            @include typography.medium13dark9;
+            padding          : 5px 15px;
+            background-color : $additional_light1;
+            border-bottom    : 1px solid $light3;
+        }
+
+        th:last-child {
+            border : 0;
+        }
+
+        td {
+            padding          : 5px 15px;
+            background-color : $light1;
+            color            : $dark9;
+            display          : flex;
+            align-items      : center;
+        }
+
+        td:first-child {
+            display : block;
+        }
+
+        tr:hover td {
+            background : transparentize($brand_core, 0.9);
+        }
     }
 
     &--footer {
@@ -131,6 +225,24 @@
         }
     }
 
+    &.simple-alert {
+        background-color : $red2;
+        border           : 1px solid $red1;
+
+        .card--header {
+            display : none;
+        }
+
+        .card--body {
+            background-color : $red2;
+            border-top       : 1px solid $red1;
+        }
+
+        .card--footer {
+            background-color : $red2;
+        }
+    }
+
     &.menu {
         background-color : $light5;
         border           : 1px solid $light5;
@@ -162,17 +274,63 @@
     &.fixed-height {
         height   : rem(300px);
         overflow : hidden;
+        margin   : 0;
+
+        .card--header {
+            min-height: 81px;
+        }
 
         .card--body {
             overflow: hidden;
         }
     }
 
+    &.hidden-header {
+        .card--header {
+            display: none;
+        }
+    }
 
     &.extended-header {
         .card--header {
             height  : auto;
             padding : 1rem;
+        }
+    }
+
+    &.no-padding-header {
+        .card--header {
+            height  : auto;
+            padding : 0;
+        }
+    }
+
+    &.side-header {
+        .card--header {
+            & .heading-icon {
+                height: 48px;
+            }
+            & p {
+                @include typography.medium13dark15;
+                opacity: 0.4;
+                margin-bottom: 6px;
+            }
+            & h3 {
+                @include typography.medium17dark9;
+            }
+        }
+        @include media-breakpoint-up(md) {
+            .card--header {
+                align-items: start;
+                min-width: 216px;
+                border-bottom: unset;
+                border-right: 1px solid #EBEFF1;
+                & .heading-icon {
+                    height: 120px;
+                }
+            }
+            display: flex;
+            flex-direction: row;
         }
     }
 
@@ -186,8 +344,7 @@
             }
 
             .minor-text {
-                @extend #regular11;
-                color      : $light16;
+                @include typography.regular11light16;
                 margin-top : 5px;
             }
         }

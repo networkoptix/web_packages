@@ -1,12 +1,17 @@
-import pystache
-from django.core.mail import EmailMultiAlternatives
-from django.core.mail.backends.smtp import EmailBackend
 from email.mime.image import MIMEImage  # python 3
+import logging
 import json
 import os
-from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
-from cms.controllers import filldata 
+
+import pystache
 from django.core.cache import cache
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail.backends.smtp import EmailBackend
+
+from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
+from cms.controllers import filldata
+
+logger = logging.getLogger(__name__)
 
 
 def email_cache(customization_name, cache_type, value=None, force=None):
@@ -47,6 +52,11 @@ def send(email, msg_type, message, language_code, customization_name):
         email = (email,)
 
     customization_cache = cloud_portal_customization_cache(customization_name, 'email')
+    email_config = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls"]
+    if not all(config_key in customization_cache for config_key in email_config):
+        logger.error(f"Some smtp config settings are missing from {customization_name}. "
+                     f"Please notify Release engineers")
+        return False
 
     config = {
         'portal_url': customization_cache["portal_url"]
@@ -54,6 +64,7 @@ def send(email, msg_type, message, language_code, customization_name):
 
     subject = get_email_title(customization_name, language_code, msg_type)
     subject = pystache.render(subject, {"message": message, "config": config})
+    subject = subject.replace("\n", "")
 
     message_html_template = read_template(customization_name, msg_type, language_code, True)
     message_txt_template = read_template(customization_name, msg_type, language_code, False)

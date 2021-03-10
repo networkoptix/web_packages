@@ -1,506 +1,934 @@
 {
-	"account": {
-		"accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
-		"activationLinkSent": "Aktivasyon linki gönderildi",
-		"passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
-		"changePassword": "Parola Değiştir",
-		"newPasswordLabel": "Yeni Parola",
-		"saveChanges": "Kaydet",
-		"accountSettings": "Hesap Ayarları"
-	},
-	"activeActions": {
-		"sendConfirm": "Aktivasyon linki gönder",
-		"resetPassword": "Parolayı sıfırla",
-		"setNewPassword": "Parolayı kaydet",
-		"setNewPasswordLabel": "Yeni Parola"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "Arama",
-		"search_ipvd": "Belirli bir üretici veya modele göre arama",
-		"filter applied": "filtre uygulandı",
-		"filters applied": "filtreler uygulandı",
-		"Any": "Herhangi",
-		"selected": "seçildi",
-		"vendor": "Üretici",
-		"vendors": "Üreticiler",
-		"hardwareType": "Tür",
-		"hardwareTypes": "Türler",
-		"minResolution": "Minimum Çözünürlük",
-		"analytics": "Analiz",
-		"analyticsSelected": "analiz Etkinliği"
-	},
-	"cameraFilters": {
-		"ptz": "PTZ kameralar",
-		"aptz": "Gelişmiş PTZ'li kameralar",
-		"fisheye": "Balıkgözü kameralar",
-		"H265": "H.265 Kameralar",
-		"IO": "G / Ç modülleri",
-		"multiSensor": "Çok sensörlü kameralar",
-		"TwWayAudio": "Çift yönlü ses cihazları",
-		"audio": "Sesli kameralar",
-		"encoder": "Çeviriciler",
-		"highRes": "Eksta yüksek çözünürlüklü kameralar"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "Windows"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "İstemci ve sunucu",
-			"camera_sdk": "Video Source SDK",
-			"client": "Yalnızca istemci",
-			"metadata_sdk": "Metadata SDK",
-			"package": "Paket",
-			"server": "Yalnızca sunucu",
-			"servertool": "Konfigürasyon aracı",
-			"storage_sdk": "Depolama için SDK",
-			"video_source_sdk": "Video Source SDK"
-		},
-		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Beta Sürümleri",
-			"rc": "Sürüm Adayı",
-			"release": "Sürüm",
-			"releases": "Sürümler",
-			"patch": "Düzeltme",
-			"patches": "Düzeltmeler"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "Alan",
-		"count": "Sayım",
-		"vendor": "Üretici",
-		"model": "Model",
-		"hardwareType": "Tür",
-		"maxResolution": "<span>Max</span><br><span>Çözünürlük</span>",
-		"maxFps": "<span>Maksimum</span><br><span>FPS</span>",
-		"primaryCodec": "Kodek",
-		"isAudioSupported": "Ses",
-		"isTwAudioSupported": "Çift Yönlü Ses",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Gelişmiş PTZ",
-		"isAptzSupportedShort": "Gelş. PTZ",
-		"isFisheye": "Fish-Eye",
-		"isMdSupported": "Hareket",
-		"isIoSupported": "G/Ç",
-		"isH265": "H.265",
-		"isMultiSensor": "Çoklu sensör",
-		"isAnalyticsSupported": "Analiz",
-		"camera": "Kamera",
-		"multiSensorCamera": "Çok Sensörlü Kamera",
-		"encoder": "Kodlayıcı",
-		"dvr": "DVR",
-		"other": "Diğer",
-		"PTZ cameras": "PTZ kameralar",
-		"Advanced PTZ cameras": "Gelişmiş PTZ kameralar",
-		"Fisheye Cameras": "Balıkgözü kameralar",
-		"Cameras supporting H.265": "H.265'i destekleyen kameralar",
-		"I / O modules": "G / Ç modülleri",
-		"Multisensor Cameras": "Çok Sensörlü Kameralar",
-		"Cameras with 2-way audio": "Çift yönlü sesli kameralar",
-		"Extra high resolution cameras": "Eksta yüksek çözünürlüklü kameralar",
-		"feedback": {
-			"a_Please": "Lütfen",
-			"b_Link": "destek talebi gönder",
-			"c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
-		},
-		"disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır."
-	},
-	"integration": {
-		"myIntegrationsLabel": "Benim",
-		"previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
-		"backToEditText": "Düzeleme arayüzüne dön",
-		"requirements": "{{name}} Gereksinimler",
-		"Access Control": "Erişim Kontrolü",
-		"Connector": "Konnektör",
-		"Data Analytics": "Veri Analizleri",
-		"Drone": "Drone",
-		"Health Monitor": "Performans İzleme",
-		"Storage": "Depolama"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
-	},
-	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "Hakkında",
-		"registerSuccess": "Hoş geldiniz",
-		"register": "Hesap Oluştur",
-		"changePassword": "Şifre değiştir",
-		"account": "Hesap ayarları",
-		"systems": "Sistemler",
-		"system": "Sistem",
-		"systemName": "{{systemName}}",
-		"systemShare": "Sistemi Paylaş",
-		"activate": "Hesabı aktif et",
-		"activateSent": "Hesabı aktif et",
-		"activateSuccess": "Hesap aktif edildi",
-		"activateCode": "Hesabı aktif et",
-		"restorePassword": "Parolayı sıfırla -",
-		"restorePasswordSuccess": "Parola kaydedildi",
-		"restorePasswordCode": "Parolayı sıfırla -",
-		"view": "Kameraları görüntüle",
-		"debug": "Hata ayıklama",
-		"login": "Giriş yap",
-		"download": "İndir %VMS_NAME%",
-		"downloadPlatform": "İçin %VMS_NAME% indir ",
-		"pageNotFound": "Sayfa bulunamadı",
-		"supportedDevices": "Desteklenen cihazlar",
-		"integrations": "Entegrasyonlar"
-	},
-	"dialogs": {
-		"okButton": "Tamam",
-		"cancelButton": "İptal",
-		"createNewAccount": "Yeni Hesap Oluştur",
-		"changeAccountLogged": "Bu mail {email} ile zaten giriş yapmışsınız",
-		"loggedFromOther": "Farklı bir hesapla giriş yapacaksınız",
-		"loginTitle": "%CLOUD_NAME% e giriş yapın",
-		"loginButton": "Giriş yap",
-		"logoutAuthorisedTitle": "Zaten giriş yapılmış",
-		"logoutAuthorisedContinueButton": "Devam et",
-		"logoutAuthorisedLogoutButton": "Oturumu Kapat",
-		"noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
-		"stayAs": "Bu email {email} ile bağlı kal ",
-		"stayLoggedIn": "Oturum açık kalsın",
-		"download": "İndir %VMS_NAME%",
-		"merge": {
-			"commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi.",
-			"connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-			"mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
-			"mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-			"primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-			"primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
-			"secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-			"systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
-			"systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
-			"recommendSupport": {
-				"a_recommend": "Danışmanızı tavsiye ederiz",
-				"b_support": "destek",
-				"c_proceeding": "işlemden önce."
-			},
-			"warning": "Birleştirilmiş Sistemde <strong>{{maxServers}}</strong> ten çok sunucu olacaktır."
-		},
-		"message": {
-			"failedToSend": "Mesaj gönderilemedi.",
-			"sent": "Mesaj gönderildi.",
-			"title": {
-				"integration": "{{companyName}} ile iletişime geçin",
-				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
-				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
-			},
-			"subject": {
-				"sales_inquiry": "{{asset}} için satış talebi",
-				"technical_inquiry": "{{asset}} için teknik sorgulama",
-				"integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
-				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
-				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
-			"shareTitle": "Ekle",
-			"shareConfirmButton": "Ekle",
-			"editShareTitle": "İzinleri düzenle",
-			"editShareConfirmButton": "Kaydet",
-			"permissionsSaved": "Yeni izin kaydedildi"
-		}
-	},
-	"errorCodes": {
-		"ok": "tamam",
-		"cantSendActivationPrefix": "Onay e-posta gönderemezsiniz",
-		"cantDisconnectSystemPrefix": "Sistem silinemiyor",
-		"cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
-		"cantSharePrefix": "Sistem paylaşılamıyor",
-		"cantGetUsersListPrefix": "Kullanıcı listesi kullanılamıyor",
-		"cantGetSystemsListPrefix": "Kullanıcı listesi kullanılamıyor",
-		"cantRegisterPrefix": "Hata oluştu",
-		"cantGetSystemInfoPrefix": "Kullanıcı listesi kullanılamıyor",
-		"cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
-		"cantChangePasswordPrefix": "Parola kaydedilemiyor",
-		"cantActivatePrefix": "Hesabınız etkinleştirilemedi",
-		"cantSendConfirmationPrefix": "Onay e-posta gönderemezsiniz",
-		"notAuthorized": "Hatalı parola",
-		"brokenAccount": "Hesapla beklenmeyen bir problem. <a href=\"/restore_password\">Hesabı geri yükle</a>",
-		"wrongParameters": "Formdaki bazı parametreler yanlış",
-		"wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
-		"wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
-		"wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
-		"forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
-		"accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
-		"accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
-		"notFound": "Bulunamadı",
-		"alreadyExists": "Bu hesap zaten mevcut",
-		"unknownError": "Beklenmedik bir hata oluştu",
-		"accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
-		"emailNotFound": "Hesap mevcut değil.",
-		"EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
-		"oldPasswordMistmatch": "Mevcut şifre hatalı.",
-		"passwordMismatch": "Hatalı parola",
-		"cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
-		"cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
-		"cantOpenClient": "%VMS_NAME% uygulama algılanmadı.",
-		"lostConnection": "{{systemName}} ile bağlantı kayboldu",
-		"thisSystem": "sistem",
-		"oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
-		"DUPLICATE_MEDIASERVER_FOUND": "Bazı sunucular, her iki sistemde de mevcut olanları - seçilenleri ve geçerli olanları listeler.<br>Çevrimdışı ve uyumsuz sunucuları her bir Sistemden kaldırın ve tekrar deneyin.",
-		"mergedSystemIsOffline": "Sistem <strong>{{failedSystem}}</strong> çevrimdışı.",
-		"INCOMPATIBLE": "Sistemler farklı yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürümüne</a>.",
-		"FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
-		"unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun."
-	},
-	"passwordRequirements": {
-		"good": "iyi",
-		"fair": "idare eder",
-		"fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-		"minLength": "çok kısa",
-		"minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
-		"required": "yanlış",
-		"requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
-		"weak": "zayıf",
-		"weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-		"strongMessage": "Güçlü parola!",
-		"common": "çok yaygın",
-		"commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
-		"missingMessage": "Parola gerekmektedir"
-	},
-	"registration": {
-		"agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
-	},
-	"system": {
-		"yourSystem": "Sistem",
-		"mySystemSearch": "IMeMyMine",
-		"unavailable": "Sistem erişilebilir değil",
-		"offline": "Sistem çevrimdışı",
-		"offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-		"openClient": "Aç %VMS_NAME%",
-		"openClientNoSystem": "Aç %VMS_NAME%",
-		"confirmMergeAction": "Birleştir",
-		"mergeSystemTitle": "Sistemleri Birleştir",
-		"confirmRenameTitle": "Sistem Adı",
-		"confirmRenameAction": "Kaydet",
-		"successRename": "Sistem ismi kaydedildi",
-		"confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
-		"confirmDisconnectAction": "Bağlantıyı kes",
-		"confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
-		"confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
-		"confirmUnshareFromMeAction": "Bağlantıyı kes",
-		"confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
-		"confirmUnshareTitle": "Kullanıcı kaldırılsın mı?",
-		"confirmUnshareAction": "Kaldır",
-		"successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
-		"successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
-		"mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
-		"mergeStart": "Sistemler birleştirilmeye başlandı",
-		"mergeSuccess": "Sistem birleştirme tamamlandı",
-		"permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
-		"unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
-		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
-		"shareUnauthorized": "Bu sistemi paylaşma izniniz yok",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "saat",
-				"minutes": "dakika"
-			},
-			"warningMessages": {
-				"videoEncryption": "Video trafiğini şifrelemek, CPU kullanımını önemli ölçüde artıracaktır."
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "aktif edildi",
-		"incompatible": "uyumsuz",
-		"merging": "birleştirme",
-		"notActivated": "aktif edilmemiş",
-		"online": "çevrimiçi",
-		"offline": "çevrimdışı",
-		"unavailable": "kullanılamaz"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "Devre Dışı Bırak",
-			"description": "Kullanıcı devre dışı bırakılmış, sisteme giriş yapamaz"
-		},
-		"Owner": {
-			"label": "Sahip",
-			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
-		},
-		"Viewer": {
-			"label": "İzleyici",
-			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
-		},
-		"Live Viewer": {
-			"label": "Canlı İzleyici",
-			"description": "Sadece canlı vidyo izleyebilir"
-		},
-		"Advanced Viewer": {
-			"label": "Gelişmiş Görüntüleyici",
-			"description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
-		},
-		"Administrator": {
-			"label": "Yönetici",
-			"description": "Sınırsız erişim, paylaşma imkanı dahil"
-		},
-		"Custom": {
-			"label": "Özel Ayarlar",
-			"description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
-		},
-		"cloudAdmin": {
-			"label": "Yönetici",
-			"description": "Sistemi yapılandırabilir ve paylaşabilir"
-		},
-		"customRole": {
-			"label": "Özel rol",
-			"description": "Sisteminde belirtilen özel kullanıcı rolü"
-		},
-		"owner": {
-			"label": "Sahip",
-			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
-		},
-		"viewer": {
-			"label": "İzleyici",
-			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
-		},
-		"liveViewer": {
-			"label": "Canlı İzleyici",
-			"description": "Sadece canlı vidyo izleyebilir"
-		},
-		"advancedViewer": {
-			"label": "Gelişmiş Görüntüleyici",
-			"description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
-		},
-		"custom": {
-			"label": "Özel Ayarlar",
-			"description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
-		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "Yüksek çözünürlük",
-			"lowStream": "Düşük çözünürlük",
-			"transcoding": "Dönüştürme",
-			"unknown": "Belirtilmemiş",
-			"copyToClipboard": "panoya yapıştır",
-			"copyDefaultText": "kopyala",
-			"copyActiveText": "panoya kopyalandı"
-		},
-		"systemOffline": "Sistem çevrimdışı",
-		"systemOfflineMessage": "Bu sistem çevrimdışı ve şu anda erişilemiyor.",
-		"systemNoAlerts": "Uyarı Yok",
-		"systemNoAlertsMessage": "Sisteminiz iyi çalışıyor olmalı!",
-		"systemServerError": "Yerel sunucu hatası",
-		"systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
-		"systemNewVersion": "Sisteminizi güncelleyin",
-		"systemNewVersionMessage": "Mevcut sürümünüz bu özellik ile uyumlu değil. Lütfen bu özelliği kullanmak için sunucularınızı en son sürüme güncelleyin.",
-		"systemHasNoCameras": "KAMERA YOK",
-		"systemUnreachable": "SİSTEM KULLANILAMAZ",
-		"cameraStates": {
-			"offline": "Çevrimdışı",
-			"error": "Hata",
-			"errorLoading": "Video yüklenirken bir sorun oluştu.",
-			"unauthorized": "Kimlik doğrulaması gerekli",
-			"noData": "Veri bulunamadı",
-			"iOSVideoTooLarge": "iOS, fullHD'den daha büyük videoyu desteklemez (2MP: 1920x1080).",
-			"flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
-			"flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
-			"noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
-			"noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
-			"ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
-			"ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
-			"ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın."
-		},
-		"searchCamPlaceholder": "Arama",
-		"resolution": {
-			"auto": "Oto",
-			"high": "Yüksek",
-			"low": "Düşük"
-		},
-		"chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
-		"voiceCommands": {
-			"play": "oynat",
-			"pause": "duraklat",
-			"live": "go to live | show me live",
-			"view": "görüntüle + [kamera adı]",
-			"search": "find + [text for searchbar]",
-			"clear search": "aramayı temizle",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
-			"expand all servers": "tüm sunucuları genişlet",
-			"collapse all servers": "tüm sunucuları daralt",
-			"stop listening": "dinlemeyi durdur",
-			"help": "help | show commands"
-		}
-	},
-	"systemAdministration": "Sistem Yönetimi",
-	"users": "Kullanıcılar",
-	"testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
-	"testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
-	"About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
-	"Download %VMS_NAME%": "İndir %VMS_NAME%",
-	"Integrations": "Entegrasyonlar",
-	"Privacy": "Gizlilik",
-	"Support": "Destek",
-	"Supported Devices": "Desteklenen cihazlar",
-	"Terms": "Şartlar",
-	"pleaseSelect": "Lütfen seçiniz...",
-	"WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
-	"FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME%kullanarak sisteminize giriş yapın",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
-	"topXByVolume": "Hacime göre ilk {{value}}:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+    "language": "en_US",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
+    "Download %VMS_NAME%": "İndir %VMS_NAME%",
+    "For developers": "Geliştiriciler İçin",
+    "Integrations (β)": "Entegrasyonlar (β)",
+    "Privacy": "Gizlilik",
+    "Support": "Destek",
+    "Terms": "Şartlar",
+    "accessRoles": {
+        "Administrator": {
+            "description": "Sınırsız erişim, paylaşma imkanı dahil",
+            "label": "Yönetici"
+        },
+        "Advanced Viewer": {
+            "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
+            "label": "Gelişmiş Görüntüleyici"
+        },
+        "Custom": {
+            "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın",
+            "label": "Özel Ayarlar"
+        },
+        "Live Viewer": {
+            "description": "Sadece canlı vidyo izleyebilir",
+            "label": "Canlı İzleyici"
+        },
+        "Owner": {
+            "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim",
+            "label": "Sahip"
+        },
+        "Viewer": {
+            "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
+            "label": "İzleyici"
+        },
+        "advancedViewer": {
+            "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
+            "label": "Gelişmiş Görüntüleyici"
+        },
+        "cloudAdmin": {
+            "description": "Sistemi yapılandırabilir ve paylaşabilir",
+            "label": "Yönetici"
+        },
+        "custom": {
+            "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın",
+            "label": "Özel Ayarlar"
+        },
+        "customRole": {
+            "description": "Sisteminde belirtilen özel kullanıcı rolü",
+            "label": "Özel rol"
+        },
+        "disabled": {
+            "description": "Kullanıcı devre dışı bırakılmış, sisteme giriş yapamaz",
+            "label": "Devre Dışı Bırak"
+        },
+        "liveViewer": {
+            "description": "Sadece canlı vidyo izleyebilir",
+            "label": "Canlı İzleyici"
+        },
+        "owner": {
+            "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim",
+            "label": "Sahip"
+        },
+        "viewer": {
+            "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
+            "label": "İzleyici"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
+        "accountSettings": "Hesap Ayarları",
+        "activationLinkSent": "Aktivasyon linki gönderildi",
+        "agreementAccepted": "Ödemeniz onaylandı",
+        "changePassword": "Parola Değiştir",
+        "newPasswordLabel": "Yeni Parola",
+        "passwordChangedSuccess": "Parola başarıyla kaydedildi",
+        "saveChanges": "Kaydet"
+    },
+    "activeActions": {
+        "resetPassword": "Parolayı sıfırla",
+        "sendConfirm": "Aktivasyon linki gönder",
+        "setNewPassword": "Parolayı kaydet",
+        "setNewPasswordLabel": "Yeni Parola"
+    },
+    "cameraFilters": {
+        "H265": "H.265 Kameralar",
+        "IO": "G / Ç modülleri",
+        "TwWayAudio": "Çift yönlü ses cihazları",
+        "aptz": "Gelişmiş PTZ'li kameralar",
+        "audio": "Sesli kameralar",
+        "encoder": "Çeviriciler",
+        "fisheye": "Balıkgözü kameralar",
+        "highRes": "Eksta yüksek çözünürlüklü kameralar",
+        "multiSensor": "Çok sensörlü kameralar",
+        "ptz": "PTZ kameralar"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Hesap oluşturuldu",
+                "message": "Confirmation message with the activation link is sent to {email}"
+            },
+            "activated": {
+                "title": "Hesap başarıyla etkinleştirildi"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "panoya kopyalandı",
+            "copyDefaultText": "kopyala",
+            "copyToClipboard": "panoya yapıştır",
+            "highStream": "Yüksek çözünürlük",
+            "lowStream": "Düşük çözünürlük",
+            "transcoding": "Dönüştürme",
+            "unknown": "Belirtilmemiş"
+        },
+        "cameraStates": {
+            "error": "Hata",
+            "errorLoading": "Video yüklenirken bir sorun oluştu.",
+            "flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
+            "flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
+            "iOSVideoTooLarge": "iOS, fullHD'den daha büyük videoyu desteklemez (2MP: 1920x1080).",
+            "ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
+            "ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
+            "noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
+            "noData": "Veri bulunamadı",
+            "noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
+            "offline": "Çevrimdışı",
+            "ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın.",
+            "unauthorized": "Kimlik doğrulaması gerekli"
+        },
+        "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
+        "login": "login",
+        "recordingSettingsWarning": "Lütfen eksik kayıt ayarlarını güncelleyin.",
+        "disableMotionWarning": "Kayıt modu \"Her zaman kaydet\" olarak değiştirilecek",
+        "recordingModes": {
+            "always": "Her zaman kaydet",
+            "motion": "Yalnızca hareketi kaydet",
+            "motionLowRes": "Hareket + Düşük-Çözünürlük"
+        },
+        "resolution": {
+            "various": "- Farklı değerler -",
+            "auto": "Oto",
+            "best": "En iyi",
+            "high": "Yüksek",
+            "medium": "Orta",
+            "low": "Düşük"
+        },
+        "general": "Genel",
+        "inaccessibleFeatureMessage": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "searchCamPlaceholder": "Arama",
+        "system": "system",
+        "systemHasNoCameras": "Kamera yok",
+        "systemHasNoCamerasMessage": "Sistemde sizin için erişilebilir kamera yok. <br><br>Keşfedilebilir hale getirmek için birkaç kamerayı sunucunun yerel ağına bağlayın veya sistem yöneticisinden erişim düzeyinizi değiştirmesini isteyin.",
+        "systemNewVersion": "Sisteminizi güncelleyin",
+        "systemNewVersionMessage": "Mevcut sürümünüz bu özellik ile uyumlu değil. Lütfen bu özelliği kullanmak için sunucularınızı en son sürüme güncelleyin.",
+        "systemNoAlerts": "Uyarı Yok",
+        "systemNoAlertsMessage": "Sisteminiz iyi çalışıyor olmalı!",
+        "systemOffline": "Sistem çevrimdışı",
+        "systemOfflineMessage": "Bu sistem çevrimdışı ve şu anda erişilemiyor.",
+        "systemServerError": "Yerel sunucu hatası",
+        "systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
+        "systemUnreachable": "SİSTEM KULLANILAMAZ",
+        "unknown": "Belirtilmemiş",
+        "vendor": "Üretici",
+        "model": "Model",
+        "ip": "IP Adresi",
+        "server": "Sunucu",
+        "os": "OS",
+        "version": "Sürüm",
+        "voiceCommands": {
+            "clear search": "aramayı temizle",
+            "collapse all servers": "tüm sunucuları daralt",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "tüm sunucuları genişlet",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "duraklat",
+            "play": "oynat",
+            "search": "find + [text for searchbar]",
+            "stop listening": "dinlemeyi durdur",
+            "view": "görüntüle + [kamera adı]"
+        },
+        "viewingOutdatedReport": "Güncel olmayan bir tarayıcı kullanıyorsunuz."
+    },
+    "dialogs": {
+        "addUser": {
+            "alreadyExists": "Bu e-posta zaten sistemde kayıtlı%systemName%"
+        },
+        "buttons": {
+            "cancel": "İptal",
+            "createAccount": "Yeni Hesap Oluştur",
+            "delete": "Sil",
+            "deleteAccount": "Hesabı Sil",
+            "download": "İndir %VMS_NAME%",
+            "logoutAuthorised": "Oturumu Kapat",
+            "ok": "Tamam",
+            "remove": "Kaldır",
+            "stayAs": "Bu email {email} ile bağlı kal ",
+            "stayLoggedIn": "Oturum açık kalsın"
+        },
+        "cloudStorage": {
+            "title": "Bulut depolama",
+            "enableStorage": "Bulut Depolamayı Etkinleştir",
+            "otherSystem": "Diğer Sistemler...",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "camera": "kamera",
+            "cameras": "kameralar",
+            "usageLabels": {
+                "currentRecordings": "Geçerli kayıt",
+                "whenFullyUsed": "Tamamen kullanıldığında",
+                "amountUsed": "Kullanılan miktar",
+                "archiveFrom": "Arşivden",
+                "recordingBitrate": "Kayıt Bit Hızı",
+                "delayFromLive": "Canlı gecikme"
+            },
+            "remove": {
+                "success": "Bulut depolama sistemi başarıyla kaldırıldı",
+                "errorPrefix": "Bulut depolama alanı kaldırılırken hata oluştu"
+            },
+            "activationError": {
+                "title": "Bulut Depolamayı Etkinleştiremiyor",
+                "message": "Sistemlerinize zaten toplam <volume> bulut depolama alanı eklediniz ve daha fazlasını ekleyemezsiniz. <br/><br/>Depolamayı başka bir sistemden silebilir veya bu sisteme taşıyabilirsiniz. "
+            },
+            "systemDisconnectError": {
+                "title": "%CLOUD_NAME% den bağlantı kesilemedi",
+                "message": "Bu sistem, üzerinde bazı arşivlerin bulunduğu bulut depolama alanına sahiptir. <br/><br/>Sistem %CLOUD_NAME%çıkarılmadan önce bulut depolama alanı manuel olarak silinmelidir."
+            },
+            "moveCloudStorage": {
+                "title": "Bulut Depolama Alanını Taşı",
+                "success": "Storage successfully moved",
+                "errorPrefix": "Bulut depolama alanı taşınırken hata oluştu",
+                "notFound": "Depolama alanı bulunamadı. Depolama alanı başka bir kullanıcı tarafından taşınmış veya silinmiş olabilir",
+                "status": {
+                    "offline": "Bulut depolama, çevrimdışı sistemlere taşınamaz."
+                }
+            },
+            "enableCloudStorage": {
+                "success": "Bulut Depolama Etkin",
+                "errorPrefix": "Bulut Depolamayı Etkinleştirme Hatası"
+            },
+            "noOtherSystemsError": {
+                "message": "Bulut depolama alanını yalnızca sahibi olduğunuz sistemler arasında taşıyabilirsiniz. <br/><br/>Bulut depolama birimini ona taşıyabilmek için bulut hesabınızı kullanarak bir sistemi %CLOUD_NAME% bağlayın."
+            }
+        },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
+            "checking": "Kontrol Ediliyor...",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "differentOwners": "Hem seçilen hem de mevcut sistem %CLOUD_NAME% bağlı ve farklı sahiplere sahip. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+            "duplicateServers": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "mergeSystemsTitle": "Mevcut sistemi ile birleştir",
+            "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
+            "noServerFound": "Hiç bir sunucu bulunamadı",
+            "newSystemDisplayName": "Yeni sistem",
+            "otherSystem": "Diğer Sistemler...",
+            "ownerCanMergeText": "Yalnızca sahibi olduğunuz Sistemleri birleştirebilirsiniz",
+            "passwordRequired": "Parola gerekmektedir",
+            "passwordWrong": "Hatalı parola",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "Aşağıdakilere danışmanızı öneririz",
+                "b_support": "destek",
+                "c_proceeding": "işlemden önce."
+            },
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotYours": "Bu sistem %CLOUD_NAME%, bağlı ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "urlEmpty": "Sunucu adresini girin",
+            "urlNotValid": "Geçerli bir URL girin",
+            "unknownError": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+        },
+        "message": {
+            "storageSettingsSaved": "Depolama ayarları kaydedildi.",
+            "storageSettingsNotSaved": "Depolama alanı ayarları kaydedilemedi.",
+            "settingsSaved": "Ayarlar kaydedildi.",
+            "settingsNotSaved": "Ayarlar kaydedilemedi.",
+            "logLevelsSaved": "Günlük düzeyleri kaydedildi.",
+            "logLevelsNotSaved": "Günlük düzeyleri kaydedilemedi.",
+            "failedToSend": "Mesaj gönderilemedi.",
+            "placeholders": {
+                "feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
+            },
+            "sent": "Mesaj gönderildi.",
+            "subject": {
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
+            },
+            "title": {
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
+            }
+        },
+        "removeSystem": {
+            "action": "Bağlantıyı kes",
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
+        },
+        "titles": {
+            "error": "Hata",
+            "success": "Başarılı",
+            "changeAccount": "Bu mail {email} ile zaten giriş yapmışsınız",
+            "deleteUser": "Kullanıcıyı sil?",
+            "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
+            "noClientDetected": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
+            "removeUser": "Kullanıcı kaldırılsın mı?",
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Hesabınızı silmek için sahibi olduğunuz tüm sistemlerin %CLOUD_NAME% portalından bağlantısını kesin."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "İstemci ve sunucu",
+            "camera_sdk": "Video Source SDK",
+            "client": "Yalnızca istemci",
+            "metadata_sdk": "Metadata SDK",
+            "package": "Paket",
+            "server": "Yalnızca sunucu",
+            "servertool": "Konfigürasyon aracı",
+            "storage_sdk": "Depolama için SDK",
+            "video_source_sdk": "Video Source SDK"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "Windows"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "Beta",
+            "betas": "Beta Sürümleri",
+            "patch": "Düzeltme",
+            "patches": "Düzeltmeler",
+            "rc": "Sürüm Adayı",
+            "release": "Sürüm",
+            "releases": "Sürümler"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Bazı sunucular, her iki sistemde de mevcut olanları - seçilenleri ve geçerli olanları listeler.<br>Çevrimdışı ve uyumsuz sunucuları her bir Sistemden kaldırın ve tekrar deneyin.",
+        "EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
+        "fail": "{failedSystem} is inaccessible.",
+        "incompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
+        "unknown_error": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
+        "accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
+        "accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
+        "accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "alreadyExists": "Bu hesap zaten mevcut",
+        "brokenAccount": "Hesapla beklenmeyen bir problem. <a href=\"/restore_password\">Hesabı geri yükle</a>",
+        "cantActivatePrefix": "Hesabınız etkinleştirilemedi",
+        "cantAddYourOwnEmail": "Kendi e-postanızı eklemenize izin verilmiyor",
+        "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
+        "cantChangePasswordPrefix": "Parola kaydedilemiyor",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDisconnectSystemPrefix": "Sistem silinemiyor",
+        "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
+        "cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
+        "cantGetSystemInfoPrefix": "Kullanıcı listesi kullanılamıyor",
+        "cantGetSystemsListPrefix": "Kullanıcı listesi kullanılamıyor",
+        "cantGetUsersListPrefix": "Kullanıcı listesi kullanılamıyor",
+        "cantOpenClient": "%VMS_NAME% uygulama algılanmadı.",
+        "cantRegisterPrefix": "Hata oluştu",
+        "cantSendActivationPrefix": "Onay e-posta gönderemezsiniz",
+        "cantSendConfirmationPrefix": "Onay e-posta gönderemezsiniz",
+        "cantSharePrefix": "Sistem paylaşılamıyor",
+        "cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
+        "emailNotFound": "Hesap mevcut değil.",
+        "failedToAccessSystem": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %CLOUD_NAME% bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
+        "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "notAuthorized": "Hatalı parola",
+        "badUsername": "Account not found",
+        "notFound": "Bulunamadı",
+        "ok": "tamam",
+        "oldPasswordMistmatch": "Mevcut şifre hatalı.",
+        "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
+        "passwordMismatch": "Hatalı parola",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "thisSystem": "sistem",
+        "unknownError": "Beklenmedik bir hata oluştu",
+        "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun.",
+        "wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
+        "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
+        "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
+        "wrongParameters": "Formdaki bazı parametreler yanlış",
+        "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun.",
+        "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
+        "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+    },
+    "integration": {
+        "Access Control": "Erişim Kontrolü",
+        "Connector": "Konnektör",
+        "Data Analytics": "Veri Analizleri",
+        "Drone": "Drone",
+        "Health Monitor": "Performans İzleme",
+        "Storage": "Depolama",
+        "myIntegrationsLabel": "Benim",
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "Gelişmiş PTZ kameralar",
+        "Cameras supporting H.265": "H.265'i destekleyen kameralar",
+        "Cameras with 2-way audio": "Çift yönlü sesli kameralar",
+        "Extra high resolution cameras": "Eksta yüksek çözünürlüklü kameralar",
+        "Fisheye Cameras": "Balıkgözü kameralar",
+        "I / O modules": "G / Ç modülleri",
+        "Multisensor Cameras": "Çok Sensörlü Kameralar",
+        "PTZ cameras": "PTZ kameralar",
+        "camera": "Kamera",
+        "count": "Sayım",
+        "dvr": "DVR",
+        "encoder": "Kodlayıcı",
+        "hardwareType": "Tür",
+        "isAnalyticsSupported": "Analiz",
+        "isAptzSupported": "Gelişmiş PTZ",
+        "isAptzSupportedShort": "Gelş. PTZ",
+        "isAudioSupported": "Ses",
+        "isDualStreamingSupported": "Çift akış",
+        "isFisheye": "Fish-Eye",
+        "isH265": "H.265",
+        "isIoSupported": "G/Ç",
+        "isMdSupported": "Hareket Algılama",
+        "isMultiSensor": "Çoklu sensör",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "Çift Yönlü Ses",
+        "maxFps": "FPS(maks)",
+        "maxResolution": "Çözünürlük(maks)",
+        "model": "Model",
+        "multiSensorCamera": "Çok Sensörlü Kamera",
+        "other": "Diğer",
+        "primaryCodec": "Kodek",
+        "resolutionArea": "Alan",
+        "sndResolution": "İkincil akış",
+        "vendor": "Üretici",
+        "sortKey": ""
+    },
+    "ipvdFeedback": {
+        "a_Please": "Lütfen",
+        "b_Link": "destek talebi gönder",
+        "c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "menu": {
+        "titles": {
+            "cameras": "Kameralar",
+            "systemAdministration": "Sistem Yönetimi",
+            "general": "Genel",
+            "licenses": "Lisanslar",
+            "users": "Kullanıcılar"
+        }
+    },
+    "pageTitles": {
+        "about": "Hakkında",
+        "account": "Hesap ayarları",
+        "activate": "Hesabı aktif et",
+        "activateCode": "Hesabı aktif et",
+        "activateSuccess": "Hesap aktif edildi",
+        "articleTitle": "{ARTICLE_TITLE} için {VMS_NAME}",
+        "changePassword": "Şifre değiştir",
+        "debug": "Hata ayıklama",
+        "default": "%CLOUD_NAME%",
+        "download": "İndir %VMS_NAME%",
+        "downloadPlatform": "İçin %VMS_NAME% indir ",
+        "failedToAccessSystem": "Sisteme erişim sağlanılamadı",
+        "integrations": "%VMS_NAME% Integrations",
+        "login": "Giriş yap",
+        "pageNotFound": "Sayfa bulunamadı",
+        "register": "Hesap Oluştur",
+        "registerSuccess": "Hoş geldiniz",
+        "restorePassword": "Parolayı sıfırla -",
+        "restorePasswordSuccess": "Parola kaydedildi",
+        "supportedDevices": "Desteklenen cihazlar",
+        "system": "Sistem",
+        "systemShare": "Sistemi Paylaş",
+        "systems": "Sistemler",
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Kameraları görüntüle",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+    },
+    "passwordRequirements": {
+        "common": "çok yaygın",
+        "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
+        "fair": "idare eder",
+        "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
+        "good": "iyi",
+        "minLength": "çok kısa",
+        "minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
+        "missingMessage": "Parola gerekmektedir",
+        "required": "yanlış",
+        "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
+        "strongMessage": "Güçlü parola!",
+        "weak": "zayıf",
+        "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın"
+    },
+    "placeholderTexts": {
+        "noSettings": {
+            "title": "Bu sayfa bulunamıyor",
+            "message": "Lütfen sunucularınızın çevrimiçi olduğundan emin olun ve tekrar deneyin."
+        },
+        "merge": {
+            "title": "This system is being merged to {systemName}.",
+            "message": {
+                "dependingOnSize": "Veritabanının boyutuna bağlı olarak, bu işlem birkaç saat sürebilir.",
+                "untilFinished": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+            }
+        },
+        "server": {
+            "title": "Sunucuya erişilemiyor",
+            "message": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor."
+        }
+    },
+    "pleaseSelect": "Lütfen seçiniz...",
+    "privacyPolicy": {
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "ipvd": "Bu formu göndererek %COMPANY_NAME% ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
+    },
+    "registration": {
+        "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "bu sistemle birleştiriliyor",
+            "mayTake": "Veritabanının boyutuna bağlı olarak, bu işlem birkaç saat sürebilir."
+        },
+        "finishingMerge": "Sistem birleştirme bitiriliyor",
+        "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
+            "backToEditText": "Düzeleme arayüzüne dön",
+            "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
+        },
+        "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
+        "systemsMerging": "Bu sistem şu anda bir birleştirme işleminde yer almaktadır."
+    },
+    "search": {
+        "Any": "Herhangi",
+        "Search": "Arama",
+        "analytics": "Analiz",
+        "analyticsSelected": "analiz Etkinliği",
+        "filter applied": "filtre uygulandı",
+        "filters applied": "filtreler uygulandı",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "hardwareType": "Tür",
+        "hardwareTypes": "Türler",
+        "minResolution": "Minimum Çözünürlük",
+        "search_ipvd": "Belirli bir üretici veya modele göre arama",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "vendor": "Üretici",
+        "vendors": "Üreticiler"
+    },
+    "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
+        "beginDetach": "Sunucu şimdi ayrılıyor",
+        "beginReset": "Server is now resetting.",
+        "detachSystemFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
+        "detachSystemSuccess": "Sunucu başarıyla sistemden ayrıldı.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
+        "removeMediaserverFailed": "Sunucu sistemden kaldırılamadı.",
+        "resetFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "restartFailed": "Sunucu yeniden başlatılırken bir sorun oluştu.",
+        "restartSuccessful": "Sunucu başarıyla yeniden başlatıldı.",
+        "serverOffline": "Sunucu Çevrimdışı.",
+        "servers": "Sunucular",
+        "status": {
+            "checking": "kontrol Ediliyor...",
+            "offline": "çevrimdışı",
+            "resetting": "resetting...",
+            "restarting": "yeniden başlatılıyor..."
+        },
+        "successRename": "Sunucu adı kaydedildi."
+    },
+    "system": {
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "mergeUnknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
+        "mySystemSearch": "IMeMyMine",
+        "settings": {
+            "notAbleToLoadStorageInfo": "Depolama bilgileri yüklenemiyor.",
+            "notAbleToLoadSecurity": "Güvenlik ayarları yüklenemiyor.",
+            "notAbleToLoadSystem": "Sistem ayarları yüklenemiyor.",
+            "sessionLimitDuration": {
+                "hours": "saat",
+                "minutes": "dakika"
+            },
+            "warningMessages": {
+                "videoEncryption": "Video trafiğini şifrelemek, CPU kullanımını önemli ölçüde artıracaktır."
+            }
+        },
+        "status": {
+            "offline": "Sistem çevrimdışı",
+            "unavailable": "Sistem erişilebilir değil"
+        },
+        "users": {
+            "cloudDelete": "Kullanıcıyı Sil",
+            "localDelete": "Kullanıcıyı sil"
+        },
+        "yourSystem": "Sistem",
+        "loggers": {
+            "none": {
+                "text": "Hiç",
+                "help": "(günlük devre dışı)"
+            },
+            "error": {
+                "text": "Hata",
+                "help": "(yalnızca günlük hataları)"
+            },
+            "warning": {
+                "text": "Uyarı",
+                "help": "(günlük uyarıları ve hataları)"
+            },
+            "info": {
+                "text": "Bilgi",
+                "help": "(günlük uyarıları, hatalar ve tüm iletiler)"
+            },
+            "debug": {
+                "text": "Hata ayıklama",
+                "help": "(her Sistem mesajını ve hata ayıklama bilgilerini günlüğe kaydet)"
+            },
+            "verbose": {
+                "text": "Ayrıntılı",
+                "help": "(Detaylar: Kullanılabilir tüm bilgileri günlükle)"
+            }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
+        }
+    },
+    "systemStatuses": {
+        "activated": "aktif edildi",
+        "incompatible": "uyumsuz",
+        "merging": "birleştirme",
+        "notActivated": "aktif edilmemiş",
+        "offline": "çevrimdışı",
+        "online": "çevrimiçi",
+        "unavailable": "kullanılamaz"
+    },
+    "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "İnceleme silindi",
+        "system": {
+            "deleted": {
+                "success": "System {systemName} is successfully deleted from your account"
+            },
+            "disconnected": {
+                "success": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı"
+            },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
+            "merge": {
+                "failed": "Sistem birleştirme işlemi başarısız oldu",
+                "success": "System merge completed"
+            },
+            "rename": {
+                "success": "Sistem ismi kaydedildi"
+            }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
+    },
+    "license": {
+        "licenseTypeTitles": {
+            "Time": "Zaman",
+            "Trial": "Deneme",
+            "Professional": "Profesyonel",
+            "Analog": "Analog",
+            "Edge": "Uç",
+            "VMAX": "VMAX",
+            "Video Wall": "Video Wall",
+            "Analog Encoder": "Analog Kodlayıcı",
+            "Starter": "Başlangıç",
+            "IO Module": "I/O Modül",
+            "Bridge": "Köprü",
+            "NVR": "NVR"
+        },
+        "info": {
+            "type": "Tür",
+            "channels": "Kanallar",
+            "server": "Sunucu",
+            "hwid": "Donanım Kimliği",
+            "status": "Durum",
+            "expires": "Bitiş tarihi",
+            "deactivations": "Devre dışı bırakabilme sayısı",
+            "online": "Çevrimiçi",
+            "error": "Hata",
+            "expired": "Süresi Dolmuş",
+            "ok": "Tamam",
+            "nvrError": "NVR Error",
+            "serverNotFound": "Sunucu bulunamadı"
+        },
+        "messages": {
+            "required": "{number} more required",
+            "activated": "Lisans deaktif edildi",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "trialActivated": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 adede kadar kamera kaydedebilirsiniz."
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Ek yerel FS türleri",
+        "autoDiscoveryResponseEnabled": "Otomatik keşif yanıtı",
+        "crossdomainEnabled": "Etki Alanları Arası",
+        "defaultExportVideoCodec": "Varsayılan video codec'i",
+        "defaultVideoCodec": "Varsayılan video codec bileşeni",
+        "downloaderPeers": "İndirici eşleri",
+        "lastMergeMasterId": "Son birleştirme yöneticisi",
+        "lastMergeSlaveId": "Son birleştirme yöneticisi",
+        "ldapSearchTimeoutS": "LDAP arama zaman aşımı (sn)",
+        "licenseServer": "Lisans sunucusu",
+        "lowQualityScreenVideoCodec": "Düşük kaliteli ekran video codec bileşeni",
+        "maxP2pAllClientsSizeBytes": "Max P2P tüm istemciler boyut bayt",
+        "maxRtpRetryCount": "Maks RTP yeniden deneme sayısı",
+        "metadataStorageChangePolicy": "Meta veri depolama değişikliği politikası",
+        "pushNotificationsLanguage": "Anlık bildirim dili",
+        "resourceFileUri": "Kaynak dosya URI'sı",
+        "sessionLimitMinutes": "Oturum sınırı (dakika)",
+        "specificFeatures": "Spesifik özellikler",
+        "systemName": "Sistem Adı",
+        "webSocketEnabled": "Web soketleri",
+        "arecontRtspEnabled": "Arecont RTSP Etkin",
+        "auditTrailEnabled": "Denetim etkinleştirildi",
+        "auditTrailPeriodDays": "Denetim izi dönemi günleri",
+        "autoDiscoveryEnabled": "Cihaz otomatik bulmayı etkinleştir",
+        "autoUpdateThumbnails": "Küçük resimleri otomatik güncelleme",
+        "backupNewCamerasByDefault": "Varsayılan olarak yeni kameraları yedekle",
+        "backupQualities": "Yedekleme Kalitesi",
+        "cameraSettingsOptimization": "Cihaz optimizasyonuna izin ver",
+        "clientStatisticsSettingsUrl": "Client istatistikleri url'si",
+        "cloudAccountName": "Cloud hesabı sahibi",
+        "cloudConnectRelayingEnabled": "Bulut bağlantısında geçiş etkinleştir",
+        "cloudConnectUdpHolePunchingEnabled": "Bulut bağlantısı için UDP port açmayı etkinleştir",
+        "cloudHost": "Cloud sunucu",
+        "cloudSystemID": "Bulut Sistem id",
+        "disabledVendors": "Engelli tedarikçi",
+        "ec2AliveUpdateIntervalSec": "Canlılık güncelleme aralığı (saniye)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Bağlantı canlı tutma zaman aşımı (saniye)",
+        "ec2KeepAliveProbeCount": "Bağlantı canlı tutma bekleme süresi (saniye)",
+        "emailFrom": "Kimden",
+        "emailSignature": "E-posta imzası",
+        "emailSupportEmail": "Destek maili",
+        "enableEdgeRecording": "Çağrı Uç etkinleştirilsin",
+        "eventLogPeriodDays": "Olay günlük periyodu (gün)",
+        "ldapAdminDn": "LDAP yönetici DN",
+        "ldapSearchBase": "LDAP veritabanı",
+        "ldapSearchFilter": "LDAP arama filtresi",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Yerel Sistem Kimliği",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Eşzamanlı İnternet zamanı arasındaki maksimum fark (milisaniyeler)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Eşzamanlı yerel zaman arasındaki maksimum fark (milisaniyeler)",
+        "maxP2pQueueSizeBytes": "Maksimum kayıt kuyruğu boyutu (bayt)",
+        "maxRecordQueueSizeBytes": "Maksimum kayıt kuyruğu boyutu (bayt)",
+        "maxRecordQueueSizeElements": "Maksimum kayıt kuyruğu boyutu (öğeler)",
+        "maxRemoteArchiveSynchronizationThreads": "Maksimum uzak arşiv senkronizasyon konuları",
+        "maxRtspConnectDurationSeconds": "Max Rtsp bağlantı süresi saniye",
+        "maxSceneItems": "Maksimum sahne öğeleri (0 varsayılan değerdir)",
+        "proxyConnectTimeoutSec": "Vekil sunucu zaman aşımı(saniye)",
+        "rtpTimeoutMs": "RTP zaman aşımı (milisaniye)",
+        "sequentialFlirOnvifSearcherEnabled": "Ardışık Flir Onvif araştırmacı kullanın",
+        "serverDiscoveryPingTimeoutSec": "Sunucu keşif zaman aşımı",
+        "smtpConnectionType": "SMTP bağlantı türü",
+        "smtpHost": "SMTP Sunucusu",
+        "smtpPort": "SMTP portu",
+        "smtpSimple": "SMTP basit doğrulama",
+        "smtpTimeout": "SMTP zaman aşımı",
+        "smtpUser": "SMTP kullanıcı",
+        "statisticsAllowed": "Anonim kullanım istatistiklerini ve kilitlenme raporlarını gönder",
+        "statisticsReportLastNumber": "İstatistik raporu - son",
+        "statisticsReportLastTime": "İstatistik raporu - son kez",
+        "statisticsReportLastVersion": "İstatistik raporu - son sürüm",
+        "statisticsReportServerApi": "Istatistik sunucusu api",
+        "statisticsReportTimeCycle": "Istatistik rapor aralığı",
+        "statisticsReportUpdateDelay": "İstatistik raporu - güncelleme gecikmesi",
+        "synchronizeTimeWithInternet": "Zamanı İnternet ile senkronize et",
+        "SystemName": "Sistem Adı",
+        "takeCameraOwnershipWithoutLock": "Kilitler olmadan kamera sahipliğini alın",
+        "timeSynchronizationEnabled": "Zaman senkronizasyonu etkin",
+        "primaryTimeServer": "Birincil zaman senkronizasyon sunucusu",
+        "osTimeChangeCheckPeriodMs": "İşletim sistemi zaman değişikliği kontrol süresi",
+        "syncTimeExchangePeriod": "Ağ istekleri için senkronizasyon zamanı senkronizasyon aralığı",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time detla less than epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Maks. Giyilebilir kamera arşivi senkronizasyonları",
+        "updateNotificationsEnabled": "Güncelleştirme bildirimleri etkin",
+        "upnpPortMappingEnabled": "UPNP bağlantı noktası eşlemesi etkinleştirildi",
+        "useTextEmailFormat": "Düz metin e-postaları gönder",
+        "useWindowsEmailLineFeed": "E-postalarda windows satır beslemesini kulllan",
+        "trafficEncryptionForced": "Trafik şifrelemeyi zorla",
+        "videoTrafficEncryptionForced": "Video trafiğini şifrelemeyi zorla",
+        "updateStatus": "Güncelleme durumu",
+        "watermarkSettings": "Filigran ayarları",
+        "maxWebMTranscoders": "Sunucu için maksimum WEBM bağlantısı. Chrome aynı anda 2 bağlantı açar ardından ilkini kapatır. Bu nedenle parametreyi value>=2 olarak ayarlamanız önerilir.",
+        "maxEventLogRecords": "Veritabanında tutulacak maksimum olay günlüğü kaydı. Silinmemiş kayıtların gerçek miktarı belirtilen değerden %20 daha yüksek olabilir.",
+        "forceLiveCacheForPrimaryStream": "Birincil akış için bazı karelerin önbellekte saklanıp saklanmayacağı. Değer:\"evet\" - her zaman etkin ( çok fazla RAM kullanılabilir), \"hayır\" - geri oynatma işleminin gerektirdiği durumlar dışında devre dışı (örn. HLS), \"auto\" hayır'a benzer ancak etkinleştirildiğinde kullanıcı deneyimini arttırır (örneğin, bazı Analitik eklentileri kamera üzerinde çalışırken)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Devre Dışı Bırak"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
+    }
 }

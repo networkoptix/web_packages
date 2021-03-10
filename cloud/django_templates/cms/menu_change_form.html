@@ -1,0 +1,35 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static "css/nested_stacked_overrides.css" %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block object-tools-items %}
+    {% if user.is_superuser %}
+        <li>
+            <a href="{% url 'admin:menu_porting' %}">Import/Export Menus</a>
+        </li>
+        <li>
+            <a href="{% url 'admin:zendesk_import' %}">Import from Zendesk</a>
+        </li>
+        <li>
+            <a href="{{ preview_url_draft }}">Draft</a>
+        </li>
+        <li>
+            <a href="{{ preview_url_review }}">Review</a>
+        </li>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}
+{% block content %}
+    {{block.super}}
+    {% if preview_url_draft %}
+        <div id="menuPreviewErrors"></div>
+        <iframe class="previewFrame" src="{{ preview_url_draft }}" style="width: 100%; height: 80vh"></iframe>
+    {% endif %}
+    <script type="text/javascript">
+        const assetInfo = JSON.parse('{{asset_info|safe}}')
+    </script>
+    <script src="{% static 'js/menuChange.js' %}"></script>
+{% endblock %}

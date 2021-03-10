@@ -1,0 +1,11 @@
+<div
+    class="playback-control-button"
+    [ngClass]="{
+        'enabled': enabled,
+        'play': btnClass === 'play',
+        'pause': btnClass === 'pause'
+    }"
+    (click)="handleClick()"
+>
+    <span class="glyph"></span>
+</div>

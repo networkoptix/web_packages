@@ -1,10 +1,12 @@
 import {
-    Component, Input, OnInit, Renderer2, ViewEncapsulation
-}                                                from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxProcessService }                      from '../../services/process.service';
+    Component, Input, Renderer2
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-remove-user-content',
@@ -16,29 +18,35 @@ export class RemoveUserModalContent {
     @Input() user;
     @Input() closable;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
-    removeUserProcess: any;
+    removeUserProcess: Process;
+    dialogTitle: string;
+    dialogButtonText: string;
 
-    constructor(public activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private processService: NxProcessService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
+        const msg = this.user.isCloud ? 'remove' : 'delete';
+        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();
+        this.dialogButtonText = this.LANG.dialogs.buttons[msg]?.();
+
         this.removeUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.user).then(() => {
                 return this.system.getUsers(true);
             });
         }, {
-            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.user ? this.user.email : ''),
-            errorPrefix   : this.LANG.errorCodes.cantSharePrefix
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -46,41 +54,5 @@ export class RemoveUserModalContent {
 
     close() {
         this.activeModal.close();
-    }
-}
-
-@Component({
-    selector     : 'nx-modal-remove-user',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-export class NxModalRemoveUserComponent implements OnInit {
-    modalRef: NgbModalRef;
-
-    constructor(private modalService: NgbModal) {
-    }
-
-    private dialog(system?, user?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(RemoveUserModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system?, user?) {
-        return this.dialog(system, user).result;
-    }
-
-    ngOnInit() {
     }
 }

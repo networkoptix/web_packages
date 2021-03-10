@@ -1,47 +1,49 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { IntegrationService }           from './integration.service';
-import { NxUriService }                 from '../../services/uri.service';
-import { NxConfigService }              from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { Subscription }                 from 'rxjs';
-import { NxAccountService }             from '../../services/account.service';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { NxPageService }                from '../../services/page.service';
-import { NxUtilsService }               from '../../services/utils.service';
+import {
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
 
-@AutoUnsubscribe()
+import { IntegrationService }        from './integration.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUtilsService }            from '../../services/utils.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'integrations-component',
-    templateUrl: 'integrations.component.html',
-    styleUrls  : ['integrations.component.scss']
+    selector : 'integrations-component',
+    templateUrl : 'integrations.component.html',
+    styleUrls : ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
-    private CONFIG: any = {};
-    private LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    private allElements: any;
-    private elements: any;
-    private emptyFilter: any = {};
-    private filterModel: any = {};
-
-    private integrationSubscription: Subscription;
-    private uriSubscription: Subscription;
-    location: any;
+    allElements: any;
+    elements: any;
+    filterModel: any = {};
     params: any;
     account: any;
-
     selectors = {
         access   : false,
         analytics: false,
         cameras  : false,
         home     : false,
-        psim     : false,
+        psim     : false
     };
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
+    private emptyFilter: any = {};
+    private integrationSubscription: Subscription;
+    private uriSubscription: Subscription;
+
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
 
         this.allElements = [];
 
@@ -52,22 +54,23 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.filterModel.tags = [];
     }
 
-    constructor(private uri: NxUriService,
+    constructor(configService: NxConfigService,
+                private uri: NxUriService,
                 private integrations: IntegrationService,
-                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
-                location: Location) {
-        this.location = location;
-        this.setupDefaults();
+                private router: Router
+    ) {
+        this.setupDefaults(configService);
     }
+
     ngOnDestroy() {}
 
     ngOnInit(): void {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.integrations);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
+        this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         // Example URI
         // /integrations?search=node
@@ -78,36 +81,41 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.accountService.get()
-            .then(account => {
-                this.integrationSubscription = this.integrations
-                    .pluginsSubject
-                    .subscribe((result: any) => {
-                        if (result) {
-                            if (!this.CONFIG.integrationStoreEnabled && !(account && account.is_staff)) {
-                                this.location.go('404');
-                            } else {
-                                this.allElements = result;
-                                this.setTags();
-                                this.setFilter();
-                            }
-                        } else {
-                            this.elements = undefined;
-                        }
-                    }, error => {
-                        console.error('Integration plugins error -> ', error);
-                        this.location.go('404');
-                    });
+        this.integrationSubscription = this.integrations
+            .pluginsSubject
+            .subscribe((result: any) => {
+                if (result) {
+                    if (!this.CONFIG.cloudCapabilities.integrationStore) {
+                        this.accountService.requireLogin()
+                            .then(() => {
+                                this.setIntegrations(result);
+                            })
+                            .catch(this.pageService.show404);
+                    } else {
+                        this.setIntegrations(result);
+                    }
+                } else {
+                    this.elements = undefined;
+                }
+            }, error => {
+                console.error('Integration plugins error -> ', error);
+                this.pageService.show404();
             });
+    }
+
+    setIntegrations(integrations) {
+        this.allElements = integrations;
+        this.setTags();
+        this.setFilter();
     }
 
     setTags() {
         const found = this.allElements.find((elm) => elm.mine);
         const haveMyIntegration = (found && found.mine) || false;
 
-        this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled || (item.id === this.CONFIG.myIntegrationTagId && haveMyIntegration)) {
-                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
+        this.CONFIG.integration.filter.items.forEach(item => {
+            if (item.enabled || (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)) {
+                this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 
@@ -116,27 +124,26 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     setFilter() {
-        function searchBy(item, query) {
-            return (item.information.name && item.information.name.toLowerCase().indexOf(query) > -1 ||
-                    item.information.companyName && item.information.companyName.toLowerCase().indexOf(query) > -1 ||
-                    item.information.shortDescription && item.information.shortDescription.toLowerCase().indexOf(query) > -1 ||
-                    item.overview && item.overview.description && item.overview.description.toLowerCase().indexOf(query) > -1);
-        }
+        const IGNORE_KEYS = ['downloadFilesOrder', 'id', 'lastModified', 'link', 'mine'];
+        const searchBy = (item, query) => {
+            return Object.keys(item).find((key) => {
+                // Ignore values that are undefined or that dont help the search.
+                if (!item[key] || IGNORE_KEYS.indexOf(key) > -1) {
+                    return false;
+                }
+                return JSON.stringify(Object.values(item[key])).toLowerCase().indexOf(query) > -1;
+            });
+        };
 
         this.elements = this.allElements.map(obj => ({ ...obj }));
 
         if (this.filterModel.query !== '') {
             const query = this.filterModel.query.toLowerCase();
 
-            this.elements = this.elements.filter(item => {
-                if (searchBy(item, query)) {
-                    // this.markMatch(item, text);
-                    return item;
-                }
-            });
+            this.elements = this.elements.filter(item => searchBy(item, query));
         }
 
-        if (this.filterModel.tags.length) {
+        if (this.filterModel.tags?.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {

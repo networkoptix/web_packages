@@ -1,16 +1,17 @@
-import django
 import logging
 import json
 import time
 import traceback
+from enum import Enum
 
+import django
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+from django.http import QueryDict, HttpResponseRedirect
+from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
-from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
-from django.http import QueryDict
-from enum import Enum
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ class ErrorCodes(Enum):
 
     # Cloud DB errors:
     cloud_invalid_response = 'cloudInvalidResponse'
+    vms_request_failure = 'vmsRequestFailure'
 
     # Portal critical errors (unexpected)
     portal_critical_error = 'portalError'
@@ -49,6 +51,8 @@ class ErrorCodes(Enum):
     invalid_nonce = 'invalidNonce'
     service_unavailable = 'serviceUnavailable'
     unknown_error = 'unknownError'
+    unsupported_media_type = 'unsupportedMediaType'
+    credentials_removed_permanently = 'credentialsRemovedPermanently'
 
     response_serialization_error = 'responseSerializationError'
     deserialization_error = 'deserializationError'
@@ -66,10 +70,13 @@ class ErrorCodes(Enum):
                     ErrorCodes.wrong_password):
             return logging.INFO
         if self in (ErrorCodes.account_blocked,
+                    ErrorCodes.cloud_invalid_response,
                     ErrorCodes.forbidden,
                     ErrorCodes.invalid_nonce,
                     ErrorCodes.wrong_code,
-                    ErrorCodes.wrong_parameters):
+                    ErrorCodes.wrong_parameters,
+                    ErrorCodes.unsupported_media_type,
+                    ErrorCodes.credentials_removed_permanently):
             return logging.WARNING
         return logging.ERROR
 
@@ -84,11 +91,15 @@ def api_success(data=None, status_code=status.HTTP_200_OK):
 
 def require_params(request, params_list):
     error_data = {}
-    for param in params_list:
-        if request.method == "POST" and (param not in request.data or request.data[param] == ''):
-            error_data[param] = ['This field is required.']
-        elif request.method == "GET" and (param not in request.GET):
-            error_data[param] = ['This field is required.']
+    try:
+        for param in params_list:
+            if request.method == "POST" and (param not in request.data or request.data[param] == ''):
+                error_data[param] = ['This field is required.']
+            elif request.method == "GET" and (param not in request.GET):
+                error_data[param] = ['This field is required.']
+    # Files with xml content type break when accessing data
+    except UnsupportedMediaType as e:
+        raise APIRequestException(e.detail, ErrorCodes.unsupported_media_type)
 
     if error_data:
         raise APIRequestException('Parameters are missing', ErrorCodes.wrong_parameters,
@@ -110,7 +121,7 @@ class APIException(Exception):
             try:
                 error_code = ErrorCodes(error_code)
             except ValueError:
-                logger.error('Unexpected error code {0}'.format(error_code))
+                logger.error(f'Unexpected error code {error_code}')
 
         self.error_data = error_data
         self.error_code = error_code
@@ -296,6 +307,8 @@ def clean_passwords(dictionary):
             dictionary['new_password'] = '****'
         if 'old_password' in dictionary:
             dictionary['old_password'] = '***'
+        if 'system' in dictionary and 'authKey' in dictionary['system']:
+            dictionary['system']['authKey'] = '**'
 
 
 def log_error(request, error, log_level):
@@ -308,12 +321,16 @@ def log_error(request, error, log_level):
 
     if isinstance(request, Request):
         page_url = request.build_absolute_uri()
-        request_data = request.data
+        try:
+            request_data = request.data
+        # Files with xml content type break when accessing data
+        except UnsupportedMediaType:
+            request_data = {}
         ip = get_client_ip(request)
         if not isinstance(request.user, AnonymousUser):
             user_name = request.user.email
         if request.session:
-            if 'login' in request.session and request.session['login'] == request.user.email:
+            if 'login' in request.session:
                 login_type = 'email and password'
             if 'time' in request.session:
                 session_time = (time.time() - request.session['time'])/1000.0
@@ -322,15 +339,10 @@ def log_error(request, error, log_level):
         request_data = request_data.dict()
 
     if isinstance(error, APIException):
-        error_text = "{}({})".format(error.error_text, error.error_code)
+        error_text = f"{error.error_text}({error.error_code})"
         if error.error_data:
             clean_passwords(error.error_data)
-        error_formatted = 'Status: {}, Message: {}, Result code: {}, Data: {}'.\
-                          format(error.status_code,
-                                 error.error_text,
-                                 error.error_code,
-                                 json.dumps(error.error_data, indent=4, separators=(',', ': '))
-                                 )
+        error_formatted = f"Status: {error.status_code}, Message: {error.error_text}, Result code: {error.error_code}, Data: {json.dumps(error.error_data, indent=4, separators=(',', ': '))}"
     else:
         error_text = 'unknown'
         error_formatted = 'Unexpected error'
@@ -338,32 +350,16 @@ def log_error(request, error, log_level):
     clean_passwords(request_data)
 
     if log_level == logging.INFO:
-        error_formatted = ' {}:{}\nUser: {} Login: {} Session Time: {} IP: {}\n{} Request: {}'. \
-            format(error.__class__.__name__,
-                   error_text,
-                   user_name,
-                   login_type,
-                   session_time,
-                   ip,
-                   page_url,
-                   request_data
-                   )
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}'
     else:
-        error_formatted = ' {}:{}\nUser: {} Login: {} Session Time: {} IP: {}\n{} Request: {}\n{}\nCall Stack: \n{}'. \
-            format(error.__class__.__name__,
-                   error_text,
-                   user_name,
-                   login_type,
-                   session_time,
-                   ip,
-                   page_url,
-                   request_data,
-                   error_formatted,
-                   traceback.format_exc()
-                   ).replace("Traceback", "")  # remove Traceback word from handled exceptions
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}\n{error_formatted}\nCall Stack: \n{traceback.format_exc().replace("Traceback", "")}'
     # Explicit check so that it will not affect superusers.
     if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO
+
+    # Lower log level of merge errors
+    elif hasattr(error, "error_text") and error.error_text in ["DUPLICATE_MEDIASERVER_FOUND", "FAIL", "INCOMPATIBLE"]:
+        log_level = logging.WARNING
 
     logger.log(log_level, error_formatted)
     return error_formatted
@@ -377,6 +373,33 @@ def kill_session(request):
     django.contrib.auth.logout(request)
 
 
+def handler(request, exception):
+    if isinstance(exception, APINotAuthorisedException):
+        log_error(request, exception, exception.log_level())
+        # check if user session exist
+        # and kill it if user is not authorized
+        if 'login' in request.session:
+            kill_session(request)
+
+        return exception.response()
+
+    elif isinstance(exception, APIException):
+        # Do not log not_authorized errors
+        log_error(request, exception, exception.log_level())
+
+        return exception.response()
+    else:
+        detailed_error = log_error(request, exception, logging.ERROR)
+
+        if not settings.DEBUG:
+            detailed_error = 'Unexpected error somewhere inside'
+
+        return Response({
+            'resultCode': status.HTTP_500_INTERNAL_SERVER_ERROR,
+            'errorText': detailed_error
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 def handle_exceptions(func):
     """
     Decorator for api_methods to handle all unhandled exception and return some reasonable response for a client
@@ -384,36 +407,14 @@ def handle_exceptions(func):
     :return:
     """
 
-    def handler(*args, **kwargs):
+    def caller(*args, **kwargs):
         # noinspection PyBroadException
         try:
             data = func(*args, **kwargs)
-            if not isinstance(data, Response):
+            if not isinstance(data, Response) and not isinstance(data, HttpResponseRedirect):
                 return Response(data, status=status.HTTP_200_OK)
             return data
+        except Exception as exception:
+            return handler(args[0], exception)
 
-        except APINotAuthorisedException as error:
-            log_error(args[0], error, error.log_level())
-            # check if user session exist
-            # and kill it if user is not authorized
-            if 'login' in args[0].session:
-                kill_session(args[0])
-
-            return error.response()
-
-        except APIException as error:
-            # Do not log not_authorized errors
-            log_error(args[0], error, error.log_level())
-
-            return error.response()
-        except Exception as error:
-            detailed_error = log_error(args[0], error, logging.ERROR)
-
-            if not settings.DEBUG:
-                detailed_error = 'Unexpected error somewhere inside'
-
-            return Response({
-                'resultCode': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                'errorText': detailed_error
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    return handler
+    return caller

@@ -16,15 +16,15 @@
         <li class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': location.integrations}"
-               href="/integrations"
-               (click)="show = false; return;">
-               <span translate>Integrations</span></a>
+               routerLink="/integrations"
+               (click)="hide()">
+               <span translate>Integrations (beta)</span></a>
         </li>
         <li class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': location.ipvd }"
-               href="/ipvd"
-               (click)="show = false; return;">
+               routerLink="/ipvd"
+               (click)="hide()">
                <span translate>Supported IP Video Devices</span>
             </a>
         </li>

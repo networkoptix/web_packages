@@ -1,35 +1,35 @@
 {
   "activate_account": {
-    "emailSubject": "啟動您的帳號"
+    "emailSubject": "啟用您的帳號"
   },
   "cloud_invite": {
     "emailSubject": "您已被邀請到 %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{message.asset}}的產品諮詢"
+    "emailSubject": "{{{message.asset}}}的銷售諮詢"
   },
   "technical_inquiry": {
-    "emailSubject": "{{message.asset}} 的技術諮詢"
+    "emailSubject": "{{{message.asset}} 的技術諮詢"
   },
   "integration_feedback": {
-    "emailSubject": "{{message.asset}} 的回饋意見"
+    "emailSubject": "{{{message.asset}}的回饋意見"
   },
   "ipvd_feedback": {
-    "emailSubject": "關於 {{message.asset}}{{/message.asset}} 攝影機頁面回饋意見{{#message.asset}}"
+    "emailSubject": "關於{{{message.asset}}{{/message.asset}}攝影機頁面的回饋意見{{#message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}： {{message.asset}} 有新版本可供檢視"
+    "emailSubject": "{{message.asset_type}}{{{message.asset}}有新版本可供檢視"
   },
   "restore_password": {
     "emailSubject": "重設您的密碼"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀請您加入 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}V影像系統 {{message.system_name}} 與您共享{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀請您加入 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}影像系統{{{message.system_name}} 與您共享{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "有人分享影像 {{message.system_name}} 給您"
+    "emailSubject": "與您分享影像系統 {{{message.system_name}}}"
   }
 }

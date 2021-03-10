@@ -7,92 +7,18 @@ import os
 import re
 import json
 import codecs
-import time
-from cloud import settings
+import logging
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.core.cache import caches
+
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
-from django.core.management.base import BaseCommand
-from django.core.cache import caches
-import logging
 logger = logging.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'
-
-
-def create_new_cloudportals_for_each_customization(logger):
-    logger.stdout.write(logger.style.SUCCESS("\nCreating cloud portal for each customization"))
-    customizations = Customization.objects.all()
-
-    for customization in customizations:
-        records_with_name = DataRecord.objects.filter(data_structure__name="%CLOUD_NAME%",
-                                                      customization=customization) \
-            .exclude(version=None).last()
-        if records_with_name:
-            asset_name = records_with_name.value
-            logger.stdout.write(logger.style.SUCCESS("\tAsset name for {} is {}".
-                                                     format(customization.name, asset_name)))
-        else:
-            asset_name = "Cloud Portal"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find asset name for {} using {}".
-                                                     format(customization.name, asset_name)))
-        cloud = structure.find_or_add_asset_with_single_customization(asset_name, customization, "cloud_portal", "")
-        cloud.customizations.add(customization)
-        cloud.save()
-    logger.stdout.write(logger.style.SUCCESS("Done creating new cloud portals"))
-
-
-def move_contexts_to_assettype(logger):
-    logger.stdout.write(
-        logger.style.SUCCESS("\nMoving contexts from original cloud portal to asset_type cloud_portal"))
-    cloud_portal = Asset.objects.get(name="cloud_portal")
-    cloud_portal_type = structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
-
-    for context in cloud_portal.context_set.all():
-        logger.stdout.write(logger.style.SUCCESS("\tMoving {}".format(context.name)))
-        context.asset_type = cloud_portal_type
-        context.save()
-    logger.stdout.write(logger.style.SUCCESS("Done moving contexts to asset_type cloud_portal"))
-
-
-def move_revisions_to_new_cloud_portals(logger):
-    logger.stdout.write(logger.style.SUCCESS("Moving revisions to new cloud portals"))
-    original_cloud_portal = Asset.objects.get(id=1)
-
-    new_clouds = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal) \
-        .exclude(id=original_cloud_portal.id)
-
-    original_content_versions = ContentVersion.objects.filter(asset=original_cloud_portal)
-
-    for cloud in new_clouds:
-        logger.stdout.write(
-            logger.style.SUCCESS("\tMoving {} revisions to {}".
-                                 format(cloud.customizations.first(), cloud.name)))
-        customization_content_versions = original_content_versions.filter(
-            customization=cloud.customizations.first())
-        for content_version in customization_content_versions:
-            content_version.asset = cloud
-            content_version.save()
-            for datarecord in content_version.datarecord_set.all():
-                datarecord.asset = cloud
-                datarecord.save()
-    logger.stdout.write(logger.style.SUCCESS("Done moving revisions to new cloud portals"))
-
-
-def migrate_18_3_to_18_4(logger):
-    # If there are not assets create a AssetType of cloud_portal and we can skip migrating 18 -> 19
-    if not Asset.objects.all().exists():
-        structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
-
-    if AssetType.objects.all().exists():
-        logger.stdout.write(logger.style.SUCCESS("Migration has already been completed skipping this step"))
-        return
-
-    move_contexts_to_assettype(logger)
-    create_new_cloudportals_for_each_customization(logger)
-    move_revisions_to_new_cloud_portals(logger)
-
-    logger.stdout.write(logger.style.SUCCESS("Done moving records from 18.3 to 18.4"))
 
 
 def context_for_file(filename, skin_name):
@@ -128,13 +54,15 @@ def iterate_cms_files(skin_name, ignore_not_english):
 
 def find_or_add_context_by_file(file_path, asset_type, has_language):
     context = Context.objects.filter(file_path=file_path, asset_type=asset_type).first()
-    if not context:
-        context = Context(name=file_path, file_path=file_path, asset_type=asset_type,
-                          translatable=has_language, hidden=True, is_global=False)
-    else:
-        context.deprecated=False
+    # Check so that static article contexts stay deprecated
+    if 'views/static/' not in file_path:
+        if not context:
+            context = Context(name=file_path, file_path=file_path, asset_type=asset_type,
+                              translatable=has_language, hidden=True, is_global=False)
+        else:
+            context.deprecated=False
 
-    context.save()
+        context.save()
     return context
 
 
@@ -168,11 +96,12 @@ def read_structure_file(filename, asset_type, global_strings, skin):
     # Here we check if there are any unique strings (which are not global)
     strings = [string for string in strings if string not in global_strings]
     context = find_or_add_context_by_file(context_name, asset_type, bool(language_code))
-    context_template = find_or_add_context_template(context, language_code, skin)
-    context_template.template = data  # update template for this context
-    context_template.save()
-    for string in strings:
-        structure.find_or_add_data_structure(string, None, context.id, bool(language_code))
+    if context:
+        context_template = find_or_add_context_template(context, language_code, skin)
+        context_template.template = data  # update template for this context
+        context_template.save()
+        for string in strings:
+            structure.find_or_add_data_structure(string, None, context, bool(language_code))
 
 
 def read_structure(asset_type):
@@ -198,7 +127,7 @@ def find_or_add_language(language_code):
 
         with codecs.open(language_json_path, 'r', 'utf-8') as file_descriptor:
             language_content = json.load(file_descriptor)
-        language_name = language_content["ajs"]["language_name"]
+        language_name = language_content["language_name"]
         language.name = language_name
         language.save()
 
@@ -222,7 +151,6 @@ class Command(BaseCommand):
 
     @timer
     def handle(self, *args, **options):
-        migrate_18_3_to_18_4(self)
         asset_type = AssetType.get_type_by_name(options['asset_type'])
         read_languages(settings.DEFAULT_SKIN)
         if not Customization.objects.filter(name=settings.CUSTOMIZATION).exists():
@@ -232,9 +160,15 @@ class Command(BaseCommand):
             default_customization.languages.add(Language.by_code('en_US'))
             default_customization.save()
 
-        structure.read_structure_json('cms/cms_structure.json')
+        structure.read_structure_json()
         read_structure(asset_type)
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
 
+        structure.read_menu_structure('cms/menus.json')
+        self.stdout.write(self.style.SUCCESS(
+            'Successfully initiated menu structure'))
+
         caches['deployment'].set(settings.DEPLOYMENT_READY, True)
+        self.stdout.write(self.style.SUCCESS(
+            'Set deployment status to ready'))

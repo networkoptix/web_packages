@@ -1,16 +1,18 @@
-import django
 import json
+import logging
+import traceback
+from urllib.parse import quote_plus
+
+import django
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from urllib.parse import quote_plus
 
 from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
-from notifications.models import Message, Event, Feedback, PushDevice, PushSubscription
-from cms.models import Asset, cloud_portal_customization_cache, get_cloud_portal_asset
+from notifications.models import Message, Event, Feedback, PushDevice, PushNotification
+from cms.models import Asset, get_cloud_portal_asset
 
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +73,7 @@ def send_feedback(event_type, asset_id, data):
     feedback.send()
 
 
-# Push Notications
+# Push Notifications
 
 def _read_push_result(notification_object):
     result_data = notification_object.result_data
@@ -88,9 +90,11 @@ def _write_push_result(notification_object, result_data):
     notification_object.save()
 
 
-def log_push_result(notification_object, message, level=logging.INFO, device_token=None):
+def log_push_result(notification_object, message, level=logging.INFO, device_token=None, stack_trace=False):
     result_data = _read_push_result(notification_object)
     log_message = f'Push Notification: {notification_object.id}, {message}'
+    if stack_trace:
+        log_message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
     logger.log(level, log_message)
 
     if device_token:
@@ -116,7 +120,7 @@ def get_system_with_users(notification_object, request_data):
     try:
         if 'system' in request_data:
             if request_data['system']['id'] == notification_object.raw_system_id:
-                system = request_data['system']
+                system = request_data['system'].copy()
             else:
                 log_push_result(notification_object, 'System credentials do not match target system')
                 return None
@@ -143,23 +147,39 @@ def get_system_with_users(notification_object, request_data):
     return system
 
 
-def process_push_response(response, notification_object, dry_run=False):
+def process_push_response(responses, notification_object, dry_run=False):
     resend_tokens = []
+    error = False
 
-    for multicast in response:
-        for result in multicast['results']:
-            if 'error' in result:
-                token = result['original_registration_id']
-                if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
-                    log_push_result(
-                        notification_object, f'FCM Error: {result["error"]}. Token no longer valid, disabling device',
-                        device_token=token
-                    )
-                else:
-                    resend_tokens.append(token)
-                    log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
+    responses = tuple(response for response in responses if response)
 
-    if not resend_tokens and not dry_run:
+    for response in responses:
+        for multicast in response:
+            for result in multicast['results']:
+                if 'error' in result:
+                    token = result['original_registration_id']
+                    error = True
+                    if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
+                        log_push_result(
+                            notification_object, f'FCM Error: {result["error"]}. Token no longer valid, deleting device',
+                            device_token=token
+                        )
+                        PushDevice.objects.filter(registration_id=token).delete()
+                    elif result['error'] == 'InvalidApnsCredential':
+                        log_push_result(
+                            notification_object,
+                            f'FCM Error: {result["error"]}. APNs credentials invalid. '
+                            f'Either the credentials are missing, invalid, or APNs certificate is expired. '
+                            f'Please Notify Release Engineers.',
+                            level=logging.ERROR,
+                            device_token=token
+                        )
+                    else:
+                        resend_tokens.append(token)
+                        log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
+
+    if not resend_tokens and not dry_run and not error:
+        notification_object.state = PushNotification.RESULT_STATES.success
         log_push_result(notification_object, 'Successfully completed')
 
     return resend_tokens
@@ -179,15 +199,15 @@ def set_subscriptions_from_targets(notification_object, request_data):
     for account in target_accounts:
         targets.remove(account.email)
         if not account.is_active:
-            log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
+            log_push_result(notification_object, f'User {account.email} is not activated', logging.WARNING)
 
     for target in targets:
-        log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
+        log_push_result(notification_object, f'User {target} not found', logging.ERROR)
 
-    matching_devices = PushDevice.objects.filter(
+    return PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        active=True, user__is_active=True
+        application_id=notification_object.customization.name
     ).distinct()
-    notification_object.devices.set(matching_devices)
+    # notification_object.devices.set(matching_devices)
 
-    return notification_object.devices.exists()
+    # return matching_devices.values_list('id', flat=True)

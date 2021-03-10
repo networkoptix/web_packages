@@ -1,46 +1,67 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NxRibbonService } from './ribbon.service';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import {
+    Component, OnDestroy, OnInit, ViewEncapsulation
+}                                   from '@angular/core';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { Subscription }             from 'rxjs';
 
-@AutoUnsubscribe()
+import { NxRibbonService }          from './ribbon.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { Process }                  from '@services/process.service';
+import { NxHeaderService }          from '@services/nx-header.service';
+
+export interface RibbonAction {
+    type: 'link' | 'process-button',
+    text: string,
+    value: string | Process;
+}
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'nx-ribbon',
-    templateUrl: 'ribbon.component.html',
-    styleUrls: ['ribbon.component.scss'],
+    selector     : 'nx-ribbon',
+    templateUrl  : 'ribbon.component.html',
+    styleUrls    : ['ribbon.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxRibbonComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
     message: string;
-    action: string;
-    actionUrl: string;
-    showRibbon: boolean;
+    actions: RibbonAction[];
+    visibility: boolean;
     type: string;
+    updateFunction;
     private ribbonSubscription: Subscription;
 
     private setupDefaults() {
-        this.showRibbon = false;
+        this.visibility = false;
         this.message = '';
-        this.action = '';
-        this.actionUrl = '';
+        this.actions = [];
         this.type = '';
+        this.updateFunction = '';
     }
 
-    constructor(private ribbonService: NxRibbonService) {
+    get showRibbon() {
+        return this.visibility;
+    }
+
+    constructor(
+        configService: NxConfigService,
+        private ribbonService: NxRibbonService,
+        public headerService: NxHeaderService
+    ) {
+        this.CONFIG = configService.getConfig();
         this.setupDefaults();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
-        this.ribbonSubscription = this.ribbonService.contextSubject.pipe(
-            distinctUntilChanged((contextA, contextB) => JSON.stringify(contextA) === JSON.stringify(contextB))
-        ).subscribe(context => {
-            this.showRibbon = context.visibility || false;
+        this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(context => {
+            this.visibility = context.visibility || false;
             this.message = context.message || '';
-            this.action = context.text || '';
-            this.actionUrl = context.url || '';
+            this.actions = context.actions || [];
             this.type = context.type || '';
+            this.updateFunction = context.updateFunction || '';
         });
     }
 }

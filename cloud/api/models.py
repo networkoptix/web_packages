@@ -1,9 +1,10 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, Group, PermissionsMixin
+from django.utils import timezone
 from django.utils.html import format_html
 
-from django.utils import timezone
-
+from jsonfield import JSONField
 
 from api.controllers.cloud_api import Account as cloud_api_account
 from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
@@ -166,8 +167,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def customizations(self):
-        if self.is_superuser:
+        if self.is_superuser or Group.objects.filter(
+                permissions__codename='access_customization', options__all_assets=True,
+                usergroupstoassettype__asset_type__type=AssetType.ASSET_TYPES.cloud_portal, user=self
+        ).exists():
             return list(Customization.objects.all().values_list('name', flat=True))
+
         cloud_portal_ids = UserGroupsToAssetPermissions.objects.\
             filter(group__in=self.groups.all(), asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal).\
             values_list('asset__id', flat=True)
@@ -191,8 +196,20 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def assets_with_permission(self, permission):
         assets = []
-        permission_asset_ids = UserGroupsToAssetPermissions.objects.filter(group__in=self.groups.all())\
-            .values_list('asset__id', flat=True).distinct()
+        permission_asset_ids = list(UserGroupsToAssetPermissions.objects.filter(group__in=self.groups.all())\
+            .values_list('asset__id', flat=True).distinct())
+
+        wildcard_asset_types = []
+        for asset_type in AssetType.objects.all():
+            if Group.objects.filter(
+                    options__all_assets=True, usergroupstoassettype__asset_type=asset_type, user=self
+            ).exists():
+                wildcard_asset_types.append(asset_type)
+        permission_asset_ids.extend(list(
+            Asset.objects.filter(asset_type__in=wildcard_asset_types).values_list('id', flat=True)
+        ))
+        permission_asset_ids = set(permission_asset_ids)
+
         for asset in Asset.objects.filter(id__in=permission_asset_ids):
             if UserGroupsToAssetPermissions.check_permission(self, asset, permission):
                 assets.append(asset.id)
@@ -215,6 +232,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
             permission_based_group = Group.objects.filter(user=self, permissions__codename='edit_content').exists()
             named_group = Group.objects.filter(user=self, name__contains='Developer').exists()
             return permission_based_group or named_group
+
+    # Called when password is changed
+    def password_changed(self):
+        from notifications.models import PushDevice
+        PushDevice.delete_for_account(self)
 
     def short_email(self):
         return format_html("<div class='truncate-email'><span>{}</span></div>", self.email)
@@ -241,7 +263,7 @@ class AccountLoginHistory(models.Model):
         verbose_name_plural = 'Authentication log'
 
     def __unicode__(self):
-        return '{0} - {1} - {2}'.format(self.action, self.email, self.ip)
+        return f'{self.action} - {self.email} - {self.ip}'
 
 
 class ProxyGroup(Group):
@@ -252,3 +274,34 @@ class ProxyGroup(Group):
         app_label = 'api'
         verbose_name = 'Group'
         verbose_name_plural = 'Groups'
+
+
+class GroupOptions(models.Model):
+    group = models.OneToOneField(Group, unique=True, on_delete=models.CASCADE, related_name='options')
+
+    # options
+    all_assets = models.BooleanField(default=False)
+
+
+def group_saved(sender, created, signal, instance, **kwargs):
+    if created:
+        GroupOptions.objects.create(group=instance)
+
+
+post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
+post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
+
+class AccountCustomProperty(models.Model):
+    class Meta:
+        verbose_name = 'Account Custom Property'
+        verbose_name_plural = 'Account Custom Properties'
+        constraints = [
+            models.UniqueConstraint(fields=['account', 'endpoint'], name='User Unique Endpoints')
+        ]
+
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    endpoint = models.SlugField()
+    json_data = JSONField()
+
+    def __str__(self):
+        return f'{self.account} - {self.endpoint}'

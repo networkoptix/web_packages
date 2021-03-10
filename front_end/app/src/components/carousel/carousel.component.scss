@@ -1,4 +1,4 @@
-@import '../../../styles/theme_palette';
+@use '../../../styles/theme_palette' as *;
 
 .carousel {
     background-color: $additional_light1;
@@ -14,7 +14,7 @@
         height: 100%;
         visibility: visible;
     }
-    
+
     &-caption {
         margin-top : 1rem;
     }
@@ -44,7 +44,7 @@
         }
 
         &::-webkit-scrollbar {
-            width: 0px;
+            width: 0;
             height: 8px;
         }
     }
@@ -78,8 +78,16 @@
 
 .nav-arrow {
     position: unset;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    bottom: 6px;
 
     & span {
+        display: block;
+        position: relative;
+        height: 2px;
+        width: 50%;
         background-color: $additional_light1;
     }
 

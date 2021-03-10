@@ -1,16 +1,18 @@
 __author__ = 'noptix'
 
 from django.conf.urls import url
-from cloud import settings
-from api.views import account, systems, common, utils, robot
+from django.conf import settings
+
+from api.views import account, systems, common, utils, robot, storage
 from notifications.views import send
 
 urlpatterns = [
     url(r'^account-autocomplete/$', account.AccountAutocomplete.as_view(), name='account-autocomplete',),
+    url(r'^permission-autocomplete/$', account.PermissionsAutocomplete.as_view(), name='permission-autocomplete',),
     url(r'^utils/visitedKey/?$',                utils.visited_key),
     url(r'^utils/language/?$',                  utils.language),
     url(r'^utils/downloads/history$',           utils.downloads_history),
-    url(r'^utils/downloads/(?P<build>.+?)$',    utils.download_build),
+    url(r'^utils/downloads/(?P<build>.*)$',    utils.download_build),
     url(r'^utils/downloads/?$',                 utils.downloads),
     url(r'^utils/settings/?$',                  utils.get_settings),
     url(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
@@ -26,8 +28,13 @@ urlpatterns = [
     url(r'^account/authKey$',            account.auth_key),
     url(r'^account/checkCode$',          account.check_code_in_portal),
     url(r'^account/checkAuthCode$',      account.check_auth_code),
+    url(r'^account/delete$',             account.delete_user),
     url(r'^account/?$',                  account.index),
 
+    url(r'^storage/create',     storage.create),
+    url(r'^storage/delete',     storage.delete),
+    url(r'^storage/move',       storage.move),
+    url(r'^storage/usageStats', storage.usage_stats),
 
     url(r'^systems/disconnect$',                     systems.disconnect),
     url(r'^systems/connect$',                        systems.connect),
@@ -41,11 +48,14 @@ urlpatterns = [
     url(r'^systems/?$',                              systems.list_systems),
 
     url(r'^ping$',                                   common.ping),
+    url(r'^maintenance/health$',                     common.maintenance_health),
 
     url(r'feedback/?$',                              send.send_event),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^robot/get_code$', robot.get_code)
+        url(r'^robot/get_code$', robot.get_code),
+        url(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$', account.AccountCustomPropertyView.as_view()),
+        url(r'^custom-properties/(?P<endpoint>.+?)$', account.AccountCustomPropertyView.as_view()),
     ]

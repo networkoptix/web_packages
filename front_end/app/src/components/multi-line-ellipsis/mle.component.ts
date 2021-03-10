@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 /* Usage
  * <nx-ml-ellipsis config='{"height" : "75", "lineHeight" : "25", "lines" : "3" }' >
@@ -10,14 +10,14 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 */
 
 @Component({
-    selector   : 'nx-ml-ellipsis',
-    templateUrl: 'mle.component.html',
-    styleUrls  : [ 'mle.component.scss' ],
+    selector    : 'nx-ml-ellipsis',
+    templateUrl : 'mle.component.html',
+    styleUrls   : ['mle.component.scss']
 })
 export class NxMultiLineEllipsisComponent implements OnInit {
     @Input() config: string;
 
-    ellipsis: any;
+    ellipsis;
 
     constructor() {
         // Defaults

@@ -5,6 +5,7 @@ Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
+Force Tags        Threaded
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
@@ -60,7 +61,6 @@ Can still log in if you don't finish the process
     Log In    ${email}    ${password}
 
 Should not allow to access /restore_password/sent /restore_password/success by direct input
-    [Tags]    Threaded
     Go To    ${url}/restore_password/sent
     Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/restore_password/success
@@ -84,7 +84,7 @@ Should set new password, login with new password
     Log In    ${email}    ${ALT PASSWORD}    button=None
 
 Displays password masked, shows password and changes eye icon when clicked
-    [Tags]    C26260    Threaded
+    [Tags]    C26260    
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}
@@ -110,10 +110,10 @@ Should not allow to use one restore link twice
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${SAVE PASSWORD}
-    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${CODE USED/INCORRECT}
+    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}${SPACE}${CODE USED/INCORRECT}
 
 Should make not-activated user active by restoring password
-    [Tags]    email    C41871    Threaded
+    [Tags]    email    C41871    
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
@@ -134,7 +134,7 @@ Should allow logged in user visit restore password page
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Should prompt log user out if he visits restore password link from email
-    [Tags]    email    Threaded    C63394
+    [Tags]    email    C63394
     ${email}=   Register Random User
     Log In    ${email}    ${password}
     Send "Restore Password" Email    ${email}
@@ -146,6 +146,10 @@ Should prompt log user out if he visits restore password link from email
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
 
     ${code}=   Get Restore Code and Open the Link    ${email}
+    Click Button    ${LOGGED IN CLOSE BUTTON}
+    Wait Until Element Is Not Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Go To    ${url}/restore_password/${code}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
 
     Go To    ${url}/restore_password/${code}
@@ -155,7 +159,6 @@ Should prompt log user out if he visits restore password link from email
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 
 Should handle click I forgot my password link at restore password page
-    [Tags]    Threaded
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -164,9 +167,10 @@ Should handle click I forgot my password link at restore password page
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Check restore password email links, colors, cloud name, and open link in new tab
-    [Tags]    C26260    Threaded
+    [Tags]    C26260
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${user}=   Register Random User
+    ${user}=   Get Random Email    ${BASE EMAIL}
+    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
     ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     delete email    ${email}
@@ -180,8 +184,9 @@ Check restore password email links, colors, cloud name, and open link in new tab
     Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${links}    Get Links From Email    ${email}
     @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/restore_password
-    : FOR    ${link}  IN  @{links}
-    \    check in list    ${expected links}    ${link}
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
     Delete Email    ${email}
     Close Mailbox
 

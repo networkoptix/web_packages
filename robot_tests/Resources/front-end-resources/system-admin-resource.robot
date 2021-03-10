@@ -1,0 +1,249 @@
+*** Keywords ***
+# Setups and teardowns
+System Admin Suite Setup
+    Create Base Cloud System
+    Sleep    60
+    Open browser and go to URL    ${ENV}
+
+System Admin Suite Teardown
+    Delete Base Cloud System
+    Close All Browsers
+    Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
+
+System Admin Test Restart
+    Common Restart Logout    ${ENV}
+    Run keyword and ignore error    Rename System    ${local auth}    ${system}[id]    ${system}[name]
+    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Start Docker Server    ${system}[cont]
+
+# Waits
+Wait until settings are visible
+    [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX}${visible}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX}${visible}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}${visible}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX}${visible}
+    ...    timeout=${timeout}
+
+    Run Keyword If    not ${old system}    Wait Until Elements Are Visible
+        ...    ${ALLOW ONLY SECURE CHECKBOX}${visible}
+        ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+        ...    ${LIMIT SESSION DURATION CHECKBOX}${visible}
+        ...    timeout=${timeout}
+        ...    ELSE    Wait Until Elements Are Not Visible
+            ...    ${ALLOW ONLY SECURE CHECKBOX}${visible}
+            ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+            ...    ${LIMIT SESSION DURATION CHECKBOX}${visible}
+            ...    timeout=${timeout}
+
+Wait Until Advanced Settings Are Visible
+    [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    @{ADVANCED SETTINGS ALERT BAR}
+        ...    @{ADVANCED SETTING ELEMENT BLOCK ${block number}}
+        ...    timeout=${timeout}
+
+# UI - validations
+Validate Disconnect Form
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    ${DISCONNECT FORM HEADER}
+        ...    ${DISCONNECT FORM CLOSE BUTTON}
+        ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
+        ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
+        ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
+        ...    ${DISCONNECT PASSWORD INPUT}
+        ...    ${DISCONNECT FORM CANCEL BUTTON}
+        ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+
+Validate Success Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    ${SUCCESS DIALOG HEADER}
+        ...    ${SUCCESS DIALOG X BUTTON}
+        ...    ${SUCCESS DIALOG TEXT}
+        ...    ${SUCCESS DIALOG CLOSE BUTTON}
+
+# UI - actions
+Change System Name
+    [Arguments]    ${new name}    ${save}=${True}
+    Click Element    ${SYSTEM NAME}
+    Execute JavaScript    document.getElementById("editable-title").innerHTML = "${new name}";
+    Press Keys    ${SYSTEM NAME}    ENTER
+    Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Run Keyword If    ${save}    Run Keywords
+        ...    Click Button    ${SAVE BUTTON}    AND
+        ...    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
+        ...    Wait until element is visible    ${NO UNSAVED CHANGES}    AND
+        ...    Sleep    1
+
+Change Input for Advanced Setting
+    [Arguments]    ${locator}    ${value}
+    Input Text    ${locator}    ${value}
+    Wait until element is visible    ${SAVE BUTTON}
+    Click Button    ${SAVE BUTTON}
+    Validate Success Dialog
+    Click Element    ${SUCCESS DIALOG CLOSE BUTTON}
+    Run Keyword Unless    '${value}' == '${EMPTY}'
+    ...    Wait Until Textfield Contains    ${locator}    ${value}
+
+Change Setting
+    [Arguments]    ${locator}    ${buttons}=${True}
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
+    ${selected}=   Set Variable If    ${status}==True    false
+    ...    ${status}==False    true
+    Set Checkbox Value    ${locator}    ${selected}
+    Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    [Return]    ${selected}
+
+Change Setting And Save
+    [Arguments]    ${locator}    ${advanced}=${False}
+    ${selected}=   Change Setting    ${locator}
+    Click Button    ${SAVE BUTTON}
+    Run Keyword If    ${advanced}    Run Keywords
+        ...    Validate Success Dialog    AND
+        ...    Click Button    ${SUCCESS DIALOG CLOSE BUTTON}
+        ...    ELSE    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    [Return]    ${selected}
+
+Changing setting changes it on server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}    ${advanced}=${False}
+    Setting on page matches server    ${locator}    ${key}    ${server url}
+    Wait until element is enabled    ${locator}
+    ${selected}=   Change Setting And Save   ${locator}    ${advanced}
+    Evaluate System Settings via API    ${local auth}    ${server url}     ${key}    ${selected}
+
+Changing input setting changes it on server
+    [Arguments]    ${locator}    ${key}    ${new value}    ${server url}=${server url}
+    Input on page matches server    ${locator}    ${key}    ${server url}
+    Change Input for Advanced Setting    ${locator}    ${new value}
+    Evaluate System Settings via API    ${local auth}    ${server url}     ${key}    ${new value}
+
+Change Setting Encrypt video traffic
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX}
+    ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
+    ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
+    ...    ${status}==True and ${status2}==True     false
+
+    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
+    ...    ELSE    Run Keywords
+       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${SAVE BUTTON}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    [Return]    ${selected}
+
+Changing Several Settings at Random
+    [Arguments]     ${action}   ${server url}=${server url}
+    ${num settings}=   Evaluate    random.randint(2, 6)    modules=random    # random number of settings
+    ${settings to change}=   Evaluate    random.sample(${checkboxes}, ${num settings})    modules=random    # random set of stttings
+    FOR    ${s}    IN    @{settings to change}
+        Change Setting   ${s}
+    END
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Sleep    2
+    Settings on page should match settings on server    ${server url}
+
+Changing All Settings
+    [Arguments]    ${action}
+    Settings on page should match settings on server
+    FOR    ${checkbox}    IN   @{checkboxes}
+        Change Setting    ${checkbox}
+    END
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Sleep    2
+    Settings on page should match settings on server
+
+Change Duration Time Interval
+    [Arguments]    ${action}
+    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
+    ${random}=   Evaluate    random.randint(1, 59)    modules=random
+    Input Text    ${TIME NUMBER INPUT}    ${random}
+    FOR    ${i}    IN RANGE    2
+           ${status}=   Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
+           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
+           ...    ELSE    Exit For Loop
+    END
+    FOR    ${i}    IN RANGE    9
+           ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
+           Run Keyword If    ${status}==False    Run Keywords
+           ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
+           ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
+           ...    Click Link    ${TIME DURATION NEW SELECTION}
+           ...    ELSE    Exit For Loop
+    END
+
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
+    Click Link    ${TIME DURATION NEW SELECTION}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+
+Elements Text Should Be
+    [Arguments]    ${args}
+    FOR    ${key}    ${val}    IN ZIP    ${args.keys()}    ${args.values()}
+        Element Text Should Be    ${key}    ${val}
+    END
+
+# VMS verifications
+Settings on page should match settings on server
+    [Arguments]    ${server url}=${server url}
+    FOR    ${setting}    IN    @{default settings.keys()}
+        Run Keyword Unless    '''${setting}''' == '''sessionLimitMinutes'''    Setting on page matches server    //*[@id="${setting}"]    ${setting}
+    END
+    Log    Limit session duration to
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit
+
+Setting on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${locator}    ${True}
+    ${string}=   Convert To String    ${status}
+    ${selected}=   Convert To Lowercase    ${string}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${selected}
+
+Input on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${data}=   Get Element Attribute    ${locator}    value
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${data}
+
+Data on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${data}=   Get Text    ${locator}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${data}
+
+Evaluate Session Limit
+    [Arguments]    ${server url}=${server url}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Sleep    5
+    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
+    ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
+    ...    "${interval}"=="${MINUTES TEXT}"    1
+    ${number}=   Evaluate    ${multiplier}*${value}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
+
+# API - based
+Evaluate System Settings via API
+    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
+    Dictionary should contain item    ${settings}    ${key}    ${expected value}
+
+Evaluate Log Level via API
+    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    ${logLevel}=   Get Log Level    ${auth}    ${server url}
+    Dictionary should contain item    ${logLevel}    ${key}    ${expected value}
+
+# Misc
+Checkbox Is Selected
+    [Arguments]    ${locator}    ${state}
+    ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
+    Should Be True    $selected == $state

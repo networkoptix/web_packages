@@ -1,43 +1,45 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit }            from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 
 import { NxConfigService } from '../../services/nx-config';
+import { NxUtilsService }  from '../../services/utils.service';
 
-const config = new NxConfigService().config;
+const config = new NxConfigService(null).config;
 
 @Component({
-    selector: 'nx-carousel',
+    selector   : 'nx-carousel',
     templateUrl: 'carousel.component.html',
-    styleUrls: ['carousel.component.scss'],
-    animations: [
+    styleUrls  : ['carousel.component.scss'],
+    animations : [
         trigger('visibilityChange', [
             transition('enter => leave', [
                 style({
-                    opacity: 1,
+                    opacity   : 1,
                     visibility: 'visible'
                 }),
-                animate(config.animation.carouselImageLeave, style({ opacity: 0, visibility: 'hidden'}))
+                animate(config.animations.carouselImage.leave, style({ opacity: 0, visibility: 'hidden' }))
             ]),
             transition('* => enter', [
                 style({
-                    opacity: 0,
+                    opacity   : 0,
                     visibility: 'hidden'
                 }),
-                animate(config.animation.carouselImageEnter, style({ opacity: 1, visibility: 'visible'}))
+                animate(config.animations.carouselImage.enter, style({ opacity: 1, visibility: 'visible' }))
             ])
         ])
     ]
 })
 export class NxCarouselComponent implements OnInit {
-    @Input() screenshots: any;
+    @Input() screenshots;
+    @Input() type?: string;
 
+    imageCount: number;
+    currentIndex = 0;
     images: any = [];
-    private currentIndex = 0;
-    private imageCount: number;
-
     caption: string;
 
-    constructor() {}
+    constructor() {
+    }
 
     ngOnInit() {
         this.caption = '';
@@ -48,17 +50,13 @@ export class NxCarouselComponent implements OnInit {
         }
     }
 
-    private mod(n, m) {
-        return ((n % m) + m) % m;
-    }
-
     previousElement(): void {
-        this.currentIndex = this.mod((this.currentIndex - 1), this.screenshots.length);
+        this.currentIndex = NxUtilsService.mod((this.currentIndex - 1), this.screenshots.length);
         this.setCaption();
     }
 
     nextElement(): void {
-        this.currentIndex = this.mod((this.currentIndex + 1), this.screenshots.length);
+        this.currentIndex = NxUtilsService.mod((this.currentIndex + 1), this.screenshots.length);
         this.setCaption();
     }
 

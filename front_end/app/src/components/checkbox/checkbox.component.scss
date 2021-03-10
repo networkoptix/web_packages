@@ -1,5 +1,5 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
+@use '../../../styles/theme_variables';
+@use '../../../styles/theme_palette' as *;
 
 nx-checkbox {
     & + label + div.input-error {
@@ -161,7 +161,7 @@ nx-checkbox {
             
             & polyline.tick {
                 fill              : none;
-                stroke            : $brand_core;
+                stroke            : theme_variables.$brand_core;
                 stroke-width      : 2px;
                 stroke-linecap    : round;
                 stroke-linejoin   : round;
@@ -171,7 +171,7 @@ nx-checkbox {
             
             & line.tristate {
                 fill              : none;
-                stroke            : $brand_core;
+                stroke            : theme_variables.$brand_core;
                 stroke-width      : 2px;
                 stroke-linecap    : round;
                 stroke-linejoin   : round;

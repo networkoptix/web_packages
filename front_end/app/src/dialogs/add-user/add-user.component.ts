@@ -1,201 +1,124 @@
-import {
-    Component, Input, OnInit, Renderer2, ViewEncapsulation
-}                                                from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxModalGenericComponent }               from '../generic/generic.component';
-import { NxToastService }                        from '../toast.service';
-import { NxProcessService }                      from '../../services/process.service';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject }             from 'rxjs';
+
+import { NxConfigService, IConfig }    from '../../services/nx-config';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService, Process }   from '../../services/process.service';
+import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-add-user-content',
-    templateUrl: 'add-user.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-add-user-content',
+    templateUrl : 'add-user.component.html',
+    styleUrls   : []
 })
 export class AddUserModalContent {
-    @Input() account;
     @Input() system;
-    @Input() user;
     @Input() closable;
+    @ViewChild('addUserForm') form;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
-    title: string;
-    sharing: any;
-    url: string;
-    accessRoles: any;
-    options: any;
-    isNewShare: boolean;
-    buttonText: string;
-    selectedPermission: {
-        name: ''
-    };
+    hideErrors: boolean = true;
+    alreadyExists: string;
+    addUser: Process;
+    user;
+    selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
 
-    constructor(public activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private configService: NxConfigService,
-                private genericModal: NxModalGenericComponent,
-                private language: NxLanguageProviderService,
-                private toastService: NxToastService,
-                private processService: NxProcessService
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private processService: NxProcessService
     ) {
-        this.url = 'share';
-        this.accessRoles = [];
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
+    }
+
+    get selectedPermission() {
+        return this.selectedPermissionSubject.getValue();
+    }
+
+    set selectedPermission(role) {
+        this.user.role = role;
+        this.selectedPermissionSubject.next(role);
     }
 
     private getRoleDescription() {
-        if (this.user.role.description) {
-            return this.user.role.description;
+        let description;
+        if (this.selectedPermission.description) {
+            description = this.selectedPermission.description;
+        } else if (this.selectedPermission.userRoleId) {
+            description = this.LANG.accessRoles.customRole.description?.();
+        } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
+        } else {
+            description = this.LANG.accessRoles.customRole.description?.();
         }
-        if (this.user.role.userRoleId) {
-            return this.LANG.accessRoles.customRole.description;
+
+        return (typeof description === 'function') ? description() : description;
+    }
+
+    private getAccessDescription() {
+        let description;
+        if (this.LANG.accessRoles[this.selectedPermission.name]) {
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
+        } else {
+            description = this.LANG.accessRoles.customRole.description?.();
         }
-        if (this.LANG.accessRoles[ this.user.role.name ]) {
-            return this.LANG.accessRoles[ this.user.role.name ].description;
-        }
-        return this.LANG.accessRoles.customRole.description;
+
+        return (typeof description === 'function') ? description() : description;
+    }
+
+    preSubmit = () => {
+        this.hideErrors = false;
     }
 
     setPermission(role: any) {
         this.selectedPermission = role;
-        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name] ?
-                this.LANG.accessRoles[this.selectedPermission.name].description :
-                this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.getAccessDescription();
     }
 
-    formatUserName() {
-        if (!this.user.fullName || this.user.fullName.trim() === '') {
-            return this.user.email;
-        }
-
-        return this.user.fullName + ' (' + this.user.email + ')';
-    }
-
-    doShare() {
-        this.user.role = this.selectedPermission;
-
-        return this.system.saveUser(this.user, this.user.role).then((user) => {
-            return this.system.getUsers(true).then(() => {
-                return new Promise(resolve => setTimeout(() => resolve(user)));
+    saveUser() {
+        return this.system.saveUser(this.user, this.user.role)
+            .then(user => {
+                return this.system.getUsers(true)
+                    .then(() => user);
             });
-        });
     }
 
     ngOnInit() {
-        this.title = (!this.user) ? this.LANG.dialogs.sharing.shareTitle : this.LANG.dialogs.sharing.editShareTitle;
-        this.buttonText = this.LANG.dialogs.sharing.shareConfirmButton;
-        this.isNewShare = false;
-
-        if (!this.user) {
-            this.isNewShare = true;
-            const predefinedRole = this.CONFIG.accessRoles.predefinedRoles.filter(role => {
-                return role.name === this.CONFIG.accessRoles.default;
-            })[0];
-            this.user = {
-                email    : '',
-                isEnabled: true,
-                role     : {
-                    name       : this.CONFIG.accessRoles.default,
-                    permissions: ''     // permissions will be updated within permissions component as it depends
-                                        // on system's accessRoles
-                }
-            };
-        }
-
-        if (!this.user.role) {
-            this.user.role = this.system.findAccessRole(this.user);
-        }
-
-        if (!this.isNewShare) {
-            this.account
-                .get()
-                .then((account) => {
-                    if (account) {
-                        if (account.email === this.user.email) {
-                            this.activeModal.close();
-
-                            const options = {
-                                autohide : true,
-                                classname: 'error',
-                                delay    : this.CONFIG.alertTimeout
-                            };
-
-                            return this.toastService.show(this.LANG.share.cantEditYourself, options);
-                        }
-
-                        this.accessDescription = this.getRoleDescription();
-                    }
-                });
-
-            this.buttonText = this.LANG.sharing.editShareConfirmButton;
-        }
-
-        this.sharing = this.processService.createProcess(() => {
-            if (this.user.role.isOwner) {
-                return this.genericModal
-                    .openConfirm(this.LANG.dialogs.sharing.confirmOwner,
-                        this.LANG.dialogs.sharing.shareTitle,
-                        this.LANG.dialogs.sharing.shareConfirmButton,
-                        undefined,
-                        this.LANG.dialogs.cancelButton)
-                    .then((result) => {
-                        if (result) {
-                            return this.doShare();
-                        }
-                    });
-            } else {
-                return this.doShare();
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.systemName || this.system.info.name);
+        this.user = {
+            email     : '',
+            isEnabled : true,
+            isCloud   : true,
+            role      : {
+                name        : this.CONFIG.accessRoles.default,
+                permissions : ''
             }
-        }, {
-            successMessage: this.LANG.dialogs.sharing.permissionsSaved,
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix
-        }).then((user) => {
-            this.activeModal.close(user.id);
-        });
-    }
+        };
+        this.accessDescription = this.getRoleDescription();
 
-    close() {
-        this.activeModal.close();
-    }
-}
-
-@Component({
-    selector     : 'nx-modal-add-user',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-export class NxModalAddUserComponent implements OnInit {
-    modalRef: NgbModalRef;
-
-    constructor(private modalService: NgbModal) {
-    }
-
-    private dialog(system?, user?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(AddUserModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system?, user?) {
-        return this.dialog(system, user).result;
-    }
-
-    ngOnInit() {
+        this.addUser = this.processService.createProcess(() => {
+            this.hideErrors = false;
+            const userExists: boolean = this.system.users.some(item => {
+                return item.email === this.user.email;
+            });
+            if (userExists) {
+                this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
+                return Promise.resolve();
+            } else {
+                return this.saveUser();
+            }
+        })
+            .then((user) => {
+                if (user) {
+                    this.hideErrors = true;
+                    this.activeModal.close(user.id);
+                }
+            });
     }
 }

@@ -1,50 +1,44 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-import { FormsModule }                       from '@angular/forms';
-import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
+import { NgModule }               from '@angular/core';
+import { CommonModule }           from '@angular/common';
+import { RouterModule, Routes }   from '@angular/router';
+import { FormsModule }            from '@angular/forms';
+import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }        from '@ngx-translate/core';
 
 import { DirectivesModule }       from '../../../directives/directives.module';
+import { ComponentsModule }       from '../../../components/components.module';
+import { AuthGuard }              from '../../../routeGuards';
 import { NxSystemsListComponent } from './list.component';
-
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../components/components.module';
-import { NxSettingsModule }    from '../settings/settings.module';
-import { AuthGuard }           from '../../../routeGuards/authGuard';
+import { NxNoSystemsComponent }   from '../no-systems/no-systems.component';
 
 const appRoutes: Routes = [
     {
-        path    : 'systems', component: NxSystemsListComponent, canActivate: [AuthGuard]
+        path: '', component: NxSystemsListComponent, canActivate: [AuthGuard]
     }
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-
-        RouterModule.forChild(appRoutes),
-        NxSettingsModule
+        RouterModule.forChild(appRoutes)
     ],
-    providers      : [
+    providers: [
     ],
-    declarations   : [
-        NxSystemsListComponent
+    declarations: [
+        NxSystemsListComponent,
+        NxNoSystemsComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap: [
     ],
-    exports        : [
-        NxSystemsListComponent
+    exports: [
+        NxSystemsListComponent,
+        NxNoSystemsComponent
     ]
 })
 export class NxSystemsListModule {

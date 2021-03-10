@@ -1,10 +1,6 @@
-@import '../../../../styles/custom/custom_palette';
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/bootstrap_utils' as bootstrap;
 
 nx-no-systems {
     .no-data-panel {
@@ -15,7 +11,7 @@ nx-no-systems {
         padding          : 2rem 0;
 
         &-body {
-            @extend #light18;
+            @include typography.light18light16;
         }
     }
 
@@ -34,7 +30,7 @@ nx-no-systems {
         }
     }
 
-    @include media-breakpoint-down(sm) {
+    @include bootstrap.media-breakpoint-down(sm) {
         .no-data-panel .right-arrow {
             transform : rotate(90deg);
         }

@@ -1,0 +1,14 @@
+<h1>Hola, </h1>
+
+<p>Us han convidat a %CLOUD_NAME%</p>
+
+{{#message.message}}
+<p>{{ message.message }}</p>
+{{/message.message}}
+
+<p>Creeu un compte a
+    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
+    utilitzant el vostre email actual i seguiu les instruccions.
+</p>
+
+<a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">Registra un compte</a>

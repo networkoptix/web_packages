@@ -1,78 +1,70 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
+import { Component, OnInit }         from '@angular/core';
+import { Router }                    from '@angular/router';
 
-import { NxConfigService }           from '../../services/nx-config';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LocalStorageService }       from 'ngx-store';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'landing-component',
-    templateUrl: 'landing.component.html',
-    styleUrls  : ['landing.component.scss']
+    selector    : 'landing-component',
+    templateUrl : 'landing.component.html',
+    styleUrls   : ['landing.component.scss']
 })
 
-export class NxLandingComponent implements OnInit, OnDestroy {
+export class NxLandingComponent implements OnInit {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    CONFIG: any = {};
-    LANG: any = {};
-
-    params: any;
-    userEmail: any;
-    login: any;
+    params;
+    userEmail;
+    login;
 
     loaded: boolean;
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.translations;
     }
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
-                private router: Router,
-                private localStorage: LocalStorageService,
+                private router: Router
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
-        if (this.router.url === '/content/about') {
+        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        if (this.router.url === '/logout') {
+            this.accountService.logout();
+        } else if (this.router.url.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
             this.accountService
-                .get()
+                .get(/* forceUpdate */true)
                 .then(account => {
-                    // TODO: remove this hack after we retire AJS
-                    // downgraded component cause this page to load twice and we end up with two login dialogs
                     if (account) {
                         this.accountService.redirectAuthorised();
-                        this.userEmail = this.accountService.getEmail();
+                        this.userEmail = this.accountService.email;
                     } else {
-                        if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
-                            this.localStorage.set('login', true);
+                        if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
-                            this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                            this.pageService.pageTitle = this.LANG.pageTitles.login?.();
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                    this.pageService.pageTitle = this.LANG.pageTitles.default?.();
                     this.loaded = true;
                 });
         }
     }
-
-    ngOnDestroy() {
-        this.localStorage.remove('login');
-    }
 }
-

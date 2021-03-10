@@ -1,207 +1,16 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Close All Browsers
-Force Tags        system
+Suite Setup       System Admin Suite Setup
+Test Setup        Common Restart Logout    ${ENV}
+Test Teardown     System Admin Test Restart
+Suite Teardown    System Admin Suite Teardown
+Force Tags        system    threaded
 
-*** Variables ***
-${email}       ${EMAIL OWNER}
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-@{checkboxes}    
-...    ${ENABLE AUTO DISCOVERY CHECKBOX REAL} 
-...    ${SEND ANONYMOUS USAGE CHECKBOX REAL} 
-...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
-...    ${ENABLE AUDIT TRAIL CHECKBOX REAL} 
-...    ${ALLOW ONLY SECURE CHECKBOX REAL} 
-...    ${LIMIT SESSION DURATION CHECKBOX REAL}
-
-*** Keywords ***
-Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-
-Check System Text
-    [Arguments]    ${user}
-    Log Out
-    Log in to Auto Tests System    ${user}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-
-Reset DB and Open New Browser On Failure
-    Close Browser
-    Reset System Names
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
-    Open Browser and go to URL    ${url}
-
-Restart
-    Common Restart Logout    ${url}
-
-Settings on page should match settings on server
-    Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled     
-    Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed    
-    Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization   
-    Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled   
-    Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced   
-    Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced  
-    Log    Limit session duration to
-    ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit 
-       
-Setting on page matches server
-    [Arguments]    ${setting}    ${id}
-    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
-    ${string}=   Convert To String    ${status}
-    ${selected}=   Convert To Lowercase    ${string}
-    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     ${id}    ${selected}
-    
-Evaluate Session Limit
-    ${value}=   Get Value    ${TIME NUMBER INPUT}
-    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${multiplier}=   Set Variable If    "${interval}"=="hours"    60
-    ...    "${interval}"=="minutes"    1
-    ${number}=   Evaluate      ${multiplier}*${value}
-    Evaluate Auto System Settings via API    sessionLimitMinutes      ${number}
-
-Changing setting changes it on server
-    [Arguments]    ${setting}    ${id}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
-    Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Evaluate Auto System Settings via API     ${id}    ${selected}
-    
-Change Setting and Save
-    [Arguments]    ${setting}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
-    Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    
-Just Change Setting
-    [Arguments]    ${setting}
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected} =    Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
-    Set Checkbox Value    ${setting}    ${selected}
-
-Set Hidden Checkbox
-     Log    BOTH CHECKBOXES ARE UNCHECKED TO START        
-     Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true   
-     Sleep    1   
-     Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true    
-     Sleep    2    
-     Capture Page Screenshot 
-     
-Change Setting Encrypt video traffic
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
-    ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
-    ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
-    ...    ${status}==True and ${status2}==True     false   
-    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
-    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
-    ...    ELSE    Set Hidden Checkbox
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    [Return]    ${selected}
-    
-Changing Several Settings at Random
-    [Arguments]     ${action}
-    ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
-    FOR    ${idx}    IN RANGE   ${random}
-        ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
-        Log    ${checkbox}
-        Just Change Setting    ${checkbox} 
-    END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action} 
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Sleep    2
-    Settings on page should match settings on server
-    
-Changing All Settings
-    [Arguments]    ${action}
-    FOR    ${checkbox}    IN   @{checkboxes}
-        Log    ${checkbox}
-        Just Change Setting    ${checkbox} 
-    END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Sleep    2
-    Settings on page should match settings on server
-    
-Change Duration Time Interval
-    [Arguments]    ${action}
-    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${random}=   Evaluate    random.randint(1, 59)    modules=random
-    Input Text    ${TIME NUMBER INPUT}    ${random}
-    FOR    ${i}    IN RANGE    2
-           ${status}=   Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
-           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
-           ...    ELSE    Exit For Loop
-    END
-    FOR    ${i}    IN RANGE    9
-           ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
-           Run Keyword If    ${status}==False    Run Keywords    
-           ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
-           ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
-           ...    Click Link    ${TIME DURATION NEW SELECTION}
-           ...    ELSE    Exit For Loop 
-    END
-    
-    Click Button    ${TIME DURATION INTERVAL BUTTON}    
-    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
-    Click Link    ${TIME DURATION NEW SELECTION}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-     
 *** Test Cases ***
-Systems dropdown should allow you to go back to the systems page
+# Misc
+Should confirm, if not owner deletes system
     [Tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Location Should Be    ${url}/systems
-    Run keyword and continue on failure    Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT_NAME}
-
-Should confirm, if owner deletes system (You are going to disconnect your system from cloud)
-    [Tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}
-    Click Element    ${DISCONNECT FORM}
-    Click Button    ${DISCONNECT FORM CANCEL}
-    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
-
-Should confirm, if not owner deletes system (You will lose access to this system)
-    [Tags]    Threaded
-    Log In To Auto Tests System    ${EMAIL NOT OWNER}
-    Validate Log In
+    Log in to user and system    ${users}[viewer]    ${system}[id]
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL WARNING}
@@ -211,230 +20,245 @@ Should confirm, if not owner deletes system (You will lose access to this system
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
-Correct items are shown for owner
-    [Tags]    C41560    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${USERS LIST LINK}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
-
-Correct items are shown for admin
-    [Tags]    C41561    Threaded
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Wait Until Element Is Visible    ${USERS LIST LINK}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-
-Correct items are shown for advanced viewer and below
-    [Tags]    C41562    Threaded
-    ${users}         Set Variable    ${EMAIL ADVVIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVEVIEWER}    ${EMAIL CUSTOM}
-    ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
-        Log in to Auto Tests System    ${user}
-        Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
-        Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
-        Element Should Not Be Visible    ${RENAME SYSTEM}
-        Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
-        Log Out
-    END
-
-Rename button opens dialog and clicking cancel closes rename dialog without rename
-    [Tags]    C41880    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}
-    Click Button    ${RENAME CANCEL}
-    Wait Until Page Does Not Contain Element    //div[@uib-modal-backdrop="modal-backdrop"]
-    Verify In System    Auto Tests
-
-Clicking 'X' closes rename dialog without rename
-    [Tags]    C41880    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME X BUTTON}
-    Wait Until Textfield Contains    ${RENAME INPUT}    ${AUTO TESTS}
-    Click Button    ${RENAME X BUTTON}
-    Wait Until Page Does Not Contain Element    ${BACKDROP}
-    Verify In System    Auto Tests
-
-Clicking save with no input in rename dialog throws error
-    [Tags]    C41880    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    sleep    2
-    Input Text    ${RENAME INPUT}    ${SPACE}
-    Press Keys    ${RENAME INPUT}    BACKSPACE
-    Click Button    ${RENAME SAVE}
-    Wait Until Elements Are Visible    ${RENAME INPUT WITH ERROR}    ${SYSTEM NAME IS REQUIRED}
-    Click Button    ${RENAME CANCEL}
-
-Clicking save in rename dialog renames system
-    [Tags]    C41880
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    Clear Element Text    ${RENAME INPUT}
-    Input Text    ${RENAME INPUT}    Auto Tests Rename
-    Click Button    ${RENAME SAVE}
-    Check For Alert    ${SYSTEM NAME SAVED}
-    Verify In System    Auto Tests Rename
-
-    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}   ${AUTO TESTS}
-    ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    &{settings}[name]    ${AUTO TESTS}
-
 Should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    Threaded
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Go To    ${ENV}/systems/${system}[id]
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
 
 Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}   ${password}    button=None
-    Verify In System    Auto Tests
+    Go To    ${ENV}/systems/${system}[id]
+    Log In    ${system}[owner]   ${base password}    button=None
+    Verify In System    ${system}[name]
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${email noperm}    ${base password}
+    Go To    ${ENV}/systems/${system}[id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
+    Go To    ${ENV}/systems/${system}[id]
+    Log In    ${email noperm}    ${base password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
-Should show (your system) for owner and (owner's name) for non-owners
-    [Tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
-    FOR    ${user}    IN    @{EMAILS LIST}
-        Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
-    END
-    
-Should open a system page in anonymous state
-    [Tags]    anonymous
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
-    Check Log In    button=None
-    
-Should show system settings and security settings and they should match settings on server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
-    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
-    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
-    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}    
-    Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
-    Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
-    Element Text Should Be    //label[@id="statisticsAllowedHelpBlock"]    ${SEND ANONYMOUS USAGE DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="cameraSettingsOptimization"]//span    ${ALLOW SYSTEM OPTIMIZE TEXT}
-    
-    Element Text Should Be    //label[@for="auditTrailEnabled"]//span    ${ENABLE AUDIT TRAIL TEXT}
-    Element Text Should Be    //label[@id="auditTrailEnabledHelpBlock"]    ${ENABLE AUDIT TRAIL DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
-    Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
-    Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
-    
-    Settings on page should match settings on server
-        
-Changing the Setting "Enable auto discovery of cameras and servers" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled  
+# Settings
+User can rename System: change on cloud -> check server
+    [Tags]    C41880
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Elements Are Visible
+        ...    ${SYSTEMS DROPDOWN}
+        ...    ${RENAME SYSTEM}
+        ...    ${NO UNSAVED CHANGES}
 
-Changing the Setting "Send anonymous usage and crash statistics to developers" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    
+    Log    Cancel button works fine
+    Change System Name    ${new system name}    save=False
+    Click Button    ${CANCEL BUTTON}
+    Wait until elements are not visible
+    Wait until element is visible    ${NO UNSAVED CHANGES}
+    ${actual name}=   Get Text    ${SYSTEM NAME}
+    Should be equal as strings    ${actual name}    ${system}[name]
 
-Changing the Setting "Allow system to optimize camera settings" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization  
+    Log    Save button works fine
+    Change System Name    ${new system name}
+    ${actual name}=   Get Text    ${SYSTEM NAME}
+    Should be equal as strings    ${actual name}    ${new system name}
 
-Changing the Setting "Enable audit trail" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled    
-
-Changing the Setting "Allow only secure connections" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced 
-
-Changing the Setting "Encrypt video traffic" changes it on the server 
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    ${selected}=   Change Setting Encrypt video traffic
-    Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
-
-Changing the Setting "Limit session duration to" changes it on the server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Change Setting and Save    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
-    
-Change Time Interval And Verify on Server
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Run Keyword If    ${status}==False    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Change Duration Time Interval    ${SYSTEM SAVE}
-    Evaluate Session Limit
+    Log    Header main button text is changed accordingly
+    # button text is not updated without reloading the page
     Reload Page
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Change Duration Time Interval    ${SYSTEM SAVE}
-    Evaluate Session Limit
+    Wait Until Elements Are Visible    ${SYSTEMS DROPDOWN}    ${DISCONNECT FROM NX}
+    Validate Header Button Text    ${new system name}    systems=False
 
-Changing Several Random Checkboxes Works
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
-    Changing Several Settings at Random    ${SYSTEM SAVE}
-    Changing Several Settings at Random    ${SYSTEM CANCEL}
-    
-Changing All Checkboxes Works    
-    [Tags]    checkbox settings testing
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
-    Changing All Settings    ${SYSTEM SAVE}
-    Changing All Settings    ${SYSTEM CANCEL}
+    Log    Check that system name is changed - server
+    Restart Server   https://${QABURBANK IP}:${system}[port]    ${cloud auth}
+    Sleep    10
+    ${settings}=   Get System Settings    ${cloud auth}    https://${QABURBANK IP}:${system}[port]
+    FOR    ${s}    IN    @{settings}
+        Run Keyword If    '''${s}[name]''' == '''systemName'''    Run Keywords
+           ...   Should be equal as strings    ${new system name}    ${s}[value]   AND
+           ...   Exit For Loop
+    END
 
+    Log    Get initial system name back
+    Rename System    ${cloud auth}    ${system}[id]    ${system}[name]
+    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+    Should be equal as strings    ${settings}[name]    ${system}[name]
 
+User can rename System: change on server side -> check cloud
+    [Tags]    C47019    C30678
+    Log    Rename System on server side and check it's changed on cloud
+    Set System Name    https://${QABURBANK IP}:${system}[port]    ${cloud auth}    ${new system name}
+    Restart Server   https://${QABURBANK IP}:${system}[port]    ${cloud auth}
+    Sleep    20
 
+    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+    Should be equal as strings    ${settings}[name]    ${new system name}
 
-    
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Elements Are Visible
+        ...    ${SYSTEMS DROPDOWN}
+        ...    ${RENAME SYSTEM}
+        ...    ${NO UNSAVED CHANGES}
+    ${actual name}=   Get Text    ${SYSTEM NAME}
+    Should be equal as strings    ${actual name}    ${new system name}
+    Validate Header Button Text    ${new system name}    systems=False
+
+    Log    Get initial system name back
+    Rename System    ${cloud auth}    ${system}[id]    ${system}[name]
+    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+    Should be equal as strings    ${settings}[name]    ${system}[name]
+
+# System Settings for different users
+Correct items are shown for owner
+    [Tags]    C41560    Threaded
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
+    Wait Until Elements Are Visible
+        ...    ${SYSTEMS DROPDOWN}
+        ...    ${RENAME SYSTEM}
+        ...    ${DISCONNECT FROM NX}
+        ...    ${expected name}
+        ...    ${MERGE BUTTON SYSTEM}
+        ...    ${LICENSES LINK}
+        ...    ${CAMERAS LINK}
+        ...    ${USERS LINK}
+        ...    ${SERVERS LINK}
+        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
+    Validate Header Button Text    ${system}[name]    systems=False
+    Run keyword and continue on failure    Title Should Be    ${system}[name] - ${PRODUCT NAME}
+    Go To Users List
+    Wait Until Elements Are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
+
+Correct items are shown for admin
+    [Tags]    C41561    Threaded
+    Log in to user and system    ${users}[cloudAdmin]    ${system}[id]
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
+    Wait Until Elements Are Visible
+        ...    ${SYSTEMS DROPDOWN}
+        ...    ${RENAME SYSTEM}
+        ...    ${DISCONNECT FROM MY ACCOUNT}
+        ...    ${OWNER LABEL}
+        ...    ${expected name}
+        ...    //span[contains(text(), "${system}[owner]")]
+        ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
+        ...    ${LICENSES LINK}
+        ...    ${CAMERAS LINK}
+        ...    ${USERS LINK}
+        ...    ${SERVERS LINK}
+        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
+    Wait Until Elements Are Not Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
+    Validate Header Button Text    ${system}[name]    systems=False
+    Go To Users List
+    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
+
+Correct items are shown for advanced viewer and below
+    [Tags]    C41562    Threaded
+    ${viewers}=    Create List    ${users}[advancedViewer]    ${users}[viewer]     ${users}[liveViewer]     ${users}[custom]
+    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
+    ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
+    FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
+        Log in to user and system    ${user}    ${system}[id]
+        Wait Until Elements Are Visible
+            ...    ${current owner name}
+            ...    ${DISCONNECT FROM MY ACCOUNT}
+            ...    ${OWNER LABEL}
+            ...    //span[contains(text(), "${system}[owner]")]
+            ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
+        Wait Until Elements Are Not Visible
+            ...    ${RENAME SYSTEM}
+            ...    ${DISCONNECT FROM NX}
+            ...    ${MERGE BUTTON SYSTEM}
+            ...    ${LICENSES LINK}
+            ...    ${CAMERAS LINK}
+            ...    ${USERS LINK}
+            ...    ${SERVERS LINK}
+        Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
+        Log Out
+    END
+
+# Disconnect System from Cloud
+Disconnect dialog interface checks
+    [Tags]    C48834
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+
+    Log     Step 2
+    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}
+    Click Element    ${DISCONNECT FORM CLOSE BUTTON}
+    Wait Until Element Is Not Visible    ${DISCONNECT FORM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+
+    Log    Step 3
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Element Is Not Visible    ${DISCONNECT FORM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+
+    Log    Step 4
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Wait Until Element Is Visible    ${PASSWORD IS REQUIRED}
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    ${ERROR COLOR}
+
+    Log    Step 5
+    Input Text    ${DISCONNECT PASSWORD INPUT}    khgwearfgak
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM WRONG PASSWORD}
+    ${input class}=   Get Element Attribute    ${DISCONNECT PASSWORD INPUT}    class
+    Should Contain    ${input class}    ng-invalid
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    ${ERROR COLOR}
+
+Owner can disconnect System from Cloud
+    [Tags]    C41883   C47020
+    ${local auth}=   Create List    admin    ${base password}
+
+    Log    Step 1
+    Log in to user and system    ${system}[owner]    ${system}[id]
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Validate Header Button Text    ${system}[name]    systems=False
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+
+    Log    Step 2
+    Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
+    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
+    Validate Header Button Text    0
+    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
+    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
+    Log Out
+
+    Log     C47020: checking that system is disconnected from cloud on the server side
+    Restart Server    https://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Sleep    10
+    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
+
+    Log    Step 3
+    ${viewer systems}=   Get Account Systems    ${ENV}    ${users}[viewer]    ${base password}
+    Should Not Contain    ${viewer systems}    ${system}[id]
+
+    Log In    ${users}[viewer]    ${base password}
+    Wait Until Location Is    ${ENV}/systems
+    Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
+    Validate Header Button Text    0
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}

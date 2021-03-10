@@ -3,10 +3,16 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "cloud-portal": {
+    "front-end": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "app",
-      "projectType": "application",
+      "prefix": "src",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -14,27 +20,113 @@
             "outputPath": "dist",
             "index": "app/index.html",
             "main": "app/main.ts",
-            "tsConfig": "app/tsconfig.app.json",
             "polyfills": "app/polyfills.ts",
+            "tsConfig": "tsconfig.json",
+            "aot": true,
+            "buildOptimizer": true,
             "assets": [
-              "app/assets",
-              "app/favicon.ico",
-              "app/manifest.json",
+              "app/customization",
+              "app/images",
+              "app/fonts",
+              "app/views",
+              "app/scripts",
+              "app/503.html",
+              "app/downloads.json",
+              "app/apple-app-site-association",
+              "app/language_compiled.json",
+              "app/language_i18n_static.json",
+              "app/language_i18n.json",
+              "app/language.json",
+              "app/languages.json",
+              "app/openapi_v1.json",
               "app/robots.txt"
             ],
             "styles": [
-              "app/main.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/font-awesome/css/font-awesome.min.css"
+              "app/styles/main.scss"
             ],
-            "scripts": []
+            "scripts": [
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "app/src/styles",
+                "app/styles"
+              ]
+            }
           },
           "configurations": {
-            "prod": {
+            "production": {
               "fileReplacements": [
                 {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.prod.ts"
+                }
+              ],
+              "deployUrl": "static/",
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": true,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "200kb",
+                  "maximumError": "280kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
+            },
+            "webadmin": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.webadmin.ts"
+                },
+                {
+                  "replace": "app/src/services/account.service/index.ts",
+                  "with": "app/src/services/account.service/index.webadmin.ts"
+                }
+              ]
+            },
+            "webadmin-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.webadmin-prod.ts"
+                },
+                {
+                  "replace": "app/src/services/account.service/index.ts",
+                  "with": "app/src/services/account.service/index.webadmin.ts"
+                }
+              ],
+              "deployUrl": "static/",
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": true,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "7mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "150kb",
+                  "maximumError": "180kb"
                 }
               ]
             }
@@ -43,89 +135,80 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "cloud-portal:build"
+            "port": 9000,
+            "browserTarget": "front-end:build",
+            "sslKey": "ssl_keys/server.key",
+            "sslCert": "ssl_keys/server.crt",
+            "ssl": true
           },
           "configurations": {
-            "prod": {
-              "browserTarget": "cloud-portal:build:prod"
+            "production": {
+              "browserTarget": "front-end:build:production"
+            },
+            "webadmin": {
+              "port": 9001,
+              "browserTarget": "front-end:build:webadmin"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cloud-portal:build"
+            "browserTarget": "front-end:build"
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "app/test.ts",
-            "karmaConfig": "./karma.conf.js",
             "polyfills": "app/polyfills.ts",
-            "tsConfig": "<rootDir>/app/src/tsconfig.spec.json",
-            "scripts": [],
-            "styles": [
-              "app/main.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/font-awesome/css/font-awesome.min.css"
-            ],
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
             "assets": [
-              "app/assets",
               "app/favicon.ico",
-              "app/manifest.json",
-              "app/robots.txt"
-            ]
+              "app/assets"
+            ],
+            "styles": [
+              "app/styles/main.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/"
+              ]
+            },
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "<rootDir>/app/tsconfig.json",
-              "<rootDir>/app/src/tsconfig.spec.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "cloud-portal-e2e": {
-      "root": "",
-      "sourceRoot": "e2e",
-      "projectType": "application",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "cloud-portal:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "front-end:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "front-end:serve:production"
+            }
           }
         }
       }
     }
   },
-  "defaultProject": "cloud-portal",
-  "schematics": {
-    "@schematics/angular:component": {
-      "prefix": "app",
-      "styleext": "scss"
-    },
-    "@schematics/angular:directive": {
-      "prefix": "app"
-    }
+  "defaultProject": "front-end",
+  "cli": {
+    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea"
   }
 }

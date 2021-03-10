@@ -7,7 +7,7 @@
     </nx-page-placeholder>
 
     <div *ngSwitchDefault>
-        <div class="gridAlertsCards" *ngIf="!healthLayoutService.mobileDetailMode" #tiles>
+        <div class="gridAlertsCards" *ngIf="!healthLayoutService.mobileDetailMode && !reportView" #tiles>
             <div class="d-flex flex-wrap p-0">
                 <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-3 mr-3 card-container">
                     <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
@@ -24,17 +24,16 @@
 
             <div class="gridMetricContentComponent" [hidden]="healthLayoutService.mobileDetailMode && healthLayoutService.activeEntity">
                 <div class="gridMetricContentComponentWrapper" >
-                    <div *ngIf="canSeeTable()"
-                         [hidden]="healthLayoutService.mobileDetailMode"
+                    <div [hidden]="healthLayoutService.mobileDetailMode"
                          [ngClass]="{'data-wrapper' : !healthLayoutService.activeEntity}">
 
-                        <div class="" *ngIf="!healthLayoutService.mobileDetailMode" #search [ngStyle]="{'width': tableWrapper + 'px'}">
+                        <div class="" *ngIf="!healthLayoutService.mobileDetailMode" #search >
                             <nx-search
                                     name="filterModel"
                                     [ngModel]="filterModel"
                                     (ngModelChange)="modelChanged($event)"
                                     layout="selectors"
-                                    [layoutMod]="desktopDetailMode ? true : false"
+                                    [layoutMod]="smallDesktopMode ? true : false"
                                     ngDefaultControl>
                             </nx-search>
                         </div>
@@ -50,8 +49,8 @@
             </div>
 
             <div class="gridMetricContentPanelComponent"
-                 *ngIf="healthLayoutService.activeEntity"
-                 [ngStyle]="{'visibility': healthService.tableReady && layoutReady ? undefined : 'hidden'}">
+                 *ngIf="layoutReady"
+                 [style.visibility]="healthService.tableReady && layoutReady ? undefined : 'hidden'">
 
                 <div class="gridMetricContentPanelComponentWrapper pb-3">
                     <div class="mb-3 all-results-btn"
@@ -71,5 +70,4 @@
             </div>
         </div>
     </div>
-
 </div>

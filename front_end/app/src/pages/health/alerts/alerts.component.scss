@@ -1,6 +1,5 @@
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-alerts-component {
@@ -145,7 +144,7 @@ nx-system-alerts-component {
             // "Clear" button
             &:last-of-type {
                 .btn-text {
-                    @extend #light15;
+                    @include typography.light15light16;
                     float         : right !important;
                     padding-right : 2px; // align visually - table border create a illusion that button text is not aligned
                 }

@@ -1,16 +1,18 @@
 import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
-import { NxDialogsService }              from '../../dialogs/dialogs.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+import { NxProcessService, Process }     from '../../services/process.service';
+import { NxDialogsService }              from '../../dialogs/dialogs.service';
+
 @Component({
-    selector   : 'sandbox-component',
-    templateUrl: 'sandbox.component.html',
-    styleUrls  : ['sandbox.component.scss']
+    selector : 'sandbox-component',
+    templateUrl : 'sandbox.component.html',
+    styleUrls : ['sandbox.component.scss']
 })
 
 export class NxSandboxComponent {
-    click: any;
+    click;
     blah: string;
     group: string;
     agree: boolean;
@@ -18,20 +20,32 @@ export class NxSandboxComponent {
     toggleDisabled: boolean;
     show5: boolean;
     edit: boolean;
-    sections: any;
-    options: any;
-    items: any;
-    itemsSelected: any;
-    filter: any;
+    sections;
+    options;
+    items;
+    itemsSelected;
+    mode;
+    modeSelected;
+    ddWidth: number;
+    filter;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
     // cameraEmbedUrl: SafeResourceUrl;
+    data: any = {};
+    theme: string;
+    change: Process;
+    restore: Process;
 
     submitted = false;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+        this.data = {
+            newPassword : '',
+            email       : ''
+        };
+
         let host = '//' + window.location.hostname;
         if (host === '//localhost' || host === '//127.0.0.1') {
             host += ':9000';
@@ -51,12 +65,14 @@ export class NxSandboxComponent {
         this.agree = false;
         this.edit = false;
 
+        this.theme = 'default';
+
         this.filter = {
-            query  : '',
-            selects: [
+            query   : '',
+            selects : [
                 {
-                    label: 'Minimum Resolution',
-                    items: [
+                    label : 'Minimum Resolution',
+                    items : [
                         { value: '0', name: 'All' },
                         { value: '84480', name: '1CIF' },
                         { value: '168960', name: '2CIF' },
@@ -78,8 +94,8 @@ export class NxSandboxComponent {
             ],
             multiselects: [
                 {
-                    label: 'Types',
-                    items: [
+                    label : 'Types',
+                    items : [
                         { id: 'Camera', label: 'Camera' },
                         { id: 'Multi-Sensor Camera', label: 'Multi-Sensor Camera' },
                         { id: 'Encoder', label: 'Encoder' },
@@ -89,18 +105,18 @@ export class NxSandboxComponent {
                     selected: undefined
                 }
             ],
-            tags   : [
+            tags: [
                 {
-                    label: 'Access Control',
-                    value: false
+                    label : 'Access Control',
+                    value : false
                 },
                 {
-                    label: 'Analytics',
-                    value: false
+                    label : 'Analytics',
+                    value : false
                 },
                 {
-                    label: 'PCIM',
-                    value: false
+                    label : 'PCIM',
+                    value : false
                 }
             ]
         };
@@ -124,7 +140,7 @@ export class NxSandboxComponent {
             { label: 'Administrator', id: 'qwerty1' },
             { label: 'Advanced Viewer', id: 'qwerty2' },
             { label: 'Viewer', id: 'qwerty3' },
-            { label: 'Live Viewer', id: 'qwerty4' },
+            { label: 'Live Viewer', id: 'qwerty4' }
             // { label: 'Administrator', id: 'qwerty11' },
             // { label: 'Advanced Viewer', id: 'qwerty12' },
             // { label: 'Viewer', id: 'qwerty13' },
@@ -137,17 +153,42 @@ export class NxSandboxComponent {
 
         this.itemsSelected = ['qwerty2', 'qwerty3'];
 
+        this.mode = [
+            { name: 'Main', value: 'qwerty2' },
+            { name: 'Backup', value: 'qwerty3' },
+            { name: 'Not in use', value: 'qwerty4' }
+        ];
 
+        this.modeSelected = this.mode[2];
+
+        // calculate dd size
+        const btn = document.createElement('span');
+        btn.style.visibility = 'hidden';
+        btn.innerText = this.modeSelected.name;
+        document.body.appendChild(btn);
+        // add button's left and right padding and space for info icon
+        this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
     }
 
     constructor(private dialogs: NxDialogsService,
+                private processService: NxProcessService,
                 private sanitizer: DomSanitizer) {
         this.setupDefaults();
     }
 
+    ngOnInit() {
+        this.change = this.processService.createProcess(() => {
+            return Promise.resolve(true);
+        });
+
+        this.restore = this.processService.createProcess(() => {
+            return Promise.resolve(true);
+        });
+    }
+
     private touchForm(form) {
         for (const ctrl in form.form.controls) {
-            if (form.form.controls.hasOwnProperty(ctrl)) {
+            if (Object.prototype.hasOwnProperty.call(form.form.controls, ctrl)) {
                 form.form.get(ctrl).markAsTouched();
             }
         }
@@ -173,5 +214,6 @@ export class NxSandboxComponent {
     notify(msg: string, type: string) {
         this.dialogs.notify(msg, type, this.autohide);
     }
-}
 
+    changeTheme(isEnabled, theme) {}
+}

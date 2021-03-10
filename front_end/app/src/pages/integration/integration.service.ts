@@ -1,9 +1,12 @@
-import { Injectable, OnDestroy }       from '@angular/core';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { NxConfigService }             from '../../services/nx-config';
-import { NxUtilsService }              from '../../services/utils.service';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { Injectable, OnDestroy }     from '@angular/core';
+import {
+    BehaviorSubject, Observable, Subscription
+}                                    from 'rxjs';
+
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService, Account } from '../../services/account.service';
 
 interface Platform {
     file: string;
@@ -17,45 +20,51 @@ interface Platform {
     providedIn: 'root'
 })
 export class IntegrationService implements OnDestroy {
-    CONFIG: any = {};
+    CONFIG: IConfig;
+    account: Account
 
     pluginsSubject = new BehaviorSubject(undefined);
-    plugin: any = {};
+    pluginSubject = new BehaviorSubject({});
     haveCustomBuild: boolean;
     private integrationSubject: Subscription;
 
-    constructor(private api: NxCloudApiService,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
+    constructor(
+        configService: NxConfigService,
+        private api: NxCloudApiService,
+        private accountService: NxAccountService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
 
-        this.integrationSubject = this.getIntegrations()
-            .subscribe(result => {
-                const plugins = result && result.data || [];
+        this.accountService.get().then(account => {
+            this.account = account;
+        }).then(_ => {
+            this.integrationSubject = this.getIntegrations(this.account && this.account.is_staff)
+                .subscribe(result => {
+                    const plugins = result?.data || [];
 
-                plugins.forEach(plugin => {
-                    if (plugin.mine) {
-                        plugin.information.type.push({ id: 'mine', label: 'mine'}); // label is not important - filter by ID
-                    }
+                    plugins.forEach(plugin => {
+                        if (plugin.mine) {
+                            plugin.information.type.push({ id: 'mine', label: 'mine' }); // label is not important - filter by ID
+                        }
 
-                    plugin.versionDetails = {
-                        version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
-                    };
-                    this.formatRequirementsAndCompatibility(plugin);
+                        plugin.versionDetails = {
+                            version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
+                        };
+                        this.formatRequirementsAndCompatibility(plugin);
 
-                    plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
+                        plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
 
-                    plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
+                        plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
-                    plugin.link = '/integrations/' + plugin.id;
-                    plugin.link += (plugin.state) ? '?state=' + plugin.state : '';
+                        plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
+                        plugin.link += (plugin.state) ? '?state=' + plugin.state : '';
+                    });
+                    this.pluginsSubject.next(plugins);
                 });
-                this.pluginsSubject.next(plugins);
-            });
+        });
     }
 
-    private getIntegrations(): Observable<any> {
+    private getIntegrations(ignoreSW): Observable<any> {
         return this.api.getIntegrations();
     }
 
@@ -67,7 +76,7 @@ export class IntegrationService implements OnDestroy {
         return elm;
     }
 
-    private formatRequirementsAndCompatibility (plugin) {
+    private formatRequirementsAndCompatibility(plugin) {
         const section = plugin.requirementsAndCompatibility;
 
         if (section) {
@@ -123,7 +132,7 @@ export class IntegrationService implements OnDestroy {
             if (section.screenshots.length < 1) {
                 delete section.screenshots;
             } else {
-                section.screenshots.sort(NxUtilsService.byParam((elm) => {
+                section.screenshots.sort(NxUtilsService.byParam((elm: any) => {
                     return elm.sortKey;
                 }, NxUtilsService.sortASC));
             }
@@ -142,9 +151,9 @@ export class IntegrationService implements OnDestroy {
 
             if (matchScreenshot) {
                 processed.push({
-                    id     : item[0].replace('overview', ''),
-                    value  : item[1],
-                    sortKey: parseInt(matchScreenshot[1], 10)
+                    id      : item[0].replace('overview', ''),
+                    value   : item[1],
+                    sortKey : parseInt(matchScreenshot[1], 10)
                 });
             }
         });
@@ -162,7 +171,7 @@ export class IntegrationService implements OnDestroy {
         });
 
         if (processed.length) {
-            processed.sort(NxUtilsService.byParam((elm) => {
+            processed.sort(NxUtilsService.byParam((elm: any) => {
                 return elm.sortKey;
             }, NxUtilsService.sortASC));
 
@@ -175,14 +184,14 @@ export class IntegrationService implements OnDestroy {
 
         this.CONFIG.icons.platforms.forEach(icon => {
             const platform = plugin.requirementsAndCompatibility
-                                   .platforms
-                                   .find(platform => {
-                                       // 32 or 64 bit? ... it doesn't matter :)
-                                       return platform.toLowerCase().indexOf(icon.name) > -1;
-                                   });
-                                   if (platform) {
-                                       platformIcons.push({ name: platform, src: icon.src });
-                                   }
+                .platforms
+                .find(platform => {
+                    // 32 or 64 bit? ... it doesn't matter :)
+                    return platform.toLowerCase().indexOf(icon.name) > -1;
+                });
+            if (platform) {
+                platformIcons.push({ name: platform, src: icon.src });
+            }
         });
 
         return platformIcons;
@@ -210,7 +219,7 @@ export class IntegrationService implements OnDestroy {
                         platform.noFollow = true;
                     }
                 } else {
-                    platform.name = this.CONFIG.defaultPlatformNames[platformName];
+                    platform.name = this.CONFIG.integration.defaultPlatformNames[platformName];
                 }
 
                 platform.url = downloadPlatforms[platformName];
@@ -225,13 +234,12 @@ export class IntegrationService implements OnDestroy {
             plugin.downloadFiles = plugin.downloadFiles.sort((a, b) => {
                 if (a.order < b.order) {
                     return -1;
-                }  else if (a.order > b.order) {
+                } else if (a.order > b.order) {
                     return 1;
                 }
                 return 0;
             });
         }
-
 
         if (plugin.versionDetails) {
             plugin.versionDetails.version = this.formatVersion(plugin.versionDetails.version);
@@ -241,7 +249,7 @@ export class IntegrationService implements OnDestroy {
             };
         }
 
-        if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+        if (plugin.requirementsAndCompatibility?.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
         }
 
@@ -257,16 +265,12 @@ export class IntegrationService implements OnDestroy {
     }
 
     setIntegrationPlugin(plugin: any = {}) {
-        this.plugin = plugin;
+        this.pluginSubject.next(plugin);
     }
 
     getIntegrationPlugin() {
-        return this.plugin;
+        return this.pluginSubject.value;
     }
-
-    // setSection(section) {
-    //     this.selectedSectionSubject.next(section);
-    // }
 
     ngOnDestroy() {
         this.integrationSubject.unsubscribe();

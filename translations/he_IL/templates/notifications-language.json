@@ -6,30 +6,30 @@
     "emailSubject": "הוזמנת ל %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "שאלת מכירות עבור {{message.asset}}"
+    "emailSubject": "שאלת מכירות עבור {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "בירור טכני עבור {{message.asset}}"
+    "emailSubject": "בירור טכני עבור {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "משוב על {{message.asset}}"
+    "emailSubject": "משוב עבור {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "משוב דף מצלמה {{#message.asset}} עבור {{message.asset}}{{/message.asset}}"
+    "emailSubject": "משוב על עמוד המצלמה{{#message.asset}} עבור {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: ל {{message.asset}} יש גרסה חדשה לסקירה"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} יש גרסה חדשה לסקירה"
   },
   "restore_password": {
     "emailSubject": "אפס את סיסמתך"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{message.system_name}} היה לשתף איתך{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{{message.system_name}}} היה לשתף איתך{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "מערכת הווידאו {{message.system_name}} שותפה איתך"
+    "emailSubject": "מערכת הווידאו {{{message.system_name}}} שותפה איתך"
   }
 }

@@ -1,5 +1,4 @@
-@import '../../../../../styles/theme_palette';
-@import '../../../../../styles/theme_variables';
+@use '../../../../../styles/theme_variables' as *;
 
 img {
     max-height: 100%;
@@ -15,6 +14,13 @@ img {
     font-size: 16px;
     opacity: 0.6;
     text-align: center;
+}
+
+.light-camera-preview {
+    @extend .hm-camera-preview;
+    font-family: $font-family-regular;
+    color: $light10;
+    padding: 16px;
 }
 
 .header {
@@ -38,4 +44,51 @@ img {
         width: 84px !important;
         margin-bottom: 8px;
     }
+}
+
+.light-thumbnail-preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px !important;
+    background: $light2;
+}
+
+.wide {
+    width: 213px !important;
+}
+
+.normal {
+    width: 160px !important;
+}
+
+.square {
+    width: 120px !important;
+}
+
+.fill {
+    width: 100% !important;
+}
+
+.motion-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.image-unavailable-border {
+    border: 1px solid $light4;
+    background: $light2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

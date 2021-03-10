@@ -40,16 +40,37 @@
         .error-page {
             color          : #303f47;
             display        : flex;
+            margin         : 0 auto;
             flex-direction : column;
             align-items    : center;
+            justify-content: center;
+            height         : 55vh;
+            max-width      : 550px;
+        }
+
+         @media screen and (max-width: 740px)  {
+            .error-page {
+                height     : 65vh !important;
+            }
         }
 
         .error-page h1 {
-            font-size : 40px;
+            font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+            font-weight: 500;
+            font-style: normal;
+            font-size: 24px;
+            color: #2B383F;
+            text-align: center;
         }
 
         .error-page p {
-            font-size : 24px;
+            font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 15px;
+            color: #2B383F;
+            text-align: center;
+            line-height: 22px;
         }
 
         .error-page p + p {
@@ -62,45 +83,8 @@
             font-weight     : 200;
         }
 
-        .error-page img:hover {
-            animation                 : shake 0.5s;
-            animation-iteration-count : infinite;
-        }
-
-        @keyframes shake {
-            0% {
-                transform : translate(1px, 1px) rotate(0deg);
-            }
-            10% {
-                transform : translate(-1px, -2px) rotate(-1deg);
-            }
-            20% {
-                transform : translate(-3px, 0px) rotate(1deg);
-            }
-            30% {
-                transform : translate(3px, 2px) rotate(0deg);
-            }
-            40% {
-                transform : translate(1px, -1px) rotate(1deg);
-            }
-            50% {
-                transform : translate(-1px, 2px) rotate(-1deg);
-            }
-            60% {
-                transform : translate(-3px, 1px) rotate(0deg);
-            }
-            70% {
-                transform : translate(3px, 1px) rotate(-1deg);
-            }
-            80% {
-                transform : translate(-1px, -1px) rotate(1deg);
-            }
-            90% {
-                transform : translate(1px, 2px) rotate(0deg);
-            }
-            100% {
-                transform : translate(1px, -2px) rotate(-1deg);
-            }
+        .error-page img {
+            margin: 40px 0;
         }
     </style>
 
@@ -111,7 +95,7 @@
 <!-- Add your site or application content here -->
 
 <div class="jumbotron error-page">
-    <img src="/static/images/503.png" srcset="/static/images/503@2x.png 2x">
+    <img alt="Maintenance is in progress picture" src="/static/images/placeholders/page/Maintenance.svg">
     %CONTENT%
 </div>
 

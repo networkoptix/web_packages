@@ -1,24 +1,27 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer }      from '@angular/platform-browser';
-import { NxConfigService }   from '../../services/nx-config';
-import { NxAppStateService } from '../../services/nx-app-state.service';
-import { ActivatedRoute }            from '@angular/router';
-import { NxSettingsService } from '../../pages/systems/settings/settings.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import {
+    Component, Input,
+    OnDestroy, OnInit
+}                                   from '@angular/core';
+import { DomSanitizer }             from '@angular/platform-browser';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { Subscription }             from 'rxjs';
 
-@AutoUnsubscribe()
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxAppStateService }        from '@services/nx-app-state.service';
+import { NxMenusService, MenuNode } from '@services/menus.service';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'nx-footer',
+    selector   : 'nx-footer',
     templateUrl: 'footer.component.html',
-    styleUrls: [ 'footer.component.scss' ]
+    styleUrls  : ['footer.component.scss']
 })
- export class NxFooterComponent implements OnInit, OnDestroy {
+export class NxFooterComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
     companyLink: string;
     companyName: string;
     copyrightYear: string;
-    config: any;
-    footerItems: any;
+    footerItems: MenuNode[];
     viewFooter: boolean;
 
     // options
@@ -26,21 +29,31 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     classes: string[] = [];
     private footerSubscription: Subscription;
 
-    constructor(private sanitizer: DomSanitizer,
-                private _config: NxConfigService,
-                private appState: NxAppStateService,
-                private route: ActivatedRoute,
-                private systemSettingsService: NxSettingsService) {
-        this.config = this._config.getConfig();
+    constructor(
+        configService: NxConfigService,
+        private sanitizer: DomSanitizer,
+        private appState: NxAppStateService,
+        private menusService: NxMenusService
+    ) {
+        this.CONFIG = configService.getConfig();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
-        this.companyLink = this.config.companyLink;
-        this.companyName = this.config.companyName;
-        this.copyrightYear = this.config.copyrightYear;
-        this.footerItems = this.config.footerItems;
+        this.companyLink = this.CONFIG.company.links.website;
+        this.companyName = this.CONFIG.company.name;
+        this.copyrightYear = this.CONFIG.company.copyrightYear;
+        this.menusService.getMenu('footer').subscribe(footer => {
+            this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
+            if (this.CONFIG.isLocal) {
+                this.footerItems.forEach(footerItem => {
+                    footerItem.new_window = true;
+                    footerItem.url = footerItem.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
+                });
+            }
+        });
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;
@@ -48,9 +61,6 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.url;
+        return item ? item.url : undefined;
     }
 }

@@ -1,18 +1,17 @@
-import { NgModule } from '@angular/core';
-
-import { NxUrlSafePipe }       from './nx-url-safe';
+import { NgModule }         from '@angular/core';
+import { NxSafePipe }       from './nx-safe';
 import { NxHealthDatePipe } from './health-date';
 
 @NgModule({
-    imports        : [],
-    declarations   : [
-        NxHealthDatePipe,
-        NxUrlSafePipe,
+    imports: [
     ],
-    entryComponents: [],
-    exports        : [
+    declarations: [
         NxHealthDatePipe,
-        NxUrlSafePipe
+        NxSafePipe
+    ],
+    exports: [
+        NxHealthDatePipe,
+        NxSafePipe
     ],
     providers: [NxHealthDatePipe]
 })

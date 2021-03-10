@@ -1,8 +1,10 @@
-@import '../../../styles/custom/custom_palette';
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/mixins';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/mixins';
+
+a {
+    text-decoration: none !important;
+}
 
 .close-button {
     border-radius: 2px;
@@ -19,25 +21,27 @@
 }
 
 .badge {
-    @extend #regular12;
-    color            : $light16;
+    @include typography.regular12light;
     font-weight      : 400;
     background-color : $light4;
     line-height      : 18px;
     height           : 20px;
     padding          : 0 8px;
     border-radius    : 2px;
+    position         : relative;
 
     &.large {
-        @extend #regular13;
-        color       : $light16;
+        @include typography.regular13nocolor;
         height      : 2rem !important;
         line-height : 2rem !important;
         padding     : 0 12px;
+        position    : relative;
     }
 }
 
 .badge {
+    position: relative;
+
     &.btn {
         cursor : pointer !important;
 
@@ -52,24 +56,46 @@
 }
 
 .badge-selected {
-    @extend #regular13;
-    @include badge-selected($light16, $light17, $light18);
-    cursor : default !important;
+    @include typography.regular13dark9;
+    @include mixins.badge-selected($light16, $light17, $light18);
+    cursor        : default !important;
+    padding-right : 32px !important;
+    position      : relative;
+
+    .close-button {
+        position : absolute;
+        right    : 0;
+    }
 }
 
 .badge-brand-selected {
-    @extend #regular13;
-    @include badge-selected($brand_core, $brand_d1, $brand_d2);
+    @include typography.regular13dark9;
+    @include mixins.badge-selected($brand_core, $brand_d1, $brand_d2);
     cursor : default !important;
+}
+
+.badge-integration {
+    &.ready {
+        display: flex !important;
+        justify-content: center;
+        justify-self: stretch;
+    }
+    &:not(.ready) {
+        padding: 0 8px !important;
+    }
 }
 
 $nx-theme-colors :
     "brand" $brand_core $light1,
     "default" $light8 $light1,
+    "default-inverted" $light4 $light16,
     "success" $brand-success $light1,
+    "success-bright" $brand-success-bright $light1,
     "info" $brand-info $light1,
     "warning" $brand-warning $light1,
-    "danger" $brand-danger $light1;
+    "warning-bright" $brand-warning-bright $light1,
+    "danger" $brand-danger $light1,
+    "danger-bright" $brand-danger-bright $light1;
 
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {
@@ -79,6 +105,6 @@ $nx-theme-colors :
     }
     .badge-#{$name}-selected {
         color: $light1 !important;
-        @include badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
+        @include mixins.badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
     }
 }

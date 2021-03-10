@@ -1,33 +1,65 @@
-import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
-import { NxConfigService }                                from '../../../../services/nx-config';
-import { NxUtilsService }                                 from '../../../../services/utils.service';
-import { NxHealthService } from '../../health.service';
+import {
+    Component, Input, OnChanges,
+    ViewEncapsulation
+}                                   from '@angular/core';
+
+import { NxHealthService }          from '../../health.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { InfoBlockLine, InfoBlockSection } from '../../../../components/info-block/info-block.component';
 
 @Component({
-    selector     : 'nx-single-entity',
-    templateUrl  : './single-entity.component.html',
-    styleUrls    : ['./single-entity.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-single-entity',
+    templateUrl   : './single-entity.component.html',
+    styleUrls     : ['./single-entity.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
-    @Input() params: any;
-    @Input() entity: any;
+    @Input() params;
+    @Input() entity;
 
-    CONFIG: any = {};
-    copyParams: any;
+    CONFIG: IConfig;
+    copyParams;
     entityName: string;
+    sections: SectionLookup;
 
-    constructor(private configService: NxConfigService,
-                private healthService: NxHealthService,
-                private utilsService: NxUtilsService) {
+    constructor(
+        private configService: NxConfigService,
+            private healthService: NxHealthService
+    ) {
         this.CONFIG = this.configService.getConfig();
     }
 
     ngOnChanges(): void {
-        this.copyParams = {...this.params};
+        this.copyParams = { ...this.params };
         if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
             this.copyParams.values.shift();
         }
         this.entityName = this.healthService.findEntityName(this.entity);
+        if (this.copyParams) {
+            const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');
+            this.sections = paramGroups
+                .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
+                    if (!this.entity[paramGroupId]) {
+                        this.copyParams.values = this.copyParams.values.filter(params => params.id !== paramGroupId);
+                        return reduced;
+                    }
+                    const lines = values.map(({ id, name }) => {
+                        const param = this.entity[paramGroupId][id] && this.entity[paramGroupId][id] || {};
+                        return new InfoBlockLine(
+                            name || id,
+                            param.text || '_',
+                            param.class,
+                            param.icon
+                        );
+                    });
+                    const maxParamWidthPercentage = 42;
+                    reduced[paramGroupId] = [new InfoBlockSection(lines, undefined, maxParamWidthPercentage)];
+                    return reduced;
+                }, {});
+        }
     }
+}
+
+export type SectionLookup = {
+    [key: string]: [InfoBlockSection]
 }

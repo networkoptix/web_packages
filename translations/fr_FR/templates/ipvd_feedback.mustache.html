@@ -1,4 +1,4 @@
 <h1>Bonjour {{ message.userFullName }},</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>donne le commentaire{{#message.asset}} pour {{ message.asset }}{{/message.asset}}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>a ajouté le commentaire suivant {{#message.asset}} pour {{ message.asset }}{{/message.asset}}:
 <div>{{ message.message }}</div>

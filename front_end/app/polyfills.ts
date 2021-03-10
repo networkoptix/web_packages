@@ -1,19 +1,24 @@
-import 'core-js/es6';
-import 'core-js/es7/reflect';
-import 'core-js/es7/object';   // IE 11 needs Object.entries
-import 'core-js/es7/array';   // IE 11 needs includes()
+/***************************************************************************************************
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+ */
+import '@angular/localize/init';
+import 'core-js/es';
+import 'core-js/features/reflect';
+import 'core-js/features/object'; // IE 11 needs Object.entries
+import 'core-js/features/array';
+import { environment } from './environments/environment';
 
 require('zone.js/dist/zone');
 
 if (!Element.prototype.matches) {
-  Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
+    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
           Element.prototype.webkitMatchesSelector;
 }
 
-if (process.env.ENV === 'production') {
-  // Production
+if (environment.production) {
+    // Production
 } else {
-  // Development and test
-  Error['stackTraceLimit'] = Infinity;
-  require('zone.js/dist/long-stack-trace-zone');
+    // Development and test
+    Error['stackTraceLimit'] = Infinity;
+    require('zone.js/dist/long-stack-trace-zone');
 }

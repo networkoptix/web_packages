@@ -1,30 +1,27 @@
-import {
-    Component, OnInit, Input, OnDestroy,
-    SimpleChanges, OnChanges
-} from '@angular/core';
+import { Component, Input }          from '@angular/core';
+
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
-    selector: 'nx-nav-location',
+    selector   : 'nx-nav-location',
     templateUrl: 'nav.component.html',
-    styleUrls: ['nav.component.scss']
+    styleUrls  : ['nav.component.scss']
 })
 
-export class NxNavLocationDropdown implements OnInit, OnDestroy, OnChanges {
-    @Input() location: any;
+export class NxNavLocationDropdown extends BaseDropdown {
+    @Input() location: any = {};
 
-    show: boolean;
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
+    ) {
+        super(languageService, configService);
+    }
 
-    constructor() {
-
+    hide() {
         this.show = false;
-    }
-
-    ngOnInit(): void {
-    }
-
-    ngOnDestroy() {
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
+        return false;
     }
 }

@@ -1,23 +1,22 @@
 import base64
-import django
 import json
-import urllib
 import uuid
+import logging
 
+import django
+from django.utils.http import urlencode
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-
-from django.utils.http import urlencode
+from drf_yasg.utils import swagger_auto_schema
+from html_sanitizer import Sanitizer
+from zapier.models import ZapHook, GeneratedRule
 
 from api.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
 from api.controllers import cloud_api, cloud_gateway
 
-from zapier.models import *
 from cloud import settings
-import logging
-from html_sanitizer import Sanitizer
 sanitizer = Sanitizer()
 
 CLOUD_INSTANCE_URL = settings.conf['cloud_portal']['url']
@@ -109,7 +108,7 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
             "actionResourceIds": [],
             "actionType": "showPopupAction",
             "aggregationPeriod": 0,
-            "comment": "Auto generated rule for Generic Event from Zapier made by {}".format(email),
+            "comment": f"Auto generated rule for Generic Event from Zapier made by {email}",
             "disabled": False,
             "eventCondition": event_condition,
             "eventResourceIds": [],
@@ -153,7 +152,7 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
             "actionResourceIds": [],
             "actionType": "execHttpRequestAction",
             "aggregationPeriod": 0,
-            "comment": "Auto generated rule for HTTP action to Zapier made by {}".format(email),
+            "comment": f"Auto generated rule for HTTP action to Zapier made by {email}",
             "disabled": False,
             "eventCondition": event_condition,
             "eventResourceIds": [],
@@ -199,6 +198,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
             increment_rule(rules_query)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -214,6 +214,7 @@ def get_systems(request):
     return api_success(zap_list)
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -233,10 +234,11 @@ def zapier_send_generic_event(request):
     make_or_increment_rule('Generic Event', email, system_id, caption,
                            password=password, description=description, source=source)
 
-    url = "api/createEvent?{}".format(urllib.urlencode(query_params).replace('+', "%20"))
+    url = f"api/createEvent?{urlencode(query_params).replace('+', '%20')}"
     return cloud_gateway.get(system_id, url, email, password)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -259,6 +261,7 @@ def nx_http_action(request):
         return Response({'message': "Webhook for " + caption + " does not exist"}, status=404)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -267,6 +270,7 @@ def ping(request):
     return Response({'status': 'ok'})
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -285,7 +289,7 @@ def subscribe_webhook(request):
     if user_hooks.exists():
         return Response({'message': 'There is already a webhook for ' + caption, 'link': None}, status=500)
 
-    url_link = '{}/zapier/?{}'.format(CLOUD_INSTANCE_URL, urlencode(query_params))
+    url_link = f'{CLOUD_INSTANCE_URL}/zapier/?{urlencode(query_params)}'
 
     make_or_increment_rule('Http Action', email, system_id, caption, password=password, target_url=url_link)
 
@@ -294,6 +298,7 @@ def subscribe_webhook(request):
     return Response({'message': 'Webhook created for ' + caption, 'link': url_link}, status=200)
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -310,6 +315,7 @@ def unsubscribe_webhook(request):
     return Response({'message': 'Webhook deleted for ' + event}, status=200)
 
 
+@swagger_auto_schema(methods=["GET", "POST"], auto_schema=None)
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions

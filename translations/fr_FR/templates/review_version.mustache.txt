@@ -1,8 +1,8 @@
-Il y a une nouvelle version pour {{ message.asset }}({{message.asset_type}}) à revoir.
+Il y a une nouvelle version pour {{ message.asset }}({{message.asset_type}}) à vérifier.
 
-Cliquez sur le lien pour évaluer le brouillon {{ message.id }} pour {{ message.asset }}
+Cliquez sur le lien pour vérifier le brouillon {{ message.id }} pour {{ message.asset }}
 
-Lien vers révision: {{ config.portal_url }}admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Vérifier le avec ce lien: {{ config.portal_url }}admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Sur cette page, vous pouvez
 1) Créer un aperçu pour voir les changements récents.

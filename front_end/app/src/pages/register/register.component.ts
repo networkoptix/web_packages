@@ -1,67 +1,94 @@
-import {
-    Component, Input,
-    OnInit, ViewChild
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { NxPageService }             from '../../services/page.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxAccountService }          from '../../services/account.service';
-import { LocalStorageService }       from 'ngx-store';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxProcessService }          from '../../services/process.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router }       from '@angular/router';
+
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxUrlProtocolService }      from '@services/url-protocol.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { NxSessionService }          from '@services/session.service';
 
 @Component({
-    selector   : 'nx-register-component',
-    templateUrl: 'register.component.html',
-    styleUrls  : ['register.component.scss']
+    selector    : 'nx-register-component',
+    templateUrl : 'register.component.html',
+    styleUrls   : ['register.component.scss']
 })
 
 export class NxRegisterComponent implements OnInit {
+    LANG: LanguageI18NStaticTypes;
 
-    LANG: any = {};
-
+    uriParamLogout: string;
     uriParam: string;
     accountInfo: any = {};
-    register: any;
-    registerSuccess: any;
-    activated: any;
-    code: any;
-    session: any;
-    context: any;
+    register: Process;
+    registerSuccess;
+    activated;
+    code;
+    session;
+    context;
     lockEmail: boolean;
-    fromClient: any;
-    location: any;
+    fromClient;
+    location;
+    CONFIG: IConfig;
+    hideErrors = true;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 
     private setupDefaults() {
         this.context = {
-            process : ''
+            process: ''
         };
 
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
-    constructor(private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private uriService: NxUriService,
-                private urlProtocol: NxUrlProtocolService,
-                private route: ActivatedRoute,
-                private localStorage: LocalStorageService,
-                private accountService: NxAccountService,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private sessionService: NxSessionService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private uriService: NxUriService,
+        private urlProtocol: NxUrlProtocolService,
+        private route: ActivatedRoute,
+        private storageService: NxStorageService,
+        public accountService: NxAccountService,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private router: Router
     ) {
+        this.LANG = language.translations;
+        this.CONFIG = configService.getConfig();
+
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
-        // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
-        this.context.process = this.localStorage.get('regProcess');
+    login() {
+        const { url } = this.router;
+        const redirect = this.CONFIG.redirect.paths.some((path) => {
+            return path === '/' ? url === '/' : url.includes(path);
+        });
+        // Handling promise to satisfy the linter.
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
+    }
 
+    async ngOnInit() {
+        this.uriParamLogout = this.route.snapshot.queryParams.logout;
+        if (this.uriParamLogout !== undefined) {
+            if (this.sessionService.loginState) {
+                await this.accountService.logout(true);
+            }
+            this.sessionService.email = '';
+        }
+
+        // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
+        this.context.process = this.storageService.regProcess;
         this.uriParam = this.route.snapshot.data.uriParam;
 
         if (this.route.snapshot.params.code) {
@@ -70,7 +97,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess?.();
         }
 
         if (this.uriParam === 'activated') {
@@ -94,13 +121,18 @@ export class NxRegisterComponent implements OnInit {
             } catch (ex) {}
         }
 
+        const loginRegister = this.storageService.loginRegister;
+        if (loginRegister) {
+            this.lockEmail = !!loginRegister;
+        }
+
         this.accountInfo = {
-            email    : this.accountInfo.email || this.accountService.getEmail(),
-            password : '',
-            firstName: '',
-            lastName : '',
-            accept   : false,
-            code     : this.code
+            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
+            password  : '',
+            firstName : '',
+            lastName  : '',
+            accept    : false,
+            code      : this.code
         };
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
@@ -110,55 +142,65 @@ export class NxRegisterComponent implements OnInit {
 
         this.fromClient = this.urlProtocol.getSource().isApp;
 
-        this.localStorage.set('regProcess', undefined);
+        this.storageService.clear = 'regProcess';
 
         this.register = this.processService.createProcess(() => {
-            this.accountService.setEmail(this.accountInfo.email);
-
+            this.accountService.email = this.accountInfo.email;
             return this.cloudApiService
-                       .registerUser(
-                               this.accountInfo.email,
-                               this.accountInfo.password,
-                               this.accountInfo.firstName,
-                               this.accountInfo.lastName,
-                               this.accountInfo.accept,
-                               this.accountInfo.code);
-                        }, {
-                            errorCodes : {
-                                alreadyExists: error => {
-                                    this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
-                                    this.registerForm.controls.registerEmail.markAsTouched();
-                                    return false;
-                                },
-                                portalError  : this.LANG.errorCodes.brokenAccount
-                            },
-                            holdAlerts : true,
-                            errorPrefix: this.LANG.errorCodes.cantRegisterPrefix
-                        })
-                        .then((response) => {
-                            if (response.resultCode === 'alreadyExists') {
-                                this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
-                                return;
-                            }
+                .registerUser(
+                    this.accountInfo.email,
+                    this.accountInfo.password,
+                    this.accountInfo.firstName,
+                    this.accountInfo.lastName,
+                    this.accountInfo.accept,
+                    this.accountInfo.code);
+        }, {
+            errorCodes: {
+                alreadyExists: () => {
+                    this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
+                    this.registerForm.controls.registerEmail.markAsTouched();
+                    return false;
+                },
+                portalError: this.LANG.errorCodes.brokenAccount?.()
+            },
+            holdAlerts  : true,
+            errorPrefix : ''
+        })
+            .then((response) => {
+                if (response.resultCode === 'alreadyExists') {
+                    this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
+                    return;
+                }
 
-                            if (response.activated) {
-                                this.uriService.updateURI('/register/successActivated', {}, false);
-                                this.accountService
-                                    .login(this.accountInfo.email, this.accountInfo.password, true)
-                                    .then(() => {
-                                        this.registerSuccess = true;
-                                        this.activated = true;
-                                        this.localStorage.set('regProcess', 'registerSuccess');
-                                        this.localStorage.set('regActivated', 'activated');
-                                    });
-                            } else {
-                                this.uriService.updateURI('/register/success', {}, true);
-                                this.accountService.setEmail(this.accountInfo.email);
-                                this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
-                                this.registerSuccess = true;
-                                this.localStorage.set('regProcess', 'registerSuccess');
-                            }
+                if (response.activated) {
+                    this.uriService
+                        .updateURI('/register/successActivated', {}, false)
+                        .catch(error => {
+                            console.error(error);
                         });
+
+                    this.accountService
+                        .login(this.accountInfo.email, this.accountInfo.password, true)
+                        // @ts-ignore -- TODO: Need to exclude this from webadmin routes
+                        .then(() => {
+                            this.registerSuccess = true;
+                            this.activated = true;
+                            this.storageService.regProcess = this.registerSuccess;
+                            this.storageService.regActivated = this.activated;
+                        });
+                } else {
+                    this.storageService.clear = 'loginRegister';
+                    this.uriService
+                        .updateURI('/register/success', {}, true)
+                        .catch(error => {
+                            console.error(error);
+                        });
+
+                    this.accountService.email = this.accountInfo.email;
+                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess?.();
+                    this.registerSuccess = true;
+                    this.storageService.regProcess = 'registerSuccess';
+                }
+            });
     }
 }
-

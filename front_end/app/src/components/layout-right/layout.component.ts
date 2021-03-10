@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChange, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 
 /* Usage
  <nx-right-layout>
@@ -35,21 +35,17 @@ import { Component, Input, OnInit, SimpleChange, SimpleChanges, ViewEncapsulatio
 */
 
 @Component({
-    selector   : 'nx-layout-right',
-    templateUrl: 'layout.component.html',
+    selector     : 'nx-layout-right',
+    templateUrl  : 'layout.component.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls  : [ 'layout.component.scss' ],
+    styleUrls    : ['layout.component.scss']
 })
-export class NxLayoutRightComponent implements OnInit {
-
-    @Input('loading') loading: any;
-    @Input('toggle') toggle: any;
+export class NxLayoutRightComponent {
+    @Input('loading') loading;
+    @Input('toggle') toggle;
     private _toggle: string;
 
     constructor() {
-    }
-
-    ngOnInit() {
     }
 
     ngOnChanges(changes: SimpleChanges) {

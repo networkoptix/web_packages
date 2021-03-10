@@ -36,13 +36,13 @@
     "cantEditYourself": "Zmiana własnych uprawnień nie jest dozwolona",
     "cantEditAdmin": "Ten użytkownik ma uprawnienia administratora",
     "cantOpenClient": "Nie wykryto aplikacji %VMS_NAME%. <a href=\"/download\">Pobierz</a>",
-    "lostConnection": "Utracono połączenie z {{systemName}}",
+    "lostConnection": "Utracono połączenie z {systemName}",
     "thisSystem": "system",
     "oldSafariNotSupported": "Wersje Safari starsze niż 10 nie są obsługiwane",
     "DUPLICATE_MEDIASERVER_FOUND": "Niektóre serwery istnieją w obu systemach - w wybranym i w bieżącym. <br>Usuń z obu systemów serwery, które są rozłączone lub niekompatybilne i spróbuj ponownie.",
-    "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> jest w trybie offline.",
+    "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> jest offline.",
     "INCOMPATIBLE": "Systemy mają różne wersje oprogramowania. Zaktualizuj oba z nich do <a href=\"/download\">najnowszej wersji</a>.",
-    "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
+    "FAIL": "System <strong>{failedSystem}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
     "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
   },
   "common": {
@@ -91,7 +91,7 @@
       "collapse server": "zwiń serwer + [nazwa serwera]",
       "expand all servers": "rozwiń wszystkie serwery",
       "collapse all servers": "zwiń wszystkie serwery",
-      "stop listening": "przestań słuchać",
+      "stop listening": "przestań nasłuchiwać",
       "help": "pomoc | pokaż polecenia"
     }
   },

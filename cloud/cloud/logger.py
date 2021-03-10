@@ -1,8 +1,9 @@
 import traceback
-from django.utils.log import AdminEmailHandler
 from hashlib import md5
-
 import logging
+
+from django.utils.log import AdminEmailHandler
+
 logger = logging.getLogger(__name__)
 DOWNGRADE_ROUTES = ['/api/account', '/api/systems']
 
@@ -35,12 +36,24 @@ class LimitAdminEmailHandler(AdminEmailHandler):
         super(LimitAdminEmailHandler, self).emit(record)
 
 
-def downgrade_unauthorized_requests(record):
-    """Downgrades the loglevel of unauthenticated requests to info.
-    Routes are defined in the {DOWNGRADE_ROUTES} variable."""
-    if record.name == 'django.request' and record.status_code == 401 and not record.request.user.is_authenticated:
-        for route in DOWNGRADE_ROUTES:
-            if route in record.request.path:
-                logger.info(record.getMessage())
-                return False
+def downgrade_requests(record):
+    """Downgrades the loglevel of certain request errors."""
+    if record.name == 'django.request':
+        # If the user is unauthenticated and the route in the {DOWNGRADE_ROUTES} variable.
+        if record.status_code == 401 and not record.request.user.is_authenticated:
+            for route in DOWNGRADE_ROUTES:
+                if route in record.request.path:
+                    logger.info(record.getMessage())
+                    return False
+            else:
+                return True
+        # Catch when a ZapHook is missing in nx_http_action
+        elif record.status_code == 404 and 'zapier' in record.request.path:
+            logger.info(record.getMessage())
+        # If the status code is 504 that means clouddb is unavailable or returned nothing.
+        elif record.status_code == 504:
+            logger.warning(record.getMessage())
+        else:
+            return True
+        return False
     return True

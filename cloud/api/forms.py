@@ -1,3 +1,5 @@
+import base64
+
 from django import forms
 from django.conf import settings
 from django.core.validators import EmailValidator
@@ -5,12 +7,13 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
+from django.urls import reverse
 from dal import autocomplete
 
-import base64
 from api.account_backend import AccountManager
 from api.models import Account
-from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType
+from cms.models import (
+    Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType)
 from notifications import notifications_api
 
 User = get_user_model()
@@ -19,8 +22,10 @@ assets_help_text = "Grants group permissions to the selected assets.<br>" \
                    "granted.<br>" \
                    "Example: The user can review any assets which have the same customization as their portal."
 
-asset_types_help_text = "Allows this group to review the selected asset_types. This field currently only affects " \
-                        "a users ability to review assets."
+asset_types_help_text = "Allows this group to review the selected asset_types. This field only affects " \
+                        "a users ability to review assets unless \"All assets\" is selected above."
+
+all_assets_help_text = "If enabled, all permissions above are also applied to ALL assets of selected types below."
 
 
 class AccountAdminForm(forms.ModelForm):
@@ -59,6 +64,8 @@ class GroupAdminForm(forms.ModelForm):
         widget=FilteredSelectMultiple('assets', False)
     )
 
+    all_assets = forms.BooleanField(required=False, help_text=all_assets_help_text)
+
     asset_types = forms.ModelMultipleChoiceField(
         queryset=AssetType.objects.all(),
         required=False,
@@ -77,6 +84,8 @@ class GroupAdminForm(forms.ModelForm):
                 .values_list('asset', flat=True).distinct()
             self.fields['asset_types'].initial = UserGroupsToAssetType.objects.filter(group=self.instance)\
                 .values_list('asset_type', flat=True).distinct()
+            self.fields['users'].help_text = f'<a href="{reverse("admin:invite")}?group_id={self.instance.id}" target="_blank" class="addLink">+ Invite to this group</a>'
+            self.fields['all_assets'].initial = self.instance.options.all_assets
 
     def save_m2m(self):
         # Add the users to the Group.
@@ -97,6 +106,10 @@ class GroupAdminForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         # Default save
         instance = super(GroupAdminForm, self).save()
+
+        instance.options.all_assets = self.cleaned_data['all_assets']
+        instance.options.save()
+
         # Save many-to-many data
         self.save_m2m()
         return instance
@@ -114,18 +127,27 @@ class UserInviteFrom(forms.Form):
             self.fields['customization'].choices = [(customization, customization) for customization in self.user.customizations]
 
     @staticmethod
-    def add_user(request):
+    def add_user(request, group=None):
         email = request.POST['email']
         customization = request.POST['customization']
         message = request.POST['message']
-        if AccountManager.is_email_in_portal(email):
-            messages.error(request, "User already has a cloud account!")
-            return Account.objects.get(email=email).id
+        user = User.objects.filter(email=email).first()
+        if user:
+            if group is None:
+                messages.error(request, "User already has a cloud account!")
+            elif group.user_set.filter(email=user.email).exists():
+                messages.error(request, f'User already in "{group.name}" group.')
+            else:
+                group.user_set.add(user)
+                messages.success(request, f'User successfully added to "{group.name}" group.') 
+            return user.id
 
         messages.success(request, "User has been invited to cloud.")
         language_code = Customization.objects.get(name=customization).default_language.code
         user = Account(email=email, customization=customization, language=language_code, is_active=False)
         user.save()
+        if group:
+            group.user_set.add(user)
         # Password in the encoded email doesnt matter its just a place holder.
         encode_email = base64.b64encode(f"password:{email}".encode('utf-8')).decode('utf-8')
         notifications_api.send(email, 'cloud_invite', {"message": message, "code": encode_email}, customization)

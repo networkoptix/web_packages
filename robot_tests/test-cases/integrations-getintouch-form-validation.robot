@@ -4,7 +4,7 @@ Suite Setup       Form Validation
 Test Template     Test Get In Touch Invalid
 Test Teardown     Run Keyword if Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        form    Threaded File
+Force Tags        form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
@@ -14,26 +14,27 @@ ${sales inquiry}        ${SALES INQUIRY TEXT}
 ${technical inquiry}    ${TECHNICAL INQUIRY TEXT}
 ${feedback}             ${FEEDBACK TEXT}
 ${valid name}           mark hamil
+${password}             ${BASE PASSWORD}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
-Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com         ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com    ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid sales inquiry valid email       success     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid sales inquiry valid email       success     ${valid name}    ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid technical inquiry valid email     success     ${valid name}    ${valid email}            ${technical inquiry}  ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid technical inquiry valid email   success     ${valid name}    ${valid email}       ${technical inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid Feedback valid email            success     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid Feedback valid email            success     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
 # Using ${SPACE} below for now due to selenium shortcomings. but really want to be testing for ${EMPTY}
-Empty name                            failure     ${SPACE}         ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Empty name                            failure     ${SPACE}         ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Close button no submit                failure     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH CLOSE BUTTON}    Sample message
+Close button no submit                failure     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH CLOSE BUTTON}    Sample message
     [tags]    C54681
-Empty message                         failure     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
+Empty message                         failure     ${valid name}    ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
     [tags]    C54681
-Cancel button no submit               failure     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH CANCEL BUTTON}   Sample message
+Cancel button no submit               failure     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH CANCEL BUTTON}   Sample message
     [tags]    C54681
 
 
@@ -46,8 +47,8 @@ Restart
 Form Validation
     Open Browser and go to URL    ${url}/integrations
     Log In    ${existing email}    ${BASE PASSWORD}
-    Wait Until Elements are Visible    ${INTEGRATION TEST INTEGRATION LINK}
-    Click Link    ${INTEGRATION TEST INTEGRATION LINK}
+    Wait Until Element is Visible    ${INTEGRATION TEST INTEGRATION LINK}/..
+    Click Element    ${INTEGRATION TEST INTEGRATION LINK}/..
     Wait Until Elements are Visible    ${INTEGRATION GET IN TOUCH BUTTON}    ${INTEGRATION TITLE}
     ${name}=   Get Text    ${INTEGRATION TITLE}
     ${subbed subject}=    Replace String    ${sales inquiry}    {{integration}}    ${name}
@@ -62,7 +63,7 @@ Form Validation
     ...    ${INTEGRATION GET IN TOUCH NAME INPUT}
     ...    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}
-    ...    ${INTEGRATION GET IN TOUCH DROPDOWN LIST}
+    #...    ${INTEGRATION GET IN TOUCH DROPDOWN LIST}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}
     ...    ${INTEGRATION GET IN TOUCH SEND BUTTON}
     ...    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
