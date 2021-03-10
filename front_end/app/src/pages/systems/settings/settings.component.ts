@@ -28,7 +28,7 @@ import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
 import { NxRibbonService }           from '@components/ribbon';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxAppStateService }         from '@services/nx-app-state.service';
+import { NxAppStateService }             from '@services/nx-app-state.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,7 +45,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: any = {};
+    content: any = [];
 
     account: Account;
     system: NxSystem|any;
@@ -54,7 +54,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     deletingSystem;
 
     _menuSearchMode: boolean;
-    searchableResults: boolean;
     menuVisible: boolean;
     systemId;
     systemNoAccess: boolean;
@@ -178,6 +177,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.content = {
+            searchableResults  : false,
             selectedSection    : '', // updated by selectedSectionSubject
             selectedSubSection : '', // updated by selectedSubSectionSubject
             system             : {}, // updated by getSystemInfo
@@ -465,7 +465,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             // Retain buttons
+            // @ts-ignore
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
+                // @ts-ignore
                 usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
@@ -570,8 +572,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
-        this.searchableResults = (this.system.permissions.editCameras && this.system.permissions.isAdmin && this.system.permissions.editUsers);
-
+        this.content.searchableResults = (this.system.permissions.editCameras && this.system.permissions.isAdmin && this.system.permissions.editUsers);
         this.content = { ...this.content };
     }
 
