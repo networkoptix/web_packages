@@ -246,7 +246,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemIdUpdate(id) {
         this.systemId = id;
         this.storageService.systemId = this.systemId;
-
         if (this.systemId && !this.systems) {
             this.systemsService
                 .forceUpdateSystems()
@@ -392,15 +391,17 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (!account || this.bootstrapProvider.newSystem) {
                     return;
                 }
-                const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
-                system.update().then(() => {
-                    system.getInfoAndPermissions().then(() => {
-                        this.systems = [system];
-                        this.singleSystem = (this.systems.length === 1);
-                        this.systemCounter = this.systems.length;
-                        this.updateActiveSystem();
-                        this.updateActive();
-                        this.headerService.activeSystem = system.moduleInfo;
+                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
+                this.system.update().then(() => {
+                    this.system.getInfoAndPermissions().then(() => {
+                        this.singleSystem = true;
+                        this.systemCounter = 1;
+                        this.system.infoSubject.subscribe((system) => {
+                            this.systems = [system];
+                            this.updateActiveSystem();
+                            this.updateActive();
+                            this.headerService.activeSystem = system.moduleInfo;
+                        });
                     });
                 });
             });
@@ -532,7 +533,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     get mainUrl() {
         if (!this.user.email) {
-            return '/';
+            return this.CONFIG.isLocal ? '/settings' : '/';
         } else if (this.singleSystem) {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         } else {

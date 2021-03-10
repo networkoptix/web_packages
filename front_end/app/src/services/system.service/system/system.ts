@@ -227,7 +227,7 @@ export class NxSystem extends System {
         if (this.CONFIG.isLocal) {
             return this.mediaserver.getSystemSettings()
                 .then(res => {
-                    let parsedSettings = {};
+                    let parsedSettings: any = {};
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
                     }
@@ -237,8 +237,7 @@ export class NxSystem extends System {
                     } else {
                         this.info = parsedSettings;
                     }
-                    this.id = this.CONFIG.localSystemId;
-                    this.info.systemName = this.CONFIG.localSystemName;
+                    this.id = parsedSettings?.id || this.CONFIG.localSystemId;
                     this.mergeInfo = this.info.mergeInfo;
                     this.isOnline = true;
                     this.cloudStorageCapable = false;

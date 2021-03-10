@@ -192,6 +192,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
+                            this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
+                            return this.system.update();
                         }).catch(() => {
                             this.systemNameWatcher.reset();
                             const options = {
@@ -272,7 +274,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     .disconnect(this.accountService, this.system)
                     .then((result) => {
                         if (result) {
-                            if (NxConfigService.isLocal && this.system.currentUser.isCloud) {
+                            if (NxConfigService.isLocal && this.system.currentUser?.isCloud) {
                                 this.accountService.logout();
                             } else {
                                 if (NxConfigService.isLocal) {

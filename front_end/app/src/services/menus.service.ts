@@ -95,7 +95,7 @@ export class NxMenusService implements OnDestroy {
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
         const menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
-        if (withCurrentSystem && this.currentSystemNode$.value) {
+        if (withCurrentSystem && this.currentSystemNode$.value && menu?.nodes) {
             menu.nodes = [this.currentSystemNode$.value, ...menu.nodes];
         }
         if (this.CONFIG.isLocal) {
