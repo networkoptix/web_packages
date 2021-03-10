@@ -2,8 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { isArray }               from 'rxjs/internal-compatibility';
 import { BehaviorSubject }       from 'rxjs';
 
-import { NxUtilsService }        from '../services/utils.service';
-import { NxSearchService }       from '../services/search.service';
+import { NxUtilsService }  from '@services/utils.service';
+import { NxSearchService } from '@services/search.service';
 
 @Injectable({
     providedIn: 'root'

@@ -4,16 +4,16 @@ import {
 import { Router }                        from '@angular/router';
 import { DomSanitizer, SafeHtml }        from '@angular/platform-browser';
 
-import { NxPageService }                 from '../../services/page.service';
-import { NxConfigService, IConfig }      from '../../services/nx-config';
-import { NxAppStateService }             from '../../services/nx-app-state.service';
-import { NxCloudApiService }             from '../../services/nx-cloud-api';
-import { NxBootstrapProvider }           from '../../services/nx-bootstrap-provider';
+import { NxPageService }                 from '@services/page.service';
+import { NxConfigService, IConfig }      from '@services/nx-config';
+import { NxAppStateService }             from '@services/nx-app-state.service';
+import { NxCloudApiService }             from '@services/nx-cloud-api';
+import { NxBootstrapProvider }           from '@services/nx-bootstrap-provider';
 
 @Component({
     selector  : 'nx-503',
     styleUrls : ['503.component.scss'],
-    template  : `<div [innerHTML]="compTemplate"></div>`
+    template  : '<div [innerHTML]="compTemplate"></div>'
 })
 export class Nx503Component implements OnInit {
     compTemplate: SafeHtml;
@@ -31,8 +31,8 @@ export class Nx503Component implements OnInit {
         this.CONFIG = configService.getConfig();
 
         this.pageService.pageTitle = 'Maintenance is in progress';
-        this.appState.setFooterVisibility(false);
-        this.appState.setHeaderVisibility(false);
+        this.appState.footerVisibility = false;
+        this.appState.headerVisibility = false;
     }
 
     ngOnInit() {

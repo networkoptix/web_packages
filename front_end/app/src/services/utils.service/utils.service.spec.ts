@@ -1,12 +1,11 @@
 import { waitForAsync, TestBed }             from '@angular/core/testing';
 import { LOCALE_ID }                         from '@angular/core';
-import { describe, expect, beforeEach, it }  from '@jest/globals';
 import { DOCUMENT }                          from '@angular/common';
 import { DeviceDetectorService }             from 'ngx-device-detector';
 
 import { NxUtilsService } from './utils.service';
 
-describe('Test Suite Name', () => {
+describe('Nx Utils Service', () => {
     let utilsService: NxUtilsService;
 
     beforeEach(waitForAsync(() => {
@@ -22,7 +21,7 @@ describe('Test Suite Name', () => {
     }));
 
     it('should create the service', () => {
-        expect(utilsService).toBeTruthy(); 
+        expect(utilsService).toBeTruthy();
     });
 
     it('should clean up id', () => {
@@ -88,7 +87,7 @@ describe('Test Suite Name', () => {
                 2: 2
             }
         };
-        expect(NxUtilsService.deepCopy(obj)).toStrictEqual(obj);
+        expect(NxUtilsService.deepCopy(obj)).toEqual(obj);
     });
 
     it('should return modulus', () => {
@@ -112,7 +111,7 @@ describe('Test Suite Name', () => {
             ip: '10.1.5.210',
             port: '7001'
         };
-        expect(NxUtilsService.formatURL(mockServer)).toStrictEqual(expectedReturnedServer);
+        expect(NxUtilsService.formatURL(mockServer)).toEqual(expectedReturnedServer);
     });
 
     it('should return ipv6 ip/port if only ipv6 exists', () => {
@@ -124,7 +123,7 @@ describe('Test Suite Name', () => {
             ip: 'fe80::5a88:4ce4:a105:fdb0%3',
             port: '7001'
         };
-        expect(NxUtilsService.formatURL(mockServer)).toStrictEqual(expectedReturnedServer);
+        expect(NxUtilsService.formatURL(mockServer)).toEqual(expectedReturnedServer);
     });
 
     it('should return N/A if none exists', () => {
@@ -136,7 +135,7 @@ describe('Test Suite Name', () => {
             ip: 'N/A',
             port: ''
         };
-        expect(NxUtilsService.formatURL(mockServer)).toStrictEqual(expectedReturnedServer);
+        expect(NxUtilsService.formatURL(mockServer)).toEqual(expectedReturnedServer);
     });
 
     it('should return true if a number', () => {
