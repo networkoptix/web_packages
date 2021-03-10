@@ -288,7 +288,7 @@ RTP, Rtsp, scene items, archive sync, WEBM
        ...    maxRtspConnectDurationSeconds=0
        ...    maxSceneItems=0
        ...    maxWearableArchiveSynchronizationThreads=-1
-       ...    maxWebMTranscoders=2
+       ...    maxHttpTranscodingSessions=2
     Set System Settings    ${local auth}    ${server url}    ${settings}
     Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT    timeout=60
@@ -306,7 +306,7 @@ RTP, Rtsp, scene items, archive sync, WEBM
     Changing input setting changes it on server    ${MAX WEARABLE CAM ARCHIVE SYNC THREADS INPUT}    maxWearableArchiveSynchronizationThreads    1
 
     Log    Step 5
-    Changing input setting changes it on server    ${MAX WEBM TRANSCODERS INPUT}    maxWebMTranscoders    1
+    Changing input setting changes it on server    ${MAX WEBM TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
 
 Meta data storage, OS time change, proxy connection timeout, push notification language
     [Tags]    C78380    advanced settings    threaded

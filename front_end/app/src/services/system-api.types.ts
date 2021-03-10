@@ -89,7 +89,7 @@ export interface Settings {
     maxRtspConnectDurationSeconds: string,
     maxSceneItems: string,
     maxWearableArchiveSynchronizationThreads: string,
-    maxWebMTranscoders: string,
+    maxHttpTranscodingSessions: string,
     metadataStorageChangePolicy: string,
     osTimeChangeCheckPeriodMs: string,
     primaryTimeServer: string,
