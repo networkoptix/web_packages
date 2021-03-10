@@ -62,8 +62,8 @@ export interface BaseConfig {
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,
-    pushConfig: string;
-    testedOperatingSystems: string;
+    pushConfig: {};
+    testedOperatingSystems: {};
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;
@@ -179,16 +179,16 @@ export interface ClientMode {
 }
 
 export interface CloudCapabilities {
-    developersEnabled: string,
-    feedbackEnabled: string;
+    developersEnabled: boolean,
+    feedbackEnabled: boolean;
     healthMonitor?: string;
     healthMonitorCacheTimeout?: number;
     // TODO Need to find out which are valid
     healthMonitoring?: string;
-    integrationStore: string;
-    publicDownloads: string;
-    publicReleases: string;
-    cloudStorageEnabled: string;
+    integrationStore: boolean;
+    publicDownloads: boolean;
+    publicReleases: boolean;
+    cloudStorageEnabled: boolean;
     cloudStorageSize: number;
 }
 

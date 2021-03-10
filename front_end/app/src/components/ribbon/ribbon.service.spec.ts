@@ -8,8 +8,8 @@ import { NxHeaderService }                                 from '@services/nx-he
 import { NxDialogsService }                                from '@dialogs/dialogs.service';
 
 @NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
+    imports : [TranslateModule.forRoot()],
+    exports : [TranslateModule]
 })
 class TranslateTestingModule {
 }
