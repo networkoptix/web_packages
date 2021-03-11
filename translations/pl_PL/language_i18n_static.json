@@ -129,7 +129,7 @@
             "unauthorized": "Wymagane uwierzytelnienie"
         },
         "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
-        "login": "login",
+        "login": "zaloguj",
         "recordingSettingsWarning": "Proszę zaktualizować brakujące ustawienia nagrywania.",
         "disableMotionWarning": "Tryb nagrywania zostanie zmieniony na „Zawsze nagrywaj”",
         "recordingModes": {
@@ -147,7 +147,7 @@
         },
         "general": "Ogólne",
         "inaccessibleFeatureMessage": "System jest offline i dlatego informacje nie są dostępne.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} integracji więcej...} one{#{endTag} integracja więcej...} few {#{endTag} integracje więcej...} many {#{endTag} integracji więcej...} other{#{endTag} integracji więcej...}}",
         "searchCamPlaceholder": "Szukaj",
         "system": "system",
         "systemHasNoCameras": "Brak kamer",
@@ -204,7 +204,7 @@
             "title": "Magazyn w chmurze",
             "enableStorage": "Włącz magazyn w chmurze",
             "otherSystem": "Inny system...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "initial": "Oferujemy {{compCapacity}} dodatkowej przestrzeni, abyś mógł rozpocząć pracę w chmurze.",
             "available": "Miejsce przechowywania w chmurze jest dostępne dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą klienta {vmsName}.",
             "camera": "kamera",
             "cameras": "kamery",
@@ -246,7 +246,7 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Jeśli zamierzałeś przenieść dane analityczne do innej lokalizacji przechowywania, skontaktuj się ze <a href=\"%SUPPORT_LINK%\" target=\"_blank\">wsparciem technicznym</a> przed kontynuowaniem."
         },
         "merge": {
             "adminPasswordTitle": "Wprowadź hasło konta właściciela w <strong>{secondarySystem}</strong>",
