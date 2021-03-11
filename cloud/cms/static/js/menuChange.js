@@ -229,6 +229,9 @@ function initNestedScripts() {
     const checkAndUpdateLabel = (node, focus = false) => {
         const wrapper = node.parentNode;
         const label = wrapper.querySelector('label')
+        if (label && label.innerText.toLowerCase().includes('all')) {
+            return
+        }
         if (label) {
             label.innerText = label.innerText.replace(':', '')
         }
@@ -270,6 +273,9 @@ function initNestedScripts() {
         const wrapper = node.parentNode;
         wrapper.classList.add('custom-input-wrapper')
         const label = node.parentNode.querySelector('label')
+        if (label && label.innerText.toLowerCase().includes('all')) {
+            return
+        }
         if (label) {
             label.innerText = label.innerText.replace(':', '')
             label.classList.add('custom-text-label')
