@@ -27,7 +27,11 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
         return from(
             this.accountService.get().then(account => {
                 if (account?.is_staff) {
+                    clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
+                    this.swBypassTimeout = setTimeout(_ => {
+                        this.swBypass = false;
+                    }, 10000);
                 }
                 return originalMethod.apply(this, args);
             })
@@ -73,6 +77,7 @@ export class NxCloudApiService {
     private CONFIG: IConfig;
     private accountService: any;
     public swBypass = false;
+    public swBypassTimeout: ReturnType<typeof setTimeout>;
 
     constructor(
         private configService: NxConfigService,
