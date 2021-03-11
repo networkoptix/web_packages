@@ -54,6 +54,10 @@ $brand_core: #2FA2DB;
       padding: 0 44px;
       font-size: 13px;
 
+      // see https://networkoptix.atlassian.net/browse/CLOUD-6846
+      // !important is the last resort against the global styling here
+      box-shadow: none !important;
+
       &::placeholder {
         color: $light16;
       }

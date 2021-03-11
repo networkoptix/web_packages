@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router';
 
-import VideoManagementSystemService from './services/vms.service'
+// import VideoManagementSystemService from './services/vms.service'
 
 import IpInfoPipe from './pipes/ip_info.pipe'
 
