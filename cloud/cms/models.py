@@ -1435,11 +1435,17 @@ class ExternalFileManager(models.Manager):
             external_file_obj.save()
             external_file_obj.file=file
         else:
-            external_raw_bytes = b''
-            for chunk in external_file_obj.file.chunks():
-                external_raw_bytes += chunk
-            if external_raw_bytes != raw_bytes:
-                raise ValueError('md5 Hash Collision')
+            if external_file_obj.file:
+                external_raw_bytes = b''
+                for count, chunk in enumerate(external_file_obj.file.chunks()):
+                    if count < 5:
+                        external_raw_bytes += chunk
+                    else:
+                        break
+                if external_raw_bytes != raw_bytes:
+                    raise ValueError('md5 Hash Collision')
+            else:
+                external_file_obj.file=file
         external_file_obj.asset_ds_pair.add(asset_ds_pair)
         external_file_obj.save()
         return external_file_obj
