@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 // import VideoManagementSystemService from './services/vms.service'
 
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     RouterModule,
     ComponentsModule,
+    FormsModule,
   ],
   exports: [
     MediaServerList,
