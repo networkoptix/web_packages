@@ -34,8 +34,8 @@
             offline: !camera.isOnline,
             unauthorized: !camera.isAuthorized,
             isScheduleEnabled: camera.isScheduleEnabled,
-            selected: camera.id === activeCameraId,
-            error: previewLoaded[camera.id] === -1
+            error: previewLoaded[camera.id] === -1,
+            selected: camera.id === activeCameraId
           }"
         >
           <div class="preview">
