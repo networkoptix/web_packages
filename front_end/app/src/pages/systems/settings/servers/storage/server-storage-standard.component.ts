@@ -379,17 +379,34 @@ export class NxSystemStorageComponent implements OnInit {
     cleanUrl = NxUtilsService.cleanSmbUrl
 
     getIconSrc(store) {
-        return `${this.CONFIG.icons.dir}${store.updating || this.updatingModes.includes(store.storageId) ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
+        return `${this.CONFIG.icons.dir}${store.updating || this.updatingModes.includes(store.storageId) || !store.storageType ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
 
     doesModeExist = (mode: MODE) => {
         const watcherMode = `mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
-        return Object.values(this.modeWatchers).reduce((prev, { value }) => prev || value === watcherMode, false);
-    }
+        if (
+            watcherMode === 'modeBackup' &&
+            this.currentStorageState.locations.some(({
+                isBackup, status
+            }) => isBackup && [STORAGE_STATUS.BEING_CHECKED, STORAGE_STATUS.INACCESSIBLE].includes(status))
+        ) {
+            return true;
+        }
+        return Object.values(this.modeWatchers).reduce(
+            (prev, { value }) => prev || value === watcherMode,
+            false
+        );
+    };
 
     modeReindexDisabled = (reindexMode: MODE) => {
         const noStorages = !this.doesModeExist(reindexMode);
-        const onlineStorages = this.currentStorageState.locations.filter(({ isOnline, mode }) => isOnline && reindexMode === mode).length;
+        const onlineStorages = this.currentStorageState.locations.filter(({
+            isOnline, mode, status, storageId
+        }) => isOnline &&
+            reindexMode === mode &&
+            ![STORAGE_STATUS.BEING_CHECKED, STORAGE_STATUS.INACCESSIBLE].includes(status) &&
+            !this.updatingModes.includes(storageId)
+        ).length;
         return noStorages || !onlineStorages;
     }
 

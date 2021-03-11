@@ -101,7 +101,6 @@
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
-                    <h1 *ngIf="pageNode.title" class="page-title">{{pageNode.title}}</h1>
                     <ng-container *ngFor="let node of pageNode.nodes">
                         <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
                         <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
