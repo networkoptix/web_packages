@@ -127,8 +127,9 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         this.mediaServerApi
             .logout()
             .finally(() => {
-                this.sessionService.invalidateSession(); // Clear session
                 this.cookieService.deleteAll();
+                this.sessionService.invalidateSession(); // Clear session
+
                 if (!doNotRedirect) {
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
