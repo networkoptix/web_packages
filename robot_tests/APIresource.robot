@@ -155,6 +155,11 @@ Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
+    Sleep    2
+    Reload Page
+    Sleep    5
+    Reload Page
+    Sleep    5
     Go To    ${ENV}
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
@@ -542,3 +547,27 @@ Get Relays
        Append To List    ${relays}    ${obj}[domain]
     END
     [Return]    ${relays}
+    
+Get Camera User Attributes
+    [Arguments]    ${server url}    ${auth}    
+    Create Digest Session    Get Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Camera Attributes   ec2/getCameraUserAttributesList    timeout=10
+    [Return]    ${resp.json()}
+    
+Save Camera User Attributes   
+    [Arguments]    ${server url}    ${auth}    ${data}
+    Create Digest Session    Save Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Save Camera Attributes   ec2/saveCameraUserAttributesList   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    
+Get Media Server Attributes
+    [Arguments]    ${server url}    ${auth}    
+    Create Digest Session    Get Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Media Server Attributes   ec2/getMediaServerUserAttributesList    timeout=10
+    [Return]    ${resp.json()}
+
+Save Media Server Attributes   
+    [Arguments]    ${server url}    ${auth}   ${data}
+    Create Digest Session    Save Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Save Media Server Attributes   ec2/saveMediaServerUserAttributesList   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
