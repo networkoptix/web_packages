@@ -313,7 +313,7 @@
                 "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
+                "integration": "Skontaktuj się z {companyName}",
                 "ipvd_feedback_device": "Opinie dotyczące {asset}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer"
             }
@@ -671,7 +671,7 @@
     },
     "system": {
         "connected": "Połączony",
-        "not_connected": "Not connected",
+        "not_connected": "Nie połączony",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
         "mySystemSearch": "IMeMyMine",
@@ -725,8 +725,8 @@
         "storageToolTips": {
             "local": "Lokalny",
             "usb": "USB",
-            "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "network": "Sieć, dodana przez system operacyjny",
+            "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
         }
     },
@@ -741,7 +741,7 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
-        "nameFail": "Failed to change {type} name",
+        "nameFail": "Nie udało się zmienić {type}",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
