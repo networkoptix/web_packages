@@ -524,6 +524,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.setCamera();
                     this.toggleMotionGrid();
                     this.settingsService.system = this.system;
+                    this.system.infoSubject.next(this.system);
                     return res;
                 });
             });

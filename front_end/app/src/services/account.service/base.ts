@@ -75,7 +75,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected nxSystemAPIService: NxSystemAPIService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+        languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;

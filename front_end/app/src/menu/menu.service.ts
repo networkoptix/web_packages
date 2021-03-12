@@ -154,7 +154,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     escapeBrackets(text) {
-        return text.replace('<', '&lt;').replace('>', '&gt;');
+        return text?.replace('<', '&lt;').replace('>', '&gt;') || text;
     }
 
     private setHighlightPattern(model) {

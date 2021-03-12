@@ -2,21 +2,21 @@ import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { SessionStorageService }     from 'ngx-webstorage';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxUrlProtocolService }      from '@services/url-protocol.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-activate-component',
-    templateUrl: 'activate.component.html',
-    styleUrls  : ['activate.component.scss']
+    selector    : 'nx-activate-component',
+    templateUrl : 'activate.component.html',
+    styleUrls   : ['activate.component.scss']
 })
 
 export class NxActivateComponent implements OnInit {
@@ -149,8 +149,9 @@ export class NxActivateComponent implements OnInit {
         this.accountInfo.email = this.accountService.email;
 
         if (this.accountInfo.activateCode) {
-            this.accountService.logoutAuthorised();
-            this.checkActivate();
+            this.accountService.logoutAuthorised().then(() => {
+                this.checkActivate();
+            });
         }
     }
 
