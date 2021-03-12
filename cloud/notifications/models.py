@@ -166,7 +166,7 @@ class Feedback(models.Model):
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
-            name='supportEmail', context__asset_type=self.target_asset.asset_type,
+            name__in=['supportEmail', '%SUPPORT_EMAIL%'], context__asset_type=self.target_asset.asset_type,
             context__name__in=['support', 'Settings']
         ).last()
         contact_email = data_structure.find_actual_value(

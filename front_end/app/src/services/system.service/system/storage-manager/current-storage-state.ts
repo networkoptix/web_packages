@@ -183,7 +183,8 @@ export const currentStorageStateFactory = (
             ...info,
             reservedSpace,
             serverId,
-            totalSpace: addParams.find(({
+            urlWithCredentials : info.url,
+            totalSpace         : addParams.find(({
                 name
             }) => name === 'space')?.value || 0
         }

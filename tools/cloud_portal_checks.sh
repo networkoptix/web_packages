@@ -37,7 +37,7 @@ fi
 # Check for mentions of nx
 BAN_LIST="[^[:alpha:]]nx\ |nxvms"
 echo "Checking files for mentions of nx with the following patterns: ${BAN_LIST}"
-branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif},{commonPasswordsList,downloads}.json} cloud_portal/front_end/app) || true
+branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif,spec.ts,mock.ts},{commonPasswordsList,downloads}.json} cloud_portal/front_end/app) || true
 if [[ -z ${branding} ]]
 then
     echo "No mentions were found"

@@ -18,7 +18,6 @@ export class NxSwCacheInterceptor implements HttpInterceptor {
             const newRequest = request.clone({
                 headers: request.headers.set('ngsw-bypass', 'true')
             });
-            this.cloudApiService.swBypass = false;
             return next.handle(newRequest);
         }
 

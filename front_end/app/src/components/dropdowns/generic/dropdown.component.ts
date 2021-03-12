@@ -47,7 +47,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
-    @Input() forcePosition: {left?: number, top?: number, width?: number}
+    @Input() forcePosition: {left?: number, top?: number, width?: number, offsetTop?: number}
 
     @Output() onSelected = new EventEmitter<string>();
 

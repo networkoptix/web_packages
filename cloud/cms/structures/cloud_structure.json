@@ -727,7 +727,8 @@
             "fieldset": "Features"
           },
           {
-            "name": "supportEmail",
+            "old_name": "supportEmail",
+            "name": "%SUPPORT_EMAIL%",
             "label": "Support E-mail",
             "value": "support@networkoptix.zendesk.com",
             "description": "E-mail that is used by contact forms.",

@@ -81,13 +81,13 @@
 </ng-template>
 <!-- End of Search Results Templates -->
 
-<div class="page-wrapper">
+<div [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'container'">
     <nx-left-menu *ngIf="menuName" [menuName]="menuName"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
-    <div class="knowledge-base">
+    <div [ngClass]="{'knowledge-base': basePath !== 'content'}">
         <nx-search *ngIf="!previewAssetId"
             [ngModel]="search"
             (ngModelChange)="updateSearchQuery($event)"
@@ -101,12 +101,16 @@
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
-                    <h1 *ngIf="pageNode.title" class="page-title">{{pageNode.title}}</h1>
-                    <ng-container *ngFor="let node of pageNode.nodes">
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node}"></ng-container>
-                    </ng-container>
+                    <ng-template #innerContent>
+                        <ng-container *ngFor="let node of pageNode.nodes">
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node}"></ng-container>
+                        </ng-container>
+                    </ng-template>
+                    <div *ngIf="basePath === 'content';else innerContent" class="card">
+                        <ng-container *ngTemplateOutlet="innerContent"></ng-container>
+                    </div>
                     <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
                         <h4>{{ (relatedLinks$ | async).type === 'next' ? 'NEXT ARTICLE:' : 'RELATED TOPICS' }}</h4>
