@@ -66,7 +66,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (relatedLinks.type === 'next') {
-            const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => `${id}` === assetId);
+            const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => id === assetId);
             if (currentIndex === (relatedLinks.nodes.length - 1)) {
                 return [];
             } else {
