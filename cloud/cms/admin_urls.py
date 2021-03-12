@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from cms.views import asset, celery
+from cms.views import asset, celery, menu
 
 urlpatterns = [
     url(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'get_asset_ids/?$', asset.get_asset_ids_by_asset_type, name="asset_ids_by_type"),
     path('asset_autocomplete', asset.MenuAssetAutocomplete.as_view(create_field='name'), name='asset_autocomplete'),
     path('asset_info/<int:asset_id>', asset.get_asset_info, name='asset_info'),
-    path('asset_info/by_menu/<int:menu_id>', asset.get_asset_info_by_menu, name='asset_info_by_menu')
+    path('asset_info/by_menu/<int:menu_id>', asset.get_asset_info_by_menu, name='asset_info_by_menu'),
+    path('menu_node_autocomplete', menu.MenuNodeAutocomplete.as_view(), name='menu_node_autocomplete')
 ]
