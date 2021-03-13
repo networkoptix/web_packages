@@ -477,5 +477,9 @@
     "WARNING TEXT": "警告",
     "INFO TEXT": "情報",
     "DEBUG TEXT": "デバッグ",
-    "VERBOSE TEXT": "詳細"
+    "VERBOSE TEXT": "詳細",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Secondary streams from all cameras on this server are being backed up in real time.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "You can change the backup mode or select specific cameras in the desktop client.",
+    "RECORDING STOP WARNING TEXT": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted."
 }
