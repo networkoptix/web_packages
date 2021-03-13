@@ -176,7 +176,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             {
                 type  : 'link',
                 text  : this.LANG.ribbon.integration.backToEditText,
-                value : this.CONFIG.integration.adminLink.replace('%ID%', id)
+                value : this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
+                external : true
             }
         ];
         if (reviewId) {
@@ -200,7 +201,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 {
                     type  : 'link',
                     text  : this.LANG.ribbon.integration.reject?.(),
-                    value : `/admin/cms/assetcustomizationreview/${reviewId}/change/`
+                    value : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
+                    external : true
                 }
             );
         }
