@@ -3,15 +3,16 @@ import {
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewChild
 }                                    from '@angular/core';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-license-trial-component',
     templateUrl : 'trial.component.html',
@@ -41,13 +42,13 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
         this.activateTrialKey = this.processService.createProcess(() => {
             return this.system
                 .activateLicense(this.selectedServer.value, this.trialLicense)
-                .then(response => {
+                .then((response: any) => {
                     if (response.reply) {
                         this.system.licensesModified = this.trialLicense;
                         this.haveTrialLicense = true;
 
                         this.dialogsService
-                            .notify(this.LANG.license.messages.trialActivated, 'success');
+                            .notify(this.LANG.license.messages.trialActivated?.(), 'success');
                     }
 
                     if (response.error) {
@@ -71,7 +72,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 }, (fail) => {
                     if (fail.error.type === 'error') {
                         this.dialogsService
-                            .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                            .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
                     }
                 });
         });

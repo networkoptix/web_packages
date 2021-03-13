@@ -1,10 +1,11 @@
+from functools import update_wrapper
+
 from django.contrib.admin import AdminSite, site
-from cms.models import ContributorAgreement
 from django.shortcuts import redirect
 from django.utils.http import urlencode
 from django.views.decorators.csrf import csrf_protect
-from functools import update_wrapper
 
+from cms.models import ContributorAgreement
 
 class CMSAdminSite(AdminSite):
     index_template = 'admin/index.html'

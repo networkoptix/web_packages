@@ -19,12 +19,11 @@
 
                                 <div class="caption d-flex">
                                     <div class="ellipsis" [innerHTML]="header"></div>
-                                    <div class="sort-dir nav-arrow"
-                                        [style.visibility]="(header == selectedHeader) ? 'visible' : 'hidden'"
-                                        [ngClass]="{'up': !sortOrderASC}">
-
-                                        <span></span>
-                                        <span></span>
+                                    <div [ngClass]="{'cam-table-show': !sortOrderASC}"
+                                        [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'">
+                                        <div class="sort-dir arrow-flip">
+                                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
+                                        </div>
                                     </div>
                                 </div>
                             </th>
@@ -34,10 +33,10 @@
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let item of pagedItems; trackBy: trackPagedItem"
                             [ngClass]="{'selected': item.sortKey == selectedCamera}"
-                            (click)="setClickedRow(item);">
+                            (mousedown)="setClickedRow(item);">
 
-                            <td *ngFor="let p of showParametersFor(item)" class="text-left">
-
+                            <td *ngFor="let p of showParametersFor(item); let first=first" class="text-left">
+                                <a *ngIf="first" [routerLink]="'/ipvd'" [queryParams]="{vendors: item.vendor, camera: item.model || item.value.model}"></a>
                                 <div *ngIf="!isBoolean(item[p]) && item[p] !== 0 && item[p] !== '0x0'; else icon">{{item[p]}}</div>
                                 <ng-template #icon>
                                     <nx-bool-icon [param]="p" [value]="item[p]"></nx-bool-icon>
@@ -73,13 +72,11 @@
                 *ngIf="pagedItems.length">
 
                 <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                    <span [translate]="'ipvd.disclaimer'"
-                        [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
-                    </span>
+                    <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
                     <span>
-                        <ng-container>{{LANG.ipvd.feedback.a_Please}}&nbsp;</ng-container>
-                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvd.feedback.b_Link}}</a>
-                        <ng-container>&nbsp;{{LANG.ipvd.feedback.c_Info}}</ng-container>
+                        <ng-container>{{LANG.ipvdFeedback.a_Please()}}&nbsp;</ng-container>
+                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvdFeedback.b_Link()}}</a>
+                        <ng-container>&nbsp;{{LANG.ipvdFeedback.c_Info()}}</ng-container>
                     </span>
                 </p>
                 <button *ngIf="debug">reset</button>

@@ -5,14 +5,15 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+
+import { NxModalGenericComponent }   from '../generic/generic.component';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUtilsService }            from '../../services/utils.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxModalGenericComponent }   from '../generic/generic.component';
-import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxStorageService }          from '../../services/storage.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @Component({
     selector    : 'ngbd-modal-content',
@@ -30,11 +31,12 @@ export class LoginModalContent implements OnInit {
     CONFIG: IConfig;
 
     locationService: Location;
-    auth: any;
+    auth;
     next: string;
     password: string;
     remember: boolean;
     loginProcess: any;
+    hideErrors = true;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -42,7 +44,7 @@ export class LoginModalContent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.localStorage.get('email') };
+        this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
         this.remember = true;
@@ -51,19 +53,19 @@ export class LoginModalContent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         locationService: Location,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
         public activeModal: NgbActiveModal,
-        @Inject(DOCUMENT) private document: any
+        @Inject(DOCUMENT) private document: any,
+        @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+        this.LANG = this.languageService.translations;
         this.locationService = locationService;
 
         this.setupDefaults();
@@ -73,14 +75,14 @@ export class LoginModalContent implements OnInit {
         this.activeModal.close();
 
         this.processService.createProcess(() => {
-            return this.cloudApiService.reactivate(email);
+            return this.account.reactivate(email);
         }, {
             errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated,
-                notFound  : this.LANG.errorCodes.emailNotFound
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated(),
+                notFound  : this.LANG.errorCodes.emailNotFound()
             },
             holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix()
         })
             .run()
             .then(() => {
@@ -106,12 +108,12 @@ export class LoginModalContent implements OnInit {
 
     setEmail(email) {
         this.auth.email = email;
-        this.localStorage.set('email', this.auth.email);
+        this.storageService.email = this.auth.email;
     }
 
     ngOnInit() {
         // Check the url queryParams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        const nextUrl = /\?next=(.*)/.exec(decodeURIComponent(this.document.location.search));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
@@ -165,40 +167,41 @@ export class LoginModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.LANG.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount()
             }
         }).then((result) => {
+            if (this.CONFIG.isLocal) {
+                return this.activeModal.close(result);
+            }
+            this.languageService.currentLang = result.data.account.language;
             this.activeModal.close();
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             if (this.keepPage) {
                 if (isRootPath) {
-                    window.location.href = this.CONFIG.redirect.authorised;
-                } else {
-                    // TODO: remove window reload once we separate session state from account service
-                    window.location.href = `${window.location.href}`;
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 }
             } else if (this.next) {
                 // sanitize this.next
                 this.next = decodeURIComponent(NxUtilsService.getRelativeLocation(this.next));
                 if (this.next.startsWith('/admin')) {
-                    window.location.href = this.next;
+                    this.window.location.href = this.next;
                 } else {
                     this.router
                         .navigate([this.next])
                         .then(() => {
                             // *** window.location.reload(); // ensure language reload as translations are loaded on page load
                             // *** admin section is not a part of Angular project
-                            window.location.href = this.next;
+                            this.router.navigate([this.next]);
                         });
                 }
             } else {
                 setTimeout(() => {
-                    window.location.href = this.CONFIG.redirect.authorised;
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 });
             }
         }, (error) => {
-            if (error.resultCode === 'portalError') {
+            if (error?.resultCode === 'portalError') {
                 // close dialog ... process will show toaster
                 this.activeModal.close();
             }

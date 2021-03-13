@@ -3,8 +3,9 @@ import {
     OnChanges, SimpleChanges,
     ViewEncapsulation
 }                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -13,9 +14,9 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls    : ['password-tag-validation.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxPasswordTagValidationComponent implements OnChanges {
-    @Input() forElement: any;
-    @Input() value: any;
+export class NxPasswordTagValidationComponent {
+    @Input() forElement;
+    @Input() value;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -30,15 +31,5 @@ export class NxPasswordTagValidationComponent implements OnChanges {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.value) {
-            this.forElement.weak = false;
-            if (this.forElement.errors && !this.forElement.errors.pattern) {
-                const { weak, common, minlength, required } = this.forElement.errors;
-                this.weak = (weak && !common && !minlength) || (common && !minlength && !required) || minlength;
-            }
-        }
     }
 }

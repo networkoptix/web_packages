@@ -1,20 +1,18 @@
 import { Injectable, NgModule }          from '@angular/core';
 import { CommonModule }                  from '@angular/common';
-import { BrowserModule }                 from '@angular/platform-browser';
-import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-
-import { ComponentsModule }             from '../../components/components.module';
-import { ApplyGuard, AuthGuard }        from '../../routeGuards';
+import { ComponentsModule }              from '../../components/components.module';
+import { DirectivesModule }              from '../../directives/directives.module';
+import { ApplyGuard, AuthGuard }         from '../../routeGuards';
 import {
     NxAccountComponent,
     NxAccountSettingsModule, NxAccountSettingsComponent,
     NxAccountPasswordModule, NxAccountPasswordComponent
-} from './';
-import { DirectivesModule }             from '../../directives/directives.module';
+}                                        from './';
+import { MenuModule }                    from '../../menu';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -27,8 +25,10 @@ export class TypeResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     {
-        path: 'account', component: NxAccountComponent, canActivate: [AuthGuard],
-        children: [
+        path        : 'account',
+        component   : NxAccountComponent,
+        canActivate : [AuthGuard],
+        children    : [
             { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
             { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }
         ]
@@ -36,10 +36,8 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
@@ -47,7 +45,8 @@ const appRoutes: Routes = [
         NxAccountSettingsModule,
         NxAccountPasswordModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers      : [
         TypeResolver
@@ -56,9 +55,6 @@ const appRoutes: Routes = [
         NxAccountComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxAccountComponent
-    ],
     exports        : [
         NxAccountComponent
     ]

@@ -35,13 +35,13 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() name: string;
     @Input() label: string;
     @Input() value: 'tristate' | string;
-    @Input() disabled: any;
+    @Input() disabled;
     @Output() onClick = new EventEmitter<string>();
 
     @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;
 
     public state: string;
-    private _value: any; // ngModel representation
+    private _value; // ngModel representation
     private _rbxStates = {
         rbFalse    : 'unchecked',
         rbTrue     : 'checked',
@@ -59,9 +59,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     }
 
     ngOnInit() {
-        if (this.disabled === undefined) {
-            this.disabled = false;
-        }
+        this.disabled = (this.disabled === undefined) ? false : this.disabled;
         this.state = this._rbxStates.rbFalse; // 'unchecked'
     }
 

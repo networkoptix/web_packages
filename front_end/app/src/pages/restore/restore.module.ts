@@ -1,15 +1,14 @@
 import { Injectable, NgModule }          from '@angular/core';
 import { CommonModule }                  from '@angular/common';
-import { BrowserModule }                 from '@angular/platform-browser';
-import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
-import { ComponentsModule }              from '../../components/components.module';
+import { TranslateModule }               from '@ngx-translate/core';
 
+import { ComponentsModule }   from '../../components/components.module';
 import { DirectivesModule }   from '../../directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
-import { TranslateModule } from '@ngx-translate/core';
 
+@Injectable()
 export class ParamResolver implements Resolve<any> {
     constructor() {
     }
@@ -51,27 +50,23 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         ComponentsModule,
         FormsModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
         DirectivesModule
     ],
-    providers      : [
+    providers: [
         ParamResolver,
         SentResolver,
-        SuccessResolver,
+        SuccessResolver
     ],
-    declarations   : [
-        NxRestoreComponent,
-    ],
-    bootstrap      : [],
-    entryComponents: [
+    declarations: [
         NxRestoreComponent
     ],
-    exports        : [
+    bootstrap: [
+    ],
+    exports: [
         NxRestoreComponent
     ]
 })

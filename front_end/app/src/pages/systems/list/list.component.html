@@ -32,7 +32,7 @@
                         <nx-tag style="display: block; margin-top: 24px;"
                               type="{{CONFIG.system.status[system.stateOfHealth].style || CONFIG.system.status.default.style}}"
                               *ngIf="canShowTag(system)">
-                            <ng-container>{{LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value}}</ng-container>
+                            <ng-container>{{LANG.systemStatuses[system.stateOfHealth]() || system.stateOfHealth }}</ng-container>
                         </nx-tag>
                         <nx-client-button [system]="system"
                                           [actionType]="(system) ? 'default' : 'primary'"

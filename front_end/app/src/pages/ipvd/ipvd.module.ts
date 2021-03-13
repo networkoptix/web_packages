@@ -1,7 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
@@ -10,22 +8,21 @@ import { Angular2CsvModule }    from 'angular2-csv';
 
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
-import {
-    NxIpvdComponent, CamTableComponent,
-    CamViewComponent, CsvButtonComponent,
-    BoolIconComponent
-}                               from './';
+import { NxIpvdComponent }      from './ipvd.component';
+import { CamTableComponent }    from './cam-components/cam-table/cam-table.component';
+import { CamViewComponent }     from './cam-components/cam-view/cam-view.component';
+import { CsvButtonComponent }   from './cam-components/csv-button/csv-button.component';
+import { BoolIconComponent }    from './cam-components/bool-icon/bool-icon.component';
+import { IpvdSearchService }    from './ipvd-search.service';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 const appRoutes: Routes = [
-    { path: 'ipvd', component: NxIpvdComponent },
-    { path: 'embed/ipvd', component: NxIpvdComponent }
+    { path: '', component: NxIpvdComponent }
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         NgbModule,
         FormsModule,
         TranslateModule,
@@ -33,9 +30,12 @@ const appRoutes: Routes = [
         DirectivesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        AngularSvgIconModule
     ],
-    providers      : [],
+    providers      : [
+        IpvdSearchService
+    ],
     declarations   : [
         NxIpvdComponent,
         CamTableComponent,
@@ -44,9 +44,6 @@ const appRoutes: Routes = [
         BoolIconComponent
     ],
     bootstrap      : [],
-    entryComponents: [
-        NxIpvdComponent
-    ],
     exports        : [
         NxIpvdComponent
     ]

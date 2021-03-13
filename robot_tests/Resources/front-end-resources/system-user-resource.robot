@@ -54,6 +54,13 @@ Verify Changed Info Via API
         Should Contain    ${new locals}    ${user}     
         #${n} =    Evaluate    ${n}+1
     END   
+    
+Rename Local User
+    [Arguments]    ${name}
+    Click Element    ${EDITABLE TITLE}
+    Sleep    1
+    Input Content Editable Text    ${EDITABLE TITLE}    ${name}
+    Click Element    //label[@for="permissionsSelect"]
 
 Verify In Local Users UI
     [Arguments]    ${local users}    ${email}
@@ -64,15 +71,18 @@ Verify In Local Users UI
         Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}]
         Element Should Not Be Visible     //span[text()="${email}"]//preceding-sibling::${LOCAL USER ICON}
         Click Element    //span[text()="Local+${user}"]
+        ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${EDITABLE TITLE}
+        ${status2} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${LOCAL USER LOGIN} 
+        Run Keyword If    '${status}' == '${FALSE}' and '${status2}' == ${FALSE}    Fail    Username not present.         
         Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
 	    Run Keyword Unless    '${email}' == '${admin}' and '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
-	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+${user}
+	    Run Keyword If    '${status}' == '${TRUE}'    Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+	    ...    ELSE    Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
 	    Run Keyword If    '${email}' == '${owner}'
@@ -88,8 +98,7 @@ Modify Local Users via Cloud UI
     Verify In Local Users UI    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     ${user}    Changed User
         ${new permission} =    Change Permission Level for Local User     ${user}    ${email}    
@@ -100,7 +109,7 @@ Modify Local Users via Cloud UI
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Wait Until Element is Visible    //span[text()="${new login}"]
-	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
         Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
@@ -121,8 +130,7 @@ Modify Local Users via Cloud UI
     
 Change Login for Local User
     [Arguments]    ${user}    ${new login}
-    Input Text    ${LOCAL USER LOGIN}     ${new login}
-    #Click Button    //button[text()="Save"]
+    Rename Local User    ${new login}
     ${new login} =    Convert To Lowercase    ${new login}
 	[Return]   ${new login} 
 	
@@ -167,7 +175,7 @@ Modify All Local User Info
 	Click Button    ${ACCOUNT SAVE}
 	Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
 	Wait Until Element is Visible    //span[text()="${new login}"]
-	Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+	Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
 	Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
@@ -183,7 +191,7 @@ Local User Start
     [Return]    ${local users}
 
 Reset Local Users
-    [Arguments]     ${auth}    ${server}    ${local user}=ocal+
+    [Arguments]     ${auth}    ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
     @{locals} =    Create List 
     @{local users} =    Get Dictionary Keys    ${role names}
     @{users} =    Get Users     ${auth}    ${server}
@@ -194,15 +202,15 @@ Reset Local Users
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    4
     Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
-    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals} 
+    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
     [Return]    ${local users}
-
+   
 Create New Local Users
-    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}
-    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}
+    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}    ${password}
+    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
     ...    ELSE    Run Keywords    
     ...    Delete All Local Users via API    ${auth}    ${server}    ${locals}    AND
-    ...    Create Local Users via API    ${auth}    ${server}    ${local users}
+    ...    Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
 
 Delete All Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}

@@ -1,37 +1,41 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute, Router }               from '@angular/router';
-import { NxConfigService, IConfig }                      from '../../../services/nx-config';
-import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
+import {
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Location }                  from '@angular/common';
+import { Router }                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { debounceTime }              from 'rxjs/operators';
+import { Subject, Subscription }     from 'rxjs';
 
-import { NxPageService }        from '../../../services/page.service';
-import { NxDialogsService }     from '../../../dialogs/dialogs.service';
-import { NxSystemsService }     from '../../../services/systems.service';
-import { NxAccountService }     from '../../../services/account.service';
-import { NxUrlProtocolService } from '../../../services/url-protocol.service';
-import { NxProcessService }     from '../../../services/process.service';
-import { debounceTime }         from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { NxHeaderService }           from '../../../services/nx-header.service';
+import { NxMenusService }            from '../../../services/menus.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-systems-list-component',
-    templateUrl: 'list.component.html',
-    styleUrls  : ['list.component.scss']
+    selector : 'nx-systems-list-component',
+    templateUrl : 'list.component.html',
+    styleUrls : ['list.component.scss']
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    showSearch: any;
-    fetchComplete: any;
-    search: any;
-    gettingSystems: any;
-    openClient: any;
-    systems: any;
-    filteredSystems: any;
+    showSearch;
+    fetchComplete;
+    search;
+    gettingSystems: Process;
+    openClient;
+    systems;
+    filteredSystems;
+    endpoint: any = {};
     userEmail: string;
     searchChanged = new Subject();
     private searchSubscription: Subscription;
@@ -41,20 +45,21 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.systems;
+        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
     }
 
-    constructor(configService: NxConfigService,
-                private urlProtocol: NxUrlProtocolService,
-                private route: ActivatedRoute,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private systemsService: NxSystemsService,
-                private accountService: NxAccountService,
-                private processService: NxProcessService,
-                private router: Router,
-                private location: Location,
+    constructor(
+        configService: NxConfigService,
+        private language: NxLanguageProviderService,
+        private pageService: NxPageService,
+        private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
+        private processService: NxProcessService,
+        private uriService: NxUriService,
+        private headerService: NxHeaderService,
+        private menusService: NxMenusService,
+        private router: Router,
+        private location: Location
     ) {
         this.setupDefaults(configService);
     }
@@ -91,11 +96,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
         this.gettingSystems = this.processService.createProcess(() => {
             this.fetchComplete = true;
-            return this.systemsService.forceUpdateSystems().subscribe(_ => {
-            });
+            return this.systemsService.forceUpdateSystems().toPromise();
         }, {
-            errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
-            logoutForbidden: true
+            errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
+            logoutForbidden : true
         });
 
         this.searchSubscription = this.searchChanged
@@ -123,7 +127,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.accountService.email) ||
+                        this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
                         this.hasMatch(system.name, search) ||
                         this.hasMatch(system.ownerFullName, search) ||
                         this.hasMatch(system.ownerAccountEmail, search);
@@ -138,12 +142,28 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.searchChanged.next();
     }
 
+    private isActive(val: string) {
+        return this.router.url.indexOf(val) >= 0;
+    }
+
+    updateEndpoint(id: string) {
+        this.endpoint.ipvd = this.isActive('/ipvd');
+        this.endpoint.integrations = this.isActive('/integrations');
+        this.endpoint.register = this.isActive('/register');
+        this.endpoint.view = this.isActive('/view');
+        this.endpoint.information = this.isActive('/health');
+        this.endpoint.settings = id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+    }
+
     openSystem(system) {
-        this.router
-            .navigate(['/systems/' + system.id])
-            .catch(error => {
-                console.error(error);
-            });
+        this.updateEndpoint(system.id);
+        this.headerService.show$ = false;
+        this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
+            .then(() => {
+                const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+                this.menusService.updateActiveSystemMenu(activeSystem);
+            })
+            .catch(err => { console.error(err); });
     }
 
     canShowTag(system) {
@@ -155,6 +175,4 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {}
-
 }
-

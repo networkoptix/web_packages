@@ -1,58 +1,79 @@
-import { Component }                 from '@angular/core';
-import { Router }                    from '@angular/router';
-import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxSessionService }          from '../../../services/session.service';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { UntilDestroy }                from '@ngneat/until-destroy';
+import {
+    BehaviorSubject, combineLatest, SubscriptionLike
+} from 'rxjs';
+
 import { BaseDropdown }              from '../injDropdown';
+import { environment }               from '../../../../environments/environment';
+import { NxConfigService }           from '../../../services/nx-config';
+import { Account, NxAccountService } from '../../../services/account.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-account-settings-select',
-    templateUrl: 'account-settings.component.html',
-    styleUrls  : ['account-settings.component.scss']
+    selector    : 'nx-account-settings-select',
+    templateUrl : 'account-settings.component.html',
+    styleUrls   : [environment.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
 })
 
-export class NxAccountSettingsDropdown extends BaseDropdown {
-    settings = {
-        email       : '',
-        is_staff    : false,
-        is_superuser: false
+export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
+    @Input() small = false;
+
+    dropdownWidth$ = new BehaviorSubject(0);
+    buttonWidth = new BehaviorSubject(0);
+    rightOffset$ = new BehaviorSubject(0);
+
+    accountSubscription: SubscriptionLike;
+    widthSubscription: SubscriptionLike;
+
+    settings: Pick<Account, 'email' | 'is_staff' | 'is_superuser'> = {
+        email        : '',
+        is_staff     : false,
+        is_superuser : false
     };
 
-    private loginSubscription: Subscription;
-
-    constructor(private accountService: NxAccountService,
-                private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
-                private sessionService: NxSessionService,
-                private router: Router
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private accountService: NxAccountService
     ) {
         super(languageService, configService);
     }
 
     ngOnInit() {
-        this.loginSubscription = this.accountService.accountSubject
+        this.accountSubscription = this.accountService.accountSubject
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
-                        email       : account.email,
-                        is_staff    : account.is_staff,
-                        is_superuser: account.is_superuser
+                        email        : account.email || account.first_name,
+                        is_staff     : account.is_staff,
+                        is_superuser : account.is_superuser
                     };
                 } else {
                     this.settings = {
-                        email       : '',
-                        is_staff    : false,
-                        is_superuser: false
+                        email        : '',
+                        is_staff     : false,
+                        is_superuser : false
                     };
+                }
+            });
+        this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
+            .subscribe(([dropdown, button]) => {
+                if (dropdown && button) {
+                    this.rightOffset$.next(Math.max(button - dropdown + 18, 0) | 0);
                 }
             });
     }
 
+    ngOnDestroy() {}
+
     logout(): void {
         this.accountService.logout(false);
+    }
+
+    hide() {
+        this.show = false;
+        return false;
     }
 }

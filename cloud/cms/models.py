@@ -1,10 +1,20 @@
+import hashlib
+import json
 import os
 import re
-import json
+import uuid
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
+from util.base_cache import BaseCache
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Q
+from django.db.models.deletion import Collector
+from django.db.models.signals import post_delete, m2m_changed, post_save
 from django.db.utils import ProgrammingError
+from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, FieldError
@@ -13,18 +23,39 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from util.config import get_config
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
+class MenuCache(BaseCache):
+    def __init__(self):
+        super().__init__(cache_key='menus')
+
+    def __getitem__(self, key):
+        return super().__getitem__(key.lower())
+
+    def __setitem__(self, key, menu):
+        from cms.controllers.documentation import DOC_CACHE
+        DOC_CACHE.clear_cache()
+        super().__setitem__(key.lower(), menu)
+
+    def clear_cache(self):
+        from cms.controllers.documentation import DOC_CACHE
+        super().clear_cache()
+        DOC_CACHE.clear_cache()
+
+
+MENU_CACHE = MenuCache()
+
+
 def create_default_permission_group(asset):
-    from django.contrib.auth.models import Permission
     if not (asset.is_cloud_portal or asset.is_integration):
         return None
 
     if asset.is_cloud_portal:
-        group = Group.objects.create(name=f'Portal Manager - {asset.name} - {asset.id}')
+        group = Group.objects.create(
+            name=f'Portal Manager - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
                                                               'change_assetcustomizationreview',
                                                               'change_asset', 'edit_content',
@@ -35,12 +66,15 @@ def create_default_permission_group(asset):
                                                type__in=[AssetType.ASSET_TYPES.cloud_portal,
                                                          AssetType.ASSET_TYPES.integration])
         for asset_type in asset_types:
-            UserGroupsToAssetType.objects.create(asset_type=asset_type, group=group)
+            UserGroupsToAssetType.objects.create(
+                asset_type=asset_type, group=group)
 
     else:
-        group = Group.objects.create(name=f'Developer - {asset.name} - {asset.id}')
+        group = Group.objects.create(
+            name=f'Developer - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(
-            codename__in=['edit_content', 'change_asset', 'change_assetcustomizationreview']
+            codename__in=['edit_content', 'change_asset',
+                          'change_assetcustomizationreview']
         )
 
     group.permissions.set(permissions)
@@ -65,15 +99,24 @@ def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
     if asset:
         return asset
 
-    customization_obj = Customization.objects.filter(name=customization).first()
+    customization_obj = Customization.objects.filter(
+        name=customization).first()
     if customization_obj:
-        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+        asset_type = AssetType.objects.get(
+            type=AssetType.ASSET_TYPES.cloud_portal, name='')
         cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
                                             asset_type=asset_type)
         cloud_portal.customizations.set([customization_obj])
         return cloud_portal
     raise Asset.DoesNotExist(f"No cloud portal asset found for {customization}. "
                              f"Most likely a customization with the name \"{customization}\" doesn't exist.")
+
+
+def get_vms_asset(customization=settings.CUSTOMIZATION):
+    return Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.vms
+    ).first()
 
 
 def get_asset_by_revision(version_id):
@@ -95,7 +138,8 @@ def check_update_cache(customization, version_id):
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
-    data = customization_cache.get(f'customization_{customization_name}', dict())
+    data = customization_cache.get(
+        f'customization_{customization_name}', dict())
     asset = get_cloud_portal_asset(customization_name)
 
     if data and 'version_id' in data and not force:
@@ -103,21 +147,18 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
     if not data or force:
         customization = Customization.objects.get(name=customization_name)
-        custom_config = get_config(customization.name)
 
-        footer_items = asset.read_global_value('%FOOTER_ITEMS%')
-        integration_store_enabled = asset.read_global_value("%INTEGRATION_STORE_ENABLED%")
-
-        if footer_items:
-            from cms.controllers.filldata import process_global_contexts
-            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type, hidden=False)
-            # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
-            footer_items = process_global_contexts(asset, footer_items, asset.version_id(),
-                                                   False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
-                                                                            "%VMS_NAME%": "%VMS_NAME%"})
+        integration_store_enabled = asset.read_global_value(
+            "%INTEGRATION_STORE_ENABLED%")
 
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
+        cloud_name = asset.read_global_value("%CLOUD_NAME%")
+        vms_name = asset.read_global_value("%VMS_NAME%")
+        seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
+            .replace("%CLOUD_NAME%", cloud_name)\
+            .replace("%VMS_NAME%", vms_name)
 
         data = {
             'version_id': asset.version_id(),
@@ -141,16 +182,16 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
+                'developers_enabled': asset.read_global_value("%DEVELOPERS_ENABLED%"),
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
-                'footer_items': footer_items,
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
-                'integration_seo_page_description': asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%"),
+                'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
-                'health_monitoring_enabled': asset.read_global_value('%HM_ENABLED%'),
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_all_betas': asset.read_global_value("%SHOW_ALL_BETAS%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
                 'sort_supported_devices_by_popularity': asset.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
@@ -161,9 +202,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
                 'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
-                'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
-                'vms_name': asset.read_global_value("%VMS_NAME%"),
-                'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
+                'cloud_name': cloud_name,
+                'vms_name': vms_name,
                 'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%'),
                 'trial_license_key': asset.read_global_value('%TRIAL_LICENSE_KEY%')
@@ -177,9 +217,66 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         update_global_cache(customization, data['version_id'])
 
     if value:
-        return data[value] if value in data else None
+        return data.get(value)
 
     return data
+
+
+def check_user_menu_permissions(nodes, user):
+    for i in reversed(range(len(nodes))):
+        node = nodes[i]
+        condition = node.pop('condition', None)
+        condition_met = node.pop('condition_met', False)
+        beta_permission = Customization.BETA_PERMISSION_MAP.get(
+            condition, None)
+        if not condition_met and condition and \
+                not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
+                    user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
+                )):
+            del nodes[i]
+        else:
+            permissions = node.get('permissions', [])
+            for permission_codename in permissions:
+                if not (user and UserGroupsToAssetPermissions.check_customization_permission(
+                        user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
+                )):
+                    del nodes[i]
+                    break
+            else:
+                node.pop('permissions', None)
+                check_user_menu_permissions(node.get('nodes', []), user)
+
+
+def cached_doc_menu_map(customization_name, refresh=False):
+    cache_key = f'{customization_name}-doc-dir'
+    menu_map = MENU_CACHE[cache_key]
+    if refresh or not menu_map:
+        menu_map = {}
+        for menu in Menu.objects.filter(enabled=True, type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
+            if menu.base_url not in menu_map:
+                menu_map[menu.base_url] = {}
+            if menu.url not in menu_map[menu.base_url]:
+                menu_map[menu.base_url][menu.url] = menu.name
+
+        MENU_CACHE[cache_key] = menu_map
+    return menu_map
+
+
+def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
+    menu_customization = MENU_CACHE[customization_name]
+    if menu_customization is None:
+        menu_customization = Menu.generate_menus(customization_name)
+        MENU_CACHE[customization_name] = menu_customization
+        cached_doc_menu_map(customization_name, refresh=True)
+    for menu_name, menu in menu_customization.items():
+        check_user_menu_permissions(menu['nodes'], user)
+
+    if menu_type:
+        menu_customization = {name: menu for name, menu in menu_customization.items() if menu['type'] == menu_type}
+    if name:
+        return menu_customization.get(name.lower(), None)
+
+    return menu_customization
 
 
 def slugify(name, lowercase=False):
@@ -190,8 +287,9 @@ def slugify(name, lowercase=False):
 
 
 def rename_file(instance, filename):
-    asset_name = slugify(instance.asset.name, True)
-    structure_name = slugify(instance.data_structure.name, True)
+    asset_ds_pair = instance.asset_ds_pair.first() if hasattr(instance, 'asset_ds_pair') else instance
+    asset_name = slugify(asset_ds_pair.asset.name, True)
+    structure_name = slugify(asset_ds_pair.data_structure.name, True)
     file_info = f"{structure_name}-{instance.id}"
     return os.path.join(asset_name, file_info, filename)
 
@@ -199,7 +297,8 @@ def rename_file(instance, filename):
 def get_integration_type():
     # Prevents issue when migrating from empty db
     try:
-        integration = AssetType.objects.only('id', 'type').filter(type=AssetType.ASSET_TYPES.integration).first()
+        integration = AssetType.objects.only('id', 'type').filter(
+            type=AssetType.ASSET_TYPES.integration).first()
         if integration:
             return integration.id
     except ProgrammingError:
@@ -244,12 +343,18 @@ class Language(models.Model):
 
 
 class Customization(models.Model):
+    BETA_PERMISSION_MAP = {
+        '%INTEGRATION_STORE_ENABLED%': 'access_integration_store',
+        '%DEVELOPERS_ENABLED%': 'access_developers'
+    }
+
     class Meta:
         # Used to allow a user to see the customization in list of customizations
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
-            ('access_integration_store', 'Can access the integration store')
+            ('access_integration_store', 'Can access the integration store'),
+            ('access_developers', 'Can see Developers pages')
         )
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
@@ -302,24 +407,31 @@ class Customization(models.Model):
 class AssetType(models.Model):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["name", "type"], name="Unique Asset Type")
+            models.UniqueConstraint(
+                fields=["name", "type"], name="Unique Asset Type")
         ]
     ASSET_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
                           (1, "vms", "Vms"),
                           (2, "integration", "Integration"),
                           (3, "other", "Other"),
                           (4, "article", "Article"),
-                          (5, "agreement", "Agreement"))
+                          (5, "agreement", "Agreement"),
+                          (6, "documentation", "Documentation Page"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
-    type = models.IntegerField(choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
+    type = models.IntegerField(
+        choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
     advanced = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
             return f"{self.name} - {AssetType.ASSET_TYPES[self.type]}"
         return AssetType.ASSET_TYPES[self.type]
+
+    @classmethod
+    def get_model_by_type(cls, asset_type):
+        return cls.objects.get(name='', type=asset_type)
 
     @staticmethod
     def get_type_by_name(name):
@@ -348,23 +460,28 @@ class Asset(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
         blank=True, related_name='created_%(class)s', on_delete=models.CASCADE)
-    customizations = models.ManyToManyField(Customization, default=None, blank=True)
-    asset_type = models.ForeignKey(AssetType, default=get_integration_type, null=True, on_delete=models.CASCADE)
+    customizations = models.ManyToManyField(
+        Customization, default=None, blank=True)
+    asset_type = models.ForeignKey(
+        AssetType, default=get_integration_type, null=True, on_delete=models.CASCADE)
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
-    preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
-    primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_status = models.IntegerField(
+        choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
+    primary_group = models.OneToOneField(
+        Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
     protected = models.BooleanField(default=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
-            return f"{self.name} - {self.customizations.first()}"
+            return f"{self.name} - {self.asset_type} - {self.customizations.first()}"
         return self.name
 
     @property
     def can_preview_on_portal(self):
         return self.asset_type.can_preview and \
-               self.customizations.filter(name=settings.CUSTOMIZATION).exists()
+            self.customizations.filter(name=settings.CUSTOMIZATION).exists()
 
     @property
     def default_language(self):
@@ -389,6 +506,18 @@ class Asset(models.Model):
         return ""
 
     @property
+    def is_agreement(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.agreement)
+
+    @property
+    def is_article(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.article)
+
+    @property
+    def is_documentation(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.documentation)
+
+    @property
     def is_cloud_portal(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
@@ -397,13 +526,25 @@ class Asset(models.Model):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
     @property
+    def is_vms(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.vms)
+
+    @property
     def is_single_customization(self):
         return self.asset_type.single_customization
 
+    def urlify(self, name=None):
+        if name is None:
+            name = self.name
+        name = name.lower().replace(' ', '-')
+        return f'{self.id}-{name}'
+
     @property
     def is_dirty(self):
-        version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
-        records_for_version = self.datarecord_set.filter(version__id=version_id)
+        version_id = self.contentversion_set.last(
+        ).id if self.contentversion_set.exists() else 0
+        records_for_version = self.datarecord_set.filter(
+            version__id=version_id)
         if not records_for_version.exists():
             return self.datarecord_set.exists()
         most_recent_record = records_for_version.latest('created_date')
@@ -458,7 +599,8 @@ class Asset(models.Model):
 
     def read_global_value(self, record_name, language=None):
         global_contexts = self.asset_type.context_set.filter(is_global=True)
-        data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
+        data_structure = DataStructure.objects.filter(
+            name=record_name, context__in=global_contexts).last()
         customization = None
 
         if self.asset_type.single_customization and self.customizations.exists():
@@ -470,8 +612,20 @@ class Asset(models.Model):
                                                 version_id=self.version_id(),
                                                 customization_name=customization)
 
+    def replace_global_values(self, content: str, global_contexts_dict=None):
+        if not global_contexts_dict:
+            from cms.controllers.filldata import global_contexts_to_dict
+            global_contexts = Context.objects.filter(
+                asset_type=self.asset_type, is_global=True)
+            global_contexts_dict = global_contexts_to_dict(
+                global_contexts, self)
+        for tag in global_contexts_dict:
+            if tag in content:
+                content = content.replace(tag, global_contexts_dict[tag])
+        return content
+
     def clean(self):
-        if self.asset_type.type != AssetType.ASSET_TYPES.cloud_portal and \
+        if not self.is_cloud_portal and \
                 Asset.objects.filter(name=self.name, asset_type=self.asset_type).exclude(pk=self.pk).exists():
             raise ValidationError({'name': 'Name already exists'})
 
@@ -495,13 +649,16 @@ class Asset(models.Model):
 
         super(Asset, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal and len(self.customizations.all()) == 1 and self.can_preview_on_portal:
-            cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
+            cloud_portal_customization_cache(
+                self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
         if create_group or update_group:
             if create_group:
                 group = create_default_permission_group(orig or self)
                 self.primary_group = group
                 self.save()
+                if self.is_cloud_portal:
+                    MenuNode.enable_global(self)
             if self.primary_group and self.created_by:
                 self.primary_group.user_set.add(self.created_by)
                 self.created_by.is_staff = True
@@ -516,13 +673,22 @@ class Asset(models.Model):
             return super().delete(*args, **kwargs)
 
 
+@receiver(m2m_changed, sender=Asset.customizations.through)
+def update_asset_customization_reviews(sender, instance, action, pk_set, **kwargs):
+    if action in ["post_add", "post_remove"]:
+        for asset_customization_review in AssetCustomizationReview.objects.\
+                filter(version__asset=instance, customization_id__in=pk_set):
+            asset_customization_review.update_children_reviews()
+
+
 class Context(models.Model):
     class Meta:
         permissions = (
             ("edit_content", "Can edit content and send for review"),
         )
         ordering = ['order', 'id']
-    asset_type = models.ForeignKey(AssetType, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(
+        AssetType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
     label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
@@ -546,14 +712,17 @@ class Context(models.Model):
     def template_for_language(self, language, default_language, skin):
 
         priorities = ((language, skin),  # exact match
-                      (default_language, skin),  # skin is more important, fallback to default language
-                      (None, skin),  # skin is more important, fallback to empty language
+                      # skin is more important, fallback to default language
+                      (default_language, skin),
+                      # skin is more important, fallback to empty language
+                      (None, skin),
                       (language, ''),  # give up skin - find by lang only
                       (default_language, ''),  # fallback to default_language
                       (None, ''))  # default of default - no skin, no language
 
         # instantiate generator for contexts based on priorities
-        contexts = (self.contexttemplate_set.filter(language=item[0], skin=item[1]) for item in priorities)
+        contexts = (self.contexttemplate_set.filter(
+            language=item[0], skin=item[1]) for item in priorities)
 
         # retrieve first available template from the list or return None
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
@@ -587,7 +756,8 @@ class Context(models.Model):
             records = datastructure.datarecord_set.filter(asset=asset)
             last_record = records.last()
             last_record_value = last_record.cast_value if last_record else None
-            datastructure.default = DataStructure.cast_value(datastructure, datastructure.default)
+            datastructure.default = DataStructure.cast_value(
+                datastructure, datastructure.default)
 
             if type(datastructure.default) in [int, bool]:
                 datastructure.default = str(datastructure.default)
@@ -621,7 +791,8 @@ class ContextTemplate(models.Model):
         unique_together = ('context', 'language', 'skin')
 
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, blank=True, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(
+        Language, blank=True, null=True, on_delete=models.CASCADE)
     template = models.TextField()
     skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
@@ -638,6 +809,32 @@ class ContextTemplate(models.Model):
 
 
 class DataStructure(models.Model):
+    """
+    META SETTINGS
+    meta_settings are additional options, usually for validation
+
+    background: Image background class in CMS (Ex: white, black, light, dark, transparent)
+    brand_vars: Show brand variables button in context edit form (true or false)
+    char_limit: Character limit
+    format: File format (ex: png)
+    height: Image height
+    height_ge: Image height, greater than or eqal to
+    height_le: Image height, less than or equal to
+    options: choices for selects, multiselects, checkboxes
+    regex: Regular expression for a text field
+    size: File size limit in MB
+
+    # Represent properties in tiny.init method, "tiny_forced_root_block" sets property "forced_root_block"
+    tiny_paste_word_valid_elements": Comma-separated list of tags that can be pasted from external word processors ("br,p,h1,h2")
+    tiny_paste_retain_style_properties": CSS styles that can be interpreted from word processors ("font-weight,text-decoration")
+    tiny_forced_root_block: Default tag to wrap text nodes or non block elements (ex: "p", "div", false)
+
+    width: Image width
+    width_ge: Image width, greater than or equal to
+    width_le: Image width, less than or equal to
+
+    """
+
     class Meta:
         permissions = (
             ("edit_advanced", "Can edit advanced DataStructures"),
@@ -680,6 +877,7 @@ class DataStructure(models.Model):
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
+    fieldset = models.CharField(blank=True, max_length=255)
 
     def __str__(self):
         return self.name
@@ -688,7 +886,8 @@ class DataStructure(models.Model):
         content_value = ""
         if not asset:
             return DataStructure.cast_value(self, self.default)
-        content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
+        content_record = DataRecord.objects.filter(
+            asset=asset, data_structure=self)
         if not draft:
             if not asset.is_single_customization and customization_name:
                 content_record = content_record.filter(
@@ -700,15 +899,19 @@ class DataStructure(models.Model):
                     ])
             else:
                 content_record = content_record.\
-                    exclude(version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
+                    exclude(
+                        version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
             content_record = content_record.order_by('version_id')
 
         # try to get translated content
         if self.translatable:
-            default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+            default_lang = Customization.objects.get(
+                name=settings.CUSTOMIZATION).default_language
             content_record_language = content_record.filter(language=language)
-            content_record_default = content_record.filter(language=default_lang)
-            content_record_english = content_record.filter(language__code='en_US')
+            content_record_default = content_record.filter(
+                language=default_lang)
+            content_record_english = content_record.filter(
+                language__code='en_US')
 
             if language and content_record_language.exists():
                 content_record = content_record_language
@@ -718,12 +921,14 @@ class DataStructure(models.Model):
                 content_record = content_record_english
 
         if content_record.exists():
-            if not version_id:
+            if not version_id and draft:
                 content_value = content_record.last().cast_value
             else:  # Here find a datarecord with version_id
                 # which is not more than version_id
                 # filter only accepted content_records
-                content_record = content_record.filter(version_id__lte=version_id)
+                if version_id:
+                    content_record = content_record.filter(
+                        version_id__lte=version_id)
                 if not draft:
                     if not asset.is_single_customization and customization_name:
                         new_review_records = content_record.filter(
@@ -735,16 +940,18 @@ class DataStructure(models.Model):
                             version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
                         )
                     # If the version matches take it
-                    version_content_record = content_record.filter(version_id=version_id).last()
+                    version_content_record = None
+                    if version_id:
+                        version_content_record = content_record.filter(
+                            version_id=version_id).last()
                     if version_content_record:
                         content_record = version_content_record
                     # Take any record that is accepted
                     elif new_review_records.exists():
                         content_record = new_review_records.last()
-                    # Take any record that has been reviewed
+                    # No record should be used if non are accepted
                     else:
-                        content_record = content_record.\
-                            filter(version__accepted_by__isnull=False).last()
+                        content_record = None
                 else:
                     content_record = content_record.last()
 
@@ -763,6 +970,89 @@ class DataStructure(models.Model):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value
+
+    @classmethod
+    def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False,
+                           customization_name=None, as_records=False, only_review=False):
+        def fish(data_structures_needed: set, **kwargs):
+            remaining = data_structures_needed.copy()
+            while remaining:
+                fished_records_qs = records.filter(
+                    data_structure__in=remaining, **kwargs
+                ).select_related('data_structure').order_by('-pk')[:len(data_structures_needed) * 3]
+                if not fished_records_qs.count():
+                    return remaining
+                for record in fished_records_qs:
+                    if record.data_structure in remaining:
+                        fished_records[record.data_structure] = record
+                        remaining.discard(record.data_structure)
+                        if not remaining:
+                            return remaining
+            return remaining
+
+        records = DataRecord.objects.filter(asset=asset)
+        if version_id:
+            records = records.filter(version_id__lte=version_id)
+            if customization_name:
+                records = records.filter(
+                    version__assetcustomizationreview__customization__name=customization_name)
+
+        if not (draft or only_review):
+            records = records.filter(
+                version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+            ).order_by('-version_id')
+        elif version_id:
+            records = records.order_by('-version_id')
+        elif only_review:
+            records = records.filter(
+                version__assetcustomizationreview__state__in=[
+                    AssetCustomizationReview.REVIEW_STATES.pending,
+                    AssetCustomizationReview.REVIEW_STATES.rejected,
+                    AssetCustomizationReview.REVIEW_STATES.blocked
+                ]).order_by('-version_id')
+
+        data_structure_set = set(data_structures)
+        translatable_ds_set = {ds for ds in data_structures if ds.translatable}
+        nontranslatable_ds_set = data_structure_set - translatable_ds_set
+        default_lang = Customization.objects.get(
+            name=settings.CUSTOMIZATION).default_language
+        fished_records = {}
+
+        # Get translatable records
+        if language:
+            translatable_ds_set = fish(translatable_ds_set, language=language)
+        if translatable_ds_set and language != default_lang:
+            translatable_ds_set = fish(
+                translatable_ds_set, language=default_lang)
+        if translatable_ds_set:
+            fish(translatable_ds_set, language__code='en_US')
+
+        # Get nontranslatable records
+        fish(nontranslatable_ds_set)
+
+        final_values = {}
+
+        for ds in data_structure_set:
+            if ds not in fished_records:
+                if as_records:
+                    final_values[ds] = None
+                else:
+                    final_values[ds] = ''
+            elif as_records:
+                final_values[ds] = fished_records[ds]
+            else:
+                final_values[ds] = fished_records[ds].cast_value
+
+            if final_values[ds] == '' and (not ds.optional or
+                                           ds.optional and ds.type in [DataStructure.DATA_TYPES.file,
+                                                                       DataStructure.DATA_TYPES.image,
+                                                                       DataStructure.DATA_TYPES.external_file,
+                                                                       DataStructure.DATA_TYPES.external_image,
+                                                                       DataStructure.DATA_TYPES.check_box,
+                                                                       DataStructure.DATA_TYPES.multiselect,
+                                                                       DataStructure.DATA_TYPES.object]):
+                final_values[ds] = DataStructure.cast_value(ds, ds.default)
+        return final_values
 
     def is_protected(self, asset):
         return self.protected and asset.version_id() > 0
@@ -834,11 +1124,27 @@ class DataStructure(models.Model):
     def is_image(self):
         return self.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]
 
+    @property
+    def has_image_field(self):
+        return self.type == DataStructure.DATA_TYPES.image
+
+    @property
+    def has_file_field(self):
+        return self.type in [DataStructure.DATA_TYPES.file,
+                             DataStructure.DATA_TYPES.external_file,
+                             DataStructure.DATA_TYPES.external_image]
+
+
+class SpecialStructure(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    config = JSONField(default={}, blank=True)
+
 
 # CMS settings. Release engineer can change that
 class UserGroupsToAssetPermissions(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(
+        Asset, default=None, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.group.name
@@ -850,11 +1156,16 @@ class UserGroupsToAssetPermissions(models.Model):
         if permission and not user.has_perm(permission):
             return False
 
-        groups = UserGroupsToAssetPermissions.objects.filter(asset=asset,
-                                                             group_id__in=user.groups.values_list('id', flat=True))
+        groups = Group.objects.filter(
+            Q(usergroupstoassetpermissions__asset=asset) |
+            Q(options__all_assets=True,
+              usergroupstoassettype__asset_type=asset.asset_type),
+            user=user
+        )
         if permission:
-            codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
-            groups = groups.filter(group__permissions__codename=codename)
+            codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
+                permission)
+            groups = groups.filter(permissions__codename=codename)
         return groups.exists()
 
     @staticmethod
@@ -862,24 +1173,38 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_advanced")
 
     @staticmethod
-    def check_customization_permission(user, customization, permission=None):
-        return UserGroupsToAssetPermissions.\
-            check_permission(user, get_cloud_portal_asset(customization), permission)
+    def check_asset_edit_content(user, asset):
+        return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
-    def check_customization_change_account(user, customization):
+    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, "api.change_account")
+            check_permission(user, get_cloud_portal_asset(
+                customization), permission)
 
     @staticmethod
-    def check_customization_access(user, customization):
+    def check_customization_access(user, customization=settings.CUSTOMIZATION):
         return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, "cms.access_customization")
+            check_customization_permission(
+                user, customization, "cms.access_customization")
+
+    @staticmethod
+    def check_customization_change_account(user, customization=settings.CUSTOMIZATION):
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(
+                user, customization, "api.change_account")
+
+    @staticmethod
+    def check_customization_publish(user, customization=settings.CUSTOMIZATION):
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(
+                user, customization, "cms.publish_version")
 
     @staticmethod
     def user_has_beta_access(user):
-        return UserGroupsToAssetPermissions. \
-            check_customization_permission(user, settings.CUSTOMIZATION, "cms.access_integration_store")
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(
+                user, settings.CUSTOMIZATION, "cms.access_integration_store")
 
     @staticmethod
     def convert_permission_to_codename(permission):
@@ -891,7 +1216,8 @@ class UserGroupsToAssetPermissions(models.Model):
 
 class UserGroupsToAssetType(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    asset_type = models.ForeignKey(AssetType, default=None, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(
+        AssetType, default=None, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.group.name
@@ -901,7 +1227,8 @@ class UserGroupsToAssetType(models.Model):
         if user.is_superuser:
             return True
 
-        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
+            permission)
         asset_type_groups = UserGroupsToAssetType.objects.\
             filter(group_id__in=user.groups.values_list('id', flat=True),
                    group__permissions__codename=codename,
@@ -918,7 +1245,8 @@ class ContentVersion(models.Model):
         verbose_name_plural = 'revisions'
 
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
-    customization = models.ForeignKey(Customization, default=None, null=True, on_delete=models.SET_NULL)
+    customization = models.ForeignKey(
+        Customization, default=None, null=True, on_delete=models.SET_NULL)
     asset = models.ForeignKey(Asset, default=1, on_delete=models.CASCADE)
 
     created_date = models.DateTimeField(auto_now_add=True)
@@ -947,11 +1275,14 @@ class ContentVersion(models.Model):
         for customization in self.asset.customizations.all():
             parent_in_review = False
             if customization.parent:
-                parent_in_review = self.asset.customizations.filter(id=customization.parent.id).exists()
+                parent_in_review = self.asset.customizations.filter(
+                    id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=pending).save()
 
     @property
     def state(self):
@@ -981,7 +1312,8 @@ class AssetCustomizationReview(models.Model):
                             (3, "blocked", "Blocked"))
     customization = models.ForeignKey(Customization, on_delete=models.CASCADE)
     version = models.ForeignKey(ContentVersion, on_delete=models.CASCADE)
-    state = models.IntegerField(choices=REVIEW_STATES, default=REVIEW_STATES.pending)
+    state = models.IntegerField(
+        choices=REVIEW_STATES, default=REVIEW_STATES.pending)
     notes = models.TextField(default="", blank=True)
     reviewed_date = models.DateTimeField(null=True, blank=True)
     reviewed_by = models.ForeignKey(
@@ -996,7 +1328,12 @@ class AssetCustomizationReview(models.Model):
             filter(customization__in=self.customization.children_customizations.all())
 
         can_show_customization = UserGroupsToAssetPermissions. \
-            check_customization_access(self.version.created_by, self.customization)
+            check_customization_access(
+                self.version.created_by, self.customization)
+
+        is_parent_in_asset = self.is_customization_in_asset
+        recursive_update_states = [AssetCustomizationReview.REVIEW_STATES.blocked,
+                                   AssetCustomizationReview.REVIEW_STATES.rejected]
 
         for review in reviews:
             if review.state == AssetCustomizationReview.REVIEW_STATES.rejected:
@@ -1017,13 +1354,19 @@ class AssetCustomizationReview(models.Model):
                     # If the child customization does not trust its parent we need to set reviewed by and date to blank.
                     review.reviewed_by = None
                     review.reviewed_date = None
+            # Handles then case when the  parent is added back
+            elif is_parent_in_asset and review.state == AssetCustomizationReview.REVIEW_STATES.pending:
+                review.state = AssetCustomizationReview.REVIEW_STATES.blocked
+            # Handles the case when the parent is removed.
+            elif not is_parent_in_asset:
+                review.state = AssetCustomizationReview.REVIEW_STATES.pending
             elif can_show_customization:
                 review.notes = f"Automatically rejected by {self.customization}"
             else:
                 review.notes = "Automatically rejected"
 
             review.save()
-            if review.state == AssetCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
+            if review.state in recursive_update_states or review.customization.trust_parent:
                 review.update_children_reviews()
 
     def update_state(self, user, state):
@@ -1050,31 +1393,117 @@ class AssetCustomizationReview(models.Model):
     @property
     def can_preview_customization(self):
         can_preview = self.version.asset.asset_type.can_preview
-        in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
+        in_review = self.state in [
+            self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
         is_current_customization = self.customization.name == settings.CUSTOMIZATION
         return can_preview and in_review and is_current_customization
 
+    @property
+    def is_customization_in_asset(self):
+        return self.version.asset.customizations.filter(id=self.customization.id).exists()
+
+
+@receiver(post_delete, sender=AssetCustomizationReview)
+def unblock_child_reviews(sender, instance, **kwargs):
+    instance.update_children_reviews()
+
+class ExternalFileManager(models.Manager):
+    def create(self, asset, data_structure, file):
+        '''
+        Adds to asset_ds_pair if file already exist else creates new file.
+        '''
+        raw_bytes = b''
+        md5 = hashlib.md5()
+        for count, chunk in enumerate(file.chunks()):
+            md5.update(chunk)
+            if count < 5:
+                raw_bytes += chunk
+        md5 = md5.hexdigest()
+        asset_ds_pair = None
+        try:
+            asset_ds_pair = AssetDsPair.objects.get(
+                asset=asset, data_structure=data_structure)
+        except ObjectDoesNotExist:
+            asset_ds_pair = AssetDsPair(
+                asset=asset, data_structure=data_structure)
+            asset_ds_pair.save()
+        external_file_obj = None
+        try:
+            external_file_obj = ExternalFile.objects.get(md5=md5)
+        except:
+            external_file_obj = ExternalFile(md5=md5, size=file.size)
+            external_file_obj.save()
+            external_file_obj.file=file
+        else:
+            external_raw_bytes = b''
+            for chunk in external_file_obj.file.chunks():
+                external_raw_bytes += chunk
+            if external_raw_bytes != raw_bytes:
+                raise ValueError('md5 Hash Collision')
+        external_file_obj.asset_ds_pair.add(asset_ds_pair)
+        external_file_obj.save()
+        return external_file_obj
+
+
+
+class AssetDsPair(models.Model):
+    data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.asset.name} > {self.data_structure.name}"
+
 
 class ExternalFile(models.Model):
-    data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
-    file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
-    md5 = models.CharField(max_length=1024, default='')
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=rename_file,
+                            storage=MediaStorage(), max_length=1000)
+    md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
+    asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
+
+    objects = ExternalFileManager()
+
+    def delete(self, *args, asset_ds_pair = None, **kwargs):
+        '''
+        Removes asset_ds_pair relation from file, deletes file if no other relations exist or if no asset_ds_pair passed.
+        '''
+        if not asset_ds_pair or not self.id or not list(self.asset_ds_pair.all()):
+            super().delete(*args, **kwargs)
+        else:
+            self.asset_ds_pair.remove(asset_ds_pair)
+            self.save()
 
     def __str__(self):
         return self.file.name
 
+def file_saved(sender, created, signal, instance, **kwargs):
+    if not created:
+        file = instance.file
+        md5 = hashlib.md5()
+        for chunk in file.file.chunks():
+            md5.update(chunk)
+        md5 = md5.hexdigest()
+        if instance.md5 != md5:
+            instance.md5 = md5
+            instance.size = file.size
+            instance.save()
+
+post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
+
 
 class DataRecord(models.Model):
     data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
-    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(
+        Asset, default=None, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(
+        Language, null=True, blank=True, on_delete=models.CASCADE)
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
-    customization = models.ForeignKey(Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
-    version = models.ForeignKey(ContentVersion, null=True, blank=True, on_delete=models.SET_NULL)
+    customization = models.ForeignKey(
+        Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+    version = models.ForeignKey(
+        ContentVersion, null=True, blank=True, on_delete=models.SET_NULL)
 
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
@@ -1082,7 +1511,8 @@ class DataRecord(models.Model):
         blank=True, related_name='created_%(class)s', on_delete=models.SET_NULL)
 
     value = models.TextField(default='', blank=True)
-    external_file = models.ForeignKey(ExternalFile, default=None, blank=True, null=True, on_delete=models.CASCADE)
+    external_file = models.ForeignKey(
+        ExternalFile, default=None, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.value
@@ -1110,22 +1540,43 @@ class DataRecord(models.Model):
             self.language = None
 
         if self.data_structure:
-            self.value = self.data_structure.to_string(self.data_structure, self.value)
+            self.value = self.data_structure.to_string(
+                self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
 
 
+@receiver(post_delete, sender=DataRecord)
+def delete_file_reverse(sender, **kwargs):
+    try:
+        file = kwargs['instance'].external_file
+        if file:
+            collector = Collector(using='default')
+            collector.collect([file], keep_parents=True)
+            # Check if any other object is referencing the ExternalFile
+            for model, instance in collector.instances_with_model():
+                if model != ExternalFile and (model != DataRecord or instance.id != kwargs['instance'].id):
+                    break
+            else:
+                file.delete()
+    except ObjectDoesNotExist:
+        # Prevent circular deletion caused by cascading
+        pass
+
+
 class ContributorAgreement(models.Model):
     accepted_date = models.DateTimeField(auto_now_add=True)
-    accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    accepted_agreement = models.ForeignKey(
+        AssetCustomizationReview, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.accepted_agreement} - {self.user}'
 
     def clean(self):
         if self.accepted_agreement and \
-                self.accepted_agreement.version.asset.asset_type.type != AssetType.ASSET_TYPES.agreement:
+                not self.accepted_agreement.version.asset.is_agreement:
             raise ValidationError({
                 'accepted_agreement': 'Accepted agreement must be a review of an agreement-type asset'
             })
@@ -1144,3 +1595,482 @@ class ContributorAgreement(models.Model):
     def is_valid(self):
         review = self.get_current()
         return review and self.accepted_agreement == review
+
+
+class Menu(models.Model):
+    MENU_TYPES = Choices((0, "generic", "Generic"),
+                         (1, "docs_struct", "Documentation Structure"),
+                         (2, "docs_knowledgebase", "Documentation Knowledgebase"))
+
+    name = models.CharField(max_length=255, unique=True)
+    depth = models.IntegerField(default=2, blank=True)
+    base_url = models.CharField(
+        blank=True, max_length=255, help_text='Ex: developers')
+    url = models.CharField(blank=True, max_length=255,
+                           help_text='Ex: knowledgebase')
+    type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
+    allow_porting = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
+    short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
+    admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
+        "header": ["name","url","enabled","order","is_global","preview"],
+        "details": ["asset","icon","authentication"],
+        "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
+    }""")
+
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return super().__str__()
+
+    def validate_unique(self, exclude=None):
+        doc_menu = self.type is not self.MENU_TYPES.generic
+        if doc_menu and Menu.objects.filter(base_url=self.base_url, url=self.url).exclude(id=self.id).exists():
+            base_url = f'"{self.base_url}"' if self.base_url else "None"
+            url = f'"{self.url}"' if self.url else "None"
+            raise ValidationError(
+                f'Menu already exists with base_url={base_url} and url={url}. Please select a unique route.')
+        super(Menu, self).validate_unique(exclude=exclude)
+
+    def preview_url(self, state='draft'):
+        """Preview url for menu change form.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}',
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
+        }.get(self.type, '')
+
+    @property
+    def node_preview_url(self):
+        """Preview url for child menu nodes.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: self.preview_url('draft'),
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
+        }.get(self.type, '')
+
+
+    @classmethod
+    def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
+        from cms.controllers.filldata import global_contexts_to_dict
+        cloud_portal_asset = get_cloud_portal_asset(customization.name)
+        global_contexts = Context.objects.filter(
+            asset_type=cloud_portal_asset.asset_type, is_global=True)
+        global_contexts_dict = global_contexts_to_dict(
+            global_contexts, cloud_portal_asset)
+        structures = {
+            menu.name.lower(): {
+                'nodes': MenuNode.generate_node_structure(
+                    menu.nodes_list,
+                    cloud_portal_asset,
+                    customization,
+                    global_contexts_dict,
+                    max_depth=menu.depth,
+                    include_not_accepted=include_not_accepted
+                ),
+                'type': menu.type,
+                'base_url': menu.base_url,
+                'id': menu.id,
+                'title': menu.title,
+                'description': menu.short_description,
+            }
+            for menu in menus
+        }
+
+        return customization, structures
+
+    @classmethod
+    def generate_menu(cls, menu_name, customization_name=settings.CUSTOMIZATION):
+        menu_name = menu_name.lower()
+        customization = Customization.objects.filter(name=customization_name).first()
+        menus = cls.get_prefetched_menus(menu_name)
+        _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
+        return structures.get(menu_name)
+
+    @classmethod
+    def generate_menus(cls, customization_name=None):
+        menus = cls.get_prefetched_menus()
+
+        if customization_name:
+            customizations = Customization.objects.filter(
+                name=customization_name)
+        else:
+            customizations = [asset.customizations.first() for asset in Asset.objects.annotate(
+                customization_count=models.Count('customizations')
+            ).filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customization_count=1)]
+
+        menu_customization_structure = {}
+
+        with ThreadPoolExecutor(max_workers=4) as executer:
+            futures = [executer.submit(cls.generate_menus_for_customization,
+                                       menus, customization) for customization in customizations]
+
+        for future in as_completed(futures):
+            customization, structures = future.result()
+            menu_customization_structure[customization.name] = structures
+
+        return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
+
+    @classmethod
+    def get_prefetched_menus(cls, menu_name=None, only_enabled=True):
+        menus = cls.objects.all()
+        if only_enabled:
+            menus = menus.filter(enabled=True)
+        menu_query = menus.filter(name=menu_name) if menu_name else menus
+        max_depth = menu_query.aggregate(
+            models.Max('depth'))['depth__max']
+        if max_depth is None:
+            return []
+        # Force qs evaluation to prevent threads from messing with prefetch cache
+        return list(menu_query.prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
+
+    @classmethod
+    def get_prefetch_objects(cls, max_depth, depth=1):
+        parent_node_lookup = '__'.join(['nodes_list' for _ in range(1, depth)])
+        nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
+        nodes_to_attr = 'nodes_list'
+        enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
+        permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
+        related_assets_lookup = f'{parent_node_lookup}__{nodes_to_attr}__related_assets' if depth > 1 else f'{nodes_to_attr}__related_assets'
+        prefetches = [models.Prefetch(nodes_lookup,
+                                      queryset=MenuNode.objects.order_by('order').select_related(
+                                          'asset', 'asset__asset_type'
+                                      ).prefetch_related(models.Prefetch('asset__customizations', to_attr='asset_customizations_list')),
+                                      to_attr=nodes_to_attr),
+                      models.Prefetch(enabled_lookup, to_attr='enabled_list'),
+                      models.Prefetch(permission_lookup),
+                      models.Prefetch(related_assets_lookup)]
+        child_prefetches = tuple()
+        if depth < max_depth:
+            child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)
+
+        return (*prefetches, *child_prefetches)
+
+    @classmethod
+    def cache_all_customizations(cls, **kwargs):
+        structures = cls.generate_menus()
+        for customization, structure in structures.items():
+            MENU_CACHE[customization] = structure
+
+    def to_dict(self):
+        assets = set()
+        def get_nodes(nodes_list):
+            nodes = []
+            for node in nodes_list:
+                node_dict = {
+                    'name': node.name,
+                    'url': node.url,
+                    'asset': node.asset.name if node.asset else None,
+                    'uuid': str(node.asset.uuid) if node.asset else None,
+                    'asset_type': node.asset.asset_type.type if node.asset else None,
+                    'related_assets': [(asset.name, asset.asset_type.type, str(asset.uuid)) for asset in node.related_assets.all()],
+                    'next_item': node.next_item,
+                    'new_window': node.new_window,
+                    'icon': node.icon,
+                    'available': [customization.name for customization in node.available.all()],
+                    'enabled': [customization.name for customization in node.enabled_customizations],
+                    'authentication': node.authentication,
+                    'condition': node.condition,
+                    'permissions': [permission.codename for permission in node.permissions.all()],
+                    'order': node.order,
+                    'is_global': node.is_global,
+                    'touched': node.touched,
+                    'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
+                }
+                assets.add(node_dict['uuid'])
+                assets.update({str(related_asset[2]) for related_asset in node_dict['related_assets']})
+                nodes.append(node_dict)
+            return nodes
+
+        menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
+                    if menu.id == self.id)
+
+        return {
+            'name': menu.name,
+            'depth': menu.depth,
+            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else [],
+            'assets': list(filter(lambda id: id, assets))
+        }
+
+    def from_dict(self, menu_dict, user, update_progress_cb = None, accept_reviews=False):
+        from cms.controllers.structure import import_assets_from_json
+        node_asset_count = len(menu_dict['assets'])
+        progress = 0
+
+        def increment_progress(error=None):
+            nonlocal progress
+            if not update_progress_cb:
+                return
+            progress += 1
+            update_progress_cb(progress, node_asset_count, error=error)
+
+        def get_node_count(node):
+            return 1 + sum(get_node_count(child) for child in node.get('nodes', []))
+
+        node_asset_count += get_node_count(menu_dict)
+        if update_progress_cb:
+            update_progress_cb(progress, node_asset_count)
+        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
+        def set_nodes(nodes_list, parent):
+            for node in nodes_list:
+                new_node = False
+                parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
+                node_obj = MenuNode.objects.filter(
+                    name=node['name'], **{parent_type: parent}).first()
+                if not node_obj:
+                    new_node = True
+                    node_obj = MenuNode()
+                node_obj.name = node['name']
+                node_obj.url = node['url']
+                node_obj.next_item = node['next_item']
+                node_obj.new_window = node['new_window']
+                node_obj.icon = node['icon']
+                node_obj.authentication = node['authentication']
+                node_obj.condition = node['condition']
+                node_obj.order = node['order']
+                node_obj.is_global = node['is_global']
+                node_obj.touched = node['touched']
+                node_obj.__setattr__(parent_type, parent)
+                if new_node:
+                    node_obj.save()
+
+                node_obj.available.set(
+                    list(Customization.objects.filter(name__in=node['available'])))
+                node_obj.enabled.set(
+                    list(Customization.objects.filter(name__in=node['enabled'])))
+                node_obj.permissions.set(
+                    list(Permission.objects.filter(codename__in=node['permissions'])))
+
+                if node['asset']:
+                    asset_obj = Asset.objects.filter(uuid=node['uuid']).first()
+                    if asset_obj:
+                        asset_obj.name = node['asset']
+                        asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
+                        asset_obj.save()
+                        node_obj.asset = asset_obj
+                    else:
+                        increment_progress(f'Failed to set customizations for <b>"{node["asset"]}"</b> to due imported asset type <b>"{AssetType.ASSET_TYPES[node["asset_type"]]}"</b> not match existing assets type.')
+
+                for asset, asset_type, asset_uuid in node.get('related_assets', []):
+                    node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())
+                node_obj.save()
+
+                increment_progress()
+                if node['nodes']:
+                    set_nodes(node['nodes'], node_obj)
+
+        self.depth = menu_dict['depth']
+        self.save()
+        if menu_dict['nodes']:
+            set_nodes(menu_dict.get('nodes', []), self)
+
+    def extract_from_nodes(self, process_node_callback):
+        def append_nodes(nodes):
+            for node in nodes:
+                extracted = process_node_callback(node)
+                if extracted:
+                    all_nodes.append(extracted)
+                if hasattr(node, 'nodes_list'):
+                    append_nodes(node.nodes_list)
+
+        all_nodes = []
+        prefetched_menu = self.get_prefetched_menus(menu_name=self.name)[0]
+        if hasattr(prefetched_menu, 'nodes_list'):
+            append_nodes(prefetched_menu.nodes_list)
+        return all_nodes
+
+
+    @property
+    def all_node_ids(self):
+        return self.extract_from_nodes(lambda node: node.id)
+
+
+    @property
+    def all_asset_ids(self):
+        return self.extract_from_nodes(lambda node: node.asset and node.asset.id)
+
+
+class MenuNode(models.Model):
+    AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),
+                           (1, "logged_in", "Logged In"),
+                           (2, "both", "Both"))
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=2048, blank=True)
+    asset = models.ForeignKey(
+        Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+    related_assets = models.ManyToManyField(
+        Asset, default=None, blank=True, related_name='nodes_related')
+    next_item = models.BooleanField(default=False, verbose_name='Link to next')
+    new_window = models.BooleanField(default=False)
+    icon = models.CharField(blank=True, max_length=255)
+    available = models.ManyToManyField(
+        Customization, blank=True, related_name='available_nodes')
+    enabled = models.ManyToManyField(
+        Customization, blank=True, related_name='enabled_nodes')
+    authentication = models.IntegerField(
+        choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
+    condition = models.CharField(blank=True, max_length=255)
+    permissions = models.ManyToManyField(Permission, default=None, blank=True)
+    order = models.IntegerField(default=0)
+    is_global = models.BooleanField(default=True, verbose_name='Global')
+    parent_menu = models.ForeignKey(
+        Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    parent_node = models.ForeignKey(
+        'self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    touched = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Item: {self.name}'
+
+    @staticmethod
+    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2, include_not_accepted=False):
+        nodes_structure = []
+        pending = None
+        for node in nodes:
+            enabled = node.is_enabled(customization)
+            condition_met = not node.condition or global_contexts_dict.get(
+                node.condition, False)
+            asset_accepted = not node.asset or node.asset.version_id(
+                customization.name) != 0
+            if enabled and (asset_accepted or include_not_accepted):
+                if node.asset:
+                    pending = AssetCustomizationReview.objects.filter(
+                        customization__name=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending).exists()
+                node_structure = {
+                    'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
+                    'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
+                    'asset_id': node.asset.id if node.asset else None,
+                    'accepted': asset_accepted,
+                    'pending': pending,
+                    'draft':  node.asset and node.asset.is_dirty,
+                    'asset_type': AssetType.ASSET_TYPES[node.asset.asset_type.type] if node.asset else None,
+                    'related_asset_ids': [asset.id for asset in node.related_assets.all()],
+                    'next_item': node.next_item,
+                    'new_window': node.new_window,
+                    'icon': node.icon,
+                    'permissions': list(node.permissions.values_list('codename', flat=True)),
+                    'authentication': node.AUTH_CHOICES[node.authentication],
+                    'order': node.order,
+                    'condition': node.condition,
+                    'condition_met': condition_met
+                }
+                node_structure['urlified'] = node.asset.urlify(node_structure['name']) if node.asset else None
+                node_structure['display_name'] = node_structure['name']
+
+                if depth < max_depth and node.nodes_list:
+                    node_structure['nodes'] = node.generate_node_structure(
+                        node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
+                        max_depth=max_depth, include_not_accepted=include_not_accepted
+                    )
+                nodes_structure.append(node_structure)
+        return nodes_structure
+
+    @classmethod
+    def enable_global(cls, cloud_portal_asset):
+        customization = cloud_portal_asset.customizations.first()
+        if customization:
+            for node in cls.objects.filter(is_global=True):
+                node.enabled.add(customization)
+            Menu.cache_all_customizations()
+
+    @property
+    def enabled_customizations(self):
+        if self.asset:
+            return getattr(self.asset, 'asset_customizations_list', self.asset.customizations.all())
+        else:
+            return getattr(self, 'enabled_list', self.enabled.all())
+
+    def is_enabled(self, customization):
+        return next(
+            (cust for cust in self.enabled_customizations if cust.id == customization.id), False)
+
+    def get_parent(self):
+        if self.parent_node:
+            return self.parent_node.get_parent()
+        else:
+            return self.parent_menu
+
+    def save(self, *args, **kwargs):
+        # Don't set obj.touched to True when touched=False is passed
+        touched = kwargs.pop('touched', True)
+        if not self.touched and touched:
+            self.touched = True
+        super().save(*args, **kwargs)
+
+
+# Start Zendesk Models
+
+class ZendeskSite(models.Model):
+    customization = models.ForeignKey(Customization, on_delete=models.CASCADE)
+
+
+class ZendeskCategory(models.Model):
+    category_id = models.BigIntegerField(blank=True, null=True)
+    name = models.CharField(max_length=500, blank=True)
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+
+
+class ZendeskSection(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    parent_category = models.ForeignKey(
+        ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
+    parent_section = models.ForeignKey(
+        'self', blank=True, null=True, on_delete=models.CASCADE)
+    section_id = models.BigIntegerField(blank=True, null=True)
+    position = models.IntegerField(default=0)
+    name = models.CharField(max_length=500, blank=True)
+
+
+class ZendeskArticleLabel(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    label_id = models.BigIntegerField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+
+
+class ZendeskArticle(models.Model):
+    site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
+    section = models.ForeignKey(ZendeskSection, on_delete=models.CASCADE)
+
+    # ZD article meta properties
+    article_id = models.BigIntegerField(blank=True, null=True)
+    author_id = models.BigIntegerField(blank=True, null=True)
+    comments_disabled = models.BooleanField()
+    created_at = models.CharField(max_length=100, blank=True)
+    draft = models.BooleanField()
+    edited_at = models.CharField(max_length=100, blank=True)
+    html_url = models.CharField(max_length=1000, blank=True)
+    labels = models.ManyToManyField(ZendeskArticleLabel)
+    permission_group_id = models.BigIntegerField(blank=True, null=True)
+    position = models.IntegerField(default=0)
+    promoted = models.BooleanField()
+    title = models.CharField(max_length=500, blank=True)
+    updated_at = models.CharField(max_length=100, blank=True)
+    user_segment_id = models.BigIntegerField(blank=True, null=True)
+
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
+
+# End Zendesk Models
+
+
+class LicenseType(models.Model):
+    name = models.CharField(max_length=100, blank=False,
+                            null=False, unique=True)
+    title = models.CharField(max_length=100, blank=False, null=False)
+    deactivations_allowed = models.PositiveIntegerField(
+        default=3, blank=False, null=False)
+
+    @staticmethod
+    def get_license_types():
+        license_types = list(LicenseType.objects.all().values(
+            'name', 'title', 'deactivations_allowed'))
+        return [{"deactivationsAllowed" if k == 'deactivations_allowed' else k: v
+                 for k, v in license.items()}
+                for license in license_types]

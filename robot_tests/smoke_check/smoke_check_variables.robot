@@ -24,40 +24,6 @@ ${system vms port}    7712
 ${merge 1 port}       7713
 ${merge 2 port}       7714
 
-${ENV}    https://test2.cloud.hdw.mx
-${VMS}    4.1
-
-${system la port}     7801
-${system ny port}     7802
-${system fr port}     7803
-${system sy port}     7804
-${system si port}     7805
-${system ch port}     7806
-${system chi port}    7807
-
-&{relays}
-...    la=relay-la.vmsproxy.com
-...    ny=relay-ny.vmsproxy.com
-...    fr=relay-fr.vmsproxy.com
-...    sy=relay-sy.vmsproxy.com
-...    si=relay-si.vmsproxy.com
-...    ch=relay-ch.vmsproxy.com
-...    chi=relay-chi.vmsproxy.com
-
-&{customizations}
-...    nx=https://nxvms.com
-...    dw=https://dwspectrum.digital-watchdog.com
-...    wave=https://sync.wavevms.com
-...    awl=https://awlcloud.awl.co.jp
-...    blackbox=https://live.black-box.com.au
-...    coresmp=https://connect.coresmp.com
-...    hankset=https://cloud.hankest.com
-...    ionetworks=https://portal.ioezcloud.com
-...    ipera=https://cloud.flyviewvms.ru
-...    piko=https://cloud.pikovms.com
-...    ras=https://pbxcloud.rassecurity.com
-...    senturian=https://senturian.nxvms.cloud
-...    systemk=https://skcloud.systemk.co.jp
-...    telstra=https://tvs.telstra.com
-...    viveex=https://viveexlink.daekyo.com
-...    xcello=https://xccelo.nxvms.cloud
+${ENV}      https://test.cloud.hdw.mx
+${VMS}      4.1
+${IMAGE}    4.1_test

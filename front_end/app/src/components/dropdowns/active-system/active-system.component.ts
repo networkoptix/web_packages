@@ -1,9 +1,10 @@
 import {
     Component, Input, SimpleChanges
 }                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '../../../services/nx-config';
-import { Router }                    from '@angular/router';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
@@ -13,15 +14,15 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 })
 
 export class NxActiveSystemDropdown extends BaseDropdown {
-    @Input() activeSystem: any;
+    @Input() activeSystem;
 
     canViewInfo: boolean;
-    params: any;
+    params;
     show: boolean;
     active = {
-        health  : false,
-        settings: false,
-        view    : false
+        health   : false,
+        settings : false,
+        view     : false
     };
 
     constructor(

@@ -4,22 +4,35 @@
 
 .user-name {
     @include mixins.ellipsis;
-    //width     : 20%;
-    // max-width : 175px;
-    @include typography.regular13;
+    @include typography.regular13dark9;
 }
 
-.user-email {
-    @include mixins.ellipsis;
-    //width     : 30%;
-    // max-width : 240px;
-    font-family : $font-family-medium;
-    line-height: 1.2;
+.heading-style {
+    font-family: $font-family-medium;
+    line-height: 40px;
+    vertical-align: middle;
+    height: 40px;
+    font-size: 24px;
+}
+
+.header-title {
+    text-align: left !important;
+    position: relative;
+    h2 {
+        @extend .heading-style;
+    }
+}
+
+.edit-button {
+    width: 40px;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }
 
 .user-role {
     @include mixins.ellipsis;
-    //width     : 20%;
     max-width : 120px;
 }
 
@@ -49,4 +62,12 @@
         background-color: $light2;
         border: 1px solid $light6;
     }
+}
+
+.edit-padding {
+    padding-left: 6px !important;
+}
+
+.user-status-switch-wrappper {
+    padding-top: 10px;
 }

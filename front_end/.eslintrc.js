@@ -14,11 +14,13 @@ module.exports = {
         "ecmaFeatures": {
             "jsx": true
         },
-        "sourceType"  : "module"
+        "sourceType" : "module",
+        "createDefaultProgram" : true
     },
     env: {
         "es6" : true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     globals: {
         "document" : "readonly",
@@ -130,13 +132,13 @@ module.exports = {
         //     "allowSamePrecedence": true
         // }],
         "no-mixed-spaces-and-tabs"     : "error",
-        "no-multi-spaces"              : ["error", {
-            exceptions: {
-                "ImportDeclaration": true,
-                "Property": true,
-                "VariableDeclarator": true
-            }
-        }],
+        // "no-multi-spaces"              : ["error", {
+        //     exceptions: {
+        //         "ImportDeclaration": true,
+        //         "Property": true,
+        //         "VariableDeclarator": true
+        //     }
+        // }],
         "no-multi-str"                 : "error",
         "no-multiple-empty-lines"      : ["error", { "max": 1, "maxEOF": 0 }],
         "no-negated-in-lhs"            : "error",
@@ -183,7 +185,7 @@ module.exports = {
         "no-useless-call"              : "error",
         "no-useless-computed-key"      : "error",
         // "no-useless-constructor"       : "error",
-        "no-useless-escape"            : "error",
+        // "no-useless-escape"            : "error",
         "no-useless-rename"            : "error",
         "no-useless-return"            : "error",
         "no-void"                      : "error",

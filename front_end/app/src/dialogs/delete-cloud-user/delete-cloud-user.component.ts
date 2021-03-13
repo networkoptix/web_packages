@@ -1,8 +1,9 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+
 import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }   from '../../services/process.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
@@ -16,7 +17,7 @@ export class DeleteCloudUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    deleteCloudUser: any;
+    deleteCloudUser: Process;
     passwordForUser: string = '';
     passwordError: string = '';
 
@@ -36,16 +37,17 @@ export class DeleteCloudUserModalContent {
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
-                        wrongParameters: () => {
+                        forbidden       : this.LANG.errorCodes.cantDeleteAccountOwningSystems(),
+                        wrongParameters : () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
-                            this.passwordError = this.LANG.passwordRequirements.missingMessage;
+                            this.passwordError = this.LANG.passwordRequirements.missingMessage();
                         },
                         wrongPassword: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordWrong: true });
-                            this.passwordError = this.LANG.errorCodes.notAuthorized;
+                            this.passwordError = this.LANG.errorCodes.notAuthorized();
                         }
                     },
-                    ignoreError: true
+                    ignoreError: false
                 })
             .then(res => {
                 if (res.resultCode === 'ok') {
@@ -59,8 +61,8 @@ export class DeleteCloudUserModalContent {
     }
 
     setPassword(input) {
-        this.passwordError = input.touched && input.errors && input.errors.required
-            ? this.LANG.passwordRequirements.missingMessage
+        this.passwordError = input.touched && input.errors?.required
+            ? this.LANG.passwordRequirements.missingMessage()
             : '';
         this.passwordForUser = input.value;
     }

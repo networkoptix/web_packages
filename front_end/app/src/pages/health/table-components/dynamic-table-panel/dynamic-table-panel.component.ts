@@ -1,24 +1,26 @@
 import {
-    AfterViewInit, Component, ElementRef,
-    EventEmitter, Input, Output, ViewChild
-}                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxHealthService }          from '../../health.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { NxHealthLayoutService }    from '../../health-layout.service';
+    AfterContentInit,
+    AfterViewInit,
+    Component, ElementRef, EventEmitter, Input,
+    Output, ViewChild
+} from '@angular/core';
+
 import {
-    InfoBlockSection,
-    InfoBlockSections,
-    InfoBlockLine
+    InfoBlockSection, InfoBlockSections, InfoBlockLine
 }                                   from '../../../../components/info-block/info-block.component';
+import { NxHealthService }          from '../../health.service';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 @Component({
     selector    : 'nx-dynamic-table-panel-component',
     templateUrl : './dynamic-table-panel.component.html',
     styleUrls   : ['./dynamic-table-panel.component.scss']
 })
-export class NxDynamicTablePanelComponent implements AfterViewInit {
-    @Input() panelParams: any;
+export class NxDynamicTablePanelComponent implements AfterContentInit {
+
+    @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: IConfig;
@@ -35,13 +37,14 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
     constructor(
         configService: NxConfigService,
         public healthService: NxHealthService,
-        public scrollMechanicsService: NxScrollMechanicsService,
-        public healthLayoutService: NxHealthLayoutService
+        public healthLayoutService: NxHealthLayoutService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
+        this.name = '';
     }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() { // AfterViewInit causes detection change error
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.scrollMechanicsService.panelVisible = true;
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';

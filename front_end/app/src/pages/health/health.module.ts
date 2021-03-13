@@ -1,36 +1,53 @@
 import { NgModule }               from '@angular/core';
 import { CommonModule }           from '@angular/common';
-import { BrowserModule }          from '@angular/platform-browser';
-import { UpgradeModule }          from '@angular/upgrade/static';
 import { RouterModule, Routes }   from '@angular/router';
 import { FormsModule }            from '@angular/forms';
-
 import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
 import { AngularSvgIconModule }   from 'angular-svg-icon';
 import { NgxFileDropModule }      from 'ngx-file-drop';
 
+import { MenuModule }             from '../../menu';
 import { ComponentsModule }       from '../../components/components.module';
 import { AuthGuard, SystemGuard } from '../../routeGuards';
 import { PipesModule }            from '../../pipes/pipes.module';
 
 import {
-    NxHealthComponent, NxSystemAlertsComponent,
+    NxHealthComponent, NxReportViewerComponent, NxSystemAlertsComponent,
     NxSystemMetricsComponent, NxDynamicTableComponent,
     NxDynamicTablePanelComponent, NxSingleEntityComponent,
-    NxImageComponent, NxImageSectionComponent,
-    NxSystemAlertCardComponent, NxUpdateInfoComponent
-} from './';
-import { DirectivesModule }       from '../../directives/directives.module';
+    NxImageSectionComponent, NxSystemAlertCardComponent, NxUpdateInfoComponent
+}                                  from './';
+import { DirectivesModule }        from '../../directives/directives.module';
+import { NxHealthLayoutService }   from './health-layout.service';
 
 const appRoutes: Routes = [
     {
-        path        : 'systems/:systemId/health',
+        path      : 'viewer',
+        component : NxReportViewerComponent,
+        children  : [
+            {
+                path      : '',
+                component : NxSystemAlertsComponent,
+                pathMatch : 'full'
+            },
+            {
+                path: 'alerts', component: NxSystemAlertsComponent
+            },
+            {
+                path: ':metric', component: NxSystemMetricsComponent
+            }
+        ]
+    },
+    {
+        path        : '',
         component   : NxHealthComponent,
         canActivate : [AuthGuard, SystemGuard],
         children    : [
             {
-                path: '', component: NxSystemAlertsComponent, pathMatch: 'full'
+                path      : '',
+                component : NxSystemAlertsComponent,
+                pathMatch : 'full'
             },
             {
                 path: 'alerts', component: NxSystemAlertsComponent
@@ -45,8 +62,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
@@ -56,36 +71,28 @@ const appRoutes: Routes = [
         AngularSvgIconModule.forRoot(),
         NgxFileDropModule,
         PipesModule,
-
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
-    providers      : [],
-    declarations   : [
+    providers    : [NxHealthLayoutService],
+    declarations : [
         NxHealthComponent,
+        NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
         NxDynamicTableComponent,
         NxDynamicTablePanelComponent,
         NxSingleEntityComponent,
-        NxImageComponent,
         NxImageSectionComponent,
         NxSystemAlertCardComponent,
         NxUpdateInfoComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
-        NxHealthComponent,
-        NxSystemAlertsComponent,
-        NxSystemMetricsComponent,
-        NxImageSectionComponent,
-        NxImageComponent,
-        NxUpdateInfoComponent
-    ],
+    bootstrap       : [],
     exports: [
         NxHealthComponent,
+        NxReportViewerComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
-        NxImageComponent
     ]
 })
 export class NxHealthModule {

@@ -71,6 +71,7 @@ $font-size-sm : rem(12px); //$font-size-base * .785;
 $h1-font-size : rem(32px); // $font-size-base * 1.4;
 $h2-font-size : rem(24px); // $font-size-base * 1.3;
 $h3-font-size : rem(18px); // $font-size-base * 1.2;
+$h3-alt-size  : rem(17px);
 $h4-font-size : rem(15px); // $font-size-base * 1;
 $h5-font-size : rem(14px); // $font-size-base;
 $h6-font-size : rem(14px); // $font-size-base * .875;
@@ -191,6 +192,7 @@ $dropdown-link-active-color: $brand_core;
 
 $collapse-first-width  : 920px;
 $collapse-second-width : 768px;
+$collapse-webadmin-width: 440px;
 
 @mixin outline {
     box-shadow : 0 0 0 2px transparentize($brand_l2, 0.4) !important;
@@ -243,3 +245,5 @@ $grid-narrow-table-width: calc(100% - 350px - 1rem);
 $grid-narrow-panel-width: 350px;
 $grid-super-wide-table-width: calc(100% - 450px - 1rem);
 $grid-super-wide-panel-width: 450px;
+
+$input-color-placeholder : $light16 !default;

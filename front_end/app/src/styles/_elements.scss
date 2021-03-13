@@ -2,7 +2,7 @@
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
 @use './mixins';
-@use '../../styles/theme_variables';
+@use '../../styles/theme_variables' as *;
 
 svg {
     pointer-events : none;
@@ -11,7 +11,6 @@ svg {
 .outerContainer {
     display        : flex;
     flex-direction : column;
-    height         : 100%;
 }
 
 .headerContainer {
@@ -26,13 +25,13 @@ svg {
 
 .standalone-delimiter {
     height           : 1px;
-    background-color : theme_variables.$light5;
+    background-color : $light5;
     padding          : 0 12px;
     position         : relative;
 
     &:after {
         height           : 1px;
-        background-color : theme_variables.$light7;
+        background-color : $light7;
         content          : '';
         position         : absolute;
         width            : calc(100% - 24px);
@@ -41,21 +40,25 @@ svg {
 
 .group-label {
     margin-bottom : 8px;
-    font-family   : theme_variables.$font-family-regular;
-    color         : theme_variables.$light16;
+    font-family   : $font-family-regular;
+    color         : $light16;
 }
 
 .error-label {
-    @include typography.regular13;
-    color : theme_variables.$error !important;
+    @include typography.regular13dark9;
+    color : $error !important;
+}
+
+.disabled-label {
+    @include typography.regular13light10;
 }
 
 .warning-label {
-    color : theme_variables.$brand-danger !important;
+    color : $brand-danger !important;
 }
 
 .block-container {
-    max-width : theme_variables.$fluid-container-max-width;
+    max-width : $fluid-container-max-width;
     width     : 100%;
     padding   : 0 16px;
 }
@@ -115,7 +118,7 @@ h1 .badge {
 }
 
 .disabled {
-    color  : theme_variables.$light10;
+    color  : $light10;
     cursor : default !important;
 }
 
@@ -145,10 +148,10 @@ h1 .badge {
 }
 
 .light-text {
-    color     : theme_variables.$light16;
+    color     : $light16;
     font-size : 13px;
 }
 
 span.marked {
-    background-color : theme_variables.$light4;
+    background-color : $light4;
 }

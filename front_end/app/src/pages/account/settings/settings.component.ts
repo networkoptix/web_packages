@@ -1,32 +1,30 @@
 import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    ViewContainerRef,
-    ViewChild,
-    ViewChildren,
-    QueryList,
-    OnDestroy
-} from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+    Component, OnInit,
+    AfterViewInit, ViewChild,
+    ViewContainerRef, OnDestroy,
+    ViewChildren, QueryList
+}                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
-import { NxProcessService }          from '../../../services/process.service';
+import { NgForm }                    from '@angular/forms';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { first }                     from 'rxjs/operators';
+
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService, Account } from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NgForm }                    from '@angular/forms';
-import { first }                     from 'rxjs/operators';
-import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxStorageService }          from '../../../services/storage.service';
+import { NxSessionService }          from '../../../services/session.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-account-settings-component',
     templateUrl : 'settings.component.html',
@@ -40,12 +38,13 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    account: any = {};
-    save: any;
+    account: Account;
+    save: Process;
     langCode: string;
     isSystemOwner = true;
+    hideErrors = true;
 
-    watchers: any = {
+    watchers = {
         firstName : new Watcher<string>(),
         lastName  : new Watcher<string>(),
         langCode  : new Watcher<string>()
@@ -54,14 +53,14 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     private formSubscription: Subscription;
 
     private setupDefaults() {
-        this.menuService.setDetailsSection('settings');
+        this.menuService.detail = 'settings';
     }
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        private languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
@@ -69,35 +68,43 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private pageService: NxPageService
+        private pageService: NxPageService,
+        private sessionService: NxSessionService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
+        this.LANG = this.languageService.translations;
         this.setupDefaults();
     }
 
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.pageService.pageTitle = this.LANG.pageTitles.account;
+        this.pageService.pageTitle = this.LANG.pageTitles.account();
+
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {
+                let lang = Promise.resolve();
                 if (this.langCode !== this.account.language) {
-                    return this.cloudApiService
-                        .changeLanguage(this.langCode)
-                        .then(() => {
-                            this.localStorage.set('langChanged', true);
-                            setTimeout(() => window.location.reload()); // reload window to catch new language
-                            return false;
-                        });
+                    this.account.language = this.langCode;
+                    this.sessionService.language = this.langCode;
+                    lang = new Promise<any>((resolve) => {
+                        return this.cloudApiService
+                            .changeLanguage(this.langCode)
+                            .then(() => {
+                                this.storageService.langChanged = true;
+                                this.languageService.currentLang = this.langCode;
+                                return resolve(false);
+                            });
+                    });
                 }
-                return this.systemsService.forceUpdateSystemsAsPromise();
+                return lang.then(() => this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>);
             }).finally(() => {
+                this.watchers.langCode.originalValue = this.watchers.langCode.value = this.langCode;
                 this.accountService.get(true);
             });
         }, {
-            successMessage  : this.LANG.account.accountSavedSuccess,
-            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix,
+            successMessage  : this.LANG.account.accountSavedSuccess(),
+            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
             this.applyService.hardReset();
@@ -111,7 +118,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.account.last_name = this.watchers.lastName.originalValue;
             this.langCode = this.watchers.langCode.originalValue;
             this.applyService.reset();
-        }, Object.values(this.watchers), null, true);
+        }, Object.values(this.watchers), undefined, this.displayErrors);
 
         this.accountService
             .get()
@@ -119,16 +126,16 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 if (account) {
                     this.account = account;
                     this.setOriginal();
-                    if (!this.systemsService.systemsPoll.destination.observers.length) {
+                    if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.isUserASystemOwner();
                 }
             });
 
-        if (this.localStorage && this.localStorage.get('langChanged')) {
-            this.dialogs.notify(this.LANG.account.accountSavedSuccess, 'success');
-            this.localStorage.set('langChanged', false);
+        if (this.storageService && this.storageService.langChanged) {
+            this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
+            this.storageService.langChanged = false;
         }
         this.applyService.hardReset();
         this.applyService.setVisible();
@@ -169,9 +176,13 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         });
     }
 
+    displayErrors = () => {
+        this.hideErrors = false;
+    }
+
     deleteUser() {
         this.dialogs.deleteCloudUser(this.cloudApiService)
-            .then(res => {
+            .then((res: any) => {
                 if (res && res.resultCode === 'ok') {
                     this.accountService.logout();
                 }

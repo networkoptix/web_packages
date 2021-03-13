@@ -2,20 +2,21 @@ import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
     OnDestroy, ViewChild, ElementRef
-} from '@angular/core';
+}                                   from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
     Validator, FormControl, NgModel
-} from '@angular/forms';
+}                                   from '@angular/forms';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { Subscription }             from 'rxjs';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxCloudApiService }        from '../../services/nx-cloud-api';
-import { Subscription }             from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-password-input',
     templateUrl : 'password.component.html',
@@ -35,9 +36,11 @@ import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-    @Input() form: any;
+    @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
+    @Input() hideErrors = false;
+    @Input() hasError = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -46,14 +49,15 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     clicked: boolean = false;
     tagWidth: number;
 
-    private value: string;
+    public value: string;
+
     private passwordSubscription: Subscription;
 
     @ViewChild('addons') addons : ElementRef;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    public onTouchedCallback = () => {
     };
 
     private onChangeCallback = (_: any) => {

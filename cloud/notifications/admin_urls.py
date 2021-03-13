@@ -1,4 +1,5 @@
 from django.conf.urls import url
+
 from notifications.views.send import cloud_notification_action, test
 
 urlpatterns = [

@@ -5,7 +5,8 @@ import {
 }                         from '@angular/router';
 import { Injectable }     from '@angular/core';
 import { Observable }     from 'rxjs';
-import { NxApplyService } from '../services/apply.service';
+
+import { NxApplyService } from '@services/apply.service';
 
 @Injectable()
 export class ApplyGuard implements CanActivate, CanDeactivate<any> {

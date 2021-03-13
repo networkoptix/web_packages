@@ -11,7 +11,7 @@
             <ngb-tab *ngFor="let type of noteTypes"
                      [id]="type">
                 <ng-template ngbTabTitle>
-                    <span class="tab-heading">{{LANG.downloads.releasesTypes[type] || type.name}}</span>
+                    <span class="tab-heading">{{ LANG.downloads.releasesTypes[type]() || type.name}}</span>
                 </ng-template>
                 <ng-template ngbTabContent>
                     <div class="card card-default">

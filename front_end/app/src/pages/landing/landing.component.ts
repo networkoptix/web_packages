@@ -1,28 +1,26 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
+import { Component, OnInit }         from '@angular/core';
+import { Router }                    from '@angular/router';
 
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LocalStorageService }       from 'ngx-store';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'landing-component',
-    templateUrl: 'landing.component.html',
-    styleUrls  : ['landing.component.scss']
+    selector    : 'landing-component',
+    templateUrl : 'landing.component.html',
+    styleUrls   : ['landing.component.scss']
 })
 
 export class NxLandingComponent implements OnInit {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    params: any;
-    userEmail: any;
-    login: any;
+    params;
+    userEmail;
+    login;
 
     loaded: boolean;
 
@@ -36,19 +34,18 @@ export class NxLandingComponent implements OnInit {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
-                private router: Router,
-                private localStorage: LocalStorageService,
+                private router: Router
     ) {
         this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.default;
+        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
         if (this.router.url === '/logout') {
             this.accountService.logout();
         } else if (this.router.url.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about;
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
             this.accountService
                 .get(/* forceUpdate */true)
@@ -59,16 +56,15 @@ export class NxLandingComponent implements OnInit {
                     } else {
                         if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
-                            this.pageService.pageTitle = this.LANG.pageTitles.login;
+                            this.pageService.pageTitle = this.LANG.pageTitles.login?.();
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.default;
+                    this.pageService.pageTitle = this.LANG.pageTitles.default?.();
                     this.loaded = true;
                 });
         }
     }
 }
-

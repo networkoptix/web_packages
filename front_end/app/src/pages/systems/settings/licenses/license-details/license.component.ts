@@ -2,17 +2,19 @@ import {
     Component, OnDestroy, Input,
     OnChanges, SimpleChanges
 }                                    from '@angular/core';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxSystem }                  from '../../../../../services/system.service';
 import { DatePipe }                  from '@angular/common';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { IConfig, NxConfigService }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
-    InfoBlockSection, InfoBlockStyle, InfoDetailClass, InfoLineStyle, InfoBlockLine
-}   from '../../../../../components/info-block/info-block.component';
+    InfoBlockLine, InfoBlockSection, InfoBlockStyle,
+    InfoDetailClass, InfoLineStyle
+}                                    from '@components/info-block/info-block.component';
+import { getDynamicLicense }         from '../licenses.component';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-license-detail-component',
     templateUrl : 'license.component.html',
@@ -80,34 +82,35 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     };
 
     private orderedDetails(info): void {
+        const dynamicLicense = getDynamicLicense(this);
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
-        const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
-        const deactivationsRemaining = this.CONFIG.licenseDeactivations - (info.deactivations === '-' ? 0 : info.deactivations);
+        const warning = info.expiration ? info.expiration < next30days.getTime() : false;
+        const deactivationsRemaining = dynamicLicense[info.class].deactivationsAllowed - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [
-                new InfoBlockLine(this.LANG.license.info.type, info.type),
-                new InfoBlockLine(this.LANG.license.info.channels, info.count),
+                new InfoBlockLine(this.LANG.license.info.type(), typeof info.type === 'function' ? info.type() : info.type),
+                new InfoBlockLine(this.LANG.license.info.channels(), info.count),
                 new InfoBlockLine(
-                    this.LANG.license.info.server,
-                    info.serverName || this.LANG.common.unknown,
+                    this.LANG.license.info.server(),
+                    info.serverName || this.LANG.common.unknown(),
                     !info.serverStatus
                         ? InfoDetailClass.ERROR
                         : undefined
                 ),
-                new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
+                new InfoBlockLine(this.LANG.license.info.hwid(), info.hwid),
                 new InfoBlockLine(
-                    this.LANG.license.info.status,
+                    this.LANG.license.info.status(),
                     info.status,
                     info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.expires,
+                    this.LANG.license.info.expires(),
                     info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
                     warning ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
-                    this.LANG.license.info.deactivations,
+                    this.LANG.license.info.deactivations(),
                     deactivationsRemaining,
                     deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
                     null,

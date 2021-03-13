@@ -54,3 +54,5 @@ ${HM FIRST TABLE PAGE ELEMENT}           //ngb-pagination//a[@aria-label="Previo
 ${HM LAST TABLE PAGE ELEMENT}            //ngb-pagination//a[@aria-label="Next" and @tabindex="-1"]
 ${HM ALERTS LINK ERRORS}                 ${HM ALERTS PAGE LINK}/div[2]/div[1]/nx-alert-counter/div/span
 ${HM ALERTS LINK WARNINGS}               ${HM ALERTS PAGE LINK}/div[2]/div[2]/nx-alert-counter/div/span
+
+${HM STORAGE TABLE}                      //table//td[contains(@title, "HD Witness Media")]

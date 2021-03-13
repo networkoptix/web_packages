@@ -19,3 +19,4 @@ pabot_results
 *.idea
 *check.robot
 chromedriver
+*.csv

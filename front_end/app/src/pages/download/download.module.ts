@@ -1,27 +1,23 @@
 import { Injectable, NgModule }  from '@angular/core';
 import { CommonModule }          from '@angular/common';
-import { BrowserModule }         from '@angular/platform-browser';
-
 import {
     Router, Resolve,
     RouterModule, Routes
 }                                from '@angular/router';
-import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
-
-import { EMPTY as empty }        from 'rxjs';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { FormsModule }           from '@angular/forms';
+import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }       from '@ngx-translate/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { EMPTY as empty }        from 'rxjs';
 
-import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
-import { NxConfigService }       from '../../services/nx-config';
 import { DirectivesModule }      from '../../directives/directives.module';
+import { DownloadComponent }     from './download.component';
+import { NxConfigService }       from '../../services/nx-config';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
-
-    deviceInfo: any;
+    deviceInfo;
     platform: string;
     platformMatch: {};
     windows: string;
@@ -49,14 +45,13 @@ export class OsResolver implements Resolve<any> {
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
     // {path: '', redirectTo: 'download', pathMatch: 'full'},
-    {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
-    {path: 'download/:platform', component: DownloadComponent}
+    { path: 'download', component: DownloadComponent, resolve: { platform: OsResolver } },
+    { path: 'download/:platform', component: DownloadComponent }
 ];
 
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
         NgbModule,
         FormsModule,
         TranslateModule,
@@ -68,12 +63,9 @@ const appRoutes: Routes = [
         OsResolver
     ],
     declarations: [
-        DownloadComponent,
-    ],
-    bootstrap: [],
-    entryComponents: [
         DownloadComponent
     ],
+    bootstrap : [],
     exports: [
         DownloadComponent
     ]

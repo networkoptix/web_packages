@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from shlex import shlex
-import subprocess
 
 import docker
 import email.header
 import imaplib
 import os
 import re
+import socket
+import subprocess
 import time
 import uuid
-import subprocess
+
 from datetime import date
-from email.parser import HeaderParser
 from platform import system
 from random import *
 from requests import head
@@ -21,14 +20,12 @@ from robot.api import logger
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs)
+from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
+from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr, timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
-
 
 class NoptixLibrary(object):
 
@@ -85,14 +82,13 @@ class NoptixLibrary(object):
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        locator = seleniumlib.find_element(locator)
+        element = seleniumlib.find_element(locator)
         # locator = self.convert_locator_to_webelement(locator)
-        logger.info("windows")
-        timeout = time.time() + 5
-        locator.send_keys(Keys.END)
-        while time.time() < timeout:
-            locator.send_keys(Keys.BACKSPACE)
-        locator.send_keys(text)
+        text = seleniumlib.get_text(locator)
+        element.send_keys(Keys.END)
+        for x in range(len(text)):
+            element.send_keys(Keys.BACKSPACE)
+        element.send_keys(text)
 
     def get_random_email(self, email):
         index = email.find('@')
@@ -171,6 +167,22 @@ class NoptixLibrary(object):
             time.sleep(.2)
         raise AssertionError(not_found)
 
+    def wait_until_element_contains_style(self, locator, styleAttribute, expected, timeout=10):
+        timeout = timeout + time.time()
+        not_found = "No element found with style " + expected
+        value = ""
+        while time.time() < timeout:
+            try:
+                value = self.get_element_style(locator, styleAttribute)
+                logger.debug(value)
+                if expected in value:
+                    return
+            except Exception as e:
+                print(e)
+                not_found = f"{value} does not contains the expected {expected}"
+            time.sleep(.2)
+        raise AssertionError(not_found)
+
     def wait_until_element_has_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -215,6 +227,22 @@ class NoptixLibrary(object):
                     return
             except:
                 found = f"Table cell still had '{expected}' in it."
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_number_of_tabs_are_open(self, number, timeout=30):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+        while time.time() < timeout:
+            try:
+                handles = seleniumlib.get_window_handles()
+                logger.debug(len(handles))
+                logger.debug(number)
+                if str(len(handles)) == str(number):
+                    return
+            except:
+                found = f"Looking for {number} tabs, found {len(handles)} tabs."
             time.sleep(.2)
         raise AssertionError(found)
 
@@ -400,29 +428,29 @@ class NoptixLibrary(object):
         if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
-    def create_custom_network(self, network_name, num, internal=False):
-        client = docker.from_env()
-        ipam_pool = docker.types.IPAMPool(
-            subnet=f'192.28.{num}.0/24',
-            iprange=f'192.28.{num}.0/24',
-            gateway=f'192.28.{num}.254'
-        )
-        ipam_config = docker.types.IPAMConfig(
-            pool_configs=[ipam_pool]
-        )
-        net = client.networks.create(
-            f'{network_name}',
-            driver='bridge',
-            ipam=ipam_config,
-            internal=internal
-        )
+    # def create_custom_network(self, network_name, num, internal=False):
+    #     client = docker.from_env()
+    #     ipam_pool = docker.types.IPAMPool(
+    #         subnet=f'192.28.{num}.0/24',
+    #         iprange=f'192.28.{num}.0/24',
+    #         gateway=f'192.28.{num}.254'
+    #     )
+    #     ipam_config = docker.types.IPAMConfig(
+    #         pool_configs=[ipam_pool]
+    #     )
+    #     net = client.networks.create(
+    #         f'{network_name}',
+    #         driver='bridge',
+    #         ipam=ipam_config,
+    #         internal=internal
+    #     )
+    #
+    #     return net.id
 
-        return net.id
-
-    def remove_custom_network(self, network_id):
-        client = docker.from_env()
-        net = client.networks.get(network_id)
-        net.remove()
+    # def remove_custom_network(self, network_id):
+    #     client = docker.from_env()
+    #     net = client.networks.get(network_id)
+    #     net.remove()
 
     def build_image(self, env):
         version = ""
@@ -446,6 +474,26 @@ class NoptixLibrary(object):
         client = docker.from_env()
         image = client.images.get(image_name)
         return image.id
+
+    @staticmethod
+    def get_random_mac():
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
+        return random_mac
+
+    @staticmethod
+    def is_port_in_use(port):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(('localhost', port)) == 0
+
+    @staticmethod
+    def get_random_port():
+        in_use = True
+        while in_use:
+            port = random_port()
+            in_use = NoptixLibrary.is_port_in_use(port)
+        return port
 
     def run_container(self, image_name, port, network='host'):
         prefix = 'AA'
@@ -552,3 +600,52 @@ class NoptixLibrary(object):
         cmd = f"pabot --testlevelsplit --processes 10 --variable max:{max} --outputdir Load-Testing Load-Testing/push_notifications_pabot.robot"
         #       print(cmd)
         os.system(cmd)
+
+    def systems_to_check(self, systemsCount):
+        return min(4, systemsCount)
+
+    def show_additional(self, systemTileCount, systemTilesToShow):
+        return systemTileCount > systemTilesToShow
+
+    def get_tiles_to_show(self, systemCount, maxSystems):
+        return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
+        
+    def check_grid_size(self, gridSize, tileSize, columns):
+        return gridSize > (tileSize * columns)
+
+    def check_if_match_and_criteria(self, locator, criteria):
+        queries = set(criteria.lower().split())
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                matches = set()
+                for highlight in highlights:
+                    matches.add(highlight.get_attribute('innerHTML').lower())
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+            if len(queries - matches) > 0 or len(matches - queries) > 0:
+                raise InvalidArgumentException("Matches found don't reflect search")
+
+        return True
+
+    def check_if_match_or_criteria(self, locator, criteria):
+        queries = criteria.lower().split("|")
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+
+        elements = seleniumlib.find_elements(locator)
+        for element in elements:
+            try:
+                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
+                for highlight in highlights:
+                    if highlight.get_attribute('innerHTML').lower() not in queries:
+                        raise InvalidArgumentException("Matches found don't reflect search")
+
+            except NoSuchElementException:
+                raise NoSuchElementException
+
+        return True

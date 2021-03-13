@@ -1,0 +1,211 @@
+[
+  {
+    "name": "Header",
+    "depth": 2,
+    "nodes": [
+      {
+        "name": "For Developers",
+        "display_name": "For Developers",
+        "url": "",
+        "new_window": false,
+        "icon": "developers.svg",
+        "authentication": "both",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Developer Tools",
+            "display_name": "Developer Tools",
+            "url": "https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Developers Support",
+            "display_name": "Developers Support",
+            "url": "https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "API Documentation",
+            "display_name": "API Documentation",
+            "url": "https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Submit an Integration",
+            "display_name": "Submit an Integration",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": false
+          }
+        ]
+      },
+      {
+        "name": "Services",
+        "display_name": "Services",
+        "url": "",
+        "new_window": false,
+        "icon": "services.svg",
+        "authentication": "both",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Downloads",
+            "display_name": "Downloads",
+            "url": "/download",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Supported Devices",
+            "display_name": "Supported Devices",
+            "url": "/ipvd",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Health Report Viewer",
+            "display_name": "Health Report Viewer",
+            "url": "/health-report/viewer",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "name": "External Links",
+        "display_name": "External Links",
+        "url": "",
+        "new_window": false,
+        "icon": "external_2.svg",
+        "authentication": "both",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Hardware Calculator",
+            "display_name": "Hardware Calculator",
+            "url": "http://networkoptix.com/calculator/",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": false
+          },
+          {
+            "name": "Support",
+            "display_name": "Support",
+            "url": "%SUPPORT_LINK%",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Terms",
+            "display_name": "Terms",
+            "url": "/content/eula",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": false
+          },
+          {
+            "name": "Privacy Policy",
+            "display_name": "Privacy Policy",
+            "url": "%PRIVACY_LINK%",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Footer",
+    "depth": 1,
+    "nodes": [
+      {
+        "name": "About %CLOUD_NAME%",
+        "url": "/content/about",
+        "new_window": false,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "Download %VMS_NAME%",
+        "url": "/download",
+        "new_window": false,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "Integrations",
+        "url": "/integrations",
+        "new_window": false,
+        "enabled": true,
+        "condition": "%INTEGRATION_STORE_ENABLED%",
+        "authentication": "both"
+      },
+      {
+        "name": "For developers",
+        "url": "https://support.networkoptix.com/hc/en-us/categories/360000737654-Develop-with-Nx-Meta",
+        "new_window": true,
+        "enabled": false,
+        "authentication": "both",
+        "condition": "%DEVELOPERS_ENABLED%"
+      },
+      {
+        "name": "Support",
+        "url": "%SUPPORT_LINK%",
+        "new_window": true,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "Terms",
+        "url": "/content/eula",
+        "new_window": false,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "Privacy",
+        "url": "%PRIVACY_LINK%",
+        "new_window": true,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "Supported Devices",
+        "url": "/ipvd",
+        "new_window": false,
+        "condition": "%IPVD_ENABLED%",
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
+        "name": "System Calculator",
+        "url": "http://nx.networkoptix.com/calculator/",
+        "enabled": ["default", "default_cn", "default_zh_CN", "metavms"],
+        "new_window": true
+      }
+    ]
+  }
+]

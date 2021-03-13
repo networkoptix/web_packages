@@ -1,21 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { IntegrationService }           from './integration.service';
-import { NxUriService }                 from '../../services/uri.service';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxUtilsService }               from '../../services/utils.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import {
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
 
-@AutoUnsubscribe()
+import { IntegrationService }        from './integration.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUtilsService }            from '../../services/utils.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'integrations-component',
-    templateUrl: 'integrations.component.html',
-    styleUrls  : ['integrations.component.scss']
+    selector : 'integrations-component',
+    templateUrl : 'integrations.component.html',
+    styleUrls : ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
@@ -66,7 +69,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.translations;
-        this.pageService.pageTitle = this.LANG.pageTitles.integrations;
+        this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
         this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
         // Example URI
@@ -87,13 +90,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                             .then(() => {
                                 this.setIntegrations(result);
                             })
-                            .catch(() => {
-                                this.router
-                                    .navigate([this.CONFIG.redirect.page404])
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            });
+                            .catch(this.pageService.show404);
                     } else {
                         this.setIntegrations(result);
                     }
@@ -102,11 +99,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 }
             }, error => {
                 console.error('Integration plugins error -> ', error);
-                this.router
-                    .navigate([this.CONFIG.redirect.page404])
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.pageService.show404();
             });
     }
 
@@ -150,7 +143,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
             this.elements = this.elements.filter(item => searchBy(item, query));
         }
 
-        if (this.filterModel.tags && this.filterModel.tags.length) {
+        if (this.filterModel.tags?.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {

@@ -1,0 +1,138 @@
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import PlaybackService from '../../services/playback.service'
+import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState'
+import SelectionService from '../../../timeline/services/timeline.selection.service'
+import { Subscription } from 'rxjs'
+
+
+type BtnClassesEnum = 'play' | 'pause'
+
+
+@Component({
+  selector: 'playback-controls',
+  templateUrl: './playback-controls.component.html',
+  styleUrls: ['./playback-controls.component.scss'],
+})
+export class PlaybackControlsComponent implements OnInit, OnDestroy {
+
+  @Input() enabled: boolean
+
+  protected subscription: Subscription
+  protected state: PlaybackState
+
+  public btnClass: BtnClassesEnum = 'play'
+
+  public handleClick () {
+    if (!this.enabled) {
+      return
+    }
+    switch (this.btnClass) {
+      case 'pause':
+        this.togglePause() || this.stop()
+        break
+      case 'play':
+        this.unpause() || this.playLive()
+        break
+    }
+  }
+
+  constructor (
+    public playback: PlaybackService,
+    protected selection: SelectionService,
+  ) {
+    this.onSubjectChange = this.onSubjectChange.bind(this)
+  }
+
+
+  public ngOnInit (): void {
+    this.subscription = this.playback.subject.subscribe(this.onSubjectChange)
+  }
+
+  public ngOnDestroy (): void {
+    this.subscription.unsubscribe()
+  }
+
+  public onSubjectChange (s: PlaybackState) {
+    this.state = s
+    switch (s.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        this.btnClass = 'play' // optimistic approach
+        // a pessimistic approach would be to check if we can play anything,
+        // but if we can't the button should be disabled altogether anyway
+        break
+      case PLAYBACK_MODE.LIVE:
+        this.btnClass = 'pause' // optimistic approach
+        // this.btnClass = s.started ? 'pause' : 'play' // pessimistic approach
+        break
+      case PLAYBACK_MODE.ARCHIVE:
+        this.btnClass = s.paused ? 'play' : 'pause' // optimistic approach
+        // this.btnClass = s.started ? s.paused ? 'play' : 'pause' : 'play' // pessimistic approach
+        break
+    }
+  }
+
+  protected get canPlayLive (): boolean {
+    return this.playback.canPlayLive
+  }
+
+  protected get canStop (): boolean {
+    return this.playback.canStop
+  }
+
+  protected get canPause (): boolean {
+    return this.playback.canPause
+  }
+
+  protected get canUnpause (): boolean {
+    return this.playback.canUnpause
+  }
+
+
+  protected playLive () {
+    if (!this.canPlayLive) {
+      return false
+    }
+    this.selection.reset()
+    this.playback.playLive()
+    return true
+  }
+
+  protected stop () {
+    if (!this.canStop) {
+      return false
+    }
+    this.playback.stop()
+    return true
+  }
+
+  protected pause () {
+    if (!this.canPause) {
+      return false
+    }
+    this.selection.reset()
+    this.playback.pause()
+    return true
+  }
+
+  protected unpause () {
+    if (!this.canUnpause) {
+      return false
+    }
+    this.playback.unpause()
+    return true
+  }
+
+  protected togglePause () {
+    if (this.canPause) {
+      this.selection.reset()
+      this.playback.pause()
+      return true
+    } else if (this.canUnpause) {
+      this.playback.unpause()
+      return true
+    }
+    return false
+  }
+}
+
+export default PlaybackControlsComponent

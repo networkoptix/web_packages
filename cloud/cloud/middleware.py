@@ -1,10 +1,11 @@
 import traceback
+import logging
+
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -18,9 +19,9 @@ class CatchExceptionMiddleware(object):
     @staticmethod
     def process_exception(request, exception):
         logging.info(request)
-        logging.critical("{}: {}\nCall Stack:\n{}".format(exception.__class__.__name__,
-                                                          exception,
-                                                          traceback.format_exc().replace("Traceback", "")))
+        stack_trace = traceback.format_exc().replace("Traceback", "")
+        logging.critical(
+            f"{exception.__class__.__name__}: {exception}\nCall Stack:\n{stack_trace}")
         if not settings.DEBUG:
             return HttpResponse("Error with request", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

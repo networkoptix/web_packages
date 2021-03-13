@@ -1,9 +1,7 @@
 <form #restartServerForm="ngForm" name="restartServerForm" novalidate>
     <div class="modal-header">
-        <h1 class="modal-title" 
-            [translate]="'dialogs.titles.serversRestart'"
-            [translateParams]="{ title: serverName }"
-        ></h1>
+        <h1 class="modal-title"
+            [innerHTML]="'dialogs.titles.serversRestart'| translate: { title: serverName }"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="close('')" *ngIf="closable">
@@ -15,7 +13,6 @@
                            [form]="restartServerForm"
                            [actionType]="'primary'"
                            buttonText="{{ 'Restart' | translate }}"></nx-process-button>
-
-        <button type="button" class="btn btn-default" (click)="close('')" translate>Cancel</button>
+        <nx-cancel-button [process]="restartServer" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>

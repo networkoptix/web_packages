@@ -1,44 +1,46 @@
 import { NgModule }                         from '@angular/core';
 import { CommonModule }                     from '@angular/common';
-import { BrowserModule }                    from '@angular/platform-browser';
-import { UpgradeModule }                    from '@angular/upgrade/static';
 import { RouterModule }                     from '@angular/router';
 import { FormsModule }                      from '@angular/forms';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
-import { DirectivesModule }                 from '../../../../directives/directives.module';
-import { NxSystemServersComponent }         from './servers.component';
 import { TranslateModule }                  from '@ngx-translate/core';
-import { ComponentsModule }                 from '../../../../components/components.module';
-import { NxSystemStandardServerComponent }  from './standard/server.component';
+
+import { DirectivesModule }                 from '@directives/directives.module';
+import { ComponentsModule }                 from '@components/components.module';
+import { NxSystemServersComponent }         from './servers.component';
+import { NxSystemStandardServerComponent }  from './standard/server-standard.component';
 import { NxServerLoggerComponent }          from './logger/logger.component';
-import { NxSystemAdvancedStorageComponent } from './storage-advanced/storage.component';
+import { NxSystemStorageComponent }         from './storage/server-storage-standard.component';
+import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
+import { NxStorageSizeComponent }           from './storage-advanced/size/size.component';
+import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage.module';
 
 @NgModule({
-    imports         : [
+    imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         FormsModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        NxCloudStorageModule
     ],
-    providers       : [],
-    declarations    : [
+    providers: [
+    ],
+    declarations: [
         NxSystemServersComponent,
         NxSystemStandardServerComponent,
         NxServerLoggerComponent,
-        NxSystemAdvancedStorageComponent
+        NxSystemStorageComponent,
+        NxSystemAdvancedStorageComponent,
+        NxStorageSizeComponent,
     ],
-    bootstrap       : [],
-    entryComponents : [
-        NxSystemServersComponent
+    bootstrap: [
     ],
-    exports         : [
+    exports: [
         NxSystemServersComponent
     ]
 })

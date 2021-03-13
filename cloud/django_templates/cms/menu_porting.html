@@ -1,0 +1,163 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content%}
+
+<h3>Export</h3>
+
+<form id="exportForm"
+      method="post" class="aligned">
+    {% csrf_token %}
+    {% for field in formExport %}
+        <div class="form-row">
+            {{ field.label_tag }}
+            <div id="{{ field.label }}" style="display:inline-block;">
+                {{ field }}
+
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+            <button class="btn btn-sm btn-primary" type="submit" name="export">Export</button>
+        </div>
+    {% endfor %}
+</form>
+
+<h3>Import</h3>
+
+<form id="importForm" method="post" class="aligned" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in formImport %}
+        <div class="form-row">
+            {{ field.label_tag }}
+            <div id="{{ field.label }}" style="display:inline-block;">
+                {{ field }}
+
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    <div id="conflicts"></div>
+    <div class="form-row">
+        <button class="btn btn-sm btn-primary" type="submit" name="import" id="import" onclick="updateMessages()">Import</button>
+    </div>
+
+</form>
+<div class="modal" id="preparing-package">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">{{modal_title}}</h5>
+        </div>
+        <div class="modal-body">
+            <div id="context-errors">
+                <h4 class="text-warning">Import Errors</h4>
+                <ul id="errors-list"></ul>
+            </div>
+            <div id="pending">
+                <p id="context-status">Processing contexts...</p>
+                <div class="progress progress-popup">
+                    <div class="progress-bar custom-download-transition"></div>
+                </div>
+                <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+            </div>
+            <div id="done">
+                <p>{{complete_message}}</p>
+                {% if download_message %}
+                    <a class="btn btn-success" id="download-button" href="" download="">{{download_message}}</a>
+                {% endif %}
+                <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+            </div>
+        </div>
+      </div>
+    </div>
+   </div>
+   <script>
+    const taskId = '{{task}}'
+    const processingMenu = '{{processing_menu}}'
+    const downloadUrl = "{% url 'celery_download_result' 'task_id' %}".replace('task_id', taskId)
+    const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
+    const pollingInterval = 1000
+    const modal = document.getElementById('preparing-package')
+    const progressBar = modal.getElementsByClassName('progress-bar')[0]
+    const contextStatus = document.getElementById('context-status')
+    const contextErrors = document.getElementById('context-errors')
+    const errorsList = document.getElementById('errors-list')
+    function togglePending (showPending) {
+        const pending = document.getElementById('pending')
+        const done = document.getElementById('done')
+        if (showPending) {
+            pending.style = "display:block;"
+            done.style = "display:none;"
+        } else {
+            pending.style = "display:none;"
+            done.style = "display:block;"
+        }
+    }
+    if (taskId) {
+        setTimeout(pollStatus, pollingInterval)
+    }
+    togglePending(true)
+
+    function pollStatus() {
+        if(!modal.classList.contains('show')) {
+            modal.classList.add('show')
+            togglePending(true)
+            contextStatus.innerText = '{{queue_message}}'
+        }
+        return fetch(generateStatusUrl(taskId)).then(
+                res => res.json()
+            ).then(status => {
+                if(status.errors && status.errors.length) {
+                    if(contextErrors.classList.contains('hide')) {
+                        contextErrors.classList.remove('hide')
+                    }
+                    errorsList.innerHTML = ''
+                    status.errors.forEach(error => {
+                        const errorItem = document.createElement('li')
+                        errorItem.innerHTML = error
+                        errorsList.appendChild(errorItem)
+                    })
+                } else if(!contextErrors.classList.contains('hide') && !errorsList.innerHTML) {
+                    contextErrors.classList.add('hide')
+                }
+                if (status && status.total || status === 'PENDING') {
+                    contextStatus.innerText = status.current
+                        ? '{{progress_message}}'.replace('CURRENT', status.current).replace('TOTAL', status.total)
+                        : '{{queue_message}}'
+                    progressBar.style = `width: ${Math.round(status.current / status.total * 100)}%;`
+                    setTimeout(pollStatus, pollingInterval)
+                } else if(status === 'SUCCESS') {
+                    togglePending(false)
+                    document.getElementById('download-button').href = downloadUrl
+                    window.open(downloadUrl)
+                } else {
+                    console.error(status)
+                }
+            })
+    }
+
+    function closeModal() {
+        modal.classList.remove('show')
+    }
+    window.conflicts = {{conflicts|safe}}
+    window.menuName = '{{menu}}'
+    window.conflictsHeader = '<h4>The import for menu "{{menu}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
+   </script>
+    <script src="{% static 'js/assetImportConflicts.js' %}"></script>
+{% endblock%}
+

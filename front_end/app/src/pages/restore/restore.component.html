@@ -9,7 +9,12 @@
     </div>
     <div *ngIf="restoring" class="reset-section">
         <h1 class="heading mb-4" translate>Reset Password</h1>
-        <form name="restorePassword" #restorePassword="ngForm" class="form" novalidate>
+        <form name="restorePassword"
+            #restorePassword="ngForm"
+            class="form"
+            [ngClass]="{'hide-errors': hideErrors}"
+            (submit)="hideErrors = false"
+            novalidate>
             <label for="email" class="" translate>Email</label>
             <nx-email-input
                 class="form-component mb-3"
@@ -17,6 +22,7 @@
                 componentId="email"
                 [(ngModel)]="data.email"
                 [form]="restorePassword"
+                [hideErrors]="hideErrors"
                 #email="ngModel"></nx-email-input>
             <ng-container *ngIf="email.touched && email.errors">
                 <span
@@ -36,7 +42,7 @@
                 [customClass]="'full-width'"
                 [process]="restore"
                 [form]="restorePassword"
-                [buttonText]="LANG.activeActions.resetPassword"></nx-process-button>
+                [buttonText]="LANG.activeActions.resetPassword()"></nx-process-button>
         </form>
     </div>
 
@@ -47,7 +53,7 @@
                 <a
                     class="btn btn-primary"
                     href
-                    (click)="login(); (false)"
+                    (click)="login(); false;"
                     translate>
                     Log In
                 </a>
@@ -57,7 +63,12 @@
         <div *ngIf="!change.success && !changeSuccess" >
             <h1 class="heading mb-4" translate>Set New Password</h1>
 
-            <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form" novalidate>
+            <form name="restorePasswordWithCode" 
+                #restorePasswordWithCode="ngForm"
+                class="form"
+                [ngClass]="{'hide-errors': hideErrors}"
+                (submit)="hideErrors = false"
+                novalidate>
                 <label for="newPassword" translate>New Password</label>
 
                 <div class="position-relative mb-3">
@@ -83,7 +94,7 @@
                     [customClass]="'full-width'"
                     [process]="change"
                     [form]="restorePasswordWithCode"
-                    [buttonText]="LANG.dialogs.buttons.ok">
+                    [buttonText]="LANG.dialogs.buttons.ok()">
                 </nx-process-button>
             </form>
         </div>

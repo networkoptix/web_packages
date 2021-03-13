@@ -1,9 +1,12 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef
-}                            from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseDropdown }      from '../injDropdown';
+}                                    from '@angular/core';
+import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 /* Usage
  <nx-select
@@ -28,6 +31,13 @@ import { BaseDropdown }      from '../injDropdown';
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
     @Input() componentId: string = 'three-dot-menu'
+
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
+    ) {
+        super(languageService, configService);
+    }
 
     change(item) {
         item.action();

@@ -8,17 +8,19 @@ nx-select {
     hr {
         width: 95%;
         margin: 6px auto;
-        border-color: $light6;
+        border-color: $light4;
+        &.narrow-hr {
+            width: calc(95% - 16px);
+        }
     }
 
     .additional-help {
-        @include typography.regular13;
+        @include typography.regular13light;
         margin-left: 0.25rem;
-        color : $light16;
     }
 
     .selected .additional-help {
-        color : $light1;
+        color : $light1 !important;
     }
 
     @include mixins.keyframe(bubblingG) {
@@ -36,11 +38,11 @@ nx-select {
     .loading {
         width          : 100%;
         height         : 100%;
-        
+
         text-align     : center;
         vertical-align : middle;
         overflow       : hidden;
-        margin         : auto;
+        margin         : 0 auto;
         div {
             margin : 0 auto;
             span {
@@ -57,7 +59,7 @@ nx-select {
                 -moz-animation    : bubblingG 650ms infinite alternate;
             }
         }
-        
+
         .dot1 {
             animation-delay         : 0s;
             -o-animation-delay      : 0s;
@@ -65,7 +67,7 @@ nx-select {
             -webkit-animation-delay : 0s;
             -moz-animation-delay    : 0s;
         }
-        
+
         .dot2 {
             animation-delay         : 0.3s;
             -o-animation-delay      : 0.3s;
@@ -73,13 +75,25 @@ nx-select {
             -webkit-animation-delay : 0.3s;
             -moz-animation-delay    : 0.3s;
         }
-        
+
         .dot3 {
             animation-delay         : 0.6s;
             -o-animation-delay      : 0.6s;
             -ms-animation-delay     : 0.6s;
             -webkit-animation-delay : 0.6s;
             -moz-animation-delay    : 0.6s;
+        }
+    }
+    .dropdown-force-position, .force-position {
+        position: static !important;
+        & > .dropdown-menu {
+            transform: translateY(calc(100% - 22px));
+        }
+        & > button.dropdown-toggle {
+            height: 24px !important;
+            & > .arrow-flip > svg-icon {
+                bottom: 2px !important;
+            }
         }
     }
 }

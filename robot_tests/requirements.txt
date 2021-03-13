@@ -11,7 +11,7 @@ robotframework-imaplibrary==0.3.0
 robotframework-pabot==1.10.0
 robotframework-requests==0.6.2
 robotframework-seleniumlibrary==4.1.0
-robotframework-sshlibrary==3.4.0
+robotframework-sshlibrary==3.6.0
 selenium==3.141.0
 six==1.12.0
 urllib3==1.24.2

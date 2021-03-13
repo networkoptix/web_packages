@@ -7,16 +7,17 @@ import {
 import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
+import { UntilDestroy }             from '@ngneat/until-destroy';
+import { SubscriptionLike }         from 'rxjs';
+import { delay }                    from 'rxjs/operators';
+
 import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { SubscriptionLike }         from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxHealthLayoutService }    from '../../health-layout.service';
-import { delay }                    from 'rxjs/operators';
-import { NxRibbonService }          from '../../../../components/ribbon/ribbon.service';
+import { NxRibbonService }          from '../../../../components/ribbon';
+import { NxUtilsService }           from '../../../../services/utils.service';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -33,7 +34,7 @@ const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-dynamic-table',
     templateUrl   : './dynamic-table.component.html',
@@ -57,8 +58,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     public selectedGroup;
     public selectedHeader;
     public showHeaders;
-    public sortOrderASC: boolean;
 
+    sortOrderASC: boolean;
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -75,7 +76,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offsetHeight: number;
     scrollHeight: number;
     showHorizontalTooltip: boolean;
-    hideTooltip: any;
+    hideTooltip;
     mobileDetailMode: boolean;
 
     ribbonSubscription: SubscriptionLike;
@@ -391,11 +392,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             switch (paramId) {
                 case 'alarm':
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
+                        return elm[groupId]?.[paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                     };
                 case 'resolution':
                     return (elm) => {
-                        if (elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value) {
+                        if (elm[groupId]?.[paramId]?.value) {
                             const res = elm[groupId][paramId].value.toLowerCase().split('x');
 
                             if (res.length === 2) {
@@ -409,25 +410,25 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     };
                 case 'displayAddress':
                     return (elm) => {
-                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                        if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
                         }
-                        const value = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value;
+                        const value = elm[groupId]?.[paramId]?.value;
                         return parseInt(value.replace(/\./g, '')) || 0;
                     };
                 default:
                     return (elm) => {
-                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                        if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
                         }
 
-                        const format = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].formatClass || undefined;
+                        const format = elm[groupId]?.[paramId]?.formatClass || undefined;
 
                         if (TEXT_FORMATS.includes(format)) {
-                            return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                            return elm[groupId]?.[paramId]?.text || '';
                         }
 
-                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value || 0;
+                        return elm[groupId]?.[paramId]?.value || 0;
                     };
             }
         }
@@ -453,9 +454,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    private getTitle(item, headerGroupId, headerId) {
+    getTitle(item, headerGroupId, headerId) {
         let title;
-        if (item && item[headerGroupId] && item[headerGroupId][headerId]) {
+        if (item?.[headerGroupId]?.[headerId]) {
             title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
         }
         if (title === undefined) {

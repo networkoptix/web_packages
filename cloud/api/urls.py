@@ -1,12 +1,14 @@
 __author__ = 'noptix'
 
 from django.conf.urls import url
-from cloud import settings
+from django.conf import settings
+
 from api.views import account, systems, common, utils, robot, storage
 from notifications.views import send
 
 urlpatterns = [
     url(r'^account-autocomplete/$', account.AccountAutocomplete.as_view(), name='account-autocomplete',),
+    url(r'^permission-autocomplete/$', account.PermissionsAutocomplete.as_view(), name='permission-autocomplete',),
     url(r'^utils/visitedKey/?$',                utils.visited_key),
     url(r'^utils/language/?$',                  utils.language),
     url(r'^utils/downloads/history$',           utils.downloads_history),
@@ -53,5 +55,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^robot/get_code$', robot.get_code)
+        url(r'^robot/get_code$', robot.get_code),
+        url(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$', account.AccountCustomPropertyView.as_view()),
+        url(r'^custom-properties/(?P<endpoint>.+?)$', account.AccountCustomPropertyView.as_view()),
     ]

@@ -2,14 +2,13 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '../../../../components/tag/tag.component' as *;
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-dynamic-table {
   cursor: default;
 
   .text-placeholder {
-    @include typography.regular20;
+    @include typography.regular20dark9;
     height : 2rem;
   }
 
@@ -25,25 +24,6 @@ nx-dynamic-table {
 
     @media (max-width : 1280px) {
       width: 100%;
-    }
-
-    ::-webkit-scrollbar {
-      width  : initial;
-      height : 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      -webkit-border-radius : initial;
-      border-radius         : 6px;
-      -webkit-box-shadow    : initial;
-      height                : 8px;
-      border                : 2px solid $light4;
-    }
-
-    ::-webkit-scrollbar-track {
-      -webkit-box-shadow    : initial;
-      -webkit-border-radius : initial;
-      border-radius         : initial;
     }
 
     .horizontalTooltip {
@@ -70,7 +50,7 @@ nx-dynamic-table {
     }
 
     .table-header {
-      @include typography.medium15;
+      @include typography.medium15dark9;
       font-weight      : 500 !important;
       background-color : $additional_light1;
       padding          : 1rem;
@@ -101,7 +81,7 @@ nx-dynamic-table {
             white-space    : nowrap;
 
             div {
-              @include typography.regular13;
+              @include typography.regular13dark9;
               border-bottom  : 1px solid;
               padding-bottom : 4px;
             }
@@ -139,7 +119,7 @@ nx-dynamic-table {
         }
 
         th {
-          @include typography.medium13;
+          @include typography.medium13dark9;
           font-weight    : 500 !important;
           padding        : 0 16px 0 0;
           text-transform : none;
@@ -157,7 +137,7 @@ nx-dynamic-table {
           }
 
           &.table-title {
-            @include typography.regular24;
+            @include typography.regular24dark9;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -179,7 +159,6 @@ nx-dynamic-table {
             }
 
             .sort-dir {
-              //top: 0;
               right    : auto;
               position : relative;
               bottom   : 0;
@@ -197,6 +176,14 @@ nx-dynamic-table {
                   content : '+';
                 }
               }
+            }
+          }
+          .arrow-flip {
+            svg-icon {
+              width: 20px;
+              height: 20px;
+              left: 8px;
+              top: 0;
             }
           }
         }
@@ -239,7 +226,7 @@ nx-dynamic-table {
           }
 
           td {
-            @include typography.regular12;
+            @include typography.regular12dark9;
             padding     : 0 16px 0 0;
             line-height : 1rem;
             border      : none;
@@ -257,7 +244,7 @@ nx-dynamic-table {
       }
 
       &-header {
-        @include typography.regular13;
+        @include typography.regular13dark9;
         padding          : 0.5rem 1rem;
         background-color : $additional_light1;
         border           : 1px solid $light3;
@@ -267,7 +254,7 @@ nx-dynamic-table {
         overflow-wrap    : break-word;
 
         .results {
-          @include typography.medium13;
+          @include typography.medium13dark9;
           font-weight : 500 !important;
           line-height : 16px;
         }
@@ -291,8 +278,7 @@ nx-dynamic-table {
           }
 
           .page-link {
-            @include typography.regular13;
-            color            : $light16 !important;
+            @include typography.regular13light;
             background-color : $light4;
             border-radius    : 2px;
             height           : 32px;

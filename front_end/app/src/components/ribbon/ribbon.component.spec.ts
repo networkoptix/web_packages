@@ -1,85 +1,108 @@
-import {
-  async,
-  ComponentFixture,
-  TestBed,
-  inject
-} from '@angular/core/testing';
-import { NxRibbonComponent } from './ribbon.component';
-import { NxRibbonService } from './ribbon.service';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { DebugElement }                                    from '@angular/core';
+import { NxRibbonComponent, RibbonAction }                 from './ribbon.component';
+import { NxRibbonService, RibbonActionInput }              from './ribbon.service';
+import { nxConfig }                                        from '@services/nx-config/config';
+import { NxConfigService }                                 from '@services/nx-config';
+import { NxHeaderService }                                 from '@services/nx-header.service';
+import { RouterLinkDirectiveStub }                         from '@src/_testing';
+
 
 describe('NxRibbonComponent', () => {
-  let component: NxRibbonComponent;
-  let fixture: ComponentFixture<NxRibbonComponent>;
+    let component: NxRibbonComponent;
+    let fixture: ComponentFixture<NxRibbonComponent>;
+    let el: DebugElement;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [NxRibbonComponent],
-      providers: [NxRibbonService]
-    }).compileComponents();
-  }));
+    const configMock = { getConfig: () => nxConfig };
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NxRibbonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(waitForAsync(() => {
+        const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
 
-  it('should create NxRibbonComponent', () => {
-    expect(component).toBeTruthy();
-  });
+        TestBed.configureTestingModule({
+            declarations : [NxRibbonComponent, RouterLinkDirectiveStub],
+            providers    : [
+                NxRibbonService,
+                { provide: NxHeaderService, useValue: spyHeader },
+                { provide: NxConfigService, useValue: configMock }
+            ]
+        }).compileComponents()
+            .then(() => {
+                fixture = TestBed.createComponent(NxRibbonComponent);
+                component = fixture.componentInstance;
+                el = fixture.debugElement;
 
-  it('should be initialized', () => {
-    component.ngOnInit();
-    expect(component.showRibbon).toBeFalsy();
-    expect(component.message).toBe('');
-    expect(component.action).toBe('');
-    expect(component.actionUrl).toBe('');
-  });
+                fixture.detectChanges();
+            });
+    }));
 
-  it('should use NxRibbonService to get data', inject(
-    [NxRibbonService],
-    (service: NxRibbonService) => {
-      const context = {
-        message:
-          'Alcohol! Because no great story started with someone eating a salad.',
-        text: 'Go back',
-        url: '/admin/cms/asset'
-      };
+    it('should create NxRibbonComponent', () => {
+        expect(component).toBeTruthy();
+    });
 
-      service.show(context.message, context.text, context.url);
+    it('should be initialized', () => {
+        component.ngOnInit();
 
-      expect(component.showRibbon).toBeTruthy();
-      expect(component.message).toBe(context.message);
-      expect(component.action).toBe(context.text);
-      expect(component.actionUrl).toBe(context.url);
-    }
-  ));
+        spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+        expect(component.showRibbon).toBeFalsy();
+        expect(component.visibility).toBe(false);
+        expect(component.type).toBe('');
+        expect(component.updateFunction).toBe('');
+        expect(component.message).toBe('');
+        expect(component.actions).toEqual([]);
+    });
 
-  it('should use NxRibbonService to hide and reset data', inject(
-    [NxRibbonService],
-    (service: NxRibbonService) => {
-      service.hide();
+    it('should use NxRibbonService to get data', inject(
+        [NxRibbonService],
+        (service: NxRibbonService) => {
+            const actions: RibbonAction[] = [{
+                type  : 'link',
+                text  : 'Go back',
+                value : '/admin/cms/asset'
+            }];
+            const context = {
+                visibility     : true,
+                message        : 'Alcohol! Because no great story started with someone eating a salad.',
+                actions,
+                type           : '',
+                updateFunction : ''
+            };
 
-      expect(component.showRibbon).toBeFalsy();
-      expect(component.message).toBe('');
-      expect(component.action).toBe('');
-      expect(component.actionUrl).toBe('');
-    }
-  ));
+            service.show(context.message, context.actions, context.type, context.updateFunction);
+            fixture.detectChanges();
 
-  it('renders correctly', inject(
-    [NxRibbonService],
-    (service: NxRibbonService) => {
-      const context = {
-        message:
-          'Alcohol! Because no great story started with someone eating a salad.',
-        text: 'Go back',
-        url: '/admin/cms/asset'
-      };
+            service.contextSubject.subscribe((serviceContext) => {
+                expect(serviceContext).toEqual(context);
+            });
 
-      service.show(context.message, context.text, context.url);
-      fixture.detectChanges();
-      expect(fixture).toMatchSnapshot();
-    }
-  ));
+            spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+            expect(component.showRibbon).toBeTruthy();
+            expect(component.message).toBe(context.message);
+            expect(component.actions).toEqual(context.actions);
+        }
+    ));
+
+    it('should use NxRibbonService to hide and reset data', inject(
+        [NxRibbonService],
+        (service: NxRibbonService) => {
+            const context = {
+                visibility     : false,
+                message        : '',
+                actions        : [],
+                type           : '',
+                updateFunction : ''
+            };
+
+            service.hide();
+            fixture.detectChanges();
+
+            service.contextSubject.subscribe((serviceContext) => {
+                expect(serviceContext).toEqual(context);
+            });
+
+            spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+            expect(component.showRibbon).toBeFalsy();
+            expect(component.message).toBe('');
+            expect(component.actions).toEqual([]);
+        }
+    ));
 });

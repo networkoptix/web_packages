@@ -1,68 +1,110 @@
 import {
     Component, Input,
     Renderer2, ViewChild
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+}                         from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { of }             from 'rxjs';
+
+import { environment }                     from '@environments/environment';
+import { NxLanguageProviderService }       from '@services/nx-language-provider';
+import { NxConfigService, IConfig }        from '@services/nx-config';
+import { NxProcessService }                from '@services/process.service';
+import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
+import { NxToastService }                  from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-disconnect-content',
-    templateUrl: 'disconnect.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-disconnect-content',
+    templateUrl : 'disconnect.component.html',
+    styleUrls   : []
 })
 export class DisconnectModalContent {
-    @Input() systemId;
+    @Input() account;
+    @Input() system;
     @Input() disconnect;
     @Input() closable;
 
+    isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     password: string;
     wrongPassword: boolean;
     auth = {
-        password: ''
+        username : '',
+        password : ''
     };
+
+    hideErrors = true;
+    mediaServerApi: NxSystemAPI;
 
     @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
     constructor(
         language: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        configService: NxConfigService,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private systemApiService: NxSystemAPIService,
+        private toastService: NxToastService
     ) {
         this.LANG = language.translations;
+        this.CONFIG = configService.getConfig();
+        this.isLocal = environment.isLocal;
     }
 
     ngOnInit() {
+        const passwordError = () => {
+            this.wrongPassword = true;
+            this.auth.password = '';
+
+            this.renderer.selectRootElement('#password').focus();
+            return true;
+        };
         this.auth.password = '';
+        this.account
+            .get()
+            .then((account) => {
+                if (account) {
+                    this.auth.username = this.isLocal ? account.first_name : account.email;
+                }
+            });
 
         this.disconnect = this.processService.createProcess(() => {
             this.disconnectForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
 
-            return this.cloudApiService.disconnect(this.systemId, this.auth.password).toPromise();
+            if (this.isLocal) {
+                return this.disconnectLocal(this.auth.password);
+            }
+            return this.account.disconnect(this.system.id, this.auth.password);
         }, {
-            ignoreUnauthorized: true,
-            errorCodes        : {
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.auth.password = '';
-
-                    this.renderer.selectRootElement('#password').focus();
-                }
+            ignoreError        : true,
+            ignoreUnauthorized : true,
+            errorCodes         : {
+                'Wrong password.' : passwordError,
+                wrongPassword     : passwordError
             },
-            successMessage: this.LANG.toastMessage.system.disconnected.success,
-            errorPrefix   : this.LANG.errorCodes.cantDisconnectSystemPrefix
-        }).then(() => {
+            errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix()
+        }, res => {
             this.activeModal.close(true);
-        });
+            const options = {
+                classname : this.CONFIG.toast.success,
+                autohide  : true,
+                delay     : this.CONFIG.alertTimeout
+            };
+            this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
+        }, () => { });
     }
 
     close() {
         this.activeModal.close();
+    }
+
+    private disconnectLocal(password) {
+        this.mediaServerApi = this.systemApiService
+            .createConnection(undefined, undefined, undefined, () => of(''));
+
+        return this.mediaServerApi.disconnectFromCloud(password);
     }
 }

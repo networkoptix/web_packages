@@ -9,14 +9,14 @@ export class IpvdSearchService {
     private static TYPES = 'hardwareTypes';
     private static ANALYTICS = 'analytics';
 
-    private _vendors: any;
-    private _showAnalytics: any;
+    private _vendors;
+    private _showAnalytics;
 
     constructor() {
         this._vendors = [];
     }
 
-    set showAnalytics(show: boolean){
+    set showAnalytics(show: boolean) {
         this._showAnalytics = show;
     }
 
@@ -52,7 +52,7 @@ export class IpvdSearchService {
                 result = result || (lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
 
                 result = result || c.analyticsEvents.find((event) => {
-                    return event.toLowerCase().includes(queryLowerNoDashes)
+                    return event.toLowerCase().includes(queryLowerNoDashes);
                 });
             }
 

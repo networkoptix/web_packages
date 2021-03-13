@@ -1,17 +1,22 @@
 import { Injectable, OnDestroy }                       from '@angular/core';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
-import { NxConfigService, IConfig }                    from './nx-config';
-import { NxLanguageProviderService }                   from './nx-language-provider';
-import { NxCloudApiService }                           from './nx-cloud-api';
-import { NxPollService }                               from './poll.service';
-import { LocalStorageService }                         from 'ngx-store';
-import { NxToastService }                              from '../dialogs/toast.service';
-import { NxUtilsService }                              from './utils.service';
-import { NxUriService }                                from './uri.service';
-import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
-import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
-import { NxSystem }                                    from './system.service';
+
+import { NxConfigService, IConfig }  from './nx-config';
+import { NxLanguageProviderService } from './nx-language-provider';
+import { NxCloudApiService }         from './nx-cloud-api';
+import { NxPollService }             from './poll.service';
+import { NxToastService }            from '../dialogs/toast.service';
+import { NxUtilsService }            from './utils.service';
+import { NxUriService }              from './uri.service';
+import { NxRibbonService }           from '../components/ribbon/ribbon.service';
+import { NxSystem }                  from './system.service';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { NxStorageService }          from './storage.service';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -19,15 +24,14 @@ import { NxSystem }                                    from './system.service';
 export class NxSystemsService implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    activeSubscription: Subscription;
-    currentUser: string;
-    mergingSystems: Set<string>;
-    // TODO: Having trouble creating type for systems and systemPoll
-    systems: any;
-    systemsPoll: any;
-    systemsSubject = new ReplaySubject(0);
+    private activeSubscription: Subscription;
+    private currentUser: string;
+    private mergingSystems: Set<string>;
+    systems: NxSystemWithUserInfo[];
+    systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
+    systemsSubject = new ReplaySubject<NxSystemWithUserInfo[]>(0);
     finishedMerged = false;
-    systemsMerging: { primary: any, secondary: any } = {
+    systemsMerging: { primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo } = {
         primary   : undefined,
         secondary : undefined
     };
@@ -37,18 +41,20 @@ export class NxSystemsService implements OnDestroy {
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
         private cloudApi: NxCloudApiService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
-        this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
+        if (!this.CONFIG.isLocal) {
+            this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+        }
         this.mergingSystems = new Set();
     }
 
-    processMerge(mergeInfo: any) {
+    processMerge<T extends {primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo}>(mergeInfo: T) {
         this.systemsMerging.primary = mergeInfo.primary;
         this.systemsMerging.secondary = mergeInfo.secondary;
     }
@@ -57,13 +63,15 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems.add(systemId);
     }
 
-    removeFromMergeList(systemId: string) {
+    private removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
 
-            const message = this.LANG.toastMessage.system.merge.success
-                .replace('{{primaryName}}', this.systemsMerging.primary.name)
-                .replace('{{secondaryName}}', this.systemsMerging.secondary.name);
+            const message = NxLanguageProviderService.translate(
+                this.LANG.toastMessage.system.merge.success, {
+                    primaryName   : this.systemsMerging.primary.name,
+                    secondaryname : this.systemsMerging.secondary.name
+                });
             this.systemsMerging = {
                 primary   : undefined,
                 secondary : undefined
@@ -78,9 +86,14 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    forceUpdateSystems(userEmail?: string): Observable<any> {
+    forceUpdateSystems(userEmail?: string): Observable<NxSystemWithUserInfo[]> {
         if (userEmail) {
             this.currentUser = userEmail;
+        }
+
+        if (this.CONFIG.isLocal) {
+            this.systemsSubject.next([]);
+            return of([]);
         }
 
         return this.cloudApi.systems().pipe(tap((systems) => {
@@ -89,7 +102,7 @@ export class NxSystemsService implements OnDestroy {
         }));
     }
 
-    forceUpdateSystemsAsPromise(userEmail?: string): Promise<any> {
+    forceUpdateSystemsAsPromise(userEmail?: string): Promise<NxSystemWithUserInfo[]> {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
@@ -104,7 +117,7 @@ export class NxSystemsService implements OnDestroy {
                 // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
-            return this.LANG.system.yourSystem;
+            return this.LANG.system.yourSystem();
         }
         // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
@@ -115,7 +128,7 @@ export class NxSystemsService implements OnDestroy {
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail: string, currentSystemId: string) {
+    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystem[] {
         return this.systems.filter((system) => {
             return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
         }).sort((a, b) => {
@@ -123,7 +136,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId: string, useCache = true) {
+    getSystem(systemId: string, useCache = true): Observable<NxSystemWithUserInfo> {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -151,7 +164,7 @@ export class NxSystemsService implements OnDestroy {
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap((systems: NxSystem[]) => this.processSystems(systems)),
+                tap((systems: NxSystemWithUserInfo[]) => this.processSystems(systems)),
                 distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
@@ -164,23 +177,24 @@ export class NxSystemsService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.systemsPoll) {
-            this.systemsPoll.unsubscribe();
+        if (this.activeSubscription) {
+            this.stopPoll();
         }
     }
 
-    private processSystems(systems: NxSystem[]) {
+    private processSystems(systems: NxSystemWithUserInfo[]) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
-            system.isMine = system.ownerAccountEmail === this.currentUser;
-            system.canMerge = system.isMine && (system.capabilities &&
-                system.capabilities.cloudMerge ||
+            system.name = system.name || system.systemName;
+            system.isMine = system.ownerAccountEmail === this.currentUser || system.currentUser?.isLocalOwner;
+            system.canMerge = system.isMine &&
+            (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                const currentSystemId = this.localStorage.get('systemId');
+                const currentSystemId = this.storageService.systemId;
                 if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
                     this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
                 }
@@ -192,7 +206,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    private sortSystems(systems: NxSystem[], currentUserEmail: string): NxSystem[] {
+    private sortSystems(systems: NxSystemWithUserInfo[], currentUserEmail: string): NxSystemWithUserInfo[] {
         // Alphabet sorting
         const preSort = systems.sort((systemA, systemB) => {
             const systemAName = this.getSystemOwnerName(systemA, currentUserEmail, true);
@@ -205,4 +219,15 @@ export class NxSystemsService implements OnDestroy {
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }
+}
+
+export interface NxSystemWithUserInfo extends NxSystem {
+    ownerAccountEmail: string;
+    ownerFullName: string;
+    name: string;
+    systemName: string;
+    isMine: boolean;
+    capabilities: IParams;
+    state: string;
+    stateOfHealth: string;
 }

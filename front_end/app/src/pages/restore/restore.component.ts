@@ -1,17 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router }   from '@angular/router';
+import { Component, Input, OnInit }  from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
 
-import { NxUriService }              from '../../services/uri.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { LocalStorageService }       from 'ngx-store';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxAccountService }          from '../../services/account.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxSessionService }          from '../../services/session.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { NxSessionService }          from '@services/session.service';
 
 @Component({
     selector    : 'nx-restore-component',
@@ -27,14 +27,15 @@ export class NxRestoreComponent implements OnInit {
     CONFIG: IConfig;
 
     uriParamEmail: string;
-    change: any;
-    restore: any;
-    data: any;
-    restoring: any;
-    restoringSuccess: any;
-    changeSuccess: any;
-    context: any;
+    change: Process;
+    restore: Process;
+    data;
+    restoring;
+    restoringSuccess;
+    changeSuccess;
+    context;
     ready: boolean;
+    hideErrors = true;
     uriParamLogout: string;
 
     private setupDefaults() {
@@ -52,7 +53,7 @@ export class NxRestoreComponent implements OnInit {
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
-        private localStorage: LocalStorageService,
+        private storageService: NxStorageService,
         private uriService: NxUriService,
         private dialogs: NxDialogsService,
         private route: ActivatedRoute,
@@ -71,13 +72,13 @@ export class NxRestoreComponent implements OnInit {
             if (this.sessionService.loginState) {
                 await this.accountService.logout(true);
             }
-            this.localStorage.remove('email');
+            this.sessionService.email = '';
         }
 
         this.ready = false;
         // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
         // updateURI causes component to be re-created
-        this.context.process = this.localStorage.get('restoreProcess');
+        this.context.process = this.storageService.restoreProcess;
 
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
@@ -91,7 +92,7 @@ export class NxRestoreComponent implements OnInit {
 
         this.data = {
             newPassword : '',
-            email       : this.uriParamEmail || this.localStorage.get('email') || '',
+            email       : this.uriParamEmail || this.storageService.email,
             restoreCode : this.uriParamCode
         };
 
@@ -133,14 +134,14 @@ export class NxRestoreComponent implements OnInit {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
             errorCodes: {
-                notFound      : this.LANG.errorCodes.wrongCodeRestore,
-                notAuthorized : this.LANG.errorCodes.wrongCodeRestore
+                notFound      : this.LANG.errorCodes.wrongCodeRestore?.(),
+                notAuthorized : this.LANG.errorCodes.wrongCodeRestore?.()
             },
             ignoreUnauthorized : true,
             holdAlerts         : true,
-            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.()
         }).then(() => {
-            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess?.();
             this.setContext('changeSuccess');
             this.dialogs.dismiss();
             this.uriService
@@ -154,13 +155,13 @@ export class NxRestoreComponent implements OnInit {
             return this.cloudApiService.restorePasswordRequest(this.data.email);
         }, {
             errorCodes: {
-                notFound: this.LANG.errorCodes.emailNotFound
+                notFound: this.LANG.errorCodes.emailNotFound?.()
             },
             ignoreUnauthorized : true,
             holdAlerts         : true,
-            errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix
+            errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix?.()
         }).then(() => {
-            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess?.();
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');
@@ -182,11 +183,11 @@ export class NxRestoreComponent implements OnInit {
 
     setContext(name) {
         this.context.process = name;
-        this.localStorage.set('restoreProcess', name);
+        this.storageService.restoreProcess = name;
     }
 
     setEmail(email) {
-        this.localStorage.set('email', email);
+        this.storageService.email = email;
     }
 
     private checkContexts(arr) {

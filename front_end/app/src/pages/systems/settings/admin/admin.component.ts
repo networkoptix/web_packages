@@ -1,28 +1,38 @@
-import { Component, OnDestroy, OnInit }   from '@angular/core';
-import { Params, Router, ActivatedRoute } from '@angular/router';
-import { NxConfigService, IConfig }       from '../../../../services/nx-config';
-import { NxPageService }                  from '../../../../services/page.service';
-import { NxDialogsService }               from '../../../../dialogs/dialogs.service';
-import { NxSettingsService }              from '../settings.service';
-import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
-import { NxMenuService }                  from '../../../../components/menu/menu.service';
-import { NxSystemsService }               from '../../../../services/systems.service';
-import { NxAccountService }               from '../../../../services/account.service';
-import { NxProcessService }               from '../../../../services/process.service';
-import { NxSystem }                       from '../../../../services/system.service';
-import { Subscription }                   from 'rxjs';
-import { auditTime }                      from 'rxjs/operators';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
-import { NxCloudApiService }              from '../../../../services/nx-cloud-api';
-import { NxUriService }                   from '../../../../services/uri.service';
+import {
+    Component, Inject, OnDestroy,
+    OnInit, ViewContainerRef
+}                                    from '@angular/core';
+import {
+    Params, Router, ActivatedRoute
+}                                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { auditTime }                 from 'rxjs/operators';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService }          from '@services/process.service';
+import { NxSystem, NxSystemUser }    from '@services/system.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxSettingsService }         from '../settings.service';
+import { NxMenuService }             from '../../../../menu';
+import { NxPageService }             from '@services/page.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxAccountService }          from '@services/account.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxToastService }            from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxApplyService, Watcher }   from '@services/apply.service';
+import { WINDOW }                    from '@services/window-provider';
+import { CookieService }             from 'ngx-cookie-service';
 
 interface Settings {
     disconnectDisabled: boolean;
     renameDisabled: boolean;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-admin-component',
     templateUrl : 'admin.component.html',
@@ -31,13 +41,17 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    user: NxSystemUser;
     system: NxSystem;
-    systems: any;
+    systems;
     params: Params;
 
+    systemNameWatcher = new Watcher('');
+    emptyName = false;
+
     advanced: boolean;
-    userDisconnectSystem: any;
-    deletingSystem: any;
+    userDisconnectSystem;
     currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;
@@ -48,8 +62,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     systemSubscription: Subscription;
     currentMergeInfo: any = undefined;
     merging: boolean;
+    editMode = false;
 
-    settingsForSystem: any;
+    settingsForSystem;
+
+    get systemName() {
+        return this.systemNameWatcher.value;
+    }
+
+    set systemName(value) {
+        this.systemNameWatcher.value = value;
+    }
 
     private setupDefaults() {
         this.params = this.route.snapshot.queryParams;
@@ -57,8 +80,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
-        this.menuService.setSection('admin');
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.admin.id);
+        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+        this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
     }
 
     private updateSettings(forceMergeState?: boolean) {
@@ -71,7 +94,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
+        private cookieService: CookieService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private pageService: NxPageService,
@@ -82,10 +106,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private uriService: NxUriService,
         private router: Router,
         private route: ActivatedRoute,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
+        private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
+        @Inject(WINDOW) private window: Window,
+        private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
+        this.LANG = languageService.translations;
 
         this.setupDefaults();
     }
@@ -93,6 +122,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     ngOnInit(): void {
+        this.accountService.get()
+            .then((account) => {
+                // @ts-ignore
+                this.user = account;
+            });
+
         this.settings = {
             disconnectDisabled : false,
             renameDisabled     : false
@@ -101,7 +136,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.settingsServiceSubscription) {
             this.settingsServiceSubscription.unsubscribe();
         }
-
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
@@ -110,7 +144,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.system = system;
-                this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
+                this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
+                this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
+                this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+                this.applyService.reset();
+
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -121,40 +159,66 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         if (this.system && !this.system.isAvailable && system && system.isAvailable) {
                             this.system = system;
                         }
-
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
-                        this.synceMergeAlerts();
+                        this.syncMergeAlerts();
+
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
-                        this.settingsSubscription = this.system.updateOrGetSystemSettings()
-                            .subscribe((res: any) => {
-                                this.settingsForSystem = res.reply.settings;
-                            }, (err) => {
-                                this.settingsForSystem = false;
-                                console.error(err);
-                            });
+                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.permissions.isAdmin)) {
+                            this.settingsSubscription = this.system.updateOrGetSystemSettings()
+                                .subscribe((response: any) => {
+                                    if (response.reply) {
+                                        this.settingsForSystem = response.reply.settings;
+                                    }
+                                }, (err) => {
+                                    this.settingsForSystem = false;
+                                    console.error(err);
+                                });
+                        }
                     });
-                this.deletingSystem = this.processService.createProcess(
-                    () => this.system.deleteFromCurrentAccount(),
-                    {
-                        successMessage : this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
-                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }
-                ).then(
-                    () => { this.updateAndGoToSystems(); },
-                    error => error
-                );
             });
+
+        this.applyService.initPageWatcher(this.applyContainerRef);
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.systemNameWatcher],
+            this.processService.createProcess(() => {
+                if (this.systemNameWatcher.changed) {
+                    if (/^\s+$/.test(this.systemName) || this.systemName.trim() === this.systemNameWatcher.originalValue) {
+                        this.systemNameWatcher.reset();
+                        return Promise.resolve();
+                    }
+                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
+                        .then(() => {
+                            this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
+                        }).catch(() => {
+                            this.systemNameWatcher.reset();
+                            const options = {
+                                classname : this.CONFIG.toast.warning,
+                                autohide  : true,
+                                delay     : this.CONFIG.alertTimeout
+                            };
+                            this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
+                        });
+                } else {
+                    return Promise.resolve();
+                }
+            }),
+            this.systemNameWatcher.reset
+        );
     }
 
-    synceMergeAlerts() {
-        if (this.system && this.system.mergeInfo) {
+    syncMergeAlerts() {
+        if (this.system?.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
-        } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+        } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
-            this.systemsService.forceUpdateSystems().toPromise();
+            if (!this.CONFIG.isLocal) {
+                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
+            } else {
+                this.ribbonService.hide();
+            }
         }
 
         if (this.systemsSubscription) {
@@ -169,14 +233,31 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    disconnect() {
-        const handleDisconnect = () => this.dialogs.disconnect(this.system.id)
+    connectLocalToCloud() {
+        this.dialogs
+            .connectLocalToCloud(this.accountService, this.system)
             .then((result) => {
                 if (result) {
-                    this.updateAndGoToSystems();
+                    // give the user chance to read the toaster
+                    setTimeout(() => window.location.reload(), 2000);
                 }
             });
-        if (this.system.isMine) {
+    }
+
+    disconnectFromCloud() {
+        const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
+            .then((result) => {
+                if (result) {
+                    if (this.CONFIG.isLocal) {
+                        // give the user chance to read the toaster
+                        setTimeout(() => window.location.reload(), 2000);
+                    } else {
+                        this.updateAndGoToSystems();
+                    }
+                }
+            });
+
+        if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }
@@ -184,12 +265,31 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
                 const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
                 this.dialogs.confirm(message, title, ok);
-            }).catch(handleDisconnect);
+            }).catch(() => {
+                // User is the owner. Deleting system means unbinding it and disconnecting all accounts
+                // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
+                this.dialogs
+                    .disconnect(this.accountService, this.system)
+                    .then((result) => {
+                        if (result) {
+                            if (NxConfigService.isLocal && this.system.currentUser.isCloud) {
+                                this.accountService.logout();
+                            } else {
+                                if (NxConfigService.isLocal) {
+                                    // give the user chance to read the toaster
+                                    setTimeout(() => window.location.reload(), 2000);
+                                } else {
+                                    this.updateAndGoToSystems();
+                                }
+                            }
+                        }
+                    });
+            });
         }
     }
 
-    updateAndGoToSystems() {
-        this.userDisconnectSystem = true;
+    updateAndGoToSystems = () => {
+        // this.userDisconnectSystem = true;
         this.systemsService
             .forceUpdateSystems(this.accountService.email)
             .subscribe(() => {
@@ -206,31 +306,41 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
+            if (this.CONFIG.isLocal) {
+                return this.dialogs.removeSystem(this.system)
+                    .then((response) => {
+                        if (response) {
+                            setTimeout(() => {
+                                this.cookieService.delete('x-runtime-guid');
+                                this.window.location.reload();
+                            }, 6000);
+                        }
+                    });
+            }
             this.dialogs.confirm(
-                this.LANG.dialogs.removeSystem.message,
-                this.LANG.dialogs.removeSystem.title,
-                this.LANG.dialogs.removeSystem.action,
+                this.LANG.dialogs.removeSystem.message(),
+                this.LANG.dialogs.removeSystem.title(),
+                this.LANG.dialogs.removeSystem.action(),
                 'btn-danger',
-                this.LANG.dialogs.buttons.cancel
+                this.LANG.dialogs.buttons.cancel()
             ).then((result) => {
                 if (result === true) {
-                    return this.deletingSystem.run();
+                    return this.system.deleteFromCurrentAccount().subscribe(res => {
+                        this.toastService.show(
+                            this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
+                            { classname: 'success' });
+                    }, err => {
+                        console.error(err);
+                        this.toastService.show(
+                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
+                            { classname: 'danger' }
+                        );
+                    },
+                    this.updateAndGoToSystems
+                    );
                 }
             });
         }
-    }
-
-    rename() {
-        return this.dialogs
-            .rename(this.system.id, this.system.info.name)
-            .then((finalName) => {
-                if (finalName) {
-                    this.system.info.name = finalName;
-                }
-
-                this.pageService.pageTitle = this.system.info.name;
-                this.systemsService.forceUpdateSystems(this.accountService.email);
-            });
     }
 
     mergeSystems() {
@@ -239,8 +349,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         return this.dialogs
-            .merge(this.system, this.systems, this.accountService)
-            .then((mergeInfo) => {
+            .merge(this.accountService, this.system, this.systems)
+            .then((mergeInfo: any) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
                     const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
@@ -252,15 +362,22 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }
-                const commonErrorMsg = this.LANG.dialogs.merge.commonText
-                    .replace('{{primarySystem}}', error.primarySystemName)
-                    .replace('{{secondarySystem}}', error.secondarySystemName);
-                let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
-                if (!responseError) {
-                    responseError = this.LANG.errorCodes.unknownMergeError;
-                } else {
-                    responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
+                const commonErrorMsg = NxLanguageProviderService.translate(
+                    this.LANG.dialogs.merge.commonText,
+                    { primarySystem: error.primarySystemName, secondarySystem: error.secondarySystemName }
+                );
+
+                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
+                if (this.CONFIG.cloudHost) {
+                    downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
                 }
+                const responseError = NxLanguageProviderService.translate(
+                    this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode] || this.LANG.errorCodes.unknownMergeError,
+                    {
+                        failedSystem: error.failedSystemName,
+                        downloadHTML
+                    }
+                );
 
                 // HTML needed for section formatting
                 const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
@@ -268,14 +385,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // Handling promise to satisfy the linter.
                 this.dialogs.confirm(
                     dialogBody,
-                    this.LANG.dialogs.merge.mergeFailedTitle,
-                    this.LANG.dialogs.buttons.ok,
+                    this.LANG.dialogs.merge.mergeFailedTitle(),
+                    this.LANG.dialogs.buttons.ok(),
                     'btn-primary',
                     undefined).then(() => {});
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
-                this.synceMergeAlerts();
+                this.syncMergeAlerts();
                 this.settingsService.system = this.system;
             });
     }
@@ -283,7 +400,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateUserRole() {
         let userRole = this.system.accessRole;
         if (this.system.accessRole in this.LANG.accessRoles) {
-            userRole = this.LANG.accessRoles[this.system.accessRole].label;
+            userRole = this.LANG.accessRoles[this.system.accessRole].label();
         }
         return userRole;
     }

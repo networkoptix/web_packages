@@ -1,7 +1,5 @@
 import { NgModule }              from '@angular/core';
 import { CommonModule }          from '@angular/common';
-import { BrowserModule }         from '@angular/platform-browser';
-import { UpgradeModule }         from '@angular/upgrade/static';
 import { TranslateModule }       from '@ngx-translate/core';
 
 import { NxGridLayoutComponent } from './layout.component';
@@ -13,24 +11,19 @@ import { DirectivesModule }      from '../../directives/directives.module';
 // ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule
         // RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
-    declarations   : [
-        NxGridLayoutComponent,
+    providers : [],
+    declarations : [
+        NxGridLayoutComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
-        NxGridLayoutComponent,
-    ],
-    exports        : [
+    bootstrap : [],
+    exports: [
         NxGridLayoutComponent
     ]
 })

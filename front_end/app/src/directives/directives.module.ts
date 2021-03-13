@@ -1,4 +1,6 @@
 import { NgModule }                   from '@angular/core';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
+
 import { NxArrowNavDirective }        from './nx-arrow-nav';
 import { NxClickElsewhereDirective }  from './nx-click-elsewhere';
 import { NxFocusMeDirective }         from './nx-focus-me';
@@ -9,10 +11,11 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
 import { NxEditableDirective }        from './nx-editable.directive';
 import { NxResizeObserver }           from './nx-resize.directive';
 import { NxAddSvgSrc }                from './add-data.directive';
-import { AngularSvgIconModule }       from 'angular-svg-icon';
+import { NxIntersectionObserver }     from './nx-intersection.directive';
+import { NxProjectedLinkHandler }     from './nx-projected-link-handler.directive';
 
 @NgModule({
-    imports     : [
+    imports: [
         AngularSvgIconModule.forRoot()
     ],
     declarations: [
@@ -25,10 +28,11 @@ import { AngularSvgIconModule }       from 'angular-svg-icon';
         NxUrlValidatorDirective,
         NxEditableDirective,
         NxResizeObserver,
-        NxAddSvgSrc
+        NxAddSvgSrc,
+        NxIntersectionObserver,
+        NxProjectedLinkHandler
     ],
-    entryComponents: [],
-    exports        : [
+    exports: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
@@ -38,7 +42,9 @@ import { AngularSvgIconModule }       from 'angular-svg-icon';
         NxUrlValidatorDirective,
         NxEditableDirective,
         NxResizeObserver,
-        NxAddSvgSrc
+        NxAddSvgSrc,
+        NxIntersectionObserver,
+        NxProjectedLinkHandler
     ]
 })
 export class DirectivesModule {

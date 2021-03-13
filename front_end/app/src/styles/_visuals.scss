@@ -1,10 +1,12 @@
-// @import '../../styles/custom/custom_palette';
-// @import '../../styles/theme_palette';
 @use '../../styles/theme_variables';
 
 .highlighted {
     display          : inline;
-    background-color : yellow;
+    background-color : rgba(theme_variables.$yellow_main, 0.5);
+}
+
+.brand-text {
+    color: theme_variables.$brand_core !important;
 }
 
 .ellipsis {

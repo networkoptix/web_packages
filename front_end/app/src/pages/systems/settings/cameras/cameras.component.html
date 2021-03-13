@@ -1,7 +1,7 @@
 <nx-pre-loader *ngIf="!show404 && showPreloader"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
-    <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
-    <ng-container *ngIf="!noCameras && selectedCamera && !show404 && system.permissions.editCameras">
+    <nx-page-placeholder *ngIf="!system || !system.isAvailable || !selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
+    <ng-container *ngIf="system && !noCameras && selectedCamera && !show404 && system.permissions.editCameras">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -36,26 +36,20 @@
             <nx-block header-style="extended">
                 <header>
                     <div class="header-top-bar mb-3">
-                        <div class="header-title" [ngClass]="{'w-100': editMode}">
-                            <h2 NxEditable
-                            #editTitle
-                            [(content)]="cameraName"
-                            (blur)="handleBlur()"
-                            (focus)="handleFocus()"
-                            id="editable-title"></h2>
-                        </div>
-                        <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
-                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20" alt="Edit icon image"/>
-                        </div>
-                        <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
+                        <nx-editable-settings-heading
+                                (editModeState)="editMode = $event"
+                                [nameWatcher]="cameraNameWatcher"
+                                [editEnabled]="system.permissions.isAdmin"
+                        ></nx-editable-settings-heading>
+                        <button *ngIf="!editMode" class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>
-                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyClass]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>View</span>
                         </button>
-                        <button *ngIf="canSeeInfo" class="camera-buttons"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                        <button *ngIf="canSeeInfo && !editMode" class="camera-buttons"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                             <span>
-                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyClass]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>
                         </button>
@@ -145,10 +139,10 @@
                         <h4 class="mb-3" translate>Mode</h4>
                             <nx-radio
                                 *ngFor="let mode of recordingModes" class="d-flex pb-2"
-                                [name]="LANG.common.recordingModes[mode.name]"
-                                [componentId]="LANG.common.recordingModes[mode.name]"
+                                [name]="LANG.common.recordingModes[mode.name]()"
+                                [componentId]="LANG.common.recordingModes[mode.name]()"
                                 [value]="mode.value"
-                                [label]="LANG.common.recordingModes[mode.name]"
+                                [label]="LANG.common.recordingModes[mode.name]()"
                                 [disabled]="!mode.enabled"
                                 [(ngModel)]="mode.value"
                                 (click)="toggleMode(mode)"
@@ -163,11 +157,13 @@
                                 <span class="text-right" translate>FPS</span>
                             </div>
                             <div class="grid-item mb-2 mb-lg-0">
-                                <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 15"
-                                    [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
-                                    [(ngModel)]="selectedFps"
-                                    #fpsInput
-                                    class="form-control input-sm"/>
+                                <input type="number" id="fps" name="fps" min="1" step="1"
+                                       [max]="selectedCamera.maxFps || 15"
+                                       [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
+                                       [(ngModel)]="selectedFps"
+                                       (keydown)="storePreviousValue($event)"
+                                       #fpsInput
+                                       class="form-control input-sm"/>
                             </div>
                             <div class="grid-item">
                                 <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>

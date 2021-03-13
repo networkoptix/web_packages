@@ -1,6 +1,5 @@
 @use '../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 /* Palette spec is here: http://4yppjt.axshare.com/#p=colors */
@@ -26,6 +25,8 @@ $themes : (
                 buttonBorder: 1px solid #333
         )
 );
+
+$theme-map : null;
 
 @mixin themify($themes: $themes) {
     @each $theme, $map in $themes {

@@ -3,30 +3,36 @@
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+            [ngClass]="{ 'small-icon-overrides': small}"
+            (resize)="buttonWidth.next($event.width)"
             (click)="show = !show"
-            type="button" id="accountSettingsSelect" data-toggle="dropdown">
-
-        <div class="popup arrow up"></div>
-
-        <span class="glyphicon glyphicon-user"></span>
-        <span class="ellipsis" [innerHTML]="settings.email"></span>
-        <div class="nav-arrow">
-            <span></span>
-            <span></span>
-        </div>
+            type="button" 
+            id="accountSettingsSelect"
+            data-toggle="dropdown">
+        <div class="popup arrow up" [ngClass]="{'invisible': !dropdownWidth$.value, 'small-override': small}"></div>
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.icons.dir + 'user.svg'" 
+            [svgStyle]="{'width.px': 24, 'height.px': 24, 'margin.px': small ? 8 : 10}"
+            [applyClass]="true"
+            ></svg-icon>
+        <span *ngIf="!small" class="user-email" [innerHTML]="settings.email"></span>
     </button>
-    <div class="dropdown-menu" [nxArrowNav]="show"
-         [style.display]="show ? 'inline-block' : 'none'"
-         aria-labelledby="accountSettingsSelect">
+    <div class="dropdown-menu"
+        [ngClass]="{'invisible': !show}"
+        (resize)="dropdownWidth$.next($event.width)"
+        [nxArrowNav]="show"
+        [style.display]="'inline-block'"
+        [style.right.px]="rightOffset$.value"
+        aria-labelledby="accountSettingsSelect">
 
-        <ul class="dropdown-menu--list">
-            <li class="dropdown-item-container">
-                <a class="dropdown-item inset" (click)="show = false; return;"
+        <ul class="dropdown-menu--list width-override">
+            <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
+                <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/" ><span translate>Account Settings</span>
                 </a>
             </li>
-            <li class="dropdown-item-container">
-                <a class="dropdown-item inset" (click)="show = false; return;"
+            <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
+                <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/password/"><span translate>Change Password</span>
                 </a>
             </li>
@@ -41,7 +47,7 @@
 
             <li class="dropdown-item-container">
                 <a class="dropdown-item inset"
-                   (click)="show = false; return;"
+                   (click)="this.show = false; true;"
                    href="/admin/" target="_blank">
                    <span translate>Administration</span>
                 </a>

@@ -1,46 +1,46 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Location } from '@angular/common';
+import {
+    Component, OnInit, Inject
+} from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
+import { SessionStorageService }     from 'ngx-webstorage';
+
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxPageService } from '../../services/page.service';
-import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
-import { ComponentsModule } from '../../components/components.module';
-import { SessionStorageService } from 'ngx-store';
-import { WINDOW } from '../../services/window-provider';
-import { NxAccountService } from '../../services/account.service';
-import { NxProcessService } from '../../services/process.service';
-import { NxCloudApiService } from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import {NxStaticCacheService} from "../../services/nx-static-cache";
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService, Account } from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { WINDOW }                    from '../../services/window-provider';
+import { NxStaticCacheService }      from '../../services/nx-static-cache';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'content-component',
-    templateUrl: 'content.component.html',
-    styleUrls : ['content.component.scss']
+    selector    : 'content-component',
+    templateUrl : 'content.component.html',
+    styleUrls   : ['content.component.scss']
 })
-
 export class NxContentComponent implements OnInit {
-    private title: string;
-    private body: SafeHtml;
-    private staticHTML: SafeHtml;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
+    public title: string;
+    public body: SafeHtml;
+    public loaded = false;
+
+    private staticHTML: string;
     private articleParam: string;
     private state: string;
     private id: string;
     private langCode: string;
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
-    private loaded = false;
-    private staticContent: any;
+    private staticContent;
 
     private agreement: boolean;
     private agreementDetails: any = {};
-    private account: any;
-    private showAgree = false;
-    private agreeProcess: any;
-
-    @ViewChild('title', { static: true }) titleElement;
+    private account: Account;
+    public showAgree = false;
+    public agreeProcess: Process;
 
     private setupDefaults() {
         this.title = '';
@@ -48,16 +48,14 @@ export class NxContentComponent implements OnInit {
         this.staticHTML = '';
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window,
         private route: ActivatedRoute,
         private router: Router,
         private http: HttpClient,
-        private location: Location,
-        private language: NxLanguageProviderService,
         private pageService: NxPageService,
-        private _compiler: Compiler,
         private sessionStorage: SessionStorageService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
@@ -66,23 +64,23 @@ export class NxContentComponent implements OnInit {
         private staticCacheService: NxStaticCacheService
     ) {
         this.setupDefaults();
-        this.langCode = this.language.currentLanguage;
         this.CONFIG = configService.getConfig();
+        this.langCode = languageService.currentLanguage;
         this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
-        this.staticContent = JSON.parse(this.sessionStorage.get('staticContent')) || {};
+        this.staticContent = JSON.parse(this.sessionStorage.retrieve('staticContent')) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
         window.onbeforeunload = (event) => {
-            this.sessionStorage.remove('staticContent');
+            this.sessionStorage.clear('staticContent');
         };
 
         this.agreeProcess = this.processService.createProcess(() => {
             return this.cloudApiService.acceptAgreement(this.agreementDetails.review_id);
         }, {
-            successMessage: this.LANG.account.agreementAccepted
+            successMessage: this.LANG.account.agreementAccepted?.()
         }).then(() => {
             this.showAgree = false;
             if (this.account.is_staff) {
@@ -93,19 +91,19 @@ export class NxContentComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.accountService.get().then(account => {
-            this.account = account;
-            this.subscribeParams();
-        });
+            if (account) {
+                this.account = account;
+            }
+        }).finally(() => this.subscribeParams());
     }
 
     subscribeParams() {
         this.route.paramMap.subscribe((paramMap) => {
-            this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
+            this.agreement = this.route.snapshot.parent.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
             this.title = '';
             this.body = '';
-            this.staticHTML = '';
             this.loaded = false;
             this.showAgree = false;
             if (this.agreement) {
@@ -132,11 +130,16 @@ export class NxContentComponent implements OnInit {
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
-        this.http.get(uri, { params }).subscribe(
+        let headers = new HttpHeaders().set('ngsw-bypass', 'true');
+        if (this.account && this.account.is_staff) {
+            headers = headers.set('ngsw-bypass', 'true');
+        }
+        this.http.get(uri, { headers, params }).subscribe(
             (data: any) => {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.pageTitle = this.title;
+                this.pageService.pageDescription = data.shortDescription;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;
@@ -152,27 +155,29 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.location.go('404');
+                    this.pageService.show404();
                 }
             });
     }
 
     loadStaticContent() {
-        this.staticCacheService.requestStatic(this.articleParam).subscribe(
-            html => {
-                this.staticHTML = this.sanitizer.bypassSecurityTrustHtml(html);
-                const titleRegex = /#title.*>(.*)</m;
-                const match = titleRegex.exec(html);
-                if (match && match[1]) {
-                    this.pageService.pageTitle = match[1];
-                }
+        const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
+
+        this.cloudApiService
+            .getStatic(templateUrl)
+            .toPromise()
+            .then((result) => {
+                this.body = this.sanitizer.bypassSecurityTrustHtml(result);
                 this.loaded = true;
+                /* If content was successfully compiled from static files,
+                    add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;
-                this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-            },
-            error => {
-                console.error(error);
-                this.location.go('404');
+                this.sessionStorage.store('staticContent', JSON.stringify(this.staticContent));
+            }).catch((e) => {
+                if (e.status === 404) {
+                    this.pageService.show404();
+                }
+                console.error(e);
             });
     }
 }

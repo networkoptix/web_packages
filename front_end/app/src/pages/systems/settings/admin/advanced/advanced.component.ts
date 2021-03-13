@@ -1,68 +1,65 @@
 import {
-    Component, Inject,
-    OnDestroy, Input, OnChanges,
-    SimpleChanges
-}                                    from '@angular/core';
+    Component,
+    OnDestroy, Input, ViewChild
+} from '@angular/core';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
-    map, delay,
-    retryWhen, take
+    map, delay, retryWhen, take
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSettingsService }         from '../../settings.service';
-import { NxMenuService }             from '../../../../../components/menu/menu.service';
+import { NgForm }                    from '@angular/forms';
 
-@AutoUnsubscribe()
+import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
+import { NxSettingsService }            from '../../settings.service';
+import { NxConfigService, IConfig }     from '../../../../../services/nx-config';
+import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
+import { NxProcessService, Process }    from '../../../../../services/process.service';
+import { NxSystem }                     from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
+import { FormWatcher, NxApplyService }  from '../../../../../services/apply.service';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-advanced-admin-component',
     templateUrl : 'advanced.component.html',
     styleUrls   : ['advanced.component.scss']
 })
 
-export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
+export class NxSystemAdvancedAdminComponent implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @Input() system: any;
+    @Input() system: NxSystem;
+    @ViewChild('systemSettingsForm', { static: true }) systemSettingsForm: NgForm
 
     haveAdvSettings: boolean;
-    saveSettings: any;
     private serverSubscription: Subscription;
+    private settingsSubscription: Subscription;
 
     systemSettings: any = {};
+    changedFields = {};
+
+    formWatcher: FormWatcher;
+    saveSettings: Process;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private applyService: NxApplyService,
         private settingsService: NxSettingsService,
         private processService: NxProcessService,
-        private menuService: NxMenuService,
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system) {
-            this.init();
-        }
-    }
-
     ngOnDestroy(): void {
     }
 
-    init() {
+    ngOnInit() {
         this.settingsService.footerSubject.next(true);
 
-        if (this.serverSubscription) {
-            this.serverSubscription.unsubscribe();
-        }
         this.serverSubscription = this.system.infoSubject
             .pipe(
                 map((system: any) => {
@@ -84,31 +81,55 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
 
         this.saveSettings = this.processService.createProcess(() => {
             return this.system
-                .updateOrGetSystemSettings(this.settingsToBeSaved())
+                .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
-                .then(response => {
-                    this.settingsToBeDisplayedOrUpdated(response.reply.settings);
+                .then((response: any) => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error)
+                            .alert(errorToShow, this.LANG.dialogs.titles.error?.())
                             .catch(error => {
                                 console.error(error);
                             });
                     } else {
+                        this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
+                            .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
+                            .then(() => {
+                                this.formWatcher.hardReset();
+                            })
                             .catch(error => {
                                 console.error(error);
                             });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved, this.LANG.dialogs.titles.error)
+                        .alert(this.LANG.dialogs.message.settingsNotSaved?.(), this.LANG.dialogs.titles.error?.())
                         .catch(error => {
                             console.error(error);
                         });
                 });
+        });
+
+        this.formWatcher = this.applyService.createFormWatcher(
+            null,
+            this.systemSettingsForm,
+            this.saveSettings
+        );
+        this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
+
+        this.formWatcher.valueSubject.subscribe((values) => {
+            if (values) {
+                Object.entries(values).forEach(([key, current]) => {
+                    const original = this.systemSettings[key];
+                    const changed = current !== original;
+                    if (changed) {
+                        this.changedFields[key] = current;
+                    } else if (key in this.changedFields) {
+                        delete this.changedFields[key];
+                    }
+                });
+            }
         });
     }
 
@@ -117,63 +138,38 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     }
 
     getAdvancedSettings() {
-        this.system.updateOrGetSystemSettings({ ignore: 'installedUpdateInformation,targetUpdateInformation' })
+        this.system.updateOrGetSystemSettings()
             .toPromise()
-            .then(response => {
+            .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
             });
     }
 
-    settingsToBeDisplayedOrUpdated(settings) {
-        const standardSettingsToExclude = [
-            'autoDiscoveryEnabled',
-            'statisticsAllowed',
-            'cameraSettingsOptimization',
-            'auditTrailEnabled',
-            'trafficEncryptionForced',
-            'videoTrafficEncryptionForced',
-            'sessionLimitMinutes'
-        ];
+    getDescription(key) {
+        return this.LANG.settingsConfig[key] ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key]) : key;
+    }
 
-        Object.keys(settings).forEach((key) => {
-            if (standardSettingsToExclude.includes(key)) {
-                return;
+    settingsToBeDisplayedOrUpdated = (settings) => {
+        Object.entries(settings).reduce((systemSettings, [key, value]) => {
+            // CLOUD-6350: Refactor advanced global settings page
+            // if a key is missing from settingsConfig it is not displayed or updated
+            if (!this.CONFIG.settingsConfig[key] || this.CONFIG.settingsConfig[key].hiddenInAdvanced) {
+                return systemSettings;
             }
-            const value = settings[key];
-            if (!this.CONFIG.settingsConfig[key]) {
-                let type = 'text';
-                if (value === true || value === false ||
-                    value === 'true' || value === 'false') {
-                    type = 'checkbox';
-                }
-                this.CONFIG.settingsConfig[key] = { label: key, type: type };
-            }
-
-            this.systemSettings[key] = {};
 
             switch (this.CONFIG.settingsConfig[key].type) {
                 case 'number':
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = (value !== '') ? parseInt(value) : '';
+                    systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
                     break;
                 case 'checkbox':
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = (value === 'true');
+                    systemSettings[key] = (typeof value === 'boolean') ? value : (value === 'true');
                     break;
                 default:
-                    this.systemSettings[key].value = this.systemSettings[key].originalValue = value;
+                    systemSettings[key] = value;
             }
-        });
-    }
 
-    settingsToBeSaved() {
-        const serverSettings = {};
-
-        Object.keys(this.systemSettings).forEach((key) => {
-            if (this.systemSettings[key].value !== this.systemSettings[key].originalValue) {
-                serverSettings[key] = this.systemSettings[key].value;
-            }
-        });
-
-        return serverSettings;
+            return systemSettings;
+        }, this.systemSettings);
     }
 }

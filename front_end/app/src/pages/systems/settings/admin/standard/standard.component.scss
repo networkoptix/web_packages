@@ -14,8 +14,7 @@ label {
 }
 
 .helper-block {
-    @include typography.regular12;
-    color       : $light16;
+    @include typography.regular12light;
     margin      : 2px 0 8px 22px;
     line-height : 16px;
 }
@@ -30,7 +29,7 @@ nx-block div.checkbox-block:last-of-type + .helper-block {
 }
 
 .time-unit-input {
-    width        : 70px;
+    width        : 70px !important;
     margin-right : 8px;
 }
 

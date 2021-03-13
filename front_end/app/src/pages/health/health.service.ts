@@ -20,10 +20,10 @@ export class NxHealthService {
     tableReadySubject = new BehaviorSubject(undefined);
 
     importedData: boolean;
-    tableHeaders: any;
-    panelParams: any;
+    tableHeaders;
+    panelParams;
 
-    alertsValues: any;
+    alertsValues;
     alertsCount = {
         warning : 0,
         error   : 0
@@ -181,7 +181,7 @@ export class NxHealthService {
                     return (c.searchTags.includes(queryTerm));
                 } else {
                     // If no dash in query -> include results with and without dash
-                    return (c.searchTags.replace(/-/g, '').includes(queryTerm));
+                    return c.searchTags.replace(/-/g, '').includes(queryTerm);
                 }
             });
         }
@@ -211,17 +211,17 @@ export class NxHealthService {
         let types;
         let servers;
 
-        const typeAlert = filter.selects && filter.selects.find(x => x.id === NxHealthService.ALERTS);
+        const typeAlert = filter.selects?.find(x => x.id === NxHealthService.ALERTS);
         if (typeAlert !== undefined) {
             alarms = typeAlert.selected;
         }
 
-        const typeTypes = filter.selects && filter.selects.find(x => x.id === NxHealthService.TYPES);
+        const typeTypes = filter.selects?.find(x => x.id === NxHealthService.TYPES);
         if (typeTypes !== undefined) {
             types = typeTypes.selected;
         }
 
-        const typeServers = filter.selects && filter.selects.find(x => x.id === NxHealthService.SERVERS);
+        const typeServers = filter.selects?.find(x => x.id === NxHealthService.SERVERS);
         if (typeServers !== undefined) {
             servers = typeServers.selected;
         }
@@ -240,9 +240,9 @@ export class NxHealthService {
     }
 
     findEntityName(entity) {
-        if (entity._ && entity._.name) {
+        if (entity._?.name) {
             return entity._.name.text;
-        } else if (entity.info && entity.info.name) {
+        } else if (entity.info?.name) {
             return entity.info.name.text;
         } else {
             return '−';

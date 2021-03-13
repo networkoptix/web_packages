@@ -2,9 +2,10 @@ import {
     Component, Input, Renderer2
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -20,31 +21,32 @@ export class RemoveUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    removeUserProcess: any;
+    removeUserProcess: Process;
     dialogTitle: string;
     dialogButtonText: string;
 
-    constructor(public activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private processService: NxProcessService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.translations;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
         const msg = this.user.isCloud ? 'remove' : 'delete';
-        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
-        this.dialogButtonText = this.LANG.dialogs.buttons[msg];
+        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();
+        this.dialogButtonText = this.LANG.dialogs.buttons[msg]?.();
 
         this.removeUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.user).then(() => {
                 return this.system.getUsers(true);
             });
         }, {
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
         }).then(() => {
             this.activeModal.close(true);
         });

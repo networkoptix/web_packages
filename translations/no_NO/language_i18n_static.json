@@ -1,11 +1,11 @@
 {
+    "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
     "Download %VMS_NAME%": "Last ned %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "Personvern",
     "Support": "Brukerstøtte",
-    "Supported Devices": "Støttede enheter",
     "Terms": "Vilkår",
     "accessRoles": {
         "Administrator": {
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Konto opprettet",
-                "message": "Bekreftelsesmelding med aktiveringslenken sendes til {{email}}"
+                "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
                 "title": "Kontoen er aktivert"
@@ -129,6 +129,7 @@
             "unauthorized": "Autentisering kreves"
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
+        "login": "login",
         "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -145,7 +146,10 @@
             "low": "Lav"
         },
         "general": "Generell",
+        "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Søk",
+        "system": "system",
         "systemHasNoCameras": "Ingen kameraer",
         "systemHasNoCamerasMessage": "Det er ingen tilgjengelige kameraer for deg i systemet. <br><br>Koble noen få kameraer til serverens lokale nettverk for å gjøre dem synlige, eller be systemadministratoren om å endre tilgangsnivået ditt.",
         "systemNewVersion": "Oppdater systemet ditt",
@@ -157,7 +161,6 @@
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
-        "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
         "unknown": "Ukjent",
         "vendor": "Leverandør",
         "model": "Modell",
@@ -201,8 +204,8 @@
             "title": "Cloud-lagring",
             "enableStorage": "Aktiver skylagring",
             "otherSystem": "Annet system...",
-            "initial": "Vi tilbyr {{compCapacity}} av kompatibel skylagring per system for å komme i gang.",
-            "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {{vmsName}} klienten.",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "kamera",
             "cameras": "kameraer",
             "usageLabels": {
@@ -227,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "Flytt skylagring",
-                "success": "Lagring flyttet",
+                "success": "Storage successfully moved",
                 "errorPrefix": "Feil ved flytting av skylagring",
                 "notFound": "Lagring ikke funnet. Lagring kan ha blitt flyttet eller slettet av en annen bruker",
                 "status": {
@@ -242,16 +245,20 @@
                 "message": "Du kan bare flytte skylagring mellom systemer du er eier av. <br/><br/>Koble et system til %CLOUD_NAME% ved hjelp av skykontoen din for å kunne flytte skylagring til den."
             }
         },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
         "merge": {
-            "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Feil passord for lokal admin bruker",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "Kontrollerer...",
-            "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
-            "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-            "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
-            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Slå sammen nåværende system med",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "noServerFound": "Ingen server funnet",
@@ -260,27 +267,31 @@
             "ownerCanMergeText": "Du kan bare slå sammen systemer der du er eieren",
             "passwordRequired": "Passord er påkrevd",
             "passwordWrong": "Feil passord",
-            "primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
-            "primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Vi anbefaler at du rådfører deg med",
                 "b_support": "brukerstøtte",
                 "c_proceeding": "før du fortsetter."
             },
-            "secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste build</a> å slå dert sammen med det nåværende.",
-            "secondarySystemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server ved {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Kan ikke få tilgang til {{targetSystem}} systemet.</p><p>Kontroller at den angitte serveren er pålogget og prøv igjen.</p>",
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
-            "systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med den gjeldende",
-            "systemOfflineUrl": "{{targetSystem}} er utilgjengelig.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Det vil være mer enn <strong>{{maxServers}}</strong> servere i det sammenslåtte systemet."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
             "storageSettingsSaved": "Innstillinger for lagring lagret.",
@@ -295,22 +306,22 @@
             },
             "sent": "Meldingen er sendt.",
             "subject": {
-                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
-                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
-                "sales_inquiry": "Salgsforespørsel for {{asset}}",
-                "technical_inquiry": "Teknisk forespørsel for {{asset}}"
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             }
         },
         "removeSystem": {
             "action": "Koble fra",
-            "message": "Du vil ikke kunne logge deg på dette systemet lenger.",
-            "title": "Disconnect System from your Account?"
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
         },
         "titles": {
             "error": "Feil",
@@ -320,9 +331,9 @@
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
             "removeUser": "Vil du fjerne bruker?",
-            "serversDetach": "Vil du fjerne serveren \"{{ title }}\" fra gjeldende system?",
-            "serversReset": "Vil du tilbakestille serveren \"{{ title }}\" til standardinnstillinger?",
-            "serversRestart": "Restart serveren \"{{ title }}\"?"
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
@@ -404,24 +415,28 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "DUPLICATE_MEDIASERVER_FOUND": "Noen server lister som eksisterende i begge systemene - i den valgte og i den nåværende.<br>Fjern offline og inkompatible servere fra hvert system, og prøv igjen.",
         "EmailAlreadyExists": "Denne e-posten er allerede registrert",
-        "FAIL": "System <strong>{{failedSystem}}</strong> er frakoblet.",
-        "Connection timed out": "System <strong>{{failedSystem}}</strong> er frakoblet.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Systemene har sammenfallende programvareversjoner. Oppdater begge disse til <a href=\"/download\">siste versjon</a>.",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-        "fail": "{{failedSystem}} er utilgjengelig.",
+        "fail": "{failedSystem} is inaccessible.",
         "incompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
         "unknown_error": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
         "accountBlocked": "Denne kontoen er midlertidig blokkert. Vennligst prøv igjen om noen minutter.",
         "accountNotActivated": "Denne kontoen er ikke aktivert enda. <a href=\"/activate\">Send aktiveringslenke igjen</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "Denne kontoen finnes allerede",
         "brokenAccount": "Uventet problem med kontoen. <a href=\"/restore_password\">Gjenopprett konto</a>",
         "cantActivatePrefix": "Kan ikke aktivere kontoen din",
         "cantAddYourOwnEmail": "Å legge til din egen e-post er ikke tillatt",
         "cantChangeAccountPrefix": "Kan ikke lagre endringer",
         "cantChangePasswordPrefix": "Kan ikke lagre passord",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantDisconnectSystemPrefix": "Kan ikke slette system",
         "cantEditAdmin": "Denne brukeren har administratorrettigheter",
         "cantEditYourself": "Endring av egne tillatelser er ikke tillatt",
@@ -437,15 +452,16 @@
         "emailNotFound": "Kontoen eksisterer ikke.",
         "failedToAccessSystem": "Ingen koblinger kan nås via denne lenken. Dette kan skje når et system er koblet fra %CLOUD_NAME%, tilgang til dette systemet er opphevet, eller du er logget inn på feil konto.",
         "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
-        "lostConnection": "Tilkobling til {{systemName}} tapt",
-        "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> er frakoblet.",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Feil passord",
+        "badUsername": "Account not found",
         "notFound": "Ikke funnet",
         "ok": "ok",
         "oldPasswordMistmatch": "Nåværende passord er feil.",
         "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
         "passwordMismatch": "Feil passord",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "En ukjent feil oppstod",
         "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
@@ -456,7 +472,7 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Kan ikke koble til {{cloudName}}, sjekk nettverkstilkoblingen din."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
     },
     "integration": {
         "Access Control": "Adgangskontroll",
@@ -466,10 +482,9 @@
         "Health Monitor": "Helse Monitor",
         "Storage": "Lagring",
         "myIntegrationsLabel": "Utvinn",
-        "phoneNumberWithLabel": "Tlf: {{number}}",
-        "requirements": "{{name}} Krav",
-        "testedVersionLabel": "Tested by the developer with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested by the developer with {{vmsName}} versions:"
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avanserte PTZ kameraer",
@@ -482,14 +497,8 @@
         "PTZ cameras": "PTZ kameraer",
         "camera": "Kamera",
         "count": "Antall",
-        "disclaimer": "Denne listen er begrenset til enheter som er funnet på {{vmsName}} der brukere har tillatt automatisk rapportering av enhetsspesifikasjoner til {{companyName}}. Ingen personlig informasjon blir samlet inn, og hver bruker forblir helt anonym.",
         "dvr": "DVR",
         "encoder": "Enkoder",
-        "feedback": {
-            "a_Please": "Vennligst",
-            "b_Link": "send inn en forespørsel",
-            "c_Info": "for ytterligere spørsmål / bekymringer angående støttede enheter."
-        },
         "hardwareType": "Skriv",
         "isAnalyticsSupported": "Analyser",
         "isAptzSupported": "Avansert PTZ",
@@ -511,9 +520,16 @@
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
         "sndResolution": "Sekundær strøm",
-        "topXByVolume": "Topp {{value}} etter volum:",
-        "vendor": "Produsent"
+        "vendor": "Produsent",
+        "sortKey": ""
     },
+    "ipvdFeedback": {
+        "a_Please": "Vennligst",
+        "b_Link": "send inn en forespørsel",
+        "c_Info": "for ytterligere spørsmål / bekymringer angående støttede enheter."
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
             "cameras": "Cameras",
@@ -529,6 +545,7 @@
         "activate": "Aktiver konto",
         "activateCode": "Aktiver konto",
         "activateSuccess": "Konto aktivert",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Bytt passord",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -544,16 +561,16 @@
         "restorePasswordSuccess": "Passord lagret",
         "supportedDevices": "Støttede enheter",
         "system": "System",
-        "systemName": "{{systemName}}",
         "systemShare": "Del system",
         "systems": "Systemer",
-        "template": "{{title}} - %CLOUD_NAME%",
-        "view": "Se kameraer"
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Se kameraer",
+        "apiTool": "API testing tool"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {{pluginName}}. {{pluginShortDecr}}",
-        "integrationDetails": "{{pluginName}} for {{pluginShortDecr}}"
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "for vanlig",
@@ -576,11 +593,11 @@
             "message": "Forsikre deg om at serverne dine er online og prøv igjen."
         },
         "merge": {
-            "title": "Dette systemet blir slått sammen til {{systemName}}.",
+            "title": "This system is being merged to {systemName}.",
             "message": {
                 "dependingOnSize": "Avhengig av størrelsen på databasen, kan dette ta opptil flere timer.",
                 "untilFinished": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
-                "whenFinished": "Når sammenslåingen er ferdig, vil alle brukere og kameraer fra dette systemet bli tilgjengelige i {{systemName}} system, og dette systemet blir slettet."
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
         },
         "server": {
@@ -590,7 +607,7 @@
     },
     "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
-        "integration": "Du finner {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a>. %COMPANY_NAME% personvernreglene, som inkluderer instruksjoner om hvordan du trekker tilbake ditt samtykke, er tilgjengelige <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a>.",
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
@@ -603,6 +620,8 @@
         },
         "finishingMerge": "Ferdigstiller systemsammenslåing",
         "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon."
         },
@@ -616,23 +635,28 @@
         "analyticsSelected": "analysehendelser",
         "filter applied": "filtrert visning",
         "filters applied": "filtrert visning",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Skriv",
         "hardwareTypes": "Typer",
         "minResolution": "Minimum oppløsning",
         "search_ipvd": "Søk etter modell eller produsent",
-        "selected": "valgt",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Produsent",
         "vendors": "Produsenter"
     },
     "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Serveren kobles fra nå",
-        "beginReset": "Serveren tilbakestilles.",
+        "beginReset": "Server is now resetting.",
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
-        "portWarning": "Portnummere mindre enn 1024 er begrenset. Serveren kan bli utilgjengelig.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
         "resetFailed": "Kunne ikke tilbakestille serveren. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
-        "resetSuccessful": "Server {{ serverName }} er tilbakestilt til standardinnstillinger.",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
         "restartFailed": "Det oppstod et problem med å starte serveren på nytt.",
         "restartSuccessful": "Serveren har startet på nytt.",
         "serverOffline": "Serveren er frakoblet.",
@@ -640,19 +664,21 @@
         "status": {
             "checking": "kontrollerer...",
             "offline": "offline",
-            "reseting": "tilbakestiller...",
+            "resetting": "resetting...",
             "restarting": "restarter..."
         },
         "successRename": "Servernavn lagret."
     },
     "system": {
-        "MERGE_FINISHES": "Når sammenslåingen er ferdig, vil alle brukere og kameraer fra dette systemet bli tilgjengelige i <strong>{{targetSystemName}}</strong> System, og dette systemet blir slettet.",
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
+            "notAbleToLoadStorageInfo": "Kan ikke laste lagringsinformasjon.",
             "notAbleToLoadSecurity": "Kan ikke laste sikkerhetsinnstillinger.",
             "notAbleToLoadSystem": "Kunne ikke laste systeminnstillinger.",
-            "notAbleToLoadStorageInfo": "Kan ikke laste lagringsinformasjon.",
             "sessionLimitDuration": {
                 "hours": "timer",
                 "minutes": "minutter"
@@ -695,6 +721,13 @@
                 "text": "Detaljert",
                 "help": "(logg all tilgjengelig informasjon)"
             }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {
@@ -708,23 +741,47 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "System {{systemName}} er slettet fra kontoen din"
+                "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
                 "success": "Systemet er frakoblet fra %CLOUD_NAME%"
             },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
             "merge": {
                 "failed": "Systemsammenslåing mislyktes",
-                "success": "Sammenslåing av systemer {{primaryName}} og {{secondaryName}} fullført"
+                "success": "System merge completed"
             },
             "rename": {
                 "success": "Systemnavn lagret"
             }
-        }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
     },
     "license": {
+        "licenseTypeTitles": {
+            "Time": "Tid",
+            "Trial": "Prøve",
+            "Professional": "Profesjonell",
+            "Analog": "Analog",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "Videovegg",
+            "Analog Encoder": "Analog Encoder",
+            "Starter": "Starter",
+            "IO Module": "IO Module",
+            "Bridge": "Bro",
+            "NVR": "NVR"
+        },
         "info": {
             "type": "Skriv",
             "channels": "Kanaler",
@@ -732,30 +789,18 @@
             "hwid": "Maskinvare ID",
             "status": "Status",
             "expires": "Utløper",
-            "time": "Tid",
             "deactivations": "Deaktivering igjen",
-            "trial": "Prøve",
             "online": "Online",
             "error": "Feil",
             "expired": "Utløpt",
             "ok": "OK",
-            "digital": "Profesjonell",
-            "analog": "Analog",
-            "edge": "Edge",
-            "vmax": "VMAX",
-            "videowall": "Videovegg",
-            "analogencoder": "Analog Encoder",
-            "starter": "Starter",
-            "iomodule": "IO Module",
-            "bridge": "Bro",
-            "nvr": "NVR",
             "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {
-            "required": "{{number}} mer kreves",
+            "required": "{number} more required",
             "activated": "Lisensnøkkel aktivert",
-            "inuse": "Lisensnøkkel er allerede aktivert og bundet til server med maskinvare-ID {{hwid}} i et annet system",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
         }
     },
@@ -853,5 +898,37 @@
         "maxWebMTranscoders": "Maks antall WEBM-tilkoblinger for serveren. Chrome åpner to tilkoblinger samtidig, og lukk deretter den første. Så det anbefales å sette verdi> = 2 til denne parameteren.",
         "maxEventLogRecords": "Maksimal hendelsesloggoppføringer for å oppbevare i databasen. Den reelle mengden ubemerkede poster kan være opptil 20% høyere enn den spesifiserte verdien.",
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Deaktivert"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

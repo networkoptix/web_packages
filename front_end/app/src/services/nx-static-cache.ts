@@ -1,8 +1,8 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
+import { shareReplay }     from 'rxjs/operators';
+
 import { NxConfigService } from './nx-config';
-import { catchError, shareReplay } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +22,7 @@ export class NxStaticCacheService {
         }
 
         this.cache[name] = this.http.get(
-            `/${this.CONFIG.viewsDir}static/${name}.html`, {responseType: 'text'}
+            `/${this.CONFIG.viewsDir}static/${name}.html`, { responseType: 'text' }
         ).pipe(shareReplay(1));
         return this.cache[name];
     }

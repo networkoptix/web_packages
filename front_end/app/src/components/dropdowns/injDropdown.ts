@@ -2,14 +2,14 @@ import {
     Injectable, OnChanges,
     SimpleChanges, OnDestroy, OnInit
 }                                    from '@angular/core';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { ControlValueAccessor }      from '@angular/forms';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { Watcher }                   from '../../services/apply.service';
 
-const noop = () => {
-};
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { Watcher }                   from '../../services/apply.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+
+const noop = () => {};
 
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
@@ -19,7 +19,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     show: boolean;
 
     // internal value
-    _selected: any;
+    _selectedItem;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -32,14 +32,14 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.message = this.LANG.pleaseSelect;
+        this.message = this.LANG.pleaseSelect();
         this.show = false;
     }
 
     ngOnInit() {
     }
 
-    // needed for @AutoUnsubscribe
+    // needed for @UntilDestroy
     ngOnDestroy(): void {
     }
 
@@ -59,8 +59,8 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
             _value = value.value;
         }
 
-        if (_value !== null && _value !== undefined) {
-            this._selected = _value;
+        if (_value !== null && _value !== undefined && !(value instanceof Watcher)) {
+            this._selectedItem = _value;
         }
     }
 

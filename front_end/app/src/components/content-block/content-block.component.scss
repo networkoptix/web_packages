@@ -1,15 +1,13 @@
 @use '../../styles/typography';
-@use '../../../styles/theme_variables';
+@use '../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/mixins/breakpoints';
-
-$grid-breakpoints: typography.$grid-breakpoints;
 
 .card {
     box-shadow   : none;
-    border-color : typography.$light4;
+    border-color : $light4;
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px typography.$additional_light2;
+        box-shadow: 0 -14px 0 2px $additional_light2;
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -22,12 +20,12 @@ $grid-breakpoints: typography.$grid-breakpoints;
     }
 
     &--header {
-        height           : unset;
+        height           : 3rem;
         display          : flex;
         align-items      : center;
-        background-color : typography.$additional_light1;
+        background-color : $additional_light1;
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid typography.$light3;
+        border-bottom    : 1px solid $light3;
         position         : relative;
 
         h4 {
@@ -39,7 +37,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
             float               : left;
             display             : flex;
             align-items         : center;
-            height              : theme_variables.rem(48px);
+            height              : rem(48px);
             max-width           : 160px;
             background-size     : contain;
             width               : 100%;
@@ -50,7 +48,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
 
     &--body {
         padding          : 1rem;
-        background-color : typography.$light1;
+        background-color : $light1;
 
         img {
             max-width : 100%;
@@ -74,8 +72,8 @@ $grid-breakpoints: typography.$grid-breakpoints;
                     height      : 1rem;
                     width       : 1rem;
                     margin-left : .25rem;
-                    color       : typography.$light12;
-                    font-size   : typography.$font-size-sm;
+                    color       : $light12;
+                    font-size   : $font-size-sm;
                     line-height : 1rem;
                 }
 
@@ -101,14 +99,14 @@ $grid-breakpoints: typography.$grid-breakpoints;
                     margin      : 4px 0;
 
                     span {
-                        background-color : theme_variables.$light4;
+                        background-color : $light4;
                         padding-right    : 4px;
                         word-break       : keep-all;
                     }
                 }
 
                 .row-line {
-                    border-bottom : 1px dotted theme_variables.$light7;
+                    border-bottom : 1px dotted $light7;
                     width         : calc(100% - 1rem);
                     position      : absolute;
                     bottom        : 6px;
@@ -122,7 +120,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
                 word-break  : break-all;
 
                 &.error {
-                    color : theme_variables.$error;
+                    color : $error;
                 }
             }
         }
@@ -154,11 +152,10 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
 
         th {
-            @include typography.medium13;
+            @include typography.medium13dark9;
             padding          : 5px 15px;
-            background-color : theme_variables.$additional_light1;
-            border-bottom    : 1px solid theme_variables.$light3;
-            color            : theme_variables.$dark9;
+            background-color : $additional_light1;
+            border-bottom    : 1px solid $light3;
         }
 
         th:last-child {
@@ -167,8 +164,8 @@ $grid-breakpoints: typography.$grid-breakpoints;
 
         td {
             padding          : 5px 15px;
-            background-color : theme_variables.$light1;
-            color            : theme_variables.$dark9;
+            background-color : $light1;
+            color            : $dark9;
             display          : flex;
             align-items      : center;
         }
@@ -178,26 +175,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
 
         tr:hover td {
-            background : transparentize(theme_variables.$brand_core, 0.9);
-        }
-
-        ::-webkit-scrollbar {
-            width  : initial;
-            height : 8px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            -webkit-border-radius : initial;
-            border-radius         : 6px;
-            -webkit-box-shadow    : initial;
-            height                : 8px;
-            border                : 2px solid theme_variables.$light4;
-        }
-
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow    : initial;
-            -webkit-border-radius : initial;
-            border-radius         : initial;
+            background : transparentize($brand_core, 0.9);
         }
     }
 
@@ -206,7 +184,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : typography.$light1;
+        background-color : $light1;
         box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
 
         footer {
@@ -216,7 +194,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : typography.$light1;
+            background-color : $light1;
             z-index          : 9;
         }
     }
@@ -228,60 +206,60 @@ $grid-breakpoints: typography.$grid-breakpoints;
     }
 
     &.gray {
-        background-color : typography.$light4;
-        border           : 1px solid typography.$light4;
+        background-color : $light4;
+        border           : 1px solid $light4;
         border-bottom    : none;
 
         .card--header {
-            background-color    : typography.$light4;
-            border-bottom-color : typography.$light6;
+            background-color    : $light4;
+            border-bottom-color : $light6;
         }
 
         .card--body {
-            background-color : typography.$light4;
-            border-top       : 1px solid typography.$light6;
+            background-color : $light4;
+            border-top       : 1px solid $light6;
         }
 
         .card--footer {
-            background-color : typography.$light4;
+            background-color : $light4;
         }
     }
 
     &.simple-alert {
-        background-color : typography.$red2;
-        border           : 1px solid typography.$red1;
+        background-color : $red2;
+        border           : 1px solid $red1;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : typography.$red2;
-            border-top       : 1px solid typography.$red1;
+            background-color : $red2;
+            border-top       : 1px solid $red1;
         }
 
         .card--footer {
-            background-color : typography.$red2;
+            background-color : $red2;
         }
     }
 
     &.menu {
-        background-color : typography.$light5;
-        border           : 1px solid typography.$light5;
+        background-color : $light5;
+        border           : 1px solid $light5;
         border-bottom    : none;
 
         .card--header {
-            background-color    : typography.$light5;
-            border-bottom-color : typography.$light7;
+            background-color    : $light5;
+            border-bottom-color : $light7;
         }
 
         .card--body {
-            background-color : typography.$light5;
-            border-top       : 1px solid typography.$light7;
+            background-color : $light5;
+            border-top       : 1px solid $light7;
         }
 
         .card--footer {
-            background-color : typography.$light5;
+            background-color : $light5;
         }
 
         &.top {
@@ -294,7 +272,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
     }
 
     &.fixed-height {
-        height   : theme_variables.rem(300px);
+        height   : rem(300px);
         overflow : hidden;
         margin   : 0;
 
@@ -307,6 +285,11 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
     }
 
+    &.hidden-header {
+        .card--header {
+            display: none;
+        }
+    }
 
     &.extended-header {
         .card--header {
@@ -322,18 +305,46 @@ $grid-breakpoints: typography.$grid-breakpoints;
         }
     }
 
+    &.side-header {
+        .card--header {
+            & .heading-icon {
+                height: 48px;
+            }
+            & p {
+                @include typography.medium13dark15;
+                opacity: 0.4;
+                margin-bottom: 6px;
+            }
+            & h3 {
+                @include typography.medium17dark9;
+            }
+        }
+        @include media-breakpoint-up(md) {
+            .card--header {
+                align-items: start;
+                min-width: 216px;
+                border-bottom: unset;
+                border-right: 1px solid #EBEFF1;
+                & .heading-icon {
+                    height: 120px;
+                }
+            }
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
     &.slim-header {
         .card--header {
             height  : auto;
-            padding : theme_variables.rem(12px);
+            padding : rem(12px);
 
             .title {
                 line-height : 15px;
             }
 
             .minor-text {
-                @include typography.regular11;
-                color      : typography.$light16;
+                @include typography.regular11light16;
                 margin-top : 5px;
             }
         }

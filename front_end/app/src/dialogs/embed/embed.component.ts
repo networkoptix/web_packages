@@ -3,13 +3,18 @@ import {
     ViewChild, OnDestroy, AfterViewInit
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
-@AutoUnsubscribe()
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
+
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
@@ -22,8 +27,8 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    auth: any;
-    params: any;
+    auth;
+    params: IParams;
     embedUrl: string;
     private formChangesSubscription: Subscription;
 
@@ -32,18 +37,18 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        private activeModal: NgbActiveModal
+        public activeModal: NgbActiveModal
     ) {
         this.params = {
-            authString: '',
-            nocameras : false,
-            noheader  : false,
-            nocontrols: false
+            authString : '',
+            nocameras  : false,
+            noheader   : false,
+            nocontrols : false
         };
 
         this.auth = {
-            email   : '',
-            password: ''
+            email    : '',
+            password : ''
         };
 
         this.CONFIG = configService.getConfig();
@@ -69,6 +74,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         let uri   = '';
 
         for (const paramsKey in params) {
+            // eslint-disable-next-line no-prototype-builtins
             if (params.hasOwnProperty(paramsKey)) {
                 // filter checkboxes in form
                 if (this.params[paramsKey] !== undefined && !params[paramsKey]) {

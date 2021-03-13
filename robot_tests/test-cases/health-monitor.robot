@@ -1,9 +1,9 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Health Monitor Setup
 Test Setup        Common Restart Logout    ${url}
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 
 *** Variables ***
@@ -11,6 +11,40 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
+Health Monitor Setup
+    Open Browser and go to URL    ${url}
+    ${owner}=   Register and activate account with random email    mark    hamil    ${password}
+    @{auth}=    Create List    ${owner}    ${password}
+    Set Suite Variable    ${owner}    ${owner}
+    ${server}=   Setup Docker Server
+    Set Suite Variable    ${cont1 name}    ${server}[name]
+    Set Suite Variable    ${cont1 id}    ${server}[id]
+    Set Suite Variable    ${cont1 port}    ${server}[port]
+    ${sysId1}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${cont1 port}    System 1    ${owner}    ${password}
+    Set Suite Variable    ${sysId1}    ${sysId1}
+
+    ${server}=   Setup Docker Server
+    Set Suite Variable    ${cont2 name}    ${server}[name]
+    Set Suite Variable    ${cont2 id}    ${server}[id]
+    Set Suite Variable    ${cont2 port}    ${server}[port]
+    ${sysId2}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${cont2 port}    System 2    ${owner}    ${password}
+    Set Suite Variable    ${sysId2}    ${sysId2}
+    Sleep    30
+    Stop Docker Server    ${cont2 name}
+
+    &{users}=    Register and Activate Generic Users
+    Set Suite Variable    ${admin}          ${users}[admin]
+    Set Suite Variable    ${viewer}         ${users}[viewer]
+    Set Suite Variable    ${live viewer}    ${users}[liveViewer]
+    Set Suite Variable    ${adv viewer}     ${users}[advViewer]
+    Set Suite Variable    ${custom}         ${users}[custom]
+    Sleep    5
+    Add user to cloud system if not there    ${sysId1}    cloudAdmin        ${admin}          auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    viewer            ${viewer}         auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    advancedViewer    ${adv viewer}     auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    custom            ${custom}         auth=${auth}
+    Add user to cloud system if not there    ${sysId1}    liveViewer        ${live viewer}    auth=${auth}
+
 Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
@@ -83,34 +117,40 @@ Check Details Panel Alerts
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..//div[@title="${hardware} ${name} is broken"]
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..${HM ALERT ICON}
 
+Health Monitor Suite Teardown
+    Close All Browsers
+    Stop Docker Server    ${cont1 id}
+    Stop Docker Server    ${cont2 id}
+    Delete Docker Server    ${cont1 id}
+    Delete Docker Server    ${cont2 id}
 *** Test Cases ***
-Onwer Has Access to Health Monitoring
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+Owner Has Access to Health Monitoring
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Admin Has Access to Health Monitoring
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL ADMIN}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${admin}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Going to Health Monitor when System is Offline Shows Offline Message
-    Go To    ${url}/systems/${AUTO TESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Go To    ${url}/systems/${sysId2}
+    Log In    ${owner}    ${password}    button=None
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible    ${HM SYSTEM OFFLINE}    ${HM SYSTEM CANNOT BE ACCESSED}
 
 Json Upload Works
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
@@ -118,12 +158,12 @@ Json Upload Works
 
 
     # More elements need to be added here when JSON files are finalized like system name and stuff
-    Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
+    #Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
 
 Json Upload Works on Offline System
-    Go To    ${url}/systems/${AUTO TESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Upload Json    one-page
@@ -136,8 +176,8 @@ Json Upload Works on Offline System
 
 Advanced Viewer Does Not Have Access To Health Monitor
     # Advanced Viewer
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL ADVVIEWER}    ${password}    button=None
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${adv viewer}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -145,8 +185,8 @@ Advanced Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL ADVVIEWER}    ${password}    button=None
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${viewer}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -154,8 +194,8 @@ Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Live Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL LIVE VIEWER}    ${password}    button=None
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${live viewer}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -163,9 +203,9 @@ Live Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 No Alerts Message Shows When There Are No Alerts
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
@@ -173,23 +213,24 @@ No Alerts Message Shows When There Are No Alerts
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Can Close Out of Json Imported Mode
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
+    Wait Until Element Is Visible    ${HM ALERTS TOTAL}
     ${first} =     Get Text    ${HM ALERTS TOTAL}
     Reload Page
     Validate Alerts Page
     Page Should Not Contain    ${HM IMPORTED REPORT RIBBON}
-    Element Text Should Not Be     ${HM ALERTS TOTAL}    ${first}
+    Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
@@ -202,9 +243,9 @@ Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header 
 
 Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     [Tags]    C69785
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
@@ -220,9 +261,9 @@ Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     Count All Alerts and Validate Totals Shown
 
 Hardware Types with Only One Item Should Show Tiles and not Show Tables
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
@@ -259,9 +300,9 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     Page Should Not Contain Element    ${HM TABLE}
 
 Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Go To    ${url}/systems/${sysId1}
+    Log In    ${owner}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page

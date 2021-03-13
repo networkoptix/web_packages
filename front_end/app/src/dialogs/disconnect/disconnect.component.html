@@ -1,4 +1,6 @@
-<form #disconnectForm="ngForm" name="disconnectForm" novalidate>
+<form #disconnectForm="ngForm" name="disconnectForm" novalidate
+      [ngClass]="{'hide-errors': hideErrors}"
+      (submit)="hideErrors = false">
     <div class="modal-header">
         <h1 class="modal-title" translate>Disconnect System from %CLOUD_NAME%?</h1>
         <button type="button" class="close"
@@ -12,6 +14,14 @@
         <p class="warning-label" translate>All cloud users will be deleted.</p>
         <p translate>System will be accessible through local network with local administrator account.</p>
         <p translate class="mb-3">Enter password to continue.</p>
+
+        <div class="form-group" *ngIf="isLocal">
+            <label for="password" translate>Login</label>
+            <input class="form-control"
+                   id="login" autocomplete="new-password"
+                   name="login" disabled value="admin"
+                   [(ngModel)]="auth.username" #login="ngModel">
+        </div>
 
         <div class="form-group">
             <label for="password" translate>Password</label>
@@ -35,7 +45,6 @@
                            [form]="disconnectForm"
                            [actionType]="'danger'"
                            buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
-
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+        <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>

@@ -1,0 +1,9 @@
+{
+  "name": "cloud-portal-backend",
+  "version": "20.2.0",
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "csstree-validator": "^2.0.0",
+    "split.js": "^1.6.2"
+  }
+}

@@ -36,6 +36,6 @@
     <div class="modal-footer">
         <!-- delete process still needs to be implemented -->
         <nx-process-button [process]="delete" [form]="deleteForm" [actionType]="'danger'" buttonText="{{ 'Delete' | translate }}"></nx-process-button>
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+        <nx-cancel-button [process]="delete" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>

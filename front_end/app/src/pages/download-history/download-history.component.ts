@@ -1,76 +1,76 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, PLATFORM_ID
-} from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router }                from '@angular/router';
-import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
-import { isNumeric }                                            from 'rxjs/util/isNumeric';
-import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }                                      from '../../services/nx-config';
-import { NxLanguageProviderService }                            from '../../services/nx-language-provider';
-import { NxAccountService }                                     from '../../services/account.service';
-import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
-import { NxUriService }                                         from '../../services/uri.service';
-import { filter }                                               from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import {
+    ActivatedRoute, ActivationEnd, Router
+}                                    from '@angular/router';
+import {
+    isPlatformBrowser, TitleCasePipe
+}                                    from '@angular/common';
+import { NgbNav, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subscription }              from 'rxjs';
+import { filter }                    from 'rxjs/operators';
+import * as isArray                  from 'core-js/features/array/is-array';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
-import isArray = require('core-js/features/array/is-array');
-import angular = require('angular');
-
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'download-history',
-    templateUrl: 'download-history.component.html',
-    styleUrls  : ['download-history.component.scss']
+    selector    : 'download-history',
+    templateUrl : 'download-history.component.html',
+    styleUrls   : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
-    private sub: any;
+    private sub;
     readonly releases = 'releases';
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    build: any;
+    build;
     canViewRelease: boolean;
     tabsVisible: boolean;
-    routeParam: any;
-    section: any;
-    user: any;
-    downloads: any;
-    activeBuilds: any;
-    downloadsData: any;
-    noteTypes: any;
-    linkbase: any;
+    routeParam;
+    section;
+    user;
+    downloads;
+    activeBuilds;
+    downloadsData;
+    noteTypes;
+    linkbase;
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
-    public tabs: NgbTabset;
+    public tabs: NgbNav;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
+    private setupDefaults() {
         this.tabsVisible = false;
         this.canViewRelease = false;
         this.noteTypes = [];
     }
 
-    constructor(configService: NxConfigService,
-                @Inject(DOCUMENT) private document: any,
-                private cloudApiService: NxCloudApiService,
-                private accountService: NxAccountService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                private uriService: NxUriService,
-                private location: Location,
-                @Inject(PLATFORM_ID) private platformId: object
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private cloudApiService: NxCloudApiService,
+        private accountService: NxAccountService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private pageService: NxPageService,
+        private uriService: NxUriService,
+        @Inject(PLATFORM_ID) private platformId: object
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults();
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.translations;
 
         if (isPlatformBrowser(this.platformId)) {
             this.routerSubscription = this.router.events
@@ -86,21 +86,13 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     private getAvailableDownloadTypes(data) {
-        this.noteTypes = [];
-        angular.forEach(data, (noteType, name) => {
-            if (isArray(noteType) && noteType.length) {
-                this.noteTypes.push(name);
-            }
-        });
-
-        // re-order tabs
-        if (this.noteTypes.length) {
-            this.noteTypes = this.noteTypes.reverse();
-        }
+        this.noteTypes = Object.keys(data || {}).filter((noteType) => {
+            return isArray(data[noteType]) && data[noteType].length;
+        }).reverse();
     }
 
     private getData() {
-        const data = this.cloudApiService
+        this.cloudApiService
             .getDownloadsHistory(this.build)
             .then((data: any) => {
                 this.linkbase = data.updatesPrefix;
@@ -126,20 +118,14 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         this.tabs.select(this.section);
                     }
                 });
-            }, () => {
-                this.router
-                    .navigate([this.CONFIG.redirect.page404])
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
+            }, this.pageService.show404
             )
             .finally(() => {
                 this.sub.unsubscribe();
             });
     }
 
-    public beforeChange($event: NgbTabChangeEvent) {
+    public beforeChange($event: NgbNavChangeEvent) {
         this.activeBuilds = this.downloadsData[$event.nextId];
         this.pageService.pageTitle = new TitleCasePipe().transform($event.nextId);
 
@@ -181,11 +167,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.router
-                                .navigate([this.CONFIG.redirect.page404])
-                                .catch(error => {
-                                    console.error(error);
-                                });
+                            this.pageService.show404();
                         }
                     });
             } else {

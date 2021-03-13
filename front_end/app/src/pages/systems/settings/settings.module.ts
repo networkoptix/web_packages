@@ -1,28 +1,32 @@
-import { NgModule }                   from '@angular/core';
-import { CommonModule }               from '@angular/common';
-import { BrowserModule }              from '@angular/platform-browser';
-import { UpgradeModule }              from '@angular/upgrade/static';
-import { RouterModule, Routes }       from '@angular/router';
-import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }            from '@ngx-translate/core';
-import { ComponentsModule }                   from '../../../components/components.module';
-import { NxNoSystemsComponent }               from '../no-systems/no-systems.component';
-import { ApplyGuard, AuthGuard, SystemGuard } from '../../../routeGuards';
+import { NgModule }                  from '@angular/core';
+import { CommonModule }              from '@angular/common';
+import { RouterModule, Routes }      from '@angular/router';
+import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }           from '@ngx-translate/core';
+import { ComponentsModule }          from '@components/components.module';
 import {
-    NxSystemSettingsComponent,
-    NxSystemAdminModule, NxSystemAdminComponent,
-    NxCamerasModule, NxCamerasComponent,
-    NxCloudStorageModule, NxCloudStorageComponent,
-    NxSystemServersModule, NxSystemServersComponent,
-    NxSystemUsersModule, NxSystemUsersComponent
-}                                             from './';
-import { NxSystemLicensesComponent }          from './licenses/licenses.component';
-import { NxSystemLicensesModule }             from './licenses/licenses.module';
+    ApplyGuard, AuthGuard, SystemGuard
+}                                    from '../../../routeGuards';
+import { MenuModule }                from '@src/menu';
+import { NxSystemLicensesComponent } from './licenses/licenses.component';
+import { NxSystemLicensesModule }    from './licenses/licenses.module';
+import { NxSystemSettingsComponent } from './settings.component';
+import { NxSystemAdminComponent }    from './admin/admin.component';
+import { NxSystemUsersComponent }    from './users/users.component';
+import { NxSystemServersComponent }  from './servers/servers.component';
+import { NxCamerasComponent }        from './cameras/cameras.component';
+import { NxCloudStorageComponent }   from './cloud-storage/cloud-storage.component';
+import { NxSystemAdminModule }       from './admin/admin.module';
+import { NxSystemUsersModule }       from './users/users.module';
+import { NxSystemServersModule }     from './servers/servers.module';
+import { NxCamerasModule }           from './cameras/cameras.module';
+import { NxCloudStorageModule }      from './cloud-storage/cloud-storage.module';
+import { NxSettingsService }         from './settings.service';
 
-const appRoutes: Routes = [
+export const cloudSettingsRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path        : 'systems/:systemId',
+        path        : '',
         component   : NxSystemSettingsComponent,
         canActivate : [AuthGuard],
         children    : [
@@ -81,8 +85,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         RouterModule,
         NgbModule,
         TranslateModule,
@@ -90,25 +92,22 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-        NxCamerasModule,
         NxCloudStorageModule,
         NxSystemLicensesModule,
-        RouterModule.forChild(appRoutes)
+        NxCamerasModule,
+        MenuModule,
+        RouterModule.forChild(cloudSettingsRoutes)
     ],
     providers: [
-        ApplyGuard
+        NxSettingsService
     ],
     declarations: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
-    ],
-    bootstrap: [],
-    entryComponents : [
         NxSystemSettingsComponent
     ],
+    bootstrap: [
+    ],
     exports: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
+        NxSystemSettingsComponent
     ]
 })
 export class NxSettingsModule {

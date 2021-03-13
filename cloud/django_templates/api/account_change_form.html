@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools-items %}
+    {% if user.is_superuser %}
+    <li>
+        <a href="{% url 'admin:force_logout' object_id %}">Logout</a>
+    </li>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

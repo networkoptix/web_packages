@@ -1,0 +1,71 @@
+@import 'styles/_theme_palette';
+
+
+:host {
+  display: inline-block;
+  width: 63px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+
+  > .playback-control-button {
+    display: block;
+    text-align: center;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > .glyph {
+      background-image: url('/static/images/web_interface_sprite@2x.png');
+      background-size: 192px 408px;
+      background-repeat: no-repeat;
+      width: 20px;
+      height: 20px;
+      opacity: 0.5;
+    }
+
+    &.play {
+      > .glyph {
+        background-position: -2px -4px;
+      }
+    }
+
+    &.pause {
+      > .glyph {
+        background-position: -26px -2px;
+      }
+    }
+
+    color: $light4;
+    background-color: $additional_light2;
+    transition: all .2s ease-in-out;
+
+    &.enabled {
+      cursor: pointer;
+      color: $light16;
+      z-index: 1;
+
+      > .glyph {
+        opacity: 1.0;
+      }
+
+      // &:hover {
+      //   background-color: $light4;
+      // }
+      &:hover {
+        background-color: $additional_light3;
+      }
+      &:active {
+        background-color: $light5 !important;
+      }
+    }
+  }
+}

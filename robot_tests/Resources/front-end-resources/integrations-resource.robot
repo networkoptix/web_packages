@@ -104,11 +104,13 @@ Fill in "Get in Touch" Form and Submit
 Number of Integrations Should be Lower
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
-    Evaluate    ${current}<${previous}
+    ${result}=   Evaluate    ${current}<${previous}
+    Should Be True    ${result}
     [Return]    ${current}
 
 Number of Integrations Should be Higher
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
-    Evaluate    ${current}>${previous}
+    ${result}=   Evaluate    ${current}>${previous}
+    Should Be True    ${result}
     [Return]    ${current}

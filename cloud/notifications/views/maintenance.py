@@ -1,10 +1,11 @@
-import boto3
 from datetime import datetime, timedelta
-from util.config import get_config
 
+import boto3
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from drf_yasg.utils import swagger_auto_schema
 
+from util.config import get_config
 from api.helpers.exceptions import handle_exceptions, api_success
 
 PERIOD = 60  # In seconds
@@ -91,7 +92,7 @@ def check_queue(queue, age_threshold, number_visible_threshold):
         }
     })
 
-
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def health_email(request):
@@ -99,7 +100,7 @@ def health_email(request):
         'celery', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD, APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
     )
 
-
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def health_push(request):

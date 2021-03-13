@@ -1,4 +1,4 @@
-<form #addUserForm="ngForm" name="addUserForm" novalidate>
+<form #addUserForm="ngForm" name="addUserForm" novalidate [ngClass]="{'hide-errors': hideErrors}">
     <div class="modal-header">
         <h1 class="modal-title" translate>Add User</h1>
         <button type="button" class="close"
@@ -17,6 +17,7 @@
                 componentId="addUserEmail"
                 [(ngModel)]="user.email"
                 [form]="addUserForm"
+                [setFocus]="true"
                 #addUserEmail="ngModel">
             </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
@@ -47,9 +48,10 @@
     </div>
     <div class="modal-footer">
         <nx-process-button
-            [process]="addUser"
-            [form]="addUserForm"
-            [buttonText]="'Add' | translate"></nx-process-button>
-        <button type="button" class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+                [clickFn]="preSubmit"
+                [process]="addUser"
+                [form]="addUserForm"
+                [buttonText]="'Add' | translate"></nx-process-button>
+        <nx-cancel-button [process]="addUser" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>

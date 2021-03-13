@@ -1,21 +1,24 @@
-import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import {
+    Component, Input, OnChanges,
+    ViewEncapsulation
+}                                   from '@angular/core';
 
-import { NxConfigService, IConfig }         from '../../../../services/nx-config';
-import { NxHealthService }                  from '../../health.service';
-import { InfoBlockLine, InfoBlockSection }  from '../../../../components/info-block/info-block.component';
+import { NxHealthService }          from '../../health.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { InfoBlockLine, InfoBlockSection } from '../../../../components/info-block/info-block.component';
 
 @Component({
-    selector : 'nx-single-entity',
-    templateUrl : './single-entity.component.html',
-    styleUrls : ['./single-entity.component.scss'],
+    selector      : 'nx-single-entity',
+    templateUrl   : './single-entity.component.html',
+    styleUrls     : ['./single-entity.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
-    @Input() params: any;
-    @Input() entity: any;
+    @Input() params;
+    @Input() entity;
 
     CONFIG: IConfig;
-    copyParams: any;
+    copyParams;
     entityName: string;
     sections: SectionLookup;
 

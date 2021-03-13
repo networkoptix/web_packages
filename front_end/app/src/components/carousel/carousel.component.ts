@@ -4,7 +4,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { NxConfigService } from '../../services/nx-config';
 import { NxUtilsService }  from '../../services/utils.service';
 
-const config = new NxConfigService().config;
+const config = new NxConfigService(null).config;
 
 @Component({
     selector   : 'nx-carousel',
@@ -30,12 +30,12 @@ const config = new NxConfigService().config;
     ]
 })
 export class NxCarouselComponent implements OnInit {
-    @Input() screenshots: any;
+    @Input() screenshots;
+    @Input() type?: string;
 
+    imageCount: number;
+    currentIndex = 0;
     images: any = [];
-    private currentIndex = 0;
-    private imageCount: number;
-
     caption: string;
 
     constructor() {

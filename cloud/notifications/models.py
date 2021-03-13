@@ -1,8 +1,9 @@
 import json
 import re
+
+from jsonfield import JSONField
 from django.db import models
 from django.utils import timezone
-from jsonfield import JSONField
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
@@ -11,6 +12,7 @@ from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice, GCMDeviceQuerySet
 from rest_framework import serializers
+
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
 
@@ -32,6 +34,9 @@ class MessageTypes(object):
     ipvd_feedback_page = "ipvd_feedback_page"
     ipvd_feedback_device = "ipvd_feedback_device"
     ipvd_feedback = "ipvd_feedback"
+
+    def keys(self):
+        return list(filter(lambda k: not k.startswith("__", 0, 2) and k != "keys", dir(self)))
 
 
 class Event(models.Model):
@@ -113,7 +118,7 @@ class Message(models.Model):
         self.save()
 
         # TODO: initiate business-logic here
-        from .tasks import send_email
+        from notifications.tasks import send_email
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
             queue_name = ""
@@ -261,6 +266,10 @@ class PushDevice(GCMDevice):
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
+    RESULT_STATES = Choices(('open', 'Open'),
+                            ('in_progress', 'In Progress'),
+                            ('success', 'Success'),
+                            ('failure', 'Failure'))
 
     title = models.CharField(max_length=255, blank=True)
     body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)], blank=True)
@@ -278,6 +287,7 @@ class PushNotification(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     send_date = models.DateTimeField(null=True, blank=True)
+    state = models.CharField(choices=RESULT_STATES, default=RESULT_STATES.open, max_length=20)
 
     def __str__(self):
         return self.title or 'Untitled Notification'

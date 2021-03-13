@@ -7,21 +7,24 @@
 @import '~bootstrap/scss/mixins';
 
 @mixin button {
-    @include typography.medium14;
-    height        : 2rem;
-    border-radius : $border-radius-base !important;
-    font-weight   : inherit;
-    padding       : 0 1rem;
-    border        : none;
-    display       : flex;
-    align-items   : center;
-    transition    : none;
-    max-width     : 278px;
-    text-overflow : ellipsis;
-    overflow      : hidden;
-    line-height   : 1rem;
-    justify-content: center;
-    text-decoration: none;
+    font-family     : $font-family-medium;
+    color           : $font-color-medium;
+    font-size       : $h6-font-size !important;
+    height          : 2rem !important;
+    border-radius   : $border-radius-base !important;
+    font-weight     : inherit !important;
+    padding         : 0 1rem !important;
+    border          : none !important;
+    display         : flex !important;
+    align-items     : center !important;
+    transition      : none !important;
+    max-width       : 278px;
+    text-overflow   : ellipsis;
+    overflow        : hidden;
+    line-height     : 1rem !important;
+    justify-content : center;
+    text-decoration : none;
+    box-shadow      : none !important;
 
     &:hover,
     &:active,
@@ -46,13 +49,13 @@ button, .btn {
 }
 
 .btn.btn-big {
-    height : 40px;
+    height : 40px !important;
 }
 
-.btn.btn-default, .btn.btn-dropdown-toggle {
+.btn.btn-default {
     color            : $dark9 !important;
     background-color : $light4 !important;
-    box-shadow       : inset 0 -1px 0 0 $light7;
+    box-shadow       : inset 0 -1px 0 0 $light7 !important;
     font-family      : $font-family-medium;
 
     &:hover:not([disabled]):not(.disabled) {
@@ -63,6 +66,24 @@ button, .btn {
     &:active,
     &.active {
         background-color : $light6 !important;
+        box-shadow       : inset 0 1px 0 0 $light9 !important;
+    }
+}
+
+.btn.btn-dropdown-toggle {
+    color            : $dark9 !important;
+    background-color : $light4;
+    box-shadow       : inset 0 -1px 0 0 $light7;
+    font-family      : $font-family-medium;
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color : $light5;
+        box-shadow       : inset 0 -1px 0 0 $light8;
+    }
+
+    &:active,
+    &.active {
+        background-color : $light6;
         box-shadow       : inset 0 1px 0 0 $light8 !important;
     }
 }
@@ -71,7 +92,7 @@ button, .btn {
     color            : $light1 !important;
     background-color : $brand_core !important;
     border-color     : transparent !important;
-    box-shadow       : inset 0 -1px 0 0 $brand_d2;
+    box-shadow       : inset 0 -1px 0 0 $brand_d2 !important;
 
     &:hover:not([disabled]):not(.disabled) {
         background-color : $brand_d1 !important;
@@ -128,7 +149,7 @@ button, .btn {
 .btn.btn-menu {
     height           : 28px;
     color            : $dark9;
-    border           : 1px solid $light10;
+    border           : 1px solid $light10 !important;
     background-color : transparent;
     max-width        : 180px;
     display          : flex;
@@ -152,7 +173,7 @@ button, .btn {
     }
 
     .glyphicon-close {
-        opacity: 1 !important;
+        opacity : 1 !important;
     }
 
     &:hover:not([disabled]):not(.disabled) {
@@ -193,8 +214,7 @@ button, .btn {
 }
 
 .btn-tag {
-    @include typography.regular13;
-    color            : $light16 !important;
+    @include typography.regular13light;
     font-weight      : 400;
     white-space      : nowrap;
     background-color : $light4;
@@ -212,7 +232,7 @@ button, .btn {
 }
 
 .btn-tag-selected {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     @include mixins.badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;
@@ -225,7 +245,7 @@ button, .btn {
     }
 
     &:hover {
-        color: $light1;
+        color : $light1;
     }
 
     .close-button {
@@ -239,10 +259,6 @@ button, .btn {
         height          : 40px;
         width           : 40px;
         cursor          : pointer;
-
-        &:hover {
-
-        }
 
         .tag-close-icon {
             margin : 0 !important;
@@ -260,74 +276,49 @@ button, .btn {
     padding-right : 12px !important;
     max-width     : none;
 
-    .nav-arrow {
-        height : 20px;
-        float  : left;
-        right  : auto;
-        left   : 8px;
-        bottom : 10px;
-
-        span {
-            background-color : $light16;
-        }
-    }
-
     &.has-icon {
         padding-left : 20px;
     }
 
     & > span {
-        margin : 0;
+        margin  : 0;
         padding : 0 1px; // flex messes up caption width
     }
 
     &.selected {
         @include mixins.badge-selected($light16, $light17, $light18);
-
-        .nav-arrow {
-            span {
-                background-color : $light1;
-            }
-        }
     }
 }
 
 .btn-text {
-    text-decoration: none;
+    text-decoration : none;
 
-    .nav-arrow {
-        height       : 20px;
-        float        : left;
-        right        : 0;
-        margin-right : 2px;
-
-        span {
-            background-color : $light16;
-        }
+    svg-icon svg {
+        width  : 20px;
+        height : 20px;
     }
 
     &.has-icon {
         padding-left : 25px;
-        position: relative;
+        position     : relative;
 
         svg {
             path {
-                fill: $light16;
+                fill : $light16;
             }
         }
     }
 
     span {
-        @include typography.regular13;
-        color : $light16 !important;
+        @include typography.regular13light;
 
         &.close {
-            left : 0;
+            left   : 0;
             width  : 16px;
             height : 16px;
 
             &:before, &:after {
-                background-color: $light16;
+                background-color : $light16;
             }
         }
     }
@@ -367,7 +358,7 @@ button, .btn {
 
     .glyphicon {
         display : block;
-        margin: 0;
+        margin  : 0;
         @include media-breakpoint-up(md) {
             display : none;
         }

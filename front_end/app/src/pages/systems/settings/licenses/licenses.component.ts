@@ -1,15 +1,14 @@
-import {
-    Component, LOCALE_ID, Inject,
-    OnInit
-}                                        from '@angular/core';
-import { NxConfigService, IConfig }      from '../../../../services/nx-config';
-import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { SubscriptionLike }              from 'rxjs';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
-import { NxSettingsService }        from '../settings.service';
-import { NxSystem, NxSystemServer } from '../../../../services/system.service';
-import { NxMenuService }            from '../../../../components/menu/menu.service';
+import { Component, OnInit }             from '@angular/core';
+import { forkJoin, SubscriptionLike }    from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
+
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxSettingsService }         from '../settings.service';
+import { NxSystem, NxSystemServer }  from '../../../../services/system.service';
+import { NxMenuService }             from '../../../../menu/menu.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxUtilsService }            from '../../../../services/utils.service';
 
 @Component({
     selector    : 'nx-system-licenses',
@@ -27,12 +26,9 @@ export class NxSystemLicensesComponent implements OnInit {
 
     licenses: any;
     licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
-    classMap: any = {};
 
     // Constructor and class initialization methods
     private setupDefaults() {
-        this.classMap = this.LANG.license.info;
-
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
@@ -63,7 +59,7 @@ export class NxSystemLicensesComponent implements OnInit {
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system
+                                this.system.serverManager
                                     .initSystemMediaServers()
                                     .catch(error => {
                                         console.error(error);
@@ -77,7 +73,6 @@ export class NxSystemLicensesComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        @Inject(LOCALE_ID) private locale: string,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService
     ) {
@@ -88,8 +83,8 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.licenses.id);
+        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+        this.menuService.detail = this.CONFIG.menus.systemSettings.licenses.id;
     }
 
     private createLicenseInfo(item) {
@@ -106,6 +101,8 @@ export class NxSystemLicensesComponent implements OnInit {
             deactivations : '-'
         };
 
+        const dynamicLicense = getDynamicLicense(this);
+
         item.licenseBlock
             .split('\n')
             .map((property) => {
@@ -113,23 +110,22 @@ export class NxSystemLicensesComponent implements OnInit {
                 item.info[prop[0].toLowerCase()] = prop[1];
             });
 
-        item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
-        item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
+        item.info.status = item.info.expired ? this.LANG.license.info.expired() : this.LANG.license.info.ok();
         // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
-            item.info.type = this.LANG.license.info.trial;
+            item.info.type = dynamicLicense.trial.title;
         } else {
             if (item.info.ordertype && item.info.ordertype === 'saas') {
-                item.info.type = this.classMap[item.info.class];
+                item.info.type = dynamicLicense[item.info.class].title;
             } else {
                 // this is complicated as for now it matches desktop client. It will change in 4.2
                 if (item.info.class === 'videowall') {
-                    item.info.type = this.LANG.license.info.videowall;
+                    item.info.type = dynamicLicense[item.info.class].title;
                 } else {
                     if (item.info.expiration) {
-                        item.info.type = this.LANG.license.info.time;
+                        item.info.type = dynamicLicense.time.title;
                     } else {
-                        item.info.type = this.classMap[item.info.class];
+                        item.info.type = dynamicLicense[item.info.class].title;
                     }
                 }
             }
@@ -143,10 +139,11 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private addLicenseSummary(item) {
         // for license summary block
-        const license = this.licenseSummaries.find(ls => ls.type === item.info.type);
+        const type = typeof item.info.type === 'function' ? item.info.type() : item.info.type;
+        const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;
-        if (item.info.serverStatus !== this.LANG.license.info.online || item.info.expired) {
+        if (item.info.serverStatus !== this.LANG.license.info.online() || item.info.expired) {
             avail = 0;
         }
 
@@ -156,7 +153,7 @@ export class NxSystemLicensesComponent implements OnInit {
             license.required += item.info.required;
         } else {
             this.licenseSummaries.push({
-                type       : item.info.type,
+                type,
                 count      : parseInt(item.info.count) || 0,
                 countAvail : avail,
                 required   : item.info.required
@@ -183,27 +180,42 @@ export class NxSystemLicensesComponent implements OnInit {
                         .subscribe(() => {
                             if (this.system.currentServerNotBusy) {
                                 if (this.system && this.system.servers && this.system.servers.length) {
-                                    this.system
-                                        .getHardwareIdsOfServers()
-                                        .then((data) => {
+                                    forkJoin({ times: this.system.getServerTimes(), hardwareIds: this.system.getHardwareIdsOfServers() })
+                                        .subscribe(data => {
+                                            const serversTime = data.times;
+                                            const hardwareIds = data.hardwareIds.reply;
                                             this.licenseSummaries = [];
-                                            if (data.reply.length) {
+
+                                            if (hardwareIds.length) {
                                                 result.forEach((item) => {
                                                     this.createLicenseInfo(item);
 
-                                                    const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {
+                                                    const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
                                                         return server.hardwareIds.find((id: string) => id === item.info.hwid);
                                                     });
 
                                                     const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
+
                                                     if (Object.keys(server).length) {
+                                                        item.info.serverTime = serversTime.find(time => {
+                                                            return NxUtilsService.cleanId(server.id) === time.serverId;
+                                                        }).vmsTime;
+
+                                                        // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
+                                                        item.info.expiration = new Date(item.info.expiration.replace(/-/g, '/')).getTime();
+
+                                                        item.info.expired = item.info.expiration < item.info.serverTime; // serverTime is in milliseconds
                                                         item.info.serverName = server.name;
-                                                        item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()];
-                                                        item.info.status = item.info.serverStatus === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                        item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()]();
+                                                        item.info.status = (item.info.expired)
+                                                            ? this.LANG.license.info.expired()
+                                                            : (item.info.serverStatus === this.LANG.license.info.online())
+                                                                ? item.info.status
+                                                                : this.LANG.license.info.error();
                                                     } else {
-                                                        item.info.serverName = this.LANG.license.info.serverNotFound;
+                                                        item.info.serverName = this.LANG.license.info.serverNotFound();
                                                         item.info.serverStatus = server.status;
-                                                        item.info.status = this.LANG.license.info.error;
+                                                        item.info.status = this.LANG.license.info.error();
                                                     }
 
                                                     this.addLicenseSummary(item);
@@ -223,3 +235,26 @@ export class NxSystemLicensesComponent implements OnInit {
             });
     }
 }
+
+export interface DynamicLicense {
+    [key: string]: {
+        title: string;
+        deactivationsAllowed
+    }
+}
+
+export const getDynamicLicense = (
+    instance: {
+        CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes
+    }
+) => instance.CONFIG.licenseTypes.reduce((
+    licenses,
+    { name, deactivationsAllowed, title }
+) => ({
+    ...licenses,
+    [name]: {
+        deactivationsAllowed,
+        title: instance.LANG.license.licenseTypeTitles[title] || title
+    }
+}), {} as DynamicLicense);

@@ -1,9 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
 @use '../../../styles/buttons';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
 
 $preloader_circle_color          : $light;
 $preloader_circle_size           : 16px;
@@ -136,7 +133,7 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-title {
-    @include typography.medium24;
+    @include typography.medium24dark9;
     text-align      : center;
     margin-bottom   : 1rem;
     justify-content : center;
@@ -144,7 +141,7 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-message {
-    @include typography.regular15;
+    @include typography.regular15dark9;
     line-height : 24px;
     max-width   : 560px;
 }

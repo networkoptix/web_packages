@@ -10,8 +10,8 @@ ${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/butto
 
 ${BROWSER}                            Chrome
 
-${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdownMenuButton']
-${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
+${LANGUAGE DROPDOWN}                  //header//nx-header-language-select//button[@id='dropdownMenuButton']
+${LANGUAGE TO SELECT}                 //header//nx-header-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
 
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Client Custom
@@ -50,25 +50,42 @@ ${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${W
 ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
-${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
 #Header
+${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
+${LOGO ICON}                          ${HEADER ICON LINK}/img
+${LOGO ICON SOURCE}                   ${ENV}/static/images/logo.png
+${LARGE ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and not(contains(@class,'small-icon-overrides'))]
+${SMALL ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and contains(@class,'small-icon-overrides')]
+${LARGE CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and not(contains(@class, 'small-button'))]
+${SMALL CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and contains(@class, 'small-button')]
+${LARGE LOGIN BUTTON}                 //nx-header/header//a[contains(@class, 'login-button')]
+${SMALL LOGIN BUTTON}                 //nx-header/header//ul[contains(@class, 'navbar-right')]//span[contains(@class, 'glyphicon-login')]
+${HEADER LANGUAGE DROPDOWN}           //header//nx-header-language-select
+
+${SYSTEM NAME HEADING}                //nx-system-admin-component//div[contains(@class,'header-title')]/h2[@id='editable-title']
+#${HEADER TAB WRAPPER}                 //nx-header/header//div[contains(@class, 'tab-wrapper')]
+${HEADER TAB BUTTONS}                 //nx-header/header/nx-header-tabs
+${HEADER TAB DROPDOWN}                //nx-header/header/nx-nav-dropdown
+${HEADER ACTIVE TAB}                  //nx-header/header//li[contains(@class, 'tab-link active')]/a
+${SYSTEMS DROPDOWN}                   //nx-header//button[@id='systemsDropdown']
+${SYSTEMS GRID}                       //nx-drop-menu//li[contains(@class, 'systems-grid')]
+${SYSTEMS GRID TILES}                 ${SYSTEMS GRID}//nx-system-tile
+
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
-${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
-${LOGO LINK}                          //header//a[@href='/']
-${LOGO IMG}                           //header//a//img[contains(@src, "static/images/logo.png")]
+${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
-${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account']
-${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
+${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
+${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
-${SYSTEMS DROPDOWN}                   //header//li[contains(@class, 'collapse-second')]//button[@id='systemsDropdown']
-${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "Open in Nx Witness")]
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
 ${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]
 ${CREATE ACCOUNT HEADER}              //header//a[@href='/register']
-${CREATE ACCOUNT BODY}                //nx-app//a[@href='/register']
+${CREATE ACCOUNT BODY}                //div[@class="jumbotron"]//a[@href='/register']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
@@ -90,14 +107,14 @@ ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON 
 ${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
 ${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG IN BUTTON TEXT}")]
-${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message']//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
+${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings
-${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
+${SYSTEM NAME}                        //div[contains(@class,"header-title")]/h2[@id="editable-title"]
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
-${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
+${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[contains(@class, "edit-button")]
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
@@ -162,7 +179,7 @@ ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='fi
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-process-button/following-sibling::button[@type="button"]
+${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="button"]
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
@@ -179,20 +196,20 @@ ${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="delet
 
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
-${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL CHANGES BUTTON TEXT}')]
+${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL BUTTON TEXT}')]
 ${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
 ${APPLY CHANGES CLOSE BUTTON}         ${MODAL DIALOG}//button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
-${DOWNLOAD WINDOWS VMS LINK}          //div[@id="windows-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD WINDOWS VMS LINK}          //a[contains(@class, "download-button")]
 ${DOWNLOAD WINDOWS VMS TEXT}          ${DOWNLOAD WINDOWS VMS LINK}//div[contains(text(),"Windows x64 - Client installer")]
-${DOWNLOAD LINUX VMS LINK}            //div[@id="linux-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD LINUX VMS LINK}            //a[contains(@class, "download-button")]
 ${DOWNLOAD LINUX VMS TEXT}            ${DOWNLOAD LINUX VMS LINK}//div[contains(text(),"Ubuntu x64 - Client installer")]
-${DOWNLOAD MAC OS VMS LINK}           //div[@id="macos-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD MAC OS VMS LINK}           //a[contains(@class, "download-button")]
 ${DOWNLOAD MAC OS VMS TEXT}           ${DOWNLOAD MAC OS VMS LINK}//div[contains(text(),"Mac OS - Client installer")]
-${DOWNLOAD ARM VMS LINK}              //div[@id="arm-panel"]//a[contains(@class, "download-button")]
+${DOWNLOAD ARM VMS LINK}              //a[contains(@class, "download-button")]
 ${DOWNLOAD ARM VMS TEXT}              ${DOWNLOAD ARM VMS LINK}//div[contains(text(),"ARM") and contains(text(),"Client")]
 
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
@@ -227,9 +244,9 @@ ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED D
 
 #Misc
 ${PAGE NOT FOUND}                     //h2[@name="404" and contains(text(),'${PAGE NOT FOUND TEXT}')]
-${TAKE ME HOME}                       //a[@href='/' and contains(text(),"${GO TO MAIN PAGE TEXT}")]
+${TAKE ME HOME}                       //button[a="${GO TO MAIN PAGE TEXT}"]
 ${404 ICON}                           //div[@name="404"]/svg-icon
-
+${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
@@ -241,11 +258,13 @@ ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'
 ${DISABLED}                           \[@disabled]
 
 #Password badges
-${PASSWORD BADGE}                     //nx-tag//div[contains(@class,"badge")]
-${PASSWORD IS WEAK BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
-${PASSWORD IS FAIR BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
-${PASSWORD IS GOOD BADGE}             //nx-tag//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
-${PASSWORD INCORRECT BADGE}           //nx-tag//div[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
+${PASSWORD BADGE}                     //nx-tag//a[contains(@class,"badge")]
+${PASSWORD IS WEAK BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
+${PASSWORD IS FAIR BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
+${PASSWORD IS GOOD BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD IS TOO SHORT BADGE}        //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
+${PASSWORD IS TOO COMMON BADGE}       //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
+${PASSWORD INCORRECT BADGE}           //nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
@@ -268,7 +287,7 @@ ${UPPERCASE PASSWORD}    ADRHARTJAD
 ${NUMBERS PASSWORD}      13462344
 ${7CHAR PASSWORD}       asdfghj
 ${SYMBOL ONLY PASSWORD}    !@#$%^&*()_-+=
-@{WEAK PASSWORDS}    ${7CHAR PASSWORD}    ${UPPERCASE PASSWORD}    ${LOWERCASE PASSWORD}    ${COMMON PASSWORD}    ${7CHAR PASSWORD}    ${NUMBERS PASSWORD}    ${SYMBOL ONLY PASSWORD}
+@{WEAK PASSWORDS}    ${UPPERCASE PASSWORD}    ${LOWERCASE PASSWORD}    ${COMMON PASSWORD}    ${NUMBERS PASSWORD}    ${SYMBOL ONLY PASSWORD}
 
 ${LOWER UPPER PASSWORD}    multPASS
 ${LOWER NUMBER PASSWORD}    mult1234
@@ -290,7 +309,7 @@ ${COMMON PASSWORD}      qweasd123
 @{INCORRECT PASSWORDS}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
 #Local User in System Users
-${LOCAL USER LOGIN}                  //input[@id='name']
+${LOCAL USER LOGIN}                  //h2[@class='user-email']
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
@@ -309,17 +328,3 @@ ${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/im
 ${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
 ${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
 ${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
-
-#ADVANCED SETTINGS
-${ADVANCED SETTINGS}                    ?advanced=true
-${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
-${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
-${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
-${ADVANCED SETTINGS ALERT}              //span[text()='${ADVANCED SETTINGS ALERT TEXT}']
-${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNING TEXT}']
-@{ADVANCED SETTINGS ALERT BAR}
-...    ${HIDE ADVANCED SETTINGS BUTTON} 
-...    ${HIDE ADVANCED SETTINGS ICON}
-...    ${ADVANCED SETTINGS ALERT ICON} 
-...    ${ADVANCED SETTINGS ALERT} 
-...    ${ADVANCED SETTINGS WARNING}

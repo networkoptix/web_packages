@@ -2,20 +2,27 @@
     <div class="row m-0" [ngClass]="{'mb-2' : layout == 'selectors'}">
         <div class="col-12 p-0" *ngIf="layout != 'selectors'">
             <div class="d-block d-md-inline-flex flex-md-row w-100">
-                <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
-                    <span class="glyphicon web-icon-search icon-search"></span>
+                <div class="search-group"
+                     [class]="layout"
+                     [ngClass]="{'mr-3' : layout == 'full'}">
                     <input [ngModel]="localFilter.query"
                            (ngModelChange)="onSearchType($event)"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
                            [maxLength]="CONFIG.search.maxLength"
+                           (focus)="setOnFocus()"
+                           (focusout)="setOnFocusOut()"
+                           (keydown.arrowup)="navArrow(buttonArrowTypeUp)"
+                           (keydown.arrowdown)="navArrow(buttonArrowTypeDown)"
+                           (keyup.enter)="navSelect()"
                            type="text"
                            class="form-control search-input"
                            name="query"
                            autocomplete="off"
-                           [placeholder]="placeholder"/>
-
-                    <button class="search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
-                        <span class="web-icon-close"></span>
+                           [placeholder]="placeholder | translate"/>
+                    <span class="glyphicon web-icon-search icon-search"></span>
+                    <button class="inset search-clear btn btn-clear" *ngIf="localFilter.query" (click)="resetQuery()">
+                        <svg-icon [src]="CONFIG.icons.dir + 'close.svg'"
+                                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                     </button>
                 </div>
                 <div class="float-left btn btn-big btn-tag-selected mt-3 mt-md-0 mr-1"
@@ -28,13 +35,11 @@
                 </div>
 
                 <div class="btn btn-arrow btn-big btn-tag float-left mt-3 mt-md-0"
-                        [ngClass]="{'selected' : showAdvancedOptions}"
+                        [ngClass]="{'cam-table-show selected' : showAdvancedOptions}"
                         (click)="toggleOptions()"
                         *ngIf="layout == 'full'">
-
-                    <div class="nav-arrow">
-                        <span></span>
-                        <span></span>
+                    <div class="arrow-flip">
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_expand.svg'"></svg-icon>
                     </div>
                     <span class="btn-tag-label" translate>Advanced Search</span>
                 </div>
@@ -103,7 +108,6 @@
                                 <li class="tags ml-0" *ngFor="let tag of localFilter.tags">
                                     <nx-tag
                                             element="btn"
-                                            control="tag"
                                             size="large"
                                             [name]="tag.label"
                                             [(ngModel)]="tag.value"

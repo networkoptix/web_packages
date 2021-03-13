@@ -2,38 +2,39 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                   from '@angular/core';
-import { ActivatedRoute }           from '@angular/router';
-import { Location }                 from '@angular/common';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
+import { UntilDestroy }           from '@ngneat/until-destroy';
+import { of, SubscriptionLike }   from 'rxjs';
+import { delay, throttleTime }    from 'rxjs/operators';
+
 import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxMenuService }            from '../../../components/menu/menu.service';
-import { NxHealthService }          from '../health.service';
-import { of, SubscriptionLike }     from 'rxjs';
 import { NxUriService }             from '../../../services/uri.service';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
-import { NxUtilsService }           from '../../../services/utils.service';
-import { delay, throttleTime }      from 'rxjs/operators';
+import { NxMenuService }            from '../../../menu';
+import { NxHealthService }          from '../health.service';
 import { NxHealthLayoutService }    from '../health-layout.service';
+import { NxUtilsService }           from '../../../services/utils.service';
+import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-system-alerts-component',
-    templateUrl   : 'alerts.component.html',
-    styleUrls     : ['alerts.component.scss'],
+    selector : 'nx-system-alerts-component',
+    templateUrl : 'alerts.component.html',
+    styleUrls : ['alerts.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
 
-    filterModel: any;
+    filterModel;
     params: any = {};
     numFilters: number;
-    metricId: any;
+    metricId;
 
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
@@ -44,24 +45,25 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     fixedLayoutClassSubscription: SubscriptionLike;
     elementReadySubscription: SubscriptionLike;
 
+    reportView: boolean;
     layoutReady: boolean;
     fixedLayoutClass: string;
     smallDesktopMode: boolean;
     breakpoint: string;
 
-    manifest: any;
-    values: any;
+    manifest;
+    values;
 
-    tableHeaders: any;
-    alerts: any;
+    tableHeaders;
+    alerts;
 
-    activePanelParams: any;
+    activePanelParams;
 
     alertsCount: number;
-    alertCards: any;
+    alertCards;
     alertCardCount: number;
 
-    windowSizeSubscription: any;
+    windowSizeSubscription;
     tableWrapper: number;
 
     @ViewChild('tiles', { static: false }) tilesElement: ElementRef;
@@ -69,14 +71,16 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('area', { static: false }) areaElement: ElementRef;
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
-    constructor(private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private configService: NxConfigService,
-                private uriService: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                public healthService: NxHealthService,
-                public healthLayoutService: NxHealthLayoutService
+    constructor(
+        public healthLayoutService: NxHealthLayoutService,
+        public healthService: NxHealthService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private location: Location,
+        private menuService: NxMenuService,
+        private configService: NxConfigService,
+        private uriService: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
@@ -111,9 +115,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.numFilters = 4;
 
         this.params = this.route.snapshot.queryParams;
-        this.menuService.setSection('alerts');
+        this.menuService.section = 'alerts';
 
+        const { url } = this.router;
+        this.reportView = url.includes('/health-report/viewer');
         if (!this.healthService.alertsValues) {
+            if (this.reportView) {
+                this.router.navigate([`/health${this.CONFIG.isLocal ? '' : '-report'}/viewer`]);
+            }
+
             return;
         }
 
@@ -265,7 +275,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         for (const [key, value] of Object.entries(this.healthService.manifest)) {
             const val: any = value;
-            if (val.resource !== '') {
+            if (val.resource !== '' && key in this.healthService.values) {
                 const item = { value: val.resource, name: val.resource };
                 typesItems.push(item);
 
@@ -336,8 +346,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
          * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
          * Note: alarm levels are sorted alphabetically
          */
-        const alarmTypes = Object.values(this.healthService.manifest).filter((resource: any) => {
-            return resource.id !== 'systems';
+        const alarmTypes: any = Object.values(this.healthService.manifest).filter((resource: any) => {
+            return resource.id !== 'systems' && resource.id in this.healthService.values;
         }).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
@@ -351,7 +361,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthService.alertsValues.filter((value: any) => {
             return value.metric !== 'systems';
         }).forEach((item) => {
-            alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+            if (alarmTypes[item.metric]) {
+                alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+            }
         });
         this.alertCards = Object.values(alarmTypes).map((alarmType: any) => {
             return {
@@ -401,7 +413,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     setActiveEntity(alarm, updateURI = true) {
-        if (alarm && alarm.entity) {
+        if (alarm?.entity) {
+            this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
             this.healthLayoutService.metricsValuesCount = alarm.metric in this.healthService.values ? Object.values(this.healthService.values[alarm.metric]).length : 0;
 

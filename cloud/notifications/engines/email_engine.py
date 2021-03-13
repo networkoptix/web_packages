@@ -1,13 +1,15 @@
-import logging
-import pystache
-from django.core.mail import EmailMultiAlternatives
-from django.core.mail.backends.smtp import EmailBackend
 from email.mime.image import MIMEImage  # python 3
+import logging
 import json
 import os
-from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
-from cms.controllers import filldata 
+
+import pystache
 from django.core.cache import cache
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail.backends.smtp import EmailBackend
+
+from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
+from cms.controllers import filldata
 
 logger = logging.getLogger(__name__)
 

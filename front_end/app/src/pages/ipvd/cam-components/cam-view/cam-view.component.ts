@@ -3,24 +3,24 @@ import {
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
 }                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxUriService }              from '../../../../services/uri.service';
 import { Subscription }              from 'rxjs';
-import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { delay }                     from 'rxjs/operators';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 
-@AutoUnsubscribe()
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxUriService }              from '../../../../services/uri.service';
+import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-cam-view',
     templateUrl : './cam-view.component.html',
     styleUrls  : ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
-
-    @Input() activeCamera: any;
+    @Input() activeCamera;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -31,14 +31,14 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     analyticsToShow: number;
     showAllFirmware: boolean;
     showAllEvents: boolean;
-    debug: any;
-    beta: any;
-    params: any;
+    debug;
+    beta;
+    params;
     showAnalytics: boolean;
     showCameraAnalytics: boolean;
 
     windowSize: any = {};
-    windowScroll: any;
+    windowScroll;
     searchHeight: number;
     clientHeight: number;
     offsetHeight: number;
@@ -46,14 +46,13 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     viewScrollFixedTop: boolean;
     viewScrollFixedBottom: boolean;
 
-    elementWidth: any;
+    elementWidth;
+    camera: { title: string, param?: string, secondaryParam?: string }[];
 
     private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
-
-    private camera: { title: string, param?: string, secondaryParam?: string }[];
 
     @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
 
@@ -72,20 +71,20 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.camera = [
-            { title: this.LANG.ipvd.maxResolution, param: 'maxResolution' },
-            { title: this.LANG.ipvd.maxFps, param: 'maxFps' },
-            { title: this.LANG.ipvd.primaryCodec, secondaryParam: 'primaryCodec' },
-            { title: this.LANG.ipvd.isAudioSupported, param: 'isAudioSupported' },
-            { title: this.LANG.ipvd.isTwAudioSupported, param: 'isTwAudioSupported' },
-            { title: this.LANG.ipvd.isPtzSupported, param: 'isPtzSupported' },
-            { title: this.LANG.ipvd.isAptzSupported, param: 'isAptzSupported' },
-            { title: this.LANG.ipvd.isMdSupported, param: 'isMdSupported' },
-            { title: this.LANG.ipvd.isFisheye, param: 'isFisheye' },
-            { title: this.LANG.ipvd.isIoSupported, param: 'isIoSupported' },
-            { title: this.LANG.ipvd.isDualStreamingSupported, param: 'isDualStreamingSupported' },
-            { title: this.LANG.ipvd.sndResolution, param: 'sndResolution' },
-            { title: this.LANG.ipvd.isMultiSensor, param: 'isMultiSensor' },
-            { title: this.LANG.ipvd.isAnalyticsSupported, param: 'isAnalyticsSupported' }
+            { title: this.LANG.ipvd.maxResolution?.(), param: 'maxResolution' },
+            { title: this.LANG.ipvd.maxFps?.(), param: 'maxFps' },
+            { title: this.LANG.ipvd.primaryCodec?.(), secondaryParam: 'primaryCodec' },
+            { title: this.LANG.ipvd.isAudioSupported?.(), param: 'isAudioSupported' },
+            { title: this.LANG.ipvd.isTwAudioSupported?.(), param: 'isTwAudioSupported' },
+            { title: this.LANG.ipvd.isPtzSupported?.(), param: 'isPtzSupported' },
+            { title: this.LANG.ipvd.isAptzSupported?.(), param: 'isAptzSupported' },
+            { title: this.LANG.ipvd.isMdSupported?.(), param: 'isMdSupported' },
+            { title: this.LANG.ipvd.isFisheye?.(), param: 'isFisheye' },
+            { title: this.LANG.ipvd.isIoSupported?.(), param: 'isIoSupported' },
+            { title: this.LANG.ipvd.isDualStreamingSupported?.(), param: 'isDualStreamingSupported' },
+            { title: this.LANG.ipvd.sndResolution?.(), param: 'sndResolution' },
+            { title: this.LANG.ipvd.isMultiSensor?.(), param: 'isMultiSensor' },
+            { title: this.LANG.ipvd.isAnalyticsSupported?.(), param: 'isAnalyticsSupported' }
         ];
         this.uriSubscription = this.uri
             .getURI()
@@ -133,7 +132,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.activeCamera) {
+        if (changes.activeCamera.currentValue) {
             this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
             this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;

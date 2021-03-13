@@ -4,10 +4,11 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }                    from '@angular/forms';
+
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { WINDOW }                    from '../../services/window-provider';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -25,9 +26,9 @@ interface Subject {
 }
 
 @Component({
-    selector   : 'nx-modal-message-content',
-    templateUrl: 'message.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-message-content',
+    templateUrl : 'message.component.html',
+    styleUrls   : []
 })
 export class MessageModalContent implements OnInit {
     @Input() account;
@@ -39,7 +40,7 @@ export class MessageModalContent implements OnInit {
     CONFIG: IConfig;
 
     placeholder: string;
-    sendMessage: any;
+    sendMessage: Process;
     userName: string;
     userEmail: string;
     message: string;
@@ -55,7 +56,7 @@ export class MessageModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
@@ -74,9 +75,9 @@ export class MessageModalContent implements OnInit {
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
 
-            return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
+            return this.account.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail);
         }, {
-            successMessage: this.LANG.dialogs.message.sent
+            successMessage: this.LANG.dialogs.message.sent?.()
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -89,19 +90,20 @@ export class MessageModalContent implements OnInit {
     initForm() {
         this.placeholder = '';
         if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
-            this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
+            this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
+
         if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
-            this.title = title.replace('{{asset}}', this.data.asset);
+            this.title = NxLanguageProviderService.translate(title, { asset: this.data.asset });
         } else {
-            this.title = title.replace('{{companyName}}', this.data.to);
+            this.title = NxLanguageProviderService.translate(title, { companyName: this.data.to });
         }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
-                value: subject,
-                name : this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
+                value : subject,
+                name  : NxLanguageProviderService.translate(this.LANG.dialogs.message.subject[subject], { asset: this.data.asset })
             };
         });
 

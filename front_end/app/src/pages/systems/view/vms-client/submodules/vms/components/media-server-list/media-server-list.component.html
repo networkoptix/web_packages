@@ -1,0 +1,51 @@
+<div class="media-server-list">
+
+  <nx-media-server-list-header
+    (ipVisibilityStateChange)="updateShowIP($event)"
+    (filterTokenChange)="updateFilteredList($event)"
+  ></nx-media-server-list-header>
+
+  <div class="server-list">
+    <div
+      class="server"
+      *ngFor="let server of mediaservers"
+      [ngClass]="{
+        'show-ip': showIP,
+        'expanded': isServerExpanded[server.id],
+        'online': server.status === 'Online',
+        'offline': server.status === 'Offline',
+        'empty': !server.cameras.length
+      }"
+    >
+      <div class="server-name" (click)=changeServerVisibility(server.id)>
+        <span class="name" [ngClass]="server.status">{{ server.name }}</span>
+        <span class="ip-info">{{ server.url | ip_info }}</span>
+      </div>
+      <div class="cameras">
+        <a
+          class="camera"
+          *ngFor="let camera of server.cameras"
+          [routerLink]="[camera.id]"
+          [ngClass]="{
+            online: camera.isOnline,
+            live: camera.isLive,
+            recording: camera.isRecording,
+            hasArchive: camera.hasArchive,
+            offline: !camera.isOnline,
+            unauthorized: !camera.isAuthorized,
+            isScheduleEnabled: camera.isScheduleEnabled,
+            selected: camera.id === activeCameraId,
+            error: previewLoaded[camera.id] === -1
+          }"
+        >
+          <div class="preview">
+            <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
+            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
+          </div>
+          <span class="name" [ngClass]="camera.status">{{ camera.name }}</span>
+          <span class="ip-info">{{ camera.url | ip_info }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,7 +3,8 @@
 <div *ngIf="plugin && LANG" class="integration-details">
     <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
         <div class="p-0" style="width: 300px;">
-            <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations">
+            <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations"
+                    [disabled]="CONFIG.isInIframe">
                 <span class="back-arrow"></span>
                 <span translate>All Integrations</span>
             </button>
@@ -75,9 +76,7 @@
                     <label class="group-label" id="info-support-label" translate>Support</label>
                 </div>
                 <div *ngIf="plugin.support.supportPhone"
-                     [translate]="'integration.phoneNumberWithLabel'"
-                     [translateParams]="{number: plugin.support.supportPhone}"
-                     id="info-support-phone"></div>
+                     id="info-support-phone"><span translate>Tel:</span> {{plugin.support.supportPhone}}</div>
                 <div *ngIf="plugin.support.supportWeb">
                     <a [href]="plugin.support.supportWeb"
                        target="_blank" id="info-support-url"
@@ -120,7 +119,7 @@
                         </nx-block>
                         <nx-block side-element type="gray"
                                   *ngIf="plugin.requirementsAndCompatibility">
-                            <header [translate]="'integration.requirements'" [translateParams]="{name: plugin.information.name}"></header>
+                            <header>{{'integration.requirements' | translate: {name: plugin.information.name} }}</header>
 
                             <nx-section>
                                 <div class="card--body-info">
@@ -131,7 +130,7 @@
                                         </div>
                                         <div class="d-flex">
                                             <ng-container *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons; first as isFirst">
-                                                <img [src]="icon.src" [title]="icon.name" [ngClass]="{'ml-0': isFirst}">
+                                                <img [alt]="'icon of ' + icon.name" [src]="icon.src" [title]="icon.name" [ngClass]="{'ml-0': isFirst}">
                                             </ng-container>
                                         </div>
                                     </div>
@@ -139,12 +138,10 @@
                                     <div class="section"
                                          *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
                                         <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length == 1">
-                                            <label class="group-label" [translate]="'integration.testedVersionLabel'"
-                                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
+                                            <label class="group-label">{{'integration.testedVersionLabel' | translate: { vmsName: CONFIG.vmsName } }}</label>
                                         </div>
                                         <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length > 1">
-                                            <label class="group-label" [translate]="'integration.testedVersionsLabel'"
-                                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
+                                            <label class="group-label">{{'integration.testedVersionsLabel'| translate: { vmsName: CONFIG.vmsName } }}</label>
                                         </div>
                                         <div class="d-flex">
                                             <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull"></div>

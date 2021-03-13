@@ -1,17 +1,18 @@
-import { Component, Input, Injector }          from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
-import { NxProcessService }          from '../../services/process.service';
-import { NxToastService }            from '../toast.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { timer, of }                 from 'rxjs';
+import { Component, Input, Injector } from '@angular/core';
+import { NgbActiveModal }             from '@ng-bootstrap/ng-bootstrap';
+import { timer }                      from 'rxjs';
 import {
     delayWhen, retryWhen, map,
     tap, mergeMap
-}                                    from 'rxjs/operators';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxApplyService }            from '../../services/apply.service';
+}                                     from 'rxjs/operators';
+
+import { NxRibbonService }           from '@components/ribbon';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxToastService }            from '@dialogs/toast.service';
+import { NxApplyService }            from '@services/apply.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-restart-server-content',
@@ -19,20 +20,20 @@ import { NxApplyService }            from '../../services/apply.service';
     styleUrls   : []
 })
 export class RestartServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverName: string;
     @Input() serverId: string;
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    restartServer: any;
+    restartServer: Process;
     private applyService: NxApplyService
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -53,7 +54,11 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                this.applyService.isOnline$.next(false);
+                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                if (!haveOnlineServers) {
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                }
+                this.applyService.isOnline$.next(haveOnlineServers);
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(
@@ -85,11 +90,16 @@ export class RestartServerModalContent {
                                 }
                             }),
                             mergeMap(() => {
+                                if (NxConfigService.isLocal) {
+                                    // give the user chance to read the toaster
+                                    setTimeout(() => window.location.reload(), 2000);
+                                    throw Error('re-login on restart');
+                                }
                                 // makes sure that system is online
                                 return this.system.getInfo(true, false)
                                     .then(() => {
                                         if (!this.system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                                             throw Error('system is offline still');
                                         }
                                     })
@@ -103,7 +113,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                                         }
                                     }),
                                     delayWhen(() => timer(4000))
@@ -116,16 +126,16 @@ export class RestartServerModalContent {
                             this.system.currentBusyServerIds.delete(this.serverId);
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
-                            this.toastService.show(this.LANG.servers.restartSuccessful, options);
+                            this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
                             serverSubscription.unsubscribe();
                         });
                 },
                 err => {
                     this.system.currentServerNotBusy = true;
                     this.system.currentBusyServerIds.delete(this.serverId);
-                    let message = this.LANG.servers.restartFailed;
+                    let message = this.LANG.servers.restartFailed();
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
-                        message = this.LANG.servers.serverOffline;
+                        message = this.LANG.servers.serverOffline?.();
                         this.close(this.CONFIG.servers.status.offline);
                     }
                     this.toastService.show(message, options);

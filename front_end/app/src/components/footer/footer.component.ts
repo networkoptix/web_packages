@@ -3,12 +3,14 @@ import {
     OnDestroy, OnInit
 }                                   from '@angular/core';
 import { DomSanitizer }             from '@angular/platform-browser';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxAppStateService }        from '../../services/nx-app-state.service';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 import { Subscription }             from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxAppStateService }        from '@services/nx-app-state.service';
+import { NxMenusService, MenuNode } from '@services/menus.service';
+
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-footer',
     templateUrl: 'footer.component.html',
@@ -19,7 +21,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     companyLink: string;
     companyName: string;
     copyrightYear: string;
-    footerItems: any;
+    footerItems: MenuNode[];
     viewFooter: boolean;
 
     // options
@@ -27,9 +29,12 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     classes: string[] = [];
     private footerSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                private sanitizer: DomSanitizer,
-                private appState: NxAppStateService,) {
+    constructor(
+        configService: NxConfigService,
+        private sanitizer: DomSanitizer,
+        private appState: NxAppStateService,
+        private menusService: NxMenusService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -40,8 +45,15 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
-        // if item.enabled is undefined assume TRUE
-        this.footerItems = this.CONFIG.footerItems.filter((item) => item.enabled || item.enabled === undefined);
+        this.menusService.getMenu('footer').subscribe(footer => {
+            this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
+            if (this.CONFIG.isLocal) {
+                this.footerItems.forEach(footerItem => {
+                    footerItem.new_window = true;
+                    footerItem.url = footerItem.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
+                });
+            }
+        });
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;

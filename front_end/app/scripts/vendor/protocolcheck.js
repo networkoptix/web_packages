@@ -191,7 +191,7 @@
         }
     }
 
-    window.protocolCheck = function(uri, failCb, successCb) {
+    window.protocolCheck = function(uri, openClientTimeout, openMobileClientTimeout, failCb, successCb) {
         function failCallback() {
             failCb && failCb();
         }
@@ -218,7 +218,7 @@
         if (browser.isFirefox) {
             openUriUsingFirefox(uri, failCallback, successCallback);
         } else if (browser.isChrome) {
-            openUriWithTimeoutHack(uri, failCallback, successCallback, Config.openClientTimeout);
+            openUriWithTimeoutHack(uri, failCallback, successCallback, openClientTimeout);
         } else if (browser.isIE) {
             openUriUsingIEInOlderWindows(uri, failCallback, successCallback);
         } else if (browser.isSafari && !detectmob()) { // Mobile safari doesn't work this way
@@ -226,10 +226,10 @@
              openUriWithHiddenFrame(uri, failCallback, successCallback);
         } else if (detectmob()){
             //not supported, implement please
-            openUriWithTimeoutHack(uri, failCallback, successCallback, Config.openMobileClientTimeout);
+            openUriWithTimeoutHack(uri, failCallback, successCallback, openMobileClientTimeout);
         } else {
             // default - unknown browser, try chrome's solution
-            openUriWithTimeoutHack(uri, failCallback, successCallback, Config.openClientTimeout);
+            openUriWithTimeoutHack(uri, failCallback, successCallback, openClientTimeout);
         }
     }
 } (window));

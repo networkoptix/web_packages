@@ -2,7 +2,6 @@
 @use '../../../../components/tag/tag.component' as *;
 @use '../../../../styles/typography';
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-cam-table {
@@ -24,23 +23,6 @@ nx-cam-table {
   .nx-table-wrapper {
     margin-bottom: 40px;
 
-    ::-webkit-scrollbar {
-        width: initial;
-        height: $scrollbar-height;
-    }
-    ::-webkit-scrollbar-thumb {
-        -webkit-border-radius:initial;
-        border-radius: 6px;
-        -webkit-box-shadow:initial;
-        height: 8px;
-        border: 2px solid $light4;
-    }
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: initial;
-        -webkit-border-radius: initial;
-        border-radius: initial;
-    }
-
     .csv {
       float : right;
       margin-top : 24px;
@@ -61,7 +43,7 @@ nx-cam-table {
 
       thead {
         th {
-          @include typography.medium11;
+          // @include typography.medium11;
           padding          : .5rem 0;
           font-weight      : 500 !important;
           text-transform   : none;
@@ -74,7 +56,7 @@ nx-cam-table {
           }
 
           &.table-title {
-            @include typography.regular24;
+            @include typography.regular24dark9;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -83,8 +65,7 @@ nx-cam-table {
           }
 
           .caption {
-            @include typography.medium13;
-            color : $light16;
+            @include typography.medium13light;
             position : relative;
             height   : 2rem;
             overflow-wrap : initial;
@@ -96,25 +77,24 @@ nx-cam-table {
               right    : auto;
               position : relative;
               bottom   : 0;
+            }
+          }
 
-              &:after {
-                content : ' ';
-              }
+          .arrow-flip {
+            height : 20px !important;
+            width  : 20px !important;
 
-              &.asc {
-                &:after {
-                  content : '+';
-                }
-              }
+            svg-icon {
+              width  : 20px;
+              height : 20px;
+              left   : 0;
+              top    : 2px;
             }
           }
         }
       }
 
       tbody {
-        //padding : .5rem 0;
-        //display : table-cell;
-
         tr {
           min-height : rem(24px);
 
@@ -127,7 +107,7 @@ nx-cam-table {
             background : $light16;
 
             td {
-              color : $light1;
+              color : $light1 !important;
 
               .icon-negative {
                 color : $light1;
@@ -136,7 +116,7 @@ nx-cam-table {
           }
 
           td {
-            @include typography.regular13;
+            @include typography.regular13dark9;
             padding      : 4px 4px 4px 0;
             line-height  : 1rem;
             border       : none;
@@ -148,22 +128,22 @@ nx-cam-table {
         }
       }
 
-      &-header {
-        @include typography.regular13;
-        padding          : 0.5rem 1rem;
-        background-color : $additional_light1;
-        border           : 1px solid $light3;
-        border-bottom    : none;
-        line-height      : 16px;
-        text-transform   : none;
-        overflow-wrap    : break-word;
-
-        .results {
-          @include typography.medium11;
-          font-weight : 500 !important;
-          line-height : 16px;
-        }
-      }
+      //&-header {
+      //  @include typography.regular13;
+      //  padding          : 0.5rem 1rem;
+      //  background-color : $additional_light1;
+      //  border           : 1px solid $light3;
+      //  border-bottom    : none;
+      //  line-height      : 16px;
+      //  text-transform   : none;
+      //  overflow-wrap    : break-word;
+      //
+      //  .results {
+      //    @include typography.medium11;
+      //    font-weight : 500 !important;
+      //    line-height : 16px;
+      //  }
+      //}
     }
 
     .pagination-nav {
@@ -183,8 +163,7 @@ nx-cam-table {
           }
 
           .page-link {
-            @include typography.regular13;
-            color: $light16 !important;
+            @include typography.regular13light;
             background-color: $light4;
             border-radius: 2px;
             height: 32px;

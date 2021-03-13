@@ -1,10 +1,14 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, EventEmitter,
-    Output, SimpleChanges, ViewChild
+    Output, SimpleChanges, ViewChild, ElementRef
 }                            from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseDropdown }      from '../injDropdown';
+
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { Watcher }                   from '../../../services/apply.service';
 
 /* Usage
  <nx-select [id]="select.id"
@@ -35,14 +39,30 @@ import { BaseDropdown }      from '../injDropdown';
 export class NxGenericDropdown extends BaseDropdown {
     // items should have at least "name"
     // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
-    @Input() id: any;
+    @Input() id;
     @Input() items: DropdownItem[];
-    @Input() selected: any;
-    @Output() onSelected = new EventEmitter<string>();
+    @Input() selected;
     @Input() merge: boolean;
+    @Input() ellipsisMargin: boolean;
+    @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
+    @Input() type: string;
+    @Input() forcePosition: {left?: number, top?: number, width?: number}
+
+    @Output() onSelected = new EventEmitter<string>();
+
+    dropdownType: string;
+    nativeElementTop = 0
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
+
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        public ref: ElementRef
+    ) {
+        super(languageService, configService);
+    }
 
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';
@@ -52,12 +72,20 @@ export class NxGenericDropdown extends BaseDropdown {
                 item.name += `<span class="additional-help">${item.help}</span>`;
             }
         });
+
+        this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
+    }
+
+    ngAfterViewInit() {
+        Promise.resolve().then(() => {
+            this.nativeElementTop = this.forcePosition ? this.ref.nativeElement.parentElement.parentElement.offsetTop : this.ref.nativeElement.offsetHeight;
+        });
     }
 
     change(item) {
-        this._selected = item;
+        this._selectedItem = item;
         this.onSelected.emit(item);
-        this.onChangeCallback(this._selected);
+        this.onChangeCallback(this._selectedItem);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -72,12 +100,12 @@ export class NxGenericDropdown extends BaseDropdown {
         if (changes.selected && changes.selected.currentValue) {
             if (changes.selected.currentValue.help &&
                 changes.selected.currentValue.name.indexOf('additional-help') === -1) {
-
                 changes.selected.currentValue.name += `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }
-            this._selected = changes.selected.currentValue;
+
+            this._selectedItem = changes.selected.currentValue;
         } else if (!this.selected && !changes.selected.firstChange) {
-            this._selected = { name: this.message, value: '0' };
+            this._selectedItem = { name: this.message, value: '0' };
         }
     }
 
@@ -94,6 +122,7 @@ export class DropdownItem {
         public name: string,
         public help?: string,
         public value?: string,
-        public state?: string
+        public state?: string,
+        public disabled?: boolean
     ) {}
 }

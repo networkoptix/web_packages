@@ -4,8 +4,8 @@ import {
 }                                    from '@angular/core';
 import { BehaviorSubject }           from 'rxjs';
 
+import { NxRibbonService }           from '../../../components/ribbon';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
@@ -16,7 +16,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
-    @Input() list: any;
+    @Input() list;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -60,9 +60,12 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     private showRibbon(): void {
         this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon,
-            this.LANG.ribbon.integration.backToEditText,
-            this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
+            this.LANG.ribbon.integration.previewRibbon?.(),
+            [{
+                type  : 'link',
+                text  : this.LANG.ribbon.integration.backToEditText?.(),
+                value : this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
+            }]
         );
     }
 }

@@ -1,0 +1,31 @@
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+<ng-template #intro let-intro="intro">
+    <div class="about-heading">
+        <h1>{{intro.title}}</h1>
+        <ng-container *ngIf="intro.asset?.shortDescription">
+            <p [innerHTML]="intro.asset.shortDescription || ''"></p>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-container *ngIf="path === '/docs/' + baseName">
+    <ng-container *ngIf="aboutStructure;else preloader">
+        <ng-container *ngFor="let node of aboutStructure" [ngSwitch]="node.template">
+            <ng-container *ngSwitchCase="aboutCases.INTRO">
+                <ng-container *ngTemplateOutlet="intro;context:{intro:node.node}"></ng-container>
+            </ng-container>
+            <nx-capabilities *ngSwitchCase="aboutCases.CAPABILITIES" [capabilitiesNode]="node.node"></nx-capabilities>
+            <nx-get-started *ngSwitchCase="aboutCases.GET_STARTED" [getStartedNode]="node.node"></nx-get-started>
+            <nx-dev-tools *ngSwitchCase="aboutCases.DEV_TOOLS"
+                [devToolsNode]="node.node"
+                [title]="node.node.displayName || node.node.title || node.node.asset.title"
+            ></nx-dev-tools>
+            <nx-integrations *ngSwitchCase="aboutCases.INTEGRATIONS" [integrationsNode]="node.node"></nx-integrations>
+            <nx-support *ngSwitchCase="aboutCases.SUPPORT" [supportNode]="node.node"></nx-support>
+            <nx-supported-tech *ngSwitchCase="aboutCases.SUPPORTED_TECH" [supportedTechNode]="node.node"></nx-supported-tech>
+            <nx-error-state *ngSwitchDefault [errors]="getInvalidTemplateError(node)"></nx-error-state>
+        </ng-container>
+    </ng-container>
+</ng-container>
+<router-outlet></router-outlet>

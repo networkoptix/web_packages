@@ -2,58 +2,58 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { Location }                  from '@angular/common';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxHealthService }           from '../health.service';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+}                                 from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location }               from '@angular/common';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { of, SubscriptionLike }      from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { delay, throttleTime }       from 'rxjs/operators';
+
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxMenuService }             from '../../../menu';
+import { NxHealthService }           from '../health.service';
 import { NxHealthLayoutService }     from '../health-layout.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxSystem }                  from '../../../services/system.service';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 interface Params {
-    [key: string]: any;
+    [key: string]: string;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-system-metrics-component',
-    templateUrl : 'metrics.component.html',
-    styleUrls : ['metrics.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-system-metrics-component',
+    templateUrl   : 'metrics.component.html',
+    styleUrls     : ['metrics.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    account: any;
+    account;
 
-    filterModel: any;
+    filterModel;
     system: NxSystem;
-    metricId: any;
-    initialId: any;
+    metricId;
+    initialId;
 
     fromBrowserNav: boolean;
     layoutReady: boolean;
     fixedLayoutClass: string;
     breakpoint: string;
 
-    manifest: any;
-    values: any;
-    alarms: any;
+    manifest;
+    values;
+    alarms;
 
-    selectedData: any;
-    selectedPanelData: any;
-    selectedValues: any;
+    selectedData;
+    selectedPanelData;
+    selectedValues;
 
-    menu: any;
+    menu;
     metricName: string;
 
     objectValues = Object.values;
@@ -73,26 +73,36 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('search', { static: false }) searchElement: ElementRef;
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
-    constructor(private accountService: NxAccountService,
-                private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
-                private systemService: NxSystemService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private uri: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                public healthService: NxHealthService,
-                public healthLayoutService: NxHealthLayoutService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public healthService: NxHealthService,
+        public healthLayoutService: NxHealthLayoutService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private location: Location,
+        private menuService: NxMenuService,
+        private uri: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.translations;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
+
         this.filterModel = {
             query: ''
         };
     }
 
     ngOnInit(): void {
+        if (this.healthService.values === undefined) {
+            const { url } = this.router;
+            if (url.includes('/health-report/viewer')) {
+                this.router.navigate(['/health-report/viewer']);
+            }
+
+            return;
+        }
+
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
 
@@ -129,7 +139,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .subscribe((params: any) => {
                 this.metricId = params.metric;
                 this.metricName = this.healthService.manifest[this.metricId].name;
-                this.menuService.setSection(this.metricId);
+                this.menuService.section = this.metricId;
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.healthLayoutService.metricsValuesCount = this.metricId in this.healthService.values ? Object.values(this.healthService.values[this.metricId]).length : 0;

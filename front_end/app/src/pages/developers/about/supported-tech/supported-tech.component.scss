@@ -1,0 +1,80 @@
+@use '../../../../styles/typography';
+@use '../../../../../styles/theme_variables' as *;
+@use 'bootstrap_utils' as bootstrap;
+
+.header-non-link {
+    @include typography.regular24dark9;
+}
+
+.header-link {
+    @extend .header-non-link;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.supported-tech {
+    background: $light1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 52px 16px 64px 16px;
+    color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        padding: 48px 16px 36px 16px;
+    }
+
+    .heading-link {
+        margin-bottom: 10px;
+    }
+
+    .tech-wrapper {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 48px -72px -12px 16px;
+        @include bootstrap.media-breakpoint-down(xs) {
+            margin: 48px -24px 0 16px;
+        }
+
+        & > .tech-block {
+            margin: 0 78px 78px 0;
+            cursor: pointer;
+            height: 56px;
+            @include bootstrap.media-breakpoint-down(xs) {
+                margin: 0 32px 32px 0;
+            }
+            & > img {
+                height: 100%;
+                @include bootstrap.media-breakpoint-down(xs) {
+                    height: 40px;
+                }
+            }
+        }
+    }
+
+    .language-wrapper {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0 8px -8px 16px;
+        @include bootstrap.media-breakpoint-down(xs) {
+            margin: 0 8px -8px 16px;
+        }
+
+        & > .language-block {
+            margin: 0 8px 8px 0;
+            @include bootstrap.media-breakpoint-down(xs) {
+                margin: 0 16px 16px 0;
+            }
+            background: $light4;
+            color: $light16;
+            padding: 3px 8px;
+            cursor: pointer;
+            & > svg-icon > svg {
+                height: 60px;
+            }
+        }
+    }
+}

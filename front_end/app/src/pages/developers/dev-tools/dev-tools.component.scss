@@ -1,0 +1,77 @@
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use 'bootstrap_utils' as bootstrap;
+
+.heading-link {
+    @include typography.regular24dark9;
+    cursor: pointer;
+    margin-bottom: 48px;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.dev-tools {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 96px auto 0 auto;
+    padding: 0 16px;
+    max-width: 1200px;
+    color: $dark10;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-top: 36px !important;
+    }
+}
+
+.detail-blocks {
+    margin-right: -16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tool-card {
+    height: 242px;
+    flex: 1 0 20%;
+    min-width: 275px;
+    margin: 0 16px 16px 0;
+    cursor: pointer;
+
+    & > header {
+        background: $additional_light1;
+        padding: 16px 0 18px 16px;
+        & > svg-icon > svg {
+            height: 48px;
+        }
+    }
+}
+
+.tool-detail {
+    padding: 8px 16px;
+    h3 {
+        line-height: 32px;
+    }
+    p {
+        line-height: 16px;
+    }
+}
+
+.stand-alone-blocks {
+    $cardWidth: 291px;
+    margin: 16px auto;
+    padding-left: 16px;
+    justify-content: start;
+    width: calc(100vw - 16px);
+    @for $columns from 2 through 6 {
+        @media screen and (min-width: $cardWidth * $columns + 32px) {
+            width: $cardWidth * $columns;
+            @if $columns is 2 {
+                padding-left: 0;
+                & > .tool-card {
+                    max-width: 275px;
+                }
+            }
+        }
+    }
+}

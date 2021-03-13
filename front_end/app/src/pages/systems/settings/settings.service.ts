@@ -1,24 +1,19 @@
-import { Injectable, OnDestroy }       from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { NxCloudApiService }           from '../../../services/nx-cloud-api';
-import { NxDialogsService }            from '../../../dialogs/dialogs.service';
-import { NxAccountService }            from '../../../services/account.service';
-import { NxUriService }                from '../../../services/uri.service';
-import { NxMenuService }               from '../../../components/menu/menu.service';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject }       from 'rxjs';
+import { NxRibbonService } from '@components/ribbon';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSettingsService implements OnDestroy {
     footerSubject = new BehaviorSubject(false);
-    systemSubject = new BehaviorSubject(undefined);
+    systemSubject = new BehaviorSubject<any>(false);
     selectedSectionSubject = new BehaviorSubject([]);
 
-    constructor(private api: NxCloudApiService,
-                private accountService: NxAccountService,
-                private uriService: NxUriService,
-                private menuService: NxMenuService,
-                private dialogs: NxDialogsService
+    constructor(
+        private ribbonService: NxRibbonService,
+        private languageService: NxLanguageProviderService
     ) {}
 
     get system() {
@@ -35,21 +30,6 @@ export class NxSettingsService implements OnDestroy {
 
     loadUsers() {
         return this.system.getUsers(true);
-    }
-
-    addUser() {
-        return this.dialogs.addUser(this.system)
-            .then((userId) => {
-                if (userId) {
-                    userId = this.system.mediaserver.cleanId(userId);
-                    this.menuService.setDetailsSection(userId);
-
-                    this.uriService
-                        .updateURI(`systems/${this.system.id}/users/${userId}`)
-                        .catch(error => console.error(error));
-                }
-            })
-            .catch(err => console.error(err));
     }
 
     ngOnDestroy() {

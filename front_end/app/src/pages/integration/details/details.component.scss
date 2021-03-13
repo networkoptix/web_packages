@@ -1,4 +1,4 @@
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 @use '../../../../styles/theme_palette';
 
 
@@ -6,11 +6,11 @@ integration-detail-component {
 
     .integration-details {
     }
-    
+
     .menu {
         background-color : theme_palette.$light5;
         padding          : .5rem 0 0;
-        
+
         .menu-level-2 {
             border-radius: 2px;
         }

@@ -1,4 +1,5 @@
 import { Inject, Injectable }        from '@angular/core';
+
 import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
@@ -52,7 +53,7 @@ export class NxUrlProtocolService {
     }
 
     generateLink(linkSettings: linkSettings = {}) {
-        let settings = {
+        let settings: linkSettings = {
             native           : true,
             from             : 'portal', // client, mobile, portal, webadmin
             context          : undefined,
@@ -69,10 +70,10 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        let protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
+        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
         const host     = this.window.location.host;
 
-        const getParams: any = { ...settings.actionParameters };
+        const getParams: linkSettings = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -103,7 +104,7 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings: linkSettings): Promise<any> {
+    getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
         return new Promise((resolve, reject) => {
             this.accountService
                 .authKey()
@@ -125,7 +126,7 @@ export class NxUrlProtocolService {
     open(systemId: string) {
         return this.getLink({
             systemId
-        }).then((data: any) => {
+        }).then((data: { link: string, authKey: string}) => {
             let link      = data.link;
             const authKey = data.authKey;
             link = link.replace(/&/g, '&&'); // This is a hack,
@@ -135,6 +136,7 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
+            // TODO: Add type to returned promise, low priority
             return new Promise<any>((resolve, reject) => {
                 /* The browser opens a dialog that we cannot directly detect or get a response from.
                  * However, when the browser dialog opens it causes the page to blur so we use that to detect what
@@ -167,26 +169,41 @@ export class NxUrlProtocolService {
                 // Check on before unload
                 // @ts-ignore
                 // eslint-disable-next-line prefer-promise-reject-errors
-                this.window.protocolCheck(link, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
-                    setTimeout(() => {
+                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout,
+                    () => {
                         this.accountService
                             .checkVisitedKey(authKey)
                             .then((visited) => {
+                                // On windows chrome actually fails so we can use the protocol error handler
                                 this.window.onblur = undefined;
                                 this.window.onfocus = undefined;
-                                /* How the check works
-                                 * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
-                                 * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
-                                 * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
-                                 */
-                                if (!visited && (!hasBlur || hasOpened)) {
+                                if (!visited && blurCount > 0) {
                                     // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }
-                                return resolve(visited);
+                                return resolve(false);
                             });
-                    }, this.CONFIG.openClientTimeout);
-                });
+                    },
+                    () => {
+                        setTimeout(() => {
+                            this.accountService
+                                .checkVisitedKey(authKey)
+                                .then((visited) => {
+                                    this.window.onblur = undefined;
+                                    this.window.onfocus = undefined;
+                                    /* How the check works
+                                     * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
+                                     * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
+                                     * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
+                                     */
+                                    if (!visited && (!hasBlur || hasOpened)) {
+                                        // eslint-disable-next-line prefer-promise-reject-errors
+                                        return reject({ resultCode: this.CONFIG.openClientError });
+                                    }
+                                    return resolve(visited);
+                                });
+                        }, this.CONFIG.openClientTimeout);
+                    });
             });
         });
     }
@@ -196,13 +213,13 @@ export class NxUrlProtocolService {
     }
 }
 
-export type linkSettings = {
+export interface linkSettings {
     native?: boolean,
     from?: string,
-    context?: any,
+    context?: {},
     command?: string,
     systemId?: string,
-    action?: any,
-    actionParameters?: any,
-    auth?: boolean
+    action?: {},
+    actionParameters?: {},
+    auth?: boolean|string|undefined
 }

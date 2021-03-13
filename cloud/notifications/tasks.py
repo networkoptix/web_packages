@@ -1,21 +1,20 @@
-from celery import shared_task
-from .engines import email_engine
-
 from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
-from celery.exceptions import Ignore
+import traceback
+import logging
 
+from celery import shared_task
+from celery.exceptions import Ignore
 from django.conf import settings
 from django.utils import timezone
 
 from api.models import Account
 from notifications import notifications_api
+from notifications.engines import email_engine
 from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
 from notifications.models import Message, PushNotification
 from util.helpers import get_language_for_email
 
-import traceback
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -25,18 +24,7 @@ class MaxResendException(Exception):
 
 
 def log_error(error, user_email, msg_type, message, lang, customization, queue, attempt):
-    error_formatted = '\n{}:{}\nTarget Email: {}\nType: {}\nMessage:{}\nLanguage: {}\nCustomization: {}\nQueue: {}\n' \
-                      'Attempt: {}\nCall Stack: {}'\
-        .format(error.__class__.__name__,
-                error,
-                user_email,
-                msg_type,
-                message,
-                lang,
-                customization,
-                queue,
-                attempt,
-                traceback.format_exc().replace("Traceback", ""))
+    error_formatted = f'\n{error.__class__.__name__}:{error}\nTarget Email: {user_email}\nType: {msg_type}\nMessage:{message}\nLanguage: {lang}\nCustomization: {customization}\nQueue: {queue}\n Attempt: {attempt}\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
 
     if isinstance(error, SMTPDataError) or isinstance(error, SMTPException) or isinstance(error, SMTPServerDisconnected):
         logger.warning(error_formatted)
@@ -46,7 +34,7 @@ def log_error(error, user_email, msg_type, message, lang, customization, queue, 
 
 def send_email_log(_task):
     def wrapper(*args, **kwargs):
-        logger.info("Start {} was run with args {}, kwargs: {}".format(_task.__name__, args, kwargs))
+        logger.info(f"Start {_task.__name__} was run with args {args}, kwargs: {kwargs}")
         return _task(*args, **kwargs)
     return wrapper
 
@@ -97,6 +85,7 @@ def send_email(msg_id, queue="", attempt=1):
 @shared_task
 def send_push_notification(notification_id, request_data, device_tokens=None, count=1):
     notification_object = PushNotification.objects.get(id=notification_id)
+    notification_object.state = PushNotification.RESULT_STATES.in_progress
     # Prevent duplicate notification processing
     if notification_object.count >= count:
         return
@@ -105,26 +94,36 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
         notification_object.save()
 
     if count == 1:
-        logger.info('Start processing push notification: {}'.format(notification_id))
+        logger.info(f'Start processing push notification: {notification_id}')
+    else:
+        logger.info(f'Retrying push notification: {notification_id} (count={count})')
 
     try:
         if device_tokens is None:
             devices = set_subscriptions_from_targets(notification_object, request_data)
             if not devices:
                 log_push_result(notification_object, 'No matching subscriptions found')
+                notification_object.send_date = timezone.now()
+                notification_object.state = PushNotification.RESULT_STATES.success
+                notification_object.save()
                 return
             responses = notification_object.send_notifications(devices=devices)
         else:
             responses = notification_object.send_notifications(device_tokens=device_tokens)
         resend_tokens = notifications_api.process_push_response(responses, notification_object)
 
-        if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
-            send_push_notification.apply_async(
-                countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
-                args=[notification_object.id],
-                kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1},
-                queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-            )
+        if resend_tokens:
+            if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
+                log_push_result(notification_object, f'Requeuing (count={count+1})')
+                send_push_notification.apply_async(
+                    countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
+                    args=[notification_object.id],
+                    kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1},
+                    queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
+                )
+            else:
+                notification_object.state = PushNotification.RESULT_STATES.failure
+                log_push_result(notification_object, 'Retries exceeded')
 
     except Exception as exception:
         if 'responses' not in locals() or not responses:
@@ -137,11 +136,13 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
                     queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
                 )
         elif 'resend_tokens' not in locals():
+            notification_object.state = PushNotification.RESULT_STATES.failure
             log_push_result(
                 notification_object, f'{type(exception)}: {exception},\nResponse: {responses}.', logging.ERROR,
                 stack_trace=True
             )
         else:
+            notification_object.state = PushNotification.RESULT_STATES.failure
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR, stack_trace=True)
     else:
         notification_object.send_date = timezone.now()

@@ -1,5 +1,7 @@
 import json
+
 import pystache
+
 from cms.forms import convert_meta_to_description
 from cms.models import DataStructure
 
@@ -34,7 +36,7 @@ def process_data_structure(data_structure):
         data_structure["nice_meta"] += f"{br}{meta}"
 
         if "options" in data_structure["meta"]:
-            options = [option["label"] if "label" in option else option for option in data_structure["meta"]["options"]]
+            options = [option.get('label') or option for option in data_structure["meta"]["options"]]
             data_structure["nice_meta"] += f'Options:&nbsp;{", ".join(options)}&nbsp;&nbsp;&nbsp;'
 
         if data_structure["nice_meta"].find('<br>') == 0:

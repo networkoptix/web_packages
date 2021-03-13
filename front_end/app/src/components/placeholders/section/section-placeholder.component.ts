@@ -1,4 +1,5 @@
 import { Component, Input, OnInit }  from '@angular/core';
+
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
@@ -19,19 +20,20 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
+    @Input() wrapperHeight = 203;
     @Input() height: string;
     @Input() width: string;
-    @Input() translatedMessage: string;
+    @Input() translatedMessage: any;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     constructor(
-        private languageService: NxLanguageProviderService,
-        private configService: NxConfigService
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
     ) {
-        this.LANG = this.languageService.translations;
-        this.CONFIG = this.configService.getConfig();
+        this.LANG = languageService.translations;
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

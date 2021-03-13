@@ -2,7 +2,6 @@ import {
     Component, EventEmitter, Input, OnInit, Output,
     ViewEncapsulation
 } from '@angular/core';
-import { IConfig, NxConfigService } from '../../../services/nx-config';
 
 /* Usage
  <nx-alert-block
@@ -22,25 +21,23 @@ import { IConfig, NxConfigService } from '../../../services/nx-config';
     encapsulation : ViewEncapsulation.None
 })
 export class NxAlertBlockComponent implements OnInit {
-    CONFIG: IConfig;
 
     @Input() iconSrc: string;
     @Input() line1: string;
     @Input() line2: string;
-    @Input() type: 'error' | 'warning' | 'default' = 'default';
+    @Input() type: 'error' | 'warning' | 'info' | 'default' = 'default';
 
     @Input() btnIconSrc: string;
     @Input() btnCaption: string;
 
     @Output() onAction = new EventEmitter<boolean>();
 
-    constructor(
-        configService: NxConfigService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    isNotDefaultType = false;
+
+    constructor() {}
 
     ngOnInit() {
+        this.isNotDefaultType = ['error', 'warning', 'info'].includes(this.type);
     }
 
     onClick() {

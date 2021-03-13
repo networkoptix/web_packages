@@ -1,7 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { IConfig, NxConfigService }                                      from '../../services/nx-config';
-import { NxLanguageProviderService }                                     from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }                                       from '../../../language_i18n_static_types';
+import {
+    Component, EventEmitter, Input,
+    OnChanges, Output, SimpleChanges
+}                                    from '@angular/core';
+
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-password-input-validation',
@@ -9,9 +13,11 @@ import { LanguageI18NStaticTypes }                                       from '.
     styleUrls  : ['password-validation.component.scss']
 })
 export class NxPasswordValidationComponent implements OnChanges {
-    @Input() forElement: any;
-    @Input() value: any;
-    @Input() customClass: any;
+    @Input() forElement;
+    @Input() value;
+    @Input() customClass;
+    @Input() hideErrors = false;
+    @Output() updateWeakPassword = new EventEmitter<boolean>();
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -31,6 +37,7 @@ export class NxPasswordValidationComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.value) {
             this.weak = (this.forElement.errors && this.forElement.errors.minlength && !this.forElement.errors.pattern); // weak
+            this.updateWeakPassword.emit(this.weak);
         }
     }
 }

@@ -1,11 +1,11 @@
-from api.controllers.cloud_api import System
-from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+import json
+
 from django.conf import settings
 from rest_framework import serializers
 
-from .models import PushSubscription, PushDevice, PushNotification
-
-import json
+from api.controllers.cloud_api import System
+from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from notifications.models import PushSubscription, PushDevice, PushNotification
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 
@@ -29,8 +29,8 @@ class NotificationSerializer(serializers.Serializer):
                 raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
             return data
 
-    systemId = serializers.UUIDField(allow_null=False)
-    targets = serializers.ListField(child=serializers.CharField(min_length=1))
+    systemId = serializers.UUIDField(allow_null=False, label='ID of target system')
+    targets = serializers.ListField(child=serializers.CharField(min_length=1), label='List of emails')
     notification = NotificationDataSerializer()
 
 

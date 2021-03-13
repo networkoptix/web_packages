@@ -1,0 +1,20 @@
+<ng-template #showError>
+    <nx-error-state [errors]="errorManager.errors"></nx-error-state>
+</ng-template>
+
+<div *ngIf="!errorManager.hasErrors; else showError" class="support-footer">
+    <h2 class="support-link"[routerLink]="cleanSupportNode.url">{{cleanSupportNode.title}}</h2>
+    <div class="support-wrapper">
+        <div class="left-image">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[1]"></svg-icon>
+        </div>
+        <div class="support-block">
+            <div *ngFor="let block of cleanSupportNode.asset.blocks"
+                class="support-body"
+                [innerHTML]="block.contentHTML"></div>
+        </div>
+        <div class="right-image">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[2]"></svg-icon>
+        </div>
+    </div>
+</div>

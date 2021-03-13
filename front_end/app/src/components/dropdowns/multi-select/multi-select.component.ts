@@ -1,11 +1,12 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, SimpleChanges
-}                                    from '@angular/core';
-import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
-import { BaseDropdown }              from '../injDropdown';
 
 /* Usage
  <nx-multi-select
@@ -34,17 +35,17 @@ import { BaseDropdown }              from '../injDropdown';
     ]
 })
 
-export class NxMultiSelectDropdown extends BaseDropdown {
-    @Input() id: any;
-    @Input('items') itemsOrig: any;
-    @Input() canSelectAll: any;
-    @Input() canSearch: any;
+export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
+    @Input() id: string;
+    @Input('items') itemsOrig: Item[];
+    @Input() canSelectAll: boolean;
+    @Input() canSearch: boolean;
 
-    public items: any = {};
+    public items: Item[] = [];
     public filter: string;
     public textSelected: any = {};
 
-    private innerValue: any;
+    private innerValue;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -62,7 +63,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     clearSelected() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = false;
             const index   = this.innerValue.indexOf(item.id);
             if (index > -1) {
@@ -71,14 +72,14 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         });
 
         // ensure 'change' will be triggered as checkboxes didn't fire click event
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
         this.updateModel();
 
         // break anchor nav event
         return false;
     }
 
-    change(evt, item) {
+    change(evt, item: any) {
         const index = this.innerValue.indexOf(item.id);
         if (index > -1) {
             this.innerValue.splice(index, 1);
@@ -96,28 +97,28 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     applyLocalFilter(value) {
         this.filter = value;
 
-        this.items = this.itemsOrig.filter((item) => {
+        this.items = this.itemsOrig.filter((item: any) => {
             return item.id.toLowerCase().includes(value.toLowerCase());
         });
     }
 
-    trackItem(index, item) {
+    trackItem(index, item: any) {
         return item ? item.id : undefined;
     }
 
     updateItems() {
-        this.items.forEach((item) => {
+        this.items.forEach((item: any) => {
             item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
         });
 
         // ensure 'change' will be triggered
-        this.items = this.items.map(obj => ({ ...obj }));
+        this.items = this.items.map((obj: any) => ({ ...obj }));
     }
 
     updateLabel() {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
-                this.textSelected = this.items.find(item => {
+                this.textSelected = this.items.find((item: any) => {
                     return (item.label.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list
@@ -126,11 +127,11 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any;
+                this.textSelected = this.LANG.search.Any();
                 break;
             }
             default: {
-                this.textSelected = this.innerValue.length + ' ' + this.LANG.search.selected;
+                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
                 break;
             }
         }

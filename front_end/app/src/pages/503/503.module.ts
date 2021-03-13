@@ -1,13 +1,11 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { Nx503Component }       from './503.component';
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { Nx503Component }       from './503.component';
 
 const appRoutes: Routes = [
     { path: '503', component: Nx503Component }
@@ -16,8 +14,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        BrowserModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
@@ -28,9 +24,6 @@ const appRoutes: Routes = [
         Nx503Component
     ],
     bootstrap      : [],
-    entryComponents: [
-        Nx503Component
-    ],
     exports: [
         Nx503Component
     ]

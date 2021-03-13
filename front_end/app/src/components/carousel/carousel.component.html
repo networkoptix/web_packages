@@ -5,21 +5,21 @@
              [ngClass]=" { 'active': i == currentIndex }"
              [@visibilityChange]="i == currentIndex ? 'enter' : 'leave'">
             <div class="carousel-img">
-                <img class="img-fluid" [src]="screenshot.value">
+                <img [alt]="screenshot.caption || (type + ' carousel image ' + (i + 1))" class="img-fluid" [src]="screenshot.value">
             </div>
         </div>
         <span *ngIf="imageCount > 1" class="carousel-control-prev" role="button"
               (click)="previousElement()">
             <div class="nav-arrow left">
-                    <span></span>
-                    <span></span>
+                <span></span>
+                <span></span>
             </div>
         </span>
         <span *ngIf="imageCount > 1" class="carousel-control-next" role="button"
               (click)="nextElement()">
             <div class="nav-arrow right">
-                    <span></span>
-                    <span></span>
+                <span></span>
+                <span></span>
             </div>
         </span>
     </div>
@@ -31,7 +31,7 @@
                 [ngClass]=" { 'active': i == currentIndex }">
             <div class="carousel-img" (click)="setIndex(i)">
                 <div style="align-self: center">
-                    <img class="img-fluid" [src]="screenshot.value">
+                    <img [alt]="type + ' preview image'" class="img-fluid" [src]="screenshot.value">
                 </div>
             </div>
         </div>

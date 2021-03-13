@@ -1,10 +1,11 @@
 import { ElementRef, Injectable }   from '@angular/core';
 import { BehaviorSubject }          from 'rxjs';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { NxHealthService }          from './health.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
 import { debounceTime }             from 'rxjs/operators';
-import { NxRibbonService }          from '../../components/ribbon/ribbon.service';
+
+import { NxHealthService }          from './health.service';
+import { NxRibbonService }          from '../../components/ribbon';
+import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Injectable({
     providedIn: 'root'
@@ -213,7 +214,7 @@ export class NxHealthLayoutService {
         // ... have a feeling that making the table off screen causes table header and table title
         // to report 0 height initially and screw pageSize calc.
         //
-        if (!table || table.offsetLeft === 0 && tableHeader.innerText.length && !tableHeader.offsetHeight) {
+        if (!table || table.offsetLeft === 0 && tableHeader?.innerText.length && !tableHeader.offsetHeight) {
             if (this.metricsValuesCount > 1) { // short circuit single entity - this was going until metric w/ page is loaded -- TT
                 this.healthService.tableReady = false;
                 setTimeout(() => this.setTableDimensions());

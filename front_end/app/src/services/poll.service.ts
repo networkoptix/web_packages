@@ -1,6 +1,6 @@
-import { BehaviorSubject, concat, Observable, of } from 'rxjs';
-import { concatMap, delay, skip, tap }             from 'rxjs/operators';
-import { Injectable }                              from '@angular/core';
+import { Injectable }                        from '@angular/core';
+import { Observable, defer, Subject, timer } from 'rxjs';
+import { concatMap, takeUntil }              from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,7 @@ import { Injectable }                              from '@angular/core';
  * After the observable resolves it will make the call again in 10 seconds.
  *
  * To start the poll subscribe to it.
- * const currentSubscription = examplePoll.subscribe((data: any) => { console.log(data); });
+ * const currentSubscription = examplePoll.subscribe((data: T) => { console.log(data); });
  *
  * Stopping the poll.
  * currentSubscription.unsubscribe();
@@ -22,18 +22,18 @@ import { Injectable }                              from '@angular/core';
  * examplePoll.unsubscribe();
  */
 export class NxPollService {
+    unsub$ = new Subject();
     constructor() {
     }
 
-    createPoll(apiCall: Observable<any>, intervalDelay: number): Observable<any> {
-        const load$    = new BehaviorSubject('');
-        const refresh$ = of('').pipe(
-            delay(intervalDelay),
-            tap(_ => load$.next('')),
-            skip(1));
+    ngOnDestroy() {
+        this.unsub$.next('done');
+    }
 
-        const poll$ = concat(apiCall, refresh$);
-
-        return load$.pipe(concatMap(_ => poll$));
+    createPoll<T>(apiCall: () => Observable<T> | Promise<T>, intervalDelay: number): Observable<T | string> {
+        return timer(0, intervalDelay).pipe(
+            takeUntil(this.unsub$),
+            concatMap(_ => defer(apiCall))
+        );
     }
 }

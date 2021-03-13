@@ -1,11 +1,11 @@
 {
+    "language": "en_US",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
     "Integrations (β)": "Integrationer (β)",
     "Privacy": "Sekretess",
     "Support": "Support",
-    "Supported Devices": "Enheter som stöds",
     "Terms": "Villkor",
     "accessRoles": {
         "Administrator": {
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "Konto skapat",
-                "message": "Bekräftelsemeddelande med aktiveringslänken skickas till {{email}}"
+                "message": "Bekräftelsemeddelande med aktiveringslänken skickas till {email}"
             },
             "activated": {
                 "title": "Kontot har aktiverats"
@@ -129,6 +129,7 @@
             "unauthorized": "Autentisering krävs"
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
+        "login": "logga in",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
         "disableMotionWarning": "Inspelningsläget ändras till \"Spela alltid in\"",
         "recordingModes": {
@@ -145,7 +146,10 @@
             "low": "Låg"
         },
         "general": "Allmänt",
+        "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} fler integrationer...} one{#{endTag} mer integration...} other{#{endTag} fler integrationer...}}",
         "searchCamPlaceholder": "Sök",
+        "system": "system",
         "systemHasNoCameras": "Inga kameror",
         "systemHasNoCamerasMessage": "Det finns inga tillgängliga kameror för dig i systemet. <br><br>Anslut några kameror till serverns lokala nätverk för att göra dem upptäckbara eller be systemadministratören att ändra din åtkomstnivå.",
         "systemNewVersion": "Uppdatera ditt system",
@@ -157,7 +161,6 @@
         "systemServerError": "Internt serverfel",
         "systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
-        "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
         "unknown": "Okänd",
         "vendor": "Leverantör",
         "model": "Modell",
@@ -201,8 +204,8 @@
             "title": "Molnlagring",
             "enableStorage": "Aktivera molnlagring",
             "otherSystem": "Andra system...",
-            "initial": "Vi erbjuder {{compCapacity}} gratis molnlagring per system för att komma igång.",
-            "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbord {{vmsName}} klienten.",
+            "initial": "Vi erbjuder {compCapacity} gratis molnlagring per system för att komma igång.",
+            "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbordsklienten {vmsName}.",
             "camera": "kamera",
             "cameras": "kameror",
             "usageLabels": {
@@ -242,16 +245,20 @@
                 "message": "Du kan bara flytta molnlagring mellan system du är ägare till. <br/><br/>Anslut ett system till %CLOUD_NAME% med ditt molnkonto för att kunna flytta molnlagring till det."
             }
         },
+        "changeStorage": {
+            "support": "Om du tänkte flytta analysdata till en annan lagringsplats, vänligen kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> innan du fortsätter."
+        },
         "merge": {
-            "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Fel lösenord för lokal administratörsanvändare",
+            "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Lösenord för administratörsanvändare är fel",
             "checking": "Kontrollerar...",
-            "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
-            "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
+            "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%cloudName%</strong> eller slå samman lokalt med <strong>%vmsName%</strong> klienten.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
-            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i det system som du vill slå ihop med denna.",
-            "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",
+            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
+            "latestBuild": "senaste versionen",
+            "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.</p><p>Inställningar och namnet tas från <strong>{primarySystem}</strong>.</p>",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
             "noServerFound": "Inga servrar hittades",
@@ -260,27 +267,31 @@
             "ownerCanMergeText": "Du kan bara slå samman system där du är ägare",
             "passwordRequired": "Lösenord krävs",
             "passwordWrong": "Fel lösenord",
-            "primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
-            "primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "System {targetSystem} har en nyare programversion som är oförenlig med det nuvarande systemet. Uppdatera det nuvarande systemet till {downloadHTML} att slå samman det med {targetSystem} systemet.",
+            "primarySystemOffline": "System {primarySystem} är offline och kan inte slås samman med System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Vi rekommenderar att du rådgör med",
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
-            "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
-            "secondarySystemUnavailable": "System {{targetSystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server vid {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Har inte åtkomst till {{targetSystem}} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
+            "secondaryCannotMerge": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera {targetSystem} till {downloadHTML} att slå samman den med den aktuella.",
+            "secondarySystemUnavailable": "System {targetSystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server vid {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Kan inte komma åt {targetSystem} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
-            "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
-            "systemOfflineUrl": "{{targetSystem}} är otillgänglig.",
-            "systemsIncompatible": "Denna server har en inkompatibel mjukvaruversion. Vänligen uppdatera båda systemen till den <a href=\"/download\" target=\"_blank\" translate>senaste versionen</a>.",
-            "systemVersionsNotMatch": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\" target=\"_blank\" translate>senaste version</a>.",
+            "serverVersionOld": "Denna server har en äldre programversion som är oförenlig med det aktuella systemet. Uppdatera den till den senaste versionen för att slå samman den med den nuvarande.",
+            "serverVersionNew": "Denna server har nyare programversion än det nuvarande systemet. Uppdatera båda systemen till samma version för att slå samman dem.",
+            "systemOffline": "System {targetSystem} är offline och kan inte slås ihop med det nuvarande",
+            "systemOfflineUrl": "{targetSystem} är otillgängligt",
+            "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera %targetSystem% till {downloadHTML} att slå samman den med den aktuella.",
+            "systemVersionNew": "System {targetSystem} har en nyare programversion som är inkompatibel med det nuvarande systemet. Uppdatera det aktuella systemet till {downloadHTML} för att slå ihop det med {targetSystem} -systemet.",
+            "systemVersionsNotMatch": "Systemen har programvaruversioner som inte matchar varandra. Uppdatera båda till {downloadHTML}.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Det kommer att finnas mer än <strong>{{maxServers}}</strong> servrar i det sammanslagna systemet."
+            "warning": "Det kommer att finnas mer än <strong>{maxServers}</strong> servrar i det sammanslagna systemet."
         },
         "message": {
             "storageSettingsSaved": "Lagringsinställningar sparade.",
@@ -295,22 +306,22 @@
             },
             "sent": "Meddelandet har skickats.",
             "subject": {
-                "integration_feedback": "Feedback för integration {{asset}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "integration_feedback": "Feedback för integration {asset}",
+                "ipvd_feedback_device": "Feedback om {asset}",
                 "ipvd_feedback_page": "Feedback för kamerans sida",
-                "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
-                "technical_inquiry": "Teknisk fråga för {{asset}}"
+                "sales_inquiry": "Försäljningsförfrågan för {asset}",
+                "technical_inquiry": "Teknisk förfrågan för {asset}"
             },
             "title": {
-                "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "integration": "Kontakta {companyName}",
+                "ipvd_feedback_device": "Feedback om {asset}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             }
         },
         "removeSystem": {
             "action": "Koppla från",
-            "message": "Du kommer inte att kunna logga in i det här systemet längre.",
-            "title": "Koppla bort systemet från ditt konto?"
+            "message": "Du håller på att koppla bort detta system från ditt konto. Du kommer inte att kunna komma åt detta system längre. Är du säker?",
+            "title": "Koppla från systemet?"
         },
         "titles": {
             "error": "Fel",
@@ -320,9 +331,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare?",
-            "serversDetach": "Ta bort servern \"{{ title }}\" från nuvarande system?",
-            "serversReset": "Återställa servern \"{{ title }}\" till standardvärden?",
-            "serversRestart": "Starta om servern \"{{ title }}\"?"
+            "serversDetach": "Koppla från servern \"{ title }\" från nuvarande system?",
+            "serversReset": "Återställ servern \"{ title }\" till standard?",
+            "serversRestart": "Starta om servern \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -404,24 +415,28 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
-        "FAIL": "Systemet <strong>{{failedSystem}}</strong> är offline.",
-        "Connection timed out": "Systemet <strong>{{failedSystem}}</strong> är offline.",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste versionen</a>.",
+        "FAIL": "System <strong>{failedSystem}</strong> är offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> är offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> kan inte nås just nu.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till {downloadHTML}.",
+        "This user does not exist.": "Denna användaren finns inte.",
+        "The user is disabled. Please contact your system administrator.": "Användaren är inaktiverad. Kontakta din systemadministratör.",
         "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
-        "fail": "{{failedSystem}} är oåtkomligt.",
+        "fail": "{failedSystem} är otillgänglig.",
         "incompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
         "unknown_error": "Ett okänt fel inträffade. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Detta konto är redan aktiverat",
         "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
         "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
+        "accountNotActivatedAlternate": "Kontot är inte aktiverat. Logga in på <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> och följ angivna instruktioner.",
         "alreadyExists": "Det här kontot existerar redan",
         "brokenAccount": "Oväntat problem med kontot. <a href=\"/restore_password\">Återställ konto</a>",
         "cantActivatePrefix": "Kan inte aktivera ditt konto",
         "cantAddYourOwnEmail": "Det är inte tillåtet att lägga till din egen e-postadress",
         "cantChangeAccountPrefix": "Kan inte spara ändringar",
         "cantChangePasswordPrefix": "Kan inte spara lösenord",
+        "cantDeleteAccountOwningSystems": "Kan inte ta bort konto som äger system",
         "cantDisconnectSystemPrefix": "Kan inte ta bort System",
         "cantEditAdmin": "Detta konto har administratörsrättigheter",
         "cantEditYourself": "Ändring av egna behörigheter är inte tillåtet",
@@ -437,15 +452,16 @@
         "emailNotFound": "Kontot existerar inte.",
         "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
-        "lostConnection": "Anslutning till {{systemName}} förlorad",
-        "mergedSystemIsOffline": "Systemet <strong>{{failedSystem}}</strong> är offline.",
+        "lostConnection": "Anslutning till {systemName} förlorade",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> är offline.",
         "notAuthorized": "Fel lösenord",
+        "badUsername": "Konto hittades inte",
         "notFound": "Hittades inte",
         "ok": "ok",
         "oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
-        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -456,7 +472,7 @@
         "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
         "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
-        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
+        "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -466,10 +482,9 @@
         "Health Monitor": "Hälsoövervakning",
         "Storage": "Lagring",
         "myIntegrationsLabel": "Mina",
-        "phoneNumberWithLabel": "Tel: {{number}}",
-        "requirements": "{{name}} Krav",
-        "testedVersionLabel": "Testad av utvecklare med {{vmsName}} version:",
-        "testedVersionsLabel": "Testad av utvecklare med {{vmsName}} version:"
+        "requirements": "{name} Krav",
+        "testedVersionLabel": "Testad av utvecklaren med {vmsName} version:",
+        "testedVersionsLabel": "Testat av utvecklaren med {vmsName} versioner:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avancerade PTZ-kameror",
@@ -482,14 +497,8 @@
         "PTZ cameras": "PTZ-kameror",
         "camera": "Kamera",
         "count": "Räkna",
-        "disclaimer": "Denna lista är begränsad till enheter som finns på {{vmsName}} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {{companyName}}. Ingen personlig information samlas in och varje användare förblir helt anonym.",
         "dvr": "DVR",
         "encoder": "Encoder",
-        "feedback": {
-            "a_Please": "Snälla",
-            "b_Link": "skicka förfrågan",
-            "c_Info": "för ytterligare frågor / problem angående stödda enheter."
-        },
         "hardwareType": "Typ",
         "isAnalyticsSupported": "Analys",
         "isAptzSupported": "Avancerad PTZ",
@@ -511,9 +520,16 @@
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
         "sndResolution": "Sekundär ström",
-        "topXByVolume": "Topp {{value}} efter volym:",
-        "vendor": "Tillverkare"
+        "vendor": "Tillverkare",
+        "sortKey": ""
     },
+    "ipvdFeedback": {
+        "a_Please": "Snälla",
+        "b_Link": "skicka förfrågan",
+        "c_Info": "för ytterligare frågor / problem angående stödda enheter."
+    },
+    "ipvdTopXByVolume": "Topp {value} efter volym:",
+    "ipvdDisclaimer": "Denna lista är begränsad till enheter som finns på {vmsName} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {companyName}. Ingen personlig information samlas in och varje användare förblir helt anonym.",
     "menu": {
         "titles": {
             "cameras": "Kameror",
@@ -529,6 +545,7 @@
         "activate": "Aktivera konto",
         "activateCode": "Aktivera konto",
         "activateSuccess": "Kontot aktiverat",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Ändra lösenord",
         "debug": "Debugläge",
         "default": "%CLOUD_NAME%",
@@ -544,16 +561,16 @@
         "restorePasswordSuccess": "Lösenordet sparat",
         "supportedDevices": "Enheter som stöds",
         "system": "System",
-        "systemName": "{{systemName}}",
         "systemShare": "Dela system",
         "systems": "System",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Visa kameror"
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "Visa kameror",
+        "apiTool": "API-testverktyg"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
-        "integrationSetup": "Installationsinstruktioner för {{pluginName}}. {{pluginShortDecr}}",
-        "integrationDetails": "{{pluginName}} för {{pluginShortDecr}}"
+        "integrationSetup": "Installationsinstruktioner för {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} för {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "för vanligt",
@@ -576,11 +593,11 @@
             "message": "Se till att dina servrar är online och försök igen."
         },
         "merge": {
-            "title": "Detta system slås samman med {{systemName}}.",
+            "title": "Detta system slås samman till {systemName}.",
             "message": {
                 "dependingOnSize": "Beroende på databasens storlek kan det ta upp till flera timmar.",
                 "untilFinished": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
-                "whenFinished": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i {{systemName}} System, och detta system kommer att raderas."
+                "whenFinished": "När sammanslagningen är klar blir alla användare och kameror från detta system tillgängliga i {systemName} systemet och detta system kommer att raderas."
             }
         },
         "server": {
@@ -590,7 +607,7 @@
     },
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "Du hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a>. Den %COMPANY_NAME% integritetspolicy, som omfattar instruktioner om hur att ta ut ditt medgivande, finns <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a>.",
+        "integration": "Du hittar {INTEGRATION_COMPANY} sekretesspolicy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">här</a>. %COMPANY_NAME% sekretesspolicyn, som innehåller instruktioner om hur du återkallar ditt samtycke, finns tillgänglig <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a>.",
         "ipvd": "Genom att skicka detta formulär samtycker du till att kontakta dig av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke."
     },
     "registration": {
@@ -603,6 +620,8 @@
         },
         "finishingMerge": "Slutför sammanslagningen av system",
         "integration": {
+            "accept": "Godkänn",
+            "reject": "Avvisa",
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
             "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen."
         },
@@ -616,23 +635,28 @@
         "analyticsSelected": "analyshändelse",
         "filter applied": "filter används",
         "filters applied": "filter används",
+        "appliedFilters": "{count, plural, =0{# filter} one{# filter} other{# filter}} tillämpas",
         "hardwareType": "Typ",
         "hardwareTypes": "Typer",
         "minResolution": "Minsta upplösning",
         "search_ipvd": "Sök efter modell eller tillverkare",
-        "selected": "vald",
+        "selected": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
         "vendor": "Tillverkare",
         "vendors": "Tillverkare"
     },
     "servers": {
+        "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",
+        "autoRefresh": "automatisk uppdatering i {time}...",
         "beginDetach": "Servern frånkopplas nu",
         "beginReset": "Servern återställer nu.",
         "detachSystemFailed": "Det gick inte att ta bort servern från systemet. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
         "detachSystemSuccess": "Servern kopplades bort från systemet.",
         "portWarning": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
+        "refresh": "Uppdatera",
+        "refreshing": "Uppdaterar...",
         "removeMediaserverFailed": "Det gick inte att ta bort servern från systemet.",
         "resetFailed": "Det gick inte att återställa servern. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
-        "resetSuccessful": "Server {{ serverName }} har återställts till standardinställningar.",
+        "resetSuccessful": "Server {serverName} har återställts till standardvärden.",
         "restartFailed": "Det gick inte att starta om servern.",
         "restartSuccessful": "Servern har startat om.",
         "serverOffline": "Servern är offline.",
@@ -640,19 +664,21 @@
         "status": {
             "checking": "kontrollerar...",
             "offline": "frånkopplad",
-            "reseting": "återställer...",
+            "resetting": "återställer...",
             "restarting": "startar om..."
         },
         "successRename": "Servernamn sparat."
     },
     "system": {
-        "MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",
+        "connected": "Ansluten",
+        "not_connected": "Inte ansluten",
+        "MERGE_FINISHES": "När sammanslagningen är klar blir alla användare och kameror från detta system tillgängliga i <strong>{targetSystemName}</strong> System, och detta system kommer att raderas.",
         "mergeUnknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
         "mySystemSearch": "JagMigMinMin",
         "settings": {
+            "notAbleToLoadStorageInfo": "Kan inte ladda lagringsinformation.",
             "notAbleToLoadSecurity": "Kan inte ladda säkerhetsinställningar.",
             "notAbleToLoadSystem": "Kan inte ladda systeminställningar.",
-            "notAbleToLoadStorageInfo": "Kan inte ladda lagringsinformation.",
             "sessionLimitDuration": {
                 "hours": "timmar",
                 "minutes": "minuter"
@@ -695,6 +721,13 @@
                 "text": "Detaljerad",
                 "help": "(logga all tillgänglig information)"
             }
+        },
+        "storageToolTips": {
+            "local": "Lokal",
+            "usb": "USB",
+            "network": "Nätverk, tillagt via OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {
@@ -708,23 +741,47 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
+        "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "System {{systemName}} har tagits bort från ditt konto"
+                "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
                 "success": "Systemet har kopplats bort från %CLOUD_NAME%"
             },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
             "merge": {
                 "failed": "Systemsammanslagning misslyckades",
-                "success": "Sammanslagningen av system {{primaryName}} och {{secondaryName}} slutförd"
+                "success": "System merge completed"
             },
             "rename": {
                 "success": "Systemnamnet sparat"
             }
-        }
+        },
+        "viewingReport": "You are viewing an imported report"
+    },
+    "headerLabels": {
+        "healthReportForSystem": "Heath Report For System {systemName}"
     },
     "license": {
+        "licenseTypeTitles": {
+            "Time": "Tid",
+            "Trial": "Provperiod",
+            "Professional": "Professionell",
+            "Analog": "Analog",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "Videovägg",
+            "Analog Encoder": "Analog enkoder",
+            "Starter": "Starter",
+            "IO Module": "I/O Modul",
+            "Bridge": "Brygga",
+            "NVR": "NVR"
+        },
         "info": {
             "type": "Typ",
             "channels": "Kanaler",
@@ -732,30 +789,18 @@
             "hwid": "Hårdvaruid",
             "status": "Status",
             "expires": "Förfaller",
-            "time": "Tid",
             "deactivations": "Deaktivering kvar",
-            "trial": "Provperiod",
             "online": "Uppkopplad",
             "error": "Fel",
             "expired": "Har förfallit",
             "ok": "OK",
-            "digital": "Professionell",
-            "analog": "Analog",
-            "edge": "Edge",
-            "vmax": "VMAX",
-            "videowall": "Videovägg",
-            "analogencoder": "Analog enkoder",
-            "starter": "Starter",
-            "iomodule": "I/O Modul",
-            "bridge": "Brygga",
-            "nvr": "NVR",
             "nvrError": "NVR fel",
             "serverNotFound": "Servern hittades inte"
         },
         "messages": {
-            "required": "{{number}} mer krävs",
+            "required": "{number} more required",
             "activated": "Licensnyckel aktiverad",
-            "inuse": "Licensnyckeln har redan aktiverats och är bunden till servern med hårdvaru-ID {{hwid}} i ett annat system",
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar."
         }
     },
@@ -853,5 +898,37 @@
         "maxWebMTranscoders": "Max antal WEBM-anslutningar för servern. Chrome öppnar 2 anslutningar samtidigt och stänger sedan den första. Så det rekommenderas att ange värdet> = 2 till denna parameter.",
         "maxEventLogRecords": "Maximala händelseloggposter för att hålla i databasen. Den verkliga mängden obestängda poster kan vara upp till 20% högre än det angivna värdet.",
         "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran)."
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "Main",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Avaktiverad"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

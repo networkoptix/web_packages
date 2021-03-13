@@ -4,10 +4,10 @@
 
 .card {
     box-shadow   : none;
-    border-color : typography.$light4;
+    border-color : $light4;
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px typography.$additional_light2;
+        box-shadow: 0 -14px 0 2px $additional_light2;
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -20,12 +20,12 @@
     }
 
     &--header {
-        height           : unset;
+        height           : 3rem;
         display          : flex;
         align-items      : center;
-        background-color : typography.$additional_light1;
+        background-color : $additional_light1;
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid typography.$light3;
+        border-bottom    : 1px solid $light3;
         position         : relative;
 
         h4 {
@@ -48,7 +48,7 @@
 
     &--body {
         padding          : 1rem;
-        background-color : typography.$light1;
+        background-color : $light1;
 
         img {
             max-width : 100%;
@@ -72,8 +72,8 @@
                     height      : 1rem;
                     width       : 1rem;
                     margin-left : .25rem;
-                    color       : typography.$light12;
-                    font-size   : typography.$font-size-sm;
+                    color       : $light12;
+                    font-size   : $font-size-sm;
                     line-height : 1rem;
                 }
 
@@ -89,7 +89,7 @@
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : typography.$light1;
+        background-color : $light1;
         box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
 
         footer {
@@ -99,7 +99,7 @@
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : typography.$light1;
+            background-color : $light1;
             z-index          : 9;
         }
     }
@@ -111,98 +111,123 @@
     }
 
     &.gray {
-        background-color : typography.$light4;
-        border           : 1px solid typography.$light4;
+        background-color : $light4;
+        border           : 1px solid $light4;
         border-bottom    : none;
 
         .card--header {
-            background-color    : typography.$light4;
-            border-bottom-color : typography.$light6;
+            background-color    : $light4;
+            border-bottom-color : $light6;
         }
 
         .card--body {
-            background-color : typography.$light4;
-            border-top       : 1px solid typography.$light6;
+            background-color : $light4;
+            border-top       : 1px solid $light6;
         }
 
         .card--footer {
-            background-color : typography.$light4;
+            background-color : $light4;
         }
     }
 
     &.simple-default {
-        background-color : typography.$red2;
-        border           : 1px solid typography.$red1;
+        background-color : $red2;
+        border           : 1px solid $red1;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : typography.$red2;
-            border-top       : 1px solid typography.$red1;
+            background-color : $red2;
+            border-top       : 1px solid $red1;
         }
 
         .card--footer {
-            background-color : typography.$red2;
+            background-color : $red2;
         }
     }
 
     &.simple-error {
-        background-color : rgba(typography.$red_l2, .1);
-        border           : 1px solid rgba(typography.$red_l2, .3);
+        @include typography.regular13dark9;
+        background-color : rgba($red_l2, .1);
+        border           : 1px solid rgba($red_l2, .3);
         margin-bottom    : 8px;
+        line-height      : 18px;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : rgba(typography.$red_l2, .1);
-            border-top       : 1px solid rgba(typography.$red_l2, .3);
+            background-color : rgba($red_l2, .1);
+            border-top       : 1px solid rgba($red_l2, .3);
         }
 
         .card--footer {
-            background-color : rgba(typography.$red_l2, .1);
+            background-color : rgba($red_l2, .1);
         }
     }
 
     &.simple-warning {
-        background-color : rgba(typography.$yellow_main, .1);
-        border           : 1px solid rgba(typography.$yellow_main, .3);
+        @include typography.regular13dark9;
+        background-color : rgba($yellow_main, .1);
+        border           : 1px solid rgba($yellow_main, .3);
         margin-bottom    : 8px;
+        line-height      : 18px;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : rgba(typography.$yellow_main, .1);
-            border-top       : 1px solid rgba(typography.$yellow_main, .3);
+            background-color : rgba($yellow_main, .1);
+            border-top       : 1px solid rgba($yellow_main, .3);
         }
 
         .card--footer {
-            background-color : rgba(typography.$yellow_main, .1);
+            background-color : rgba($yellow_main, .1);
+        }
+    }
+
+    &.simple-info {
+        @include typography.regular13dark9;
+        background-color : rgba($brand_core, .1);
+        border           : 1px solid rgba($brand_core, .3);
+        margin-bottom    : 8px;
+        line-height      : 18px;
+
+        .card--header {
+            display : none;
+        }
+
+        .card--body {
+            background-color : rgba($brand_core, .1);
+            border-top       : 1px solid rgba($brand_core, .3);
+        }
+
+        .card--footer {
+            background-color : rgba($brand_core, .1);
         }
     }
 
     &.menu {
-        background-color : typography.$light5;
-        border           : 1px solid typography.$light5;
+        background-color : $light5;
+        border           : 1px solid $light5;
         border-bottom    : none;
 
         .card--header {
-            background-color    : typography.$light5;
-            border-bottom-color : typography.$light7;
+            background-color    : $light5;
+            border-bottom-color : $light7;
         }
 
         .card--body {
-            background-color : typography.$light5;
-            border-top       : 1px solid typography.$light7;
+            background-color : $light5;
+            border-top       : 1px solid $light7;
         }
 
         .card--footer {
-            background-color : typography.$light5;
+            background-color : $light5;
         }
 
         &.top {
@@ -245,11 +270,14 @@
             }
 
             .minor-text {
-                @include typography.regular11;
-                color      : typography.$light16;
+                @include typography.regular11light16;
                 margin-top : 5px;
             }
         }
+    }
+
+    .h20 {
+        height: 20px;
     }
 }
 

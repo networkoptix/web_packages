@@ -1,9 +1,10 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject }             from 'rxjs';
+
 import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { BehaviorSubject }             from 'rxjs';
+import { NxProcessService, Process }   from '../../services/process.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
@@ -19,9 +20,10 @@ export class AddUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    hideErrors: boolean = true;
     alreadyExists: string;
-    addUser: any;
-    user: any;
+    addUser: Process;
+    user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
 
@@ -45,23 +47,38 @@ export class AddUserModalContent {
     }
 
     private getRoleDescription() {
+        let description;
         if (this.selectedPermission.description) {
-            return this.selectedPermission.description;
+            description = this.selectedPermission.description;
+        } else if (this.selectedPermission.userRoleId) {
+            description = this.LANG.accessRoles.customRole.description?.();
+        } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
+        } else {
+            description = this.LANG.accessRoles.customRole.description?.();
         }
-        if (this.selectedPermission.userRoleId) {
-            return this.LANG.accessRoles.customRole.description;
-        }
+
+        return (typeof description === 'function') ? description() : description;
+    }
+
+    private getAccessDescription() {
+        let description;
         if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            return this.LANG.accessRoles[this.selectedPermission.name].description;
+            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
+        } else {
+            description = this.LANG.accessRoles.customRole.description?.();
         }
-        return this.LANG.accessRoles.customRole.description;
+
+        return (typeof description === 'function') ? description() : description;
+    }
+
+    preSubmit = () => {
+        this.hideErrors = false;
     }
 
     setPermission(role: any) {
         this.selectedPermission = role;
-        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name]
-            ? this.LANG.accessRoles[this.selectedPermission.name].description
-            : this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.getAccessDescription();
     }
 
     saveUser() {
@@ -73,7 +90,7 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists.replace('%systemName%', this.system.info.name);
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.systemName || this.system.info.name);
         this.user = {
             email     : '',
             isEnabled : true,
@@ -86,6 +103,7 @@ export class AddUserModalContent {
         this.accessDescription = this.getRoleDescription();
 
         this.addUser = this.processService.createProcess(() => {
+            this.hideErrors = false;
             const userExists: boolean = this.system.users.some(item => {
                 return item.email === this.user.email;
             });
@@ -98,6 +116,7 @@ export class AddUserModalContent {
         })
             .then((user) => {
                 if (user) {
+                    this.hideErrors = true;
                     this.activeModal.close(user.id);
                 }
             });

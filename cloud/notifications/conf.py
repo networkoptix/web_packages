@@ -1,9 +1,24 @@
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import caches
+from push_notifications.conf.legacy import LegacyConfig
 
 from cms.models import Asset, AssetType
-from push_notifications.conf.legacy import LegacyConfig
+
+
+CLOUD_NOTIFICATIONS_USERS_TEMPLATE = \
+    "<div>" \
+    "    {{#users_by_customization}}" \
+    "    <div class=\"panel panel-default\">" \
+    "        <div class=\"panel-heading\" onclick=\"toggleUserList('{{name}}_users')\">" \
+    "            <h3 class=\"panel-title\">{{name}}</h3>" \
+    "        </div>" \
+    "        <div class=\"panel-body\" id=\"{{name}}_users\">" \
+    "            {{users}}" \
+    "        </div>" \
+    "    </div>" \
+    "    {{/users_by_customization}}" \
+    "</div>"
 
 
 class empty(object):

@@ -1,4 +1,5 @@
 @use "../../../../styles/typography";
+@use "../../../../styles/mixins";
 @use '../../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
@@ -43,65 +44,11 @@
         display: flex;
         align-items: center;
         margin-bottom: 24px;
-        .header-title {
-            flex: 0 1 auto;
-            min-width: 0;
-            height: 40px;
-            text-align: left !important;
-            h2 {
-                font-family: $font-family-medium;
-                line-height: 40px;
-                vertical-align: middle;
-                height: 40px;
-                font-size: 24px;
-            }
+
+        .camera-buttons {
+            @include mixins.details-buttons;
         }
 
-        .edit-button {
-            width: 40px;
-            flex: 1 0 auto;
-            display: flex;
-            padding-left: 8px;
-            justify-content: start;
-            align-items: center;
-            cursor: pointer;
-        }
-        .camera-buttons {
-            flex: 0 0 auto;
-            &:hover {
-                color: $dark15;
-                svg-icon {
-                    svg {
-                        g,
-                        path {
-                            fill: $dark15 !important;
-                        }
-                    }
-                }
-            }
-            @include typography.regular13;
-            // flex: 0 0 auto;
-            background-color: inherit;
-            color: $light16;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            padding-left: 8px;
-            padding-right: 0px;
-            svg-icon {
-                svg {
-                    height: 20px;
-                    g,
-                    path {
-                        fill: $light16 !important;
-                    }
-                }
-            }
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
-        }
     }
 
     .header-table {
@@ -112,7 +59,7 @@
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -292,15 +239,6 @@
       }
   }
 
-  .placeholder-section{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-    margin-top: 40px;
-}
-
 .disabled-helper-block, .disabled-label {
     opacity : 0.3;
     cursor  : default;
@@ -333,7 +271,7 @@
         }
         &-keys {
             p {
-                @include typography.regular13;
+                @include typography.regular13dark9;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -356,7 +294,7 @@
         }
         &-values {
             p {
-                @include typography.medium13;
+                @include typography.medium13dark9;
                 margin-right: 16px;
             }
         }
@@ -364,7 +302,10 @@
 }
 
 .recording-hint {
-    @include typography.regular13;
+    // do not use typography as we can't overwrite color with input-error
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: $dark9;
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

@@ -1,8 +1,10 @@
 import { IConfig } from './config-types';
+import { environment } from '@environments/environment';
 
 export const nxConfig: IConfig = {
-    alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
-    animations   : {
+    alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
+    pollingTimeout : 30 * 1000,
+    animations     : {
         carouselImage: {
             enter : '0.25s ease-in',
             leave : '0.25s ease-out'
@@ -29,7 +31,13 @@ export const nxConfig: IConfig = {
             strongClassesCount : 3
         }
     },
-    dialogs: {
+    defaultLanguage : 'en_US',
+    developers : {
+        landing : {
+            adminLink : '/admin/cms/menu/%ID%/change/'
+        }
+    },
+    dialogs         : {
         message: {
             subjects: {
                 integration          : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
@@ -164,10 +172,18 @@ export const nxConfig: IConfig = {
             { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
             { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
         ],
+        devTools              : '/static/images/icons/dev_tools/',
+        backgrounds           : '/static/images/icons/backgrounds/',
         dir                   : '/static/images/icons/standard/',
+        dirDevtools           : '/static/images/icons/dev_tools/',
+        dirButtons            : '/static/images/icons/buttons/',
         dirNonStandard        : '/static/images/icons/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
         dirSectionPlaceholder : '/static/images/placeholders/section/'
+    },
+    images: {
+        dir           : '/static/images/',
+        dirDevelopers : '/static/images/developers/'
     },
     integration: {
         adminLink            : '/admin/cms/asset/%ID%/pages/',
@@ -198,8 +214,8 @@ export const nxConfig: IConfig = {
     },
     interceptor: {
         cloudUnavailable: {
-            error : 'cloudInvalidResponse',
-            timeout  : 5 * 1000
+            error   : 'cloudInvalidResponse',
+            timeout : 5 * 1000
         }
     },
     ipvd: {
@@ -213,7 +229,9 @@ export const nxConfig: IConfig = {
         searchTags                       : '',
         vendorsShown                     : 0
     },
-    layout: {
+    isInIframe : false,
+    isLocal    : environment.isLocal,
+    layout     : {
         table: {
             rows: 10
         },
@@ -246,7 +264,7 @@ export const nxConfig: IConfig = {
             baseUrl: '/health/'
         },
         systemSettings: {
-            baseUrl : '/systems/',
+            baseUrl : environment.isLocal ? '/settings/' : '/systems/',
             admin   : {
                 id   : 'admin',
                 icon : 'systems',
@@ -292,16 +310,19 @@ export const nxConfig: IConfig = {
             }
         }
     },
-    permissions: {
+    newSystem   : false,
+    permissions : {
         canViewRelease: 'can_view_release'
     },
     redirect: {
-        authorised   : '/systems', // Page for redirecting all authorised users
+        authorised   : environment.isLocal ? '/settings' : '/systems', // Page for redirecting all authorised users
         unauthorised : '/', // Page for redirecting all unauthorised users by default
         page404      : '/404',
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
     },
     showHeaderAndFooter : true,
+    headerHeight        : 48,
+    ribbonHeight        : 33,
     search              : {
         debounceTime : 500, // ms
         maxLength    : 200,
@@ -319,11 +340,12 @@ export const nxConfig: IConfig = {
             online     : 'online',
             offline    : 'offline',
             restarting : 'restarting',
-            reseting   : 'reseting',
+            resetting  : 'resetting',
             checking   : 'checking'
         }
     },
-    system: {
+    supportedLanguages : [],
+    system             : {
         flags: {
             newSystem: 'SF_NewSystem'
         },
@@ -352,6 +374,7 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
+        developersEnabled         : '',
         feedbackEnabled           : '',
         healthMonitor             : '',
         integrationStore          : '',
@@ -361,8 +384,13 @@ export const nxConfig: IConfig = {
         cloudStorageSize          : 0,
         healthMonitorCacheTimeout : 60
     },
-    cloudName : '',
-    company   : {
+    cloudName       : '',
+    cloudHost       : '',
+    cloudSystemId   : '',
+    localSystemId   : '',
+    localSystemName : '',
+    localServerId   : '',
+    company         : {
         copyrightYear : '',
         links         : {
             privacy : '',
@@ -371,13 +399,16 @@ export const nxConfig: IConfig = {
         },
         name: ''
     },
-    footerItems          : '',
-    googleTagManagerId   : '',
-    trialLicenseKey      : '',
-    licenseDeactivations : 3,
-    pushConfig           : '',
-    trafficRelayHost     : '',
-    vmsName              : '',
+    dynamicMenus           : {},
+    docMenuMap             : {},
+    licenseTypes           : [],
+    googleTagManagerId     : '',
+    trialLicenseKey        : '',
+    licenseDeactivations   : 3,
+    pushConfig             : '',
+    testedOperatingSystems : '',
+    trafficRelayHost       : '',
+    vmsName                : '',
     // End of dynamic config
 
     // Legacy webadmin config
@@ -441,7 +472,6 @@ export const nxConfig: IConfig = {
     debug          : {
         chunksOnTimeline: false // timeline.js - draw debug events
     },
-    gatewayUrl                  : '/gateway',
     globalViewArchivePermission : 'GlobalViewArchivePermission',
     openClientTimeout           : 20 * 1000, // 20 seconds we wait for client to open
     openClientError             : 'notVisited',
@@ -462,7 +492,7 @@ export const nxConfig: IConfig = {
         playerReadyTimeout          : 100,
         reloadInterval              : 30 * 1000,
         resetDisplayedTextTimer     : 3 * 1000,
-        staticResources             : 'static/web_common/',
+        // staticResources             : 'static/web_common/',
         skipFramesRenderingTimeline : true,
         // One minute timeout for manifest:
         // * 30 seconds for gateway to open connection
@@ -475,11 +505,12 @@ export const nxConfig: IConfig = {
         useSystemTime               : true
     },
     settingsConfig: {
-        auditTrailEnabled          : { type: 'checkbox' },
-        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
-        defaultMotionMask          : '5,0,0,44,32',
-        disabledVendors            : { type: 'text' },
-        ec2AliveUpdateIntervalSec  : {
+        auditTrailEnabled                  : { type: 'checkbox', hiddenInAdvanced: true },
+        cameraSettingsOptimization         : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        cloudConnectUdpHolePunchingEnabled : { type: 'checkbox' },
+        defaultMotionMask                  : '5,0,0,44,32',
+        disabledVendors                    : { type: 'text' },
+        ec2AliveUpdateIntervalSec          : {
             type  : 'number',
             alert : 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"'
         },
@@ -493,7 +524,7 @@ export const nxConfig: IConfig = {
         ldapSearchBase                   : { type: 'text' },
         ldapSearchFilter                 : { type: 'text' },
         ldapUri                          : { type: 'text' },
-        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true },
+        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         smtpConnectionType               : { type: 'text' },
         smtpHost                         : { type: 'text' },
         smtpPort                         : { type: 'number' },
@@ -504,7 +535,7 @@ export const nxConfig: IConfig = {
         updateNotificationsEnabled       : { type: 'checkbox' },
         arecontRtspEnabled               : { type: 'checkbox' },
         backupNewCamerasByDefault        : { type: 'checkbox' },
-        statisticsAllowed                : { type: 'checkbox', setupWizard: true },
+        statisticsAllowed                : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         backupQualities                  : { type: 'text' },
         serverDiscoveryPingTimeoutSec    : { type: 'number' },
 
@@ -515,6 +546,7 @@ export const nxConfig: IConfig = {
 
         systemName: { type: 'text' },
 
+        licenseServer             : { type: 'text' },
         newSystem                 : { type: 'static' },
         proxyConnectTimeoutSec    : { type: 'number' },
         crossdomainEnabled        : { type: 'checkbox' },
@@ -531,8 +563,8 @@ export const nxConfig: IConfig = {
         takeCameraOwnershipWithoutLock : { type: 'checkbox' },
         upnpPortMappingEnabled         : { type: 'checkbox' },
 
-        trafficEncryptionForced      : { type: 'checkbox' },
-        videoTrafficEncryptionForced : { type: 'checkbox' },
+        trafficEncryptionForced      : { type: 'checkbox', hiddenInAdvanced: true },
+        videoTrafficEncryptionForced : { type: 'checkbox', hiddenInAdvanced: true },
         updateStatus                 : { type: 'static' },
         watermarkSettings            : { type: 'static' },
 

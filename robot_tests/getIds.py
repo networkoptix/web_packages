@@ -63,7 +63,7 @@ def get_variables(cloud_url, test_email):
                      verify=False)
 
     #get the system id for the system with the 2serverofflineanchor email and add it to the dictionary
-    x = requests.post(f"{cloud_url}/cdb/system/get", 
+    x = requests.post(f"{cloud_url}/cdb/system/get",
                       auth=HTTPDigestAuth(f"{test_email}+2serverofflineanchor@gmail.com", "qweasd 123"),
                       json={"name":"Auto Tests"})
     y = x.json()
@@ -106,3 +106,7 @@ def get_variables(cloud_url, test_email):
 
     # return the dictionary as variables into robot
     return vars
+
+
+if __name__ == '__main__':
+    get_variables("https://cloud-test.hdw.mx", "noptixautoqa")

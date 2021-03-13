@@ -14,7 +14,6 @@ function brew_install() {
 
     echo 'Installing node v11.15.0'
     n 11.15.0
-
     echo 'Installing python 3.7.6'
     pyenv install 3.7.6
     pip install virtualenv
@@ -63,6 +62,15 @@ function setup_cms(){
     popd
 }
 
+function dump_db(){
+    printf "Dumping db\n"
+    FILENAME=dump-"$(date +%Y-%m-%d-%H-%M)"
+    echo $FILENAME
+    mkdir -p ./etc/dumps
+    mysqldump -h 0.0.0.0 --port=3306 -uroot --all-databases --column-statistics=0 > ./etc/dumps/"$FILENAME".sql
+    printf "DB was saved to %s/etc/dumps/%s.sql\n\n" "$PWD" "$FILENAME"
+}
+
 function setup_db(){
     SQL_COUNT=`ls -1q etc/*.sql | wc -l`
     if [[ ${SQL_COUNT} -eq 1 ]]; then
@@ -87,15 +95,43 @@ function setup_env() {
     export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
     export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
     printf "Setting up cloud portal locally\n\n"
-    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
-
-    printf "Activating python3.7 env\n\n"
-    . ./env/bin/activate
+    setup_or_activate_virtualenv
 
     printf "Installing pip packages for build_scripts and cloud\n\n"
     export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
+    npm install --prefix cloud
+}
+
+function setup_robot_env() {
+    setup_or_activate_virtualenv
+
+    pushd robot_tests
+        ROBOT_DIR=$PWD
+        if [[ ! -f chromedriver ]] ; then
+            echo "Chromedriver is missing from $ROBOT_DIR"
+            echo "Please download from https://chromedriver.chromium.org/downloads. Then try again."
+            exit 1;
+        fi
+
+        if grep -qF "$ROBOT_DIR" ~/.bash_profile ; then
+            echo "Robot env has already been setup"
+        else
+            pip install -r requirements.txt
+            echo -e "\n\nexport PYTHONPATH='$PYTHONPATH:$ROBOT_DIR'" >> ~/.bash_profile
+            echo -e "export PATH='$PATH:$ROBOT_DIR'" >> ~/.bash_profile
+            echo 'Restart your terminal or run `source ~/.bash_profile` and rerun this script.'
+        fi
+    popd
+    source ~/.bash_profile
+}
+
+function setup_or_activate_virtualenv() {
+    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
+
+    printf "Activating python3.7 env\n\n"
+    . ./env/bin/activate
 }
 
 function start_celery() {
@@ -128,7 +164,16 @@ function stop_docker_containers() {
 function build_mediaserver_image() {
     DEB_NAME=$1
     VERSION=$2
-    docker image build robot_tests/Docker --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME
+    COPY=$3
+    docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME --build-arg copy=$COPY
+}
+
+function list_mediaserver() {
+    docker images | grep mediaserver
+}
+
+function remove_mediaserver() {
+    docker images | grep mediaserver | awk '{print $3}' | xargs docker image rm -f
 }
 
 function run_mediaserver() {
@@ -140,13 +185,45 @@ function run_mediaserver() {
     do
         echo "Starting mediaserver $PORT"
         docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
-        python cloud/manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
+        if [[ -e $EMAIL ]]; then
+            pushd cloud
+                python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
+            popd
+        fi
         echo
     done
 }
 
 function stop_mediaserver() {
     docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
+}
+
+function local_build() {
+    VERSION=$1
+    PORT=$2
+    COPY=$3
+    BUILD_DIR=~/Desktop/build
+    REPO=$PWD
+
+    export IS_LOCAL=true
+    [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
+
+    [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules
+    pushd $BUILD_DIR
+        . "$REPO/../webadmin/build.sh"
+        cp server-external/bin/external.dat $REPO/tools/docker
+    popd
+
+    echo "Stop mediaserver"
+    stop_mediaserver
+    echo "Build mediaserver"
+    build_mediaserver_image $VERSION.deb $VERSION $COPY
+    echo "Run mediaserver"
+    echo "Starting mediaserver $PORT"
+    docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+    sleep 10
+    open https://localhost:$PORT
 }
 
 function start_https_tunnel() {
@@ -214,7 +291,7 @@ do
             setup_cms
             ;;
         setup_cms)
-            . ./env/bin/activate
+            setup_or_activate_virtualenv
             setup_cms
             ;;
         setup_db)
@@ -222,6 +299,9 @@ do
             ;;
         setup_env)
             setup_env
+            ;;
+        setup_robot_env)
+            setup_robot_env
             ;;
         set_cloud_instance)
             if [[ -z ${CLOUD_INSTANCE} ]]; then
@@ -231,6 +311,14 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
+            # Removed for now
+            # if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
+            #   echo "Py3 not found. Likely virtualenv is not activated. Proxy configuration is not updated!"
+            # else
+            #   pushd front_end
+            #       python update_proxy.py
+            #   popd
+            # fi
             break
             ;;
         start_celery)
@@ -243,11 +331,24 @@ do
         stop_docker)
             stop_docker_containers
             ;;
+        local_build)
+            VERSION=$2
+            PORT=$3
+            COPY=$4
+            local_build $VERSION $PORT $COPY
+            break
+            ;;
         build_mediaserver)
             DEB_NAME=$2
             VERSION=$3
             build_mediaserver_image $DEB_NAME $VERSION
             break
+            ;;
+        list_mediaserver)
+            list_mediaserver
+            ;;
+        remove_mediaserver)
+            remove_mediaserver
             ;;
         run_mediaserver)
             VERSION=$2
@@ -263,6 +364,9 @@ do
          start_https_tunnel)
             start_https_tunnel
             ;;
+         dump_db)
+            dump_db
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -271,16 +375,21 @@ do
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
             echo 'login_db - Login to docker db'
+            echo 'dump_db - Dump database to sql file in etc/dumps'
             echo 'rebuild_frontend - Rebuilds the frontend and runs readstructure and filldata commands'
             echo 'set_cloud_instance - Sets the cloud instance env. Usage "source ./cloud_helper.sh set_cloud_instance $instance".'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'
             echo 'setup_db - Loads local db with sql file in ~/develop/nx_vms/cloud_portal/'
+            echo 'setup_robot_env - Setups robot env. Run after placing the chromedriver in robot_tests'
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
-            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/robot_tests/Docker. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
+            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/tools. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
+            echo 'list_mediaserver - List docker images build by this script'
+            echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'local_build - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh local_build {version} {port} {copy}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
             echo ''
             ;;

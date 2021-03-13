@@ -1,7 +1,6 @@
 @use '../../styles/typography';
 @use '../../../styles/theme_variables'as *;
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .ipvd {
@@ -28,8 +27,7 @@
     }
 
     .text-placeholder {
-        @include typography.regular20;
-        color       : $light16;
+        @include typography.regular20light;
         height      : 2rem;
     }
 
@@ -52,13 +50,9 @@
                 //white-space: normal;
 
                 .caption {
-                    @include typography.medium13;
+                    @include typography.medium13dark9;
                     line-height : 1rem;
                     align-items : flex-end;
-
-                    .nav-arrow {
-                        height: 18px;
-                    }
                 }
 
                 &:nth-child(1) {

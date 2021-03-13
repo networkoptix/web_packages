@@ -1,17 +1,17 @@
-import django
 import logging
 import json
 import time
 import traceback
+from enum import Enum
 
+import django
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+from django.http import QueryDict, HttpResponseRedirect
 from rest_framework.exceptions import UnsupportedMediaType
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
-from django.conf import settings
-from django.contrib.auth.models import AnonymousUser
-from django.http import QueryDict, HttpResponseRedirect
-from enum import Enum
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ class APIException(Exception):
             try:
                 error_code = ErrorCodes(error_code)
             except ValueError:
-                logger.error('Unexpected error code {0}'.format(error_code))
+                logger.error(f'Unexpected error code {error_code}')
 
         self.error_data = error_data
         self.error_code = error_code
@@ -339,15 +339,10 @@ def log_error(request, error, log_level):
         request_data = request_data.dict()
 
     if isinstance(error, APIException):
-        error_text = "{}({})".format(error.error_text, error.error_code)
+        error_text = f"{error.error_text}({error.error_code})"
         if error.error_data:
             clean_passwords(error.error_data)
-        error_formatted = 'Status: {}, Message: {}, Result code: {}, Data: {}'.\
-                          format(error.status_code,
-                                 error.error_text,
-                                 error.error_code,
-                                 json.dumps(error.error_data, indent=4, separators=(',', ': '))
-                                 )
+        error_formatted = f"Status: {error.status_code}, Message: {error.error_text}, Result code: {error.error_code}, Data: {json.dumps(error.error_data, indent=4, separators=(',', ': '))}"
     else:
         error_text = 'unknown'
         error_formatted = 'Unexpected error'
@@ -355,29 +350,9 @@ def log_error(request, error, log_level):
     clean_passwords(request_data)
 
     if log_level == logging.INFO:
-        error_formatted = ' {}:{}\nUser: {} Login: {} Session Time: {} IP: {}\n{} Request: {}'. \
-            format(error.__class__.__name__,
-                   error_text,
-                   user_name,
-                   login_type,
-                   session_time,
-                   ip,
-                   page_url,
-                   request_data
-                   )
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}'
     else:
-        error_formatted = ' {}:{}\nUser: {} Login: {} Session Time: {} IP: {}\n{} Request: {}\n{}\nCall Stack: \n{}'. \
-            format(error.__class__.__name__,
-                   error_text,
-                   user_name,
-                   login_type,
-                   session_time,
-                   ip,
-                   page_url,
-                   request_data,
-                   error_formatted,
-                   traceback.format_exc()
-                   ).replace("Traceback", "")  # remove Traceback word from handled exceptions
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}\n{error_formatted}\nCall Stack: \n{traceback.format_exc().replace("Traceback", "")}'
     # Explicit check so that it will not affect superusers.
     if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO

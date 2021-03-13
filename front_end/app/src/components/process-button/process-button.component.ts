@@ -2,7 +2,9 @@ import {
     Component, OnInit, Input,
     ViewEncapsulation
 }                                   from '@angular/core';
+
 import { NxConfigService, IConfig } from '../../services/nx-config';
+import { Process }                  from '../../services/process.service';
 
 @Component({
     selector     : 'nx-process-button',
@@ -11,15 +13,16 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
     encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
-    @Input() process: any;
-    @Input() clickFn: any;
+    @Input() process: Process;
+    @Input() clickFn;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
-    @Input() actionType: any;
-    @Input() form: any;
+    @Input() actionType;
+    @Input() form;
     @Input() customClass: any = '';
     @Input() customButtonClass: any = '';
-    @Input() svg: any;
+    @Input() svg;
+    @Input() textOnly: boolean = false;
 
     buttonClass: string;
     CONFIG: IConfig;
@@ -41,18 +44,20 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     touchForm() {
-        for (const ctrl in this.form.form.controls) {
-            if (this.form.form.controls.hasOwnProperty(ctrl)) {
-                this.form.form.get(ctrl).markAsTouched();
-                this.form.form.get(ctrl).markAsDirty();
+        const form = this.form.form || this.form;
+        for (const ctrl in form.controls) {
+            if (form.controls.hasOwnProperty(ctrl)) {
+                form.get(ctrl).markAsTouched();
+                form.get(ctrl).markAsDirty();
             }
         }
     }
 
     setFocusToInvalid() {
-        for (const ctrl in this.form.form.controls) {
-            if (this.form.form.controls.hasOwnProperty(ctrl)) {
-                if (this.form.form.get(ctrl).invalid) {
+        const form = this.form.form || this.form;
+        for (const ctrl in form.controls) {
+            if (form.controls.hasOwnProperty(ctrl)) {
+                if (form.get(ctrl).invalid) {
                     // TODO : find how to set element's focus
                     // control.focused = true;
                     return;
@@ -71,5 +76,11 @@ export class NxProcessButtonComponent implements OnInit {
         } else {
             this.process.run();
         }
+    }
+
+    clickHandler(event) {
+        event.stopPropagation();
+        this.clickFn();
+        this.checkForm();
     }
 }

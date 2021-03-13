@@ -1,7 +1,7 @@
 interface StateMachine {
     currentState: string;
-    state: any;
-    store: any;
+    state;
+    store;
     history: string[];
 }
 
@@ -27,8 +27,10 @@ class StateMachine {
 
     goBack() {
         for (const variable in this.state.template) {
-            if (variable.includes('Error')) {
-                this.state.template[variable] = '';
+            if (Object.prototype.hasOwnProperty.call(this.state.template, variable)) {
+                if (variable.includes('Error')) {
+                    this.state.template[variable] = '';
+                }
             }
         }
         if (this.history.length > 0) {

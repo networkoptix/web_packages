@@ -1,8 +1,10 @@
 import {
-    Component, EventEmitter, forwardRef,
-    Input, OnInit, Output, SimpleChanges
-}                                                  from '@angular/core';
+    Component, ElementRef, EventEmitter, forwardRef,
+    Input, OnInit, Output, Renderer2, SimpleChanges
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NavigationEnd, Router }                   from '@angular/router';
+import { Subscription }                            from 'rxjs';
 
 /* Usage
  <nx-tag
@@ -33,14 +35,21 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() element: string;
     @Input() size: string;
     @Input() clickable: boolean = true;
-    @Input() static: any;
+    @Input() static;
+    @Input() link;
+    @Input() linkParam;
 
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
-    private badgeType: string;
+    public badgeType: string;
+    public tagHref: string;
 
-    constructor() {}
+    constructor(
+        private renderer: Renderer2,
+    ) {
+        this.linkParam = {};
+    }
 
     ngOnInit() {
         this.static = (this.static !== undefined);
@@ -49,10 +58,16 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         if (this.selected) {
             this.badgeType = `badge-${this.badgeType}-selected`;
         }
+
+        const params = Object.keys(this.linkParam);
+        if (this.link && params.length) {
+            const queryParams = params.map(key => key + '=' + this.linkParam[key]).join('&');
+            this.tagHref = `${this.link}?${queryParams}`;
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.selected = changes.selected && changes.selected.currentValue;
+        this.selected = changes.selected?.currentValue;
         setTimeout(() => {
             if (!this.selected) {
                 this.deselectTag();

@@ -1,31 +1,31 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as variables;
 @use '../../../styles/buttons' as buttons;
-@use '~bootstrap/scss/bootstrap';
+@use 'bootstrap_utils' as bootstrap;
 
 nx-block {
-  .user-email,
-  .system-name {
-    font-family: variables.$font-family-medium;
-  }
+	.user-email,
+	.system-name {
+		font-family : variables.$font-family-medium;
+	}
 
-  .user-name,
-  .system-owner {
-    @include typography.regular13;
-  }
+	.user-name,
+	.system-owner {
+		@include typography.regular13dark9;
+	}
 
-  .name {
-    font-family: variables.$font-family-bold;
-  }
+	.name {
+		font-family : variables.$font-family-bold;
+	}
 }
 
-.fixed-sidebar{
-  margin: 0 !important;
-  padding-left: 1rem !important;
-  padding-right: 0 !important;
+.fixed-sidebar {
+	margin        : 0 !important;
+	padding-left  : 1rem !important;
+	padding-right : 0 !important;
 
   @include bootstrap.media-breakpoint-down(lg) {
-    height: auto !important;
+    height: auto;
     padding-right : 1rem !important;
   }
 

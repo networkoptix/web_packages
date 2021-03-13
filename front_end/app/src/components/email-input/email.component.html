@@ -1,17 +1,20 @@
-<input [style.display]="lockEmail ? 'none' : 'inline'"
+<input *ngIf="!lockEmail"
        [ngModel]="value"
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
        [id]="componentId" [name]="componentId"
+       [ngClass]="{'hide-errors': hideErrors}"
        type="email"
        class="form-control"
        required
        autocomplete="off"
-       maxlength="255">
+       maxlength="255"
+       nxFocusMe="setFocus">
 
 <input *ngIf="lockEmail"
        type="text"
        name="registerEmailLocked"
        class="form-control"
+       [ngClass]="{'hide-errors': hideErrors}"
        [(ngModel)]="value"
        readonly>

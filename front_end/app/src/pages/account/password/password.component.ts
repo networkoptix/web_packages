@@ -1,23 +1,26 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import {
+    Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList
+}                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { NxProcessService }          from '../../../services/process.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService, Account } from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { NxApplyService, Watcher }   from '../../../services/apply.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../menu';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @Component({
-    selector : 'nx-account-password-component',
+    selector    : 'nx-account-password-component',
     templateUrl : 'password.component.html',
-    styleUrls : ['password.component.scss']
+    styleUrls   : ['password.component.scss']
 })
 
 export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
@@ -28,10 +31,12 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     form: NgForm;
 
-    account: any = {};
+    account: Account;
     pass: any = {};
+    hideErrors = true;
+    weakPassword = false;
 
-    changePassword: any;
+    changePassword: Process;
 
     watchers: any = {
         password    : new Watcher<string>(),
@@ -43,7 +48,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
             password    : '',
             newPassword : ''
         };
-        this.menuService.setDetailsSection('password');
+        this.menuService.detail = 'password';
     }
 
     constructor(
@@ -73,10 +78,10 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
                 .changePassword(this.pass.newPassword, this.pass.password);
         }, {
             errorCodes: {
-                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch,
-                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch
+                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.()
             },
-            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix,
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
             ignoreUnauthorized : true
         }).then(() => {
             this.form.reset();
@@ -87,13 +92,15 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.applyService.initPageWatcher(this.applyContainer, this.changePassword, () => {
             this.form.reset();
             this.applyService.reset();
-        }, Object.values(this.watchers));
+        }, Object.values(this.watchers), undefined, this.displayErrors);
 
         this.accountService
             .get()
             .then((account) => {
-                this.account = account;
-                this.setOriginal();
+                if (account) {
+                    this.account = account;
+                    this.setOriginal();
+                }
             });
 
         this.applyService.setVisible();
@@ -112,12 +119,18 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     }
 
     setPassword(password) {
+        this.hideErrors = true;
         this.pass.password = password;
         this.watchers.password.value = password;
     }
 
     setNewPassword(newPassword) {
+        this.hideErrors = true;
         this.pass.newPassword = newPassword;
         this.watchers.newPassword.value = newPassword;
+    }
+
+    displayErrors = () => {
+        this.hideErrors = false;
     }
 }

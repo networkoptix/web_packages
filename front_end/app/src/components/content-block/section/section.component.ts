@@ -23,7 +23,7 @@ import {
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
-    @Input() nonPadded: any;
+    @Input() nonPadded;
 
     haveSubheader: boolean;
 

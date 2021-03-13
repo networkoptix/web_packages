@@ -11,8 +11,8 @@ def timer(func):
         res = func(*args, **kwargs)
         end = time.time()
 
-        logger.info("Function: {}\nArgs: {}\nKwargs: {}\nelapsed time: {}"
-                    .format(func.__name__, args, kwargs, end - start))
+        logger.info(
+            f"Function: {func.__name__}\nArgs: {args}\nKwargs: {kwargs}\nelapsed time: {end - start}")
 
         return res
     return exec_foo
@@ -24,12 +24,13 @@ class Timer:
 
     def __enter__(self):
         self.start_time = time.time()
-        logger.info("Starting {}.".format(self.measure_name))
+        logger.info(f"Starting {self.measure_name}.")
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.finish_time = time.time()
-        logger.info("{} took {}".format(self.measure_name, self.finish_time - self.start_time))
+        logger.info(
+            f"{self.measure_name} took {self.finish_time - self.start_time}")
 
     def elapsed_time(self):
         return self.finish_time - self.start_time

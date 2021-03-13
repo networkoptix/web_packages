@@ -1,23 +1,35 @@
 import collections
 from math import log2
-
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from django.core.cache import cache, caches
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.helpers.exceptions import handle_exceptions, require_params,\
-    APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 import datetime
 import json
 import logging
 import re
-import requests
-from cloud import settings
-from django.shortcuts import redirect
 
-from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
+import requests
+from django.core.cache import cache, caches
+from django.conf import settings
+from django.shortcuts import redirect
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
+from api.helpers.exceptions import handle_exceptions, require_params,\
+    APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
+from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
+    cached_doc_menu_map, LicenseType
 
 logger = logging.getLogger(__name__)
+
+
+# Swagger params
+build__route_param = openapi.Parameter('key', openapi.IN_PATH, type=openapi.TYPE_STRING)
+visited_key__query_param = openapi.Parameter('key', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
+# Swagger schemas
+language__body = openapi.Schema(type=openapi.TYPE_STRING)
+visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_cloud_capabilities_from_cache():
@@ -39,17 +51,17 @@ def get_settings_from_cache():
         'copyrightYear': customization_cache.get('copyright_year', ''),
         'companyName': customization_cache.get('company_name', ''),
         'companyLink': customization_cache.get('company_link', ''),
+        'developersEnabled': customization_cache.get('developers_enabled', False),
         'feedbackEnabled': customization_cache.get('feedback_enabled', False),
-        'footerItems': customization_cache.get('footer_items', []),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
         'integrationSeoPageDescription': customization_cache.get('integration_seo_page_description', ''),
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
-        'healthMonitoringEnabled': customization_cache.get('health_monitoring_enabled', False),
         'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache.get('public_downloads', False),
         'publicReleases': customization_cache.get('public_releases', False),
+        'showAllBetas': customization_cache.get('show_all_betas', False),
         'showAnalyticsEvents': customization_cache.get('show_analytics_events', False),
         'sortSupportedDevicesByPopularity': customization_cache.get('sort_supported_devices_by_popularity', False),
         'testedOperatingSystems': customization_cache.get('tested_operating_systems', {}),
@@ -61,10 +73,44 @@ def get_settings_from_cache():
         'vendorsShown': customization_cache.get('vendors_shown', '30'),
         'pushConfig': customization_cache.get('push_config', {}),
         'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
-        'trialLicenseKey': customization_cache.get('trial_license_key', '')
+        'trialLicenseKey': customization_cache.get('trial_license_key', ''),
     }
 
 
+def filter_releases(releases):
+    """Finds a mobile and vms release"""
+    filtered_releases = []
+    has_mobile = False
+    has_vms = False
+    mobile_types = ["android", "ios"]
+
+    for release in releases:
+        is_mobile = any(map(lambda platform: platform.get("name") in mobile_types, release.get("platforms", [])))
+        if is_mobile and not has_mobile:
+            has_mobile = True
+            filtered_releases.append(release)
+        elif not is_mobile and not has_vms:
+            has_vms = True
+            filtered_releases.append(release)
+
+        if has_mobile and has_vms:
+            break
+
+    return filtered_releases
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Checks if the key has been used.",
+                     manual_parameters=[visited_key__query_param])
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Marks the key as visited.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "key": visited_key__body
+                         },
+                         required=["key"]
+                     ))
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 def visited_key(request):
@@ -91,6 +137,19 @@ def visited_key(request):
     return Response({'visited': value})
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Gets the language of the current user.",
+                     responses={'302': 'Redirect to language file'})
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Sets the language for current user.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "language": language__body
+                         },
+                         required=["language"]
+                     ),
+                     responses={'200': openapi.Schema(type=openapi.TYPE_OBJECT, properties={'language': openapi.Schema(type=openapi.TYPE_STRING)})})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -123,6 +182,8 @@ def language(request):
         return response
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def downloads_history(request):
@@ -146,9 +207,17 @@ def downloads_history(request):
     downloads_json.raise_for_status()
     downloads_json = downloads_json.json()
 
+    if not get_settings_from_cache()["showAllBetas"]:
+        filter_type = "betas"
+        downloads_json[filter_type] = filter_releases(downloads_json.get(filter_type, []))
+
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns detailed information about a specific build for the current "
+                                           "cloud portal.",
+                     manual_parameters=[build__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def download_build(request, build):
@@ -202,6 +271,11 @@ def download_build(request, build):
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the download information for the current build.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Forces the downloads cache to clear and returns the "
+                                           "new download information.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 def downloads(request):
@@ -227,7 +301,7 @@ def downloads(request):
             logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
-        latest_version = updates_record['download_version'] if 'download_version' in updates_record else None
+        latest_version = updates_record.get('download_version')
 
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):
@@ -283,27 +357,40 @@ def downloads(request):
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns cloud config information to the web client.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
         del settings_object['version_id']
+    settings_object['menus'] = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
+    settings_object['docMenuMap'] = cached_doc_menu_map(customization_name=settings.CUSTOMIZATION)
+    settings_object['licenseTypes'] = LicenseType.get_license_types()
 
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
         del settings_object['cloudMerge']
 
+    if 'showAllBetas' in settings_object:
+        del settings_object['showAllBetas']
+
     if not settings_object.get('integrationStoreEnabled') and \
             UserGroupsToAssetPermissions.user_has_beta_access(request.user):
         settings_object['integrationStoreEnabled'] = True
-        for item in settings_object['footerItems']:
-            if item['url'] == '/integrations':
-                item['enabled'] = True
-                break
+    if not settings_object.get('developersEnabled', False) and \
+            UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
+        settings_object['developersEnabled'] = True
     return Response(settings_object)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the list of supported devices.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Clear's the supported devices cache.",
+                     responses={'200': 'IPVD cache cleared'})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 def get_ipvd(request):
@@ -426,6 +513,9 @@ def get_ipvd(request):
         return Response({'IPVD cache cleared'})
 
 
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Returns what capabilities cloud portal supports. This is used "
+                                           "mainly for vms.")
 @api_view(['GET'])
 def cloud_capabilities(request):
     capabilities = get_cloud_capabilities_from_cache()

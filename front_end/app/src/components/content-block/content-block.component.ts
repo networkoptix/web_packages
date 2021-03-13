@@ -1,5 +1,5 @@
 import {
-    Component, ElementRef, Input, OnInit,
+    Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges,
     ViewChild, ViewEncapsulation
 } from '@angular/core';
 
@@ -35,21 +35,21 @@ import {
     selector     : 'nx-block',
     templateUrl  : 'content-block.component.html',
     styleUrls    : ['content-block.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
-export class NxContentBlockComponent implements OnInit {
+export class NxContentBlockComponent implements OnInit, OnChanges {
     @Input('type') type: string;
-    @Input('fixed-height') fixedHeight: any;
-    @Input('hoverable') hoverable: any;
-    @Input('header-style') headerStyle: any;
-    @Input('header-class') headerClass: any;
+    @Input('fixed-height') fixedHeight;
+    @Input('hoverable') hoverable;
+    @Input('header-style') headerStyle;
+    @Input('header-class') headerClass;
 
     haveHeader: boolean;
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', {static: true}) headerWrapper: ElementRef;
-    @ViewChild('footerWrapper', {static: true}) footerWrapper: ElementRef;
+    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
+    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
 
     constructor() {
         this.haveHeader = true;
@@ -67,5 +67,11 @@ export class NxContentBlockComponent implements OnInit {
         this.headerClass = (this.headerClass) ? this.headerClass : '';
 
         this.headerClasses = this.headerStyle + this.headerClass;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.layout?.currentValue) {
+            this.haveHeader = (changes.layout.currentValue !== '');
+        }
     }
 }

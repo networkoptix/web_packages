@@ -1,7 +1,9 @@
-from api.models import Account
-from rest_framework import serializers
 import django
-from cloud import settings
+from django.conf import settings
+from rest_framework import serializers
+
+from api.models import Account
+from cms.models import UserGroupsToAssetPermissions, AssetType, UserGroupsToAssetType
 
 
 class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer
@@ -46,10 +48,17 @@ class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer
 
 
 class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
+    can_publish_integration = serializers.SerializerMethodField()
+
     class Meta:
         model = Account
         fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser',
-                  'permissions')
+                  'permissions', 'can_publish_integration', 'is_authenticated')
+
+    def get_can_publish_integration(self, obj):
+        return UserGroupsToAssetPermissions.check_customization_publish(obj) and \
+               UserGroupsToAssetType.check_asset_type(obj, AssetType.ASSET_TYPES.integration, 'cms.publish_version'
+    )
 
 
 class AccountUpdateSerializer(serializers.ModelSerializer):  # ModelSerializer

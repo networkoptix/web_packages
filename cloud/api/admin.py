@@ -1,18 +1,17 @@
+from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.admin import helpers, SimpleListFilter
-from django.conf.urls import url
-
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.sessions.models import Session
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
-
-from cloud import settings
-from cms.admin import CMSAdmin
-from api.forms import *
-from api.models import *
-from cms.models import *
+from django.urls import path
 from django_csv_exports.admin import CSVExportAdmin
 
-from django.contrib.auth.models import Permission
+from api.forms import *
+from api.models import *
+from cms.admin import CMSAdmin
+from cms.models import *
 
 
 @admin.register(Permission)
@@ -94,6 +93,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
                   'is_staff', 'language', 'customization')
 
     change_list_template = "api/account_changelist.html"
+    change_form_template = "api/account_change_form.html"
     form = AccountAdminForm
 
     def save_model(self, request, obj, form, change):
@@ -145,22 +145,39 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
     def get_urls(self):
         urls = super(AccountAdmin, self).get_urls()
         my_urls = [
-            url(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite')
+            url(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite'),
+            path('force_logout/<slug:user_id>/', self.force_logout, name='force_logout')
         ]
         return my_urls + urls
 
+    @staticmethod
+    @user_passes_test(lambda user: user.is_superuser)
+    def force_logout(request, user_id):
+        session_count = 0
+        for session in Session.objects.all():
+            decoded_session = session.get_decoded()
+            if decoded_session.get('_auth_user_id', None) == user_id:
+                session.delete()
+                session_count += 1
+        messages.success(request, f'Deleted {session_count} sessions')
+        return redirect('admin:api_account_change', user_id)
+
     def invite(self, request):
+        group_id = request.GET.get('group_id')
+        group = Group.objects.filter(id=group_id).first() if group_id.isnumeric() else None
+        group_name = group.name if group else None
         context = {
-            'title': 'Invite User',
+            'title': 'Invite User' + (f' to Group "{group_name}"' if group_name else ""),
             'app_label': self.model._meta.app_label,
             'opts': self.model._meta,
-            'has_change_permission': self.has_change_permission(request)
+            'has_change_permission': self.has_change_permission(request),
+            'group': group
         }
 
         if request.method == 'POST':
             form = UserInviteFrom(request.POST, user=request.user)
             if form.is_valid():
-                user_id = form.add_user(request)
+                user_id = form.add_user(request, group=group)
                 return redirect(reverse('admin:api_account_change', args=[user_id]))
         else:
             form = UserInviteFrom(user=request.user)
@@ -198,8 +215,7 @@ class AccountLoginHistoryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    clean_old_records.short_description = "Remove messages older than {} days".format(
-        settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+    clean_old_records.short_description = f"Remove messages older than {settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS} days"
 
 
 admin.site.unregister(Group)

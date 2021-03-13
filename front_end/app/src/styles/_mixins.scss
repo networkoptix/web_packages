@@ -1,9 +1,9 @@
-@use 'theme/_variables';
 @use '../../styles/theme_variables';
+@use '../styles/typography';
 @forward '../../styles/theme_variables';
 
 // Placeholder text
-@mixin placeholder($color: variables.$input-color-placeholder) {
+@mixin placeholder($color: theme_variables.$input-color-placeholder) {
     // Firefox
     &::-moz-placeholder {
         color   : $color;
@@ -17,7 +17,7 @@
     }
     // Microsoft Edge
     ::-ms-input-placeholder {
-        color : red;
+        color : $color;
         font-family: theme_variables.$font-family-regular;
     }
     // Safari and Chrome
@@ -55,11 +55,11 @@
 @mixin badge-selected($default, $hover, $active) {
     @include selected-tag;
     background-color : $default;
-    
+
     & > span.close-button:hover {
         background-color : $hover;
     }
-    
+
     & > span.close-button:active {
         background-color : $active;
     }
@@ -108,16 +108,52 @@
     @-webkit-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-moz-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-o-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @keyframes #{$animation-name} {
         @content;
+    }
+}
+
+@mixin details-buttons {
+    flex: 0 0 auto;
+    &:hover, &:hover > span {
+        color: theme_variables.$dark15 !important;
+        svg-icon {
+            svg {
+                g,
+                path {
+                    fill: theme_variables.$dark15 !important;
+                }
+            }
+        }
+    }
+    @include typography.regular13light;
+    // flex: 0 0 auto;
+    background-color: inherit;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-left: 8px;
+    padding-right: 0px;
+    svg-icon {
+        svg {
+            height: 20px;
+            g,
+            path {
+                fill: theme_variables.$light16 !important;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
     }
 }

@@ -1,0 +1,114 @@
+import { filter, map, retry, retryWhen, skip, startWith, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subject }                   from 'rxjs';
+
+import { ServerManager }                                    from '../server-manager/server-manager';
+import { StateManager }                                     from '@src/utils';
+import { BaseManager }                                      from '../base/base-manager';
+import { CurrentStorageState, currentStorageStateFactory }  from './current-storage-state';
+import { NxLogger }                                         from '@services/utils.service';
+
+export enum UpdateTriggers {
+    INFO='info',
+    METRICS='metrics',
+    STATS='stats',
+    ANALYTICS='analytics'
+}
+
+export type TriggerUpdateCallback = () => void
+
+/**
+ * StorageState class should only handle managing the storage state data stream.
+ * If the initial stream structure or logic needs to be updated it's done here.
+ *
+ * The StorageState class has an update method that is used to trigger updating.
+ * StorageInfo, StorageStats, and StorageMetrics can be individually updated or all can be updated.
+ */
+export class StorageState extends BaseManager {
+    /**
+     * Trigger updates, leave blank to update all or add UpdateTrigger to update specific data.
+     */
+    update = (dataToRefresh?: UpdateTriggers) => {
+        if (!dataToRefresh) {
+            Object.values(UpdateTriggers).forEach(this.update);
+        } else {
+            this.#updater$.next(dataToRefresh);
+        }
+        return this.storageState$;
+    }
+
+    poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
+        return [this.storageState$, () => this.update(dataToPoll)];
+    }
+
+    /**
+     * Triggers update events, similar to redux action/reducer pattern.
+     */
+    #updater$ = new Subject<UpdateTriggers>();
+
+    #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$))
+
+    // State update handlers - These need to be arrow functions because "this" is fun.
+    #getStorageInfoHandler = (id) => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));
+    #getStorageStatsHandler = (id) => this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
+    #getStorageMetricsHandler = (id) => this.serverManager.getServerStats(id).pipe(startWith(false));
+    #getAnalyticsHandler = (id) => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
+
+    /**
+     * StateManagers:
+     *
+     * Updates on serverId$ change or by triggering updater.
+     *
+     * Fetches storage info from /ec2/getStorages.
+     *
+     * Fetches metrics info from /api/metrics/values, used to get mediaSpaceB for vms usage.
+     *
+     * Fetches storage stats from /api/storageSpace, used to get stats for each storage. Could take a long time.
+     */
+
+    #storageInfoStateManager = new StateManager(this.#getStorageInfoHandler, this.#updateOn(UpdateTriggers.INFO));
+    #storageStatsStateManager = new StateManager(this.#getStorageStatsHandler, this.#updateOn(UpdateTriggers.STATS));
+    #storageMetricsStateManager = new StateManager(this.#getStorageMetricsHandler, this.#updateOn(UpdateTriggers.METRICS));
+    #storageAnalyticsStateManager = new StateManager(this.#getAnalyticsHandler, this.#updateOn(UpdateTriggers.ANALYTICS));
+
+    storageState: CurrentStorageState;
+
+    /**
+     * The storageState$ contains an instance of the CurrentStorageState which has a locations property with an array of Storage.
+     * The remaining properties on the CurrentStorage state are for properties that apply to the storages as a whole and not an individual storage.
+     * The individual storages should be updated from methods on the StorageState class.
+     * This way edge cases can be checked before calling the appropriate update method on the individual Storage.
+     */
+    storageState$ = combineLatest(
+        [
+            this.#storageInfoStateManager.state$,
+            this.#storageMetricsStateManager.state$,
+            this.#storageStatsStateManager.state$,
+            this.#storageAnalyticsStateManager.state$
+        ]
+    ).pipe(
+        map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
+        map((cur) => {
+            if (
+                this.storageState &&
+                (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&
+                !cur.storageStatsLoaded &&
+                this.storageState.storageInfoLoaded
+            ) {
+                return this.storageState;
+            }
+            this.storageState = cur;
+            return cur;
+        })
+    );
+
+    statsUpdated$ = new Subject<any>()
+
+    constructor(public serverManager: ServerManager) {
+        super();
+        this.storageState$.subscribe(NxLogger.logCustom({
+            logIdentifier : 'Storage State',
+            prettyPrint   : false
+        }));
+        this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
+    }
+}

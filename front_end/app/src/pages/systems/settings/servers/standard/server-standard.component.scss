@@ -1,0 +1,96 @@
+
+@use '../../../../../styles/typography';
+@use '../../../../../styles/mixins';
+@use '../../../../../../styles/theme_variables' as *;
+
+
+.server-info {
+    font-family : typography.$font-family-regular;
+    font-size   : typography.$font-size-base;
+    color: $dark9;
+    .header-top-bar {
+        display: flex;
+        align-items: center;
+        .server-buttons {
+            @include mixins.details-buttons;
+            .animate-rotation {
+                animation-name: rotate;
+                animation-duration: 1.8s;
+                animation-iteration-count: infinite;
+                transform-origin: 50% 50%;
+            }
+            @keyframes rotate {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+    }
+
+    .server-setting-buttons {
+        display: flex;
+        justify-content: space-between;
+        .setting-buttons {
+            display: flex;
+            button:first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    @media (max-width: 870px) {
+        .server-setting-buttons {
+            flex-direction: column;
+            .left button:not(:first-child) {
+                margin-top: 16px;
+            }
+            .right button {
+                margin-top: 16px;
+            }
+            .setting-buttons {
+                flex-direction: column;
+                button {
+                    max-width: 100%;
+                }
+                button:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+.server-settings {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    .text-column {
+        text-align: right;
+    }
+    .port-input {
+        height: 30px;
+        width: 80px;
+        border-radius: 2px;
+        border: 1px solid $light6;
+        &:disabled {
+            background-color: $light2;
+            border: 1px solid $light4;
+        }
+    }
+    nx-select {
+        min-width: 0px;
+        max-width: 240px;
+    }
+}
+
+.header-button-span {
+    color: $light16 !important;
+}
+
+nx-select.storages-loading {
+    pointer-events: none !important;
+}

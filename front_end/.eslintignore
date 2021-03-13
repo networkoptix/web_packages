@@ -6,3 +6,5 @@ dist
 coverage
 # Don't lint the auto generated static language types file
 app/src/language_l18n_static_types.ts
+# Don't lint tsconfig
+tsconfig.json

@@ -168,7 +168,7 @@ Rename Camera
     Verify on Cameras Page
     Select Camera by Name    good cam
 
-    Rename Camera    good cam name changed 1
+    Rename System or Hardware    good cam name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -184,7 +184,7 @@ Rename Camera
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam name changed 1
-    Rename Camera    good cam name changed 2
+    Rename System or Hardware    good cam name changed 2
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -200,7 +200,7 @@ Rename Camera
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam name changed 2
-    Rename Camera    good cam name changed 3
+    Rename System or Hardware    good cam name changed 3
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
@@ -754,7 +754,7 @@ UDP stream settings
     Verify on Cameras Page
     Select Camera By Name    UDP cam
     Log    1
-    Rename Camera    UDP cam changed
+    Rename System or Hardware    UDP cam changed
     Log    2
     Change Aspect Ratio    1:1 
     Change Rotation    90˚
@@ -815,7 +815,7 @@ RTSP stream settings
     Verify on Cameras Page
     Select Camera By Name    RTSP cam
     Log    1
-    Rename Camera    RTSP cam changed
+    Rename System or Hardware    RTSP cam changed
     Log    2
     Change Aspect Ratio    1:1 
     Change Rotation    90˚
@@ -876,7 +876,7 @@ HTTP stream settings
     Verify on Cameras Page
     Select Camera By Name    HTTP cam
     Log    1
-    Rename Camera    HTTP cam changed
+    Rename System or Hardware    HTTP cam changed
     Log    2
     Change Aspect Ratio    1:1 
     Change Rotation    90˚

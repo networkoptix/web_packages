@@ -1,19 +1,23 @@
-import { Component, LOCALE_ID, Inject, OnInit } from '@angular/core';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
-import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
-import { BehaviorSubject }              from 'rxjs';
-import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
-import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
-import { NxUtilsService }               from '../../../../services/utils.service';
-import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxSettingsService }            from '../settings.service';
-import { NxSystem }                     from '../../../../services/system.service';
-import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
-import { NxProcessService, Process }    from '../../../../services/process.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
-import { ActivatedRoute } from '@angular/router';
-import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
+import {
+    Component, LOCALE_ID,
+    Inject, OnInit, Input
+} from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { BehaviorSubject }           from 'rxjs';
+
+import {
+    InfoBlockColumns, InfoBlockSection, InfoBlockLine
+}                                    from '../../../../components/info-block/info-block.component';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../services/process.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }         from '../settings.service';
+import { NxMenuService }             from '../../../../menu';
+import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
+import { NxUtilsService }            from '../../../../services/utils.service';
+import { NxSystem }                  from '../../../../services/system.service';
 
 @Component({
     selector    : 'nx-cloud-storage',
@@ -21,6 +25,9 @@ import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../c
     styleUrls   : ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent implements OnInit {
+    @Input() layout;
+    @Input() type: string;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system$: BehaviorSubject<NxSystem>;
@@ -33,7 +40,26 @@ export class NxCloudStorageComponent implements OnInit {
     updateEnabledUsageAndStats: Process;
     parsedUsage: InfoBlockColumns;
 
+    layoutSimple: boolean;
+    cloudStorageInital: string;
+
     // Constructor and class initialization methods
+    private setupDefaults() {
+        this.usageStats = emptyUsage;
+        this.system$ = this.settingsService.systemSubject;
+        this.system$.subscribe(system => {
+            if (system === undefined) return;
+            this.updateEnabledAndUsageStats();
+            if (system.cloudStorageCapable === undefined) {
+                system.getInfoAndPermissions();
+            }
+        });
+        this.menuService.section = this.type === 'servers' ? this.CONFIG.menus.systemSettings.servers.id
+            : this.CONFIG.menus.systemSettings.admin.id;
+        if (this.type !== 'servers') {
+            this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
+        }
+    }
 
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -46,30 +72,14 @@ export class NxCloudStorageComponent implements OnInit {
         private menuService: NxMenuService,
         private route: ActivatedRoute
     ) {
-        this.setupDefaults({ configService, languageService });
-        this.init();
-    }
-
-    private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
-    private init() {
-        this.usageStats = emptyUsage;
-        this.system$ = this.settingsService.systemSubject;
-        this.system$.subscribe(system => {
-            if (system === undefined) return;
-            this.updateEnabledAndUsageStats();
-            if (system.cloudStorageCapable === undefined) {
-                system.getInfoAndPermissions();
-            }
-        });
-        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.cloudStorage.id);
-    }
-
     ngOnInit() {
+        this.setupDefaults();
+        this.cloudStorageInital = NxLanguageProviderService.translate(this.LANG.dialogs.cloudStorage.initial?.(), { compCapacity: this.compCloudCapacity });
+        this.layoutSimple = (this.layout && this.layout === 'simple');
         this.initEnableCloudStorageProcess();
     }
 
@@ -93,32 +103,32 @@ export class NxCloudStorageComponent implements OnInit {
 
     public get cloudCapacity() {
         const { locale } = this;
-        return fromBits(this._cloudCapacity, { locale, roundTo: 1073741824 / 10 });
+        return NxUtilsService.fromBits(this._cloudCapacity, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get compCloudCapacity() {
         const { locale, CONFIG: { cloudCapabilities: { cloudStorageSize } } } = this;
-        return fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
+        return NxUtilsService.fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get bitrate() {
         const { locale } = this;
         return (
-            this.usageStats.recordingBitrate === '_'
+            typeof this.usageStats.recordingBitrate !== 'number'
                 ? this.usageStats.recordingBitrate
-                : fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
+                : NxUtilsService.fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
         );
     }
 
     public get cloudStorageUsed() {
         const { locale } = this;
         return (
-            this.usageStats.amountUsed === '_'
+            typeof this.usageStats.amountUsed !== 'number'
                 ? this.usageStats.amountUsed
-                : wrapWithPercent(
+                : NxUtilsService.wrapWithPercent(
                     this.usageStats.amountUsed,
                     this._cloudCapacity,
-                    fromBits(
+                    NxUtilsService.fromBits(
                         this.usageStats.amountUsed,
                         { locale, roundTo: 1073741824 / 10 }),
                     2
@@ -127,17 +137,20 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public get numberOfCameras() {
-        if (this.usageStats.archiveFrom === '_') return this.usageStats.archiveFrom;
+        if (typeof this.usageStats.archiveFrom !== 'number') {
+            return this.usageStats.archiveFrom;
+        }
+
         const single = this.usageStats.archiveFrom === 1;
         const { camera, cameras } = this.LANG.dialogs.cloudStorage;
-        return `${this.usageStats.archiveFrom} ${single ? camera : cameras}`;
+        return `${this.usageStats.archiveFrom} ${single ? camera?.() : cameras?.()}`;
     }
 
     // String methods for view
 
-    public msFriendlyTime(ms: number | '_', suffix = false) {
+    public msFriendlyTime(ms: number | '&mdash;', suffix = false) {
         return (
-            ms === '_'
+            ms === '&mdash;'
                 ? ms
                 : this.utilsService.msFromNowToString(ms, suffix));
     }
@@ -149,14 +162,14 @@ export class NxCloudStorageComponent implements OnInit {
 
     set cloudStorageSystemEnabled(value: boolean | string) {
         const section1 = new InfoBlockSection([
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.currentRecordings, this.msFriendlyTime(this.usageStats.currentRecordings)),
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.whenFullyUsed, this.msFriendlyTime(this.usageStats.whenFullyUsed)),
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.amountUsed, this.cloudStorageUsed)
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.currentRecordings(), this.msFriendlyTime(this.usageStats.currentRecordings)),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.whenFullyUsed(), this.msFriendlyTime(this.usageStats.whenFullyUsed)),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.amountUsed(), this.cloudStorageUsed)
         ]);
         const section2 = new InfoBlockSection([
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.archiveFrom, this.numberOfCameras),
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.recordingBitrate, this.bitrate),
-            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.delayFromLive, this.msFriendlyTime(this.usageStats.delayFromLive, true))
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.archiveFrom(), this.numberOfCameras),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.recordingBitrate(), this.bitrate),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.delayFromLive(), this.msFriendlyTime(this.usageStats.delayFromLive, true))
         ]);
         this.parsedUsage = [[section1], [section2]];
         this.cloudStorageSystemEnabled$.next(value);
@@ -187,14 +200,14 @@ export class NxCloudStorageComponent implements OnInit {
         }, {
             errorCodes: {
                 cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized;
+                    return this.LANG.errorCodes.notAuthorized?.();
                 },
                 networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                    return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success,
-            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix
+            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success?.(),
+            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix?.()
         }).then(() => {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();
@@ -236,12 +249,12 @@ export class NxCloudStorageComponent implements OnInit {
 }
 
 export const emptyUsage: IUsageStats = {
-    currentRecordings : '_',
-    whenFullyUsed     : '_',
-    amountUsed        : '_',
-    archiveFrom       : '_',
-    recordingBitrate  : '_',
-    delayFromLive     : '_'
+    currentRecordings : '&mdash;',
+    whenFullyUsed     : '&mdash;',
+    amountUsed        : '&mdash;',
+    archiveFrom       : '&mdash;',
+    recordingBitrate  : '&mdash;',
+    delayFromLive     : '&mdash;'
 };
 
 export interface IUsageStats {
@@ -253,4 +266,4 @@ export interface IUsageStats {
     delayFromLive: UsageTypes
 }
 
-type UsageTypes = '_' | number
+type UsageTypes = '&mdash;' | number

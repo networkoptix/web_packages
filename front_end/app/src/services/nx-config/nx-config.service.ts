@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
-import { IConfig }    from './config-types';
-import { nxConfig }   from './config';
+import { Injectable }        from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
+
+import { IConfig }           from './config-types';
+import { nxConfig }          from './config';
+import { environment }       from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -8,17 +11,38 @@ import { nxConfig }   from './config';
 export class NxConfigService {
     config: IConfig;
 
-    constructor() {
+    constructor(
+        private http: HttpClient
+    ) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
-        // viewsDirCommon: 'static/web_common/views/',
         // ***************************************************************
 
         this.config = nxConfig;
+        this.config.isLocal = environment.isLocal;
+    }
+
+    get cloudHost() {
+        return this.config.cloudHost;
+    }
+
+    getSettings() {
+        const url = environment.isLocal ? '/static/customization/webadmin_config.json' : '/api/utils/settings';
+        return this.http.get(url).toPromise();
     }
 
     getConfig() {
         return this.config;
     }
+
+    static get isLocal() {
+        return nxConfig.isLocal;
+    }
+
+    static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
+        return NxConfigService.isLocal ? local : cloud;
+    }
+
+    public resolveLocalOrCloud = NxConfigService.resolveLocalOrCloud
 }

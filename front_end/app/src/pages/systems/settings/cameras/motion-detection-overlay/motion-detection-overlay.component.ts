@@ -1,10 +1,11 @@
 import {
     Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked,
     ChangeDetectionStrategy, HostListener, Output, EventEmitter
-}                               from '@angular/core';
-import { BehaviorSubject, Subject }      from 'rxjs';
-import { MotionMaskState }      from './MotionMaskState';
-import { MotionMaskRenderer }   from './MotionMaskRenderer';
+}                                   from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+
+import { MotionMaskState }          from './MotionMaskState';
+import { MotionMaskRenderer }       from './MotionMaskRenderer';
 import { NxConfigService, IConfig } from '../../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../../services/utils.service';
 

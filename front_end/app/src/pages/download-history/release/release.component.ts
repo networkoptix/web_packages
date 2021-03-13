@@ -1,21 +1,17 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    Inject
-} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-release',
-    templateUrl: 'release.component.html',
-    styleUrls  : ['release.component.scss']
+    selector : 'nx-release',
+    templateUrl : 'release.component.html',
+    styleUrls : ['release.component.scss']
 })
 export class ReleaseComponent implements OnInit {
     @Input() build: string;
-    @Input() release: any;
+    @Input() release;
     @Input() LANG: LanguageI18NStaticTypes;
-    @Input() linkbase: any;
+    @Input() linkbase;
 
     constructor() {
     }

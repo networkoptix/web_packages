@@ -40,23 +40,24 @@ import {
 })
 export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @Input() required: any;
-    @Input() checked: any;
-    @Input() disabled: any;
+    @Input() required;
+    @Input() checked;
+    @Input() disabled;
     @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
+    public value: any;
+    public state: string;
+
     private touched: boolean;
     private invalid: boolean;
+
     private cbxStates = {
         false     : 'unchecked',
         true      : 'checked',
         disabled  : 'disabled',
         undefined : 'tristate'
     };
-
-    state: string;
-    value: any;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

@@ -88,13 +88,15 @@ Integration Store Search
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]
     Wait Until Location Is    ${url}?search=vis&tags=objectDetection
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
+    Each Integration Tile Contains    Object Detection    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${number of tiles}
     Each Integration Tile Contains    vis    Vis
 
     Log    Step 4
-    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[7]
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,storage
-    Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[7]//span[contains(@class, "tag-close-icon")]
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]
+    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
+    Capture Page Screenshot
+    Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
     ${current}=   Number of Integrations Should be Higher    ${current}
     Each Integration Tile Contains    vis    Vis
     Each Integration Tile Contains    Object Detection    ${EMPTY}
@@ -103,30 +105,35 @@ Integration Store Search
     Log    Step 5
     Click Element     ${INTEGRATIONS SEARCH CLOSE BUTTON}
     Textfield Should Contain    ${INTEGRATIONS SEARCH INPUT}    ${EMPTY}
-    Wait Until Location Is    ${url}?tags=objectDetection,storage
+    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Each Integration Tile Contains    Object Detection    ${EMPTY}
+    Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Higher    ${current}
 
     Log    Step 6
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
-    Wait Until Location Is    ${url}?tags=storage
+    ${loc}    Get Location
+    log    ${loc}
+    Wait Until Location Is    ${url}?tags=automation
+    Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${current}
 
     Log    Step 7
-    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[7]//span[contains(@class, "tag-close-icon")]
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
     Wait Until Location Is    ${url}
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=storage
+    Wait Until Location Is    ${url}?tags=automation
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=objectDetection,storage
-    ${current}=   Number of Integrations Should be Lower    ${current}
-    Go Back
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection,storage
+    Wait Until Location Is    ${url}?tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Higher    ${current}
-    Go Forward
-    Wait Until Location Is    ${url}?tags=objectDetection,storage
+    Go Back
+    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Lower    ${current}
+    Go Forward
+    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    ${current}=   Number of Integrations Should be Higher    ${current}
     Go To Integrations Page
 
 Integration Store Integration Details Required Fields

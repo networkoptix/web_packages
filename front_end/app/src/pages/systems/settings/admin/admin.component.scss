@@ -4,10 +4,8 @@
     .system-header-bold {
         font-family: typography.$font-family-bold;
     }
-    .system-name {
-        @include typography.medium24;
-    }
+
     .system-owner {
-        @include typography.regular13;
+        @include typography.regular13dark9;
     }
 }

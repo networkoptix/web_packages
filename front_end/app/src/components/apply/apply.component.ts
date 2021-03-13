@@ -3,6 +3,7 @@ import {
     HostListener, ViewChild
 }                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
+
 import { NxProcessButtonComponent }  from '../process-button/process-button.component';
 
 
@@ -20,15 +21,18 @@ import { NxProcessButtonComponent }  from '../process-button/process-button.comp
 })
 export class NxApplyComponent {
     @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;
-
-    @Input() show: boolean;
-    @Input() save: any;
-    @Input() discard: any;
+    @Input() save;
+    @Input() discard;
     @Input() warn: string;
     @Input() form: NgForm;
+    @Input() submitFn: () => any = () => null;
+    @Input() showSectionWarning = false;
+    @Input() showDiscard = false;
 
-    applyVisible: boolean;
-    isOnline = true;
+    show = false;
+    applyVisible = false;
+    isOnline = false;
+    ready = false
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {

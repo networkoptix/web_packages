@@ -1,12 +1,12 @@
 import {
-    Component, Input, Renderer2, OnInit, ViewChild
-}                                      from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService, Process }   from '../../services/process.service';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
-import { ICamera, NxSystem }           from '../../services/system.service';
+    Component, Input, OnInit, ViewChild
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxSystem, ICamera }         from '../../services/system.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-rename-content',
@@ -51,7 +51,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
             ) {
                 return Promise.resolve();
             }
-            return this.system.updateCameraSettings(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
+            return this.system.updateResource(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
                 .then(this.updateCallback);
         }).then(() => {
             this.activeModal.close();

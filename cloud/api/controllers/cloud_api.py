@@ -1,15 +1,18 @@
-import requests
-from rest_framework.response import Response
-from rest_framework import status
-from requests.auth import HTTPDigestAuth
 from hashlib import md5, sha256
 import base64
 import random
 import string
-from cloud import settings
-from api.helpers.exceptions import validate_response, ErrorCodes, APIRequestException, APINotAuthorisedException, APINotFoundException
-
 import logging
+
+import requests
+from requests.auth import HTTPDigestAuth
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework import status
+
+from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
+                                    APINotAuthorisedException, APINotFoundException)
+
 logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
@@ -30,7 +33,7 @@ def salt_machine(char_pool=string.ascii_lowercase + string.digits, size=15):
 
 def delete_wrapper(url, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
-    logger.info('\nDELETE: {}\n Query Parameters: {}'.format(url, default_params))
+    logger.info(f'\nDELETE: {url}\n Query Parameters: {default_params}')
 
     return requests.delete(url, auth=auth, headers=headers)
 
@@ -41,7 +44,7 @@ def get_wrapper(url, params=None, auth=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info('\nGET: {}\n Query Parameters: {}'.format(url, default_params))
+    logger.info(f'\nGET: {url}\n Query Parameters: {default_params}')
 
     return requests.get(url, params=default_params, auth=auth, headers=headers)
 
@@ -52,7 +55,7 @@ def post_wrapper(url, params=None, auth=None, json=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info('\nPOST: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
+    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}')
 
     return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
 
@@ -63,7 +66,7 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info('\nPUT: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
+    logger.info(f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
     return requests.put(url, params=default_params, auth=auth, json=json, headers=headers)
 
 

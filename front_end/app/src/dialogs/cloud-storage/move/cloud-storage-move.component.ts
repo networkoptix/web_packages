@@ -1,22 +1,19 @@
 import {
-    Component,
-    Renderer2,
-    ViewChild,
-    Input,
-    OnInit,
-    Injector
+    Component, Renderer2, ViewChild,
+    Input, OnInit, Injector
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { BehaviorSubject }           from 'rxjs';
+
+import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxProcessService, Process }          from '../../../services/process.service';
-import { BehaviorSubject }           from 'rxjs';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxSystem }                  from '../../../services/system.service';
-import { NxDialogsService }          from '../../dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxModalGenericComponent }   from '../../generic/generic.component';
 
 @Component({
     selector    : 'nx-cloud-storage-move-content',
@@ -41,14 +38,16 @@ export class CloudStorageMoveModalContent implements OnInit {
     showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
-    constructor(configService: NxConfigService,
+
+    constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         public renderer: Renderer2,
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private injector: Injector
+        private genericModal: NxModalGenericComponent,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -76,8 +75,8 @@ export class CloudStorageMoveModalContent implements OnInit {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
-                    this.injector.get(NxDialogsService).confirm(message, title, ok);
-                };
+                    this.genericModal.openConfirm(message?.(), title?.(), ok?.());
+                }
             });
         });
 
@@ -85,20 +84,20 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
             errorCodes: {
                 500: () => {
-                    return this.LANG.common.systemServerError;
+                    return this.LANG.common.systemServerError?.();
                 },
                 notFound: () => {
-                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound?.();
                 },
                 cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized;
+                    return this.LANG.errorCodes.notAuthorized?.();
                 },
                 networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                    return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
-            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
+            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
+            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
         }).then(() => {
             this.updateCallback();
             this.close();
@@ -122,9 +121,14 @@ export class CloudStorageMoveModalContent implements OnInit {
     setTargetSystem({ value, state }: DropdownItem) {
         this.target$.next(value);
         this.targetOnline$.next(state !== 'offline');
+        if (value === 'otherSystem') {
+            // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
+            this.errorText = "this isn't implemented, not sure if it should be";
+        }
+
         this.systemsService.getSystem(value).toPromise().then(({ state }) => {
             if (state === 'offline') {
-                this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
+                this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline?.();
             } else {
                 this.errorText = '';
             }

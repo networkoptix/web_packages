@@ -1,4 +1,5 @@
 import { Component }                 from '@angular/core';
+
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -16,6 +17,6 @@ export class Nx404Component {
         pageService: NxPageService
     ) {
         this.LANG = languageService.translations;
-        pageService.pageTitle = this.LANG.pageTitles.pageNotFound;
+        pageService.pageTitle = this.LANG.pageTitles.pageNotFound?.();
     }
 }
