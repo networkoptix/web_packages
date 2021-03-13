@@ -311,7 +311,7 @@ ${MAX SCENE ITEMS INPUT}                        //input[@id='maxSceneItems']
 ${MAX SCENE ITEMS LABEL}                        //div[text()='${MAX SCENE ITEMS TEXT}']
 ${MAX WEARABLE CAM ARCHIVE SYNC THREADS INPUT}  //input[@id='maxWearableArchiveSynchronizationThreads']
 ${MAX WEARABLE CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX WEARABLE CAM ARCHIVE SYNC THREADS TEXT}']
-${MAX WEBM TRANSCODERS INPUT}                   //input[@id='maxWebMTranscoders']
+${MAX WEBM TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
 ${MAX WEBM TRANSCODERS LABEL}                   //div[text()='${MAX WEBM TRANSCODERS TEXT}']
 
 @{ADVANCED SETTING ELEMENT BLOCK EIGHT}
