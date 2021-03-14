@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Forcer le chiffrement du trafic vidéo",
         "updateStatus": "Mettre à jour statut",
         "watermarkSettings": "Paramètres du filigrane",
-        "maxWebMTranscoders": "Nombre maximum de connexions WEBM pour le serveur. Chrome ouvre 2 connexions à la fois, puis ferme la première. Il est donc recommandé de définir la valeur >=2 à ce paramètre.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Nombre maximal d'enregistrements du journal des événements à conserver dans la base de données. La quantité réelle d'enregistrements non supprimés peut dépasser de 20% la valeur spécifiée.",
         "forceLiveCacheForPrimaryStream": "S'il faut mettre certaines images en cache pour le flux principal. Valeurs: \"oui\" - toujours activé (peut utiliser beaucoup de RAM), \"non\" - toujours désactivé sauf lorsque requis par la lecture (par exemple, HLS), \"auto\" - similaire à \"non\", mais activé lorsque l'amélioration de l'expérience utilisateur (par exemple, lorsqu'un plug-in Analytics fonctionne sur la caméra)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Réservé",
             "inaccessible": "Inaccessible",
             "changing": "Changement de mode en cours...",
-            "disabled": "Désactivé"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Le chemin de stockage {url} est déjà utilisé par un autre serveur.",
         "deleteExternalStorage": "Supprimer le stockage externe ?",

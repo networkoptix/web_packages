@@ -332,8 +332,8 @@
             "noClientDetected": "Instale %VMS_NAME% para ver su sistema",
             "removeUser": "¿Eliminar usuario?",
             "serversDetach": "¿Separar el servidor \"{ title }\" del sistema actual?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversReset": "¿Restablecer el servidor \"{ title }\" a los valores predeterminados?",
+            "serversRestart": "¿Reiniciar el servidor \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos los sistemas de los que es dueño del portal %CLOUD_NAME% para eliminar su cuenta."
@@ -415,15 +415,15 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un dueño diferente. Los sistemas de la nube solo pueden fusionarse si la cuenta del dueño es la misma.",
         "DUPLICATE_MEDIASERVER_FOUND": "Algunas listas de servidores existen en ambos sistemas, en el seleccionado y en el actual.<br>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.",
         "EmailAlreadyExists": "Este correo electrónico ya ha sido registrado",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "FAIL": "El sistema <strong>{failedSystem}</strong> está fuera de línea.",
+        "Connection timed out": "El sistema <strong>{failedSystem}</strong> está fuera de línea.",
+        "Bad Gateway": "El sistema <strong>{failedSystem}</strong> está disponible actualmente.<br>Vuelva a intentarlo en unos minutos o póngase <a href=\"%SUPPORT_LINK%\" target=\"_blank\">contacto con el servicio de asistencia</a>.",
+        "INCOMPATIBLE": "Los sistemas tienen versiones de software que no coinciden. Actualícelos a {downloadHTML}.",
         "This user does not exist.": "Este usuario no existe.",
         "The user is disabled. Please contact your system administrator.": "El usuario está deshabilitado. Por favor, póngase en contacto con el administrador del sistema.",
         "cloud_systems_have_different_owners": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un propietario diferente. Los sistemas en la nube solo pueden fusionarse si la cuenta del propietario es la misma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
-        "fail": "{failedSystem} is inaccessible.",
+        "fail": "{failedSystem} es inaccesible.",
         "incompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la misma compilación para fusionarlos.",
         "unknown_error": "Un error desconocido ocurrió. Actualice la página e intente nuevamente. Si el problema persiste, póngase en contacto con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "accountAlreadyActivated": "Esta cuenta ya está activada",
@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Forzar Encriptación de Trafico de Video",
         "updateStatus": "Estado de actualización",
         "watermarkSettings": "Configuraciones de marca de agua",
-        "maxWebMTranscoders": "Cantidad máxima de conexiones WEBM para el servidor. Chrome abre 2 conexiones a la vez, luego cierra la primera. Por lo tanto, se recomienda fijar el valor >=2 a este parámetro.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Máximo registro de eventos para mantener en la base de datos. La cantidad real de registros no eliminados puede ser hasta un 20% más alta que el valor especificado.",
         "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Desactivado"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

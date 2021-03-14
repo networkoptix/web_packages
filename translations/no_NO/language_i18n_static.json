@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Påtvunget kryptering av vidostrøm",
         "updateStatus": "Oppdater status",
         "watermarkSettings": "Vannmerkeinnstillinger",
-        "maxWebMTranscoders": "Maks antall WEBM-tilkoblinger for serveren. Chrome åpner to tilkoblinger samtidig, og lukk deretter den første. Så det anbefales å sette verdi> = 2 til denne parameteren.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maksimal hendelsesloggoppføringer for å oppbevare i databasen. Den reelle mengden ubemerkede poster kan være opptil 20% høyere enn den spesifiserte verdien.",
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Deaktivert"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

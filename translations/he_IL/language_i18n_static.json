@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "כפה הצפנת תעבורת וידאו",
         "updateStatus": "עדכן מצב",
         "watermarkSettings": "הגדרות סימן מים",
-        "maxWebMTranscoders": "כמות מקסימלית של חיבורי WEBM עבור השרת. Chrome פותח 2 חיבורים בו-זמנית, ולאחר מכן סוגר את הראשון. לכן, מומלץ להגדיר ערך> = 2 לפרמטר זה.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "המספר המרבי של רשומות יומן האירועים שיש לשמור במסד הנתונים. הכמות האמיתית של רשומות שלא נמחקו עשויה להיות גבוהה בעד 20% מהערך שצוין.",
         "forceLiveCacheForPrimaryStream": "האם לשמור במטמון כמה מסגרות עבור הזרם הראשי. ערכים: \"כן\" - מאופשר תמיד (יכול להשתמש בהרבה RAM), \"לא\" - תמיד מושבת למעט כאשר נדרש על ידי הקלטה(למשל HLS), \"אוטומטי\" - דומה \"לא\", אבל מופעלת כאשר משפרת את חוויית המשתמש (לדוגמה, כאשר תוסף כלשהו של Analytics פועל על המצלמה)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "כבוי"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

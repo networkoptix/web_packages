@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Força el xifratge del trànsit de vídeo",
         "updateStatus": "Estat de l'actualització",
         "watermarkSettings": "Configuració de la filigrana",
-        "maxWebMTranscoders": "Quantitat màxima de connexions WEBM per al servidor. Chrome obre dues connexions alhora i després tanca la primera. Per tant, es recomana establir un valor >= 2 en aquest paràmetre.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Registres d'esdeveniments màxims que es mantenen a la base de dades. La quantitat real de registres no eliminats pot ser fins a un 20% superior al valor especificat.",
         "forceLiveCacheForPrimaryStream": "Si cal emmagatzemar alguns segments per al flux principal. Valors: \"sí\" - sempre activat (pot utilitzar molta memòria RAM), \"no\" - sempre desactivat excepte quan la reproducció ho requereixi (per exemple, HLS), \"automàtic\" - similar a \"no\", però activat quan millora el experiència d'usuari (per exemple, quan algun connector d'Analytics està funcionant a la càmera)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Desactivat"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
