@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Videotrafficverschlüsselung erzwingen",
         "updateStatus": "Updatestatus",
         "watermarkSettings": "Wasserzeicheneinstellungen",
-        "maxWebMTranscoders": "Maximale Anzahl von WEBM-Verbindungen für den Server. Chrome öffnet 2 Verbindungen auf einmal und schließt dann die erste. Es wird daher empfohlen, den Wert >=2 auf diesen Parameter zu setzen.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximale Ereignisprotokollaufzeichnungen, die in der Datenbank gespeichert werden sollen. Die tatsächliche Anzahl der nicht gelöschten Datensätze kann bis zu 20% höher sein als der angegebene Wert.",
         "forceLiveCacheForPrimaryStream": "Gibt an, ob einige Frames für den primären Stream zwischengespeichert werden sollen. Werte: \"Ja\" - immer aktiviert (verwendet möglicherweise viel RAM), \"Nein\" - immer deaktiviert, außer wenn dies für die Wiedergabe erforderlich ist (z. B. HLS), \"Auto\" - ähnlich wie \"Nein\", wird aber eingeschaltet, wenn die Benutzerfreundlichkeit verbessert wird (z.B. wenn einige Analytics-Plugins an der Kamera arbeiten)."
     },

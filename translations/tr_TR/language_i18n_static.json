@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Video trafiğini şifrelemeyi zorla",
         "updateStatus": "Güncelleme durumu",
         "watermarkSettings": "Filigran ayarları",
-        "maxWebMTranscoders": "Sunucu için maksimum WEBM bağlantısı. Chrome aynı anda 2 bağlantı açar ardından ilkini kapatır. Bu nedenle parametreyi value>=2 olarak ayarlamanız önerilir.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Veritabanında tutulacak maksimum olay günlüğü kaydı. Silinmemiş kayıtların gerçek miktarı belirtilen değerden %20 daha yüksek olabilir.",
         "forceLiveCacheForPrimaryStream": "Birincil akış için bazı karelerin önbellekte saklanıp saklanmayacağı. Değer:\"evet\" - her zaman etkin ( çok fazla RAM kullanılabilir), \"hayır\" - geri oynatma işleminin gerektirdiği durumlar dışında devre dışı (örn. HLS), \"auto\" hayır'a benzer ancak etkinleştirildiğinde kullanıcı deneyimini arttırır (örneğin, bazı Analitik eklentileri kamera üzerinde çalışırken)."
     },

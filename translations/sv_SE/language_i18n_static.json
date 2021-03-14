@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Tvinga videotrafikkryptering",
         "updateStatus": "Uppdatera status",
         "watermarkSettings": "Vattenmärkesinställningar",
-        "maxWebMTranscoders": "Max antal WEBM-anslutningar för servern. Chrome öppnar 2 anslutningar samtidigt och stänger sedan den första. Så det rekommenderas att ange värdet> = 2 till denna parameter.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximala händelseloggposter för att hålla i databasen. Den verkliga mängden obestängda poster kan vara upp till 20% högre än det angivna värdet.",
         "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran)."
     },

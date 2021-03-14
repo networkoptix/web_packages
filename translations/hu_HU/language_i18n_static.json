@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Kényszerített videó forgalom titkosítás",
         "updateStatus": "Állapotfrissítés",
         "watermarkSettings": "Vízjel beállítások",
-        "maxWebMTranscoders": "A WEBM kapcsolatok maximális száma a szerveren. A Chrome egyszerre 2 kapcsolatot nyit meg, majd bezárja az elsőt. Tehát javasoljuk, hogy ezen a paraméternél állítson be >= 2 értéket.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Az adatbázisban tárolható maximális eseménynapló-nyilvántartások. A nem törölt rekordok valódi mennyisége akár 20% -kal is magasabb lehet, mint a megadott érték.",
         "forceLiveCacheForPrimaryStream": "Az elsődleges stream képkockáinak gyorsítótárazása. Értékek: \"igen\" - mindig engedélyezve (sok RAM-ot használhat), \"nem\" - mindig letiltva, kivéve, ha a lejátszás megköveteli (pl. HLS), \"auto\" - hasonlóan a \"nem\" -hez, de bekapcsolva, amikor javítja a felhasználói élmény (pl. amikor egy Analytics plugin működik a kamerán)."
     },

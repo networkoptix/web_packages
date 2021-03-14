@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Vynutit šifrovaný video přenos",
         "updateStatus": "Aktualizovat stav",
         "watermarkSettings": "Nastavení vodoznaku",
-        "maxWebMTranscoders": "Maximální počet připojení WEBM pro server. Chrome otevře 2 připojení najednou a uzavře první. Proto se doporučuje nastavit hodnotu > = 2 na tento parametr.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximální záznamy protokolu událostí, které lze uložit do databáze. Skutečné množství nevymazaných záznamů může být až o 20% vyšší než zadaná hodnota.",
         "forceLiveCacheForPrimaryStream": "Určuje, zda ukládat některé snímky pro primární stream. Hodnoty: \"ano\" - vždy povoleno (může využít hodně RAM), \"ne\" - vždy vypnuto, kromě případů, kdy to vyžaduje přehrávání (např.. HLS), \"auto\" - podobné \"ne\", ale pokud je zapnuto, zlepšuje uživatelský zážitek (např. když nějaký plugin Analytický pracuje na kamerě)."
     },

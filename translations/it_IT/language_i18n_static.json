@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Forzare la Crittografia del traffico Video",
         "updateStatus": "Aggiorna stato",
         "watermarkSettings": "Impostazioni del watermark",
-        "maxWebMTranscoders": "Quantità massima di connessioni WEBM per il server. Chrome apre due connessioni contemporaneamente, quindi chiude la prima. Pertanto, si consiglia di impostare il valore> = 2 su questo parametro.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Numero massimo di record del registro degli eventi da conservare nel database. La quantità reale di record non eliminati può essere maggiore del 20% rispetto al valore specificato.",
         "forceLiveCacheForPrimaryStream": "Indica se memorizzare nella cache alcuni frame per lo stream principale. Valori: \"sì\" - sempre abilitato (può utilizzare molta RAM), \"no\" - sempre disabilitato tranne quando richiesto dalla riproduzione (ad es. HLS), \"auto\" - simile a \"no\", ma attivo quando si migliora l'esperienza dell'utente (ad esempio quando alcuni plug-in di Analytics funzionano sulla telecamera)."
     },
