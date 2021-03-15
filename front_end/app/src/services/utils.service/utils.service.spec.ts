@@ -5,7 +5,7 @@ import { DeviceDetectorService }             from 'ngx-device-detector';
 
 import { NxUtilsService } from './utils.service';
 
-describe('Nx Utils Service', () => {
+describe('Xyz  Utils Service', () => {
     let utilsService: NxUtilsService;
 
     beforeEach(waitForAsync(() => {

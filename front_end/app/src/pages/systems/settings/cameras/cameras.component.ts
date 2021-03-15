@@ -1,33 +1,40 @@
 import {
     Component, OnDestroy, OnInit,
-    Inject, ViewContainerRef, ElementRef, ViewChild
-} from '@angular/core';
-import { ActivatedRoute, Router }            from '@angular/router';
+    Inject, ViewContainerRef
+}                                       from '@angular/core';
+import { ActivatedRoute, Router }       from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    Subject, Subscription, BehaviorSubject, from, throwError, of
-} from 'rxjs';
+    Subject, Subscription, BehaviorSubject,
+    from, throwError, of
+}                                       from 'rxjs';
 import {
-    filter, map, retryWhen, delay, distinctUntilChanged, retry, tap, catchError, switchMap
-}                                    from 'rxjs/operators';
-
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxProcessService, Process } from '@services/process.service';
-import { WINDOW }                    from '@services/window-provider';
-import { NxApplyService, Watcher }   from '@services/apply.service';
+    filter, map, retryWhen, delay,
+    distinctUntilChanged, retry, tap,
+    catchError, switchMap
+}                                       from 'rxjs/operators';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { NxProcessService, Process }    from '@services/process.service';
+import { WINDOW }                       from '@services/window-provider';
+import { NxApplyService, Watcher }      from '@services/apply.service';
 import {
-    ICamera, IRecordingModes, IRecordingSettings,
-    ITask, MotionType, NxSystem, StreamQuality
-}                                    from '@services/system.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '@src/menu';
-import { NxUriService, ChildRoutes } from '@services/uri.service';
-import { NxHealthService }           from '@pages/health/health.service';
-import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component';
-import { NxUtilsService }            from '@services/utils.service';
+    ICamera, IRecordingModes,
+    IRecordingSettings, ITask,
+    MotionType, NxSystem,
+    StreamQuality
+}                                       from '@services/system.service';
+import { NxDialogsService }             from '@dialogs/dialogs.service';
+import { NxSettingsService }            from '../settings.service';
+import { NxMenuService }                from '@src/menu';
+import { NxUriService, ChildRoutes }    from '@services/uri.service';
+import { NxHealthService }              from '@pages/health/health.service';
+import {
+    InfoBlockColumns, InfoBlockSection,
+    InfoBlockLine
+}                                       from '@components/info-block/info-block.component';
+import { NxUtilsService }               from '@services/utils.service';
 
 @UntilDestroy()
 @Component({
@@ -39,8 +46,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     isMobile: boolean;
-
-    @ViewChild('fpsInput') fpsInput: ElementRef;
 
     unsub$: Subject<boolean> = new Subject();
     public reload$ = new BehaviorSubject(0);
@@ -278,9 +283,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     set selectedFps(value) {
         this.selectedFpsWatcher.value = !value ? value : Math.min(value, this.selectedCamera.maxFps);
-        if (this.fpsInput && this.fpsInput.nativeElement.value !== this.selectedFpsWatcher.value) {
-            this.fpsInput.nativeElement.value = this.selectedFpsWatcher.value;
-        }
     }
 
     get variousFps() {
@@ -844,11 +846,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
-    storePreviousValue(e) {
-        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
-            e.preventDefault();
-        }
-    }
+    // storePreviousValue(e) {
+    //     if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
+    //         e.preventDefault();
+    //     }
+    // }
 }
 
 export class Alert {

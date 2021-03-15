@@ -1,17 +1,18 @@
 import {
-    Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
-}                                       from '@angular/core';
-import { Subscription }                 from 'rxjs';
-import { filter, map }                          from 'rxjs/operators';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { NxSystem }                     from '@services/system.service';
-import { LanguageI18NStaticTypes }      from '@services/../../language_i18n_static_types';
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
-import { Watcher }                      from '@services/apply.service';
-import { NxProcessService, Process }    from '@services/process.service';
-import { NxDialogsService }             from '@services/../dialogs/dialogs.service';
-import { IConfig, NxConfigService }      from '@services/nx-config';
-import { CurrentStorageState } from '@services/system.service/system/storage-manager/current-storage-state';
+    Component, Inject, OnDestroy, LOCALE_ID,
+    Input, OnChanges, SimpleChanges
+}                                    from '@angular/core';
+import { Subscription }              from 'rxjs';
+import { filter }                    from 'rxjs/operators';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Watcher }                   from '@services/apply.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxDialogsService }          from '@services/../dialogs/dialogs.service';
+import { IConfig, NxConfigService }  from '@services/nx-config';
+import { CurrentStorageState }       from '@services/system.service/system/storage-manager/current-storage-state';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -177,8 +177,8 @@ export function getCloudSettings() {
             'sdk',
             'windows'
         ],
-        cloudName              : 'Nx Witness Cloud',
-        vmsName                : 'Nx Witness',
+        cloudName              : 'Xyz Witness Cloud',
+        vmsName                : 'Xyz Witness',
         cloudStorageEnabled    : false,
         cloudStorageSize       : '53687091200',
         copyrightYear          : '2020',
@@ -234,7 +234,7 @@ export function getCloudSettings() {
             }
         ],
         integrationFilterLimitation      : '12',
-        integrationSeoPageDescription    : 'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Nx Witness, all available in Nx Witness Cloud so that you can find solutions to build and customize your IP Video system.',
+        integrationSeoPageDescription    : 'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Xyz Witness, all available in Xyz Witness Cloud so that you can find solutions to build and customize your IP Video system.',
         integrationStoreEnabled          : true,
         healthMonitorCacheTimeout        : 60,
         trafficRelayHost                 : '{systemId}.relay.vmsproxy.hdw.mx',
@@ -387,7 +387,7 @@ export function getCloudSettings() {
             footer: {
                 nodes: [
                     {
-                        name              : 'About Nx Witness Cloud',
+                        name              : 'About Xyz Witness Cloud',
                         url               : '/content/about',
                         asset_id          : null,
                         accepted          : true,
@@ -401,10 +401,10 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 0,
                         urlified          : null,
-                        display_name      : 'About Nx Witness Cloud'
+                        display_name      : 'About Xyz Witness Cloud'
                     },
                     {
-                        name              : 'Download Nx Witness',
+                        name              : 'Download Xyz Witness',
                         url               : '/download',
                         asset_id          : null,
                         accepted          : true,
@@ -418,7 +418,7 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 1,
                         urlified          : null,
-                        display_name      : 'Download Nx Witness'
+                        display_name      : 'Download Xyz Witness'
                     },
                     {
                         name              : 'Integrations',
@@ -532,7 +532,7 @@ export function getCloudSettings() {
             'platform overview (for developers landing)': {
                 nodes: [
                     {
-                        name              : 'Develop with Nx Meta',
+                        name              : 'Develop with Xyz Meta',
                         url               : '',
                         asset_id          : 208,
                         accepted          : true,
@@ -546,7 +546,7 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 0,
                         urlified          : '208-develop-with-nx-meta',
-                        display_name      : 'Develop with Nx Meta'
+                        display_name      : 'Develop with Xyz Meta'
                     },
                     {
                         name              : 'What is Possible',
@@ -1203,7 +1203,7 @@ export function getCloudSettings() {
             'test - developer tools': {
                 nodes: [
                     {
-                        name              : 'Nx Server HTTP REST API',
+                        name              : 'Xyz Server HTTP REST API',
                         url               : 'https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API',
                         asset_id          : 212,
                         accepted          : true,
@@ -1217,10 +1217,10 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 0,
                         urlified          : '212-nx-server-http-rest-api',
-                        display_name      : 'Nx Server HTTP REST API'
+                        display_name      : 'Xyz Server HTTP REST API'
                     },
                     {
-                        name              : 'Nx Server Plugin SDK (C++)',
+                        name              : 'Xyz Server Plugin SDK (C++)',
                         url               : 'https://support.networkoptix.com/hc/en-us/articles/202856206-Nx-Server-Plugin-SDK-C-',
                         asset_id          : 213,
                         accepted          : true,
@@ -1234,10 +1234,10 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 1,
                         urlified          : '213-nx-server-plugin-sdk-(c++)',
-                        display_name      : 'Nx Server Plugin SDK (C++)'
+                        display_name      : 'Xyz Server Plugin SDK (C++)'
                     },
                     {
-                        name              : 'Cloud API: Route API Calls via Nx Cloud',
+                        name              : 'Cloud API: Route API Calls via Xyz Cloud',
                         url               : 'https://support.networkoptix.com/hc/en-us/articles/360016266074-Cloud-API-Route-API-Calls-via-Nx-Cloud',
                         asset_id          : 214,
                         accepted          : true,
@@ -1251,7 +1251,7 @@ export function getCloudSettings() {
                         authentication    : 'Both',
                         order             : 2,
                         urlified          : '214-cloud-api:-route-api-calls-via-nx-cloud',
-                        display_name      : 'Cloud API: Route API Calls via Nx Cloud'
+                        display_name      : 'Cloud API: Route API Calls via Xyz Cloud'
                     },
                     {
                         name              : 'Testcamera: IP Camera Emulator',
@@ -1339,7 +1339,7 @@ export function getCloudSettings() {
                         display_name      : 'Getting Started',
                         nodes             : [
                             {
-                                name              : 'Get an Nx Witness Build',
+                                name              : 'Get an Xyz Witness Build',
                                 url               : '',
                                 asset_id          : 351,
                                 accepted          : true,
@@ -1353,7 +1353,7 @@ export function getCloudSettings() {
                                 authentication    : 'Both',
                                 order             : 0,
                                 urlified          : '351-get-an-nx-witness-build',
-                                display_name      : 'Get an Nx Witness Build'
+                                display_name      : 'Get an Xyz Witness Build'
                             },
                             {
                                 name              : 'Getting Licenses for Developers',
@@ -1373,7 +1373,7 @@ export function getCloudSettings() {
                                 display_name      : 'Getting Licenses for Developers'
                             },
                             {
-                                name              : 'Nx Witness Architecture Overview',
+                                name              : 'Xyz Witness Architecture Overview',
                                 url               : '',
                                 asset_id          : 220,
                                 accepted          : true,
@@ -1387,7 +1387,7 @@ export function getCloudSettings() {
                                 authentication    : 'Both',
                                 order             : 3,
                                 urlified          : '220-nx-witness-architecture-overview',
-                                display_name      : 'Nx Witness Architecture Overview'
+                                display_name      : 'Xyz Witness Architecture Overview'
                             },
                             {
                                 name              : 'Submitting an Integration to the Cloud Marketplace',
@@ -1460,7 +1460,7 @@ export function getCloudSettings() {
                                 display_name      : 'Server Plugin SDK (C++)'
                             },
                             {
-                                name              : 'Cloud API: Route API Calls via Nx Witness Cloud',
+                                name              : 'Cloud API: Route API Calls via Xyz Witness Cloud',
                                 url               : '',
                                 asset_id          : 358,
                                 accepted          : true,
@@ -1474,7 +1474,7 @@ export function getCloudSettings() {
                                 authentication    : 'Both',
                                 order             : 2,
                                 urlified          : '358-cloud-api:-route-api-calls-via-nx-witness-cloud',
-                                display_name      : 'Cloud API: Route API Calls via Nx Witness Cloud'
+                                display_name      : 'Cloud API: Route API Calls via Xyz Witness Cloud'
                             },
                             {
                                 name              : 'Test Camera: IP Camera Emulator',
@@ -1702,7 +1702,7 @@ export function getCloudSettings() {
                                         display_name      : 'Virtual Machines'
                                     },
                                     {
-                                        name              : 'Which browser does Nx Witness use?',
+                                        name              : 'Which browser does Xyz Witness use?',
                                         url               : '',
                                         asset_id          : 471,
                                         accepted          : true,
@@ -1716,7 +1716,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 4,
                                         urlified          : '471-which-browser-does-nx-witness-use?',
-                                        display_name      : 'Which browser does Nx Witness use?'
+                                        display_name      : 'Which browser does Xyz Witness use?'
                                     }
                                 ]
                             },
@@ -1774,7 +1774,7 @@ export function getCloudSettings() {
                         display_name      : 'Knowledge Base',
                         nodes             : [
                             {
-                                name              : 'What is Nx Witness?',
+                                name              : 'What is Xyz Witness?',
                                 url               : '',
                                 asset_id          : null,
                                 accepted          : true,
@@ -1788,10 +1788,10 @@ export function getCloudSettings() {
                                 authentication    : 'Both',
                                 order             : 0,
                                 urlified          : null,
-                                display_name      : 'What is Nx Witness?',
+                                display_name      : 'What is Xyz Witness?',
                                 nodes             : [
                                     {
-                                        name              : 'Benefits of Integrating with Nx Witness',
+                                        name              : 'Benefits of Integrating with Xyz Witness',
                                         url               : '',
                                         asset_id          : 365,
                                         accepted          : true,
@@ -1805,10 +1805,10 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 0,
                                         urlified          : '365-benefits-of-integrating-with-nx-witness',
-                                        display_name      : 'Benefits of Integrating with Nx Witness'
+                                        display_name      : 'Benefits of Integrating with Xyz Witness'
                                     },
                                     {
-                                        name              : 'What is a Powered-by-Nx product?',
+                                        name              : 'What is a Powered-by-Xyz product?',
                                         url               : '',
                                         asset_id          : 366,
                                         accepted          : true,
@@ -1822,7 +1822,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 1,
                                         urlified          : '366-what-is-a-powered-by-nx-product?',
-                                        display_name      : 'What is a Powered-by-Nx product?'
+                                        display_name      : 'What is a Powered-by-Xyz product?'
                                     },
                                     {
                                         name              : 'Meta Release Process',
@@ -1997,7 +1997,7 @@ export function getCloudSettings() {
                                         display_name      : '8. Create a Smart IP Camera Plugin'
                                     },
                                     {
-                                        name              : '9. Important Technical Considerations w/ Nx Witness',
+                                        name              : '9. Important Technical Considerations w/ Xyz Witness',
                                         url               : '',
                                         asset_id          : 376,
                                         accepted          : true,
@@ -2011,7 +2011,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 8,
                                         urlified          : '376-9.-important-technical-considerations-w/-nx-witness',
-                                        display_name      : '9. Important Technical Considerations w/ Nx Witness'
+                                        display_name      : '9. Important Technical Considerations w/ Xyz Witness'
                                     },
                                     {
                                         name              : '10. Development Tools & Tips',
@@ -2188,7 +2188,7 @@ export function getCloudSettings() {
                                 ]
                             },
                             {
-                                name              : 'Nx Server Plugin Debugging',
+                                name              : 'Xyz Server Plugin Debugging',
                                 url               : '',
                                 asset_id          : null,
                                 accepted          : true,
@@ -2202,7 +2202,7 @@ export function getCloudSettings() {
                                 authentication    : 'Both',
                                 order             : 3,
                                 urlified          : null,
-                                display_name      : 'Nx Server Plugin Debugging',
+                                display_name      : 'Xyz Server Plugin Debugging',
                                 nodes             : [
                                     {
                                         name              : 'Introduction to Plugin Debugging',
@@ -2513,7 +2513,7 @@ export function getCloudSettings() {
                                         display_name      : 'Virtual Camera API Protocol: How to Import Files to Camera Archive'
                                     },
                                     {
-                                        name              : 'Connecting a System to Nx Witness Cloud using the API',
+                                        name              : 'Connecting a System to Xyz Witness Cloud using the API',
                                         url               : '',
                                         asset_id          : 403,
                                         accepted          : true,
@@ -2527,7 +2527,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 7,
                                         urlified          : '403-connecting-a-system-to-nx-witness-cloud-using-the-api',
-                                        display_name      : 'Connecting a System to Nx Witness Cloud using the API'
+                                        display_name      : 'Connecting a System to Xyz Witness Cloud using the API'
                                     },
                                     {
                                         name              : 'HTTP Generic Event',
@@ -2583,7 +2583,7 @@ export function getCloudSettings() {
                                 display_name      : 'Other Articles',
                                 nodes             : [
                                     {
-                                        name              : 'How to run Nx Witness Server in Docker',
+                                        name              : 'How to run Xyz Witness Server in Docker',
                                         url               : '',
                                         asset_id          : 404,
                                         accepted          : true,
@@ -2597,10 +2597,10 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 0,
                                         urlified          : '404-how-to-run-nx-witness-server-in-docker',
-                                        display_name      : 'How to run Nx Witness Server in Docker'
+                                        display_name      : 'How to run Xyz Witness Server in Docker'
                                     },
                                     {
-                                        name              : 'How does Nx Witness Server RTSP Streaming Work?',
+                                        name              : 'How does Xyz Witness Server RTSP Streaming Work?',
                                         url               : '',
                                         asset_id          : 405,
                                         accepted          : true,
@@ -2614,7 +2614,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 1,
                                         urlified          : '405-how-does-nx-witness-server-rtsp-streaming-work?',
-                                        display_name      : 'How does Nx Witness Server RTSP Streaming Work?'
+                                        display_name      : 'How does Xyz Witness Server RTSP Streaming Work?'
                                     },
                                     {
                                         name              : 'How to Call Client using URL?',
@@ -2634,7 +2634,7 @@ export function getCloudSettings() {
                                         display_name      : 'How to Call Client using URL?'
                                     },
                                     {
-                                        name              : 'How to: Embed Video from Nx Witness / Nx Witness on a website',
+                                        name              : 'How to: Embed Video from Xyz Witness / Xyz Witness on a website',
                                         url               : '',
                                         asset_id          : 407,
                                         accepted          : true,
@@ -2648,10 +2648,10 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 3,
                                         urlified          : '407-how-to:-embed-video-from-nx-witness-/-nx-witness-on-a-website',
-                                        display_name      : 'How to: Embed Video from Nx Witness / Nx Witness on a website'
+                                        display_name      : 'How to: Embed Video from Xyz Witness / Xyz Witness on a website'
                                     },
                                     {
-                                        name              : 'How to start/stop recording using Nx Witness Generic Event',
+                                        name              : 'How to start/stop recording using Xyz Witness Generic Event',
                                         url               : '',
                                         asset_id          : 408,
                                         accepted          : true,
@@ -2665,10 +2665,10 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 4,
                                         urlified          : '408-how-to-start/stop-recording-using-nx-witness-generic-event',
-                                        display_name      : 'How to start/stop recording using Nx Witness Generic Event'
+                                        display_name      : 'How to start/stop recording using Xyz Witness Generic Event'
                                     },
                                     {
-                                        name              : 'How to start/stop the recording schedule of a specific camera via Nx Witness Server API',
+                                        name              : 'How to start/stop the recording schedule of a specific camera via Xyz Witness Server API',
                                         url               : '',
                                         asset_id          : 409,
                                         accepted          : true,
@@ -2682,7 +2682,7 @@ export function getCloudSettings() {
                                         authentication    : 'Both',
                                         order             : 5,
                                         urlified          : '409-how-to-start/stop-the-recording-schedule-of-a-specific-camera-via-nx-witness-server-api',
-                                        display_name      : 'How to start/stop the recording schedule of a specific camera via Nx Witness Server API'
+                                        display_name      : 'How to start/stop the recording schedule of a specific camera via Xyz Witness Server API'
                                     },
                                     {
                                         name              : 'Server Hive Synchronization',

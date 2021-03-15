@@ -68,9 +68,11 @@
     gap: 8px;
     grid-template-columns: min-content auto;
     align-items: center;
+
     .text-column {
         text-align: right;
     }
+
     .port-input {
         height: 30px;
         width: 80px;

@@ -8,8 +8,9 @@ import {
     getCloudSettings, getLocalSettings,
     getModuleInformation
 }                                    from '@src/_mocks/getSettings.mock';
+import { NxPageService }             from '@services/page.service';
 
-describe('Nx Bootstrap Provider', () => {
+describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;
 
     const configMock = { getConfig: () => nxConfig };
@@ -32,6 +33,7 @@ describe('Nx Bootstrap Provider', () => {
                 NxBootstrapProvider,
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
+                { provide: NxPageService, useValue: {} },
                 { provide: HttpClient, useValue: {} }
             ]
         });
