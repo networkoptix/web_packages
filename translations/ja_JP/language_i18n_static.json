@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Force video traffic encryption",
         "updateStatus": "ステータス更新",
         "watermarkSettings": "透かし設定",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "このサーバーに対する、トランスコーディングを使用したHTTP接続の最大数。Chromeは一度に2つの接続を開き、次に最初の接続を閉じます。したがって、このパラメータには2以上の値を設定することをお勧めします。",
         "maxEventLogRecords": "データベースに保存する最大イベントログレコード。削除されていないレコードの実際の量は、指定された値よりも最大20％大きくなる可能性があります。",
         "forceLiveCacheForPrimaryStream": "プライマリストリーム用にいくつかのフレームをキャッシュするかどうか。値： \"yes\" - 常に有効（多くのRAMを使用する可能性があります）、 \"no\" - 再生で要求される場合を除いて常に無効（HLSなど）、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上すると（たとえば、Analyticsプラグインがカメラで動作しているときに）オンになります。"
     },

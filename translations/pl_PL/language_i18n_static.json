@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Wymuszaj szyfrowanie transmisji wideo",
         "updateStatus": "Aktualizacja statusu",
         "watermarkSettings": "Ustawienia znaku wodnego",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Maksymalna liczba połączeń HTTP korzystających z transkodowania na serwerze. Chrome jednocześnie otwiera dwa połączenia, a następnie zamyka pierwsze. Dlatego zaleca się ustawienie tego parametru na wartość >= 2.",
         "maxEventLogRecords": "Maksymalna liczba wpisów do dziennika zdarzeń przechowywanego w bazie danych. Rzeczywista ilość rekordów może być nawet o 20% wyższa niż podana wartość.",
         "forceLiveCacheForPrimaryStream": "Czy buforować niektóre ramki dla strumienia głównego. Wartości: „tak” - zawsze włączone (może zużywać dużo pamięci RAM), „nie” - zawsze wyłączone, chyba że wymaga tego odtwarzanie (np. HLS), „auto” - podobne do „nie”, ale włączone, gdy poprawia to wrażenia użytkownika (np. w niektórych wtyczkach analizy wideo)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Zarezerwowane",
             "inaccessible": "Niedostępne",
             "changing": "Changing mode...",
-            "disabled": "Wyłączone"
+            "disabled": "Wyłączony"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

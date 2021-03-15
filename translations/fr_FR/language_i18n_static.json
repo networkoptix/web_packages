@@ -915,7 +915,7 @@
             "reserved": "Réservé",
             "inaccessible": "Inaccessible",
             "changing": "Changement de mode en cours...",
-            "disabled": "Désactivé"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Le chemin de stockage {url} est déjà utilisé par un autre serveur.",
         "deleteExternalStorage": "Supprimer le stockage externe ?",

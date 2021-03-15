@@ -915,7 +915,7 @@
             "reserved": "Reserviert",
             "inaccessible": "Unzugänglich",
             "changing": "Modus ändern...",
-            "disabled": "Deaktiviert"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Der Speicherpfad {url} wird bereits von einem anderen Server verwendet.",
         "deleteExternalStorage": "Externen Speicher löschen?",

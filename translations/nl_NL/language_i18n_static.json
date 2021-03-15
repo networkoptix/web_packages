@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Uitgeschakeld"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

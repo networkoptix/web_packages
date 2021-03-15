@@ -915,7 +915,7 @@
             "reserved": "Gereserveerd",
             "inaccessible": "Niet toegankelijk",
             "changing": "Modus wijzigen...",
-            "disabled": "Uitgeschakeld"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Opslagpad {url} wordt al gebruikt door een andere server.",
         "deleteExternalStorage": "Externe opslag verwijderen?",

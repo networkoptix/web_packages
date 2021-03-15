@@ -478,8 +478,8 @@
     "INFO TEXT": "情報",
     "DEBUG TEXT": "デバッグ",
     "VERBOSE TEXT": "詳細",
-    "ARCHIVE BACKUP STREAMS MSG TEXT": "Secondary streams from all cameras on this server are being backed up in real time.",
-    "ARCHIVE BACKUP CLIENT MSG TEXT": "You can change the backup mode or select specific cameras in the desktop client.",
-    "RECORDING STOP WARNING TEXT": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-    "STORAGE DELETION ALERT TOOLTIP TEXT": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted."
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "このサーバー上のすべてのカメラからのセカンダリストリームがリアルタイムでバックアップされています。",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "デスクトップクライアントで、バックアップモードの変更やカメラの選択ができます。",
+    "RECORDING STOP WARNING TEXT": "この保存場所への録画は停止しますが、古い映像は削除され続けます。",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "この保存先への録画は停止されていますが、古い映像は引き続き削除されています。"
 }

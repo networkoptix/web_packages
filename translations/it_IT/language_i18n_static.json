@@ -915,7 +915,7 @@
             "reserved": "Riservato",
             "inaccessible": "Inaccessibile",
             "changing": "Modifica della modalità...",
-            "disabled": "Non attivo"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Il percorso di archiviazione {url} è già utilizzato da un altro server.",
         "deleteExternalStorage": "Eliminare l'archiviazione esterna?",
