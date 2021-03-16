@@ -58,8 +58,8 @@ export class CurrentStorageState {
     get freeSpace() {
         return this.locations.reduce((
             totalFreeSpace,
-            { freeSpace, isBackup }
-        ) => totalFreeSpace + (!isBackup ? freeSpace : 0), 0);
+            { freeSpace, isBackup, usedForWriting }
+        ) => totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0), 0);
     }
 
     get serialized(): SaveStoragePayload[] {
