@@ -1,8 +1,8 @@
-@import 'styles/_theme_palette';
+@use '../../../../../../styles/_theme_palette' as *;
 
 :host {
     padding-left: 0;
-    display: block;
+    //display: block;
     position: fixed;
     left: 0;
     top: 48px;
@@ -94,16 +94,20 @@
             cursor: pointer;
             opacity: 0.8;
             // transition: opacity .2s ease-in-out;
+            border-radius: 2px 0 0 2px;
+            transform: rotate(180deg);
+
             &:hover {
                 opacity: 1.0;
             }
 
-            transform: rotate(180deg);
-            border-radius: 2px 0 0 2px;
-
             &.shown {
                 transform: rotate(0deg);
-                border-radius: 0 2px 2px 0;
+                box-shadow : 0 2px 0 0 rgba(0, 0, 0, 0.1);
+
+                @media (min-width : 501px) {
+                    border-radius : 0 2px 2px 0;
+                }
 
                 @media (max-width: 500px) {
                     right: 0;

@@ -16,6 +16,11 @@ $border-color: $light6;
   right: 0;
   top: 0;
   box-sizing: border-box;
+  z-index: 9;
+
+  @media (max-width : 500px) {
+    width : 100%;
+  }
 
   // transition: all .2s ease-in-out;
 
