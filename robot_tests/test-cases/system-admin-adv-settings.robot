@@ -287,7 +287,7 @@ RTP, Rtsp, scene items, archive sync, WEBM
        ...    maxRtpRetryCount=6
        ...    maxRtspConnectDurationSeconds=0
        ...    maxSceneItems=0
-       ...    maxWearableArchiveSynchronizationThreads=-1
+       ...    maxVirtualCameraArchiveSynchronizationThreads=-1
        ...    maxHttpTranscodingSessions=2
     Set System Settings    ${local auth}    ${server url}    ${settings}
     Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
@@ -303,7 +303,7 @@ RTP, Rtsp, scene items, archive sync, WEBM
     Changing input setting changes it on server    ${MAX SCENE ITEMS INPUT}    maxSceneItems    1
 
     Log    Step 4
-    Changing input setting changes it on server    ${MAX WEARABLE CAM ARCHIVE SYNC THREADS INPUT}    maxWearableArchiveSynchronizationThreads    1
+    Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
 
     Log    Step 5
     Changing input setting changes it on server    ${MAX WEBM TRANSCODERS INPUT}    maxHttpTranscodingSessions    1

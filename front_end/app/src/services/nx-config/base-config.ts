@@ -656,7 +656,7 @@ export interface SettingsConfig {
     osTimeChangeCheckPeriodMs:Setting,
     syncTimeExchangePeriod:Setting,
     syncTimeEpsilon:Setting,
-    maxWearableArchiveSynchronizationThreads:Setting,
+    maxVirtualCameraArchiveSynchronizationThreads:Setting,
     maxEventLogRecords:Setting,
     forceLiveCacheForPrimaryStream: Setting
 }
@@ -1265,7 +1265,7 @@ export interface SettingsConfig {
 //         { json: 'osTimeChangeCheckPeriodMs', js: 'osTimeChangeCheckPeriodMs', typ: r('Setting') },
 //         { json: 'syncTimeExchangePeriod', js: 'syncTimeExchangePeriod', typ: r('Setting') },
 //         { json: 'syncTimeEpsilon', js: 'syncTimeEpsilon', typ: r('Setting') },
-//         { json: 'maxWearableArchiveSynchronizationThreads', js: 'maxWearableArchiveSynchronizationThreads', typ: r('Setting') },
+//         { json: 'maxVirtualCameraArchiveSynchronizationThreads', js: 'maxVirtualCameraArchiveSynchronizationThreads', typ: r('Setting') },
 //         { json: 'maxEventLogRecords', js: 'maxEventLogRecords', typ: r('Setting') },
 //         { json: 'forceLiveCacheForPrimaryStream', js: 'forceLiveCacheForPrimaryStream', typ: r('Setting') }
 //     ], false)
