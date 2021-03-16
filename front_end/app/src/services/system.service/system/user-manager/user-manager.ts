@@ -221,7 +221,7 @@ export class UserManager {
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         user.email = user.email.toLowerCase();
         let userCreated = false;
-        const isSelf = user.email === this.currentUserEmail;
+        const isSelf = user.id === this.currentUser.id;
         if (isSelf && user.isCloud) {
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });

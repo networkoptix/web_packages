@@ -39,7 +39,7 @@ id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STR
 @handle_exceptions
 def get_page(request, doc_id):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'review'
+    review = request.query_params.get('state') in ('pending', 'review')
     language = get_language_object_from_request(request)
 
     doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()

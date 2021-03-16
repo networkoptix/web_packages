@@ -1,14 +1,13 @@
-import { waitForAsync, TestBed }                   from '@angular/core/testing';
-import { describe, expect, jest, beforeEach, it }  from '@jest/globals';
-import { TranslateService }                        from '@ngx-translate/core';
-import { Subject }                                 from 'rxjs';
-
+import { waitForAsync, TestBed }     from '@angular/core/testing';
+import { TranslateService }          from '@ngx-translate/core';
+import { Subject }                   from 'rxjs';
 import { NxMenusService }            from '@services/menus.service';
 import { NxConfigService }           from '@services/nx-config';
 import { nxConfig }                  from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService }          from './session.service';
 import { WINDOW }                    from './window-provider';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
 
 describe('Test Suite Name', () => {
     let menu: NxMenusService;
@@ -27,6 +26,7 @@ describe('Test Suite Name', () => {
                 { provide: NxConfigService, useValue: configMock },
                 { provide: TranslateService, useValue: {} },
                 { provide: NxSessionService, useValue: {} },
+                { provide: NxCloudApiService, useValue: {} },
                 { provide: WINDOW, useValue: {} }
             ]
         });

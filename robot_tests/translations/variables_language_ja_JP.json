@@ -477,5 +477,9 @@
     "WARNING TEXT": "警告",
     "INFO TEXT": "情報",
     "DEBUG TEXT": "デバッグ",
-    "VERBOSE TEXT": "詳細"
+    "VERBOSE TEXT": "詳細",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "このサーバー上のすべてのカメラからのセカンダリストリームがリアルタイムでバックアップされています。",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "デスクトップクライアントで、バックアップモードの変更やカメラの選択ができます。",
+    "RECORDING STOP WARNING TEXT": "この保存場所への録画は停止しますが、古い映像は削除され続けます。",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "この保存先への録画は停止されていますが、古い映像は引き続き削除されています。"
 }

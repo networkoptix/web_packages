@@ -40,6 +40,7 @@ export class StorageDataStructure {
     storageType: STORAGE_TYPES;
     totalSpace: number;
     url : string;
+    urlWithCredentials: string;
     usedForWriting : boolean;
     freeSpace : number;
     isExternal : boolean;
@@ -53,21 +54,22 @@ export class StorageDataStructure {
         // The status field was added to 4.3 systems but isn't really needed here
         delete inputs.status;
         const defaults: StorageDataStructure = {
-            isBackup       : false,
-            reservedSpace  : 0,
-            serverId       : '',
-            storageType    : null,
-            totalSpace     : 0,
-            url            : '',
-            usedForWriting : false,
-            freeSpace      : null,
-            isExternal     : false,
-            isOnline       : false,
-            isWritable     : false,
-            storageStatus  : '',
-            vmsSpace       : 0,
-            storageId      : '',
-            canUpdate      : null
+            isBackup           : false,
+            reservedSpace      : 0,
+            serverId           : '',
+            storageType        : null,
+            totalSpace         : 0,
+            url                : '',
+            usedForWriting     : false,
+            freeSpace          : null,
+            isExternal         : false,
+            isOnline           : false,
+            isWritable         : false,
+            storageStatus      : '',
+            vmsSpace           : 0,
+            storageId          : '',
+            canUpdate          : null,
+            urlWithCredentials : ''
         };
         Object.assign(this, { ...defaults, ...inputs });
     }
@@ -180,7 +182,7 @@ export class Storage extends StorageDataStructure {
             spaceLimit     : this.reservedSpace.toString(),
             storageType    : this.storageType,
             typeId         : this.#typeId,
-            url            : this.url,
+            url            : this.urlWithCredentials,
             usedForWriting : this.usedForWriting
         } : null;
     }

@@ -123,9 +123,9 @@
     "DEVELOPER SUPPORT TEXT": "Supporto degli sviluppatori",
     "API DOCUMENTATION TEXT": "Documentazione API",
     "SERVICES TEXT": "Servizi",
-    "EXTERNAL LINKS TEXT": "External Links",
+    "EXTERNAL LINKS TEXT": "Link Esterni",
     "DOWNLOADS TEXT": "Download",
-    "DEVELOP WITH NX META TEXT": "Develop with Nx Meta",
+    "DEVELOP WITH NX META TEXT": "Sviluppa con Nx Meta",
     "HEALTH VIEWER TEXT": "Visualizzatore di report personalizzato",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Attivi il suo Account",
     "RESET PASSWORD EMAIL SUBJECT": "Reimpostare la password",
@@ -477,5 +477,9 @@
     "WARNING TEXT": "Attenzione",
     "INFO TEXT": "Informazioni",
     "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Dettagliato"
+    "VERBOSE TEXT": "Dettagliato",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Secondary streams from all cameras on this server are being backed up in real time.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "You can change the backup mode or select specific cameras in the desktop client.",
+    "RECORDING STOP WARNING TEXT": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted."
 }

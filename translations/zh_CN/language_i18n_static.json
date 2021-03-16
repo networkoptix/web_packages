@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "强制视频传输加密",
         "updateStatus": "更新状态",
         "watermarkSettings": "浮水印设置",
-        "maxWebMTranscoders": "服务器最大的WEBM连线数。 Chrome会立刻开启2个连接，然后关闭第一个连接。因此建议将参数值设置为> = 2",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "要保留最多笔在资料库中的事件日志记录。实际未删除记录的数量可能比指定值高出20％。",
         "forceLiveCacheForPrimaryStream": "是否为主串流缓存一些帧数。数值：“是” - 一直启用（可能占用大量RAM），“否” - 一直停用，除非回放需要（例如HLS），“自动” - 类似于“否”，但会在开启时改进使用者体验（例如: 当某些分析插件在摄像机上作用时）。"
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "禁用"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

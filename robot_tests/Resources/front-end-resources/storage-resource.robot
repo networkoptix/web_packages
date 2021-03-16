@@ -128,9 +128,11 @@ Storage Suite Setup
     Close Connection
     Set Suite Variable    ${port0}    ${portnew[0]}
     
+    # Sleep    30
+    
     Open Browser and go to URL    ${url}
     Turn On Recording    ${sysId0}  
- 
+    
     Verify Storages    ${sysId0}    5
     Verify Storages    ${sysId1}    1
     
@@ -295,3 +297,45 @@ Verify Recorded Video Files
     Close Connection
     [Return]    ${files}
     
+Delete Recorded Video Files
+    [Arguments]    ${disk}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS} 
+    ${results}    Execute Command    find ${disk}-${random} -iname "*mkv" -type f -delete    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    [Return]    ${results}
+    
+Wait Until Files Are Recorded
+    [Arguments]    ${disk}    ${attempts}   
+    ${start files} =    Verify Recorded Video Files    ${disk}  
+    FOR    ${n}    IN RANGE    ${attempts}
+        ${files} =    Verify Recorded Video Files    ${disk}
+        Exit For Loop If    ${files} > ${start files}  
+        Sleep    8 
+    END
+    [Return]    ${files}
+    
+Wait Until Recorded Files Deleted
+    [Arguments]    ${disk}    ${attempts}     
+    FOR    ${n}    IN RANGE    ${attempts}
+        ${files} =    Verify Recorded Video Files    ${disk}
+        Exit For Loop If    ${files} == 0  
+        Sleep    8 
+    END
+    
+Turn On Backup For Camera
+    [Arguments]    ${server}    ${server auth}
+    ${camera attribs} =    Get Camera User Attributes    ${server}    ${server auth} 
+    Set To Dictionary    ${camera attribs[0]}     backupType     CameraBackupHighQuality|CameraBackupLowQuality
+    Save Camera User Attributes    ${server}    ${server auth}     ${camera attribs}
+    
+Set Backup Setting To
+    [Arguments]    ${backup setting}    ${server}    ${server auth}
+    ${server id} =    Get Server Id    ${server}    ${server auth} 
+    ${media server attribs} =    Get Media Server Attributes     ${server}    ${server auth} 
+    # ${media server attribs} =    Set Variable If     ${media server attribs} == ${EMPTY}    ${media attributes dict}  
+    Set To Dictionary    ${media server attribs[0]}    backupType    ${backup setting} 
+    #Set To Dictionary    ${media server attribs}    serverId    ${server id} 
+    Save Media Server Attributes    ${server}    ${server auth}     ${media server attribs}   
+    ${media server attribs} =    Get Media Server Attributes     ${server}    ${server auth}
+    Should Be Equal As Strings    ${media server attribs[0]}[backupType]    ${backup setting} 

@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Забезпечити шифрування передачі відеосигналу",
         "updateStatus": "Оновити статус",
         "watermarkSettings": "Налаштування водяного знака",
-        "maxWebMTranscoders": "Максимальна кількість WEBM-з'єднань для сервера. Chrome одночасно відкриває 2 з'єднання, потім закриває перше. Отже, рекомендується встановити значення> = 2 для цього параметра.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Максимум запису журналу подій для зберігання в базі даних. Реальний обсяг відновлених записів може становити до 20% вище вказаного значення.",
         "forceLiveCacheForPrimaryStream": "Чи потрібно кешувати деякі кадри для первинного потоку. Значення: \"так\" - завжди включений (може використовувати багато оперативної пам'яті), \"ні\" - завжди вимикається, за винятком випадків, коли це вимагається відтворенням (наприклад, HLS), \"авто\" - схожена \"ні\", але увімкнено, коли покращується користувальницький досвід (наприклад, коли деякий плагін Analytics працює на камері)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Вимкнений"
+            "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

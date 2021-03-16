@@ -5,7 +5,7 @@ Resource     ${variables_file}
 Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
-Variables    getIds.py    ${ENV}    ${TEST EMAIL}
+# Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
@@ -33,10 +33,10 @@ ${selenium_timeout}    30
 *** Keywords ***
 Open Browser and go to URL
     [Arguments]    ${url}    ${import IDs}=${True}    ${check language}=${True}
-    Run Keyword If    ${import IDs}    Run Keywords
-        ...    Acquire Lock    MyLock    AND
-        ...    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}    AND
-        ...    Release Lock    MyLock
+    # Run Keyword If    ${import IDs}    Run Keywords
+        # ...    Acquire Lock    MyLock    AND
+        # ...    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}    AND
+        # ...    Release Lock    MyLock
     Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}

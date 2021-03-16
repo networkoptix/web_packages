@@ -251,7 +251,19 @@ $border-color: $light6;
     justify-content: center;
     text-transform: uppercase;
     background: $player-background;
+    background-size: cover;
+    background-position: center;
     // transition: all .2s ease-in-out;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      background-color: rgba($player-background, .3);
+      backdrop-filter: blur(15px) saturate(80%);
+  }
 
     > svg {
       width: 96px;
@@ -267,6 +279,7 @@ $border-color: $light6;
       line-height: 48px;
       opacity: 0.6;
       font-size: 40px;
+      text-align: center;
       font-family : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
   }

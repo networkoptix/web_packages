@@ -94,13 +94,25 @@ export class NxMenusService implements OnDestroy {
     }
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
-        const menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
-        if (withCurrentSystem && this.currentSystemNode$.value) {
+        let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
+
+        if (this.CONFIG.isLocal) {
+            if (menu?.title === undefined) {
+                menu = {
+                    description : undefined,
+                    nodes       : [],
+                    title       : name
+                };
+            }
+            if (menu?.title !== 'header') {
+                return from([menu]);
+            }
+        }
+
+        if (withCurrentSystem && this.currentSystemNode$.value && menu?.nodes) {
             menu.nodes = [this.currentSystemNode$.value, ...menu.nodes];
         }
-        if (this.CONFIG.isLocal) {
-            return from([menu]);
-        }
+
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache

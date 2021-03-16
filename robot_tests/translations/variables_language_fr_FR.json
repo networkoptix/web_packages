@@ -477,5 +477,9 @@
     "WARNING TEXT": "Alerte",
     "INFO TEXT": "Informations",
     "DEBUG TEXT": "Débogage",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Verbose",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Les flux secondaires de toutes les caméras de ce serveur sont sauvegardés en temps réel.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "Vous pouvez changer le mode de sauvegarde ou sélectionner des caméras spécifiques dans le client.",
+    "RECORDING STOP WARNING TEXT": "L'enregistrement vers cet emplacement de stockage s'arrêtera. Cependant, les séquences obsolètes de cet emplacement continueront d'être supprimées.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "L'enregistrement vers cet emplacement de stockage est arrêté. Cependant, les séquences obsolètes de cet emplacement sont toujours en cours de suppression."
 }

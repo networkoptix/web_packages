@@ -50,13 +50,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
-    @ViewChild('timeUnitTracker', { static: false }) set el(el: ElementRef) {
-        if (el) {
-            this.timeUnitTracker = el;
-            this.updateTimeUnitInput(this.selectedTimeUnit);
-        }
-    }
-
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
             this.selectElement = el;
@@ -139,7 +132,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     curr = parseInt(curr);
                     this.sessionLimitToggle = Boolean(curr);
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
-
+                    this.updateTimeUnitInput(this.selectedTimeUnit);
                     sw[setting].originalValue = curr;
                     this.timeValue = curr;
                     if (this.timeValue % 60 === 0) {
@@ -203,6 +196,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 if (sessionLimitMinutes?.originalValue) {
                     this.sessionLimitToggle = true;
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+                    this.updateTimeUnitInput(this.selectedTimeUnit);
                     this.timeValue = sessionLimitMinutes.originalValue;
                     if (this.timeValue % 60 === 0) {
                         this.timeValue /= 60;
@@ -219,17 +213,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     // sets input max value and updates hour/minutes
     updateTimeUnitInput(timeUnit) {
         this.currentMaxTimeUnit = timeUnit.max;
-        const el = this.timeUnitTracker;
-        if (el) {
-            if (el.nativeElement.value > this.currentMaxTimeUnit) {
-                el.nativeElement.value = this.currentMaxTimeUnit;
-            }
-            el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
-            if (this.selectedTimeUnit.value !== timeUnit.value) {
-                this.selectedTimeUnit = timeUnit;
-                this.updateLimitSessionValue(this.timeValue);
-            }
+        if (this.selectedTimeUnit.value !== timeUnit.value) {
+            this.selectedTimeUnit = timeUnit;
+            this.updateLimitSessionValue(this.timeValue);
         }
     }
 
@@ -270,6 +257,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
             this.timeValue = this.selectedTimeUnit.default;
             this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;
+            this.updateTimeUnitInput(this.selectedTimeUnit);
         } else {
             this.timeValue = 0;
             this.settingsWatchers.sessionLimitMinutes.value = 0;

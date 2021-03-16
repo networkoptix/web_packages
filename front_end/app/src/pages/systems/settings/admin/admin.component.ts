@@ -15,17 +15,16 @@ import { NxProcessService }          from '@services/process.service';
 import { NxSystem, NxSystemUser }    from '@services/system.service';
 import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../menu';
-import { NxPageService }             from '@services/page.service';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxAccountService }          from '@services/account.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxUriService }              from '@services/uri.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxApplyService, Watcher }   from '@services/apply.service';
-import { WINDOW }                    from '@services/window-provider';
-import { CookieService }             from 'ngx-cookie-service';
+import { NxMenuService }           from '../../../../menu';
+import { NxPageService }           from '@services/page.service';
+import { NxSystemsService }        from '@services/systems.service';
+import { NxAccountService }        from '@services/account.service';
+import { NxCloudApiService }       from '@services/nx-cloud-api';
+import { NxUriService }            from '@services/uri.service';
+import { NxToastService }          from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { WINDOW }                  from '@services/window-provider';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -95,7 +94,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private cookieService: CookieService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private pageService: NxPageService,
@@ -192,6 +190,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
+                            this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
+                            return this.system.update();
                         }).catch(() => {
                             this.systemNameWatcher.reset();
                             const options = {
@@ -239,7 +239,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .then((result) => {
                 if (result) {
                     // give the user chance to read the toaster
-                    setTimeout(() => window.location.reload(), 2000);
+                    setTimeout(() => this.window.location.reload(), 2000);
                 }
             });
     }
@@ -250,7 +250,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (result) {
                     if (this.CONFIG.isLocal) {
                         // give the user chance to read the toaster
-                        setTimeout(() => window.location.reload(), 2000);
+                        setTimeout(() => this.window.location.reload(), 2000);
                     } else {
                         this.updateAndGoToSystems();
                     }
@@ -272,12 +272,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     .disconnect(this.accountService, this.system)
                     .then((result) => {
                         if (result) {
-                            if (NxConfigService.isLocal && this.system.currentUser.isCloud) {
+                            if (NxConfigService.isLocal && this.system.currentUser?.isCloud) {
                                 this.accountService.logout();
                             } else {
                                 if (NxConfigService.isLocal) {
                                     // give the user chance to read the toaster
-                                    setTimeout(() => window.location.reload(), 2000);
+                                    setTimeout(() => this.window.location.reload(), 2000);
                                 } else {
                                     this.updateAndGoToSystems();
                                 }
@@ -311,8 +311,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     .then((response) => {
                         if (response) {
                             setTimeout(() => {
-                                this.cookieService.delete('x-runtime-guid');
-                                this.window.location.reload();
+                                this.accountService.logout();
                             }, 6000);
                         }
                     });

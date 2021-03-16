@@ -5,9 +5,8 @@ import { BehaviorSubject }           from 'rxjs';
     providedIn: 'root'
 })
 export class NxAppStateService {
-    private readySubject = new BehaviorSubject(false);
-    private ribbonSubject = new BehaviorSubject(false);
-
+    readySubject = new BehaviorSubject(false);
+    ribbonSubject = new BehaviorSubject(false);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
@@ -21,12 +20,20 @@ export class NxAppStateService {
 
     constructor() {}
 
-    setFooterVisibility(visible: boolean) {
+    set footerVisibility(visible: boolean) {
         this.footerVisibleSubject.next(visible);
     }
 
-    setHeaderVisibility(visible: boolean) {
+    get footerVisibility() {
+        return this.footerVisibleSubject.getValue();
+    }
+
+    set headerVisibility(visible: boolean) {
         this.headerVisibleSubject.next(visible);
+    }
+
+    get headerVisibility() {
+        return this.headerVisibleSubject.getValue();
     }
 
     set ribbonVisibility(visible: boolean) {

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core'
+import { NxAccountService } from '@services/account.service'
+import { LocalStorageService } from 'ngx-webstorage'
 
 
 export type PlaybackQuality = 'auto' | 'low' | 'high'
@@ -8,21 +10,22 @@ export type PlaybackQuality = 'auto' | 'low' | 'high'
   providedIn: 'root',
  })
 export class CameraQualityStorageService {
-
+  user = ''
   constructor (
+    private localStorageService: LocalStorageService,
+    private accountService: NxAccountService
   ) {
-  }
-
-  // TODO: add persistency, if required
-  protected _qualities = {
+    this.accountService.accountSubject.subscribe(({ email, id }) => {
+      this.user = email || id;
+    })
   }
 
   public get (cameraId: string) {
-    return this._qualities[cameraId]
+    return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || 'auto'
   }
 
   public set (cameraId: string, quality: PlaybackQuality) {
-    this._qualities[cameraId] = quality
+    this.localStorageService.store(`${this.user}_quality_${cameraId}`, quality)
   }
 
 }

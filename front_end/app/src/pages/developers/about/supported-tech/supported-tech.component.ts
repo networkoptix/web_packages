@@ -31,16 +31,10 @@ export class NxSupportedTechComponent {
     ngOnInit() {
         const supportedTechConfig = this.errorManager.buildConfig(
             ['title', 'nodes'],
-            [
-                this.errorManager.buildConfig(
-                    ['title'],
-                    this.errorManager.buildConfig(['title', 'icon'])
-                ),
-                this.errorManager.buildConfig(
-                    ['title'],
-                    this.errorManager.buildConfig(['title'])
-                )
-            ]
+            this.errorManager.buildConfig(
+                ['title', 'nodes', 'icon'],
+                this.errorManager.buildConfig(['title'])
+            )
         );
         this.errorManager.checkAboutNode(
             this.supportedTechNode,

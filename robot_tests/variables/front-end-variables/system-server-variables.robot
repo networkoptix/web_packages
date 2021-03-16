@@ -82,6 +82,15 @@ ${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tool
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
 ${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
+&{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
+${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup"]
+${ARCHIVE BACKUP SWITCH ENABLED}    //input[@id="archive-backup-switch" and @class="selected"]
+${ARCHIVE BACKUP STREAMS MSG}       //p[contains(text(), "${ARCHIVE BACKUP STREAMS MSG TEXT}")]
+${ARCHIVE BACKUP CLIENT MSG}        //p[contains(text(), "${ARCHIVE BACKUP CLIENT MSG TEXT}")]
+${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
+${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
+${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
+
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]

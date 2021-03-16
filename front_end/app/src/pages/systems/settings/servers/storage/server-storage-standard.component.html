@@ -75,7 +75,7 @@
                                                 [items]="getModes(store)"
                                                 [selected]="selectMode(store)"
                                                 (onSelected)="changeMode(store, $event)"
-                                                [forcePosition]="{left: dropdownOffsetCalc$ | async, width: ddWidth}"
+                                                [forcePosition]="{left: dropdownOffsetCalc$ | async, width: ddWidth, offsetTop: 8}"
                                                 [hrMargin]="true">
                                             </nx-select>
                                             <svg-icon nx-add-svg-src
@@ -107,8 +107,8 @@
                             <td *ngIf="currentStorageState?.hasAction" class="d-flex justify-content-end">
                                 <!-- Add settings button -->
                                 <button class="btn btn-text has-icon"
-                                        [disabled]="updatingModes.includes(store.storageId) || store.status === STATUS.REINDEXING"
-                                        [ngClass]="{'disabled-action': updatingModes.includes(store.storageId) || store.status === STATUS.REINDEXING}"
+                                        [disabled]="updatingModes.includes(store.storageId) || (store.isBackup && reindexingBackup) || (!store.isBackup && reindexingMain)"
+                                        [ngClass]="{'disabled-action': updatingModes.includes(store.storageId) || (store.isBackup && reindexingBackup) || (!store.isBackup && reindexingMain)}"
                                         *ngIf="store.hasAction && store.storageType !== storageTypes.CLOUD"
                                         (click)="deleteStorage(store)">
                                     <svg-icon

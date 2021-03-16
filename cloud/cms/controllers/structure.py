@@ -536,7 +536,13 @@ def update_asset_by_json(asset, asset_json, user):
 
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
-        context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        context_model = None
+        try:
+            context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        except Context.DoesNotExist:
+            # Skips updating if invalid context for asset_type
+            continue
+
         data_records = {}
         files = {}
         for ds in context["values"]:

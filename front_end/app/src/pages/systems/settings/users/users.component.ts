@@ -192,7 +192,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 };
                 this.toastService.show(
                     NxLanguageProviderService.translate(
-                        this.LANG.toastMessage.nameFail?.(),
+                        this.LANG.toastMessage.nameFail,
                         { type: this.LANG.common.login?.() }
                     ), options);
             }

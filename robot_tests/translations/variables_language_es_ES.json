@@ -477,5 +477,9 @@
     "WARNING TEXT": "Advertencia",
     "INFO TEXT": "Info",
     "DEBUG TEXT": "Depurar",
-    "VERBOSE TEXT": "Verbose"
+    "VERBOSE TEXT": "Verbose",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Se está realizando una copia de seguridad de las transmisiones secundarias de todas las cámaras de este servidor en tiempo real.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "Puede cambiar el modo de respaldo o seleccionar cámaras específicas en el cliente de escritorio.",
+    "RECORDING STOP WARNING TEXT": "Se detendrá la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado continuará eliminándose.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Se detiene la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado todavía está siendo eliminando."
 }

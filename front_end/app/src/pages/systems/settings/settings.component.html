@@ -11,7 +11,7 @@
                          [ngStyle]="{'display' : _menuSearchMode ? 'contents': 'block'}"
                          [content]="content"
                          [system]="system"
-                         [searchable]="searchableResults"
+                         [searchable]="content.searchableResults"
                          [autoFit]="true"
                          (menuSearchMode)="_menuSearchMode = $event"
                          (contentToggle)="contentToggle($event)"></nx-menu>

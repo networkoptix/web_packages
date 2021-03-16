@@ -72,8 +72,8 @@ export class AppComponent {
                 .finally(() => {
                     this.appStateService.ready = true;
                 });
-            this.appStateService.setHeaderVisibility(false);
-            this.appStateService.setFooterVisibility(false);
+            this.appStateService.headerVisibility = false;
+            this.appStateService.footerVisibility = false;
             return;
         } else if (bootstrapProvider.newSystem) {
             this.newSystem = true;
@@ -141,8 +141,8 @@ export class AppComponent {
         // Route check if page is displayed inside an iframe
         this.CONFIG.isInIframe = (window.location.pathname.indexOf('/embed') === 0 || window.location.search.indexOf('adminPreview=true') !== -1);
         if (this.CONFIG.isInIframe) {
-            this.appStateService.setHeaderVisibility(false);
-            this.appStateService.setFooterVisibility(false);
+            this.appStateService.headerVisibility = false;
+            this.appStateService.footerVisibility = false;
         }
 
         // Updates query params for components without routes.
