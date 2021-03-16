@@ -4,11 +4,11 @@ import {
     Component, OnDestroy, OnInit, ViewEncapsulation
 }                                 from '@angular/core';
 import {
-    ActivatedRoute, Router, NavigationEnd
+    ActivatedRoute
 }                                 from '@angular/router';
 import { UntilDestroy }           from '@ngneat/until-destroy';
-import { BehaviorSubject }        from 'rxjs';
-import { filter, tap }            from 'rxjs/operators';
+import { BehaviorSubject, fromEvent }        from 'rxjs';
+import { debounceTime }            from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -36,7 +36,8 @@ interface AuthorizeParams {
     scope?: string,
     state?: string,
     code?: string,
-    client_type?: string
+    client_type?: ClientType,
+    view_type?: 'desktop' | 'mobile' | 'web'
 };
 
 export enum AuthorizeState {
@@ -59,8 +60,6 @@ export enum ClientType {
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb'
 };
-
-// add a param for desktop/mobile/web
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-authorize-component',
@@ -79,7 +78,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     // shared
     currentState: string;
     clientType: ClientType;
-    windowWideEnough = true;
+    viewType: 'desktop' | 'mobile' | 'web';
+    windowLargeEnough = false;
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
 
@@ -91,6 +91,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginProcess: Process;
     loginPassword: string;
     passwordErrorCode: string;
+    shouldStayLoggedIn: boolean;
 
     // create account
     existingEmail: string;
@@ -151,11 +152,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // should save email to local storage on login
-        this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter;
+        this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
         this.initProcesses();
         this.route.queryParams.subscribe((params: any) => {
             this.initialData = NxUtilsService.deepCopy(params);
             this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
+            this.viewType = this.initialData.view_type || 'web';
             this.currentState = AuthorizeState.email;
 
             // for reset password
@@ -164,6 +166,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.resetPasswordEmail = atob(this.resetPasswordCode).split(':')[1];
                 this.currentState = AuthorizeState.reset;
             }
+
+            this.windowLargeEnough = window.innerWidth > 560 && window.innerHeight > 720 && this.viewType === 'web';
+            fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
+                const { innerHeight, innerWidth } = event.target;
+                this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
+            });
         });
     }
 
@@ -287,6 +295,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = () => {
+        // should pass in some data to denote whether user should stay logged in or not (this.shouldStayLoggedIn)
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -295,6 +304,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.response_type || 'code',
             this.initialData.state
         );
+    }
+
+    stayingLoggedIn(stayLoggedIn: boolean) {
+        this.shouldStayLoggedIn = stayLoggedIn;
     }
 
     ngOnDestroy() {}

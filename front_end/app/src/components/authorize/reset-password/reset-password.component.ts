@@ -7,7 +7,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,15 +19,16 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @Input() viewType: string;
     @Input() loginEmail: string;
     @Input() password: string;
     @Output() passwordChange = new EventEmitter<string>();
-    hideErrors: boolean;
-    weakPassword: boolean;
     @Input() confirm: boolean;
     @Input() newPasswordProcess: Process;
     @Input() loginProcess: Process;
     // @Input() errorCode: string;
+    hideErrors: boolean;
+    weakPassword = false;
     sendPassword: any;
     // @ViewChild('resetForm', { static: false }) resetForm: HTMLFormElement;
 

@@ -1,6 +1,114 @@
 @use '../../../styles/theme_variables';
 @use '../../../styles/theme_palette' as *;
 
+@mixin checkboxSvgColor($box, $mark) {
+    svg {
+        height : 16px;
+        width  : 20px;
+        
+        & polygon.box {
+            fill              : none;
+            stroke            : $box;
+            stroke-linecap    : round;
+            stroke-linejoin   : round;
+            stroke-miterlimit : 10;
+        }
+        
+        & polyline.box {
+            fill              : none;
+            stroke            : $box;
+            stroke-linecap    : round;
+            stroke-linejoin   : round;
+            stroke-miterlimit : 10;
+            stroke-width      : 1px;
+            display           : none;
+        }
+        
+        & polyline.tick {
+            fill              : none;
+            stroke            : $mark;
+            stroke-width      : 2px;
+            stroke-linecap    : round;
+            stroke-linejoin   : round;
+            stroke-miterlimit : 10;
+            display           : none;
+        }
+        
+        & line.tristate {
+            fill              : none;
+            stroke            : $mark;
+            stroke-width      : 2px;
+            stroke-linecap    : round;
+            stroke-linejoin   : round;
+            stroke-miterlimit : 10;
+            display           : none;
+        }
+    }
+}
+
+@mixin checkboxSvgStateColors($hover, $checked, $checkedHover, $halfChecked) {
+    input:hover ~ .tick {
+        svg polygon.box,
+        svg polyline.box {
+            stroke : $hover;
+        }
+    }
+    
+    input:active ~ .tick {
+        svg polygon.box,
+        svg polyline.box {
+            stroke : $checked !important;
+        }
+    }
+    
+    input:hover ~ .check {
+        svg polygon.box,
+        svg polyline.box {
+            stroke : $checkedHover;
+        }
+        
+        & ~ .text {
+            color : $checkedHover;
+        }
+    }
+    
+    input:active ~ .check {
+        svg polygon.box,
+        svg polyline.box {
+            stroke : $checked !important;
+        }
+        
+        & ~ .text {
+            color : $checked !important;
+        }
+    }
+    
+    &[disabled] {
+        opacity : .3;
+        
+        .tick {
+            cursor : default;
+        }
+        
+        input:hover ~ .tick {
+            svg polygon.box,
+            svg polyline.box {
+                stroke : $halfChecked !important;
+            }
+        }
+    }
+    
+    label {
+        &:hover:not([disabled]) {
+            color : $hover;
+        }
+        
+        &:active:not([disabled]) {
+            color : $checked !important;
+        }
+    }
+}
+
 nx-checkbox {
     & + label + div.input-error {
         display : none;
@@ -31,65 +139,12 @@ nx-checkbox {
             opacity  : 0;
         }
         
-        input:hover ~ .tick {
-            svg polygon.box,
-            svg polyline.box {
-                stroke : $dark1;
-            }
+        &.desktop {
+            @include checkboxSvgStateColors($light8, $light4, $light1, $light4);
         }
-        
-        input:active ~ .tick {
-            svg polygon.box,
-            svg polyline.box {
-                stroke : $dark9 !important;
-            }
-        }
-        
-        input:hover ~ .check {
-            svg polygon.box,
-            svg polyline.box {
-                stroke : $dark1;
-            }
-            
-            & ~ .text {
-                color : $dark1;
-            }
-        }
-        
-        input:active ~ .check {
-            svg polygon.box,
-            svg polyline.box {
-                stroke : $dark9 !important;
-            }
-            
-            & ~ .text {
-                color : $dark9 !important;
-            }
-        }
-        
-        &[disabled] {
-            opacity : .3;
-            
-            .tick {
-                cursor : default;
-            }
-            
-            input:hover ~ .tick {
-                svg polygon.box,
-                svg polyline.box {
-                    stroke : $dark9 !important;
-                }
-            }
-        }
-        
-        label {
-            &:hover:not([disabled]) {
-                color : $dark1;
-            }
-            
-            &:active:not([disabled]) {
-                color : $dark9 !important;
-            }
+
+        &:not(.desktop) {
+            @include checkboxSvgStateColors($dark1, $dark9, $dark1, $dark9);
         }
         
         & + label {
@@ -102,6 +157,14 @@ nx-checkbox {
         }
     }
     
+    .desktop .tick {
+        @include checkboxSvgColor($light10, $light4);
+    }
+
+    :not(.desktop) .tick {
+        @include checkboxSvgColor($dark9, theme_variables.$brand_core)
+    }
+
     .tick {
         cursor                      : pointer;
         position                    : relative;
@@ -136,49 +199,7 @@ nx-checkbox {
                 }
             }
         }
-        
-        svg {
-            height : 16px;
-            width  : 20px;
-            
-            & polygon.box {
-                fill              : none;
-                stroke            : $dark9;
-                stroke-linecap    : round;
-                stroke-linejoin   : round;
-                stroke-miterlimit : 10;
-            }
-            
-            & polyline.box {
-                fill              : none;
-                stroke            : $dark9;
-                stroke-linecap    : round;
-                stroke-linejoin   : round;
-                stroke-miterlimit : 10;
-                stroke-width      : 1px;
-                display           : none;
-            }
-            
-            & polyline.tick {
-                fill              : none;
-                stroke            : theme_variables.$brand_core;
-                stroke-width      : 2px;
-                stroke-linecap    : round;
-                stroke-linejoin   : round;
-                stroke-miterlimit : 10;
-                display           : none;
-            }
-            
-            & line.tristate {
-                fill              : none;
-                stroke            : theme_variables.$brand_core;
-                stroke-width      : 2px;
-                stroke-linecap    : round;
-                stroke-linejoin   : round;
-                stroke-miterlimit : 10;
-                display           : none;
-            }
-        }
     }
 }
+
 

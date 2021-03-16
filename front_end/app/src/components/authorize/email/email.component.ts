@@ -7,8 +7,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { AuthorizeState } from '../authorize.component';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { AuthorizeState }            from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,6 +21,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     LANG: LanguageI18NStaticTypes;
 
     @Input() clientType: string;
+    @Input() viewType: string;
     @Input() loginEmail: string;
     @Output() loginEmailChange = new EventEmitter<string>();
     @Input() emailProcess: Process;

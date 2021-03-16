@@ -41,6 +41,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() hideErrors = false;
     @Input() hasError = false;
     @Input() showTag = true;
+    @Input() web = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

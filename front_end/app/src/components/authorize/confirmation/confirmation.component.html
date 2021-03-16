@@ -1,11 +1,15 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<main>
-    <svg-icon nx-add-svg-src 
-        [src]="CONFIG.icons.dir + 'checkmark-placeholder.svg'" 
-        [svgStyle]="{'width.px': 24, 'height.px': 24}"
-        [applyClass]="true"></svg-icon>
-    <h3>{{LANG.authorize.connectedText()}}</h3>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+    <form>
+        <svg-icon nx-add-svg-src
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'success' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'" 
+            [svgStyle]="{'width.px': 280, 'height.px': 120}"
+            [applyClass]="true"></svg-icon>
+        <h3 class="authorize-header mt-3">{{LANG.authorize.connectedText()}}</h3>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="d-flex justify-content-end w-100">
+            <button class="btn btn-primary" type="submit" translate>OK</button>
+        </div>
+    </footer>
 </main>
-<footer>
-    <button class="btn btn-forward" type="submit" translate>OK</button>
-</footer>

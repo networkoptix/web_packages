@@ -1,8 +1,11 @@
 <div class="authorize-main">
-    <div class="dialog-window" [ngSwitch]="currentState">
+    <div class="auth-window" [ngSwitch]="currentState"
+        [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }"
+    >
         <nx-authorize-email-component
             *ngSwitchCase="AuthorizeState.email"
             [clientType]="clientType"
+            [viewType]="viewType"
             [(loginEmail)]="loginEmail"
             [emailProcess]="checkEmailProcess"
             [errorCode]="emailErrorCode"
@@ -11,13 +14,16 @@
         <nx-authorize-password-component 
             *ngSwitchCase="AuthorizeState.password"
             [clientType]="clientType"
+            [viewType]="viewType"
             [loginEmail]="loginEmail"
             [(loginPassword)]="loginPassword"
             [passwordProcess]="loginProcess"
             [errorCode]="passwordErrorCode"
+            (isStayingLoggedIn)="stayingLoggedIn($event)"
         ></nx-authorize-password-component>
         <nx-authorize-create-account-component 
             *ngSwitchCase="AuthorizeState.create"
+            [viewType]="viewType"
             [existingEmail]="existingEmail"
             [(accountInfo)]="accountInfo"
             [createAccountProcess]="createProcess"
@@ -25,6 +31,7 @@
         ></nx-authorize-create-account-component>
         <nx-authorize-activate-account-component 
             *ngSwitchCase="AuthorizeState.activate"
+            [viewType]="viewType"
             [loginEmail]="loginEmail"
             (setCurrentState)="setCurrentState($event)"
             [checkActivationProcess]="checkEmailProcess"
@@ -34,9 +41,11 @@
         ></nx-authorize-activate-account-component>
         <nx-authorize-confirmation-component 
             *ngSwitchCase="AuthorizeState.confirm"
+            [viewType]="viewType"
         ></nx-authorize-confirmation-component>
         <nx-authorize-reset-request-component
             *ngSwitchCase="AuthorizeState.request"
+            [viewType]="viewType"
             [confirm]="confirmRequest"
             [(resetEmail)]="resetPasswordEmail"
             [loginProcess]="loginPostPasswordRequestProcess"
@@ -45,6 +54,7 @@
         ></nx-authorize-reset-request-component>
         <nx-authorize-reset-password-component
             *ngSwitchCase="AuthorizeState.reset"
+            [viewType]="viewType"
             [confirm]="confirmReset"
             [loginEmail]="resetPasswordEmail"
             [(password)]="resetPassword"
@@ -52,21 +62,19 @@
             [loginProcess]="loginPostNewPasswordProcess"
         ></nx-authorize-reset-password-component>
     </div>
-    <div class="dialog-overlay" *ngIf="errorDialog$.value">
-        <div class="dialog-window">
+    <div class="auth-overlay" *ngIf="errorDialog$.value">
+        <div class="auth-window">
             <nx-authorize-connect-error-component
                 [clientType]="clientType"
+                [viewType]="viewType"
                 [processTryAgain]="errorDialogProcess"
             ></nx-authorize-connect-error-component>
         </div>
     </div>
-    <div *ngIf="windowWideEnough">
-        <div class="row">
-            <ul class="">
-                <li *ngFor="let item of footerItems">
-                    <a href="item.url" target="_blank">{{ item.name }}</a>
-                </li>
-            </ul>
-        </div>
+    <div *ngIf="windowLargeEnough" class="auth-footer">
+        <ng-container *ngFor="let footerItem of footerItems; let last = last">
+            <a [href]="footerItem.url" target="_blank">{{footerItem.name}}</a>
+            <span *ngIf="!last" class="dot"></span>
+        </ng-container>
     </div>
 </div>

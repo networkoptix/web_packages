@@ -1,28 +1,32 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<form #resetForm="ngForm" name="connectErrorForm">
-    <main>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+    <form #resetForm="ngForm" name="connectErrorForm">
         <svg-icon nx-add-svg-src
             [src]="CONFIG.icons.dirSectionPlaceholder + 'error_placeholder.svg'" 
-            [svgStyle]="{'width.px': 320, 'height.px': 80}"
+            [svgStyle]="{'width.px': 280, 'height.px': 120}"
             [applyClass]="true"></svg-icon>
-        <h3 translate>Cannot connect to %CLOUD_NAME%</h3>
-        <p [innerHTML]="additionalText"></p>
-    </main>
-    <footer>
-        <button *ngIf="clientType === 'setupWizard'" class="btn svg-icon" (click)="setupNonCloudSystem()" type="button">
-            <span translate>Setup Non-cloud System</span>
-        </button>
-        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType)" class="btn svg-icon" type="button">
-            <!-- (click)="goBack()"  -->
-            <svg-icon nx-add-svg-src
-                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': 24, 'height.px': 20}"
-                [applyClass]="true"></svg-icon>
-            <span translate>Back</span>
-        </button>
-        <nx-process-button
-            buttonText="{{ 'Try Again' | translate }}"
-            [process]="processTryAgain">
-        </nx-process-button>
+        <h3 class="authorize-header mt-3 mb-2" translate>Cannot connect to %CLOUD_NAME%</h3>
+        <p class="mt-1" [innerHTML]="additionalText"></p>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="left">
+            <button *ngIf="clientType === 'setupWizard'" class="btn text-button" (click)="setupNonCloudSystem()" type="button">
+                <span translate>Setup Non-cloud System</span>
+            </button>
+        </div>
+        <div class="right">
+            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType)" class="btn text-button" type="button">
+                <!-- (click)="goBack()"  -->
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [applyClass]="true"></svg-icon>
+                <span translate>Back</span>
+            </button>
+            <nx-process-button
+                buttonText="{{ 'Try Again' | translate }}"
+                [process]="processTryAgain">
+            </nx-process-button>
+        </div>
     </footer>
-</form>
+</main>

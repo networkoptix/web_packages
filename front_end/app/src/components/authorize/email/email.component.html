@@ -1,16 +1,16 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<form #emailForm="ngForm" name="emailForm">
-    <header>
-        <svg-icon nx-add-svg-src 
-            [src]="CONFIG.icons.dirSectionPlaceholder + CONFIG.isLocal ? 'local_header' : 'cloud_header' + '.svg'" 
-            [svgStyle]="{'width.px': 320, 'height.px': 80}"
-            [applyClass]="true"></svg-icon>
-        <h3 class="authorize-header">{{ header }}</h3>
-        <h4 class="authorize-subheader">{{ subHeader }}</h4>
-    </header>
-    <main>
+<header [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+    <svg-icon nx-add-svg-src
+        [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
+        [svgStyle]="{'width.px': 280, 'height.px': 120}"
+        [applyClass]="true"></svg-icon>
+    <h3 class="authorize-header">{{ header }}</h3>
+    <h4 *ngIf="subHeader" class="authorize-subheader">{{ subHeader }}</h4>
+</header>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+    <form #emailForm="ngForm" name="emailForm" class="form">
         <ng-container *ngIf="!CONFIG.isLocal; else webadmin">
-            <label for="authorizeEmail" translate>Email</label>
+            <label for="authorizeEmail" class="mb-2" translate>Email</label>
             <input
                 type="email"
                 id="authorizeEmail"
@@ -21,20 +21,20 @@
                 autocomplete="email"
                 required
                 nxFocusMe>
-            <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="mt-2">
                 <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
                 <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
-                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p class="my-2 error-label" translate>Account not activated.</p>
                     <p><a href="resendLink" target="_blank" translate>Resend activation email.</a></p>
                 </ng-container>
                 <ng-container *ngIf="email.errors.accountDoesNotExist">
-                    <p class="mb-2" translate>Account does not exist.</p>
+                    <p class="my-2" translate>Account does not exist.</p>
                     <p translate>You can create account with this email address or try to enter a different one.</p>
                 </ng-container>
                 <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
                 <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
-            </ng-container>
+            </div>
             <p *ngIf="['connectSystemToCloud', 'setupWizard'].includes(clientType)" translate>This account will get owner access level</p>
         </ng-container>
         <ng-template #webadmin>
@@ -58,28 +58,32 @@
                 <p *ngIf="login.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
             </ng-container>
         </ng-template>
-    </main>
-    <footer>
-        <button *ngIf="['loginToCloud', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)"
-            class="btn svg-icon"
-            (click)="createAccount()"
-            type="button"
-        >
-            <svg-icon nx-add-svg-src 
-                [src]="CONFIG.icons.dir + 'plus.svg'" 
-                [svgStyle]="{'width.px': 24, 'height.px': 24}"
-                [applyClass]="true"></svg-icon>
-            <span translate>Create Account</span>
-        </button>
-        <button *ngIf="clientType === 'setupWizard'" class="btn svg-icon" (click)="setupNonCloudSystem()" type="button">
-            <span translate>Setup Non-cloud System</span>
-        </button>
-        <nx-process-button
-            buttonText="{{ 'Next' | translate }}"
-            [clickFn]="sendEmail"
-            [form]="emailForm"
-            [process]="emailProcess"
-            [svg]="{ src: 'arrow_right', height: '24', width: '24', color: 'light1' }">
-        </nx-process-button>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="left">
+            <button *ngIf="['loginToCloud', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)"
+                class="btn text-button no-padding"
+                (click)="createAccount()"
+                type="button"
+            >
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'plus.svg'"
+                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [applyClass]="true"></svg-icon>
+                <span class="pl-1" translate>Create Account</span>
+            </button>
+            <button *ngIf="clientType === 'setupWizard'" class="btn text-button" (click)="setupNonCloudSystem()" type="button">
+                <span translate>Setup Non-cloud System</span>
+            </button>
+        </div>
+        <div class="right">
+            <nx-process-button
+                buttonText="{{ 'Next' | translate }}"
+                [clickFn]="sendEmail"
+                [form]="emailForm"
+                [process]="emailProcess"
+                [svg]="{ src: 'arrow_right', height: '20', width: '20', color: 'light1' }">
+            </nx-process-button>
+        </div>
     </footer>
-</form>
+</main>

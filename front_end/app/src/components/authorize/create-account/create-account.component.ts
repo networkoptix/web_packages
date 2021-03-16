@@ -7,7 +7,7 @@ import { UntilDestroy }                         from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
 import { Process }                              from '@services/process.service';
-import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,6 +19,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @Input() viewType: string;
     @Input() existingEmail: string;
     @Input() accountInfo: {
         email: string;
@@ -41,7 +42,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
-    weakPassword: boolean;
+    weakPassword = false;
+    termsAndConditions = false;
 
     @Input() createAccountProcess: Process;
     onCreateSubmit: any;

@@ -1,3 +1,24 @@
 @use '../../../styles/typography';
 @use '../../../styles/mixins';
 @use '../../../../styles/theme_variables' as *;
+
+main form {
+    padding: 36px 16px;
+    .create-row {
+        display: flex;
+        .email, .first-name, .last-name, .password {
+            &:not(.hasError) {
+                margin-bottom: 16px;
+            }
+            &.hasError {
+                margin-bottom: 8px;
+            }
+
+            width: 100%;
+            input {
+                width: 100%;
+                height: 32px !important;
+            }
+        }
+    }
+}
