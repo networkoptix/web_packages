@@ -77,35 +77,37 @@ export interface ActiveActions {
 }
 
 export interface Authorize {
-    loginCloudHeader:        any;
-    loginSystemHeader:       any;
-    connectHeader:           any;
-    expiredHeader:           any;
-    loginSystemSubheader:    any;
-    connectSubheader:        any;
-    expiredSubheader:        any;
-    connectAdditional:       any;
-    createText:              any;
-    setupText:               any;
-    asAccountSubheader:      any;
-    toAccountSubheader:      any;
-    forAccountSubheader:     any;
-    expiredAccountSubheader: any;
-    createAccountHeader:     any;
-    activateHeader:          any;
-    createdText:             any;
-    activatedText:           any;
-    createdAdditional:       any;
-    activatedAdditional:     any;
-    passResetHeader:         any;
-    newPassHeader:           any;
-    newPassConfirmText:      any;
-    confirmHeader:           any;
-    loginError:              any;
-    loginErrorAdditional:    any;
-    connectErrorAdditional:  any;
-    setupErrorAdditional:    any;
-    connectedText:           any;
+    loginCloudHeader:           any;
+    loginSystemHeader:          any;
+    connectHeader:              any;
+    expiredHeader:              any;
+    loginSystemSubheader:       any;
+    connectSubheader:           any;
+    expiredSubheader:           any;
+    connectAdditional:          any;
+    createText:                 any;
+    setupText:                  any;
+    asAccountSubheader:         any;
+    toAccountSubheader:         any;
+    forAccountSubheader:        any;
+    expiredAccountSubheader:    any;
+    createAccountHeader:        any;
+    activateHeader:             any;
+    createdText:                any;
+    activatedText:              any;
+    createdAdditional:          any;
+    activatedAdditional:        any;
+    passResetHeader:            any;
+    newPassHeader:              any;
+    newPassConfirmText:         any;
+    confirmHeader:              any;
+    loginError:                 any;
+    loginErrorAdditional:       any;
+    connectErrorAdditional:     any;
+    setupErrorAdditional:       any;
+    connectedText:              any;
+    stayLoggedInHelpText:       any;
+    termsAndConditionsHelpText: any;
 }
 
 export interface CameraFilters {
@@ -1117,6 +1119,8 @@ const typeMap: any = {
         { json: "connectErrorAdditional", js: "connectErrorAdditional", typ: "any" },
         { json: "setupErrorAdditional", js: "setupErrorAdditional", typ: "any" },
         { json: "connectedText", js: "connectedText", typ: "any" },
+        { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
+        { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

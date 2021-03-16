@@ -7,7 +7,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,15 +19,18 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @Input() viewType: string;
     @Input() clientType: string;
     @Input() loginEmail: string;
     @Input() loginPassword: string;
     @Output() loginPasswordChange = new EventEmitter<string>();
     @Input() passwordProcess: Process;
     @Input() errorCode: string;
+    @Output() isStayingLoggedIn = new EventEmitter<boolean>();
 
     sendPassword: any;
     @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
+    stayLoggedIn = false;
     header: string;
     subHeader: string;
     templateText: {
@@ -50,6 +53,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         this.setText();
         this.sendPassword = () => {
             this.loginPasswordChange.emit(this.loginPassword);
+            this.isStayingLoggedIn.emit(this.stayLoggedIn);
         };
     }
 
@@ -58,7 +62,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
             this.passwordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         }
 
-        if (!changes.clientType.firstChange) {
+        if (!changes.clientType?.firstChange) {
             this.setText();
         }
     }
@@ -71,19 +75,13 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         const auth = this.LANG.authorize;
         const connect = {
             header    : auth.connectHeader(),
-            subHeader : NxLanguageProviderService.translate(
-                auth.toAccountSubheader,
-                { accountEmail: this.loginEmail })
+            subHeader : auth.toAccountSubheader()
         };
         const renew = {
             header    : auth.expiredHeader(),
-            subHeader : NxLanguageProviderService.translate(
-                auth.expiredAccountSubheader,
-                { accountEmail: this.loginEmail })
+            subHeader : auth.expiredAccountSubheader()
         };
-        const subHeader = NxLanguageProviderService.translate(
-            auth.asAccountSubheader,
-            { accountEmail: this.loginEmail });
+        const subHeader = auth.asAccountSubheader();
         this.templateText = {
             loginToCloud: {
                 header: auth.loginCloudHeader(),
@@ -101,7 +99,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
             renewSessionWeb      : renew
         };
     }
-    
+
     setText() {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;

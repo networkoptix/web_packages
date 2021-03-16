@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map }                       from 'rxjs/operators';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AuthorizeState }            from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -23,6 +23,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @Input() viewType: string;
     @Input() loginEmail: string;
     @Output() setCurrentState = new EventEmitter<AuthorizeState>();
     @Input() checkActivationProcess: Process;

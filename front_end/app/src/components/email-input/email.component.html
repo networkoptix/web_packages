@@ -3,9 +3,8 @@
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
        [id]="componentId" [name]="componentId"
-       [ngClass]="{'hide-errors': hideErrors}"
+       [ngClass]="{'hide-errors': hideErrors, 'form-control': web}"
        type="email"
-       class="form-control"
        required
        autocomplete="off"
        maxlength="255"

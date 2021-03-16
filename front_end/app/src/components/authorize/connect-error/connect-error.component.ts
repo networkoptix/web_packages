@@ -7,7 +7,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,6 +19,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @Input() viewType: string;
     @Input() clientType: string;
     @Input() processTryAgain: Process;
 

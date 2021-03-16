@@ -1,13 +1,11 @@
 import {
-    Component, Inject, OnDestroy,
-    OnInit, ViewContainerRef
+    Component, Input, OnDestroy, OnInit
 }                                               from '@angular/core';
 import { UntilDestroy }                         from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxProcessService, Process }            from '@services/process.service';
-import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -18,6 +16,8 @@ import { LanguageI18NStaticTypes }              from '../../../../language_i18n_
 export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    @Input() viewType: string;
 
     constructor(
         language: NxLanguageProviderService,

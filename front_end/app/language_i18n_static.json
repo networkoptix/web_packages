@@ -92,11 +92,11 @@
         "connectAdditional": "This account will get owner access level",
         "createText": "Create Account",
         "setupText": "Setup Non-cloud System",
-        "asAccountSubheader": "As {accountEmail}",
-        "toAccountSubheader": "To {accountEmail}",
+        "asAccountSubheader": "As",
+        "toAccountSubheader": "To",
         "forAccountSubheader": "For {accountEmail}",
-        "expiredAccountSubheader": "Please, log in again as {accountEmail}",
-        "createAccountHeader": "Create %CLOUD_NAME% account",
+        "expiredAccountSubheader": "Please, log in again as",
+        "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",
         "activatedText": "Account Activated!",
@@ -110,7 +110,9 @@
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
         "connectErrorAdditional": "Please try again later.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%"
+        "connectedText": "System connected to %CLOUD_NAME%",
+        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
