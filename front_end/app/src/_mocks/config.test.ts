@@ -1136,7 +1136,7 @@ export function setupConfig(): IConfig {
             syncTimeEpsilon: {
                 type: 'number'
             },
-            maxWearableArchiveSynchronizationThreads: {
+            maxVirtualCameraArchiveSynchronizationThreads: {
                 type: 'number'
             },
             maxEventLogRecords: {
