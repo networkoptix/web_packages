@@ -573,7 +573,7 @@ export const nxConfig: IConfig = {
         syncTimeExchangePeriod     : { type: 'number' },
         syncTimeEpsilon            : { type: 'number' },
 
-        maxWearableArchiveSynchronizationThreads : { type: 'number' },
+        maxVirtualCameraArchiveSynchronizationThreads : { type: 'number' },
         maxEventLogRecords                       : { type: 'number' },
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
