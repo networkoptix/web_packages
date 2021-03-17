@@ -98,6 +98,20 @@ export class NxMenuService implements OnDestroy {
         }
     }
 
+    isEqual(currentContent, newContent, nodeGroup) {
+        return !NxUtilsService.isEqual(
+            currentContent.filter(node => node.id === nodeGroup),
+            newContent.filter(node => node.id === nodeGroup)
+        );
+    }
+
+    hasUpdatedContent(content) {
+        return !NxUtilsService.isEqual(this.content, content) ||
+            !this.isEqual(this.content, content, 'cameras') ||
+            !this.isEqual(this.content, content, 'users') ||
+            !this.isEqual(this.content, content, 'servers');
+    }
+
     fillerItemsBy(model) {
         let filteredContent = [];
         if (model.query) {
@@ -145,6 +159,24 @@ export class NxMenuService implements OnDestroy {
         return filteredContent;
     }
 
+    sanitizeContent(content) {
+        const clean = NxUtilsService.deepCopy(content);
+        return clean.map((node) => {
+            if (node.level3.length) {
+                node.level3.forEach(item => {
+                    item.label = NxUtilsService.htmlWiper(item.label);
+                    if (item.additionalLabel) {
+                        item.additionalLabel = NxUtilsService.htmlWiper(item.additionalLabel);
+                    }
+                    if (item.additionalText) {
+                        item.additionalText = NxUtilsService.htmlWiper(item.additionalText);
+                    }
+                });
+            }
+            return node;
+        });
+    }
+
     cleanMenuContent(content) {
         const clean = NxUtilsService.deepCopy(content);
         return clean.map((node) => {
@@ -153,18 +185,15 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    escapeBrackets(text) {
-        return text?.replace('<', '&lt;').replace('>', '&gt;') || text;
-    }
-
     private setHighlightPattern(model) {
-        let pattern = (model.queryExactMatch ||
+        const pattern = (model.queryExactMatch ||
             model.queryEndsWith ||
             model.queryStartsWith ||
             model.queryOrMatch ||
             model.queryAndMatch).join('|');
 
-        pattern = NxUtilsService.escapeRegExp(pattern);
+        // query will be broken in tokens so attempted html/js injection will fail
+        // pattern = NxUtilsService.escapeRegExp(pattern);
 
         this.regex = new RegExp(pattern, 'gi');
     }
