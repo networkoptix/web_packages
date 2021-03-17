@@ -38,7 +38,7 @@ export class NxCapabilitiesComponent {
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title', 'nodes'],
             this.errorManager.buildConfig(
-                ['title', 'displayName', 'icon'],
+                ['title', 'subtitle', 'displayName', 'icon'],
                 null,
                 this.errorManager.buildConfig(
                     ['title', 'shortDescription', 'blocks']

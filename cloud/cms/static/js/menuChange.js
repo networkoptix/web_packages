@@ -70,7 +70,7 @@ function initNestedScripts() {
             window.errorWatcher.value = true;
         }
     }
-    
+
     const handleAdvancedToggle = ({ target }) => {
         const advancedShown = 'advanced-shown'
         const { classList } = target.parentNode
@@ -90,9 +90,9 @@ function initNestedScripts() {
             classList[isShown ? 'remove' : 'add'](nodeExpanded)
         }
     };
-    
+
     window.addEventListener('message', addError);
-    
+
     const addNodeCounts = () => {
         const parentNodes = document.getElementsByClassName('djn-item')
         for (const node of parentNodes) {
@@ -124,7 +124,7 @@ function initNestedScripts() {
                     countTag.innerText = count
                     nodeHandle.appendChild(countTag)
                 }
-    
+
                 const deleteNode = nodeHandle.getElementsByClassName('djn-delete-handler')[0]
                 const target = node.getElementsByClassName('nested-stacked-heading')[0]
                 if (deleteNode) {
@@ -157,12 +157,12 @@ function initNestedScripts() {
     addNodeCounts()
     hideNoPreviews()
     expandErrors()
-    
+
     window.addEventListener('click', (event) => [
         handleNodeToggle, handleAdvancedToggle
     ].forEach(callback => callback(event)))
     window.addEventListener('mousemove', () => requestAnimationFrame(addNodeCounts))
-    
+
     const adminConfig = document.getElementsByClassName('field-admin_config')[0]
     const buttonsAdded = adminConfig.classList.contains('reset-buttons-added')
     const configs = {
@@ -211,7 +211,7 @@ function initNestedScripts() {
         }
         Object.entries(configs).forEach(addButton)
     }
-    
+
     const nestedMenu = document.getElementById('nodes-group')
     const helpText = nestedMenu.querySelectorAll('.help')
     helpText.forEach(node => {
@@ -225,7 +225,7 @@ function initNestedScripts() {
         tooltip.title = node.innerText
         parent.appendChild(tooltip)
     })
-    
+
     const checkAndUpdateLabel = (node, focus = false) => {
         const wrapper = node.parentNode;
         const label = wrapper.querySelector('label')
@@ -248,7 +248,7 @@ function initNestedScripts() {
     }
     const handleFocus = (event) => checkAndUpdateLabel(event.target, focus)
     const handleBlur = (event) => checkAndUpdateLabel(event.target)
-    
+
     const addLabelListeners = (delay = 0) => setTimeout(() => nestedMenu.querySelectorAll('.vTextField').forEach((node, ind, arr) => {
         checkAndUpdateLabel(node)
         node.removeEventListener('focus', handleFocus)
@@ -259,14 +259,14 @@ function initNestedScripts() {
             addNewNodeListeners()
         }
     }), delay)
-    
+
     addLabelListeners()
-    
+
     const addNewNodeListeners = (delay = 0) => setTimeout(() => nestedMenu.querySelectorAll('.djn-add-handler').forEach(node => {
         node.removeEventListener('click', addLabelListeners)
         node.addEventListener('click', addLabelListeners)
     }), delay)
-    
+
     const widgets = nestedMenu.querySelectorAll('.related-widget-wrapper')
     const selects = nestedMenu.querySelectorAll('select')
     const applyTopLabelStyles = node => {

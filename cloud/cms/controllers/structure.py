@@ -138,7 +138,8 @@ def read_structure_json():
 
 def process_node(node_obj, node_struct):
     if not node_obj.touched:
-        node_obj.name = node_struct['name']
+        node_obj.name = node_struct.get('name', '')
+        node_obj.subtitle = node_struct.get('subtitle', '')
         node_obj.url = node_struct.get('url', '')
         node_obj.new_window = node_struct.get('new_window', False)
         node_obj.condition = node_struct.get('condition', '')
