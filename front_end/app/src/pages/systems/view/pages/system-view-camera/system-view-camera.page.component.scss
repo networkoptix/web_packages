@@ -103,7 +103,8 @@ $border-color: $light6;
       > .glyph {
         opacity: 1.0;
         // background-color: green;
-        background-color: red;
+        // background-color: red;
+        border: 2px solid $dark15;
       }
       &.isRecording {
         opacity: 1.0;

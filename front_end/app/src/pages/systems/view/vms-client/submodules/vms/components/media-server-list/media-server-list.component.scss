@@ -62,8 +62,7 @@
 
                 &.offline {
                     >.server-name:after {
-                        // background-image: url('/static/images/icons/standard/server_offline.svg');
-                        background-image: url('/static/images/icons/view/placeholder_camera_server_offline.svg');
+                        background-image: url('/static/images/icons/standard/server_offline.svg');
                     }
                 }
 
