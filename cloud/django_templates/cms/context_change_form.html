@@ -378,7 +378,7 @@
                     return matched;
                 }
 
-                args.content = args.content.replace(/<\/?([^\s>]*?)>/g, replaceElements);
+                args.content = args.content.replace(/<\/?([^\s>]*).*?>/g, replaceElements);
                 args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, "");
             },
             paste_postprocess: function(plugin, args) {
