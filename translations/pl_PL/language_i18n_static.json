@@ -258,7 +258,7 @@
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
             "latestBuild": "najnowsza kompilacja",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Zamierzasz złączyć systemy <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.</p><p>Ustawienia i nazwa zostaną pobrane z <strong>{primarySystem}</strong></p>",
             "mergeSystemsTitle": "Złącz bieżący system z",
             "mergeFailedTitle": "Łączenie systemów nie powiodło się",
             "noServerFound": "Nie znaleziono serwera",
@@ -267,7 +267,7 @@
             "ownerCanMergeText": "Możesz złączać tylko takie systemy, których jesteś właścicielem",
             "passwordRequired": "Hasło jest wymagane",
             "passwordWrong": "Nieprawidłowe hasło",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primaryCannotMerge": "System {targetSystem} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "primarySystemOffline": "System {primarySystem} jest w trybie offline i nie można go połączyć z systemem {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
             "recommendSupport": {
@@ -280,14 +280,14 @@
             "serverAtUrl": "serwer {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionOld": "Ten serwer ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj go do najnowszej wersji, aby połączyć go z bieżącym systemem.",
             "serverVersionNew": "Ten serwer ma nowszą wersję oprogramowania niż system bieżący. Zaktualizuj oba systemy do tej samej wersji, aby je połączyć.",
             "systemOffline": "System {targetSystem} jest w trybie offline i nie może być połączony z bieżącym systemem",
             "systemOfflineUrl": "{targetSystem} nie jest dostępny",
             "systemsIncompatible": "Ten serwer ma niekompatybilną wersję oprogramowania. Zaktualizuj oba systemy do {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionOld": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj %targetSystem% do {downloadHTML} aby połączyć go z bieżącym.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "systemVersionsNotMatch": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -320,7 +320,7 @@
         },
         "removeSystem": {
             "action": "Rozłącz",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "message": "Zamierzasz odłączyć ten system od swojego konta. Nie będziesz już mieć dostępu do tego systemu. Czy na pewno kontynuować?",
             "title": "Odłączyć system?"
         },
         "titles": {
@@ -415,10 +415,10 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
         "DUPLICATE_MEDIASERVER_FOUND": "Niektóre serwery istnieją w obu systemach - w wybranym i w bieżącym. <br>Usuń z obu systemów serwery, które są rozłączone lub niekompatybilne i spróbuj ponownie.",
         "EmailAlreadyExists": "Ten e-mail jest już zarejestrowany",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "FAIL": "System <strong>{failedSystem}</strong> jest w trybie offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> jest w trybie offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z działem wsparcia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
+        "INCOMPATIBLE": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
         "This user does not exist.": "Ten użytkownik nie istnieje.",
         "The user is disabled. Please contact your system administrator.": "Użytkownik jest wyłączony. Skontaktuj się z administratorem systemu.",
         "cloud_systems_have_different_owners": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
@@ -429,14 +429,14 @@
         "accountAlreadyActivated": "To konto jest już aktywne",
         "accountBlocked": "Konto jest tymczasowo zablokowane. Prosimy spróbować ponownie za kilka minut.",
         "accountNotActivated": "To konto nie jest jeszcze aktywne. <a href=\"/activate\">Wyślij ponownie link aktywacyjny</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "accountNotActivatedAlternate": "Konto nie zostało aktywowane. Zaloguj się do <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> i postępuj zgodnie z podanymi instrukcjami.",
         "alreadyExists": "To konto już istnieje",
         "brokenAccount": "Nieoczekiwany problem z kontem. <a href=\"/restore_password\">Przywróć konto</a>",
         "cantActivatePrefix": "Nie można aktywować konta",
         "cantAddYourOwnEmail": "Dodanie własnego adresu e-mail jest niedozwolone",
         "cantChangeAccountPrefix": "Nie można zapisać zmian",
         "cantChangePasswordPrefix": "Nie można zapisać hasła",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDeleteAccountOwningSystems": "Nie można usunąć konta, które posiada systemy",
         "cantDisconnectSystemPrefix": "Nie można usunąć systemu",
         "cantEditAdmin": "Ten użytkownik ma uprawnienia administratora",
         "cantEditYourself": "Zmiana własnych uprawnień nie jest dozwolona",
@@ -461,7 +461,7 @@
         "oldPasswordMistmatch": "Bieżące hasło jest nieprawidłowe.",
         "oldSafariNotSupported": "Wersje Safari starsze niż 10 nie są obsługiwane",
         "passwordMismatch": "Nieprawidłowe hasło",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z działem wsparcia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "thisSystem": "system",
         "unknownError": "Wystąpił nieoczekiwany błąd",
         "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -472,7 +472,7 @@
         "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -482,7 +482,7 @@
         "Health Monitor": "Monitor stanu technicznego",
         "Storage": "Archiwum",
         "myIntegrationsLabel": "Moje",
-        "requirements": "{name} Requirements",
+        "requirements": "Wymagania {name}",
         "testedVersionLabel": "Przetestowane w wersji {vmsName}:",
         "testedVersionsLabel": "Przetestowane w wersjach {vmsName}:"
     },
@@ -651,7 +651,7 @@
         "beginReset": "Serwer jest resetowany.",
         "detachSystemFailed": "Nie udało się odłączyć serwera od systemu. Proszę sprawdzić, czy hasło jest prawidłowe i czy serwer jest online, i spróbować ponownie.",
         "detachSystemSuccess": "Serwer został pomyślnie odłączony od systemu.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portWarning": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
         "refresh": "Odśwież",
         "refreshing": "Odświeżanie...",
         "removeMediaserverFailed": "Nie udało się usunąć serwera z systemu.",
@@ -752,20 +752,20 @@
             },
             "cloudConnect": {
                 "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "failed": "Nie udało się podłączyć systemu do %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Łączenie systemów nie powiodło się",
-                "success": "System merge completed"
+                "success": "Zakończono złączanie systemów"
             },
             "rename": {
                 "success": "Zapisana nazwa systemu"
             }
         },
-        "viewingReport": "You are viewing an imported report"
+        "viewingReport": "Oglądasz zaimportowany raport"
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Raport stanu systemu {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -800,7 +800,7 @@
         "messages": {
             "required": "{number} more required",
             "activated": "Klucz licencyjny aktywowany",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "Klucz licencyjny został już aktywowany i powiązany z serwerem o identyfikatorze sprzętu {hwid} w innym systemie",
             "trialActivated": "Licencja próbna aktywowana. Począwszy od dzisiaj, możesz nagrywać maksymalnie 4 kamery przez 30 dni."
         }
     },
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Okres sprawdzania zmiany czasu systemu",
         "syncTimeExchangePeriod": "Interwał synchronizacji czasu dla żądań sieciowych",
         "syncTimeEpsilon": "Wartość synchronizacji czasu epsilon. Nowa wartość nie jest stosowana jeśli czas delta jest mniejszy niż czas epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max liczba wątków synchronizacji nagrań kamery przenośnej",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Powiadomienia o aktualizacji włączone",
         "upnpPortMappingEnabled": "Przekierowywanie portów UPNP włączone",
         "useTextEmailFormat": "Wysyłaj e-maile czystym tekstem",
@@ -906,29 +906,29 @@
             "mainSuccess": "Main storage reindexing completed",
             "backupSuccess": "Backup storage reindexing completed",
             "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "backupFailed": "Indeksowanie kopii zapasowej archiwum nie powiodło się"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
+            "main": "Główny",
+            "backup": "Zapasowy",
+            "notInUse": "Nieużywany",
             "reserved": "Zarezerwowane",
             "inaccessible": "Niedostępne",
-            "changing": "Changing mode...",
+            "changing": "Zmiana trybu...",
             "disabled": "Wyłączony"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Ścieżka archiwum {url} jest już używana przez inny serwer.",
+        "deleteExternalStorage": "Usunąć archiwum zewnętrzne?",
+        "failed": "Nie udało się dodać archiwum zewnętrznego",
+        "invalidPath": "Nieprawidłowa ścieżka archiwum.",
+        "stillHasArchivesPreWarning": "Nagrywanie na to archiwum zostanie zatrzymane. Jednak przestarzałe nagrania będą nadal usuwane.",
+        "stillHasArchives": "Nagrywanie na to archiwum jest zatrzymane. Jednak przestarzałe nagrania będą nadal z niego usuwane.",
+        "storageDeleted": "Archiwum {url} usunięte",
+        "failedRemove": "Nie udało się usunąć archiwum zewnętrznego {url}",
+        "reservedTooSmallTooltip": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest zbyt mała, a dostępne są inne większe lokalizacje.",
+        "reservedSystemTooltip": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest na dysku systemowym, a dostępne są inne większe lokalizacje.",
+        "serverOffline": "Nie udało się dodać archiwum zewnętrznego - serwer nie odpowiada",
+        "success": "Dodano archiwum zewnętrzne",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

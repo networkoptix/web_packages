@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "ระยะเวลาการตรวจสอบการเปลี่ยนแปลงเวลาระบบปฏิบัติการ",
         "syncTimeExchangePeriod": "ซิงค์ช่วงเวลาการซิงโครไนซ์สำหรับคำขอเครือข่าย",
         "syncTimeEpsilon": "Epsilon ซิงค์เวลา ค่าใหม่จะไม่ถูกใช้หากเวลา detla น้อยกว่า epsilon",
-        "maxWearableArchiveSynchronizationThreads": "หัวข้อการซิงค์ไฟล์เก็บถาวรสูงสุดของกล้องที่สวมใส่ได้",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "เปิดใช้งานการแจ้งเตือนการปรับปรุง",
         "upnpPortMappingEnabled": "เปิดใช้การแมปพอร์ต UPnP",
         "useTextEmailFormat": "ส่งอีเมลแบบธรรมดา",

@@ -478,8 +478,8 @@
     "INFO TEXT": "Info",
     "DEBUG TEXT": "Debug",
     "VERBOSE TEXT": "Uitgebreid",
-    "ARCHIVE BACKUP STREAMS MSG TEXT": "Secondary streams from all cameras on this server are being backed up in real time.",
-    "ARCHIVE BACKUP CLIENT MSG TEXT": "You can change the backup mode or select specific cameras in the desktop client.",
-    "RECORDING STOP WARNING TEXT": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-    "STORAGE DELETION ALERT TOOLTIP TEXT": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted."
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Secundaire streams van alle camera's op deze server worden in realtime geback-upt.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "U kunt de back-upmodus wijzigen of specifieke camera's selecteren in de desktopclient.",
+    "RECORDING STOP WARNING TEXT": "Opname naar deze opslaglocatie zal stoppen. Echter, verouderde beelden blijven verwijderd worden.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Opname naar deze opslaglocatie is gestopt. Echter, verouderde beelden worden nog steeds verwijderd."
 }
