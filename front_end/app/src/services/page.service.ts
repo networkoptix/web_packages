@@ -72,7 +72,7 @@ export class NxPageService {
         this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
     }
 
-    public show404() {
+    public show404 = () => {
         this.router
             .navigate([this.CONFIG.redirect.page404], {
                 replaceUrl: true
