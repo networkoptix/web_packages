@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Kontroll av OS-tidsinställningar",
         "syncTimeExchangePeriod": "Synkronisera tidssynkroniseringsintervall för nätverksförfrågningar",
         "syncTimeEpsilon": "Synkronisera tidsepsilon. Nytt värde tillämpas inte om tidsdeltat mindre än epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Maximalt antal bärbara kamerarkiv synkronisera trådar",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Uppdateringsaviseringar aktiverade",
         "upnpPortMappingEnabled": "UPNP-portmappning aktiverad",
         "useTextEmailFormat": "Skicka e-post med vanlig text",

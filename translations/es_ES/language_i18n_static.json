@@ -429,14 +429,14 @@
         "accountAlreadyActivated": "Esta cuenta ya está activada",
         "accountBlocked": "Esta cuenta está bloqueada. Por favor, intente nuevamente en unos minutos.",
         "accountNotActivated": "Esta cuenta aún no es activada. <a href=\"/activate\"> Envíe enlace de activación de nuevo</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "accountNotActivatedAlternate": "La cuenta no está activada. Inicie sesión en <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> y siga las instrucciones proporcionadas.",
         "alreadyExists": "Esta cuenta ya existe",
         "brokenAccount": "Problema inesperado con cuenta. <a href=\"/restore_password\"> restaurar cuenta</a>",
         "cantActivatePrefix": "No puede activar su cuenta",
         "cantAddYourOwnEmail": "No se permite añadir tu propio correo electrónico",
         "cantChangeAccountPrefix": "No puede guardar los cambios",
         "cantChangePasswordPrefix": "No se puede guardar la contraseña",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDeleteAccountOwningSystems": "No se puede eliminar la cuenta que posee sistemas",
         "cantDisconnectSystemPrefix": "No se puede eliminar el sistema",
         "cantEditAdmin": "Este usuario tiene permisos de administrador",
         "cantEditYourself": "Cambiar permisos propios no está permitido",
@@ -452,16 +452,16 @@
         "emailNotFound": "La cuenta no existe.",
         "failedToAccessSystem": "No se puede acceder al sistema a través de este enlace. Esto puede suceder cuando un sistema ha sido desconectado de %CLOUD_NAME%, el acceso a este sistema ha sido revocado, o si ha iniciado sesión en la cuenta incorrecta.",
         "forbidden": "No tiene permisos para realizar esta acción",
-        "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "lostConnection": "Conexión a {systemName} perdida",
+        "mergedSystemIsOffline": "Sistema <strong>{failedSystem}</strong> está desconectado.",
         "notAuthorized": "Contraseña incorrecta",
-        "badUsername": "Account not found",
+        "badUsername": "Cuenta no encontrada",
         "notFound": "No se ha encontrado",
         "ok": "ok",
         "oldPasswordMistmatch": "La contraseña actual es incorrecta.",
         "oldSafariNotSupported": "Las versiones de Safari anteriores a 10 no son compatibles",
         "passwordMismatch": "Contraseña incorrecta",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} no está disponible actualmente. Inténtalo de nuevo en unos minutos o ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
         "thisSystem": "el sistema",
         "unknownError": "Error inesperado",
         "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -472,7 +472,7 @@
         "licenseFail": "Error al activar la licencia. Por favor intente nuevamente o contacte a soporte.",
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -482,9 +482,9 @@
         "Health Monitor": "Monitor de salud",
         "Storage": "Almacenamiento",
         "myIntegrationsLabel": "Mío",
-        "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "requirements": "{name} Requisitos",
+        "testedVersionLabel": "Probado por el desarrollador con la versión {vmsName}:",
+        "testedVersionsLabel": "Probado por el desarrollador con {vmsName} versiones:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Cámaras PTZ avanzadas",
@@ -528,8 +528,8 @@
         "b_Link": "enviar una solicitud",
         "c_Info": "para preguntas / preocupaciones adicionales con respecto a los dispositivos compatibles."
     },
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdTopXByVolume": "Top {value} por volumen:",
+    "ipvdDisclaimer": "Esta lista está limitada a dispositivos encontrados en {vmsName} donde los usuarios han permitido reportar automáticamente las especificaciones del dispositivo a {companyName}. No se recoge ninguna información personal y cada usuario permanece completamente anónimo.",
     "menu": {
         "titles": {
             "cameras": "Cámaras",
@@ -545,7 +545,7 @@
         "activate": "Activar la cuenta",
         "activateCode": "Activar cuenta",
         "activateSuccess": "Cuenta Activada",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} para {VMS_NAME}",
         "changePassword": "Cambiar contraseña",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
@@ -565,12 +565,12 @@
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
         "view": "Ver cámaras",
-        "apiTool": "API testing tool"
+        "apiTool": "Herramienta de prueba de API"
     },
     "pageDescriptions": {
         "integrations": "El Marketplace de Integraciones es un ecosistema centralizado de productos que se integran perfectamente con productos VMS como %VMS_NAME%, todo disponible en %CLOUD_NAME% para que pueda encontrar soluciones para construir y personalizar su sistema de vídeo IP.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrationSetup": "Instrucciones de configuración para {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} para {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "muy común",
@@ -593,11 +593,11 @@
             "message": "Asegúrese de que sus servidores estén en línea e intente nuevamente."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Este sistema está siendo fusionado con {systemName}.",
             "message": {
                 "dependingOnSize": "Dependiendo del tamaño de la base de datos, esto puede tomar hasta varias horas.",
                 "untilFinished": "Hasta que finalice la fusión, puede iniciar sesión en este sistema y ver el video, pero no puede cambiar ninguna configuración.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "Cuando termine la combinación, todos los usuarios y cámaras de este sistema estarán disponibles en el sistema {systemName}, y este sistema se eliminará."
             }
         },
         "server": {
@@ -607,7 +607,7 @@
     },
     "pleaseSelect": "Por favor, seleccione...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Encontrará la política de privacidad de {INTEGRATION_COMPANY} <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">aquí</a>. La política de privacidad de %COMPANY_NAME%, que incluye instrucciones sobre cómo retirar tu consentimiento, está disponible <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a>.",
         "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará la %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "registration": {
@@ -620,8 +620,8 @@
         },
         "finishingMerge": "Acabando la fusión de sistemas",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Aceptar",
+            "reject": "Rechazar",
             "backToEditText": "Volver a las interfaces de edición",
             "previewRibbon": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público."
         },
@@ -635,28 +635,28 @@
         "analyticsSelected": "evento de analiticas",
         "filter applied": "filtro aplicado",
         "filters applied": "filtros aplicados",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filtros} one{# filtro} other{# filtros}} aplicados",
         "hardwareType": "Tipo",
         "hardwareTypes": "Tipos",
         "minResolution": "Resolución mínima",
         "search_ipvd": "Búsqueda por modelo o fabricante",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# ¡Seleccionado} one{# ¡Seleccionado} other{# ¡Seleccionado}}",
         "vendor": "Fabricante",
         "vendors": "Fabricantes"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "analyticsDataPolicyError": "Error al eliminar o mantener datos analíticos",
+        "autoRefresh": "refrescar automáticamente en {time}...",
         "beginDetach": "El servidor ahora se está separando",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "El servidor se está reiniciando.",
         "detachSystemFailed": "Error al desconectar el servidor del sistema. Verifique si la contraseña que ingresó es correcta y el servidor está en línea e intente nuevamente.",
         "detachSystemSuccess": "El servidor se desconectó correctamente del sistema.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "Los números de puerto menores de 1024 están restringidos. El servidor puede volverse inaccesible.",
+        "refresh": "Actualizar",
+        "refreshing": "Actualizando...",
         "removeMediaserverFailed": "Error al eliminar el servidor del sistema.",
         "resetFailed": "Error al restablecer el servidor. Verifique si la contraseña que ingresó es correcta y el servidor está en línea e intente nuevamente.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "El servidor {serverName} se ha restablecido a los valores predeterminados.",
         "restartFailed": "Hubo un problema al reiniciar el servidor.",
         "restartSuccessful": "El servidor se reinició correctamente.",
         "serverOffline": "Servidor está desconectado.",
@@ -664,15 +664,15 @@
         "status": {
             "checking": "comprobando...",
             "offline": "desconectado",
-            "resetting": "resetting...",
+            "resetting": "reiniciando...",
             "restarting": "reiniciando..."
         },
         "successRename": "Nombre del servidor guardado."
     },
     "system": {
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "connected": "Conectado",
+        "not_connected": "No conectado",
+        "MERGE_FINISHES": "Cuando termine la combinación, todos los usuarios y cámaras de este sistema estarán disponibles en el sistema <strong>{targetSystemName}</strong> y este sistema será eliminado.",
         "mergeUnknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
@@ -725,9 +725,9 @@
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",
-            "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "network": "Red añadida a través del sistema operativo",
+            "smb": "Red (smb), añadida a través de VMS",
+            "cloud": "Nube"
         }
     },
     "systemStatuses": {
@@ -741,31 +741,31 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Algo salió mal. Por favor, actualiza la página en unos 30 segundos.",
-        "nameFail": "Failed to change {type} name",
-        "reviewAccepted": "The review has been accepted",
+        "nameFail": "Error al cambiar el nombre de {type}",
+        "reviewAccepted": "La revisión ha sido aceptada",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "Sistema {systemName} ha sido eliminado de su cuenta"
             },
             "disconnected": {
                 "success": "El sistema se desconecta con éxito de %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "success": "Sistema conectado a %CLOUD_NAME%",
+                "failed": "Error al conectar el sistema a %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "La fusión de sistemas falló",
-                "success": "System merge completed"
+                "success": "Fusión del sistema completada"
             },
             "rename": {
                 "success": "Nombre del sistema guardado"
             }
         },
-        "viewingReport": "You are viewing an imported report"
+        "viewingReport": "Está viendo un informe importado"
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Informe de salud del sistema {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -798,9 +798,9 @@
             "serverNotFound": "Servidor no encontrado"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} más requeridos",
             "activated": "Clave de licencia activada",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
             "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Período de verificación de cambio de hora del SO",
         "syncTimeExchangePeriod": "Intervalo de sincronización de tiempo para solicitudes de red",
         "syncTimeEpsilon": "Tiempo de sincronización epsilon. El nuevo valor no se aplica si el tiempo delta es menor que épsilon",
-        "maxWearableArchiveSynchronizationThreads": "Hilos de sincronización de archivo de cámara ponibles máx",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Notificaciones de actualización habilitadas",
         "upnpPortMappingEnabled": "Mapeo de puerto UPNP habilitado",
         "useTextEmailFormat": "Enviar correos electrónicos de texto plano",
@@ -895,40 +895,40 @@
         "videoTrafficEncryptionForced": "Forzar Encriptación de Trafico de Video",
         "updateStatus": "Estado de actualización",
         "watermarkSettings": "Configuraciones de marca de agua",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Cantidad máxima de conexiones HTTP usando transcodificación para el servidor. Chrome abre 2 conexiones a la vez, luego cierra la primera. Por lo tanto, se recomienda fijar el valor >=2 a este parámetro.",
         "maxEventLogRecords": "Máximo registro de eventos para mantener en la base de datos. La cantidad real de registros no eliminados puede ser hasta un 20% más alta que el valor especificado.",
         "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara)."
     },
-    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "result": "{count, plural, =0{# resultados} one{# resultado} other{# resultados}}",
+    "additionalSystems": "{count, plural, =0{+ # Sistemas} one{+ # Sistema} other{+ # Sistemas}}",
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Reindexación de almacenamiento principal completada",
+            "backupSuccess": "Reindexación de almacenamiento de copia de seguridad completada",
+            "mainFailed": "Falló la reindexación del almacenamiento principal",
+            "backupFailed": "Falló la reindexación de almacenamiento de copia de seguridad"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "main": "Principal",
+            "backup": "Respaldo",
+            "notInUse": "No en uso",
+            "reserved": "Reservado",
+            "inaccessible": "Inaccesible",
+            "changing": "Cambiando el modo...",
+            "disabled": "Desactivado"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Ruta de almacenamiento {url} ya está siendo usada por otro servidor.",
+        "deleteExternalStorage": "¿Eliminar almacenamiento externo?",
+        "failed": "Error al añadir almacenamiento externo",
+        "invalidPath": "Ruta de almacenamiento no válida.",
+        "stillHasArchivesPreWarning": "La grabación en esta ubicación de almacenamiento se detendrá. Sin embargo, las imágenes desactualizadas de ella continuarán siendo borradas.",
+        "stillHasArchives": "Se ha detenido la grabación en esta ubicación de almacenamiento. Sin embargo, se están borrando imágenes desactualizadas.",
+        "storageDeleted": "Almacenamiento {url} eliminado",
+        "failedRemove": "No se pudo eliminar el almacenamiento externo {url}",
+        "reservedTooSmallTooltip": "Esta ubicación de almacenamiento no se puede utilizar para grabar porque es demasiado pequeña, y hay otras ubicaciones de almacenamiento más grandes disponibles para grabar.",
+        "reservedSystemTooltip": "Esta ubicación de almacenamiento no se puede utilizar para grabar porque es almacenamiento del sistema y hay otras ubicaciones de almacenamiento más grandes disponibles para grabar.",
+        "serverOffline": "Error al añadir almacenamiento externo - el servidor no responde",
+        "success": "Almacenamiento externo añadido",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

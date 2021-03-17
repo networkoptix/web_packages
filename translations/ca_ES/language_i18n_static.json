@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Període de comprovació de canvi d'hora del sistema operatiu",
         "syncTimeExchangePeriod": "Interval de sincronització d'hora de sincronització per a sol·licituds de xarxa",
         "syncTimeEpsilon": "Hora de sincronització epsilon. El valor nou no s'aplica si l'hora delta és inferior a epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Fils màxims de sincronització de l'arxiu de la càmera portable",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Notificacions d'actualització activades",
         "upnpPortMappingEnabled": "Mapatge de ports UPNP activat",
         "useTextEmailFormat": "Envia correus electrònics de text pla",

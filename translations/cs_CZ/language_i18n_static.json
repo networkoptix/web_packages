@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Období kontroly časových změn OS",
         "syncTimeExchangePeriod": "Synchronizovat interval synchronizace času pro síťové požadavky",
         "syncTimeEpsilon": "Synchronizovat čas epsilon. Nová hodnota není použita, pokud je čas delta menší než epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Maximální počet uživatelských synchronizačních vláken v archivu kamery",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Aktualizace oznámení byla povolena",
         "upnpPortMappingEnabled": "Mapování portů UPNP bylo povoleno",
         "useTextEmailFormat": "Odeslat prostý text emailem",
