@@ -1888,7 +1888,7 @@ class Menu(models.Model):
                     append_nodes(node.nodes_list)
 
         all_nodes = []
-        prefetched_menu = self.get_prefetched_menus(menu_name=self.name)[0]
+        prefetched_menu = self.get_prefetched_menus(menu_name=self.name, only_enabled=False)[0]
         if hasattr(prefetched_menu, 'nodes_list'):
             append_nodes(prefetched_menu.nodes_list)
         return all_nodes
@@ -1992,12 +1992,15 @@ class MenuNode(models.Model):
                 if node.name:
                     title = node.name
                 elif node.asset and node.asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                    asset_title = None
                     if asset_accepted:
-                        title = document_title_ds.find_actual_value(node.asset)
+                        asset_title = document_title_ds.find_actual_value(node.asset)
                     elif pending is not None:
-                        title = document_title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id)
+                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id)
                     elif node_structure['draft']:
-                        title = document_title_ds.find_actual_value(node.asset, draft=True)
+                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True)
+                    if asset_title:
+                        title = asset_title
 
                 node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict)
 
