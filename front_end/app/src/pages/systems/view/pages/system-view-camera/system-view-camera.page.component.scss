@@ -1,4 +1,6 @@
-@import 'styles/_theme_palette';
+@use '../../../../../../styles/_theme_palette';
+@use '../../../../../../styles/theme_variables' as *;
+@use 'bootstrap_utils' as bootstrap;
 
 $header-background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
 $header-foreground: white;
@@ -16,6 +18,11 @@ $border-color: $light6;
   right: 0;
   top: 0;
   box-sizing: border-box;
+  z-index: 9;
+
+  @include bootstrap.media-breakpoint-down(md) {
+    width : 100%;
+  }
 
   // transition: all .2s ease-in-out;
 
@@ -35,7 +42,7 @@ $border-color: $light6;
   }
 
   &.sidebar-shown {
-    @media (min-width: 751px) {
+    @include bootstrap.media-breakpoint-up(md) {
       width: calc(100vw - 320px);
     }
   }
@@ -43,7 +50,7 @@ $border-color: $light6;
   &.controls-shown {
     > .controls {
       position: relative;
-      bottom: 0px;
+      bottom: 0;
     }
     > player,
     > .offline-message {
@@ -80,13 +87,13 @@ $border-color: $light6;
 
       &.name {
         padding: 0 .5em;
-        text-shadow: 0px 1px 3pxrgba(0,0,0,1);
         overflow      : hidden;
         text-overflow : ellipsis;
         white-space   : nowrap;
         flex-basis: 100%;
         flex-shrink: 1;
         flex-grow: 1;
+        text-shadow: 0 1px 3px rgba(0,0,0,1);
 
         > .quality {
           text-transform: capitalize;
@@ -142,7 +149,7 @@ $border-color: $light6;
         height: 36px;
         padding: 8px;
         margin-right: 5px;
-        text-shadow: 0px 1px 3pxrgba(0,0,0,1);
+        text-shadow: 0 1px 3px rgba(0,0,0,1);
         cursor: pointer;
         > svg {
           width: 20px;
@@ -164,7 +171,7 @@ $border-color: $light6;
         height: 36px;
         padding: 5px;
         cursor: pointer;
-        text-shadow: 0px 1px 3pxrgba(0,0,0,1);
+        text-shadow: 0 1px 3px rgba(0,0,0,1);
         > svg {
           width: 26px;
           height: 26px;
@@ -267,10 +274,10 @@ $border-color: $light6;
     &::before {
       content: "";
       position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       background-color: rgba($player-background, .3);
       backdrop-filter: blur(15px) saturate(80%);
   }
@@ -313,11 +320,8 @@ $border-color: $light6;
       left: calc(50% - 40px/2);
       height: 16px;
       width: 40px;
-      background: $additional_light2;
       cursor: pointer;
-      background-image: url('./img/arrow-down.png');
-      background-position: center center;
-      background-repeat: no-repeat;
+      background : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
       background-size: 16px 16px;
       box-shadow: 0px -2px 0px 0px rgba(0,0,0,0.1);
 
