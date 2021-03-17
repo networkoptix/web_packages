@@ -39,6 +39,22 @@
 }
 
 .authorize-main {
+    .main-w .stroke-color-main {
+        stroke: $dark9;
+    }
+
+    .main-w .fill-color-main {
+        fill: $dark9;
+    }
+
+    .main-d .stroke-color-main {
+        stroke: $light16;
+    }
+
+    .main-d .fill-color-main {
+        fill: $light16;
+    }
+
     .invalid-state {
         border-color: $error !important;
         color: $error !important;
