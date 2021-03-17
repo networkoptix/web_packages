@@ -1619,9 +1619,9 @@ class Menu(models.Model):
     title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
     short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
-        "header": ["name","url","enabled","order","is_global","preview"],
+        "header": ["name","url","enabled","order","preview"],
         "details": ["asset","icon","authentication"],
-        "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
+        "advanced": ["related_assets","next_item","subtitle","condition","permissions", "new_window", "is_global"]
     }""")
 
     enabled = models.BooleanField(default=True)

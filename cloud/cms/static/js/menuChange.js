@@ -172,7 +172,6 @@ function initNestedScripts() {
               "url",
               "enabled",
               "order",
-              "is_global",
               "preview"
             ],
             details: [
@@ -183,9 +182,11 @@ function initNestedScripts() {
             advanced: [
               "related_assets",
               "next_item",
+              "subtitle",
               "condition",
               "permissions",
-              "new_window"
+              "new_window",
+              "is_global"
             ]
           }
     }
