@@ -50,10 +50,6 @@ export class NxSupportComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.cleanSupportNode = NxUtilsService.deepCopy(changes.supportNode.currentValue);
-        this.cleanSupportNode.asset.blocks.forEach(block => {
-            if (block.contentHTML) {
-                block.contentHTML = this.sanitizer.bypassSecurityTrustHtml(block.contentHTML);
-            }
-        });
+        this.cleanSupportNode.asset.shortDescription = this.sanitizer.bypassSecurityTrustHtml(this.cleanSupportNode.asset.shortDescription);
     }
 }
