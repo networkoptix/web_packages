@@ -39,7 +39,7 @@ export class NxSupportComponent implements OnChanges {
             ['displayName', 'icon', 'title'],
             null,
             this.errorManager.buildConfig(
-                ['blocks', 'url']
+                ['shortDescription', 'url']
             )
         );
         this.errorManager.checkAboutNode(
