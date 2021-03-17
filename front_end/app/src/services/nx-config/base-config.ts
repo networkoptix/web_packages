@@ -372,6 +372,7 @@ export interface Icons {
     dir: string;
     dirDevtools: string;
     dirButtons: string;
+    dirTextButtons: string;
     dirNonStandard: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;

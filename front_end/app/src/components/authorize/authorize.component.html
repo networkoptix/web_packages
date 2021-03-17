@@ -1,4 +1,4 @@
-<div class="authorize-main">
+<div class="authorize-main" [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
     <div class="auth-window" [ngSwitch]="currentState"
         [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }"
     >

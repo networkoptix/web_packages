@@ -13,7 +13,7 @@ from django.http.response import HttpResponse, HttpResponseBadRequest
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema

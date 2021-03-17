@@ -3,8 +3,8 @@
 <svg version="1.1" id="Layer_3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 20 20" style="enable-background:new 0 0 20 20;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#698796;stroke-linecap:round;stroke-miterlimit:10;}
+	.st0{stroke:#698796;}
 </style>
-<line class="st0" x1="2.5" y1="10.5" x2="16.5" y2="10.5"/>
-<line class="st0" x1="9.5" y1="17.5" x2="9.5" y2="3.5"/>
+<line class="st0" fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="2.5" y1="10.5" x2="16.5" y2="10.5"/>
+<line class="st0" fill="none" stroke-linecap="round" stroke-miterlimit="10" x1="9.5" y1="17.5" x2="9.5" y2="3.5"/>
 </svg>
