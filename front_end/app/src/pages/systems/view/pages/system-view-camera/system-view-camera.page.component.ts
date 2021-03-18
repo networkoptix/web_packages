@@ -185,33 +185,39 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
       this.getRecordsInProgress = this.id
       createSystem().then(() => {
-        this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-        this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
-            console.log('got camera archive range', this.id, ar)
-            if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-              console.log('empty archive')
-            } else try {
-              const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs)
-              const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs)
-              const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs)
-              const stillRecording = lastRecordDuration === -1
-              const now = Date.now()
-              const archiveEndMs = stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration)
-              const range = new SimpleTimeRange(firstRecordStartTimeMs, archiveEndMs)
-              const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
-              if (stillRecording) {
-                archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now)
-                console.log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration)
-              }
-              console.log('non-empty archive', this.id, range, archive)
-              this.vms.setCameraRecords(this.id, range, archive)
-              this._initSelectedCamera()
-            } catch (e) {
-              console.warn(e, 'caught while requesting camera archive ranges')
+            this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
+            if (this.system.userManager.isLiveViewer()) {
+                this.getRecordsInProgress = undefined;
+            } else {
+                this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
+                    console.log('got camera archive range', this.id, ar);
+                    if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+                        console.log('empty archive');
+                    } else {
+                        try {
+                            const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
+                            const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
+                            const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
+                            const stillRecording = lastRecordDuration === -1;
+                            const now = Date.now();
+                            const archiveEndMs = stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration);
+                            const range = new SimpleTimeRange(firstRecordStartTimeMs, archiveEndMs);
+                            const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
+                            if (stillRecording) {
+                                archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
+                                console.log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
+                            }
+                            console.log('non-empty archive', this.id, range, archive);
+                            this.vms.setCameraRecords(this.id, range, archive);
+                            this._initSelectedCamera();
+                        } catch (e) {
+                            console.warn(e, 'caught while requesting camera archive ranges');
+                        }
+                    }
+                    this.getRecordsInProgress = undefined;
+                });
             }
-            this.getRecordsInProgress = undefined
-          })
-      })
+        });
     }
 
     public ngAfterViewInit () {
