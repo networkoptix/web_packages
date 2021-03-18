@@ -169,7 +169,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.saveSettings,
             () => {
                 this.applyService.reset();
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
+                    this.selectDefaultStorage();
                 this.setSystemStorageChosen(this.selectedStorage);
             }
         );

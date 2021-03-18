@@ -59,7 +59,7 @@ export class NxDevToolsComponent implements OnInit {
                 subtitle,
                 displayName : displayName || name,
                 nodes       : nodes && nodes.map(mapToDevToolsNode),
-                url         : url || `/developers/knowledge-base/${assetId}`,
+                url         : url || `/docs/content/${assetId}`,
                 assetId,
                 asset,
                 icon,

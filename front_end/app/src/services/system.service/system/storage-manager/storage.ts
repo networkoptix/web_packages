@@ -89,7 +89,8 @@ export class Storage extends StorageDataStructure {
     currentStorageState: CurrentStorageState;
 
     get hasAction() {
-        return [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType) || this.status === STORAGE_STATUS.INACCESSIBLE;
+        return [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType) ||
+            [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.status);
     }
 
     get mode() {
