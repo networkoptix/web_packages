@@ -292,6 +292,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                             this.findKBWithArticle(assetId, assetParam);
                             return EMPTY;
                         } else {
+                            if (!this.menuName && !this.assetId$.value) {
+                                this.pageService.show404();
+                                return EMPTY;
+                            }
                             return this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.knowledgebase, this.assetId$.value, state)
                                 .pipe(
                                     tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {

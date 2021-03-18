@@ -18,8 +18,9 @@ import { Nx404Component }           from '../404/404.component';
 
 const appRoutes: Routes = [
     {
-        path : '',
-        component: Nx404Component
+        path        : '',
+        component   : Nx404Component,
+        canActivate : [DevelopersGuard]
     },
     {
         path        : ':name',
