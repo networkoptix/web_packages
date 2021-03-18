@@ -12,6 +12,8 @@ import components from './components'
 
 import MediaServerList from './components/media-server-list/media-server-list.component'
 import { CommonModule } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { DirectivesModule } from '@directives/directives.module';
 
 
 @NgModule({
@@ -24,6 +26,8 @@ import { CommonModule } from '@angular/common';
     RouterModule,
     ComponentsModule,
     FormsModule,
+    AngularSvgIconModule.forRoot(),
+    DirectivesModule
   ],
   exports: [
     MediaServerList,

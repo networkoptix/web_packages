@@ -7,6 +7,7 @@ import VideoManagementSystemService from '../../../../../vms-client/submodules/v
 import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
 import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
 import ICamera from '../../datatypes/ICamera'
+import { IConfig, NxConfigService } from '@services/nx-config'
 
 
 @Component({
@@ -15,7 +16,7 @@ import ICamera from '../../datatypes/ICamera'
     styleUrls: ['media-server-list.component.scss']
 })
 export class MediaServerListComponent implements OnInit, OnDestroy {
-
+  CONFIG: IConfig
   protected _vmsStateSubscription: Subscription
   protected _mediaservers: Array<MediaServer>
   public showIP: boolean = false
@@ -43,8 +44,10 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
   constructor (
     private vms: VideoManagementSystemService,
     protected cookieService: CookieService,
+    configService: NxConfigService
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
+    this.CONFIG = configService.config
 
   }
 

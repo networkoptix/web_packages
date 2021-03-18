@@ -60,12 +60,6 @@
                     }
                 }
 
-                &.offline {
-                    >.server-name:after {
-                        background-image: url('/static/images/icons/standard/server_offline.svg');
-                    }
-                }
-
                 .server-name {
                     padding: 0 36px;
                     height: 40px;
@@ -78,18 +72,11 @@
                         background-color: $additional_light3;
                     }
 
-                    &:after {
-                        // server (status) icon
-                        content: '';
+                    > svg-icon {
                         position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 44px;
-                        height: 44px;
-                        background-image: url('/static/images/icons/standard/server.svg');
-                        background-position: 3px 4px;
-                        background-size: auto 29px;
-                        background-repeat: no-repeat;
+                        left: 7px;
+                        top: -2px;
+                        width: 29px;
                     }
 
                     &:before {
@@ -223,29 +210,8 @@
                                 background: $red_main;
                                 border-radius: 5px;
                                 border: 2px solid $red_main !important;
-                                // background-image: url('/static/images/icons/standard/camera_recording.svg');
-                                // background-position: center center;
-                                // background-size: 100% auto;
-                                // background-repeat: no-repeat;
                             }
                         }
-
-                        // &.live {
-                        //     > .preview:after {
-                        //         content: '';
-                        //         position: absolute;
-                        //         left: 4px;
-                        //         top: 4px;
-                        //         width: 10px;
-                        //         height: 10px;
-                        //         background: green;
-                        //         border-radius: 5px;
-                        //         // background-image: url('/static/images/icons/standard/camera_recording.svg');
-                        //         // background-position: center center;
-                        //         // background-size: 100% auto;
-                        //         // background-repeat: no-repeat;
-                        //     }
-                        // }
 
                         &.offline,
                         &.unauthorized,
@@ -255,30 +221,16 @@
                             }
 
                             > .preview {
-                                // background-image: url('/static/images/icons/view/placeholder_preview_offline.svg');
-                                // background-image: url('/static/images/icons/standard/camera_offline.svg');
-                                // background-image: url('/static/images/icons/view/placeholder_camera_offline.svg');
-                                background-image: url('/static/images/icons/standard/cameras_list_placeholder_offline.svg');
-                                background-position: center center;
-                                background-size: 36% auto;
-                                background-repeat: no-repeat;
+                                > svg-icon {
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    width: 36%;
+                                    transform: translate(-50%, -50%);
+                                }
                                 > img {
                                     display: none;
                                 }
-                            }
-                        }
-
-                        &.unauthorized {
-                            > .preview {
-                                // background-image: url('/static/images/icons/standard/camera_unauthorized.svg');
-                                // background-image: url('/static/images/icons/view/placeholder_camera_unauthorized.svg');
-                                background-image: url('/static/images/icons/standard/cameras_list_placeholder_unauthorized.svg');
-                            }
-                        }
-
-                        &.error {
-                            > .preview {
-                                background-image: url('/static/images/icons/view/placeholder_preview_alert.svg');
                             }
                         }
 

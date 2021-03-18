@@ -20,6 +20,9 @@
       <div class="server-name" (click)=changeServerVisibility(server.id)>
         <highlighted-string class="name" [ngClass]="server.status" [string]="server.name" [token]="token"></highlighted-string>
         <highlighted-string class="ip-info" [string]="server.url | ip_info" [token]="token"></highlighted-string>
+        <svg-icon nx-add-svg-src
+          [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
+          [applyClass]="true"></svg-icon>
       </div>
       <div class="cameras">
         <a
@@ -41,6 +44,12 @@
           <div class="preview">
             <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
             <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
+            <svg-icon nx-add-svg-src
+              *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
+              [src]="previewLoaded[camera.id] === -1
+                ? '/static/images/icons/view/placeholder_preview_alert.svg'
+                : CONFIG.icons.dir + 'cameras_list_placeholder_' + (!camera.isAuthorized ? 'unauthorized' : 'offline') + '.svg'"
+              [applyClass]="true"></svg-icon>
           </div>
           <highlighted-string class="name" [ngClass]="camera.status" [string]="camera.name" [token]="token"></highlighted-string>
           <highlighted-string class="ip-info" [string]="camera.url | ip_info" [token]="token"></highlighted-string>
