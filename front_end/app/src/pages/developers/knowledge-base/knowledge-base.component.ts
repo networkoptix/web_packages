@@ -4,7 +4,7 @@ import {
 import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
 import { WINDOW }                                               from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest, EMPTY, of }            from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { switchMap, tap, delay, map, filter, startWith }        from 'rxjs/operators';
 
 import { NxConfigService, IConfig }     from '@services/nx-config';
@@ -12,7 +12,7 @@ import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
 import { NxHeaderService }              from '@services/nx-header.service';
 import { NxMenusService, MenuNode }     from '@services/menus.service';
 
-import { RelatedLinks }                 from '@components/left-menu/left-menu.component';
+import { MenuNodeWithParent, RelatedLinks } from '@components/left-menu/left-menu.component';
 import { SearchFilter }                 from '@components/search/search.component';
 import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
@@ -58,25 +58,24 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     searchQuery$ = new BehaviorSubject({ query: '' });
     assetId$ = new BehaviorSubject('');
     relatedLinks$ = new BehaviorSubject<RelatedLinks>({ type: '', nodes: [] });
-    relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
-        map(this.filterRelatedLinks)
-    );
+    relatedLinksFiltered$: Observable<MenuNodeWithParent[]>;
 
     CardClasses = CardClasses;
 
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
-        if (relatedLinks.type === 'next') {
-            const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => id === assetId);
-            if (currentIndex === (relatedLinks.nodes.length - 1)) {
-                return [];
-            } else {
-                return [relatedLinks.nodes[currentIndex + 1]];
+        if (this.menuName) {
+            if (relatedLinks.type === 'next') {
+                const currentIndex = relatedLinks.nodes.findIndex(({ asset_id : id }) => id === assetId);
+                if (currentIndex === (relatedLinks.nodes.length - 1)) {
+                    return [];
+                } else {
+                    return [relatedLinks.nodes[currentIndex + 1]];
+                }
+            } else if (relatedLinks.type === 'related') {
+                return relatedLinks.nodes;
             }
-        } else if (relatedLinks.type === 'related') {
-            return relatedLinks.nodes;
-        } else {
-            return [];
         }
+        return [];
     }
 
     updateSearchQuery({ query }) {
@@ -344,6 +343,12 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.relatedLinksFiltered$ = combineLatest([this.assetId$, this.relatedLinks$]).pipe(
+            map(latest => {
+                return this.filterRelatedLinks(latest);
+            })
+        );
+
         this.accountService.get().then(account => {
             this.account = account;
 
