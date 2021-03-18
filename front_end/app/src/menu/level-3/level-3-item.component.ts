@@ -28,9 +28,9 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
 
     itemPath: string;
-    itemSearch: string;
     isEnabled: boolean;
     menuNavItemId: string;
+    queryParams: any = {};
 
     navItemSubscription: SubscriptionLike;
 
@@ -59,7 +59,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
         if (changes.item?.currentValue) {
             this.itemPath = this.base;
             this.itemPath += (changes.item.currentValue.path !== '') ? '/' + changes.item.currentValue.path : '';
-            this.itemSearch = changes.item.currentValue.query?.search;
+            this.queryParams = changes.item.currentValue.query;
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
 
             if (!changes.item.currentValue.additionalText) {

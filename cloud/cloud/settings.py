@@ -311,7 +311,7 @@ DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 if LOCAL_ENVIRONMENT:
     INSTALLED_APPS += ('silk',)
-    MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
+    # MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -627,7 +627,7 @@ SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'
 
 if LOCAL_ENVIRONMENT:
-    _HOST = 'https://cloud-test.hdw.mx'
+    _HOST = 'http://cloud-test.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"

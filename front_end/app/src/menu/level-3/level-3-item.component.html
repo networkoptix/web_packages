@@ -3,7 +3,7 @@
    tabindex="{{ selected ? '-1': undefined }}"
    [id]="item.id"
    [routerLink]="[itemPath]"
-   [queryParams]="{search: itemSearch}"
+   [queryParams]="queryParams"
     (mouseover)="setNavIdx(item)">
     <div *ngIf="first" class="top-shadow-cover"></div>
     <div class="menu-level-3-content ellipsis">
