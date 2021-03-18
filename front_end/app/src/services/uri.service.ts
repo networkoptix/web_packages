@@ -60,7 +60,7 @@ export class NxUriService {
     }
 
     changePort(newPort): void {
-        this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}${this.window.location.pathname}`);
+        this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`);
     }
 
     getURI(): Observable<Params> {
