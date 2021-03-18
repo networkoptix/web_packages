@@ -110,7 +110,7 @@ export class NxMenusService implements OnDestroy {
             }
         }
 
-        if (withCurrentSystem && this.currentSystemNode$.value && menu?.nodes) {
+        if (withCurrentSystem && this.currentSystemNode$.value && menu?.nodes?.length) {
             menu.nodes = [this.currentSystemNode$.value, ...menu.nodes];
         }
 
