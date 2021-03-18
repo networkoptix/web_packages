@@ -214,6 +214,7 @@
     "Please select recording quality": "请选择录像质量",
     "Popularity": "热门度",
     "Port": "端口",
+    "Port is busy": "Port is busy",
     "Press \"Connect System to %CLOUD_NAME%\"": "按“将系统连接到 %CLOUD_NAME%”",
     "Quality": "质量",
     "Recording": "录像中",

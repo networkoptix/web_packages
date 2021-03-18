@@ -214,6 +214,7 @@
     "Please select recording quality": "録画の画質を選択してください",
     "Popularity": "知名度",
     "Port": "ポート",
+    "Port is busy": "Port is busy",
     "Press \"Connect System to %CLOUD_NAME%\"": "「システムを %CLOUD_NAME% に接続」を押します",
     "Quality": "画質",
     "Recording": "録画",

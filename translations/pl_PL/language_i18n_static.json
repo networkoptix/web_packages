@@ -286,12 +286,12 @@
             "systemOfflineUrl": "{targetSystem} nie jest dostępny",
             "systemsIncompatible": "Ten serwer ma niekompatybilną wersję oprogramowania. Zaktualizuj oba systemy do {downloadHTML}.",
             "systemVersionOld": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj %targetSystem% do {downloadHTML} aby połączyć go z bieżącym.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionNew": "System {targetSystem} ma wersję oprogramowania niezgodną z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "systemVersionsNotMatch": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów."
         },
         "message": {
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
@@ -307,10 +307,10 @@
             "sent": "Wiadomość została wysłana.",
             "subject": {
                 "integration_feedback": "Opinie na temat integracji {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "ipvd_feedback_device": "Opinie dotyczące {asset}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Zapytanie handlowe do {asset}",
+                "technical_inquiry": "Zapytanie techniczne do {asset}"
             },
             "title": {
                 "integration": "Skontaktuj się z {companyName}",
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Okres sprawdzania zmiany czasu systemu",
         "syncTimeExchangePeriod": "Interwał synchronizacji czasu dla żądań sieciowych",
         "syncTimeEpsilon": "Wartość synchronizacji czasu epsilon. Nowa wartość nie jest stosowana jeśli czas delta jest mniejszy niż czas epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max liczba wątków synchronizacji archiwum dla kamery wirtualnej",
         "updateNotificationsEnabled": "Powiadomienia o aktualizacji włączone",
         "upnpPortMappingEnabled": "Przekierowywanie portów UPNP włączone",
         "useTextEmailFormat": "Wysyłaj e-maile czystym tekstem",
