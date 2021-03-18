@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "OS time change check period",
         "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Notificações de actualização habilitadas",
         "upnpPortMappingEnabled": "Mapeamento de portas UPNP activado",
         "useTextEmailFormat": "Enviar e-mails de texto simples",

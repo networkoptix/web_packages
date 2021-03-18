@@ -73,18 +73,25 @@
         text-align: right;
     }
 
-    .port-input {
-        height: 30px;
-        width: 80px;
-        border-radius: 2px;
-        border: 1px solid $light6;
-        &:disabled {
-            background-color: $light2;
-            border: 1px solid $light4;
+    &-port {
+        display : flex;
+        align-items: center;
+
+        input {
+            height        : 30px;
+            width         : 80px;
+            border-radius : 2px;
+            border        : 1px solid $light6;
+
+            &:disabled {
+                background-color : $light2;
+                border           : 1px solid $light4;
+            }
         }
     }
+
     nx-select {
-        min-width: 0px;
+        min-width: 0;
         max-width: 240px;
     }
 }

@@ -25,8 +25,9 @@ def create_structures(apps, schema_editor):
 
     vms_lin = SpecialStructure.objects.filter(name='%VMS_LIN_PATH%').first()
     if vms_lin:
-        vms_lin.config['ds'] = vms_lin.config['default_ds']
-        del vms_lin.config['default_ds']
+        default_ds = vms_lin.config.pop('default_ds', None)
+        if default_ds:
+            vms_lin.config['ds'] = default_ds
         vms_lin.save()
 
 

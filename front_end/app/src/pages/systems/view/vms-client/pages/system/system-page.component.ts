@@ -28,7 +28,8 @@ export class SystemPageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.vms.setTestMediaServers()
+    // Create test cameras and archive
+    // this.vms.setTestMediaServers()
     this._subscription = this.vms.subject.subscribe(this.onVmsSubjectChange)
   }
 

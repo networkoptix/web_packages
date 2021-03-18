@@ -88,7 +88,7 @@ export interface Settings {
     maxRtpRetryCount: string,
     maxRtspConnectDurationSeconds: string,
     maxSceneItems: string,
-    maxWearableArchiveSynchronizationThreads: string,
+    maxVirtualCameraArchiveSynchronizationThreads: string,
     maxHttpTranscodingSessions: string,
     metadataStorageChangePolicy: string,
     osTimeChangeCheckPeriodMs: string,

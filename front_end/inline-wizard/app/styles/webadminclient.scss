@@ -139,8 +139,9 @@ body {
 }
 
 .webadmin-wizard .new-style-checkbox {
-    .control-label {
+  .control-label {
     color : $dark9;
+    font-weight: 500 !important;
 
     &:hover {
       color : $dark6;

@@ -1,8 +1,9 @@
-@import 'styles/_theme_palette';
+@use '../../../../../../styles/_theme_palette';
+@use '../../../../../../styles/theme_variables' as *;
+@use 'bootstrap_utils' as bootstrap;
 
 :host {
     padding-left: 0;
-    display: block;
     position: fixed;
     left: 0;
     top: 48px;
@@ -69,7 +70,7 @@
 
         width: 320px;
         left: -320px;
-        @media (max-width: 500px) {
+        @include bootstrap.media-breakpoint-down(sm) {
             width: 100vw;
             left: -100vw;
         }
@@ -103,9 +104,13 @@
 
             &.shown {
                 transform: rotate(0deg);
-                border-radius: 0 2px 2px 0;
+                box-shadow : 0 2px 0 0 rgba(0, 0, 0, 0.1);
 
-                @media (max-width: 500px) {
+                @include bootstrap.media-breakpoint-up(md) {
+                    border-radius : 0 2px 2px 0;
+                }
+
+                @include bootstrap.media-breakpoint-down(md) {
                     right: 0;
                 }
             }

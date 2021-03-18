@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "作業系統時間會變更檢查時段",
         "syncTimeExchangePeriod": "發送網路校時請求的時間間隔",
         "syncTimeEpsilon": "容許誤差。如果時間最小誤差容許值小於目前誤差, 則不更新時間",
-        "maxWearableArchiveSynchronizationThreads": "穿戴式攝影機錄影資料同時最大單次上傳量",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "已啟用更新通知",
         "upnpPortMappingEnabled": "已啟用 UPNP 埠映射",
         "useTextEmailFormat": "發送純文字電子郵件",

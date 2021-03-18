@@ -68,6 +68,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public id: string
     public camera: ICamera
     public system: NxSystem
+    public previewUrl = ''
 
     protected CONFIG: IConfig;
 
@@ -184,6 +185,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
       this.getRecordsInProgress = this.id
       createSystem().then(() => {
+        this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
         this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
             console.log('got camera archive range', this.id, ar)
             if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {

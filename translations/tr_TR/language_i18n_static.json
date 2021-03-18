@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "İşletim sistemi zaman değişikliği kontrol süresi",
         "syncTimeExchangePeriod": "Ağ istekleri için senkronizasyon zamanı senkronizasyon aralığı",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time detla less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Maks. Giyilebilir kamera arşivi senkronizasyonları",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Maksimum sanal kamera arşivi senkronizasyon dizileri",
         "updateNotificationsEnabled": "Güncelleştirme bildirimleri etkin",
         "upnpPortMappingEnabled": "UPNP bağlantı noktası eşlemesi etkinleştirildi",
         "useTextEmailFormat": "Düz metin e-postaları gönder",

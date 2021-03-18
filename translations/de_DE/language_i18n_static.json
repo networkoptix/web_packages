@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Prüfung der OS-Zeitänderung",
         "syncTimeExchangePeriod": "Synchronisationsintervall für Netzwerkanfragen",
         "syncTimeEpsilon": "Zeitsumme synchronisieren. Neuer Wert wird nicht angewendet, wenn die Delta-Zeit kleiner als die Summe ist",
-        "maxWearableArchiveSynchronizationThreads": "Max. tragbare Kameraarchiv Syncthreads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max. Synchronisationsthreads für virtuelle Kameras",
         "updateNotificationsEnabled": "Updatebenachrichtigungen aktiviert",
         "upnpPortMappingEnabled": "UPNP-Portmapping aktiviert",
         "useTextEmailFormat": "Nur Textemails senden",
