@@ -147,7 +147,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     setCurrentState(state: AuthorizeState) {
-        this.currentState = state;
+        this.currentState = AuthorizeState[state];
     }
 
     ngOnInit(): void {

@@ -35,6 +35,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         lastName: string;
     }>();
 
+    @Output() setCurrentState = new EventEmitter<string>();
+
     createEmail: string;
     createFirstName: string;
     createLastName: string;

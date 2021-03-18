@@ -109,8 +109,7 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="left">
-            <button class="btn text-button no-padding" type="button">
-                <!-- (click)="login()" -->
+            <button class="btn text-button no-padding" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'login.svg'"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
@@ -118,8 +117,7 @@
             </button>
         </div>
         <div class="right">
-            <button class="btn text-button" type="button">
-                <!-- (click)="goBack()"-->
+            <button class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
@@ -133,6 +131,5 @@
                 buttonText="{{ 'Create Account' | translate }}">
             </nx-process-button>
         </div>
-        <!-- [process]="createAccountFactory(accountInfo)" -->
     </footer>
 </main>

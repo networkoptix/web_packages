@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, ViewChild, OnChanges, SimpleChanges
+    OnInit, Output, OnChanges, SimpleChanges
 }                       from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -22,6 +22,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
     @Input() viewType: string;
     @Input() clientType: string;
     @Input() processTryAgain: Process;
+    @Output() setCurrentState = new EventEmitter<string>();
 
     additionalText: string;
     templateText: {
@@ -65,9 +66,8 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
                 additionalText: auth.loginErrorAdditional()
             }
         };
-
     }
-    
+
     setText() {
         this.additionalText = this.templateText[this.clientType]?.additionalText;
     }

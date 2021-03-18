@@ -15,8 +15,8 @@
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType)" class="btn text-button" type="button">
-                <!-- (click)="goBack()"  -->
+            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType)"
+                class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"

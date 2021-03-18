@@ -8,7 +8,6 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeState }            from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,7 +25,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Output() loginEmailChange = new EventEmitter<string>();
     @Input() emailProcess: Process;
     @Input() errorCode: string;
-    @Output() setCurrentState = new EventEmitter<AuthorizeState>();
+    @Output() setCurrentState = new EventEmitter<string>();
 
     sendEmail: any;
     @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
@@ -69,10 +68,6 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     setupNonCloudSystem() {
         // TODO: waiting for new setup wizard
-    }
-
-    createAccount() {
-        this.setCurrentState.emit(AuthorizeState.create);
     }
 
     setupText() {

@@ -26,6 +26,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Output() loginPasswordChange = new EventEmitter<string>();
     @Input() passwordProcess: Process;
     @Input() errorCode: string;
+    @Output() setCurrentState = new EventEmitter<string>();
     @Output() isStayingLoggedIn = new EventEmitter<boolean>();
 
     sendPassword: any;

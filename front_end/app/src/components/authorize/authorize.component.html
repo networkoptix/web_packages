@@ -19,6 +19,7 @@
             [(loginPassword)]="loginPassword"
             [passwordProcess]="loginProcess"
             [errorCode]="passwordErrorCode"
+            (setCurrentState)="setCurrentState($event)"
             (isStayingLoggedIn)="stayingLoggedIn($event)"
         ></nx-authorize-password-component>
         <nx-authorize-create-account-component 
@@ -28,8 +29,9 @@
             [(accountInfo)]="accountInfo"
             [createAccountProcess]="createProcess"
             [errorCode]="createErrorCode"
+            (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-create-account-component>
-        <nx-authorize-activate-account-component 
+        <nx-authorize-activate-account-component
             *ngSwitchCase="AuthorizeState.activate"
             [viewType]="viewType"
             [loginEmail]="loginEmail"
@@ -51,6 +53,7 @@
             [loginProcess]="loginPostPasswordRequestProcess"
             [resetRequestProcess]="resetRequestProcess"
             [errorCode]="resetRequestErrorCode"
+            (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-reset-request-component>
         <nx-authorize-reset-password-component
             *ngSwitchCase="AuthorizeState.reset"
@@ -68,6 +71,7 @@
                 [clientType]="clientType"
                 [viewType]="viewType"
                 [processTryAgain]="errorDialogProcess"
+                (setCurrentState)="setCurrentState($event)"
             ></nx-authorize-connect-error-component>
         </div>
     </div>

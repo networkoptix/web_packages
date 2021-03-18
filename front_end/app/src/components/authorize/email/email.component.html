@@ -63,7 +63,7 @@
         <div class="left">
             <button *ngIf="['loginToCloud', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)"
                 class="btn text-button no-padding"
-                (click)="createAccount()"
+                (click)="setCurrentState.emit('create')"
                 type="button"
             >
                 <svg-icon nx-add-svg-src

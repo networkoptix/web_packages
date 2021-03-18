@@ -251,6 +251,12 @@
                     &::selection {
                         background-color: $brand_core;
                     }
+
+                    // auto-complete in chrome creates background-color & color that cannot be overwritten
+                    // so delaying that transition for (2 hours)
+                    &:-webkit-autofill {
+                        transition-delay: 7200s;
+                    }
                 }
             }
 
@@ -264,6 +270,10 @@
 
                 .authorize-header {
                     color: $light4 !important;
+                }
+
+                &:-webkit-autofill {
+                    transition-delay: 7200s;
                 }
             }
 
@@ -279,12 +289,12 @@
 
                 .left {
                     display: flex;
-                    justify-content: start;
+                    justify-content: flex-start;
                 }
 
                 .right {
                     display: flex;
-                    justify-content: end;
+                    justify-content: flex-end;
                 }
 
                 button.btn.text-button span {
@@ -385,9 +395,10 @@
     }
 
     .auth-footer {
+        z-index: 2;
         display: flex;
         justify-content: center;
-        min-width: 500px;
+        min-width: 580px;
         width: 100%;
         margin: 75px 16px 0 16px;
         padding: 12px 0;

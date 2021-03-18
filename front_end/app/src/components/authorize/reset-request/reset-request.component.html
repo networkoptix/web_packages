@@ -35,9 +35,8 @@
         </ng-template>
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
-        <div class="d-flex justify-content-end w-100">
-            <button class="btn text-button" type="button">
-                <!-- (click)="goBack()"  -->
+        <div class="right w-100">
+            <button class="btn text-button" type="button" (click)="goBack()">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{'width.px': 24, 'height.px': 20}"

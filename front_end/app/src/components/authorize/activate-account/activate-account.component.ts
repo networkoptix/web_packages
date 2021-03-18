@@ -10,7 +10,6 @@ import { Process }                   from '@services/process.service';
 import { combineLatest, Observable } from 'rxjs';
 import { map }                       from 'rxjs/operators';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeState }            from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,7 +24,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
 
     @Input() viewType: string;
     @Input() loginEmail: string;
-    @Output() setCurrentState = new EventEmitter<AuthorizeState>();
+    @Output() setCurrentState = new EventEmitter<string>();
     @Input() checkActivationProcess: Process;
     @Input() loginProcess: Process;
     @Input() activated$: Observable<boolean>;
@@ -53,10 +52,6 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
                 ? fromEmail && this.LANG.authorize.activatedAdditional || (() => '')
                 : this.LANG.authorize.createdAdditional);
         }));
-    }
-
-    login() {
-        this.setCurrentState.emit(AuthorizeState.email);
     }
 
     ngOnDestroy(): void {}

@@ -25,6 +25,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Input() confirm: boolean;
     @Input() loginProcess: Process;
     @Input() resetRequestProcess: Process;
+    @Output() setCurrentState = new EventEmitter<string>();
 
     sendEmail: any;
     @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: HTMLFormElement;
@@ -46,6 +47,14 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode) {
             this.resetPasswordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
+        }
+    }
+
+    goBack() {
+        if (this.confirm) {
+            this.confirm = false;
+        } else {
+            this.setCurrentState.emit('password');
         }
     }
 
