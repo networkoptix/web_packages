@@ -62,7 +62,6 @@ export class RemoveSystemModalContent {
     ngOnInit() {
         this.auth.username = this.system.userManager.currentUserEmail;
         this.auth.password = '';
-        console.log(this.system)
 
         this.disconnectFromAccount = this.processService.createProcess(() => {
             this.disconnectAccountForm.controls.password.setErrors(undefined);
