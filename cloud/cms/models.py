@@ -1826,14 +1826,19 @@ class Menu(models.Model):
         import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
-                new_node = False
                 parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
-                node_obj = MenuNode.objects.filter(
-                    name=node['name'], **{parent_type: parent}).first()
+                node_qs = MenuNode.objects.filter(**{parent_type: parent}, id__in=all_node_ids)
+                node_obj = None
+                node_name = node.get('name', '')
+                node_asset_uuid = node.get('uuid', '-1')
+                if node_name:
+                    node_obj = node_qs.filter(name=node_name).first()
+                elif node_asset_uuid and node_asset_uuid != '-1':
+                    node_obj = node_qs.filter(asset__uuid=node_asset_uuid).first()
                 if not node_obj:
-                    new_node = True
                     node_obj = MenuNode()
-                node_obj.name = node.get('name', '')
+
+                node_obj.name = node_name
                 node_obj.subtitle = node.get('subtitle', '')
                 node_obj.url = node['url']
                 node_obj.next_item = node['next_item']
@@ -1845,7 +1850,7 @@ class Menu(models.Model):
                 node_obj.is_global = node['is_global']
                 node_obj.touched = node['touched']
                 node_obj.__setattr__(parent_type, parent)
-                if new_node:
+                if not node_obj.pk:
                     node_obj.save()
 
                 node_obj.available.set(
@@ -1856,7 +1861,7 @@ class Menu(models.Model):
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node['asset']:
-                    asset_obj = Asset.objects.filter(uuid=node['uuid']).first()
+                    asset_obj = Asset.objects.filter(uuid=node_asset_uuid).first()
                     if asset_obj:
                         asset_obj.name = node['asset']
                         asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
@@ -1876,6 +1881,7 @@ class Menu(models.Model):
         self.depth = menu_dict['depth']
         self.save()
         if menu_dict['nodes']:
+            all_node_ids = self.all_node_ids
             set_nodes(menu_dict.get('nodes', []), self)
 
     def extract_from_nodes(self, process_node_callback):
