@@ -522,6 +522,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
             ]).then(_ => {
+                this.system.cameraManager.cameras = this.system.cameraManager.cameras.map(
+                    camera => camera.id === this.selectedCamera.id
+                        ? { ...camera, ...cameraSettings }
+                        : camera
+                );
+
                 return this.system.getCameras().then(res => {
                     this.setCamera();
                     this.toggleMotionGrid();
