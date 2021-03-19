@@ -278,15 +278,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get selectedFps() {
-        return Number.isNaN(this.selectedFpsWatcher.value) ? null : this.selectedFpsWatcher.value;
+        return this.selectedFpsWatcher.value;
     }
 
     set selectedFps(value) {
-        this.selectedFpsWatcher.value = !value ? value : Math.min(value, this.selectedCamera.maxFps);
+        const fps = !value ? value : Math.min(value, this.selectedCamera.maxFps);
+        this.selectedFpsWatcher.value = Number.isNaN(fps) ? null : fps;
     }
 
     get variousFps() {
-        return this.selectedFps === 'various' || !this.selectedFps;
+        return this.selectedFps === null || !this.selectedFps;
     }
 
     get selectedQuality() {
