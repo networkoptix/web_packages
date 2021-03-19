@@ -1105,60 +1105,319 @@ Detailed Info button works (system has one storage)
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
+    
+Add external storage: Close dialog and Cancel
+    [Tags]    C81583    external
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Click Button    ${AS MODAL CLOSE BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    
+Add external storage: empty URL
+    [Tags]    C81584    external
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL REQUIRED}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    
+Add external storage: wrong URL
+    [Tags]    C81585    external
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys     ${AS MODAL URL INPUT}     example.com
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL INVALID}
+    Delete All Text     ${AS MODAL URL INPUT}
+    Press Keys     ${AS MODAL URL INPUT}     \example\com\
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL INVALID}
+    Delete All Text     ${AS MODAL URL INPUT}
+    Press Keys     ${AS MODAL URL INPUT}     //example/
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL INVALID}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    
+Add external storage: Wrong login or password
+    [Tags]    C81589    external
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys     ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      incorrect
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL PASSWORD INVALID}
+    ...    
+    Delete All Text     ${AS MODAL LOGIN INPUT}
+    Delete All Text     ${AS MODAL PASSWORD INPUT}   
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     incorrect
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL PASSWORD INVALID}
+    
+    Delete All Text     ${AS MODAL LOGIN INPUT}
+    Delete All Text     ${AS MODAL PASSWORD INPUT}       
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL PASSWORD INVALID}  
+        
+    Delete All Text     ${AS MODAL LOGIN INPUT}
+    Delete All Text     ${AS MODAL PASSWORD INPUT}   
+    Press Keys      ${AS MODAL LOGIN INPUT}     qaburbank  
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL PASSWORD INVALID}   
+    
+    Delete All Text      ${AS MODAL LOGIN INPUT}      
+    Delete All Text     ${AS MODAL PASSWORD INPUT}     
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements are Visible
+    ...    ${AS MODAL PASSWORD INVALID}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    
+Add external storage: invalid storage path
+    [Tags]    C81597    external
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys     ${AS MODAL URL INPUT}     //10.1.5.238/incorrect
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL NOT FOUND}
+    ...    ${ADD STORAGE MODAL}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    
+Failed to add external storage: server is offline
+    [Tags]    C81600    external
+    Log in to user and system    ${owner}     ${sysId2}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Stop Server    storage2-${random}
+    Sleep    60
+    Press Keys     ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS FAILED TO ADD TOAST}
+    ...    ${ADD STORAGE MODAL}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Start Server    storage2-${random}    2
+    Sleep    60
+    Reload Page
+    Verify on Servers Page
+    Wait Until Elements Are Not Visible    
+    ...    ${ADD STORAGE MODAL}
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+        
 
-# Add External Storage validation FUTURE (need to figure out how to add external storage)
-    # Log in to user and system    ${owner}     ${sysId0}
-    # Wait Until Element is Visible    ${SERVERS LINK}
-    # Click Link    ${SERVERS LINK}
-    # Verify on Servers Page
-    # Wait Until Element is Visible     ${STORAGE ADD BUTTON}
-    # Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
-    # Click Button    ${STORAGE ADD BUTTON}
-    # Verify Add Storage Dialog
-    # Log    All Required Check
-    # Click Button    ${AS MODAL SUBMIT BUTTON}
-    # Wait Until Elements are Visible
-    # ...    ${AS MODAL URL INPUT ERROR}
-    # ...    ${AS MODAL URL REQUIRED}
-    # ...    ${AS MODAL LOGIN INPUT ERROR}
-    # ...    ${AS MODAL LOGIN REQUIRED}
-    # ...    ${AS MODAL PASSWORD INPUT ERROR}
-    # ...    ${AS MODAL PASSWORD REQUIRED}
-    # Log    Valid URL check
-    # Press Keys     ${AS MODAL URL INPUT}     //ComputerNameNoFolder
-    # Wait Until Elements Are Visible
-    # ...    ${AS MODAL URL INPUT ERROR}
-    # ...    ${AS MODAL URL INVALID}
-    # Delete All Text     ${AS MODAL URL INPUT}
-    # Press Keys      ${AS MODAL URL INPUT}        //ComputerName/FolderName
-    # Wait Until Element is Visible     ${AS MODAL URL NOT INVALID}
-    # Log    Invalid login and/or password with non-existent url
-    # Press Keys      ${AS MODAL LOGIN INPUT}      pi
-    # Press Keys      ${AS MODAL PASSWORD INPUT}     ${password}
-    # Click Button    ${AS MODAL SUBMIT BUTTON}
-    # Wait Until Element is Visible       ${AS FAILED TO ADD TOAST}
-    # Wait Until Elements Are Not Visible
-    # ...     //nx-modal-add-storage
-    # ...     //app-toasts
-    # Only if valid url input
-    # Wait Until Elements are Visible
-    # ...     ${AS MODAL PASSWORD INVALID}
-    # ...     ${AS MODAL PASSWORD INPUT ERROR}
-
-# Add External Storage Success FUTURE (need valid URL/login/password to add)
-#     Verify on Servers Page
-#     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
-#     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
-#     Click Button    ${STORAGE ADD BUTTON}
-#     Verify Add Storage Dialog
-#     Press Keys      ${AS MODAL URL INPUT}        //ComputerName/FolderName
-#     Press Keys      ${AS MODAL LOGIN INPUT}      pi
-#     Press Keys      ${AS MODAL PASSWORD INPUT}     ${password}
-#     Click Button    ${AS MODAL SUBMIT BUTTON}
-#     # url text should have one less "/" in the start than when added
-#     Wait Until Elements Are Visible
-#     ...     not(${ADD STORAGE MODAL})
-#     ...     ${STORAGE LOCATIONS TABLE}//tbody/tr/td[1]/span[contains(text(), "/ComputerName/FolderName")]
+Add external storage: successful scenario with password
+    [Tags]    C81599    C81587    C81595    C81596    External
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    # url text should have one less "/" in the start than when added
+    Wait Until Element Is Visible    ${ALERT} 
+    Element Text Should Be    ${ALERT}     ${EXTERNAL STORAGE ADDED TEXT}
+    Wait Until Elements Are Visible   
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    Mouse Over    ${STORAGE SMB ICON}  
+    Wait Until Element Is Visible    ${STORAGE SMB TOOLTIP} 
+    Reload Page
+    Wait Until Elements Are Visible   
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    Wait Until Files Are Recorded    networkDisk    100
+    Log To Console    C81599 ....... | PASS | 
+    
+    Log    path is already added to this server
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL URL INPUT ERROR}
+    ...    ${AS MODAL URL ALREADY ADDED}
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Log To Console    C81587 ....... | PASS |
+    
+    Log    Add external storage: path is already added to another server - Cancel, Close, Back
+    ${server2} =    Get Server Id    https://${QA BURBANK IP}:${port2}    ${server auth}    
+    Merge Systems    ${auth}    ${sysId0}    ${sysId2}
+    Sleep    90
+    Go To    ${ENV}/systems/${sysId0}/servers/${server2}
+    #Reload Page
+    Verify on Servers Page
+    Wait Until Element is Visible     ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL STORAGE USED BY ANOTHER SERVER}
+    ...    ${AS MODAL NOT RECOMMENEDED} 
+    ...    ${AS MODAL ADD ANYWAY} 
+    ...    ${AS MODAL BACK BUTTON}
+    ...    ${AS MODAL CLOSE BUTTON}
+    ...    ${AS MODAL SUBMIT BUTTON}
+    ...    ${AS MODAL CANCEL BUTTON}
+    
+    Click Button    ${AS MODAL CLOSE BUTTON}
+    Wait Until Elements Are Not Visible    
+    ...    ${ADD STORAGE MODAL}
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL STORAGE USED BY ANOTHER SERVER}
+    ...    ${AS MODAL NOT RECOMMENEDED} 
+    ...    ${AS MODAL ADD ANYWAY} 
+    ...    ${AS MODAL BACK BUTTON}
+    ...    ${AS MODAL CLOSE BUTTON}
+    ...    ${AS MODAL SUBMIT BUTTON}
+    ...    ${AS MODAL CANCEL BUTTON}
+    
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Elements Are Not Visible    
+    ...    ${ADD STORAGE MODAL}
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL STORAGE USED BY ANOTHER SERVER}
+    ...    ${AS MODAL NOT RECOMMENEDED} 
+    ...    ${AS MODAL ADD ANYWAY} 
+    ...    ${AS MODAL BACK BUTTON}
+    ...    ${AS MODAL CLOSE BUTTON}
+    ...    ${AS MODAL SUBMIT BUTTON}
+    ...    ${AS MODAL CANCEL BUTTON}
+    
+    Click Button    ${AS MODAL BACK BUTTON}
+    Verify Add Storage Dialog  
+    
+    Click Button    ${AS MODAL CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Log To Console    C81595 ....... | PASS |
+    
+    Log    Add external storage: path is already added to another server - Add Storage 
+    Click Button    ${STORAGE ADD BUTTON}
+    Verify Add Storage Dialog
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
+    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL STORAGE USED BY ANOTHER SERVER}
+    ...    ${AS MODAL NOT RECOMMENEDED} 
+    ...    ${AS MODAL ADD ANYWAY} 
+    ...    ${AS MODAL BACK BUTTON}
+    ...    ${AS MODAL CLOSE BUTTON}
+    ...    ${AS MODAL SUBMIT BUTTON}
+    ...    ${AS MODAL CANCEL BUTTON}
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Element Is Visible    ${ALERT} 
+    Element Text Should Be    ${ALERT}     ${EXTERNAL STORAGE ADDED TEXT}
+    Wait Until Elements Are Visible   
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}  
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    Log To Console    C81596 ....... | PASS |
 
 Reindexing Main Archive Tooltip Shows
     Log in to user and system    ${owner}     ${sysId0}
