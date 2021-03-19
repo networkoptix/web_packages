@@ -26,7 +26,7 @@ ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3
 @{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3     --headless
 ${speed}    0
-${selenium_timeout}    30
+${selenium_timeout}    40
 
 @{auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
 
@@ -107,7 +107,12 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${cms}=${False}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
+    ...    ELSE    Log In Web Admin    ${user}    ${password}
+
+Log In Cloud
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
@@ -119,9 +124,17 @@ Log In
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}    password=${password}
-    Run Keyword If    ${validate} == ${True} and ${cms}==${True}    Validate cms Log In
+    Run Keyword If    ${validate} == ${True}    Validate Log In    ${email}    password=${password}
+
     Sleep    0.5
+
+Log In Web Admin
+    [arguments]    ${login}    ${password}
+    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
+    Input Text    //input[@id="login_email"]    ${login}
+    Input Text    //input[@id="login_password"]    ${password}
+    Click Button    //button[@type="submit"]
+
 
 Log In With Remember Me
     [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}    ${remember me}=True
@@ -160,6 +173,10 @@ Check Log In
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log Out cloud
+    ...    ELSE    Log Out Web Admin
+
+Log Out Cloud
     Wait Until Page Does Not Contain Element    ${BACKDROP}
     Wait Until Page Contains Element    ${LOG OUT BUTTON}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
@@ -169,10 +186,21 @@ Log Out
     Click Link    ${LOG OUT BUTTON}
     Validate Log Out
 
+Log Out Web Admin
+    Wait Until Element Is Visible    //header//button[@id="accountSettingsSelect"]
+    Click Button    //header//button[@id="accountSettingsSelect"]
+    Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
+    Click Link    //header//a/span[text()="Log Out"]/..
+    Validate Log Out Web Admin
+
 Validate Log Out
     Wait Until Element Is Not Visible    ${BACKDROP}
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
     Check Language Anonymous
+
+Validate Log Out Web Admin
+    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
+    Wait Until Element Is Not Visible    locator
 
 Log Out No Language
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -320,11 +348,11 @@ Restore Password using API
     CloudPortalAPI.Log In    ${ENV}    ${email}    ${new password}
 
 Go to Users List
-    ${location}=   Get Location
-    Go To    ${location}/users
+    Wait Until Element is Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
 
 Go to System Administration
-    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}    timeout=30
+    Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
@@ -348,7 +376,8 @@ Share To
     ...    Wait Until Element Is Visible    //span[contains(text(),"${s}")]    ${selenium timeout}    AND
     ...    Element Style Should Be    ${ADD USER EMAIL}     border-color    ${ERROR COLOR}    AND
     ...    Element Style Should Be    ${ADD USER EMAIL}    color    ${ERROR COLOR WITH OPACITY}    AND
-    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}
+    ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}    AND
+    ...    Click Button    ${ADD USER CLOSE}
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
@@ -361,9 +390,9 @@ Rename System or hardware
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
     Wait Until Element Is Not Visible    ${ADD USER MODAL}
+    Select user in Users List    ${user email address}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
-    Select user in Users List    ${user email address}
     Sleep    3
     Change User Permissions    ${permissions}
     Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
@@ -455,7 +484,7 @@ Select user in Users List
     Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
     Wait Until Elements Are Visible    ${USER EMAIL}
-    Element Text Should Be    ${USER EMAIL}    ${user email address}
+    Wait Until Element Contains    ${USER EMAIL}    ${user email address}
     [return]    ${user email address}
 
 Check For Alert
@@ -486,11 +515,14 @@ Disconnect from cloud
 #    Sleep    5
 
 Disconnect from my account
+    [Arguments]    ${system name}
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    ${alert}=   Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
+    Check For Alert Dismissable    ${alert}    timeout=300
 
 Failure Tasks
     [timeout]    5 minutes
@@ -514,9 +546,9 @@ Wait Until Elements Are Enabled
     END
 
 Elements Should Not Be Visible
-    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    [arguments]    @{elements}
     FOR     ${element}  IN  @{elements}
-        Element Should Not Be Visible    ${element}    ${timeout}
+        Element Should Not Be Visible    ${element}
     END
 
 Wait Until Page Does Not Contain Elements
@@ -636,7 +668,7 @@ Make sure viewer is in the system
 User is in cloud system
     [Arguments]    ${user email}    ${system id}    ${auth}=${auth}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
-    FOR    ${user}    IN    @{users}
+    FOR    ${user}    IN    ${users}
         ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
         Run Keyword If   ${status}    Exit For Loop
     END
@@ -789,7 +821,7 @@ Get Key from Value
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${local users}    ${password}
     FOR    ${user}    IN    @{local users}
-        Save User    ${auth}    ${server}    ${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
     END
     [return]    @{local users}
 
@@ -809,7 +841,8 @@ Delete All Local Users
         Sleep    2
         Reload Page
     END
-    Wait Until Element is Visible    //span[text()="admin"]
+    sleep    5
+    Wait Until Element is Visible    //nx-menu//span[text()="admin"]
     Page Should Not Contain Element     ${locator}
 
 Check Password Badge
@@ -985,13 +1018,18 @@ Create Base Cloud System
     ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
     Set Suite Variable    ${email noperm}
     ${users}=   Create Dictionary
+    ${local users}=    Create Dictionary
     FOR    ${role}    IN    @{permissions.keys()}
         ${email}=   Register and activate account with random email    System    ${role}    ${base password}
         Sleep    1
         Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+        ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
+        Save User    ${local auth}    ${server url}    Local+${role}    ${permissions}[${role}]    noptixautoqa+local_${role}@gmail.com    Local User    ${base password}    is cloud=${False}
         Set To Dictionary    ${users}    ${role}=${email}
+        Set To Dictionary    ${local users}    ${role}=Local+${role}
     END
     Set Suite Variable    ${users}
+    Set Suite Variable    ${local users}
 
 Delete Base Cloud System
     [Documentation]    Wipe out all resources related to "Create Base Cloud System"

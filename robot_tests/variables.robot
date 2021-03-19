@@ -110,7 +110,7 @@ ${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG I
 ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings
-${SYSTEM NAME}                        //div[contains(@class,"header-title")]/h2[@id="editable-title"]
+${SYSTEM NAME}                        //div/nx-editable-settings-heading//h2
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
@@ -309,7 +309,7 @@ ${COMMON PASSWORD}      qweasd123
 @{INCORRECT PASSWORDS}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
 #Local User in System Users
-${LOCAL USER LOGIN}                  //h2[@class='user-email']
+${LOCAL USER LOGIN}                  //h2
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]

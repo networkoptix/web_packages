@@ -423,7 +423,7 @@ Save User
     ...    ${user role id}=${EMPTY}
     ...    ${is enabled}=${True}
     ...    ${is cloud}=${True}
-    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    password=${password}
+    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1

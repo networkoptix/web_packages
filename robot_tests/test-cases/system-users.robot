@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Setup
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
+Suite Setup       Users Suite Setup
+Test Setup        Users Test Setup
+Test Teardown     Users Test Tear Down
 Suite Teardown    users Teardown
 Force Tags        system    Threaded
 
@@ -11,43 +11,30 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 @{TMP USERS}
 @{server auth}    admin    qweasd 123
+${mode}    cloud
 
 *** Keywords ***
-Setup
-    ${owner}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${owner}          ${owner}
-    @{auth}=    Create List    ${owner}    ${password}
+Users Suite Setup
+    Create Base Cloud System    image=4.3651
+    Set Suite Variable    ${owner}    ${system['owner']}
+    @{auth}=    Create List    ${system['owner']}    ${password}
     Set Suite Variable    @{auth}    @{auth}
-    Open Browser and go to URL    ${url}
-    FOR   ${i}    IN RANGE    1    3
-        ${server}=   Setup Docker Server    image=4.3
-        Set Suite Variable    ${cont ${i}}    ${server}[name]
-        Set Suite Variable    ${cont id ${i}}    ${server}[id]
-        Set Suite Variable    ${port ${i}}    ${server}[port]
-        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
-        Set Suite Variable    ${server name ${i}}    ${server name}
-    END
-    &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}
-    &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${port 2}
-    Setup Local System    https://${QA BURBANK IP}:${server 1['port']}    ${BASE PASSWORD}    usertest1
-    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    usertest1    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId1}    ${sysId1}
     
-    Save User Role    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
+    ${server}=   Setup Docker Server    image=4.3651
+    Set Suite Variable    ${cont 2}    ${server}[name]
+    Set Suite Variable    ${cont id 2}    ${server}[id]
+    Set Suite Variable    ${port 2}    ${server}[port]
+    ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id 2}
+    Set Suite Variable    ${server name 2}    ${server name}
 
-    Setup Local System    https://${QA BURBANK IP}:${server 2['port']}    ${BASE PASSWORD}    usertest2
-    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId2}    ${sysId2}
+    Setup Local System    https://${QA BURBANK IP}:${port 2}    ${BASE PASSWORD}    usertest2
+    
+    #${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${owner}    ${BASE PASSWORD}
+    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port 2}    usertest2    ${owner}    ${BASE PASSWORD}
+    Save User Role    ${server auth}    https://${QA BURBANK IP}:${system ['port']}    Client Custom    NoGlobalPermissions
+    &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${port 2}    id=${sysId2}
+    Set Suite Variable    ${server 2}    &{server 2}
 
-    @{cloud auth}=   Create List    ${owner}    ${password}
-    @{cloud auth}=   Set Suite Variable    @{cloud auth}    @{cloud auth}
-
-    Open Browser and go to URL    ${url}
-    Log in to user and system    ${owner}    ${sysId1}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=95
-    Log Out
     Pop From Dictionary    ${role names}    custom    #due to bug 4960
 
     &{users}    Register and Activate Generic Users
@@ -59,33 +46,57 @@ Setup
     Set Suite Variable    ${custom}         ${users}[custom]
     Set Suite Variable    ${client custom}     ${client custom}
 
-    Add user to cloud system if not there    ${sysId1}    cloudAdmin        ${admin}            auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    viewer            ${viewer}           auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    advancedViewer    ${adv viewer}       auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    custom            ${custom}           auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    liveViewer        ${live viewer}      auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    viewer            ${client custom}    auth=${auth}    
+    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
+    ...    ELSE    Web Admin Suite Setup
+
+Web Admin Suite Setup
+    Set Suite Variable    ${user in charge}    admin
+    Open Browser and go to URL    https://${QA BURBANK IP}:${system['port']}
+
+Cloud Suite Setup
+    Set Suite Variable    ${user in charge}    ${system['owner']}
+    Open Browser and go to URL    ${url}
+    Log in to user and system    ${system['owner']}    ${system['id']}
+    Wait Until Element is Visible    ${SERVERS LINK}     65
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=95
+    Log Out
+
+Users Test Setup
+    [Arguments]    ${server}=&{system}    ${user}=${user in charge}    ${verify}=${True}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
+    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
+
+Web Admin Test Setup
+    [Arguments]    ${server}    ${user}    ${verify}
+    Log In Web Admin    ${user}    ${password}
+    Go to Users List
+    Capture page screenshot
+
+Cloud Test Setup
+    [Arguments]    ${server}=${system}    ${user}=${user in charge}    ${verify}=${True}
+    Log in to user and system    ${user}    ${server['id']}
     
 Users Teardown
-    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
+    Disconnect Server via API    ${auth}    ${system['id']}    ${password}    ${system['owner']}
+    Disconnect Server via API    ${auth}    ${server 2['id']}    ${password}    ${system['owner']}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop usertest1 usertest2
-    ${results}    Execute Command    docker container rm usertest1 usertest2
-    Close Connection
+    ${results}    Execute Command    docker container stop ${system['cont']} ${cont id 2}
+    ${results}    Execute Command    docker container rm ${system['cont']} ${cont id 2}
     #Remove Temporary Users
     Close All Browsers
 
-Restart
-    Common Restart Logout    ${url}
+Users Test Tear Down
+    Run Keyword If    '''${mode}'''!='''cloud'''    Log Out Web Admin
+    Run Keyword If    '''${mode}'''=='''cloud'''    Common Restart Logout    ${url}
 
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
     ${random user}    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${cloud auth}    ${sysId1}    ${ACCESS ROLES}[viewer]    ${random user}
-
-    Log in to user and system    ${random user}    ${sysId1}
+    Share    ${cloud auth}    ${system['id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Log in to user and system    ${random user}    ${system['id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL CANCEL}
@@ -93,82 +104,101 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Element Is Not Visible    ${DISCONNECT MODAL WARNING}
     Wait Until Page Does Not Contain Element    //div[@modal-render='true']
-
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${MODAL DIALOG}    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    Sleep    1
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    ${SYSYEM DELETED FROM ACCOUNT}    Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    usertest1
-    Check For Alert    ${SYSYEM DELETED FROM ACCOUNT}
+    ${SYSYEM DELETED FROM ACCOUNT}    Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${system['name']}
+    Check For Alert Dismissable     ${SYSYEM DELETED FROM ACCOUNT}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Log Out
 
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${system['owner']}    ${password}
+    Go To    ${url}/systems/${system['id']}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
 
     # Verify the user is removed from the list via API
-    ${users}=   Get Cloud System Users    ${auth}    ${sysId1}
+    ${users}=   Get Cloud System Users    ${auth}    ${system['id']}
     ${is there}=   Set Variable    ${False}
     FOR    ${obj}    IN    @{users}
         ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${EMAIL NOT OWNER}'    ${True}
     END
     Should Not Be True    ${is there}
 
-Owner / user can unlink offline System from Cloud / Account
+Owner / Admin can unlink offline System from Cloud / Account
     [Tags]    C41897    C41898
     Log    Prepare offline system with owner and viewer
     #${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
-    ${user email}=   Register and activate account with random email    firstName    lastName    ${password}
-    ${user 2 email}=   Register and activate account with random email    firstName    lastName    ${password}
-    Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user email}
-    Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[viewer]    ${user 2 email}
+    ${user 1}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${user 2}=   Register and activate account with random email    firstName    lastName    ${password}
+    Save User    ${local auth}    https://${QA BURBANK IP}:${server 2['port']}    Mark    ${ACCESS ROLES}[viewer]    ${user 1}    Mark Hamil    ${password}    
+    Save User    ${local auth}    https://${QA BURBANK IP}:${server 2['port']}    Mark2   ${ACCESS ROLES}[viewer]    ${user 2}    Mark Hamil2    ${password}    
+    #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user email}
+    #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user 2 email}
     # Make the system offline
-    Restore Factory Defaults    https://${QA BURBANK IP}:${server 2['port']}    ${auth}
+    #Sleep    30
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop ${server 2['contId']}
+    Close Connection
 
     Log    C41898: Step 1
-    Go To    ${url}/systems/${sysId2}
-    Log In    ${user email}    ${password}    button=None
+    Go To    ${url}/systems/${server 2['id']}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log In    ${user 1}    ${password}    button=None
+    ...    ELSE    Log In Web Admin    admin    ${password}
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
-    Disconnect from my account
+    Disconnect from my account    usertest2
+
     Log out
 
     Log    C41898: Step 2
-    ${users}=   Get Cloud System Users    ${auth}    ${sysId2}
+    ${users}=   Get Cloud System Users    ${auth}    ${server 2['id']}
     ${is there}=   Set Variable    ${False}
     FOR    ${obj}    IN    @{users}
-        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${user email}'    ${True}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${user 1}'    ${True}
     END
     Should Not Be True    ${is there}
 
-    Go To    ${url}/systems/${sysId2}
+    Go To    ${url}/systems/${server 2['id']}
     Log In    ${owner}    ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-    Run keyword and expect error    *    Select user in Users List    ${user email}
+    Run keyword and expect error    *    Select user in Users List    ${user 1}
 
     Log    C41897: Step 1 - add user and disconnect system from cloud
     Disconnect from cloud
     Log Out
 
     Log    C41897: Step 2 - make sure viewer has no systems
-    ${systems}=   Get Account Systems    ${ENV}    ${user 2 email}    ${password}
+    ${systems}=   Get Account Systems    ${ENV}    ${user 2}    ${password}
     Should Be Empty    ${systems}
-    Log In   ${user 2 email}    ${password}
+    Log In   ${user 2}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container start ${server 2['contId']}
+    ${results}    Execute Command    docker container port ${server 2['contId']}
+    ${port info}=   Split String    ${results}    :
+    Close Connection
+    Set To Dictionary    ${server 2}    port=${port info[1]}
+    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${owner}    ${BASE PASSWORD}
+    Set To Dictionary    ${server 2}    sysId=${sysId2}
+
 
 Should display same user data as user provided during registration
     [Tags]    email
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${system['id']}    ${ACCESS ROLES}[admin]    ${random email}
 
-#verify user name displayed correctly in users list
+    #verify user name displayed correctly in users list
     Log in    ${random email}    ${password}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Wait Until Element Is Visible    ${USERS LIST LINK}    60
     Click Link    ${USERS LIST LINK}
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
     Wait Until Element Is Visible    ${User In List}
@@ -179,33 +209,54 @@ Should display same user data as shown in user account
     [Tags]    email    C41573    C41842
     ${random email}=   Register and activate account with random email    mark    hamill    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[viewer]    ${random email}
+    Share    ${auth}    ${system['id']}    ${ACCESS ROLES}[viewer]    ${random email}
     Set Account Name    ${url}    ${random email}    ${password}    ${COMBO TEXT}    ${COMBO TEXT}
 
-    Log in to user and system    ${owner}    ${sysId1}
     Go to Users List
-#click link containing user's email
+    #click link containing user's email   
     Select user in Users List    ${random email}
-#verify name displayed
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[@class="user-name" and contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    #verify name displayed
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name") and contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Share button - opens dialog
-    [Tags]    C41888
-    Log in to user and system    ${owner}    ${sysId1}
+    [Tags]    C41888    web_admin
+    log    ${local users}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
-    Click Button    ${ADD USER BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${ADD USER MODAL}
-    Click Button    ${ADD USER CLOSE}
-    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
+
+    # Verify the user is removed from the list via API
+    ${users}=   Get Cloud System Users    ${auth}    ${system['id']}
+    ${is there}=   Set Variable    ${False}
+    FOR    ${obj}    IN    @{users}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${EMAIL NOT OWNER}'    ${True}
+    END
+    Should Not Be True    ${is there}
+
+Share button - opens dialog
+    [Tags]    C41888    web_admin
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${system['owner']}
+    ...    ELSE    Create List    ${system['owner']}    admin
+    FOR    ${user}  IN  @{list}
+        Log In    ${user}    ${password}
+        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${system['id']}
+        Wait Until Elements Are Visible    ${USERS LIST LINK}
+        Click Link    ${USERS LIST LINK}
+        Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+        Click Button    ${ADD USER BUTTON SYSTEMS}
+        Wait Until Element is Visible    ${ADD USER MODAL}
+        Click Button    ${ADD USER CLOSE}
+        Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
+        Exit For Loop If    '''${user}'''=='''admin'''
+        Log Out
+    END
 
 Check Cancel and 'X' buttons
-    [Tags]    C78228
-    Log in to user and system    ${owner}    ${sysId1}
+    [Tags]    C78228    web_admin
     ${user}=   Get Random Email    ${BASE EMAIL}
     Log    Check Cancel Button
-    Go To    ${url}/systems/${sysId1}/users
+    Go to Users List
     Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
     Click Button  ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
@@ -223,10 +274,8 @@ Check Cancel and 'X' buttons
     Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${user}")]
 
 Sharing roles are ordered: more access is on top of the list with options
-    [Tags]
-    Log in to user and system    ${owner}    ${sysId1}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    [Tags]    web_admin
+    Go to Users List
     Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
@@ -236,8 +285,7 @@ Sharing roles are ordered: more access is on top of the list with options
     Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 
 When user selects role - special hint appears
-    [Tags]    C41901
-    Log in to user and system    ${owner}    ${sysId1}
+    [Tags]    C41901    web_admin
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
@@ -248,45 +296,44 @@ When user selects role - special hint appears
     FOR    ${type}    IN    @{USER TYPE LIST}
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
-    Click Button    ${ADD USER CANCEL}
 
-Admin cannot delete or edit self
+Cloud Admin cannot delete or edit self
     [Tags]    C41904
-    Log in to user and system    ${admin}    ${sysId1}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    [Setup]    Users Test Setup    user=${admin}
+    Go to Users List
     Select user in Users List    ${admin}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin and owner cannot edit self and other users via share
     @{admins}=   Create List    ${owner}    ${admin}
     @{all users}=   Create List    ${owner}    ${admin}    ${viewer}    ${adv viewer}    ${live viewer}    ${custom}
-
+    Log Out
     FOR    ${user}    IN    @{admins}
         Log    Step 1
-        Log in to user and system    ${user}    ${sysId1}
+        Log in to user and system    ${user}    ${system['id']}
         Select user in users list    ${user}
-        Elements should not be visible    ${REMOVE USER BUTTON}    ${ACCESS LEVEL DROPDOWN}
+        Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
+        Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
 
         Log    Step 2
-        Share To    ${owner}    ${CUSTOM TEXT}    fail    system=usertest1
+        Share To    ${owner}    ${CUSTOM TEXT}          fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
-        Share To    ${admin}    ${LIVE VIEWER TEXT}    fail    system=usertest1
+        Share To    ${admin}    ${LIVE VIEWER TEXT}     fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
-        Share To    ${viewer}    ${ADV VIEWER TEXT}    fail    system=usertest1
+        Share To    ${viewer}    ${ADV VIEWER TEXT}     fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
-        Share To    ${adv viewer}    ${CUSTOM TEXT}    fail    system=usertest1
+        Share To    ${adv viewer}    ${CUSTOM TEXT}     fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
-        Share To    ${live viewer}    ${CUSTOM TEXT}    fail    system=usertest1
+        Share To    ${live viewer}    ${CUSTOM TEXT}    fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
-        Share To    ${custom}    ${VIEWER TEXT}    fail    system=usertest1
+        Share To    ${custom}    ${VIEWER TEXT}         fail    system=${system['name']}
         Click Button    ${ADD USER CANCEL}
         Log Out
     END
 
     Log    Step 3
     FOR    ${user}    IN    @{all users}
-        ${role}=   Get Cloud User Role    ${auth}    ${user}    ${sysId1}
+        ${role}=   Get Cloud User Role    ${auth}    ${user}    ${system['id']}
         Run Keyword If    '${user}'=='${owner}'          Should be equal as strings    ${role}    owner
         Run Keyword If    '${user}'=='${admin}'          Should be equal as strings    ${role}    cloudAdmin
         Run Keyword If    '${user}'=='${viewer}'         Should be equal as strings    ${role}    viewer
@@ -297,19 +344,21 @@ Admin and owner cannot edit self and other users via share
 
 Admin cannot delete or edit other admins or owner
     [Tags]    C41905
+    [Setup]    Users Test Setup    user=${admin}
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${system['id']}    ${ACCESS ROLES}[admin]    ${random email}
 
-    Log in to user and system    ${random email}    ${sysId1}
     Select user in Users List    ${admin}
-    Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
+    Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
+    Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
     Select user in Users List    ${owner}
-    Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
+    Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
+    Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
 
 Admin cannot invite another admin
     [Tags]    C41905
-    Log in to user and system    ${admin}    ${sysId1}
+    [Setup]    Users Test Setup    user=${admin}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
@@ -325,13 +374,12 @@ Admin cannot invite another admin
     Click Button    ${ADD USER CANCEL}
 
 Edit permission works
-    [Tags]    C41900    C30657    C47041
+    [Tags]    C41900    C30657    C47041    web_admin
     ${random email}=   Get Random Email    ${BASE EMAIL}
-    Log in to user and system    ${owner}    ${sysId1}
     Share To    ${random email}    ${ADMIN TEXT}
 
     # Check that the user's role is added correctly in vms
-    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
@@ -342,23 +390,18 @@ Edit permission works
     Check User Permissions    ${random email}    ${VIEWER TEXT}
 
     # Check that the user's role has changed in vms
-    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[viewer]
         ...    AND     Exit For Loop
     END
 
-    Edit User Permissions In Systems    ${random email}    ${ADMIN TEXT}
-    Check User Permissions    ${random email}    ${ADMIN TEXT}
-    Remove User Permissions    ${random email}
-
 Delete user works
     [Tags]    email    C41903
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${system['id']}    ${ACCESS ROLES}[admin]    ${random email}
 
-    Log in to user and system    ${owner}    ${sysId1}
     Select user in Users List    ${random email}
     Wait Until Element Is Visible    ${REMOVE USER BUTTON}
     Click Button    ${REMOVE USER BUTTON}
@@ -373,16 +416,16 @@ Delete user works
 
 Share with registered user works and sends him notification
     [Tags]    email    C41888
+    Log in to user and system    ${system['owner']}    ${system['id']}
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
     Append to List    ${TMP USERS}    ${random email}
-    Log in to user and system    ${owner}    ${sysId1}
-    Verify In System    usertest1
+    Verify In System    ${system['name']}
     ${random email}    Register and activate account with random email    mark     hamil    ${password}
     Share To    ${random email}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
     Sleep   10
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${system['id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     Sleep    10
 
@@ -395,7 +438,7 @@ Share with registered user works and sends him notification
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    usertest1
+    ...    ${system['name']}
     # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
     # Check Email Subject
     # ...    ${emailID}
@@ -416,17 +459,19 @@ Share with registered user works and sends him notification
     Delete Email    ${emailID}
     Close Mailbox
 
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${system['id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 Share with registered user gives user access to system
     [Tags]    email    C41888
-    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Log Out
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
+    Share    ${auth}    ${system['id']}    viewer    ${random email}
+    Log in to user and system    ${random email}    ${system['id']}
+    Go to System Administration
     ${auth}=    Create List    ${owner}    ${password}
-    Share    ${auth}    ${sysId1}    viewer    ${random email}
-    Log In    ${random email}    ${password}
 
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    mark hamil    
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner    
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${owner}")]    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
     Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
     Element Should Not Be Visible    ${RENAME SYSTEM}
@@ -435,15 +480,15 @@ Share with registered user gives user access to system
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
     Log    Step 1
+    Log in to user and system    ${system['owner']}    ${system['id']}
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
-    Log in to user and system    ${owner}    ${sysId1}
     Go To Users List
     Share To    ${random email}    Administrator
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${system['id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
+    ${code}=   Get Code From Email    ${url}    ${cloud auth}    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
@@ -459,14 +504,14 @@ Share with unregistered user - brings them to registration page with code with c
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
-    Should Contain    ${email text}    mark hamil
+    Should Contain    ${email text}    System Owner
    
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    mark hamil
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}     System Owner
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
     Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     Log    Step 3-4
     ${links}    Get Links From Email    ${email}
-    @{expected links}    Set Variable    mailto:${owner}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate   
+    @{expected links}    Set Variable    mailto:${system['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate   
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
     END
@@ -480,8 +525,9 @@ Share with unregistered user - brings them to registration page with code with c
     ...    ${REGISTER LAST NAME INPUT}
     ...    ${REGISTER PASSWORD INPUT}
     ...    ${CREATE ACCOUNT BUTTON}
+    ...    ${REGISTER EMAIL INPUT LOCKED} 
 
-    ${populated email}=   Get Value    ${REGISTER EMAIL INPUT}
+    ${populated email}=   Get Value    ${REGISTER EMAIL INPUT LOCKED} 
     Should be equal as strings    ${populated email}    ${random email}
     Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}
     Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
@@ -491,20 +537,18 @@ Share with unregistered user - brings them to registration page with code with c
     # New user gets logged in right away
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SYSTEM NAME}
-    Element Text Should Be    ${SYSTEM NAME}    usertest1
+    Element Text Should Be    ${SYSTEM NAME}    ${system['name']}
     Log    Step 7 skipped thick client login
     Log    Step 8
     Log Out
-    Log in to user and system    ${owner}    ${sysId1}
+    Log in to user and system    ${owner}    ${system['id']}
     Go To Users List
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     Click Element    //span[contains(text(),"${random email}")]
     ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
     Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
-    
 Share System with the same user twice
     [Tags]    C41892
-    Log in to user and system    ${owner}    ${sysId1}
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
@@ -512,7 +556,7 @@ Share System with the same user twice
     ...    user=${BASE EMAIL}
     ...    is_secure=True
     Delete All Emails
-    Share To    ${admin}    ${ADV VIEWER TEXT}    fail    system=usertest1
+    Share To    ${admin}    ${ADV VIEWER TEXT}    fail    system=${system['name']}
     Run Keyword And Expect Error    *    Wait For Email    recipient=${admin}    timeout=120
     Close Mailbox 
     
@@ -536,14 +580,14 @@ Check share email for registered user
     Delete email    ${email}
 
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[admin]    ${random email}
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${sysId1}
+    Share    ${auth}    ${system['id']}    ${ACCESS ROLES}[admin]    ${random email}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${system['id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    usertest1
+    ...    ${system['name']}
     ${email}    Wait For Email    recipient=${random email}    timeout=120
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
@@ -559,7 +603,7 @@ Check share email for registered user
     ...    ${SUPPORT URL}
     ...    ${WEBSITE URL}
     ...    ${ENV}
-    ...    ${ENV}/systems/${sysId1}
+    ...    ${ENV}/systems/${system['id']}
     ...    mailto:${owner}
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
@@ -573,44 +617,50 @@ Users should be able to disconnect themselves from cloud
     FOR    ${role}    IN    @{roles}
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
         Append To List    ${TMP USERS}    ${random email}
-        Share     ${auth}    ${sysId1}    ${role}    ${random email}
-
+        Save User    ${auth}    https://${QA BURBANK IP}:${system['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
+        #Share     ${auth}    ${system['id']}    ${role}    ${random email}
+        Sleep    5
+        #Open Browser and go to URL    ${url}
         Log In    ${random email}    ${password}
-        Wait until element is visible    ${SYSTEM NAME}
-        Disconnect from my account
-        Log out
+        Wait until element is visible    ${SYSTEM NAME}    300
+        Disconnect from my account    ${system['name']}
+        Log Out
+        Sleep    5
     END
+    Open Browser and go to URL    ${url}
 
 User with client custom settings has access to system
     [Tags]
-    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${auth}
+    [Setup]    Users Test Setup    user=${client custom}
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${system['port']}    ${auth}
     #FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
-    #    Share    ${auth}   ${sysId1}    ${user role}    ${user email}
+    #    Share    ${auth}   ${system['id']}    ${user role}    ${user email}
     #END
     FOR    ${role}    IN    @{custom roles}
         &{client custom permissions}=   Set Variable If    '''${role["name"]}'''=='''Client Custom'''    ${role}
         Exit For Loop If    '''${role["name"]}'''=='''Client Custom'''
     END
-    ${users}    Get Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']} 
-    log    ${users}
-    ${user id}=   Get Cloud User Id By Email    ${auth}    ${client custom}    ${sysId1}
+    ${users}    Get Users    ${server auth}    https://${QA BURBANK IP}:${system['port']} 
+    ${user id}=   Get Cloud User Id By Email    ${auth}    ${client custom}    ${system['id']}
     Save User Existing
     ...    ${server auth}
-    ...    https://${QA BURBANK IP}:${server 1['port']}
+    ...    https://${QA BURBANK IP}:${system['port']}
     ...    ${client custom}
     ...    ${client custom permissions["permissions"]}
     ...    ${client custom}
     ...    ${client custom permissions["id"]}
     ...    ${user id}
 
-    Log in to user and system    ${client custom}    ${sysId1}
-    Location Should Be    ${url}/systems/${sysId1}
-    Verify In System    usertest1
+    Location Should Be    ${url}/systems/${system['id']}
+    Verify In System    ${system['name']}
 
 User can be invited with client custom permissions
-    Log in to user and system    ${owner}    ${sysId1}
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
+    ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${system['owner']}
+    ...    '''${mode}''' != '''cloud'''    admin
+    Log in    ${user}    ${password}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${system['id']}
     Share To    ${random email}    Client Custom
     
     Open Mailbox
@@ -625,50 +675,59 @@ User can be invited with client custom permissions
     Delete Email    ${email}
     Close Mailbox
 
-Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
-    [Tags]    C63390
 
+Disable enable User correctly affects the User
+    [Tags]    C63390    C76245    web_admin
+    ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${system['owner']}
+    ...    '''${mode}''' != '''cloud'''    admin
+    Log in    ${user}    ${password}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${system['id']}
     Log    Step 1
-    Log in to user and system    ${owner}    ${sysId1}
     Check User Permissions    ${viewer}    ${VIEWER TEXT}
 
     Log    Step 2
+    Capture Page Screenshot
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Sleep    1
+    Capture Page Screenshot
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
+    Capture Page Screenshot
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${viewer}    ${VIEWER TEXT}
+    Capture Page Screenshot
+    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
+    Capture Page Screenshot
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
 
     Log    Step 3
     Log Out
-    Go To    ${ENV}/systems
-    Log In   ${viewer}    ${BASE PASSWORD}    button=None
-    Wait Until Location Is    ${ENV}/systems
-    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
+    Log In   ${users['viewer']}    ${BASE PASSWORD}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
+    # ELSE     WRONG LOGIN OR PASSWORD SHOULD BE DETECTED
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
 
     Log    Step 4
     Log Out
-    Log in to user and system    ${owner}    ${sysId1}
+    Log in to user and system    ${owner}    ${system['id']}
     Check User Permissions    ${viewer}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${viewer}    ${VIEWER TEXT}
+    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
 
     Log    Step 5
     Log Out
-    Log in to user and system    ${viewer}    ${sysId1}
+    Log in to user and system    ${viewer}    ${system['id']}
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
 
 Administrator can add, disable and enable Viewer
     [Tags]    C63391
+    [Setup]    Users Test Setup    user=${admin}
     ${random email}=   Register and activate account with random email    mark    harmill    ${BASE PASSWORD}
     Log    Steps 1 & 2
-    Log in to user and system    ${admin}    ${sysId1}
-    Share To    ${random email}   ${VIEWER TEXT}    system=usertest1
+    Share To    ${random email}   ${VIEWER TEXT}    system=${system['name']}
     Select user in Users List    ${random email}
 
     Log    Step 3
@@ -680,7 +739,7 @@ Administrator can add, disable and enable Viewer
 
     Log     Step 4
     Log Out
-    Log in to user and system    ${admin}    ${sysId1}
+    Log in to user and system    ${admin}    ${system['id']}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -698,7 +757,7 @@ Administrator can add, disable and enable Viewer
 
     Log    Step 6
     Log Out
-    Log in to user and system    ${admin}    ${sysId1}
+    Log in to user and system    ${admin}    ${system['id']}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -713,36 +772,59 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[@class="name" and contains(text(),'${VIEWER TEXT}')]
+    Log Out
 
 Cloud Owner Can Change Local User Login
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
+    
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
 	    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
-        # Wait Until Elements Are Visible    ${ACCOUNT SAVE}
-        # Click Button    ${ACCOUNT SAVE}
-        # Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Wait Until Element is Visible    //span[text()="${new login}"]
 	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
 
+# ***Currently removed due to CLOUD-6854***
+#Cloud Owner/admin Can Change Local User Login
+#    [Tags]    local_user    C76244    web_admin
+#    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${system['owner']}
+#    ...    ELSE    Create List    admin    ${system['owner']}
+#    FOR    ${user}    IN    @{list}
+#        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+#        Log In    ${user}    ${password}
+#        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${system['id']}
+#        Go to Users List
+#        
+#        Verify In Local Users UI    ${local users}    ${system['owner']}
+#        @{new locals} =    Create List
+#        Change All Local Users Login
+#        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+#        Exit For Loop If    '''${user}'''=='''admin'''    
+#        Log Out
+#    END
+    
 Cloud Owner Can Change Local User Full Name
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    #Run Keyword if    '''${mode}'''=='''cloud'''    Log in to user and system    ${user in charge}    ${server id}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER NAME}
+        Wait Until Elements Are Visible    ${LOCAL USER NAME}
 	    ${new full name} =    Change Full Name for Local User     ${user}    Changed User
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
@@ -752,18 +834,18 @@ Cloud Owner Can Change Local User Full Name
         &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
 
 Cloud Owner Can Change Local User Email
     [Tags]    local_user    C76244
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER EMAIL}
-        ${new local user email} =     Change Email for Local User    ${user}    ${EMAIL VIEWER}
+        Wait Until Element Is Visible    ${LOCAL USER EMAIL}
+        ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -771,35 +853,37 @@ Cloud Owner Can Change Local User Email
         &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
 
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local_user    C76243
+    [Tags]    local_user    C76243    web_admin
     Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new permission} =    Change Permission Level for Local User     ${user}    ${owner}
+        ${new permission} =    Change Permission Level for Local User    ${owner}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        ${user} =    Convert To Lowercase    ${user}
-        Wait Until Element is Visible    //span[text()="local+${user}"]/following-sibling::span[text()="${new permission}"]
+        #${user} =    Convert To Lowercase    ${user}
+        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
 	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
-        ${name} =   Convert To Lowercase    local+${user}
+        ${name} =   Convert To Lowercase    Local+${user}
         &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=${permissions}[${reverse permission}]
         Append To List    ${new locals}    ${new local}
     END
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
 
 Cloud Owner Can Change Local User Password
-    [Tags]    local_user    C76246
+    [Tags]    local_user    C76246    web_admin
     Log    Same test as testrail "Cloud owner can change local user password (positive)"
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     FOR    ${user}    IN    @{local users}
         Log    Change password for ${user}
@@ -812,20 +896,22 @@ Cloud Owner Can Change Local User Password
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
         @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
     END
 
 Cloud owner can change local users' information
     [Tags]    local_user    C76239
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}    ${owner}
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
 
 Cloud owner can enable/disable local user (positive)
     [Tags]    C76245    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
@@ -835,10 +921,10 @@ Cloud owner can enable/disable local user (positive)
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # switching focus
     Click Element    //span[text()="Local+viewer"]
-    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
-    Click Element    //span[text()="local+advancedviewer"]
+    Element Style Should Be    //span[text()="Local+advancedViewer"]    color    ${DISABLED TEXT COLOR}
+    Click Element    //span[text()="Local+advancedViewer"]
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${False}
@@ -850,47 +936,43 @@ Cloud owner can enable/disable local user (positive)
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${True}
     END
-    Should Be True    ${state} == ${True}
 
 Cloud administrator cannot change local administrator's or owner's information
     [Tags]    local_user    C76240
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    [Setup]    Users Test Setup    user=${admin}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${admin}
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
-	    ${user role} =    Get Text    //span[text()="Local+${user}"]/following-sibling::span
+	    ${user role} =    Get Text    //span[contains(text(),"Local+${user}")]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
 	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${admin}
         ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${admin}
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
         ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
     END
-    Run Keyword and Expect Error    *    Delete All Local Users    //span[contains(text(),"ocal+")]
-    Log    Step 2
-    Wait Until Element is Visible    //span[text()="admin"]
-    Click Element    //span[text()="admin"]
-    Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${admin}
-    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
 
 Local User Removed on Server is Removed From UI
     [Tags]    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     ${user to delete} =    Set Variable    Local+viewer
     FOR    ${user}    IN    @{users}
         ${user id} =    Set Variable If    '${user}[name]' == '${user to delete}'    ${user}[id]
         Run Keyword If    '${user id}' != 'None'    Exit For Loop
     END
-    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${system['port']}    ${user id}
     Reload Page
     Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
     Page Should Not Contain    //span[text()="${user to delete}"]
@@ -898,45 +980,48 @@ Local User Removed on Server is Removed From UI
 Verify Local Users Deleted On Server
     [Tags]    local_user    C76242
     Log    This case performs the same test known in testrail as "Cloud owner can delete any local user (positive)."
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Delete All Local Users    //span[contains(text(),"ocal+")]
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     ${deleted user} =    Set Variable    Local
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
     END
-    
+
+
 Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user
     Log    Preconditions
     @{locals} =    Create List 
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
-    Delete All Local Users via API    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
+    Delete All Local Users via API    ${auth}    https://${QA BURBANK IP}:${system['port']}    ${locals}
     Log    Step 1
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     
 Cloud owner cannot change local owner's information
     [Tags]    C76238    local_user
     Log    Step 1
-    Log in to user and system    ${owner}    ${sysId1}
     Go To Users List
     Log    Step 2
-    Wait Until Element is Visible    //span[text()="admin"]
-    Click Element    //span[text()="admin"]
-    Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${email}
-    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
-
+    Wait Until Element is Visible    //span[text()="${user2}"]
+    Click Element    //span[text()="${user2}"]
+    Run Keyword If    '''${mode}''' != '''cloud'''    Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${email}
+    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}    ${ADD USER PERMISSIONS DROPDOWN}
+    
 Unsaved changes are not sent to the server
-    [Tags]    C76241    local_user
+    [Tags] 4  C76241    local_user
     Log    Preconditions
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
-    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     
     Log    Step 1
@@ -959,7 +1044,7 @@ Unsaved changes are not sent to the server
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     Lists Should Be Equal     ${check info}    ${locals}  
     
     Log    Step 4
@@ -973,15 +1058,16 @@ Unsaved changes are not sent to the server
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
 	
 	Log    Step 5
-	@{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+	@{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     Lists Should Be Equal     ${check info}    ${locals}
     
 Local User Login Field Cannot Be Left Blank
     [Tags]    C76248    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
-    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    @{locals} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
             
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Click Element    //span[text()="Local+advancedViewer"]
     
@@ -998,7 +1084,7 @@ Local User Login Field Cannot Be Left Blank
     Element Style Should Be    ${EDITABLE TITLE}     border-color    ${ERROR COLOR}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     Lists Should Be Equal     ${check info}    ${locals}
 
     Log    Step 4
@@ -1006,14 +1092,15 @@ Local User Login Field Cannot Be Left Blank
     Wait Until Element Contains    ${EDITABLE TITLE}    Local+advancedViewer
     
     Log    Step 5
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     Lists Should Be Equal     ${check info}    ${locals} 
     
 Local User name field can be left blank
     [Tags]    C76249    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Click Element    //span[text()="Local+advancedViewer"]
     
@@ -1024,18 +1111,19 @@ Local User name field can be left blank
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${user}    IN    @{check info}
         ${full name} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[fullName]
         Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
     END 
-    Should Be Equal    ${full name}    ${EMPTY}   
+    Should Be Equal    ${full name}    ${None}   
      
 Local User email field can be left blank
     [Tags]    C76250    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Click Element    //span[text()="Local+advancedViewer"]
     
@@ -1046,38 +1134,41 @@ Local User email field can be left blank
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     
     Log    Step 3
-    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{check info} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${user}    IN    @{check info}
         ${email field} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[email]
         Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
     END 
-    Should Be Equal    ${email field}    ${EMPTY}
+    Should Be Equal    ${email field}    ${None}
     
 User list is available for owner and administrator
     [Tags]    C76233    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Log Out
     Log    Step 2
-    Log in to user and system    ${admin}    ${sysId1}
+    Log in to user and system    ${admin}    ${system['id']}
     Go To Users List
     Verify In Local Users UI    ${local users}    ${admin}
     
 User list is not available for advanced viewer & lower
     [Tags]    C76462
+    [Setup]    Users Test Setup    user=${advViewer}
     Log    Step 1
-    Log in to user and system    ${custom}    ${sysId1}
     Element Should Not Be visible    ${USERS LIST LINK}
     Log Out
     Log    Step 2
-    Log in to user and system    ${adv viewer}    ${sysId1}
+    Log in to user and system    ${adv viewer}    ${system['id']}
     Element Should Not Be visible    ${USERS LIST LINK} 
     
 Cloud Administrator Can Delete Local User(positive)
     [Tags]    C76524    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    [Setup]    Users Test Setup    user=${admin}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 2
@@ -1088,7 +1179,7 @@ Cloud Administrator Can Delete Local User(positive)
     Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
     Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
     Log    Step 4
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     ${deleted user} =    Set Variable    Local+advancedViewer
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    "${user}[name]" was found on server
@@ -1096,21 +1187,25 @@ Cloud Administrator Can Delete Local User(positive)
     
 Cloud administrator can change local user's login permissions, name and email (positive)
     [Tags]    C76526    C76525    local_user
+    [Setup]    Users Test Setup    user=${admin}
     @{new locals} =    Create List
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 2 and 3
     ${new local} =    Modify All Local User Info    advancedViewer    ${admin}
     Append To List    ${new locals}    ${new local}
     Log    Step 4
-    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}    local user=ocal+advancedviewer    
+    Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}    local user=ocal+advancedviewer    
     
 Cloud administrator can enable/disable any viewer local user (positive)
     [Tags]    C76527    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    [Setup]    Users Test Setup    user=${admin}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
     Log    Step 1
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${admin}
     Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 2   
@@ -1122,11 +1217,11 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # switching focus
     Click Element    //span[text()="Local+viewer"]
-    Element Style Should Be    //span[text()="local+advancedviewer"]    color    ${DISABLED TEXT COLOR}
-    Click Element    //span[text()="local+advancedviewer"]
+    Element Style Should Be    //span[text()="Local+advancedViewer"]    color    ${DISABLED TEXT COLOR}
+    Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 4
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${False}
@@ -1140,7 +1235,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     Page Should Not Contain Element   ${USER DISABLED MSG}
     Log    Step 6
     ${name} =    Get Text    ${EDITABLE TITLE}
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR     ${user}    IN    @{users}
         ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
         Exit For Loop If    ${state} == ${True}
@@ -1149,7 +1244,9 @@ Cloud administrator can enable/disable any viewer local user (positive)
     
 Cloud administrator can change local user password (positive)
     [Tags]    C76530    local_user
-    @{local users} =    Local User Start   ${admin}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
+    [Setup]    Users Test Setup    user=${admin}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${admin}
 
     Log    Step 1
@@ -1169,28 +1266,29 @@ Cloud administrator can change local user password (positive)
     
     Log    Step 4
     @{old auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
-    Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
     
     Log    Step 5
     @{new auth} =    Create List    local+advancedviewer     ${ALT PASSWORD}
-    ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+    ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
     
 Changes made in thick client appear on cloud portal
     [Tags]    C76251    local_user
-    @{local users} =    Local User Start   ${owner}    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${sysId1} 
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+advancedViewer   
         ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
         Exit For Loop If    '${id}' != 'None'             
     END
     Log    Step 1 - 3
+    Go to Users List
     Verify In Local Users UI    ${local users}    ${owner}
     Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 4
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1202,7 +1300,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 5
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1214,7 +1312,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 6
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1226,7 +1324,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 7
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1239,7 +1337,7 @@ Changes made in thick client appear on cloud portal
     Log    Step 8
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+advancedViewer   
     ...    ${permissions}[viewer]    
     ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1249,13 +1347,13 @@ Changes made in thick client appear on cloud portal
     ...    is cloud=${False}
     Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
     Log    Step 9
-    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${system['port']}    ${id}
     Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
     
     Log    Step 10
     Save User    
     ...    ${auth}    
-    ...    https://${QA BURBANK IP}:${server 1['port']}    
+    ...    https://${QA BURBANK IP}:${system['port']}    
     ...    Local+newApiUser   
     ...    ${permissions}[advancedViewer]    
     ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1279,37 +1377,42 @@ Changes made in thick client appear on cloud portal
     Wait Until Element Contains    ${EDITABLE TITLE}    Local+newApiUser
     Wait Until Textfield Contains    ${LOCAL USER NAME}    New Api
     Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
-    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]    
+    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]    
     
     Log    Clean up
-    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${auth}    https://${QA BURBANK IP}:${system['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    Local+newApiUser   
         ${id} =     Set Variable if    ${node}[isCloud] == ${False} and ${name state} == ${True}    ${node}[id]
         Exit For Loop If    '${id}' != 'None'             
     END
-    Remove User    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    ${id}
+    Remove User    ${auth}    https://${QA BURBANK IP}:${system['port']}    ${id}
     
 Local user list is not available for offline system
     [Tags]    C76234    local_user    System-offline
+    [Setup]    Users Test Setup    server=${server 2}    
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     Log    Preconditions
     @{local users} =   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}
-    Log in to user and system    ${owner}    ${sysId2}
+    ${results}    Execute Command    docker container stop ${server 2['contId']}
     Go To Users List
     FOR    ${user}    IN    @{local users}
-        Element Should Not Be Visible    //span[text()="Local+${user}"]
+        Element Should Not Be Visible    //span[text()="local+${user}"]
     END    
     Log    Step 2   
-    ${results}    Execute Command    docker container start usertest2
+    ${results}    Execute Command    docker container start ${server 2['contId']}
+    Reload Page
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Visible   //span[text()="Local+${user}"]    65
     END   
     Log    Step 3
-    ${results}    Execute Command    docker container stop usertest2
-    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    65
+    ${results}    Execute Command    docker container stop ${server 2['contId']}
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    125
     Reload Page   
     FOR    ${user}    IN    @{local users}
-        Wait Until Element Is Not Visible   //span[text()="Local+${user}"]
+        Wait Until Element Is Not Visible   //span[text()="local+${user}"]
     END   
     Log    Clean up
-    ${results}    Execute Command    docker container start usertest2
+    ${results}    Execute Command    docker container start ${server 2['contId']}
+    Close Connection

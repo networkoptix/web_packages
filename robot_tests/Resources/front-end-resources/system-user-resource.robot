@@ -42,7 +42,7 @@ Check Special Hint
 Verify Changed Info Via API
     [Arguments]    ${new locals}    ${ip}    ${local user}=ocal+
     @{locals} =    Create List 
-    @{users} =    Get Users     ${auth}    ${ip}
+    @{users} =    Get Users     ${server auth}    ${ip}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
@@ -51,33 +51,37 @@ Verify Changed Info Via API
         Keep in Dictionary    ${user}    name    fullName    permissions    email
     END
     FOR    ${user}    IN    @{locals} 
-        Should Contain    ${new locals}    ${user}     
+        Dictionary Should Contain    ${new locals}    ${user}   
         #${n} =    Evaluate    ${n}+1
     END   
-    
+
 Rename Local User
     [Arguments]    ${name}
     Click Element    ${EDITABLE TITLE}
-    Sleep    1
+   #Delete all text    ${EDITABLE TITLE}
+   #Input Text    ${EDITABLE TITLE}    ${name}
     Input Content Editable Text    ${EDITABLE TITLE}    ${name}
+    Sleep    2
     Click Element    //label[@for="permissionsSelect"]
 
 Verify In Local Users UI
-    [Arguments]    ${local users}    ${email}
-    FOR    ${user}    IN    @{local users}
+    [Arguments]    ${new local users}    ${email}
+    FOR    ${user}    IN    @{new local users}
+        Sleep  2
         Wait Until Elements Are Visible    
         ...    //span[text()="Local+${user}"]
         ...    //span[text()="Local+${user}"]//preceding-sibling::${LOCAL USER ICON}   
         Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}]
-        Element Should Not Be Visible     //span[text()="${email}"]//preceding-sibling::${LOCAL USER ICON}
+        Run Keyword If    '${mode}'=='cloud'    Element Should Not Be Visible     //span[text()="${email}"]//preceding-sibling::${LOCAL USER ICON}
         Click Element    //span[text()="Local+${user}"]
-        ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${EDITABLE TITLE}
-        ${status2} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${LOCAL USER LOGIN} 
+# commented out because of CLOUD-6854
+        ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${EDITABLE TITLE}    5
+        ${status2} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${LOCAL USER LOGIN}    5
         Run Keyword If    '${status}' == '${FALSE}' and '${status2}' == ${FALSE}    Fail    Username not present.         
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${admin}' and '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
+	    Run Keyword Unless    '${email}' == '${users['cloudAdmin']}' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -85,9 +89,16 @@ Verify In Local Users UI
 	    ...    ELSE    Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
-	    Run Keyword If    '${email}' == '${owner}'
+        log    ${email}
+        log    ${user}
+        log    ${users['cloudAdmin']}
+	    Run Keyword If    '${email}' == '${system['owner']}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${admin}' and '${role names}[${user}]' != '${ADMIN TEXT}'
+	    ...    ELSE IF    '${email}' == '${users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
+        ...    ELSE IF    '${email}' == '${local users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
+        ...    ELSE IF    '${email}' == 'admin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
 		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
     END
@@ -99,20 +110,21 @@ Modify Local Users via Cloud UI
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
-        ${new full name} =    Change Full Name for Local User     ${user}    Changed User
-        ${new permission} =    Change Permission Level for Local User     ${user}    ${email}    
-        ${new local user email} =     Change Email for Local User    ${user}    ${EMAIL VIEWER}
+        ${new login} =    Change Login for Local User    Local+${user}_changed
+        ${new full name} =    Change Full Name for Local User     Changed User
+        ${new permission} =    Change Permission Level for Local User    ${user}    ${email}
+        ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
 	   
 	    Log    Save All Changes
-	    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+	    Wait Until Element is Visible    ${ACCOUNT SAVE}    60
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Wait Until Element is Visible    //span[text()="${new login}"]
-	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
+# commented out because of CLOUD-6854        
+        #Wait Until Element is Visible    //span[text()="${new login}"]
+	    #Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
-        Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
+        #Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
         
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
@@ -121,7 +133,7 @@ Modify Local Users via Cloud UI
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]    
+        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}    permissions=${permissions}[${reverse permission}]    
         
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local} 
@@ -129,26 +141,27 @@ Modify Local Users via Cloud UI
     [Return]    ${new locals}
     
 Change Login for Local User
-    [Arguments]    ${user}    ${new login}
+    [Arguments]    ${new login}
+    Sleep    5
     Rename Local User    ${new login}
-    ${new login} =    Convert To Lowercase    ${new login}
 	[Return]   ${new login} 
 	
 Change Full Name for Local User    
-    [Arguments]    ${user}    ${new full name}
+    [Arguments]    ${new full name}
+    Sleep    5
     Input Text    ${LOCAL USER NAME}     ${new full name}
     [Return]    ${new full name}
 
 Change Permission Level for Local User    
-    [Arguments]    ${user}    ${email}
+    [Arguments]    ${user}    ${email}    
     @{permissions set} =    Get Dictionary Values    ${role names}
     ${admin} =    Run Keyword And Return Status    Should Be Equal As Strings    ${email}     ${EMAIL ADMIN}
-    Run Keyword If    ${admin} == ${True}    Remove Values From List    ${permissions set}    ${ADMIN TEXT}
-    ${n} =    Set Variable If    ${admin} == ${True}    2    3    
+    Remove Values From List    ${permissions set}    ${ADMIN TEXT}
+
     FOR    ${x}    IN RANGE    5
-        ${random int} =	    Evaluate	random.randint(0, ${n})	modules=random 
+        ${random int} =	    Evaluate	random.randint(0, 2)	modules=random 
         ${new permission} =     Get From List    ${permissions set}    ${random int}   
-        Exit For Loop If  '${new permission}' != '${role names}[${user}]'
+        Exit For Loop If  '${new permission}' != '${role names['${user}']}'
     END
     # ${new permission} =    Set Variable If     '${role names}[${user}]' == 'Viewer'    Live Viewer
     # ...     '${role names}[${user}]' != 'Viewer'    Viewer 
@@ -160,35 +173,29 @@ Change Permission Level for Local User
     [Return]    ${new permission} 
     
 Change Email for Local User
-    [Arguments]    ${user}    ${new email}
+    [Arguments]    ${new email}
     Input Text    ${LOCAL USER EMAIL}      ${new email}
     ${new email} =    Convert To Lowercase    ${new email}
     [Return]    ${new email}
     
 Modify All Local User Info
     [Arguments]    ${user}    ${email}
-    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
-	${new full name} =    Change Full Name for Local User     ${user}    Changed User
-	${new permission} =    Change Permission Level for Local User     ${user}    ${email}    
-	${new local user email} =     Change Email for Local User    ${user}    ${EMAIL VIEWER}
+    ${new login} =    Change Login for Local User    Local+${user}_changed
+	${new full name} =    Change Full Name for Local User     Changed User
+	${new permission} =    Change Permission Level for Local User    ${user}    ${email}    
+	${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
 	Wait Until Elements Are Visible    ${ACCOUNT SAVE}
 	Click Button    ${ACCOUNT SAVE}
 	Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-	Wait Until Element is Visible    //span[text()="${new login}"]
-	Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
+	#Wait Until Element is Visible    //span[text()="${new login}"]
+    # commented out because of CLOUD-6854
+	#Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
-	Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
+	#Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
 	${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]
+	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}    permissions=${permissions}[${reverse permission}]
     [Return]    ${new local}
-    
-Local User Start
-    [Arguments]    ${email}    ${auth}    ${server ip}    ${server id}
-    @{local users} =   Reset Local Users    ${auth}    ${server ip}
-    Log in to user and system    ${email}    ${server id}
-    Go To Users List
-    [Return]    ${local users}
 
 Reset Local Users
     [Arguments]     ${auth}    ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
@@ -200,7 +207,7 @@ Reset Local Users
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     ${count} =    Get Length    ${locals}
-    ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    4
+    ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
     Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
     ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
     [Return]    ${local users}
@@ -229,3 +236,161 @@ Reset Local Users API
         ...    ${variable}
         Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    user id=${user}[id]    is cloud=${False}    
     END
+
+Check Special Hints
+    FOR    ${type}    IN    @{USER TYPE LIST}
+        Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
+    END
+
+Get Client Custom Permissions
+    [Arguments]    ${custom roles}
+    FOR    ${role}    IN    @{custom roles}
+        Return From Keyword If    '''${role["name"]}'''=='''Client Custom'''    ${role}
+    END
+
+Change All Local Users Login
+    @{new locals}=    Create List
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+	    ${new login}=    Change Login for Local User    Local+${user}_changed
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        Wait Until Element is Visible    //span[text()="${new login}"]
+	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
+	    ${email}=    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        &{new local}=    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
+        Append To List    @{new locals}    ${new local}
+    END
+
+Change All Local Users Full Name
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible    ${LOCAL USER NAME}
+	    ${new full name} =    Change Full Name for Local User     Changed User
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        ${name} =   Convert To Lowercase    local+${user}
+        &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=${permissions}[${user}]
+        Append To List    ${new locals}    ${new local}
+    END
+    
+Change All Local Users Email
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Is Visible    ${LOCAL USER EMAIL}
+        ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        ${name} =   Convert To Lowercase    local+${user}
+        &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=${permissions}[${user}]
+        Append To List    ${new locals}    ${new local}
+    END
+
+Change All Local User Permissions
+    FOR    ${user}    IN    @{local users}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        ${new permission} =    Change Permission Level for Local User    ${user}    ${system['owner']}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+        Click Button    ${ACCOUNT SAVE}
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
+	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
+        ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
+        ${name} =   Convert To Lowercase    Local+${user}
+        &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=${permissions}[${reverse permission}]
+        Append To List    ${new locals}    ${new local}
+    END
+
+Change All Local User Password
+    FOR    ${user}    IN    @{local users}
+        Log    Change password for ${user}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+        Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
+        Wait Until Element is Not Visible    //input[@id="newPassword"]
+        Sleep    5
+        ${user} =    Convert To Lowercase    ${user}
+        @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
+        @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
+    END
+
+Change All Local User Info
+    FOR    ${local user}    IN    @{local users}
+        Go to Users List
+        Click Element    //span[text()="Local+${local user}"]
+        Wait Until Element Is Visible    ${LOCAL USER NAME}
+	    ${user role} =    Get Text    //span[contains(text(),"Local+${local user}")]/following-sibling::span
+	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${local user}    ${users['cloudAdmin']}
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${local user}    ${users['cloudAdmin']}
+        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
+        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+    END
+
+Get Local User Id By Name
+    [Arguments]    ${auth}    ${server url}    ${name}
+    @{users} =    Get Users     ${auth}    ${server url}
+    ${user to delete} =    Set Variable    ${name}
+    FOR    ${user}    IN    @{users}
+        ${user id} =    Set Variable If    '${user}[name]' == '${user to delete}'    ${user}[id]
+        Run Keyword If    '${user id}' != 'None'    Exit For Loop
+    END
+    [Return]    ${user id}
+
+User Should Not Exist
+    [Arguments]    ${deleted user}
+    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
+    END
+
+Get Local Users
+    [Arguments]    
+    ${locals}=   Create List
+    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+    END
+    [Return]    ${locals}
+
+Check User Full Name is None
+    [Arguments]    ${name}    ${check info}
+    FOR    ${user}    IN    @{check info}
+        ${full name} =    Set Variable If    '${name}' in '${user}[name]'    ${user}[fullName]
+        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+    END 
+    Should Be Equal    ${full name}    ${None}   
+
+
+Check User Email is None
+    [Arguments]    ${name}    ${check info}
+    FOR    ${user}    IN    @{check info}
+        ${email field} =    Set Variable If    'name' in '${user}[name]'    ${user}[email]
+        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
+    END 
+    Should Be Equal    ${email field}    ${None}
+
+Verify User is Deleted on Server
+    [Arguments]    ${deleted user}    ${users}
+        FOR    ${user}    IN    @{users}
+            Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    "${user}[name]" was found on server
+        END
+
+Check If User Is Enabled/Disabled    
+    [Arguments]    ${current users}    ${name}
+    FOR     ${user}    IN    @{current users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    '${state}'=='${True}' or '${state}'=='${False}'
+    END
+    [Return]    ${state}

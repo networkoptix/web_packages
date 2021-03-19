@@ -12,6 +12,8 @@ ${ENV}                                ${CLOUD TEST}
 
 ${BROWSER}                            Chrome
 
+${MODE}                               cloud
+
 #Emails
 ${BASE EMAIL}                         ${TEST EMAIL}@gmail.com
 ${BASE EMAIL DOMAIN}                  @gmail.com
@@ -51,7 +53,7 @@ ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${
 ...    ${EMAIL AUTO TESTS ANCHOR}=viewer
 
 &{permissions}
-...    cloudAdmin=GlobalAdminPermission
+...    cloudAdmin=GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
 ...    viewer=GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission
 ...    liveViewer=GlobalAccessAllMediaPermission
 ...    advancedViewer=GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission

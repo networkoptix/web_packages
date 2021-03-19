@@ -20,13 +20,13 @@ Server Settings Suite Setup
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     # we setup one server manually here because we need 2 ports
-    ${cont id 1}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 4.3
+    ${cont id 1}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 4.3682
     ${results}    Execute Command    docker container port ${cont id 1} 7001
     ${port info}=   Split String    ${results}    :
     ${port 1}=   Set Variable    ${port info[1]}
 
     FOR   ${i}    IN RANGE    2    4
-        ${server}=   Setup Docker Server    image=4.3
+        ${server}=   Setup Docker Server    image=4.3682
         Set Suite Variable    ${cont ${i}}    ${server}[name]
         Set Suite Variable    ${cont id ${i}}    ${server}[id]
         Set Suite Variable    ${port ${i}}    ${server}[port]
@@ -60,15 +60,30 @@ Server Settings Suite Setup
 Web Admin Suite Setup
     Set Suite Variable    ${user in charge}    admin
     @{server auth}=   Create List    admin    ${password}
-    #sleep    30
+    #sleep    120
     Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1['port']}   ${QA BURBANK IP}:${server 2['port']}    currentPassword=${password}
+    #Sleep    120
+    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
+    Input Text    //input[@id="login_email"]    admin
+    Input Text    //input[@id="login_password"]    ${password}
+    Click Button    //button[@type="submit"]
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Select Server By Name    server 1
+    Wait Until Element is Visible    //header//button[@id="accountSettingsSelect"]
+    click button    //header//button[@id="accountSettingsSelect"]
+    Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
+    Click Link    //header//a/span[text()="Log Out"]/..
     
+
+
     @{local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    password=${password}
-    Set Suite Variable    ${admin}          ${local users[1]}
-    Set Suite Variable    ${viewer}         ${local users[4]}
-    Set Suite Variable    ${live viewer}    ${local users[3]}
-    Set Suite Variable    ${adv viewer}     ${local users[0]}
-    Set Suite Variable    ${custom}         ${local users[2]}
+    Set Suite Variable    ${admin}          Local+${local users[1]}
+    Set Suite Variable    ${viewer}         Local+${local users[4]}
+    Set Suite Variable    ${live viewer}    Local+${local users[3]}
+    Set Suite Variable    ${adv viewer}     Local+${local users[0]}
+    Set Suite Variable    ${custom}         Local+${local users[2]}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     ${results}    Execute Command    docker container stop ${server2['contId']}
@@ -89,7 +104,7 @@ Cloud Suite Setup
     ${sysId3}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 3['port']}    2serverstest3    ${user in charge}    ${password}
     Set To Dictionary    ${server 3}    sysId=${sysId3}
 
-    Log in to user and system    ${user in charge}    ${server 1['sysId']}
+    Log in to user and system    ${user in charge}    ${server 1['sysId']}    password=qweasd1234
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
@@ -115,13 +130,13 @@ Cloud Suite Setup
     Add user to cloud system if not there    ${server 1['sysId']}    custom            ${custom}         auth=${auth}
     Add user to cloud system if not there    ${server 1['sysId']}    liveViewer        ${live viewer}    auth=${auth}
         
-    Log in to user and system    ${user in charge}    ${server 1['sysId']}
+    Log in to user and system    ${user in charge}    ${server 1['sysId']}    password=qweasd1234
     Wait Until Element is Visible    ${SERVERS LINK}    120
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
     Log Out
 
-    Log in to user and system    ${user in charge}    ${server 3['sysId']}
+    Log in to user and system    ${user in charge}    ${server 3['sysId']}    password=qweasd1234
     Wait Until Element is Visible    ${SERVERS LINK}    120
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
@@ -156,7 +171,7 @@ Server Settings Test Setup
 
 Cloud Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
-    Log in to user and system    ${user}    ${server['sysId']}
+    Log in to user and system    ${user}    ${server['sysId']}    password=qweasd1234
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
     Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
     Run Keyword If    ${verify}    Verify on Servers Page    timeout=120
@@ -166,15 +181,7 @@ Web Admin Test Setup
     ${current port}=    Set Variable If    ${server}==${server 1}    ${server['port']}
     ...    ${server}==${server2} or ${server}==${server 3}    ${server['port']}
     Open Browser and go to URL    https://${QA BURBANK IP}:${current port}
-    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
-    # Temporary for CLOUD-6433
-    ${user}=   Convert To Lower Case    ${user}
-    Input Text    //input[@id="login_email"]    ${user}
-    Input Text    //input[@id="login_password"]    ${password}
-    Click Button    //button[@type="submit"]
-
-    Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
-    Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
+    Log In Web Admin    ${user}    ${password}
 
 Server Settings Test Teardown
     Run Keyword If    '''${mode}'''=='''cloud'''    Common Restart Logout    ${ENV}
