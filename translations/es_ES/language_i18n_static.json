@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Período de verificación de cambio de hora del SO",
         "syncTimeExchangePeriod": "Intervalo de sincronización de tiempo para solicitudes de red",
         "syncTimeEpsilon": "Tiempo de sincronización epsilon. El nuevo valor no se aplica si el tiempo delta es menor que épsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Máximo de hilos de sincronización de archivos de cámara virtual",
         "updateNotificationsEnabled": "Notificaciones de actualización habilitadas",
         "upnpPortMappingEnabled": "Mapeo de puerto UPNP habilitado",
         "useTextEmailFormat": "Enviar correos electrónicos de texto plano",
