@@ -581,7 +581,7 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         if publish:
             published = False
             # Send for review
-            send_version_for_review(asset_obj, user)
+            send_version_for_review(asset_obj, user, notify=False)
             asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
 
             # Accept review
