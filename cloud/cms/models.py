@@ -1909,6 +1909,15 @@ class MenuNodeManager(models.Manager):
         return super().get_queryset().select_related('asset')
 
 
+def node_asset_on_delete(collector, fields, sub_objs, using):
+    sub_objs_no_children = sub_objs.filter(nodes=None).distinct()
+    sub_objs_children = sub_objs.exclude(nodes=None).distinct()
+    if sub_objs_no_children:
+        models.CASCADE(collector, fields, sub_objs=sub_objs_no_children, using=using)
+    if sub_objs_children:
+        models.SET_NULL(collector, fields, sub_objs=sub_objs_children, using=using)
+
+
 class MenuNode(models.Model):
     AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),
                            (1, "logged_in", "Logged In"),
@@ -1917,7 +1926,7 @@ class MenuNode(models.Model):
     subtitle = models.CharField(max_length=255, blank=True)
     url = models.CharField(max_length=2048, blank=True)
     asset = models.ForeignKey(
-        Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+        Asset, null=True, blank=True, on_delete=node_asset_on_delete, related_name='nodes')
     related_assets = models.ManyToManyField(
         Asset, default=None, blank=True, related_name='nodes_related')
     next_item = models.BooleanField(default=False, verbose_name='Link to next')
@@ -1942,7 +1951,8 @@ class MenuNode(models.Model):
     objects = MenuNodeManager()
 
     def __str__(self):
-        return f'Item: {self.display_name()}'
+        parent = self.get_parent()
+        return f'Item: {self.display_name()} (Menu: {parent.name if parent else "None"})'
 
     def display_name(self):
         if self.name:
