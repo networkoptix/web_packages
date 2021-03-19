@@ -278,7 +278,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get selectedFps() {
-        return this.selectedFpsWatcher.value;
+        return Number.isNaN(this.selectedFpsWatcher.value) ? null : this.selectedFpsWatcher.value;
     }
 
     set selectedFps(value) {

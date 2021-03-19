@@ -38,6 +38,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor {
     @Input() step: number;
     @Input() componentId: string;
     @Input() disabled;
+    @Input() placeholder = '- -';
 
     @Output() onChange = new EventEmitter<number>();
 
