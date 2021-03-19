@@ -107,14 +107,20 @@ Modify Local Users via Cloud UI
     [Arguments]    ${local users}    ${email}
     @{new locals} =    Create List 
     Verify In Local Users UI    ${local users}    ${email}
-    FOR    ${user}    IN    @{local users}
-        Click Element    //span[text()="Local+${user}"]
-        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new login} =    Change Login for Local User    Local+${user}_changed
+    &{local users limited}=    Create Dictionary    &{local users}   
+    Pop From Dictionary    ${local users limited}    cloudAdmin 
+    
+    FOR    ${user}    IN    @{local users limited}
+# commented out because of CLOUD-6854
+        #Click Element    //span[text()="Local+${user}"]
+        #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        #${new login} =    Change Login for Local User    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     Changed User
         ${new permission} =    Change Permission Level for Local User    ${user}    ${email}
-        ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
-	   
+        ${email}=       Get Random Email    ${BASE EMAIL}
+        ${new local user email} =     Change Email for Local User    ${email}
+	    #Log To Console    You should be able to save now. ${user}
+        #Sleep    100
 	    Log    Save All Changes
 	    Wait Until Element is Visible    ${ACCOUNT SAVE}    60
         Click Button    ${ACCOUNT SAVE}
@@ -180,7 +186,7 @@ Change Email for Local User
     
 Modify All Local User Info
     [Arguments]    ${user}    ${email}
-    ${new login} =    Change Login for Local User    Local+${user}_changed
+    #${new login} =    Change Login for Local User    Local+${user}_changed
 	${new full name} =    Change Full Name for Local User     Changed User
 	${new permission} =    Change Permission Level for Local User    ${user}    ${email}    
 	${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
@@ -249,23 +255,28 @@ Get Client Custom Permissions
     END
 
 Change All Local Users Login
-    @{new locals}=    Create List
-    FOR    ${user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}
+    Pop From Dictionary    ${local users limited}    cloudAdmin
+    FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+# commented out because of CLOUD-6854
+        #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
 	    ${new login}=    Change Login for Local User    Local+${user}_changed
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Wait Until Element is Visible    //span[text()="${new login}"]
-	    Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
+# commented out because of CLOUD-6854
+	    #Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    ${email}=    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         &{new local}=    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
         Append To List    @{new locals}    ${new local}
     END
 
 Change All Local Users Full Name
-    FOR    ${user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}   
+    Pop From Dictionary    ${local users limited}    cloudAdmin 
+    FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible    ${LOCAL USER NAME}
 	    ${new full name} =    Change Full Name for Local User     Changed User
@@ -279,7 +290,9 @@ Change All Local Users Full Name
     END
     
 Change All Local Users Email
-    FOR    ${user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}
+    Pop From Dictionary    ${local users limited}    cloudAdmin
+    FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Element Is Visible    ${LOCAL USER EMAIL}
         ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
@@ -292,9 +305,12 @@ Change All Local Users Email
     END
 
 Change All Local User Permissions
-    FOR    ${user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}
+    Pop From Dictionary    ${local users limited}    cloudAdmin
+    FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+# commented out because of CLOUD-6854
+        #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         ${new permission} =    Change Permission Level for Local User    ${user}    ${system['owner']}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
@@ -308,10 +324,13 @@ Change All Local User Permissions
     END
 
 Change All Local User Password
-    FOR    ${user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}
+    Pop From Dictionary    ${local users limited}    cloudAdmin
+    FOR    ${user}    IN    @{local users limited}
         Log    Change password for ${user}
         Click Element    //span[text()="Local+${user}"]
-        Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+# commented out because of CLOUD-6854
+        #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    ${LOCAL USER CHANGE PASSWORD SAVE}
@@ -325,14 +344,16 @@ Change All Local User Password
     END
 
 Change All Local User Info
-    FOR    ${local user}    IN    @{local users}
+    &{local users limited}=    Create Dictionary    &{local users}
+    Pop From Dictionary    ${local users limited}    cloudAdmin
+    FOR    ${user}    IN    @{local users limited}
         Go to Users List
-        Click Element    //span[text()="Local+${local user}"]
+        Click Element    //span[text()="Local+${user}"]
         Wait Until Element Is Visible    ${LOCAL USER NAME}
-	    ${user role} =    Get Text    //span[contains(text(),"Local+${local user}")]/following-sibling::span
+	    ${user role} =    Get Text    //span[contains(text(),"Local+${user}")]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
-	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${local user}    ${users['cloudAdmin']}
-        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${local user}    ${users['cloudAdmin']}
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
         ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
     END

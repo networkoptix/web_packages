@@ -2,7 +2,7 @@
 Verify on Servers Page
     [Arguments]    ${timeout}=${selenium_timeout}
     Wait Until Elements are Visible
-    #...    ${PORT INPUT}
+    ...    ${PORT INPUT}
     ...    ${RESTART SERVER BUTTON}
     ...    ${SERVER DETAILED INFO BUTTON}
     ...    ${IP}       
