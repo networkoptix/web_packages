@@ -1,35 +1,14 @@
-@import 'styles/_theme_palette';
+@use '../../../../../../../../../styles/_theme_palette' as *;
 
 :host {
     .media-server-list {
 
         .server-list {
+            display        : flex;
+            flex-direction : column;
             padding: 0 8px;
             height : calc(100vh - 92px);
             overflow: auto;
-
-            // &::-webkit-scrollbar {
-            //     display: none;
-            // }
-            // -ms-overflow-style: none;
-            // scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                width: 8px;
-            }
-
-            scrollbar-width: 8px;
-            scrollbar-color: $light4 $light8;
-
-            &::-webkit-scrollbar-track {
-                background-color: $light4;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                background-color: $light8;
-                border-radius: 0;
-                border: none;
-            }
 
             .server {
                 width: 100%;

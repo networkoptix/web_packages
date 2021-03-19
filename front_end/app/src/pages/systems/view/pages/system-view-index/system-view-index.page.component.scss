@@ -80,41 +80,61 @@
         background-color: $additional_light2;
         z-index: 20;
 
-        > .sidebar-toggling-ear {
-            position: absolute;
-            top: calc(50% - 40px / 2);
-            right: -16px;
-            width: 16px;
-            height: 40px;
-            background-color: $light4;
-            background-image: url('./img/arrow-left.png');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 16px 16px;
-            box-shadow: 0px -2px 0px 0px rgba(0,0,0,0.1);
-            cursor: pointer;
-            opacity: 0.8;
-            // transition: opacity .2s ease-in-out;
-            &:hover {
-                opacity: 1.0;
+        > .sidebar-toggling-ear--wrapper {
+            position : absolute;
+            top      : calc(50% - 40px / 2);
+            right    : -16px;
+            width    : 16px;
+            height   : 40px;
+
+            @include bootstrap.media-breakpoint-down(md) {
+                content    : "";
+                position   : absolute;
+                top        : calc(50% - 70px / 2);
+                right      : -50px;
+                width      : 50px;
+                height     : 70px;
+                background : transparent;
             }
 
-            transform: rotate(180deg);
-            border-radius: 2px 0 0 2px;
-
             &.shown {
-                transform: rotate(0deg);
-                box-shadow : 0 2px 0 0 rgba(0, 0, 0, 0.1);
+                @include bootstrap.media-breakpoint-down(sm) {
+                    right : 0;
+                }
 
-                @include bootstrap.media-breakpoint-up(md) {
+                .sidebar-toggling-ear {
+                    transform     : rotate(0deg);
                     border-radius : 0 2px 2px 0;
+
+                    @include bootstrap.media-breakpoint-down(sm) {
+                        float : right;
+                    }
+                }
+            }
+
+            .sidebar-toggling-ear {
+                width               : 16px;
+                height              : 40px;
+                background-color    : $light4;
+                background-image    : url('./img/arrow-left.png');
+                background-position : center center;
+                background-repeat   : no-repeat;
+                background-size     : 16px 16px;
+                box-shadow          : 0px -2px 0px 0px rgba(0, 0, 0, 0.1);
+                cursor              : pointer;
+                opacity             : 0.8;
+
+                &:hover {
+                    opacity : 1.0;
                 }
 
                 @include bootstrap.media-breakpoint-down(md) {
-                    right: 0;
+                    margin-top: 15px;
                 }
-            }
 
+                transform           : rotate(180deg);
+                border-radius       : 2px 0 0 2px;
+            }
         }
     }
 

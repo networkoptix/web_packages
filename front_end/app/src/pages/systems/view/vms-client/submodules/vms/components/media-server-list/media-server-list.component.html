@@ -5,7 +5,7 @@
     (filterTokenChange)="updateFilteredList($event)"
   ></nx-media-server-list-header>
 
-  <div class="server-list">
+  <div class="server-list" [ngStyle]="{height : 'calc(100vh - 92px)'}">
     <div
       class="server"
       *ngFor="let server of mediaservers"
