@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "OS időváltozási ellenőrzési időszak",
         "syncTimeExchangePeriod": "A hálózati kérések szinkronizálási időszaka",
         "syncTimeEpsilon": "Epsilon szinkronizálása. Az új érték nem kerül alkalmazásra, ha a delta idő kevesebb, mint epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max hordozható kamera archív szinkronszálak",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Frissítések értesítései engedélyezve",
         "upnpPortMappingEnabled": "Az UPNP port hozzárendelés engedélyezve",
         "useTextEmailFormat": "Egyszerű szöveges e-mailek küldése",

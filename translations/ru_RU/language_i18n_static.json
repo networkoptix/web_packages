@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Период проверки изменения времени ОС",
         "syncTimeExchangePeriod": "Интервал синхронизации времени для сетевых запросов",
         "syncTimeEpsilon": "Диапазон синхронизация времени. Новое время не применяется, если разница времени меньше, чем это значение",
-        "maxWearableArchiveSynchronizationThreads": "Максимальное количество потоков синхронизации архива для виртуальных камер",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Уведомления об обновлениях включены",
         "upnpPortMappingEnabled": "Сопоставление портов UPNP включено",
         "useTextEmailFormat": "Отправка писем простым текстом",

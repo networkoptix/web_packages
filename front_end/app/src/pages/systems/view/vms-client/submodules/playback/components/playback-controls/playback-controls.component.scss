@@ -1,5 +1,4 @@
-@import 'styles/_theme_palette';
-
+@use '../../../../../../../../../styles/_theme_palette' as *;
 
 :host {
   display: inline-block;
@@ -9,9 +8,8 @@
   z-index: 2;
 
   > .playback-control-button {
-    display: block;
     text-align: center;
-
+    border-left: 1px solid $light4;
     position: absolute;
     left: 0;
     top: 0;

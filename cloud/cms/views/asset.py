@@ -745,7 +745,7 @@ def prepare_asset_info(request, customization, asset, ignore_error = False):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsSuperuser,))
 def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
@@ -765,7 +765,7 @@ def prepare_asset_info_for_menu(request, menu_id):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsSuperuser,))
 def get_asset_info_by_menu(request, menu_id):
     require_params(request, ('customization',))
     return api_success(prepare_asset_info_for_menu(request, menu_id))

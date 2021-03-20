@@ -13,7 +13,8 @@ Merge Systems
     [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
     ${data}=   Create Dictionary    systemId=${secondary id}
-    Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
+    # hardcoded url below because ${ENV} uses https see Jira CQA-165
+    Create Digest Session    merge session    http://cloud-test.hdw.mx    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -422,7 +423,7 @@ Save User
     ...    ${user role id}=${EMPTY}
     ...    ${is enabled}=${True}
     ...    ${is cloud}=${True}
-    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    password=${password}
+    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1

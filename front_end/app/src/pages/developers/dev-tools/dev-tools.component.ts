@@ -46,6 +46,7 @@ export class NxDevToolsComponent implements OnInit {
         if (!this.devToolsNode) {
             const mapToDevToolsNode = ({
                 name,
+                subtitle,
                 display_name: displayName,
                 asset_id: assetId,
                 new_window: newWindow,
@@ -55,9 +56,10 @@ export class NxDevToolsComponent implements OnInit {
                 nodes
             }): AboutNode => ({
                 title       : displayName || name || asset?.title,
+                subtitle,
                 displayName : displayName || name,
                 nodes       : nodes && nodes.map(mapToDevToolsNode),
-                url         : url || `/developers/knowledge-base/${assetId}`,
+                url         : url || `/docs/content/${assetId}`,
                 assetId,
                 asset,
                 icon,

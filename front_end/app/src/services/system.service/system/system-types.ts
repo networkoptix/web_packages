@@ -106,7 +106,7 @@ export interface NxMediaServer {
     id: string;
     name: string;
     url: string;
-
+    status: string;
     timeInfo: ServerTimeInfo;
 
     // considered obligatory for now, though may change later on (@gbezyuk)

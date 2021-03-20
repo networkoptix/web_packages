@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Période de vérification du changement d'heure de l'OS",
         "syncTimeExchangePeriod": "Intervalle de synchronisation de synchronisation de l'heure pour les requêtes réseau",
         "syncTimeEpsilon": "Synchroniser le temps epsilon. La nouvelle valeur n'est pas appliquée si le temps delta est inférieur à epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Nombre max de threads de synchronisation d'archive de caméra portable",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Nombre maximum de threads de synchronisation des archives de la caméra virtuelle",
         "updateNotificationsEnabled": "Notifications de mise à jour activées",
         "upnpPortMappingEnabled": "Mappage de port UPNP activé",
         "useTextEmailFormat": "Envoyer des courriels en texte brut",
@@ -895,7 +895,7 @@
         "videoTrafficEncryptionForced": "Forcer le chiffrement du trafic vidéo",
         "updateStatus": "Mettre à jour statut",
         "watermarkSettings": "Paramètres du filigrane",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Nombre maximum de connexions HTTP en utilisant le transcodage pour le serveur. Chrome ouvre 2 connexions à la fois, puis ferme la première. Il est donc recommandé de définir la valeur >=2 à ce paramètre.",
         "maxEventLogRecords": "Nombre maximal d'enregistrements du journal des événements à conserver dans la base de données. La quantité réelle d'enregistrements non supprimés peut dépasser de 20% la valeur spécifiée.",
         "forceLiveCacheForPrimaryStream": "S'il faut mettre certaines images en cache pour le flux principal. Valeurs: \"oui\" - toujours activé (peut utiliser beaucoup de RAM), \"non\" - toujours désactivé sauf lorsque requis par la lecture (par exemple, HLS), \"auto\" - similaire à \"non\", mais activé lorsque l'amélioration de l'expérience utilisateur (par exemple, lorsqu'un plug-in Analytics fonctionne sur la caméra)."
     },
@@ -915,7 +915,7 @@
             "reserved": "Réservé",
             "inaccessible": "Inaccessible",
             "changing": "Changement de mode en cours...",
-            "disabled": "Disabled"
+            "disabled": "Désactivé"
         },
         "alreadyUsed": "Le chemin de stockage {url} est déjà utilisé par un autre serveur.",
         "deleteExternalStorage": "Supprimer le stockage externe ?",

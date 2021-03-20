@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "OSの時刻変更チェック期間",
         "syncTimeExchangePeriod": "ネットワーク要求の時刻同期間隔",
         "syncTimeEpsilon": "同期時間イプシロン。時間デルタがイプシロンより小さい場合、新しい値は適用されません",
-        "maxWearableArchiveSynchronizationThreads": "ウェアラブルカメラアーカイブの最大同期スレッド",
+        "maxVirtualCameraArchiveSynchronizationThreads": "仮想カメラのアーカイブ同期スレッド最大数",
         "updateNotificationsEnabled": "更新の通知有効",
         "upnpPortMappingEnabled": "UPNPポートマッピング有効",
         "useTextEmailFormat": "テキスト形式のメールを送信する",

@@ -555,7 +555,7 @@ def asset_has_required_data(asset, version_id=None):
     return errors
 
 
-def send_version_for_review(asset, user):
+def send_version_for_review(asset, user, notify=True):
     old_version = ContentVersion.objects.filter(asset=asset, accepted_date=None).order_by('created_date').last()
 
     if old_version:
@@ -575,7 +575,9 @@ def send_version_for_review(asset, user):
 
     update_records_to_version(asset, Context.objects.filter(asset_type=asset.asset_type), version)
 
-    notify_version_ready(asset, version, user)
+    if notify:
+        notify_version_ready(asset, version, user)
+
     return []
 
 

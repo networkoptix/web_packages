@@ -86,6 +86,9 @@ nx-select {
     }
     .dropdown-force-position, .force-position {
         position: static !important;
+        & > button#genericSelect:active {
+            box-shadow: none !important;
+        }
         & > .dropdown-menu {
             transform: translateY(calc(100% - 22px));
         }

@@ -4,7 +4,7 @@ ${SERVER NAME}                      //header//h2
 ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]
-${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input[@type="number"]
+${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::div//input[@type="number"]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
@@ -64,6 +64,7 @@ ${STORAGE DISK 2}                   //span[contains(text(), "disk2") and @class=
 ${STORAGE DISK 3}                   //span[contains(text(), "disk3") and @class="ellipsis"]
 ${STORAGE DISK 4}                   //span[contains(text(), "disk4") and @class="ellipsis"]
 ${STORAGE DISK INVALID}             //span[contains(text(), "invalid") and @class="ellipsis"]
+${STORAGE DISK NETWORK}             //span[contains(text(), "networkDisk") and @class="ellipsis"]
 ${STORAGE DISABLED INACCESSIBLE}    ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]/following-sibling::td/div[contains(text(), "${INACCESSIBLE}")]
 ${STORAGE DISABLED NOT IN USE}      ${STORAGE DISK 2}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE NOT IN USE MODE}
 ${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE RESERVED MODE}
@@ -90,7 +91,12 @@ ${ARCHIVE BACKUP CLIENT MSG}        //p[contains(text(), "${ARCHIVE BACKUP CLIEN
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
 ${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
-
+${STORAGE SMB ICON}                 //*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
+${STORAGE SMB TOOLTIP}              ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${SMB TOOLTIP TEXT}")]
+${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
+${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
+${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
+${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]
@@ -99,6 +105,8 @@ ${AS MODAL URL INPUT}               ${ADD STORAGE MODAL}/div[contains(@class, "m
 ${AS MODAL URL INPUT ERROR}         ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl" and contains(@class, "ng-invalid")]
 ${AS MODAL URL REQUIRED}            ${AS MODAL URL INPUT}/parent::div/following-sibling::div/span[contains(text(), "${URL REQUIRED TEXT}")]
 ${AS MODAL URL INVALID}             ${AS MODAL URL INPUT}/parent::div/following-sibling::div/span[contains(text(), "${INVALID URL TEXT}")]
+${AS MODAL URL ALREADY ADDED}       ${AS MODAL URL INPUT}/parent::div/following-sibling::div/span[contains(text(), "${STORAGE PATH ALREADY ADDED TEXT}")]
+${AS MODAL URL NOT FOUND}           ${AS MODAL URL INPUT}/parent::div/following-sibling::div/span[contains(text(), "${NO STORAGE FOUND TEXT}")]
 ${AS MODAL URL NOT INVALID}         ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl" and not(contains(@class, "ng-invalid"))]
 ${AS MODAL LOGIN INPUT}             ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addLogin"]
 ${AS MODAL LOGIN INPUT ERROR}       ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addLogin" and contains(@class, "ng-invalid")]
@@ -110,6 +118,10 @@ ${AS MODAL PASSWORD INVALID}        ${AS MODAL PASSWORD INPUT}/parent::div/follo
 ${AS MODAL SUBMIT BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button
 ${AS MODAL CANCEL BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
 ${AS FAILED TO ADD TOAST}           //app-toasts//ngb-toast/div[@class="toast-body"]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
+${AS MODAL STORAGE USED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//p[contains(text(), "${STORAGE PATH ALREADY USED TEXT}")]
+${AS MODAL NOT RECOMMENEDED}        ${ADD STORAGE MODAL}//p[contains(text(), "${NOT RECOMMENDED DIFFERENT SERVERS TEXT}")]
+${AS MODAL ADD ANYWAY}              ${ADD STORAGE MODAL}//p[contains(text(), "${ADD THIS STORAGE ANYWAY TEXT}")]
+${AS MODAL BACK BUTTON}             ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]//button[contains(text(), "${BACK TEXT}")]
 
 ${STORAGE REINDEXING BLOCK}         //nx-block//div[contains(@class, "reindex-container")]
 ${STORAGE REINDEX MAIN BUTTON}      ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX MAIN STORAGE TEXT}")]

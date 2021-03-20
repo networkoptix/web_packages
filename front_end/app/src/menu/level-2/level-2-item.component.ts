@@ -29,12 +29,7 @@ export class NxLevel2ItemComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.item?.currentValue) {
             this.isEnabled = changes.item.currentValue.isEnabled;
-            this.item.label = this.menuService.escapeBrackets(this.item.label);
-            this.item.additionalText = this.menuService
-                .escapeBrackets((typeof changes.item.currentValue.additionalLabel === 'function')
-                    ? changes.item.currentValue.additionalLabel()
-                    : changes.item.currentValue.additionalLabel
-                );
+            this.item.additionalText = this.menuService.getAdditionalText(changes.item.currentValue.additionalLabel);
         }
     }
 }

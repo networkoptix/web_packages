@@ -24,7 +24,7 @@ Storage Suite Setup
     @{server auth}=   Create List    admin    qweasd 123
     Set Suite Variable    ${server auth}    ${server auth}   
     
-    @{size} =    Create List    30000    20000    20000    12000    12000
+    @{size} =    Create List    200000    20000    20000    12000    12000
 
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
     Open Connection    ${QA BURBANK IP}
@@ -162,7 +162,12 @@ Storage Suite Teardown
         ${results}    Execute Command     rm ${disk location}/disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
         ${results}    Execute Command     rm -r disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
         Close Connection
-    END 
+    END
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     rm -r networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection 
     
     FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}     
         Delete Account    ${ENV}    ${user email}    ${password}   
@@ -290,9 +295,10 @@ Wait Until Analytics Data Exists
     
 Verify Recorded Video Files
     [Arguments]    ${disk}
+    ${disk} =    Set Variable If    '${disk}' == 'networkDisk'    networkDisk    ${disk}-${random}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS} 
-    ${results}    Execute Command    find ${disk}-${random} -iname "*mkv" -printf "%f "
+    ${results}    Execute Command    find ${disk} -iname "*mkv" -printf "%f "
     ${files} =    Get Count    ${results}    .mkv
     Close Connection
     [Return]    ${files}
@@ -339,3 +345,21 @@ Set Backup Setting To
     Save Media Server Attributes    ${server}    ${server auth}     ${media server attribs}   
     ${media server attribs} =    Get Media Server Attributes     ${server}    ${server auth}
     Should Be Equal As Strings    ${media server attribs[0]}[backupType]    ${backup setting} 
+    
+Stop Server
+    [Arguments]    ${container name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
+    ${results}    Execute Command     docker container stop ${container name}    
+    #Should Be Equal As Integers   ${results}    0 
+    Close Connection 
+    
+Start Server
+    [Arguments]    ${container name}    ${n}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}        
+    ${results}    Execute Command    docker container start ${container name}    
+    ${results}    Execute Command    docker container port ${container name}
+    @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    Close Connection
+    Set Suite Variable    ${port${n}}    ${portnew[0]}

@@ -1,6 +1,6 @@
 export const sidebarLayout = {
-    sidebarOverlaysWhenWindowWidthBelowPx: 750,
-    cameraClickHidesSidebarWhenWindowWidthBelowPx: 500,
-}
+    sidebarOverlaysWhenWindowWidthBelowPx         : 768,
+    cameraClickHidesSidebarWhenWindowWidthBelowPx : 768
+};
 
-export default sidebarLayout
+export default sidebarLayout;

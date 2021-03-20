@@ -31,7 +31,7 @@ export class NxGetStartedComponent implements OnChanges {
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
-                ['icon', 'url', 'title'],
+                ['icon', 'title', 'subtitle'],
                 null,
                 this.errorManager.buildConfig(
                     ['title']

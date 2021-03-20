@@ -223,6 +223,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           id: ms.id,
           name: ms.name,
           url: ms.url,
+          status: ms.status,
           cameras: ms.cameras.map(c => {
             this.hasCameras = true
             const result = new Camera(
