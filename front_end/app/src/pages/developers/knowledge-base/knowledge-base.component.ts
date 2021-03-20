@@ -300,10 +300,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                                             this.showRibbon(this.assetId$.value, reviewId);
                                         }
                                         this.search = { ...this.search };
-                                        this.pageService.pageTitle = NxLanguageProviderService.translate(
-                                            this.LANG.pageTitles.articleTitle, {
-                                                ARTICLE_TITLE: originalTitle, VMS_NAME: this.CONFIG.vmsName
-                                            });
+                                        this.pageService.pageTitle = originalTitle;
                                         this.pageService.pageDescription = shortDescription;
                                         this.pageNode = KnowledgeNode.normalHeader(
                                             title,
