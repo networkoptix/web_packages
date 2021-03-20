@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "時間",
-            "Trial": "試用",
+            "Trial": "時間",
             "Professional": "プロフェッショナル",
             "Analog": "アナログ",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "追加で {number} 必要",
             "activated": "ライセンスキーが有効化されました",
             "inuse": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID {hwid} を持つサーバーに登録されています。",
-            "trialActivated": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。"
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {

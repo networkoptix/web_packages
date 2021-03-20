@@ -481,5 +481,13 @@
     "ARCHIVE BACKUP STREAMS MSG TEXT": "Se está realizando una copia de seguridad de las transmisiones secundarias de todas las cámaras de este servidor en tiempo real.",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "Puede cambiar el modo de respaldo o seleccionar cámaras específicas en el cliente de escritorio.",
     "RECORDING STOP WARNING TEXT": "Se detendrá la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado continuará eliminándose.",
-    "STORAGE DELETION ALERT TOOLTIP TEXT": "Se detiene la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado todavía está siendo eliminando."
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Se detiene la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado todavía está siendo eliminando.",
+    "STORAGE PATH ALREADY ADDED TEXT": "Storage path is already added to this server",
+    "EXTERNAL STORAGE ADDED TEXT": "External storage added",
+    "SMB TOOLTIP TEXT": "Network (smb), added through VMS",
+    "NO STORAGE FOUND TEXT": "No storage found",
+    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.238/networkDisk is already used by another server.",
+    "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
+    "ADD THIS STORAGE ANYWAY TEXT": "Add this storage anyway?",
+    "BACK TEXT": "Back"
 }

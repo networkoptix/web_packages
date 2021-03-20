@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Prøve",
+            "Trial": "Tid",
             "Professional": "Profesjonell",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "Lisensnøkkel aktivert",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {

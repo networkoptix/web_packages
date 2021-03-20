@@ -253,7 +253,7 @@
             "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
             "checking": "Sprawdzanie...",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%cloudName%</strong> lub złącz je lokalnie za pomocą klienta <strong>%vmsName%</strong>.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
@@ -275,10 +275,10 @@
                 "b_support": "wsparcie",
                 "c_proceeding": "przed kontynuowaniem."
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "secondaryCannotMerge": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym. Zaktualizuj {targetSystem} do {downloadHTML} aby połączyć systemy.",
+            "secondarySystemUnavailable": "System {targetSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
             "serverAtUrl": "serwer {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotAvailable": "<p class=\"mb-2\">Nie można uzyskać dostępu do systemu {targetSystem}.</p><p>Upewnij się, że ten serwer jest w trybie online i spróbuj ponownie.</p>",
             "serverNotYours": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
             "serverVersionOld": "Ten serwer ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj go do najnowszej wersji, aby połączyć go z bieżącym systemem.",
             "serverVersionNew": "Ten serwer ma nowszą wersję oprogramowania niż system bieżący. Zaktualizuj oba systemy do tej samej wersji, aby je połączyć.",
@@ -528,8 +528,8 @@
         "b_Link": "wyślij zapytanie",
         "c_Info": "w przypadku dodatkowych pytań / wątpliwości dotyczących obsługiwanych urządzeń."
     },
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdTopXByVolume": "Max {value} wg ilości:",
+    "ipvdDisclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {vmsName}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {companyName}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy.",
     "menu": {
         "titles": {
             "cameras": "Kamery",
@@ -545,7 +545,7 @@
         "activate": "Aktywuj konto",
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} dla {VMS_NAME}",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
@@ -568,9 +568,9 @@
         "apiTool": "Narzędzie testowania API"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrations": "Integrations Marketplace to scentralizowany ekosystem produktów, które bezproblemowo integrują się z produktami VMS, takimi jak %VMS_NAME%, wszystkie dostępne w %CLOUD_NAME% dzięki czemu można znaleźć rozwiązania umożliwiające zbudowanie i dostosowanie systemu wideo IP.",
+        "integrationSetup": "Instrukcje konfiguracji dla {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} dla {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "zbyt popularne",
@@ -593,11 +593,11 @@
             "message": "Upewnij się, że twoje serwery są w trybie online i spróbuj ponownie."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "System jest złączany z {systemName}.",
             "message": {
                 "dependingOnSize": "W zależności od rozmiaru bazy danych może to potrwać do kilku godzin.",
                 "untilFinished": "W trakcie złączania systemów można logować się do nich i odtwarzać wideo, ale nie można zmieniać ich konfiguracji.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "Po złączeniu systemów wszyscy użytkownicy i kamery z tego systemu będą dostępne w systemie {systemName}, a ten system zostanie usunięty."
             }
         },
         "server": {
@@ -607,7 +607,7 @@
     },
     "pleaseSelect": "Proszę wybrać...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Politykę prywatności firmy {INTEGRATION_COMPANY} można znaleźć <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">tutaj</a>. Polityka prywatności firmy %COMPANY_NAME%, która zawiera instrukcje dotyczące wycofania zgody, jest dostępna <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>.",
         "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
     },
     "registration": {
@@ -635,12 +635,12 @@
         "analyticsSelected": "zdarzenia analityczne",
         "filter applied": "zastosowany filtr",
         "filters applied": "zastosowane filtry",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filtry} one{# filtrów} other{# filtrów}} zastosowano",
         "hardwareType": "Rodzaj",
         "hardwareTypes": "Typy",
         "minResolution": "Minimalna rozdzielczość",
         "search_ipvd": "Wyszukaj według modelu lub producenta",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# wybrane} one{# wybranych} other{# wybranych}}",
         "vendor": "Producent",
         "vendors": "Producenci"
     },
@@ -672,7 +672,7 @@
     "system": {
         "connected": "Połączony",
         "not_connected": "Nie połączony",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "MERGE_FINISHES": "Po złączeniu systemów wszyscy użytkownicy i kamery z tego systemu będą dostępne w systemie <strong>{targetSystemName}</strong>, a ten system zostanie usunięty.",
         "mergeUnknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
@@ -742,16 +742,16 @@
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
         "nameFail": "Nie udało się zmienić {type}",
-        "reviewAccepted": "The review has been accepted",
+        "reviewAccepted": "Opinia została przyjęta",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "System {systemName} został pomyślnie usunięty z Twojego konta"
             },
             "disconnected": {
                 "success": "System został pomyślnie odłączony od %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "System podłączono do %CLOUD_NAME%",
                 "failed": "Nie udało się podłączyć systemu do %CLOUD_NAME%"
             },
             "merge": {
@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Czas",
-            "Trial": "Okres próbny",
+            "Trial": "Czas",
             "Professional": "Professional",
             "Analog": "Analogowy",
             "Edge": "Edge",
@@ -798,10 +798,10 @@
             "serverNotFound": "Nie znaleziono serwera"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} więcej wymaganych",
             "activated": "Klucz licencyjny aktywowany",
             "inuse": "Klucz licencyjny został już aktywowany i powiązany z serwerem o identyfikatorze sprzętu {hwid} w innym systemie",
-            "trialActivated": "Licencja próbna aktywowana. Począwszy od dzisiaj, możesz nagrywać maksymalnie 4 kamery przez 30 dni."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -899,13 +899,13 @@
         "maxEventLogRecords": "Maksymalna liczba wpisów do dziennika zdarzeń przechowywanego w bazie danych. Rzeczywista ilość rekordów może być nawet o 20% wyższa niż podana wartość.",
         "forceLiveCacheForPrimaryStream": "Czy buforować niektóre ramki dla strumienia głównego. Wartości: „tak” - zawsze włączone (może zużywać dużo pamięci RAM), „nie” - zawsze wyłączone, chyba że wymaga tego odtwarzanie (np. HLS), „auto” - podobne do „nie”, ale włączone, gdy poprawia to wrażenia użytkownika (np. w niektórych wtyczkach analizy wideo)."
     },
-    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "result": "{count, plural, =0{# rezultaty} one{# rezultatów} other{# rezultatów}}",
+    "additionalSystems": "{count, plural, =0{+ # systemy} one{+ # systemów} other{+ # systemów}}",
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
+            "mainSuccess": "Ukończono reindeksowanie głównego magazynu",
+            "backupSuccess": "Ukończono reindeksowanie magazynu archiwum",
+            "mainFailed": "Reindeksowanie zakończone niepowodzeniem",
             "backupFailed": "Indeksowanie kopii zapasowej archiwum nie powiodło się"
         },
         "modes": {
