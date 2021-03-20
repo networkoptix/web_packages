@@ -52,6 +52,10 @@ export class UserManager {
         return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
     }
 
+    isLiveViewer() {
+        return ['Live Viewer', 'liveViewer'].includes(this._accessRole);
+    }
+
     isEmptyGuid(guid?: string) {
         return guid
             ? guid.replace(/[{}0-]/gi, '') === ''

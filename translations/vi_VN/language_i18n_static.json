@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Thời gian",
-            "Trial": "Thử nghiệm",
+            "Trial": "Thời gian",
             "Professional": "Chuyên nghiệp",
             "Analog": "Tương tự",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "Mã bản quyền được kích hoạt",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Giấy phép dùng thử kích hoạt. Bắt đầu từ hôm nay, bạn có thể ghi lại tới 4 camera trong 30 ngày."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Thời gian kiểm tra thay đổi thời gian của hệ điều hành",
         "syncTimeExchangePeriod": "Đồng bộ hóa khoảng thời gian đồng bộ hóa cho các yêu cầu mạng",
         "syncTimeEpsilon": "Đồng bộ hóa thời gian epsilon. Giá trị mới không được áp dụng nếu thời gian delta nhỏ hơn epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Chủ đề đồng bộ hóa máy ảnh có thể đeo tối đa",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Đã cập nhật thông báo",
         "upnpPortMappingEnabled": "Ánh xạ cổng UPNP được kích hoạt",
         "useTextEmailFormat": "Gửi email văn bản đơn giản",

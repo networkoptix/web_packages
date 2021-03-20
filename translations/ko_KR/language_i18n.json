@@ -9,7 +9,7 @@
     "Account not activated": "계정이 활성화되지 않았습니다",
     "Account not found": "계정을 찾을 수 없습니다",
     "Activate": "활성화",
-    "Activate Trial License": "체험용 라이선스 인증",
+    "Activate Time License": "Activate Time License",
     "Activate your account": "귀하의 계정을 활성화 합니다",
     "Add": "추가",
     "Add External Storage": "Add External Storage",
@@ -95,6 +95,7 @@
     "Download %VMS_NAME%": "%VMS_NAME% 다운로드",
     "Download Chrome": "Chrome을 다운로드",
     "Download Firefox": "Firefox를 다운로드",
+    "Download Full Report": "Download Full Report",
     "Download Links:": "다운로드 링크",
     "Downloads": "다운로드",
     "Draft": "초안",
@@ -213,6 +214,7 @@
     "Please select recording quality": "녹화 모드를 선택하십시오.",
     "Popularity": "인기도",
     "Port": "포트:",
+    "Port is busy": "Port is busy",
     "Press \"Connect System to %CLOUD_NAME%\"": "\"시스템을 %CLOUD_NAME%연결\"을 누르십시오.",
     "Quality": "품질",
     "Recording": "저장",
@@ -307,7 +309,7 @@
     "You can change the backup mode or select specific cameras in the desktop client.": "You can change the backup mode or select specific cameras in the desktop client.",
     "You can reset backup settings to default to backup secondary streams from all cameras in real time.": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
     "You can try to connect to other servers in this system:": "You can try to connect to other servers in this system:",
-    "You have an unused trial license.": "You have an unused trial license.",
+    "You have an unused time license.": "You have an unused time license.",
     "You have no Systems connected to %CLOUD_NAME%": "%CLOUD_NAME%에 연결된 시스템이 없습니다",
     "You have registered in": "귀하는 Nx클라우드에 등록 되셨습니다.",
     "Your Email": "당신의 이메일",
@@ -323,3 +325,4 @@
     "result": "result",
     "you": "당신"
 }
+

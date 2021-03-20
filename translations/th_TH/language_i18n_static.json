@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "เวลา",
-            "Trial": "ทดลอง",
+            "Trial": "เวลา",
             "Professional": "มืออาชีพ",
             "Analog": "อนาล๊อก",
             "Edge": "ขอบ",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "เปิดใช้งานใบอนุญาตแล้ว",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "เปิดใช้งานใบอนุญาตทดลองใช้แล้ว วันนี้คุณสามารถบันทึกได้สูงสุด 4 กล้องเป็นเวลา 30 วัน"
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "ระยะเวลาการตรวจสอบการเปลี่ยนแปลงเวลาระบบปฏิบัติการ",
         "syncTimeExchangePeriod": "ซิงค์ช่วงเวลาการซิงโครไนซ์สำหรับคำขอเครือข่าย",
         "syncTimeEpsilon": "Epsilon ซิงค์เวลา ค่าใหม่จะไม่ถูกใช้หากเวลา detla น้อยกว่า epsilon",
-        "maxWearableArchiveSynchronizationThreads": "หัวข้อการซิงค์ไฟล์เก็บถาวรสูงสุดของกล้องที่สวมใส่ได้",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "เปิดใช้งานการแจ้งเตือนการปรับปรุง",
         "upnpPortMappingEnabled": "เปิดใช้การแมปพอร์ต UPnP",
         "useTextEmailFormat": "ส่งอีเมลแบบธรรมดา",

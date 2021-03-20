@@ -19,11 +19,13 @@ import {
 }                                  from './supported-tech/supported-tech.component';
 import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule }             from '@src/pipes/pipes.module';
+import { DevelopersGuard } from '../../../routeGuards';
 
 const appRoutes: Routes = [
     {
         path      : ':name',
-        component : NxAboutComponent
+        component : NxAboutComponent,
+        canActivate: [DevelopersGuard]
     }
 ];
 

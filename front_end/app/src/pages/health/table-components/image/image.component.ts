@@ -54,7 +54,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
                 this.show = false;
             }
         }
-        if (changes.state && !['Online', 'Recording', 'Scheduled'].includes(changes.state.currentValue)) {
+        if (this.state === 'Unauthorized' || changes.state && !['Online', 'Recording', 'Scheduled'].includes(changes.state.currentValue)) {
             this.url = '';
             this.loaded.emit(true);
         }

@@ -198,10 +198,16 @@ function stop_mediaserver() {
     docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
 }
 
-function local_build() {
-    VERSION=$1
-    PORT=$2
-    COPY=$3
+function update_webadmin() {
+    TARGET=$1
+    TARGET_DIR=/opt/networkoptix/mediaserver/bin
+    BUILD_FILE=~/Desktop/build/server-external/bin/external.dat
+
+    echo "Copying..."
+    echo $(scp $BUILD_FILE $TARGET:$TARGET_DIR)
+}
+
+function build_webadmin_locally() {
     BUILD_DIR=~/Desktop/build
     REPO=$PWD
 
@@ -212,6 +218,17 @@ function local_build() {
     [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules
     pushd $BUILD_DIR
         . "$REPO/../webadmin/build.sh"
+    popd
+}
+
+function local_build() {
+    VERSION=$1
+    PORT=$2
+    COPY=$3
+    BUILD_DIR=~/Desktop/build
+    REPO=$PWD
+
+    pushd $BUILD_DIR
         cp server-external/bin/external.dat $REPO/tools/docker
     popd
 
@@ -331,11 +348,18 @@ do
         stop_docker)
             stop_docker_containers
             ;;
-        local_build)
+        build_local_vms)
             VERSION=$2
             PORT=$3
             COPY=$4
+            build_webadmin_locally
             local_build $VERSION $PORT $COPY
+            break
+            ;;
+        update_remote_vms)
+            TARGET=$2
+            build_webadmin_locally
+            update_webadmin $TARGET
             break
             ;;
         build_mediaserver)
@@ -389,7 +413,8 @@ do
             echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
-            echo 'local_build - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh local_build {version} {port} {copy}"'
+            echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
+            echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
             echo ''
             ;;

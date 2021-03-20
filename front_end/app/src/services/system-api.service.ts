@@ -167,7 +167,7 @@ export class NxSystemAPI {
         let headers = new HttpHeaders();
         params = params || {};
 
-        if (this.authGet) {
+        if (!environment.isLocal && this.authGet) {
             params.auth = this.authGet;
         }
 
@@ -203,7 +203,7 @@ export class NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        if (this.authPost && !url.includes('/cookieLogin')) {
+        if (!environment.isLocal && this.authGet) {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {

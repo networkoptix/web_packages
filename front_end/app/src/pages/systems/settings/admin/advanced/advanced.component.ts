@@ -134,7 +134,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     canSee(key) {
-        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key].type);
+        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key]?.type);
     }
 
     getAdvancedSettings() {
@@ -153,12 +153,20 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     settingsToBeDisplayedOrUpdated = (settings) => {
         Object.entries(settings).reduce((systemSettings, [key, value]) => {
             // CLOUD-6350: Refactor advanced global settings page
-            // if a key is missing from settingsConfig it is not displayed or updated
-            if (!this.CONFIG.settingsConfig[key] || this.CONFIG.settingsConfig[key].hiddenInAdvanced) {
+            if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {
                 return systemSettings;
             }
-
-            switch (this.CONFIG.settingsConfig[key].type) {
+            let type = this.CONFIG.settingsConfig[key]?.type;
+            if (type === undefined) {
+                type = 'text';
+                if (Number.isInteger(value)) {
+                    type = 'number';
+                } else if (['true', 'false'].includes(value as string)) {
+                    type = 'checkbox';
+                }
+                this.CONFIG.settingsConfig[key] = { type };
+            }
+            switch (type) {
                 case 'number':
                     systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
                     break;

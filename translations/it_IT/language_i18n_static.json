@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Orario",
-            "Trial": "Prova",
+            "Trial": "Orario",
             "Professional": "Professionale",
             "Analog": "Analogico",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} più richiesti",
             "activated": "Licenza attivata",
             "inuse": "La chiave di licenza è già stata attivata e associata al server con ID hardware {hwid} in un altro sistema",
-            "trialActivated": "Licenza di prova attivata. A partire da oggi, puoi registrare fino a 4 telecamere per 30 giorni."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Periodo di controllo della modifica dell'ora del sistema operativo",
         "syncTimeExchangePeriod": "Intervallo sincronizzazione orario per le richieste di rete",
         "syncTimeEpsilon": "Tempo di sincronizzazione epsilon. Il nuovo valore non viene applicato se il tempo delta è inferiore a epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Thread di sincronizzazione massima dell'archivio della telecamera indossabili",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Notifiche di aggiornamento abilitate",
         "upnpPortMappingEnabled": "Funzione UPNP abilitata",
         "useTextEmailFormat": "Invia e-mail di testo",

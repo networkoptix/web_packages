@@ -368,7 +368,7 @@
         tinymce.init({
             selector: '#{{ field.id_for_label }}',
             paste_preprocess : function(plugin, args) {
-                const validPasteElements = ['span', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
+                const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
                 function replaceElements(matched, tagName) {
@@ -378,7 +378,7 @@
                     return matched;
                 }
 
-                args.content = args.content.replace(/<\/?([^\s>]*?)>/g, replaceElements);
+                args.content = args.content.replace(/<\/?([^\s>]*).*?>/g, replaceElements);
                 args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, "");
             },
             paste_postprocess: function(plugin, args) {
@@ -406,6 +406,7 @@
             valid_children: "+a[*]",
             closed : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
             protect: [/<svg.*\/svg>/],
+            relative_urls: false,
             toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
             menubar: false,
             resize: 'both',

@@ -97,6 +97,7 @@ export class NxAboutComponent {
             this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(({ nodes: about, id }) => {
                 const mapToAboutNode = ({
                     name,
+                    subtitle,
                     display_name: displayName,
                     asset_id: assetId,
                     new_window: newWindow,
@@ -108,6 +109,7 @@ export class NxAboutComponent {
                 }): AboutNode => {
                     return ({
                         title       : displayName || name || asset.title,
+                        subtitle,
                         displayName : displayName || name,
                         nodes       : nodes && nodes.map(mapToAboutNode),
                         url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
@@ -155,6 +157,7 @@ export type AboutStructure = AboutStructureNode[]
 
 export interface AboutNode {
     title: string;
+    subtitle: string;
     displayName: string;
     assetId: number;
     asset: any;

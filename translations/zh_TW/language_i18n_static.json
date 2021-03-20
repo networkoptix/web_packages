@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "時效性",
-            "Trial": "測試版",
+            "Trial": "時效性",
             "Professional": "專業版",
             "Analog": "類比",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "授權已啟用",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "測試授權已啟用。即日起可享有4台攝影機錄影30天的試用。"
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "作業系統時間會變更檢查時段",
         "syncTimeExchangePeriod": "發送網路校時請求的時間間隔",
         "syncTimeEpsilon": "容許誤差。如果時間最小誤差容許值小於目前誤差, 則不更新時間",
-        "maxWearableArchiveSynchronizationThreads": "穿戴式攝影機錄影資料同時最大單次上傳量",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "已啟用更新通知",
         "upnpPortMappingEnabled": "已啟用 UPNP 埠映射",
         "useTextEmailFormat": "發送純文字電子郵件",

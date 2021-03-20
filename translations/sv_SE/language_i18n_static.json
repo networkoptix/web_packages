@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Provperiod",
+            "Trial": "Tid",
             "Professional": "Professionell",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "Licensnyckel aktiverad",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Kontroll av OS-tidsinställningar",
         "syncTimeExchangePeriod": "Synkronisera tidssynkroniseringsintervall för nätverksförfrågningar",
         "syncTimeEpsilon": "Synkronisera tidsepsilon. Nytt värde tillämpas inte om tidsdeltat mindre än epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Maximalt antal bärbara kamerarkiv synkronisera trådar",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Uppdateringsaviseringar aktiverade",
         "upnpPortMappingEnabled": "UPNP-portmappning aktiverad",
         "useTextEmailFormat": "Skicka e-post med vanlig text",

@@ -9,7 +9,7 @@
     "Account not activated": "Kontot är inte aktiverat",
     "Account not found": "Kan inte hitta kontot",
     "Activate": "Aktivera",
-    "Activate Trial License": "Aktivera testlicens",
+    "Activate Time License": "Activate Time License",
     "Activate your account": "Aktivera ditt konto",
     "Add": "Lägg till",
     "Add External Storage": "Lägg till extern lagring",
@@ -95,6 +95,7 @@
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "Download Chrome": "Hämta Chrome",
     "Download Firefox": "Hämta Firefox",
+    "Download Full Report": "Download Full Report",
     "Download Links:": "Nedladdningslänkar:",
     "Downloads": "Nedladdningar",
     "Draft": "Utkast",
@@ -213,6 +214,7 @@
     "Please select recording quality": "Välj inspelningskvalitet",
     "Popularity": "Popularitet",
     "Port": "Port",
+    "Port is busy": "Port is busy",
     "Press \"Connect System to %CLOUD_NAME%\"": "Tryck på \"Anslut system till %CLOUD_NAME%\"",
     "Quality": "Kvalitet",
     "Recording": "Inspelning",
@@ -307,7 +309,7 @@
     "You can change the backup mode or select specific cameras in the desktop client.": "Du kan ändra säkerhetskopieringsläget eller välja specifika kameror i skrivbordsklienten.",
     "You can reset backup settings to default to backup secondary streams from all cameras in real time.": "Du kan återställa säkerhetskopieringsinställningarna till standard för att säkerhetskopiera sekundära strömmar från alla kameror i realtid.",
     "You can try to connect to other servers in this system:": "Du kan försöka ansluta till andra servrar i detta system:",
-    "You have an unused trial license.": "Du har en oanvänd testlicens.",
+    "You have an unused time license.": "You have an unused time license.",
     "You have no Systems connected to %CLOUD_NAME%": "Du har inga system anslutna till %CLOUD_NAME%",
     "You have registered in": "Du har registrerat dig i",
     "Your Email": "Din E-postadress",
@@ -323,3 +325,4 @@
     "result": "resultat",
     "you": "du"
 }
+

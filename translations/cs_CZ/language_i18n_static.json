@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Čas",
-            "Trial": "Zkušební verze",
+            "Trial": "Čas",
             "Professional": "Profesionální",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "Licenční klíč aktivován",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Zkušební licence byla aktivována. Počínaje dnem, můžete zaznamenávat až 4 kamery po dobu 30 dní."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Období kontroly časových změn OS",
         "syncTimeExchangePeriod": "Synchronizovat interval synchronizace času pro síťové požadavky",
         "syncTimeEpsilon": "Synchronizovat čas epsilon. Nová hodnota není použita, pokud je čas delta menší než epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Maximální počet uživatelských synchronizačních vláken v archivu kamery",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Aktualizace oznámení byla povolena",
         "upnpPortMappingEnabled": "Mapování portů UPNP bylo povoleno",
         "useTextEmailFormat": "Odeslat prostý text emailem",

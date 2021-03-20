@@ -282,11 +282,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set selectedFps(value) {
-        this.selectedFpsWatcher.value = !value ? value : Math.min(value, this.selectedCamera.maxFps);
+        const fps = !value ? value : Math.min(value, this.selectedCamera.maxFps);
+        this.selectedFpsWatcher.value = Number.isNaN(fps) ? null : fps;
     }
 
     get variousFps() {
-        return this.selectedFps === 'various' || !this.selectedFps;
+        return this.selectedFps === null || !this.selectedFps;
     }
 
     get selectedQuality() {
@@ -522,6 +523,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
             ]).then(_ => {
+                this.system.cameraManager.cameras = this.system.cameraManager.cameras.map(
+                    camera => camera.id === this.selectedCamera.id
+                        ? { ...camera, ...cameraSettings }
+                        : camera
+                );
+
                 return this.system.getCameras().then(res => {
                     this.setCamera();
                     this.toggleMotionGrid();

@@ -10,7 +10,7 @@ export interface ErrorStateStructure {
   [key: string]: boolean | string | number | AssetBlock | ErrorStateStructure
 }
 
-type AboutNodeFields = 'assetId' | 'displayName' | 'icon' | 'newWindow' | 'title' | 'url' | 'shortDescription' | 'blocks' | 'asset' | 'nodes'
+type AboutNodeFields = 'assetId' | 'displayName' | 'icon' | 'newWindow' | 'title' | 'url' | 'shortDescription' | 'blocks' | 'asset' | 'nodes' | 'subtitle'
 
 type BaseErrorConfig = {
     [key in AboutNodeFields]: string | ErrorConfig

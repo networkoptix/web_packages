@@ -1619,9 +1619,9 @@ class Menu(models.Model):
     title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
     short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
-        "header": ["name","url","enabled","order","is_global","preview"],
+        "header": ["name","url","enabled","order","preview"],
         "details": ["asset","icon","authentication"],
-        "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
+        "advanced": ["related_assets","next_item","subtitle","condition","permissions", "new_window", "is_global"]
     }""")
 
     enabled = models.BooleanField(default=True)
@@ -1667,6 +1667,8 @@ class Menu(models.Model):
             asset_type=cloud_portal_asset.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(
             global_contexts, cloud_portal_asset)
+        document_title_ds = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
+                                                         name='title').first()
         structures = {
             menu.name.lower(): {
                 'nodes': MenuNode.generate_node_structure(
@@ -1675,7 +1677,8 @@ class Menu(models.Model):
                     customization,
                     global_contexts_dict,
                     max_depth=menu.depth,
-                    include_not_accepted=include_not_accepted
+                    include_not_accepted=include_not_accepted,
+                    document_title_ds=document_title_ds
                 ),
                 'type': menu.type,
                 'base_url': menu.base_url,
@@ -1768,6 +1771,7 @@ class Menu(models.Model):
             for node in nodes_list:
                 node_dict = {
                     'name': node.name,
+                    'subtitle': node.subtitle,
                     'url': node.url,
                     'asset': node.asset.name if node.asset else None,
                     'uuid': str(node.asset.uuid) if node.asset else None,
@@ -1822,14 +1826,20 @@ class Menu(models.Model):
         import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
-                new_node = False
                 parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
-                node_obj = MenuNode.objects.filter(
-                    name=node['name'], **{parent_type: parent}).first()
+                node_qs = MenuNode.objects.filter(**{parent_type: parent}, id__in=all_node_ids)
+                node_obj = None
+                node_name = node.get('name', '')
+                node_asset_uuid = node.get('uuid', '-1')
+                if node_name:
+                    node_obj = node_qs.filter(name=node_name).first()
+                elif node_asset_uuid and node_asset_uuid != '-1':
+                    node_obj = node_qs.filter(asset__uuid=node_asset_uuid).first()
                 if not node_obj:
-                    new_node = True
                     node_obj = MenuNode()
-                node_obj.name = node['name']
+
+                node_obj.name = node_name
+                node_obj.subtitle = node.get('subtitle', '')
                 node_obj.url = node['url']
                 node_obj.next_item = node['next_item']
                 node_obj.new_window = node['new_window']
@@ -1840,7 +1850,7 @@ class Menu(models.Model):
                 node_obj.is_global = node['is_global']
                 node_obj.touched = node['touched']
                 node_obj.__setattr__(parent_type, parent)
-                if new_node:
+                if not node_obj.pk:
                     node_obj.save()
 
                 node_obj.available.set(
@@ -1851,7 +1861,7 @@ class Menu(models.Model):
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node['asset']:
-                    asset_obj = Asset.objects.filter(uuid=node['uuid']).first()
+                    asset_obj = Asset.objects.filter(uuid=node_asset_uuid).first()
                     if asset_obj:
                         asset_obj.name = node['asset']
                         asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
@@ -1871,6 +1881,7 @@ class Menu(models.Model):
         self.depth = menu_dict['depth']
         self.save()
         if menu_dict['nodes']:
+            all_node_ids = self.all_node_ids
             set_nodes(menu_dict.get('nodes', []), self)
 
     def extract_from_nodes(self, process_node_callback):
@@ -1883,7 +1894,7 @@ class Menu(models.Model):
                     append_nodes(node.nodes_list)
 
         all_nodes = []
-        prefetched_menu = self.get_prefetched_menus(menu_name=self.name)[0]
+        prefetched_menu = self.get_prefetched_menus(menu_name=self.name, only_enabled=False)[0]
         if hasattr(prefetched_menu, 'nodes_list'):
             append_nodes(prefetched_menu.nodes_list)
         return all_nodes
@@ -1899,14 +1910,29 @@ class Menu(models.Model):
         return self.extract_from_nodes(lambda node: node.asset and node.asset.id)
 
 
+class MenuNodeManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('asset')
+
+
+def node_asset_on_delete(collector, fields, sub_objs, using):
+    sub_objs_no_children = sub_objs.filter(nodes=None).distinct()
+    sub_objs_children = sub_objs.exclude(nodes=None).distinct()
+    if sub_objs_no_children:
+        models.CASCADE(collector, fields, sub_objs=sub_objs_no_children, using=using)
+    if sub_objs_children:
+        models.SET_NULL(collector, fields, sub_objs=sub_objs_children, using=using)
+
+
 class MenuNode(models.Model):
     AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),
                            (1, "logged_in", "Logged In"),
                            (2, "both", "Both"))
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
+    subtitle = models.CharField(max_length=255, blank=True)
     url = models.CharField(max_length=2048, blank=True)
     asset = models.ForeignKey(
-        Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+        Asset, null=True, blank=True, on_delete=node_asset_on_delete, related_name='nodes')
     related_assets = models.ManyToManyField(
         Asset, default=None, blank=True, related_name='nodes_related')
     next_item = models.BooleanField(default=False, verbose_name='Link to next')
@@ -1928,14 +1954,27 @@ class MenuNode(models.Model):
         'self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
     touched = models.BooleanField(default=False)
 
+    objects = MenuNodeManager()
+
     def __str__(self):
-        return f'Item: {self.name}'
+        parent = self.get_parent()
+        return f'Item: {self.display_name()} (Menu: {parent.name if parent else "None"})'
+
+    def display_name(self):
+        if self.name:
+            return self.name
+        elif self.asset:
+            return f'(Asset: {self.asset.name})'
+        elif self.pk:
+            return str(self.pk)
+        return 'New'
 
     @staticmethod
-    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2, include_not_accepted=False):
+    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1,
+                                max_depth=2, include_not_accepted=False, document_title_ds=None):
         nodes_structure = []
-        pending = None
         for node in nodes:
+            pending = None
             enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
@@ -1944,13 +1983,14 @@ class MenuNode(models.Model):
             if enabled and (asset_accepted or include_not_accepted):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
-                        customization__name=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending).exists()
+                        customization=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending
+                    ).select_related('version').order_by('-id').first()
                 node_structure = {
-                    'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
+                    'subtitle': node.subtitle,
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
                     'asset_id': node.asset.id if node.asset else None,
                     'accepted': asset_accepted,
-                    'pending': pending,
+                    'pending': pending is not None,
                     'draft':  node.asset and node.asset.is_dirty,
                     'asset_type': AssetType.ASSET_TYPES[node.asset.asset_type.type] if node.asset else None,
                     'related_asset_ids': [asset.id for asset in node.related_assets.all()],
@@ -1963,13 +2003,30 @@ class MenuNode(models.Model):
                     'condition': node.condition,
                     'condition_met': condition_met
                 }
+
+                title = 'Untitled'
+                if node.name:
+                    title = node.name
+                elif node.asset and node.asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                    asset_title = None
+                    if asset_accepted:
+                        asset_title = document_title_ds.find_actual_value(node.asset)
+                    elif pending is not None:
+                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id)
+                    elif node_structure['draft']:
+                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True)
+                    if asset_title:
+                        title = asset_title
+
+                node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict)
+
                 node_structure['urlified'] = node.asset.urlify(node_structure['name']) if node.asset else None
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:
                     node_structure['nodes'] = node.generate_node_structure(
                         node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
-                        max_depth=max_depth, include_not_accepted=include_not_accepted
+                        max_depth=max_depth, include_not_accepted=include_not_accepted, document_title_ds=document_title_ds
                     )
                 nodes_structure.append(node_structure)
         return nodes_structure

@@ -383,6 +383,14 @@ class AssetAdmin(CMSAdmin):
             Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type)
         ).prefetch_related('permissions')
 
+        if request.user.is_superuser:
+            nodes = asset.nodes.all()
+            related_nodes_list = []
+            for node in nodes:
+                menu = node.get_parent()
+                related_nodes_list.append({'menu': menu, 'node': node})
+            extra_context['related_nodes'] = related_nodes_list
+
         if not asset.is_cloud_portal:
             extra_context['show_clone_asset'] = True
 
@@ -1013,9 +1021,9 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
                 obj_url = obj.url
                 if not obj_url.startswith('http') and not obj_url.startswith('/'):
                     obj_url = '/' + obj_url
-                return format_html(f'<a href="{obj_url}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+                return format_html(f'<a href="{obj_url}" title="Preview"><span class="glyphicon glyphicon-picture"></span></a>')
             elif obj.asset:
-                return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+                return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}" title="Preview"><span class="glyphicon glyphicon-picture"></span></a>')
         return ''
 
 

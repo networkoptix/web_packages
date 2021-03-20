@@ -1,8 +1,9 @@
-@import 'styles/_theme_palette';
+@use '../../../../../../styles/_theme_palette';
+@use '../../../../../../styles/theme_variables' as *;
+@use 'bootstrap_utils' as bootstrap;
 
 :host {
     padding-left: 0;
-    display: block;
     position: fixed;
     left: 0;
     top: 48px;
@@ -69,7 +70,7 @@
 
         width: 320px;
         left: -320px;
-        @media (max-width: 500px) {
+        @include bootstrap.media-breakpoint-down(sm) {
             width: 100vw;
             left: -100vw;
         }
@@ -79,37 +80,61 @@
         background-color: $additional_light2;
         z-index: 20;
 
-        > .sidebar-toggling-ear {
-            position: absolute;
-            top: calc(50% - 40px / 2);
-            right: -16px;
-            width: 16px;
-            height: 40px;
-            background-color: $light4;
-            background-image: url('./img/arrow-left.png');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 16px 16px;
-            box-shadow: 0px -2px 0px 0px rgba(0,0,0,0.1);
-            cursor: pointer;
-            opacity: 0.8;
-            // transition: opacity .2s ease-in-out;
-            &:hover {
-                opacity: 1.0;
+        > .sidebar-toggling-ear--wrapper {
+            position : absolute;
+            top      : calc(50% - 40px / 2);
+            right    : -16px;
+            width    : 16px;
+            height   : 40px;
+
+            @include bootstrap.media-breakpoint-down(md) {
+                content    : "";
+                position   : absolute;
+                top        : calc(50% - 70px / 2);
+                right      : -50px;
+                width      : 50px;
+                height     : 70px;
+                background : transparent;
             }
 
-            transform: rotate(180deg);
-            border-radius: 2px 0 0 2px;
-
             &.shown {
-                transform: rotate(0deg);
-                border-radius: 0 2px 2px 0;
+                @include bootstrap.media-breakpoint-down(sm) {
+                    right : 0;
+                }
 
-                @media (max-width: 500px) {
-                    right: 0;
+                .sidebar-toggling-ear {
+                    transform     : rotate(0deg);
+                    border-radius : 0 2px 2px 0;
+
+                    @include bootstrap.media-breakpoint-down(sm) {
+                        float : right;
+                    }
                 }
             }
 
+            .sidebar-toggling-ear {
+                width               : 16px;
+                height              : 40px;
+                background-color    : $light4;
+                background-image    : url('./img/arrow-left.png');
+                background-position : center center;
+                background-repeat   : no-repeat;
+                background-size     : 16px 16px;
+                box-shadow          : 0px -2px 0px 0px rgba(0, 0, 0, 0.1);
+                cursor              : pointer;
+                opacity             : 0.8;
+
+                &:hover {
+                    opacity : 1.0;
+                }
+
+                @include bootstrap.media-breakpoint-down(md) {
+                    margin-top: 15px;
+                }
+
+                transform           : rotate(180deg);
+                border-radius       : 2px 0 0 2px;
+            }
         }
     }
 

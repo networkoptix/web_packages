@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "זמן",
-            "Trial": "נסיון",
+            "Trial": "זמן",
             "Professional": "מקצועי",
             "Analog": "אנלוגי",
             "Edge": "קצה",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "הרשיון הופעל",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "רישיון ניסיון הופעל. החל מהיום תוכלו להקליט עד 4 מצלמות למשך 30 יום."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "תקופת בדיקת שינוי זמן מערכת הפעלה",
         "syncTimeExchangePeriod": "מרווח סנכרון זמן בבקשות רשת",
         "syncTimeEpsilon": "סינכרון epsilon זמן. ערך חדש אינו מיושם אם זמן מנותק פחות מאפסילון",
-        "maxWearableArchiveSynchronizationThreads": "מספק מקסימלי לסנכרון מצלמות וירטואליות",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "עדכון ההתראות מופעל",
         "upnpPortMappingEnabled": "מיפוי יציאת UPNP מאופשר",
         "useTextEmailFormat": "לשלוח הודעות דואר אלקטרוני טקסט רגיל",

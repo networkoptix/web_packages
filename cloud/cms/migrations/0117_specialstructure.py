@@ -15,7 +15,7 @@ STRUCTURES = [
     {
         'name': '%VMS_LIN_PATH%',
         'config': {
-            'default_ds': '%companyId%'
+            'ds': '%companyId%'
         }
     },
     {

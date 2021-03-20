@@ -9,9 +9,8 @@
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[1]"></svg-icon>
         </div>
         <div class="support-block">
-            <div *ngFor="let block of cleanSupportNode.asset.blocks"
-                class="support-body"
-                [innerHTML]="block.contentHTML"></div>
+            <div class="support-body"
+                [innerHTML]="cleanSupportNode.asset.shortDescription"></div>
         </div>
         <div class="right-image">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[2]"></svg-icon>

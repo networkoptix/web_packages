@@ -1,5 +1,7 @@
 import { Location }                                           from '@angular/common';
-import { Component, HostListener, Inject, ViewEncapsulation } from '@angular/core';
+import {
+    Component, HostListener, Inject, ViewEncapsulation, ViewChild, ElementRef
+}                                                             from '@angular/core';
 import { ActivationStart, Event, Router }                     from '@angular/router';
 import { CookieService }                                      from 'ngx-cookie-service';
 import { DeviceDetectorService }                              from 'ngx-device-detector';
@@ -30,7 +32,7 @@ require('./scripts/vendor/protocolcheck');
         <div class="outerContainer"
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.heightWithRibbon : appStateService.heightWithoutRibbon }">
-            <div class="mainContainer" nxScrollHelper>
+            <div class="mainContainer" nxScrollHelper #mainContainer>
                 <router-outlet></router-outlet>
             </div>
         </div>
@@ -48,6 +50,8 @@ export class AppComponent {
     newSystem: boolean;
 
     CONFIG: IConfig;
+
+    @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 
     constructor(
         bootstrapProvider: NxBootstrapProvider,
@@ -150,6 +154,7 @@ export class AppComponent {
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
             this.uriService.queryParams = queryParams;
+            this.mainContainer.nativeElement.scrollTop = 0;
         });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {

@@ -19,7 +19,6 @@ body {
 .inline-webadmin.panel{
   height:100%;
   width:100%;
-  padding-bottom: 58px;
   background-color : $window;
 }
 
@@ -30,7 +29,6 @@ body {
 }
 
 .inline-webadmin .panel-footer{
-  position:absolute;
   bottom:0;
   width:100%;
   border-top : 1px solid $light17;
