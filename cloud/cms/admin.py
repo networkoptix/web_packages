@@ -1097,6 +1097,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         objs = [obj for obj, fields in formset.changed_objects]
         objs.extend(formset.new_objects)
         for obj in objs:
+            obj.refresh_from_db()
             if obj.asset:
                 obj.asset.customizations.set(obj.enabled.all())
 

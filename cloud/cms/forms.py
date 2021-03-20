@@ -595,26 +595,28 @@ class MenuNodeInlineForm(forms.ModelForm):
         if 'related_assets' in self.fields:
             self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
 
-    def clean_enabled(self):
-        if self.cleaned_data.get('asset', None):
-            old_enabled = set(self.cleaned_data['asset'].customizations.all().values_list('name', flat=True))
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('asset', None):
+            old_enabled = set(cleaned_data['asset'].customizations.all().values_list('name', flat=True))
         elif self.instance.pk:
             old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))
         else:
             old_enabled = set()
 
         if self.current_customization == 'all':
-            val = set(self.cleaned_data['enabled'].values_list('name', flat=True))
+            val = set(cleaned_data['enabled'].values_list('name', flat=True))
             possible_customizations = set(self.user_customizations)
         else:
-            val = {self.current_customization.name} if self.cleaned_data['enabled'] else set()
+            val = {self.current_customization.name} if cleaned_data['enabled'] else set()
             possible_customizations = {self.current_customization.name}
 
         new_enabled = old_enabled.difference(possible_customizations)
 
         new_enabled = new_enabled.union(set(val))
         new_enabled = Customization.objects.filter(name__in=new_enabled)
-        return new_enabled
+        cleaned_data['enabled'] = new_enabled
+        return cleaned_data
 
 
 class MenuPortForm(forms.Form):
