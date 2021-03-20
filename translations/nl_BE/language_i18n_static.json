@@ -886,7 +886,7 @@
         "osTimeChangeCheckPeriodMs": "Controle van de tijd van het besturingssysteem",
         "syncTimeExchangePeriod": "Synchroniseer tijd synchronisatie interval voor netwerkverzoeken",
         "syncTimeEpsilon": "Synchroniseer tijd epsilon. Nieuwe waarde wordt niet toegepast als delta tijd minder is dan epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max. Aantal synchronisatie-threads voor virtuele camera-archieven",
         "updateNotificationsEnabled": "Update meldingen ingeschakeld",
         "upnpPortMappingEnabled": "UPNP-poorttoewijzing ingeschakeld",
         "useTextEmailFormat": "Verstuur e-mails met onbewerkte tekst",
