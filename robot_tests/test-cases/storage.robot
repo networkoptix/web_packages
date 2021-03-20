@@ -27,7 +27,7 @@ Loading State of Storage Locations Block
     Click Link    ${SERVERS LINK}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
-    Should Be Equal As Integers    ${height}    256
+    Should Be Equal As Integers    ${height}    259
        
 Detailed Info in Storage Locations block
     [Tags]    C81534
@@ -292,30 +292,7 @@ Analytics DB Storage dropdown is not visible
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
-    
-# Analytics DB Storage Dropdown is Visible Analytics Plugin Enabled
-    # [Tags]    C81754    Analytics
-    # ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${port0}
-    # Log    ${response}
-    # Log in to user and system    ${owner}     ${sysId0}
-    # Wait Until Element is Visible    ${SERVERS LINK}    timeout=120
-    # Click Link    ${SERVERS LINK}
-    # Verify on Servers Page
-    # Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    
-# Analytics DB Storage Dropdown is Visible Analytics Data Exists
-    # ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${port0}
-    # Log    ${response}
-    # Wait Until Analytics Data Exists    30    30    disk0    ${camera}    storage0-${random}
-    # [Tags]    C81755    Analytics             
-    # Log in to user and system    ${owner}     ${sysId0}
-    # Wait Until Element is Visible with Retry    ${SERVERS LINK}    
-    # Click Link    ${SERVERS LINK}
-    # Verify on Servers Page
-    # Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    # Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
-
-    
+        
 Storages order in "Analytics DB Storage" dropdown
     [Tags]    C81757    Analytics
     @{menu order}    Create List    
@@ -350,7 +327,7 @@ Cancel Changing "Analytics DB Storage"
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Log    Step 1
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
+    Wait Until Element Contains    ${ANALYTICS DROPDOWN}    disk0
     Log    Step 2
     Click Button    ${ANALYTICS DROPDOWN}
     Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
@@ -370,7 +347,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Log    Step 1 - C81779
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk0
+    Wait Until Element Contains     ${ANALYTICS DROPDOWN}    disk0
     Log    Step 2 - C81779
     Click Button    ${ANALYTICS DROPDOWN}
     Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
@@ -427,7 +404,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Wait Until Element is Visible    ${CS MODAL CLOSE BUTTON}    
     Click Button    ${CS MODAL CLOSE BUTTON}
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Wait Until Element Contains     ${ANALYTICS DROPDOWN}    disk1
     Elements Should Not Be Visible
     ...    ${SAVE BUTTON}
     ...    ${CANCEL BUTTON}
@@ -447,7 +424,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Log    Step 6 - C81775
     Click Button    ${CS MODAL CANCEL BUTTON} 
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Wait Until Element Contains     ${ANALYTICS DROPDOWN}    disk1
     Elements Should Not Be Visible
     ...    ${SAVE BUTTON}
     ...    ${CANCEL BUTTON}
@@ -471,7 +448,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Click Button    ${CS MODAL KEEP BUTTON} 
     Wait Until Element Is Not Visible     ${CHANGE ANALYTICS MODAL} 
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk2
+    Wait Until Element Contains     ${ANALYTICS DROPDOWN}    disk2
     Elements Should Not Be Visible
     ...    ${SAVE BUTTON}
     ...    ${CANCEL BUTTON}
@@ -498,7 +475,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Click Button     ${CS MODAL DELETE BUTTON}
     Wait Until Element Is Not Visible     ${CHANGE ANALYTICS MODAL} 
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    Element Should Contain    ${ANALYTICS DROPDOWN}    disk1
+    Wait Until Element Contains     ${ANALYTICS DROPDOWN}    disk1
     Elements Should Not Be Visible
     ...    ${SAVE BUTTON}
     ...    ${CANCEL BUTTON}
@@ -508,69 +485,8 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Run Keyword and Expect Error    *    Check Analytics Data is Present    disk2    ${camera}    storage0-${random}
     Log To Console    C81777 ....... | PASS |
     
-# Change Storage used for Analytics data FUTURE (need other storages to select)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Click Button     ${ANALYTICS DROPDOWN}
-#     ${new storage url}=      /someOther/storageUrl
-#     Click Link      ${ANALYTICS DROPDOWN}/following-sibling::div/ul/li/a/span[contains(text(), "${new storage url}")]
-#     Wait Until Element is Visible     ${STORAGE CHANGING MODE}/span[contains(text(), "${new storage url}")]
-
-# Change Storage for Analytics Data with Existing Analytics Data Close Button FUTURE (need a storage with existing analytics data)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Click Button     ${ANALYTICS DROPDOWN}
-#     ${new storage url}=      /currentStorage/HasAnalyticsData
-#     Click Link      ${ANALYTICS DROPDOWN}/following-sibling::div/ul/li/a/span[contains(text(), "${new storage url}")]
-#     Wait Until Element is Visible     ${CHANGE ANALYTICS MODAL}
-#     Click Button    ${CS MODAL CLOSE BUTTON}
-#     Wait Until Element Is Not Visible    ${CHANGE ANALYTICS MODAL}
-
-# Change Storage for Analytics Data with Existing Analytics Data Cancel Button FUTURE (need a storage with existing analytics data)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Click Button     ${ANALYTICS DROPDOWN}
-#     ${new storage url}=      /currentStorage/HasAnalyticsData
-#     Click Link      ${ANALYTICS DROPDOWN}/following-sibling::div/ul/li/a/span[contains(text(), "${new storage url}")]
-#     Wait Until Element is Visible     ${CHANGE ANALYTICS MODAL}
-#     Click Button    ${CS MODAL CANCEL BUTTON}
-#     Wait Until Element Is Not Visible    ${CHANGE ANALYTICS MODAL}
-
-# Change Storage for Analytics Data with Existing Analytics Data Keep Button FUTURE (need a storage with existing analytics data)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Click Button     ${ANALYTICS DROPDOWN}
-#     ${new storage url}=      /currentStorage/HasAnalyticsData
-#     Click Link      ${ANALYTICS DROPDOWN}/following-sibling::div/ul/li/a/span[contains(text(), "${new storage url}")]
-#     Wait Until Element is Visible     ${CHANGE ANALYTICS MODAL}
-#     Click Button    ${CS MODAL KEEP BUTTON}
-#     # can also check that metadataStorageChangePolicy = 'keep' in /api/systemSettings
-#     Wait Until Element Is Not Visible    ${CHANGE ANALYTICS MODAL}
-
-# Change Storage for Analytics Data with Existing Analytics Data Keep Button FUTURE (need a storage with existing analytics data)
-#     Verify on Servers Page
-#     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-#     Click Button     ${ANALYTICS DROPDOWN}
-#     ${new storage url}=      /currentStorage/HasAnalyticsData
-#     Click Link      ${ANALYTICS DROPDOWN}/following-sibling::div/ul/li/a/span[contains(text(), "${new storage url}")]
-#     Wait Until Element is Visible     ${CHANGE ANALYTICS MODAL}
-#     Click Button    ${CS MODAL DELETE BUTTON}
-#     # can also check that metadataStorageChangePolicy = 'remove' in /api/systemSettings
-#     Wait Until Element Is Not Visible    ${CHANGE ANALYTICS MODAL}
-
-# reserved tooltip not seen by selenium
-# Storage Location Table Reserved Tooltip Shows
-    # Log in to user and system    ${owner}     ${sysId0}
-    # Wait Until Element is Visible    ${SERVERS LINK}
-    # Click Link    ${SERVERS LINK}
-    # Verify on Servers Page
-    # Wait Until Element is Visible    ${STORAGE RESERVED MODE}
-    # Sleep    5
-    # Mouse Over    ${STORAGE RESERVED MODE}/following-sibling::svg-icon
-    # Wait Until Element Is Visible    ${STORAGE SYSTEM TOOLTIP}
-    
 Change storage mode: Main -> Backup
-    [Tags]    C81541
+    [Tags]    C81541    mode
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk2
     Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
@@ -582,28 +498,28 @@ Change storage mode: Main -> Backup
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
     
     Log    Step 2
-    Sleep    300
-    ${files disk0} =    Verify Recorded Video Files    disk0
+    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files disk0} > 0
-    ${files disk1} =    Verify Recorded Video Files    disk1
+    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
     Should Be True    ${files disk1} > 0
     
     Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
     Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
     Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 4
+    Sleep    2
     Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON} 
     
     Log    Step 5
-    Sleep    300
-    ${files 2 disk0} =    Verify Recorded Video Files    disk0
+    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files 2 disk0} > ${files disk0}
-    ${files 2 disk1} =    Verify Recorded Video Files    disk1
+    ${files 2 disk1} =    Wait Until Files Are Recorded    disk1    100
     Should Be True    ${files 2 disk1} > ${files disk1}
     
     Log    Step 6
@@ -613,24 +529,27 @@ Change storage mode: Main -> Backup
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 7
+    Sleep    2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Click Button    ${SAVE BUTTON}
-    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     
     Log    Step 8 
     Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
     
     Log    Step 9
-    Sleep    210
-    ${files 3 disk0} =    Verify Recorded Video Files    disk0
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files 3 disk0} > ${files 2 disk0}
+    Sleep    15
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files 2 disk1}
+    Should Be True    ${files 3 disk1} == ${files 2 disk1} or ${files 3 disk1} < ${files 2 disk1}
     
 Change storage mode: Backup -> Main
-    [Tags]    C81542
+    [Tags]    C81542    mode
     Log    Step 1
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible    ${SERVERS LINK}
@@ -640,40 +559,44 @@ Change storage mode: Backup -> Main
     Log    Step 2
     ${files disk0} =    Verify Recorded Video Files    disk0
     ${files disk1} =    Verify Recorded Video Files    disk1   
-    Sleep    300
-    ${files 2 disk0} =    Verify Recorded Video Files    disk0
+    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files 2 disk0} > ${files disk0}
+    Sleep    30
     ${files 2 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 2 disk1} == ${files disk1}
+    Should Be True    ${files 2 disk1} == ${files disk1} or ${files 2 disk1} < ${files disk1}
     
     Log    Step 3
     Click Button      ${STORAGE ENABLED BACKUP}/parent::button
     Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
     Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Sleep    2
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 4
+    Sleep    2
     Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE ENABLED BACKUP}    
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON} 
+    Capture Page Screenshot
     
     Log    Step 5
-    Sleep    300
-    ${files 3 disk0} =    Verify Recorded Video Files    disk0
+    ${files 3 disk0} =     Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files 3 disk0} > ${files 2 disk0}
+    Sleep    30
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1}
+    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
     
     Log    Step 6
     Click Button      ${STORAGE ENABLED BACKUP}/parent::button
     Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
     Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Sleep    2
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 7
     Click Button    ${SAVE BUTTON}
-    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
     
@@ -681,12 +604,410 @@ Change storage mode: Backup -> Main
     Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
     
     Log    Step 9
-    Sleep    300
-    ${files 4 disk0} =    Verify Recorded Video Files    disk0
+    ${files 4 disk0} =    Wait Until Files Are Recorded    disk0    100
     Should Be True    ${files 4 disk0} > ${files 3 disk0}
-    ${files 4 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 4 disk1} > ${files disk1}
+    ${files 4 disk1} =    Wait Until Files Are Recorded    disk1    100
+    Should Be True    ${files 4 disk1} > ${files 3 disk1}
     
+Enable storage: Not in use -> Main
+    [Tags]    C81543    mode
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}    
+    
+    Log    Step 2
+    ${files disk2} =    Wait Until Files Are Recorded    disk2    15
+    Should Be True    ${files disk2} == 0
+    
+    Log    Step 3
+    Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
+    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    
+    Log    Step 5 
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
+    
+    Log    Step 6
+    ${files 2 disk2} =    Wait Until Files Are Recorded    disk2    100
+    Should Be True    ${files 2 disk2} > 0
+    
+Enable storage: Not in use -> Backup
+    [Tags]    C81544    mode
+    @{disabled} =    Create List    disk1    disk2    disk3
+    @{backups} =    Create List     
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}    
+    
+    Log    Step 2
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    ${files disk2} =    Verify Recorded Video Files    disk2
+    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
+    ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Should Be True    ${files 2 disk0} > ${files disk0}
+    Should Be True    ${files disk2} == ${files 2 disk2}
+    Log    Step 3
+    Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure     Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+
+    Log    Step 5 
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX} 
+    Element Should Not Be Visible    ${ARCHIVE BACKUP STREAMS MSG}    
+    Element Should Not Be Visible    ${ARCHIVE BACKUP CLIENT MSG}
+    
+    Log    Step 6
+    ${files 3 disk2} =    Wait Until Files Are Recorded    disk2    25
+    Should Be True    ${files 3 disk2} == ${files disk2} or ${files 3 disk2} < ${files disk2}
+    
+    Log    Step 7
+    # Turn On Backup For Camera    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Reload Page
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Element    ${SAVE BUTTON}
+    # Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Reload Page
+    Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
+    
+    ${files disk0} =     Wait Until Files Are Recorded    disk0    100
+    ${files 4 disk2} =    Verify Recorded Video Files    disk2
+    Sleep    60
+    ${files 5 disk2} =    Verify Recorded Video Files    disk2
+    Should Be True    ${files 5 disk2} == ${files 4 disk2}
+    
+    Log    Step 8
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Reload Page
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
+    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
+    ${files 6 disk2} =    Wait Until Files Are Recorded    disk2    100
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Should Be True    ${files 2 disk0} > ${files disk0}
+    Should Be True    ${files 6 disk2} > ${files 5 disk2}
+    
+Disable storage: Main -> Not in use
+    [Tags]    C81545    mode
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List     disk2
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    
+    Log    Step 2
+    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files disk0} > 0
+    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
+    Should Be True    ${files disk1} > 0
+    
+    Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Sleep    2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    
+    Log    Step 5
+    Wait Until Element Is Visible     ${STORAGE DISK 1}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+    
+    Log    Step 6
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
+    
+Disable storage: Backup -> Not in use
+    [Tags]    C81546    mode
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}  
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Click Element    ${ARCHIVE BACKUP CHECK BOX}    AND
+    ...    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
+    ...    Click Element    ${SAVE BUTTON}
+    
+    Log    Step 2
+    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files disk0} > 0
+    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
+    Should Be True    ${files disk1} > 0
+    
+    Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE ENABLED BACKUP} /parent::button
+    Click Button      ${STORAGE ENABLED BACKUP} /parent::button
+    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    
+    Log    Step 4
+    Sleep    2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    
+    Log    Step 5
+    Wait Until Element Is Visible     ${STORAGE DISK 1}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+    
+    Log    Step 6
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
+    
+Changing mode state - reload page
+    [Tags]    C81558    mode
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}  
+    
+    Log    Step 2
+    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
+    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Sleep    2
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}  
+
+    Log    Step 3
+    Reload Page
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
+    
+Disabling storage warnings - Main storages
+    [Tags]    C81562    mode
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List     disk2
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    
+    Log    Step 2
+    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files disk0} > 0
+    Sleep    60
+    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
+    Should Be True    ${files disk1} > 0
+    
+    Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
+    Element Style Should Be    ${RECORDING STOP WARNING}    color    ${ERROR COLOR WITH OPACITY}
+    
+    Log    Step 4
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
+    
+    Log    Step 5
+    Wait Until Element Is Visible    ${STORAGE DELETION ALERT ICON}
+    Mouse Over    ${STORAGE DELETION ALERT ICON}
+    Wait Until Element Is Visible    ${STORAGE DELETION ALERT TOOLTIP}
+    
+    Log    Step 6
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
+      
+Disabling storage warnings - Backup storages   
+    [Tags]    C81564    mode
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}  
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
+    Run Keyword If    ${status}    Run Keywords
+    ...    Click Element    ${ARCHIVE BACKUP CHECK BOX}    AND
+    ...    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
+    ...    Click Element    ${SAVE BUTTON}
+    
+    Log    Step 2
+    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files disk0} > 0
+    Sleep    120
+    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
+    Should Be True    ${files disk1} > 0
+    
+    Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE ENABLED BACKUP} /parent::button
+    Click Button      ${STORAGE ENABLED BACKUP} /parent::button
+    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
+    
+    Log    Step 4
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING} 
+    
+    Log    Step 5
+    Wait Until Element Is Visible    ${STORAGE DELETION ALERT ICON}
+    Mouse Over    ${STORAGE DELETION ALERT ICON}
+    Wait Until Element Is Visible    ${STORAGE DELETION ALERT TOOLTIP}
+    
+    Log    Step 6
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk1} =    Verify Recorded Video Files    disk1
+    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
+    
+Disabling storage warnings aren't shown - Main storages
+    [Tags]    C81570    mode
+    @{disabled} =    Create List    disk3
+    @{backups} =    Create List     disk1
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    
+    Log    Step 2
+    Delete Recorded Video Files    disk2
+    Wait Until Recorded Files Deleted    disk2    100
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    
+    Sleep    2
+    ${files 2 disk0} =    Verify Recorded Video Files    disk2
+    Log    ${files 2 disk0}
+    Element Should Not Be Visible    ${RECORDING STOP WARNING}
+   
+    Log    Step 3
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING} 
+    
+    Log    Step 4
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk2} =    Verify Recorded Video Files    disk2
+    Should Be True    ${files 3 disk2} == 0
+    
+Disabling storage warnings aren't shown - Backup storages
+    [Tags]    C81571    mode
+    @{disabled} =    Create List    disk3    disk1
+    @{backups} =    Create List     disk2
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    
+    Log    Step 1
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    
+    Log    Step 2
+    Delete Recorded Video Files    disk2
+    Wait Until Recorded Files Deleted    disk2    100
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    
+    Sleep    2
+    ${files 2 disk0} =    Verify Recorded Video Files    disk2
+    Log    ${files 2 disk0}
+    Element Should Not Be Visible    ${RECORDING STOP WARNING}
+   
+    Log    Step 3
+    Sleep    2
+    Click Button    ${SAVE BUTTON}
+    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING} 
+    
+    Log    Step 4
+    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
+    Should Be True    ${files 3 disk0} > ${files disk0}
+    Sleep    15
+    ${files 3 disk2} =    Verify Recorded Video Files    disk2
+    Should Be True    ${files 3 disk2} == 0
+
 Storage Location Table Space Legend Tooltip Shows 
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible    ${SERVERS LINK}

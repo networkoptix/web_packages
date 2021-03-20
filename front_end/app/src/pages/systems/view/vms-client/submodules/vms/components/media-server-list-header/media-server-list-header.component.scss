@@ -19,6 +19,17 @@ $brand_core: #2FA2DB;
       background-color: $light1;
     }
 
+    > .search-reset-icon {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 40px;
+      top: 12px;
+      stroke: #0009;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
     > .search-icon {
       // TODO: replace with SVG icon
       position: absolute;
@@ -53,6 +64,10 @@ $brand_core: #2FA2DB;
       border: none;
       padding: 0 44px;
       font-size: 13px;
+
+      // see https://networkoptix.atlassian.net/browse/CLOUD-6846
+      // !important is the last resort against the global styling here
+      box-shadow: none !important;
 
       &::placeholder {
         color: $light16;

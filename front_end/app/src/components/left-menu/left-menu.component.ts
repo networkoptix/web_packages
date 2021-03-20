@@ -56,6 +56,8 @@ export class NxLeftMenuComponent {
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
                 this.activeNodeUrl = node.url;
+                // If activeNodeUrl is set we don't want firstUrl to be highlighted anymore
+                this.firstUrl = '';
             }
             const name = node.display_name || node.name;
             const openNodeIndex = this.openNodes.indexOf(name);

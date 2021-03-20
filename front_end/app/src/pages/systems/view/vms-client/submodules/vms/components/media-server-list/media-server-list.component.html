@@ -18,8 +18,8 @@
       }"
     >
       <div class="server-name" (click)=changeServerVisibility(server.id)>
-        <span class="name" [ngClass]="server.status">{{ server.name }}</span>
-        <span class="ip-info">{{ server.url | ip_info }}</span>
+        <highlighted-string class="name" [ngClass]="server.status" [string]="server.name" [token]="token"></highlighted-string>
+        <highlighted-string class="ip-info" [string]="server.url | ip_info" [token]="token"></highlighted-string>
       </div>
       <div class="cameras">
         <a
@@ -34,16 +34,16 @@
             offline: !camera.isOnline,
             unauthorized: !camera.isAuthorized,
             isScheduleEnabled: camera.isScheduleEnabled,
-            selected: camera.id === activeCameraId,
-            error: previewLoaded[camera.id] === -1
+            error: previewLoaded[camera.id] === -1,
+            selected: camera.id === activeCameraId
           }"
         >
           <div class="preview">
             <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
             <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
           </div>
-          <span class="name" [ngClass]="camera.status">{{ camera.name }}</span>
-          <span class="ip-info">{{ camera.url | ip_info }}</span>
+          <highlighted-string class="name" [ngClass]="camera.status" [string]="camera.name" [token]="token"></highlighted-string>
+          <highlighted-string class="ip-info" [string]="camera.url | ip_info" [token]="token"></highlighted-string>
         </a>
       </div>
     </div>

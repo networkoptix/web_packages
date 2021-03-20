@@ -494,7 +494,7 @@ def generate_preview_link(context=None, asset=None, state=""):
                         return f'{url}?{params}'
                     url += f'/{asset.id}?{params}'
                     return url
-            return f'/docs/kb-preview/{asset.id}?{params}'
+            return f'/docs/content/{asset.id}?{params}'
 
     return f"{context.url}?preview=true" if context and context.url else None
 

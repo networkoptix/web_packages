@@ -186,6 +186,7 @@
     "New password saved": "Nytt lösenord sparat",
     "Next": "Nästa",
     "No main storage drive was selected for writing - video will not be recorded on this server.": "Ingen huvudlagringsenhet valdes för skrivning - video spelas inte in på den här servern.",
+    "No storage found": "No storage found",
     "No unsaved changes": "Inga osparade ändringar",
     "Nothing Found": "Inget hittades",
     "Nothing found": "Ingenting hittades",
@@ -208,7 +209,6 @@
     "Password:": "Lösenord:",
     "Please activate your account by visiting this link.": "Vänligen aktivera ditt konto genom att besöka denna länk.",
     "Please enter a valid Email": "Vänligen ange en giltig e-postadress",
-    "Please enter a valid name": "Ange ett giltigt namn",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Läs och godkänn användarvillkoren och sekretesspolicy för att fortsätta",
     "Please select FPS.": "Välj FPS.",
     "Please select recording mode.": "Välj inspelningsläge.",
@@ -325,3 +325,4 @@
     "result": "resultat",
     "you": "du"
 }
+

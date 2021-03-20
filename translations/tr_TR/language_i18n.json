@@ -186,6 +186,7 @@
     "New password saved": "Yeni şifre kaydedildi",
     "Next": "İleri",
     "No main storage drive was selected for writing - video will not be recorded on this server.": "Yazmak için hiçbir ana disk seçilmemiş - vidyo kaydı bu sunucuya yapılmayacak.",
+    "No storage found": "No storage found",
     "No unsaved changes": "Kaydedilmemiş değişiklik yok",
     "Nothing Found": "Hiçbir şey Bulunamadı",
     "Nothing found": "Hiçbir şey bulunamadı",
@@ -208,7 +209,6 @@
     "Password:": "Şifre:",
     "Please activate your account by visiting this link.": "Lütfen bu bağlantıyı ziyaret ederek hesabınızı etkinleştirin.",
     "Please enter a valid Email": "Lütfen geçerli bir E-posta girin",
-    "Please enter a valid name": "Lütfen geçerli bir isim girin",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Devam etmek için lütfen Şartlar ve Koşullar ve Gizlilik politikasını inceleyin ve kabul edin",
     "Please select FPS.": "Lütfen FPS'yi seçin.",
     "Please select recording mode.": "Lütfen kayıt modunu seçin.",
@@ -325,3 +325,4 @@
     "result": "result",
     "you": "sen"
 }
+

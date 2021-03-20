@@ -78,7 +78,6 @@ export class NxBootstrapProvider {
         this.CONFIG.cloudHost = (hostProtocol === data.cloudHost) ? `https://${data.cloudHost}` : data.cloudHost;
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;
-        this.CONFIG.localSystemName = data.systemName;
         this.CONFIG.localServerId = data.id;
     }
 

@@ -178,7 +178,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
-        const { ip, port } = this.selectedServer;
+        const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
@@ -193,7 +193,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             new InfoBlockLine(this.LANG.common.os(), this.selectedServer.osName || '-'),
             new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
-        this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
+
+        this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +serverPort;
         this.checkIfOnline(this.parsedServerId).finally(() => {
             this.serverLoaded = true;
         });
@@ -228,13 +229,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             ), options);
                     });
             }
+            let newPort;
             try {
                 if (!port.value) {
                     port.value = port.originalValue;
                 } else if (port.value !== port.originalValue) {
                     const portReturn = await this.system.changeServerPort(port.value, serverId);
                     if (portReturn) {
-                        port.originalValue = port.value;
+                        newPort = port.originalValue = port.value;
                     }
                 }
                 if (this.saveStorageWatcher.value) {
@@ -254,8 +256,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             } catch (error) {
                 return Promise.reject(error);
             }
-            this.applyService.reset();
 
+            if (this.CONFIG.isLocal) {
+                setTimeout(() => {
+                    this.uriService.changePort(newPort);
+                });
+            }
+
+            this.applyService.reset();
             return Promise.resolve();
         });
     }
@@ -350,27 +358,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             .then(() => this.setStatus('resetting'));
     }
 
-    storePreviousValue(e) {
-        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
-            e.preventDefault();
+    onPortChange(port) {
+        if (port && port >= this.CONFIG.servers.port.min && port < this.CONFIG.servers.port.max) {
+            this.ipPortWatcher.value = port;
         }
-        this.previousInputValue = this.ipPortWatcher.value;
-    }
-
-    validationCheckForInput() {
-        // checks if entering a value less than min or greater than max
-        // null exception for less than since it gets cast to 0
-        if (
-            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null) ||
-            this.ipPortWatcher.value > this.CONFIG.servers.port.max
-        ) {
-            this.ipPortWatcher.value = this.previousInputValue;
-        }
-        this.onPortChange();
-    }
-
-    onPortChange() {
-        if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
+        if (this.ipPortWatcher.value !== null && this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
             this.applyService.setWarn(this.LANG.servers.portWarning?.());
         } else {
             this.applyService.setWarn('');
@@ -388,7 +380,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         if (newStorage.id === this.currentAnalyticsDbId) {
             this.saveStorageWatcher.value = false;
             return;
-        };
+        }
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
         const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();

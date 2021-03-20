@@ -4,7 +4,11 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class NxSwCacheService {
-    clearAllCache(cache): Promise<boolean[]> {
+    clearAllCache(): Promise<boolean[][]> {
+        return this.clearCacheByNameOrAll(undefined, true);
+    }
+
+    clearByName(cache): Promise<boolean[][]> {
         return this.clearCacheByNameOrAll(this.dataCacheName(cache), false);
     }
 
@@ -20,10 +24,18 @@ export class NxSwCacheService {
         return caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.filter(cacheName => {
-                    if (allKeys) return true;
+                    if (allKeys && cacheName.startsWith('ngsw:/:1:data:dynamic')) return true;
                     if (nameCacheParam === cacheName) return true;
                 }).map(cacheName => {
-                    return caches.delete(cacheName);
+                    return caches.open(cacheName).then((c) => {
+                        return c.keys().then((keys) => {
+                            return Promise.all(
+                                keys.map(key => {
+                                    return c.delete(key);
+                                })
+                            );
+                        });
+                    });
                 })
             );
         });

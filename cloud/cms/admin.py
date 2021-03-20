@@ -19,7 +19,7 @@ from cms.forms import *
 from cms.controllers import generate_structure, structure
 from cms.controllers.modify_db import get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
-from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu 
+from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -1292,12 +1292,12 @@ class MenuFilter(SimpleListFilter):
 
 @admin.register(MenuNode)
 class MenuNodeAdmin(CMSAdmin):
-    list_display = ('name', 'menu', 'url', 'condition', 'authentication', 'touched')
+    list_display = ('name', 'menu', 'url', 'condition', 'authentication', 'touched', 'parent_node', 'parent_menu')
     search_fields = ('name', 'asset__name')
     list_filter = (MenuFilter, 'enabled', 'authentication')
     form = MenuNodeChangeForm
     fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available',
-              'enabled', 'touched')
+              'enabled', 'touched', 'parent_node', 'menu')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }
@@ -1310,9 +1310,16 @@ class MenuNodeAdmin(CMSAdmin):
         super().save_related(request, form, formsets, change)
         transaction.on_commit(MENU_CACHE.clear_cache)
 
-    def response_change(self, request, obj):
-        parent_menu = obj.get_parent()
-        return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            old_obj = MenuNode.objects.get(pk=obj.pk)
+            parent = old_obj.get_parent()
+            if form.cleaned_data['parent_node']:
+                obj.parent_menu = None
+            else:
+                obj.parent_menu = parent
+        return super().save_model(request, obj, form, change)
+
 
 class LicenseTypeAdmin(CMSAdmin):
     list_display = ('name', 'title', 'deactivations_allowed')

@@ -446,7 +446,7 @@ class MenuChangeForm(forms.ModelForm):
                 customization_choices = (('all', 'All'),) + customization_choices
             self.fields['customization_view'].choices = customization_choices
             self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
-    
+
     def clean_admin_config(self):
         config = self.cleaned_data['admin_config']
         updated_config = {'header': [], 'details': [], 'advanced': []}
@@ -480,9 +480,28 @@ class MenuChangeForm(forms.ModelForm):
 
 
 class MenuNodeChangeForm(forms.ModelForm):
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput)
+
+    class Meta:
+        widgets = {
+            'parent_node': autocomplete.ModelSelect2(
+                url='menu_node_autocomplete', attrs={
+                    'data-placeholder': 'Choose node or leave blank for root',
+                    'data-minimum-input-length': 2
+                },
+                forward=['menu']
+            ),
+        }
 
     class Media:
         js = ('js/menuNode.js',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        parent = self.instance.get_parent()
+        self.fields['menu'].initial = parent
+        node_ids = parent.all_node_ids
+        self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
 
     def clean_enabled(self):
         enabled = self.cleaned_data['enabled']

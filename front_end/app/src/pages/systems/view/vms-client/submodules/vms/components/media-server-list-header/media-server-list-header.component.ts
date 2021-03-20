@@ -19,11 +19,11 @@ export class NxMediaServerListHeaderComponent implements OnInit {
   }
 
   // filterToken: string = ''
-  ipVisibilityState: boolean = false
+  public ipVisibilityState: boolean = false
+  public token: string = ''
 
   onFilterTokenChange (token: string) {
-    // this.filterToken = token
-    this.filterTokenChange.emit(token)
+    this.filterTokenChange.emit(this.token)
   }
 
   onIpVisibilityStateChange (newValue: boolean) {
@@ -35,6 +35,11 @@ export class NxMediaServerListHeaderComponent implements OnInit {
   public ngOnInit () {
     this.ipVisibilityState = !!parseInt(this.cookieService.get(COOKIE_NAME))
     this.ipVisibilityStateChange.emit(this.ipVisibilityState)
+  }
+
+  public resetSearch () {
+    this.token = ''
+    this.filterTokenChange.emit(this.token)
   }
 }
 

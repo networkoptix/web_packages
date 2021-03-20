@@ -477,5 +477,9 @@
     "WARNING TEXT": "Ostrzeżenie",
     "INFO TEXT": "Info",
     "DEBUG TEXT": "Debug",
-    "VERBOSE TEXT": "Szczegóły"
+    "VERBOSE TEXT": "Szczegóły",
+    "ARCHIVE BACKUP STREAMS MSG TEXT": "Kopie zapasowe strumieni pomocniczych ze wszystkich kamer na tym serwerze są kopiowane w czasie rzeczywistym.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT": "Możesz zmienić tryb tworzenia kopii zapasowych lub wybrać określone kamery w aplikacji klienta.",
+    "RECORDING STOP WARNING TEXT": "Nagrywanie na to archiwum zostanie zatrzymane. Jednak przestarzałe nagrania będą nadal usuwane.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT": "Nagrywanie na to archiwum jest zatrzymane. Jednak przestarzałe nagrania będą nadal usuwane."
 }

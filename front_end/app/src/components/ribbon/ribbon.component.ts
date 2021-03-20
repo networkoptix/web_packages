@@ -12,7 +12,8 @@ import { NxHeaderService }          from '@services/nx-header.service';
 export interface RibbonAction {
     type: 'link' | 'process-button',
     text: string,
-    value: string | Process;
+    value: string | Process,
+    external?: boolean
 }
 
 @UntilDestroy({ checkProperties: true })

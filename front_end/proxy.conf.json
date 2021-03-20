@@ -17,6 +17,18 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/hls/*": {
+    "target": "https://10.1.5.210:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/web/hls/*": {
+    "target": "https://10.1.5.210:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
   "/static/customization/*": {
     "target": "https://10.1.5.210:7001",
     "secure": false,

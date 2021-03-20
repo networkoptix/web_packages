@@ -157,13 +157,16 @@
                                 <span class="text-right" translate>FPS</span>
                             </div>
                             <div class="grid-item mb-2 mb-lg-0">
-                                <input type="number" id="fps" name="fps" min="1" step="1"
-                                       [max]="selectedCamera.maxFps || 15"
-                                       [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + ('current' | translate)"
-                                       [(ngModel)]="selectedFps"
-                                       (keydown)="storePreviousValue($event)"
-                                       #fpsInput
-                                       class="form-control input-sm"/>
+                                <div style="width: 100%">
+                                    <nx-numeric
+                                            [componentId]="'fps'"
+                                            [class]="'pl-2'"
+                                            [step]="1"
+                                            [min]="1"
+                                            [max]="selectedCamera.maxFps || 15"
+                                            [(ngModel)]="selectedFps"
+                                    ></nx-numeric>
+                                </div>
                             </div>
                             <div class="grid-item">
                                 <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>

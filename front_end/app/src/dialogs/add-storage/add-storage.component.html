@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 ml-n2 d-flex">
                 <ng-container *ngIf="urlChecked && getControls('url').errors">
-                    <span *ngIf="getControls('url').errors.wrongPath" class="input-error" translate>Invalid storage path.</span>
+                    <span *ngIf="getControls('url').errors.wrongPath" class="input-error" translate>No storage found</span>
                     <span *ngIf="getControls('url').errors.alreadyExists"
                         class="input-error" translate>Storage path is already added to this server</span>
                     <span *ngIf="getControls('url').errors.required"

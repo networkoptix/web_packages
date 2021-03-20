@@ -76,6 +76,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .then((account: Account|any) => {
                 if (account.is_authenticated) {
                     this.account = account;
+                    this.account.isCloud = true;
                 }
                 return this.account;
             })

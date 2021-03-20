@@ -13,7 +13,7 @@ export class NxProjectedLinkHandler implements AfterViewInit {
         Array.from(this.el.nativeElement.querySelectorAll('a')).forEach(
             (el: HTMLAnchorElement) => {
                 const linkEmitter = (e) => {
-                    this.handler.emit({ url: el.href, target: el.target });
+                    this.handler.emit({ url: (el.href as any)?.baseVal || el.href, target: el.target });
                     e.preventDefault();
                 };
                 el.addEventListener('click', linkEmitter);

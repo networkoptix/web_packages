@@ -374,13 +374,13 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
-        developersEnabled         : '',
-        feedbackEnabled           : '',
+        developersEnabled         : false,
+        feedbackEnabled           : false,
         healthMonitor             : '',
-        integrationStore          : '',
-        publicDownloads           : '',
-        publicReleases            : '',
-        cloudStorageEnabled       : '',
+        integrationStore          : false,
+        publicDownloads           : false,
+        publicReleases            : false,
+        cloudStorageEnabled       : false,
         cloudStorageSize          : 0,
         healthMonitorCacheTimeout : 60
     },
@@ -388,7 +388,6 @@ export const nxConfig: IConfig = {
     cloudHost       : '',
     cloudSystemId   : '',
     localSystemId   : '',
-    localSystemName : '',
     localServerId   : '',
     company         : {
         copyrightYear : '',

@@ -205,6 +205,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             }
         }
+
+        if (changes.searchable) {
+            this.isSearchable = changes.searchable.currentValue;
+        }
     }
 
     ngAfterViewInit() {

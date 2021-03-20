@@ -159,15 +159,16 @@
                     </div>
                     <div *ngIf="sessionLimitToggle"
                          class="row ml-4 mt-2">
-                        <input #timeUnitTracker
-                               [ngModel]="timeValue"
-                               (ngModelChange)="updateLimitSessionValue($event)"
-                               [ngModelOptions]="{standalone: true}"
-                               (keydown)="storePreviousValue($event)"
-                               (keyup)="validationCheckForInput()"
-                               type="number"
-                               min="1"
-                               class="form-control time-unit-input">
+
+                        <div class="mr-2" style="width: 70px;">
+                            <nx-numeric
+                                    [class]="'pl-2'"
+                                    [min]="1"
+                                    [max]="currentMaxTimeUnit"
+                                    [(ngModel)]="timeValue"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (onChange)="updateLimitSessionValue($event)"></nx-numeric>
+                        </div>
                         <nx-select #selectorTracker
                                    class="time-unit-select"
                                    [items]="limitSessionTimeItems"

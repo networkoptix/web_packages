@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
-import VideoManagementSystemService from './services/vms.service'
+// import VideoManagementSystemService from './services/vms.service'
 
 import IpInfoPipe from './pipes/ip_info.pipe'
 
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     RouterModule,
     ComponentsModule,
+    FormsModule,
   ],
   exports: [
     MediaServerList,

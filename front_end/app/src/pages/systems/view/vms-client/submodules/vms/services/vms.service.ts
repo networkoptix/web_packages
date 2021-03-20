@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs'
 import { CookieService } from 'ngx-cookie-service'
 import IMediaServer from '../datatypes/IMediaServer'
 import Camera from '../datatypes/Camera'
-import testMediaServers from '../testMediaServers'
+// import testMediaServers from '../testMediaServers'
 import { GUID } from '../../../utils/type-aliases'
 import {
   VmsState,
@@ -83,9 +83,10 @@ export class VideoManagementSystemService {
     }
   }
 
-  public setTestMediaServers () {
-    this.setMediaServers('test', testMediaServers)
-  }
+  // Test routine
+  // public setTestMediaServers () {
+  //   this.setMediaServers('test', testMediaServers)
+  // }
 
   public selectCamera (cameraId: GUID) {
     if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {

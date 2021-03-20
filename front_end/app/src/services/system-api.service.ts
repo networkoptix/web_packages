@@ -203,7 +203,7 @@ export class NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        if (this.authPost) {
+        if (this.authPost && !url.includes('/cookieLogin')) {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
@@ -526,6 +526,15 @@ export class NxSystemAPI {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;
+        // View tab needs authKey. The mediaserver does not like runtime-guid.
+        if (environment.isLocal) {
+            this.authGet = authGet || this.cookieService.get('authGet');
+            this.authPost = authPost || this.cookieService.get('authPost');
+            this.authPlay = authPlay || this.cookieService.get('authPlay');
+            this.cookieService.set('authGet', this.authGet);
+            this.cookieService.set('authPost', this.authPost);
+            this.cookieService.set('authPlay', this.authPlay);
+        }
     }
 
     /* End of Authentication  */
@@ -844,7 +853,7 @@ export class NxSystemAPI {
         if (position) {
             data.pos = position;
         }
-        const url = `/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
+        const url = `/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
         return this.generateGetUrl(url, data, true);
     }
 
@@ -962,11 +971,11 @@ export class NxSystemAPI {
     }
 
     getLiveHlsUrl(cameraId, resolution = 'hi') {
-        return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
+        return `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
     }
 
     getHlsUrl(cameraId, position, resolution = 'hi') {
-        return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
+        return `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
     }
     // </added by @gbezyuk for watch component>
 
