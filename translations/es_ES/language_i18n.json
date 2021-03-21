@@ -95,6 +95,7 @@
     "Download %VMS_NAME%": "Descargar %VMS_NAME%",
     "Download Chrome": "Descargar Chrome",
     "Download Firefox": "Descargar Firefox",
+    "Download Full Report": "Descargar informe completo",
     "Download Links:": "Enlaces de descarga:",
     "Downloads": "Descargas",
     "Draft": "Borrador",
@@ -145,7 +146,6 @@
     "Integrations (beta)": "Integraciones (beta)",
     "Invalid URL": "URL inválida",
     "Invalid license key": "Clave de licencia no válida",
-    "Invalid storage path.": "Ruta de almacenamiento inválida.",
     "It's not recommended to use one recording location for different servers.": "No se recomienda utilizar una ubicación de grabación para diferentes servidores.",
     "Keep": "Mantener",
     "Knowledge Base Search": "Búsqueda de Base de Conocimientos",
@@ -324,4 +324,3 @@
     "result": "resultado",
     "you": "usted"
 }
-

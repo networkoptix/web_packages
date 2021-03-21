@@ -95,6 +95,7 @@
     "Download %VMS_NAME%": "%VMS_NAME% 다운로드",
     "Download Chrome": "Chrome을 다운로드",
     "Download Firefox": "Firefox를 다운로드",
+    "Download Full Report": "Download Full Report",
     "Download Links:": "다운로드 링크",
     "Downloads": "다운로드",
     "Draft": "초안",
@@ -145,7 +146,6 @@
     "Integrations (beta)": "통합 (베타)",
     "Invalid URL": "Invalid URL",
     "Invalid license key": "유효하지 않은 라이선스 키",
-    "Invalid storage path.": "Invalid storage path.",
     "It's not recommended to use one recording location for different servers.": "It's not recommended to use one recording location for different servers.",
     "Keep": "Keep",
     "Knowledge Base Search": "Knowledge Base Search",
@@ -324,4 +324,3 @@
     "result": "result",
     "you": "당신"
 }
-
