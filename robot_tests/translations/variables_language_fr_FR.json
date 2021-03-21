@@ -482,12 +482,12 @@
     "ARCHIVE BACKUP CLIENT MSG TEXT": "Vous pouvez changer le mode de sauvegarde ou sélectionner des caméras spécifiques dans le client.",
     "RECORDING STOP WARNING TEXT": "L'enregistrement vers cet emplacement de stockage s'arrêtera. Cependant, les séquences obsolètes de cet emplacement continueront d'être supprimées.",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "L'enregistrement vers cet emplacement de stockage est arrêté. Cependant, les séquences obsolètes de cet emplacement sont toujours en cours de suppression.",
-    "STORAGE PATH ALREADY ADDED TEXT": "Storage path is already added to this server",
-    "EXTERNAL STORAGE ADDED TEXT": "External storage added",
-    "SMB TOOLTIP TEXT": "Network (smb), added through VMS",
-    "NO STORAGE FOUND TEXT": "No storage found",
-    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.238/networkDisk is already used by another server.",
-    "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
-    "ADD THIS STORAGE ANYWAY TEXT": "Add this storage anyway?",
-    "BACK TEXT": "Back"
+    "STORAGE PATH ALREADY ADDED TEXT": "Le chemin de stockage est déjà ajouté à ce serveur",
+    "EXTERNAL STORAGE ADDED TEXT": "Stockage externe ajouté",
+    "SMB TOOLTIP TEXT": "Réseau (smb), ajouté via VMS",
+    "NO STORAGE FOUND TEXT": "Aucun stockage trouvé",
+    "STORAGE PATH ALREADY USED TEXT": "Le chemin de stockage //10.1.5.238/networkDisk est déjà utilisé par un autre serveur.",
+    "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Il n'est pas recommandé d'utiliser un emplacement d'enregistrement pour différents serveurs.",
+    "ADD THIS STORAGE ANYWAY TEXT": "Ajouter tout de même ce stockage ?",
+    "BACK TEXT": "Précédent"
 }

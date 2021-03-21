@@ -482,7 +482,7 @@
     "ARCHIVE BACKUP CLIENT MSG TEXT": "Puede cambiar el modo de respaldo o seleccionar cámaras específicas en el cliente de escritorio.",
     "RECORDING STOP WARNING TEXT": "Se detendrá la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado continuará eliminándose.",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "Se detiene la grabación en esta ubicación de almacenamiento. Sin embargo, el metraje desactualizado todavía está siendo eliminando.",
-    "STORAGE PATH ALREADY ADDED TEXT": "Storage path is already added to this server",
+    "STORAGE PATH ALREADY ADDED TEXT": "La ruta de almacenamiento ya está agregada a este servidor",
     "EXTERNAL STORAGE ADDED TEXT": "External storage added",
     "SMB TOOLTIP TEXT": "Network (smb), added through VMS",
     "NO STORAGE FOUND TEXT": "No storage found",
