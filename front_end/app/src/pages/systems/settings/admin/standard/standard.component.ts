@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, Inject, Input, ViewContainerRef,
+    Component, OnInit, Input,
     ViewChild, ElementRef, OnChanges, SimpleChanges
 }                                    from '@angular/core';
 
@@ -31,7 +31,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     limitSessionTimeUnits;
     limitSessionTimeItems;
     saveSettings: Process;
-    resetVideoEncryptionIfDisabled;
     setWarningMessageThroughApplyService;
     timeUnitTracker;
     selectElement;
@@ -50,6 +49,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
+    // eslint-disable-next-line accessor-pairs
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
             this.selectElement = el;
@@ -148,17 +148,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     initApplyService(): void {
-        this.resetVideoEncryptionIfDisabled = () => {
-            const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
-            const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
-            if (encryptVideo) {
-                this.applyService.setWarn('');
-            }
-            if (!encryptTraffic && encryptVideo) {
-                this.settingsWatchers.videoTrafficEncryptionForced.value = false;
-            }
-        };
-
         this.setWarningMessageThroughApplyService = () => {
             if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
                 this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
