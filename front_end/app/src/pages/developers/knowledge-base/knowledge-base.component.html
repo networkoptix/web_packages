@@ -6,15 +6,15 @@
 
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
-<ng-template #normalCard let-node="node">
+<ng-template #normalCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(pageNode.title + node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
-<ng-template #contentCard let-node="node">
+<ng-template #contentCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(pageNode.title + node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
@@ -28,7 +28,7 @@
 <!--    </nx-block>-->
 <!--</ng-template>-->
 
-<ng-template #sideCard let-node="node">
+<ng-template #sideCard let-node="node" let-index="index">
     <nx-block type="mt-3" header-style="side">
         <header>
             <div *ngIf="node.cardIcon" class="heading-icon">
@@ -41,14 +41,13 @@
             <h3>{{node.title}}</h3>
         </header>
         <nx-section>
-            <div [innerHTML]="node.content | safe:'html'"></div>
+            <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
         </nx-section>
     </nx-block>
 </ng-template>
 
-<ng-template #articleBlock>
-    <h1>{{pageNode.title}}</h1>
-    <div [innerHTML]="pageNode.content | safe:'html'"></div>
+<ng-template #articleBlock  let-index="index">
+    <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
 </ng-template>
 
 <!-- End of Card Templates -->
@@ -102,10 +101,10 @@
                 </ng-container>
                 <ng-template #displayContent>
                     <ng-template #innerContent>
-                        <ng-container *ngFor="let node of pageNode.nodes">
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node}"></ng-container>
+                        <ng-container *ngFor="let node of pageNode.nodes; let i = index">
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node, index:i}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node, index:i}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node, index:i}"></ng-container>
                         </ng-container>
                     </ng-template>
                     <div *ngIf="basePath === 'content';else innerContent" class="card">
