@@ -91,6 +91,32 @@
     }
 }
 
+.menu-level-4 {
+    @extend .base-level;
+    & > .menu-link {
+        padding-left: 128px;
+        &.arrow-padding {
+            padding-left: 160px;
+        }
+    }
+    & > .left-menu-arrow {
+        left: 132px;
+    }
+}
+
+.menu-level-5 {
+    @extend .base-level;
+    & > .menu-link {
+        padding-left: 168px;
+        &.arrow-padding {
+            padding-left: 200px;
+        }
+    }
+    & > .left-menu-arrow {
+        left: 172px;
+    }
+}
+
 .has-state {
     padding-left: 60px !important;
 }
