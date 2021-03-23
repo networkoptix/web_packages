@@ -388,6 +388,27 @@
                     });
                 });
             },
+            urlconverter_callback: function(url, node, on_save, name) {
+                if (url.startsWith('%')) {
+                    return url;
+                }
+
+                const settings = this.settings;
+                // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+                if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.indexOf('file:') === 0) {
+                    return url;
+                }
+
+                // Convert to relative
+                if (settings.relative_urls) {
+                    return this.documentBaseURI.toRelative(url);
+                }
+
+                // Convert to absolute
+                url = this.documentBaseURI.toAbsolute(url, settings.remove_script_host);
+
+                return url;
+            },
             branding: false,
             {% if 'tiny_paste_word_valid_elements' in data_structure.meta_settings %}paste_word_valid_elements: "{{ data_structure.meta_settings.tiny_paste_word_valid_elements }}",{% endif %}
             {% if 'tiny_paste_retain_style_properties' in data_structure.meta_settings %}paste_retain_style_properties: "{{ data_structure.meta_settings.tiny_paste_retain_style_properties }}",{% endif %}
