@@ -30,7 +30,8 @@ def item_position(item):
 
 
 def generate_branding_dict():
-    branding = get_branding_shortcuts()
+    branding, hidden_branding = get_branding_shortcuts()
+    branding.extend(hidden_branding)
     rep = {re.escape(value): ds['name'] for ds, value in branding}
     rep[re.escape('Nx Cloud')] = '%CLOUD_NAME%'
     rep[re.escape('Nx Meta')] = '%VMS_NAME%'

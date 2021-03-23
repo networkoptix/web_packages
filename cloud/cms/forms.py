@@ -61,24 +61,41 @@ def get_branding_shortcuts():
                                      asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
     brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
-    vals = DataStructure.find_actual_values(brand_structures, asset=cloud_portal)
+    hidden_branding_structures = [ds for ds in DataStructure.objects.filter(
+        context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal, advanced=False,
+        context__hidden=False, context__is_global=True, name__startswith='%', context__name__in=['settings', 'branding'],
+    ) if 'shortcut' not in ds.meta_settings]
+    vals = DataStructure.find_actual_values(brand_structures + hidden_branding_structures, asset=cloud_portal)
+    special_structures = SpecialStructures()
+
     brands = [
         ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
         for ds in brand_structures
     ]
+    brands.extend([(
+        {'name': name, 'label': structure['label'], 'description': structure['description']},
+        structure['function'](cloud_portal))
+        for name, structure in special_structures.function_dict.items() if structure['shortcut']
+    ])
 
-    brands.append((
-        {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
-        SpecialStructures.calc_cloud_link(cloud_portal)
-    ))
-    return brands
+    hidden_brands = [
+        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+        for ds in hidden_branding_structures
+    ]
+    hidden_brands.extend([(
+        {'name': name, 'label': structure['label'], 'description': structure['description']},
+        structure['function'](cloud_portal))
+        for name, structure in special_structures.function_dict.items() if not structure['shortcut'] and not structure['hidden']
+    ])
+    return brands, hidden_brands
 
 
-def generate_branding_variables(datastructure, branding_shortcuts=None):
-    if not branding_shortcuts:
-        branding_shortcuts = get_branding_shortcuts()
+def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None):
+    if not (branding_shortcuts and hidden_branding_shortcuts):
+        branding_shortcuts, hidden_branding_shortcuts = get_branding_shortcuts()
     return render_to_string(
-        'cms/widgets/branding_variables.html', context={'brands': branding_shortcuts, 'datastructure': datastructure}
+        'cms/widgets/branding_variables.html',
+        context={'brands': branding_shortcuts, 'hidden_brands': hidden_branding_shortcuts, 'datastructure': datastructure}
     )
 
 
@@ -91,7 +108,7 @@ class CustomContextForm(forms.Form):
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
         self.fieldsets = {}
-        self.branding_shortcuts = get_branding_shortcuts()
+        self.branding_shortcuts, self.hidden_branding_shortcuts = get_branding_shortcuts()
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -123,7 +140,7 @@ class CustomContextForm(forms.Form):
             if data_structure.meta_settings:
                 ds_description += convert_meta_to_description(data_structure.meta_settings)
                 if 'brand_vars' in data_structure.meta_settings and data_structure.meta_settings['brand_vars']:
-                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts)
+                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts, self.hidden_branding_shortcuts)
 
             if data_structure.type == DataStructure.DATA_TYPES.guid:
                 ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
