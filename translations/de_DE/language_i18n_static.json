@@ -801,7 +801,7 @@
             "required": "{number} mehr benötigt",
             "activated": "Lizenzschlüssel aktiviert",
             "inuse": "Der Lizenzschlüssel wurde bereits aktiviert und in einem anderen System an den Server mit der Hardware-ID {hwid} gebunden",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Zeitlizenz aktiviert. Ab heute können bis zu 4 Kameras für 30 Tage aufnehmen."
         }
     },
     "settingsConfig": {
