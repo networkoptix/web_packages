@@ -50,6 +50,7 @@ export class NxGetStartedComponent implements OnChanges {
             step.icon = images[0];
             step.aniIcon = images[1];
             step.currentIcon = step.icon;
+            step.url = step.url || step.assetId ? `/docs/content/${step.assetId}` : '';
         });
         this.steps = getStartedNode;
     }
