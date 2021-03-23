@@ -178,6 +178,7 @@ export class NxBootstrapProvider {
             this.CONFIG.vmsName = data.vmsName;
 
             this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription;
+            this.CONFIG.landing.description = data.landingDescription;
 
             // detect preview mode
             if (window.location.href.indexOf('preview') >= 0) {

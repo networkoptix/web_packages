@@ -41,6 +41,7 @@ export class NxLandingComponent implements OnInit {
 
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        this.pageService.pageDescription = this.CONFIG.landing.description;
         if (this.router.url === '/logout') {
             this.accountService.logout();
         } else if (this.router.url.includes('/content/about')) {
@@ -57,12 +58,14 @@ export class NxLandingComponent implements OnInit {
                         if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
                             this.pageService.pageTitle = this.LANG.pageTitles.login?.();
+                            this.pageService.pageDescription = '';
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
                     this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+                    this.pageService.pageDescription = this.CONFIG.landing.description;
                     this.loaded = true;
                 });
         }

@@ -159,6 +159,10 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
             .replace("%CLOUD_NAME%", cloud_name)\
             .replace("%VMS_NAME%", vms_name)
+        landing_description = ''
+        landing_description_ds = DataStructure.objects.filter(context__name='Landing page', name='%SUBTITLE%').first()
+        if landing_description_ds:
+            landing_description = landing_description_ds.find_actual_value(asset)
 
         data = {
             'version_id': asset.version_id(),
@@ -188,6 +192,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
+                'landing_description': landing_description,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),

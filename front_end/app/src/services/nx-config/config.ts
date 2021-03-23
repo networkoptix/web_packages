@@ -239,6 +239,9 @@ export const nxConfig: IConfig = {
             rows: 20
         }
     },
+    landing : {
+        description : ''
+    },
     maintenanceTimeout : 60 * 1000,
     maxServers         : 100, // The maximum amount of server that can be in a system
     meta               : {

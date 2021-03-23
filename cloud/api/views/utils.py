@@ -57,6 +57,7 @@ def get_settings_from_cache():
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
         'integrationSeoPageDescription': customization_cache.get('integration_seo_page_description', ''),
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
+        'landingDescription': customization_cache.get('landing_description', ''),
         'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache.get('public_downloads', False),
