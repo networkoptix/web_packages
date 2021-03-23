@@ -146,6 +146,11 @@
     p, li {
         font-size: 0.8125rem !important;
     }
+
+    p strong {
+        font-family: $font-family-medium;
+    }
+
     h1, h2 {
         margin-block-start: 32px;
         margin-block-end: 24px;
@@ -172,7 +177,6 @@
     h1, h2, h3, h4, h5, h6 {
         display: block;
     }
-
 
     img {
         max-width: 100%;
