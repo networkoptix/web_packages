@@ -2,7 +2,10 @@
 @use '../../../styles/typography';
 @use 'bootstrap_utils' as bootstrap;
 
-.page-wrapper {
+$custom-lg: 992px;
+$custom-xl: 1440px;
+
+.page-wrapper, .content-only {
     display: grid;
     grid-column-gap: 1rem;
     grid-template-columns: repeat(12, 1fr);
@@ -20,10 +23,6 @@
         grid-column: span 12;
         grid-row: 1 / -1;
 
-        ::ng-deep .menu-level-2 > .menu-link {
-            font-size: 13px !important;
-        }
-
         @include bootstrap.media-breakpoint-up(md) {
             position: sticky;
             overflow-y: auto;
@@ -32,19 +31,25 @@
             margin: -1rem 0 -1rem -1rem;
             grid-column: span 4;
         }
-        @include bootstrap.media-breakpoint-up(lg) {
-            grid-column: span 3;
-        }
         @include bootstrap.media-breakpoint-up(xl) {
-            grid-column: span 2;
+            grid-column: span 3;
         }
     }
 }
 
-.container {
-    margin-top: 32px;
+.content-only {
+    background: transparent;
+    & > div {
+        grid-column: 1  / -1;
+        @media (min-width: $custom-lg) {
+            grid-column: 2  / -2;
+        }
+        @media (min-width: $custom-xl) {
+            grid-column: 3  / -3;
+        }
+    }
     .card {
-        padding: 0 16px;
+        padding: 0 24px;
     }
 }
 
@@ -53,18 +58,12 @@
     @include bootstrap.media-breakpoint-up(lg) {
         grid-column: span 8;
     }
-    @include bootstrap.media-breakpoint-up(lg) {
-        grid-column: span 7;
-    }
-    @include bootstrap.media-breakpoint-up(xl) {
-        grid-column: span 6;
-    }
 }
 
 .wide-section {
     grid-column: span 12;
     @include bootstrap.media-breakpoint-up(lg) {
-        grid-column: span 8;
+        grid-column: span 9;
     }
 }
 
@@ -83,13 +82,9 @@
         margin-left: 8px;
         margin-right: 8px;
     }
-    @include bootstrap.media-breakpoint-up(lg) {
+    @include bootstrap.media-breakpoint-up(xl) {
         grid-template-columns: repeat(9, 1fr);
         grid-column: span 9;
-    }
-    @include bootstrap.media-breakpoint-up(xl) {
-        grid-template-columns: repeat(10, 1fr);
-        grid-column: span 10;
     }
 }
 
@@ -101,8 +96,15 @@
 .doc-link {
     @include typography.medium15dark9;
     cursor: pointer;
+    text-decoration: underline;
     &:hover {
-        text-decoration: underline;
+        color: $dark15 !important;
+    }
+    &:visited {
+        color: $dark19 !important;
+        &:hover {
+            color: $dark14 !important;
+        }
     }
 }
 

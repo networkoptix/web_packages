@@ -26,6 +26,7 @@
             <nx-supported-tech *ngSwitchCase="aboutCases.SUPPORTED_TECH" [supportedTechNode]="section.node"></nx-supported-tech>
             <nx-error-state *ngSwitchDefault [errors]="getInvalidTemplateError(section)"></nx-error-state>
         </ng-container>
+        <nx-footer [center]="true"></nx-footer>
     </ng-container>
 </ng-container>
 <router-outlet></router-outlet>

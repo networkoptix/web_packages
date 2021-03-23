@@ -93,8 +93,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.searchMode = false;
     };
 
-    navigateSearch(doc) {
-        this.router.navigate([doc.docId], { relativeTo: this.route.parent });
+    navigateSearch() {
         this.searchMode = false;
     }
 
