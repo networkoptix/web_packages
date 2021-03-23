@@ -1,7 +1,7 @@
 import { NgModule }                  from '@angular/core';
 import { Angular2CsvModule }         from 'angular2-csv';
 
-import { DirectivesModule }          from '../directives/directives.module';
+import { DirectivesModule }          from '@directives/directives.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxDebugModule }             from './debug/debug.module';
@@ -14,6 +14,15 @@ import { AuthGuard }                 from '@guards/authGuard';
 
 const lazyRoutes: Routes = [
     {
+        path       : '',
+        redirectTo : 'settings',
+        pathMatch  : 'full'
+    },
+    {
+        path       : 'advanced',
+        redirectTo : 'settings/advanced'
+    },
+    {
         path         : 'settings',
         loadChildren : () => import('./systems/webadmin-system.module').then(m => m.NxSystemModule)
     },
@@ -24,11 +33,6 @@ const lazyRoutes: Routes = [
     {
         path         : 'health',
         loadChildren : () => import('./health/health.module').then(m => m.NxHealthModule)
-    },
-    {
-        path       : '',
-        redirectTo : 'settings',
-        pathMatch  : 'full'
     },
     {
         path         : '404',

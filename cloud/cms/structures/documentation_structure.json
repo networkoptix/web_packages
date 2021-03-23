@@ -38,7 +38,7 @@
             "description": "Short description that is used on page previews and landing pages",
             "type": "long_text",
             "optional": true,
-            "advanced": true
+            "advanced": false
           },
           {
             "name": "body",

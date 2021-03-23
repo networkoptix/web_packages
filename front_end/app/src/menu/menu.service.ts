@@ -162,7 +162,7 @@ export class NxMenuService implements OnDestroy {
     sanitizeContent(content) {
         const clean = NxUtilsService.deepCopy(content);
         return clean.map((node) => {
-            if (node.level3.length) {
+            if (node.level3?.length) {
                 node.level3.forEach(item => {
                     item.label = NxUtilsService.htmlWiper(item.label);
                     if (item.additionalLabel) {

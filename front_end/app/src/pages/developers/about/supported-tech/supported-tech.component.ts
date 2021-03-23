@@ -29,6 +29,18 @@ export class NxSupportedTechComponent {
     }
 
     ngOnInit() {
+        const { nodes, ...supportedTech } = this.supportedTechNode;
+        this.supportedTechNode = {
+            ...supportedTech,
+            nodes: nodes.map(({ nodes, ...section }) => ({
+                ...section,
+                nodes: nodes.map(({ url, assetId, ...node }) => ({
+                    ...node,
+                    assetId,
+                    url: url || assetId ? `/docs/content/${assetId}` : ''
+                }))
+            }))
+        };
         const supportedTechConfig = this.errorManager.buildConfig(
             ['title', 'nodes'],
             this.errorManager.buildConfig(

@@ -133,6 +133,7 @@ Log In Web Admin
     Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     Input Text    //input[@id="login_email"]    ${login}
     Input Text    //input[@id="login_password"]    ${password}
+    #Sleep    5
     Click Button    //button[@type="submit"]
 
 
@@ -187,6 +188,7 @@ Log Out Cloud
     Validate Log Out
 
 Log Out Web Admin
+    Sleep    2
     Wait Until Element Is Visible    //header//button[@id="accountSettingsSelect"]
     Click Button    //header//button[@id="accountSettingsSelect"]
     Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
@@ -199,7 +201,10 @@ Validate Log Out
     Check Language Anonymous
 
 Validate Log Out Web Admin
-    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
+    Sleep    5
+    Element Should Be Visible    //input[@id="login_email"]        
+    Element Should Be Visible    //input[@id="login_password"]
+    Element Should Be Visible    //button[@type="submit"]
     Wait Until Element Is Not Visible    locator
 
 Log Out No Language
@@ -1021,10 +1026,27 @@ Create Base Cloud System
     ${local users}=    Create Dictionary
     FOR    ${role}    IN    @{permissions.keys()}
         ${email}=   Register and activate account with random email    System    ${role}    ${base password}
-        Sleep    1
-        Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+        Sleep    2
         ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
-        Save User    ${local auth}    ${server url}    Local+${role}    ${permissions}[${role}]    noptixautoqa+local_${role}@gmail.com    Local User    ${base password}    is cloud=${False}
+        #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+        Save User
+        ...    ${local auth}
+        ...    ${server url}
+        ...    ${email}
+        ...    ${permissions}[${role}]    
+        ...    ${email}
+        ...    Cloud User
+        ...    ${base password}
+
+        Save User    
+        ...    ${local auth}    
+        ...    ${server url}    
+        ...    Local+${role}    
+        ...    ${permissions}[${role}]    
+        ...    noptixautoqa+local_${role}@gmail.com    
+        ...    Local User    
+        ...    ${base password}    
+        ...    is cloud=${False}
         Set To Dictionary    ${users}    ${role}=${email}
         Set To Dictionary    ${local users}    ${role}=Local+${role}
     END

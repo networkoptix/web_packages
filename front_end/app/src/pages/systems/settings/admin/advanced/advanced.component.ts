@@ -117,6 +117,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             this.saveSettings
         );
         this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
+        this.applyService.reset();
 
         this.formWatcher.valueSubject.subscribe((values) => {
             if (values) {

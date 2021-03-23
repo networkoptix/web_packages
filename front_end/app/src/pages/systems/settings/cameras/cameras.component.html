@@ -1,7 +1,7 @@
 <nx-pre-loader *ngIf="!show404 && showPreloader"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
     <nx-page-placeholder *ngIf="!system || !system.isAvailable || !selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
-    <ng-container *ngIf="system && !noCameras && selectedCamera && !show404 && system.permissions.editCameras">
+    <ng-container *ngIf="system && !noCameras && selectedCamera && !show404 && system.userManager.permissions.editCameras">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -39,7 +39,7 @@
                         <nx-editable-settings-heading
                                 (editModeState)="editMode = $event"
                                 [nameWatcher]="cameraNameWatcher"
-                                [editEnabled]="system.permissions.isAdmin"
+                                [editEnabled]="system.userManager.permissions.isAdmin"
                         ></nx-editable-settings-heading>
                         <button *ngIf="!editMode" class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>

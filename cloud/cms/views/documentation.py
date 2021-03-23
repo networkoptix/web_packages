@@ -92,7 +92,7 @@ def kb_for_article(request, doc_id):
     for menu in menus:
         if menu.base_url and menu.url:
             return {'base': menu.base_url, 'kb_name': menu.url}
-    raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+    raise APINotFoundException(error_data={'id': doc_id}, error_text='Kb not found')
 
 
 # Simple filter for checking that each space delimited string exists somewhere in the doc

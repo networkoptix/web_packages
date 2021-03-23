@@ -4,7 +4,7 @@ ${SERVER NAME}                      //header//h2
 ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]
-${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::div//input[@type="number"]
+${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/..//input[@type="number"]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..

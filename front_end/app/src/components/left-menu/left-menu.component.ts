@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter }   from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { Router, NavigationEnd }                    from '@angular/router';
-import { Location }                                 from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import {
     filter, map, startWith, switchMap, takeUntil
 }                                                   from 'rxjs/operators';
@@ -46,7 +46,8 @@ export class NxLeftMenuComponent {
         private router: Router,
         private menusService: NxMenusService,
         public location: Location,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.config;
     }
@@ -55,6 +56,17 @@ export class NxLeftMenuComponent {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
+                const currentQueryParams = this.document.location.search;
+                const currentPath = this.location.path();
+                // Change URL in address bar to have the current one if a different one was used
+                if (node.url !== currentPath) {
+                    let newUrl = node.url;
+                    if (currentQueryParams) {
+                        newUrl += currentQueryParams;
+                    }
+                    this.location.replaceState(newUrl);
+                }
+
                 this.activeNodeUrl = node.url;
                 // If activeNodeUrl is set we don't want firstUrl to be highlighted anymore
                 this.firstUrl = '';

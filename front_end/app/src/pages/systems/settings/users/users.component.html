@@ -15,7 +15,7 @@
                             [showWarning]="true"
                     ></nx-switch>
                 </div>
-<!--                <div *ngIf="!system.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">-->
+<!--                <div *ngIf="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">-->
                 <div>
                     <h2 class="heading-style" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
                         >{{ username }}</h2>

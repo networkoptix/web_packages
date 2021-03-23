@@ -14,6 +14,7 @@ import { Process, NxProcessService } from './process.service';
 import { NxUtilsService }            from './utils.service';
 import { ApplyModalContent }         from '@dialogs/apply/apply.component';
 import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+import { isObject }                  from 'rxjs/internal-compatibility';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -551,7 +552,14 @@ export class NxApplyService {
         const changedWatchers$ = Object.values(
             this.watchers
         ).map((watcher) => watcher.valueSubject.pipe(
-            map(current => current !== watcher.originalValue),
+            map(current => {
+                if (isObject(current)) {
+                    // Form watcher
+                    return !NxUtilsService.isEqual(current, watcher.originalValue);
+                }
+
+                return watcher.originalValue !== undefined && current !== watcher.originalValue;
+            }),
             startWith(false)
         ));
         combineLatestFrom(

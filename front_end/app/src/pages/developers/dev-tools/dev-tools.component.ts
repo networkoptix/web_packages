@@ -72,6 +72,13 @@ export class NxDevToolsComponent implements OnInit {
                         nodes: devTools.map(mapToDevToolsNode)
                     };
                 });
+        } else {
+            this.devToolsNode = {
+                ...this.devToolsNode,
+                nodes: this.devToolsNode.nodes.map(({
+                    url, ...node
+                }) => ({ ...node, url: url || `/docs/content/${node.assetId}` }))
+            };
         }
 
         const devToolsConfig = this.errorManager.buildConfig(

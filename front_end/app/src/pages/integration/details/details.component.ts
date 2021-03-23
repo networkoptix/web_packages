@@ -112,14 +112,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         .subscribe(result => {
                             if (result.length) {
                                 this.plugin = this.integrationService.format(result[0]);
-                                if (paramParts.length > 1) {
-                                    this.content.base += assetParam;
-                                } else {
-                                    this.content.base += this.plugin.urlified || assetid;
-                                    const childPath = this.route.snapshot.firstChild.routeConfig.path;
-                                    const newUrl = this.content.base + (childPath ? '/' + childPath : '');
-                                    this.location.replaceState(newUrl);
+
+                                this.content.base += this.plugin.urlified || assetid;
+                                const childPath = this.route.snapshot.firstChild.routeConfig.path;
+                                const newUrl = this.content.base + (childPath ? '/' + childPath : '');
+                                let queryParams = '';
+                                if (query) {
+                                    queryParams = new URLSearchParams(query).toString();
                                 }
+                                this.location.replaceState(newUrl, queryParams);
 
                                 if (this.plugin.pending || this.plugin.draft) {
                                     const ribbonActions: RibbonActionInput[] = [

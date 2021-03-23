@@ -1,30 +1,30 @@
 import {
     Component, Inject, OnDestroy,
     OnInit, ViewContainerRef
-}                                    from '@angular/core';
+}                                          from '@angular/core';
 import {
     Params, Router, ActivatedRoute
-}                                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
-import { auditTime }                 from 'rxjs/operators';
-import { NxRibbonService }           from '@components/ribbon';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService }          from '@services/process.service';
-import { NxSystem, NxSystemUser }    from '@services/system.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }           from '../../../../menu';
-import { NxPageService }           from '@services/page.service';
-import { NxSystemsService }        from '@services/systems.service';
-import { NxAccountService }        from '@services/account.service';
-import { NxCloudApiService }       from '@services/nx-cloud-api';
-import { NxUriService }            from '@services/uri.service';
-import { NxToastService }          from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxApplyService, Watcher } from '@services/apply.service';
-import { WINDOW }                  from '@services/window-provider';
+}                                          from '@angular/router';
+import { UntilDestroy }                    from '@ngneat/until-destroy';
+import { Subscription }                    from 'rxjs';
+import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+import { NxRibbonService }                 from '@components/ribbon';
+import { NxConfigService, IConfig }        from '@services/nx-config';
+import { NxLanguageProviderService }       from '@services/nx-language-provider';
+import { NxProcessService }                from '@services/process.service';
+import { NxSystem, NxSystemUser }          from '@services/system.service';
+import { NxDialogsService }                from '@dialogs/dialogs.service';
+import { NxPageService }                   from '@services/page.service';
+import { NxSystemsService }                from '@services/systems.service';
+import { NxAccountService }                from '@services/account.service';
+import { NxCloudApiService }               from '@services/nx-cloud-api';
+import { NxUriService }                    from '@services/uri.service';
+import { NxToastService }                  from '@dialogs/toast.service';
+import { NxApplyService, Watcher }         from '@services/apply.service';
+import { WINDOW }                          from '@services/window-provider';
+import { NxMenuService }                   from '@src/menu';
+import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
+import { NxSettingsService }               from '../settings.service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -44,7 +44,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     user: NxSystemUser;
     system: NxSystem;
     systems;
-    params: Params;
 
     systemNameWatcher = new Watcher('');
     emptyName = false;
@@ -74,13 +73,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setupDefaults() {
-        this.params = this.route.snapshot.queryParams;
-        this.advanced = (this.params.advanced !== undefined);
-
+        this.advanced = (this.route.snapshot.routeConfig.path === 'advanced');
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
+
+        this.route.queryParams.subscribe((params) => {
+            this.advanced = (this.route.snapshot.routeConfig.path === 'advanced' || params.advanced !== undefined);
+            if (this.CONFIG.isLocal && params.advanced !== undefined) {
+                this.router.navigate(['settings/advanced']);
+            }
+        });
+    }
+
+    private setNameAndTitle() {
+        this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
+        this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
+        this.pageService.pageTitle = this.systemNameWatcher.originalValue;
     }
 
     private updateSettings(forceMergeState?: boolean) {
@@ -136,15 +146,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
+            .pipe(distinctUntilChanged())
             .subscribe((system) => {
                 if (!system) {
                     this.system = undefined;
                     return;
                 }
                 this.system = system;
-                this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
-                this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
-                this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+                this.setNameAndTitle();
                 this.applyService.reset();
 
                 if (this.systemSubscription) {
@@ -164,7 +173,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
-                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.permissions.isAdmin)) {
+                        if (!this.applyService.locked) {
+                            this.setNameAndTitle();
+                        }
+
+                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.userManager.permissions.isAdmin)) {
                             this.settingsSubscription = this.system.updateOrGetSystemSettings()
                                 .subscribe((response: any) => {
                                     if (response.reply) {
@@ -178,6 +191,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     });
             });
 
+        this.initWatchers();
+    }
+
+    initWatchers() {
         this.applyService.initPageWatcher(this.applyContainerRef);
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.systemNameWatcher],

@@ -480,7 +480,13 @@ export class NxCloudApiService {
     findArticleKB(assetId) {
         return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
             if (error.status === 404) {
-                this.#show404();
+                if (error.error.errorText === 'Kb not found') {
+                    this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
+                        this.router.navigate([`/docs/content/${assetId}`])
+                    );
+                } else {
+                    this.#show404();
+                }
                 return EMPTY;
             } else {
                 return of(error);

@@ -19,4 +19,29 @@ Show/hide branding variables
         </div>
         {% endfor %}
     </div>
+    <button class="btn btn-default btn-xs ml-3" type="button" data-toggle="collapse"
+            data-target="#{{ datastructure.name | escape_ds_name }}_hidden-vars">
+        See All
+    </button>
+    <div class="collapse variable-group" data-field-name="id_{{ datastructure.name | escape_ds_name }}"
+         id="{{ datastructure.name }}_hidden-vars">
+        {% for var, value in hidden_brands %}
+            {% if forloop.counter0|divisibleby:"2" %}
+            <div class="row" style="width: 900px">
+            {% endif %}
+                <div class="col-xs-6">
+                    <button
+                            data-container="body" data-animation="false" title="{{ var.description }}"
+                            data-toggle="tooltip"
+                            data-placement="top" data-name="{{ var.name }}"
+                            class="brand-variable list-group-item list-group-item-action">
+                        <strong>{{ var.label }} ({{ value }})</strong>
+                        <span class="badge badge-primary badge-pill">{{ var.name }}</span>
+                    </button>
+                </div>
+            {% if forloop.counter|divisibleby:"2" or forloop.last %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>

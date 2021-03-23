@@ -1,13 +1,12 @@
 import {
     Inject, Injectable, Injector
-}                                     from '@angular/core';
-import { DOCUMENT, Location }         from '@angular/common';
-import { Router }                     from '@angular/router';
-import { forkJoin }                   from "rxjs";
-import { flatMap }                    from "rxjs/internal/operators";
-import { tap, catchError }            from 'rxjs/operators';
+}                                    from '@angular/core';
+import { DOCUMENT, Location }        from '@angular/common';
+import { Router }                    from '@angular/router';
+import { forkJoin }                  from 'rxjs';
+import { tap, catchError, map }      from 'rxjs/operators';
 
-import { Exactly }                    from '../utils.service';
+import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
 import { NxCloudApiService }         from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';
@@ -96,7 +95,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
 
     loginAllServers(login, password, remember = false) {
         return this.mediaServerApi.getMediaServers(false).pipe(
-            flatMap((servers: any) =>
+            map((servers: any) =>
                 forkJoin(servers.map((server) => {
                     const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
                     });

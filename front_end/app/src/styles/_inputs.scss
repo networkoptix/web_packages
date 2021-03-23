@@ -21,7 +21,7 @@
 
     &[disabled], &[readonly],
     fieldset[disabled] & {
-        background-color : $additional_light2;
+        background-color : $additional_light2 !important;
 
         &:hover, &:focus {
             border-color : $light6 !important;

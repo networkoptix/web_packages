@@ -1658,7 +1658,6 @@ class Menu(models.Model):
             self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
         }.get(self.type, '')
 
-
     @classmethod
     def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
         from cms.controllers.filldata import global_contexts_to_dict
@@ -1667,8 +1666,12 @@ class Menu(models.Model):
             asset_type=cloud_portal_asset.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(
             global_contexts, cloud_portal_asset)
-        document_title_ds = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
-                                                         name='title').first()
+        document_dss = {
+            'title': DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
+                                                  name='title').first(),
+            'url': DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
+                                                name='url').first()
+        }
         structures = {
             menu.name.lower(): {
                 'nodes': MenuNode.generate_node_structure(
@@ -1678,7 +1681,7 @@ class Menu(models.Model):
                     global_contexts_dict,
                     max_depth=menu.depth,
                     include_not_accepted=include_not_accepted,
-                    document_title_ds=document_title_ds
+                    document_dss=document_dss
                 ),
                 'type': menu.type,
                 'base_url': menu.base_url,
@@ -1971,7 +1974,7 @@ class MenuNode(models.Model):
 
     @staticmethod
     def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1,
-                                max_depth=2, include_not_accepted=False, document_title_ds=None):
+                                max_depth=2, include_not_accepted=False, document_dss=None):
         nodes_structure = []
         for node in nodes:
             pending = None
@@ -2004,29 +2007,39 @@ class MenuNode(models.Model):
                     'condition_met': condition_met
                 }
 
+                title_ds = document_dss['title']
+                url_ds = document_dss['url']
                 title = 'Untitled'
+                url = ''
                 if node.name:
                     title = node.name
-                elif node.asset and node.asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                if node.asset and node.asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
                     asset_title = None
+                    asset_url = None
                     if asset_accepted:
-                        asset_title = document_title_ds.find_actual_value(node.asset)
+                        asset_title = title_ds.find_actual_value(node.asset, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, customization_name=customization.name)
                     elif pending is not None:
-                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id)
+                        asset_title = title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
                     elif node_structure['draft']:
-                        asset_title = document_title_ds.find_actual_value(node.asset, draft=True)
-                    if asset_title:
+                        asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+                    if not title and asset_title:
                         title = asset_title
+                    if asset_url:
+                        url = asset_url
+                    elif asset_title:
+                        url = asset_title
+                    node_structure['urlified'] = node.asset.urlify(url) if url else None
 
                 node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict)
-
-                node_structure['urlified'] = node.asset.urlify(node_structure['name']) if node.asset else None
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:
                     node_structure['nodes'] = node.generate_node_structure(
                         node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
-                        max_depth=max_depth, include_not_accepted=include_not_accepted, document_title_ds=document_title_ds
+                        max_depth=max_depth, include_not_accepted=include_not_accepted, document_dss=document_dss
                     )
                 nodes_structure.append(node_structure)
         return nodes_structure

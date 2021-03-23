@@ -349,7 +349,8 @@ export const nxConfig: IConfig = {
         flags: {
             newSystem: 'SF_NewSystem'
         },
-        status: {
+        name   : '',
+        status : {
             online  : 'online',
             default : {
                 style: 'default'

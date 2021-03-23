@@ -17,7 +17,7 @@
                 </div>
             </header>
 
-            <nx-section *ngIf="system.permissions.isAdmin && ((system.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)">
+            <nx-section *ngIf="system.userManager.permissions.isAdmin && ((system.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)">
                 <div class="row m-0">
                     <div class="col-12 pl-0">
                         <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
@@ -55,7 +55,7 @@
                     <nx-editable-settings-heading
                             (editModeState)="editMode = $event"
                             [nameWatcher]="systemNameWatcher"
-                            [editEnabled]="system.isOnline && system.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
+                            [editEnabled]="system.isOnline && system.userManager.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
                     <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [textOnly]="true"></nx-client-button>
                 </div>
 

@@ -11,25 +11,31 @@ class SpecialStructures:
     """
     def __init__(self):
         self.function_dict = {}
-        self.add_function("%SUPPORT_LINK%", self.calc_support_link)
-        self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization)
-        self.add_function("%LANGUAGES%", self.calc_lang_codes)
-        self.add_function("%CLOUD_LINK%", self.calc_cloud_link)
-        self.add_function("%CLOUD_HOST%", self.calc_cloud_host)
-        self.add_function("%licenseTypes%", self.calc_license_type)
-        self.add_function("%VMS_WIN_PATH%", self.calc_vms_win_path)
-        self.add_function("%VMS_LIN_PATH%", self.calc_vms_lin_path)
-        self.add_function("%VMS_LIN_SERVICE_NAME%", self.calc_vms_lin_service_name)
-        self.add_function("%VMS_COMPANY_ID%", self.calc_vms_company_id)
-        self.add_function('%VMS_MAC_COMPANY_ID%', self.calc_vms_mac_company_id)
-        self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable)
+        self.add_function("%SUPPORT_LINK%", self.calc_support_link, 'Support Link', 'Link for support page')
+        self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization, 'Customization Name', 'Name of the current customization')
+        self.add_function("%LANGUAGES%", self.calc_lang_codes, hidden=True)
+        self.add_function("%CLOUD_LINK%", self.calc_cloud_link, 'Cloud Link', 'Link to the cloud portal with protocol', shortcut=True)
+        self.add_function("%CLOUD_HOST%", self.calc_cloud_host, 'Cloud Host', 'Hostname of the cloud portal without protocol')
+        self.add_function("%licenseTypes%", self.calc_license_type, hidden=True)
+        self.add_function("%VMS_WIN_PATH%", self.calc_vms_win_path, 'VMS Windows Path', 'Path to the vms directory on Windows')
+        self.add_function("%VMS_LIN_PATH%", self.calc_vms_lin_path, 'VMS Linux Path', 'Path to the vms directory on Linux')
+        self.add_function("%VMS_LIN_SERVICE_NAME%", self.calc_vms_lin_service_name, 'Mediaserver Service', 'Mediaserver service name on Linux')
+        self.add_function("%VMS_COMPANY_ID%", self.calc_vms_company_id, 'VMS Company Id', 'Company ID used by VMS')
+        self.add_function('%VMS_MAC_COMPANY_ID%', self.calc_vms_mac_company_id, 'VMS Mac Company Id', 'Company ID used by VMS on Mac OS')
+        self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable, 'VMS Windows Executable', 'VMS executable name on windows')
 
-    def add_function(self, tag: str, function):
-        self.function_dict[tag] = function
+    def add_function(self, tag: str, function, label='', description='', hidden=False, shortcut=False):
+        self.function_dict[tag] = {
+            'function': function,
+            'label': label or tag,
+            'description': description,
+            'hidden': hidden,
+            'shortcut': shortcut
+        }
 
     def calc(self, tag: str, asset: Asset):
         if tag in self.function_dict:
-            return self.function_dict[tag](asset)
+            return self.function_dict[tag]['function'](asset)
         return ""
 
     @staticmethod

@@ -203,17 +203,23 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.healthLayoutService.searchTableArea = this.areaElement;
         });
 
-        this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className) => {
-            this.fixedLayoutClass = className;
-        });
+        this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
+            .pipe(delay(0))
+            .subscribe((className) => {
+                this.fixedLayoutClass = className;
+            });
 
-        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
-            this.layoutReady = value;
-        });
+        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject
+            .pipe(delay(0))
+            .subscribe((value: boolean) => {
+                this.layoutReady = value;
+            });
 
-        this.activeEntitySubscription = this.healthLayoutService.activeEntitySubject.pipe(delay(0)).subscribe(() => {
-            this.setLayout();
-        });
+        this.activeEntitySubscription = this.healthLayoutService.activeEntitySubject
+            .pipe(delay(0))
+            .subscribe(() => {
+                this.setLayout();
+            });
     }
 
     trackItem(index, item) {

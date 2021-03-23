@@ -36,7 +36,6 @@
     & >.left-menu-arrow {
             position: absolute;
             top: calc(50% - 16px);
-            left: 8px;
             height: 32px !important;
             display: flex;
             justify-content: center;
@@ -47,52 +46,83 @@
     }
 }
 
+.child-level {
+    @extend .base-level;
+    & > .menu-link {
+        padding: 4px 5px 3px 0;
+        font-size: 13px !important;
+    }
+
+}
+
 .menu-level-1 {
     @extend .base-level;
     @include typography.medium15dark9;
 
     & > .menu-link {
-        padding-left: 40px;
+        padding-left: 26px;
         &.arrow-padding {
-            padding-left: 40px;
+            padding-left: 26px;
         }
     }
     & > .left-menu-arrow {
-        padding-left: 8px;
-        &.arrow-padding {
-            padding-left: 40px;
-        }
+        padding-left: 4px;
+    }
+    .has-state {
+        padding-left: 42px !important;
     }
 }
 
 .menu-level-2 {
-    @extend .base-level;
+    @extend .child-level;
     & > .menu-link {
-        padding-left: 48px;
-        &.arrow-padding {
-            padding-left: 80px;
-        }
+        padding-left: 42px;
     }
     & > .left-menu-arrow {
-        left: 52px;
+        left: 22px;
+    }
+    .has-state {
+        padding-left: 68px !important;
     }
 }
 
 .menu-level-3 {
-    @extend .base-level;
+    @extend .child-level;
     & > .menu-link {
-        padding-left: 88px;
-        &.arrow-padding {
-            padding-left: 120px;
-        }
+        padding-left: 68px;
     }
     & > .left-menu-arrow {
-        left: 92px;
+        left: 46px;
+    }
+    .has-state {
+        padding-left: 84px !important;
     }
 }
 
-.has-state {
-    padding-left: 60px !important;
+.menu-level-4 {
+    @extend .child-level;
+    & > .menu-link {
+        padding-left: 94px;
+    }
+    & > .left-menu-arrow {
+        left: 70px;
+    }
+    .has-state {
+        padding-left: 120px !important;
+    }
+}
+
+.menu-level-5 {
+    @extend .child-level;
+    & > .menu-link {
+        padding-left: 120px;
+    }
+    & > .left-menu-arrow {
+        left: 94px;
+    }
+    .has-state {
+        padding-left: 146px !important;
+    }
 }
 
 .menu-link > a {
