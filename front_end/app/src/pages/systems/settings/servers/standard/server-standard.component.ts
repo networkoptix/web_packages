@@ -186,11 +186,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
-        this.renameDisabled = !this.system.permissions.isAdmin;
-        this.restartDisabled = !this.system.permissions.isAdmin;
-        this.detachDisabled = !this.system.permissions.editAdmins;
-        this.resetDisabled = !this.system.permissions.editAdmins;
-        this.portChangeDisabled = !this.system.permissions.editAdmins;
+        const { isAdmin, editAdmins } = this.system.userManager.permissions;
+        this.renameDisabled = !isAdmin;
+        this.restartDisabled = !isAdmin;
+        this.detachDisabled = !editAdmins;
+        this.resetDisabled = !editAdmins;
+        this.portChangeDisabled = !editAdmins;
 
         this.serverDetails = new InfoBlockSection([
             new InfoBlockLine(this.LANG.common.ip(), this.selectedServer.ip || '-'),

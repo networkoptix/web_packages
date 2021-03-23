@@ -87,6 +87,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
     }
 
+    private setNameAndTitle() {
+        this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
+        this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
+        this.pageService.pageTitle = this.systemNameWatcher.originalValue;
+    }
+
     private updateSettings(forceMergeState?: boolean) {
         this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         this.settings = {
@@ -147,9 +153,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.system = system;
-                this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
-                this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
-                this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+                this.setNameAndTitle();
                 this.applyService.reset();
 
                 if (this.systemSubscription) {
@@ -169,7 +173,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
-                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.permissions.isAdmin)) {
+                        if (!this.applyService.locked) {
+                            this.setNameAndTitle();
+                        }
+
+                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.userManager.permissions.isAdmin)) {
                             this.settingsSubscription = this.system.updateOrGetSystemSettings()
                                 .subscribe((response: any) => {
                                     if (response.reply) {
@@ -204,9 +212,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }).catch(() => {
                             this.systemNameWatcher.reset();
                             const options = {
-                                classname: this.CONFIG.toast.warning,
-                                autohide : true,
-                                delay    : this.CONFIG.alertTimeout
+                                classname : this.CONFIG.toast.warning,
+                                autohide  : true,
+                                delay     : this.CONFIG.alertTimeout
                             };
                             this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
                         });

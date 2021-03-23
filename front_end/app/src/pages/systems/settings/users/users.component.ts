@@ -121,7 +121,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.system = system;
                 this.pageService.pageTitle = this.system.info.name;
                 // Route guard did not worked :( ... so doing it the old way
-                if (!this.system.permissions || !this.system.permissions.editUsers) {
+                if (!this.system.userManager.permissions || !this.system.userManager.permissions.editUsers) {
                     this.uriService
                         .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                         .catch(error => {

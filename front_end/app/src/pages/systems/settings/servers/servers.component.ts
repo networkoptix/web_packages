@@ -104,7 +104,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 this.isOffline = true;
                             }
                         }).finally(() => {
-                            if (this.system && !this.system.permissions?.editUsers) {
+                            if (this.system && !this.system.userManager.permissions?.editUsers) {
                                 this.uriService
                                     .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
                                     .catch(error => {

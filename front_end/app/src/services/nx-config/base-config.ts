@@ -539,6 +539,7 @@ export interface ServersStatus {
 export interface System {
     auditTime: number;
     flags: Flags;
+    name: string;
     status: SystemStatus;
 }
 

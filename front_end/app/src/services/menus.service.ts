@@ -209,7 +209,7 @@ export class NxMenusService implements OnDestroy {
         }
         const { endpoint: { view = false, settings = false, information = false } } = this;
         // TODO: unify system's name location once we remove promises
-        let name = activeSystem.info?.systemName || activeSystem.name;
+        let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.name;
         if (!name) {
             name = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
         }

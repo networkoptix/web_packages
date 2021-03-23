@@ -47,7 +47,7 @@
                     <nx-editable-settings-heading
                         [nameWatcher]="serverNameWatcher"
                         (editModeState)="editMode = $event"
-                        [editEnabled]="system.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
+                        [editEnabled]="system.userManager.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
                     <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
                     <div *ngIf="!editMode" class="d-flex pb-2">
                         <button *ngIf="system.canViewInfo()" class="server-buttons"

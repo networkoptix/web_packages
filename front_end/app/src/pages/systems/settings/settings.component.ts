@@ -240,7 +240,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix()
         }).then(() => {
-            if (this.system.permissions.editUsers) {
+            if (this.system.userManager.permissions.editUsers) {
                 this.gettingSystemUsers.run();
             } else {
                 this.systemReady();
@@ -404,7 +404,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
 
         this.content.system = this.system;
-        if (this.system.permissions.editCameras) {
+        if (this.system.userManager.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -437,7 +437,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
         }
 
-        if (this.system.permissions.editUsers) {
+        if (this.system.userManager.permissions.editUsers) {
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
 
             if (!usersNode) {
@@ -511,7 +511,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
         }
 
-        if (this.system.permissions.isAdmin) {
+        if (this.system.userManager.permissions.isAdmin) {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {
@@ -571,7 +571,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
-        this.content.searchableResults = (this.system.permissions.editCameras && this.system.permissions.isAdmin && this.system.permissions.editUsers);
+        this.content.searchableResults = (this.system.userManager.permissions.editCameras && this.system.userManager.permissions.isAdmin && this.system.userManager.permissions.editUsers);
         this.content = { ...this.content };
     }
 

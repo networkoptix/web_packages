@@ -231,11 +231,18 @@ export class NxSystem extends System {
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
                     }
-                    Object.assign(parsedSettings, this.userManager.currentUser);
+                    const currentUser = { ...this.userManager.currentUser };
+                    if (currentUser?.name) {
+                        delete currentUser.name;
+                    }
+                    Object.assign(parsedSettings, currentUser);
                     if (this.info) {
                         Object.assign(this.info, parsedSettings); // Update
                     } else {
                         this.info = parsedSettings;
+                    }
+                    if (this.CONFIG.isLocal && !this.info.name) {
+                        this.info.name = this.CONFIG.system.name;
                     }
                     this.id = parsedSettings?.id || this.CONFIG.localSystemId;
                     this.mergeInfo = this.info.mergeInfo;
@@ -739,13 +746,6 @@ export class NxSystem extends System {
      */
     get isMine() {
         return this.userManager.isMine;
-    }
-
-    /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
-     */
-    get permissions() {
-        return this.userManager.permissions;
     }
 
     /**

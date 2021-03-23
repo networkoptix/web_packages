@@ -734,7 +734,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         let cameraIndex: number;
         if (this.system && this.system.cameras) {
             cameraIndex = this.system.cameras.findIndex(camera => camera?.id === `{${this.parsedCameraId}}`);
-            this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.permissions.editCameras;
+            this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.userManager.permissions.editCameras;
             if (this.system.show404) {
                 return;
             }
