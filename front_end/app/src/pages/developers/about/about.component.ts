@@ -124,7 +124,7 @@ export class NxAboutComponent {
                     node     : mapToAboutNode(node)
                 });
 
-                this.aboutStructure = about.map(mapToAboutStructure);
+                this.aboutStructure = (about || []).map(mapToAboutStructure);
                 if (state) {
                     this.showRibbon(id);
                 }
