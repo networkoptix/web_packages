@@ -49,8 +49,9 @@
 .nested-stacked-advanced.node-expanded, .nested-stacked-advanced.advanced-shown {
     border: 1px solid red !important;
 }
+.nested-stacked-flex .field-preview > label,
 .nested-stacked-advanced > div {
-    display: none;
+    display: none !important;
 }
 .nested-stacked-advanced.advanced-shown > div {
     display: block !important;

@@ -59,6 +59,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     previousInputValue: number;
     checking: boolean;
     _serverLoaded = false;
+    portBusy: boolean;
 
     dropdownStorages: any[] = [];
     saveStorageWatcher = new Watcher<boolean>(false);
@@ -115,6 +116,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.section = 'servers';
         this.fullInfoPath = '';
+
+        this.portBusy = false;
     }
 
     constructor(
@@ -166,7 +169,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.saveSettings,
             () => {
                 this.applyService.reset();
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
+                    this.selectDefaultStorage();
                 this.setSystemStorageChosen(this.selectedStorage);
             }
         );
@@ -208,6 +212,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.saveSettings = this.processService.createProcess(async() => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
+            let newPort;
+
             if (this.serverNameWatcher.changed) {
                 await this.system.renameServer(this.selectedServer.id, this.serverNameWatcher.value)
                     .then(() => {
@@ -229,14 +235,18 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             ), options);
                     });
             }
-            let newPort;
+
             try {
                 if (!port.value) {
                     port.value = port.originalValue;
                 } else if (port.value !== port.originalValue) {
                     const portReturn = await this.system.changeServerPort(port.value, serverId);
-                    if (portReturn) {
-                        newPort = port.originalValue = port.value;
+                    switch (portReturn.error) {
+                        case '0': newPort = port.originalValue = port.value; break;
+                        case '3':
+                            this.portBusy = true;
+                            port.value = port.originalValue;
+                            break;
                     }
                 }
                 if (this.saveStorageWatcher.value) {
@@ -257,7 +267,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 return Promise.reject(error);
             }
 
-            if (this.CONFIG.isLocal) {
+            if (this.CONFIG.isLocal && newPort) {
                 setTimeout(() => {
                     this.uriService.changePort(newPort);
                 });
@@ -359,6 +369,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     onPortChange(port) {
+        this.portBusy = false;
         if (port && port >= this.CONFIG.servers.port.min && port < this.CONFIG.servers.port.max) {
             this.ipPortWatcher.value = port;
         }

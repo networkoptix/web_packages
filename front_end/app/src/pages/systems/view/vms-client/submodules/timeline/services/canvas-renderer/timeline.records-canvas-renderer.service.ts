@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core'
 import TimelineService from '../timeline.service'
 import VideoManagementSystemService from '../../../vms/services/vms.service'
 import { float, ms, px } from '../../../../utils/type-aliases'
+import { fileURLToPath } from 'url'
+import drawStripyBar from './stripy-bar/stripy-bar'
+import { pxPerSecond } from './stripy-bar/types'
+import getSlopeWidth from './stripy-bar/slope'
+
+import stripeCfg from './stripy-bar/cfg'
 
 
 @Injectable({
@@ -64,6 +70,12 @@ export class TimelineRecordsCanvasRendererService {
           // ctx.fillStyle = oldFill
         }
       }
+
+      const LAST_MINUTE_SIZE = 1.5 * 60 * 1000 // 1.5 minutes
+      const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE
+      if (endMs > lastMinuteStartMs && this.timeline.durationToCanvasWidth(LAST_MINUTE_SIZE) > 1) {
+        this._drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs)
+      }
     }
   }
 
@@ -78,6 +90,26 @@ export class TimelineRecordsCanvasRendererService {
     const h = Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * ch)
     const w = x1 - x0
     ctx.fillRect(x0, y, w, h)
+  }
+
+  protected _drawLastMinuteStripes (ctx, lastMinuteStartMs, pxPerMs) {
+    const dpr = this.timeline.canvasGeometry.dpr
+    const x = Math.round((lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs)
+    const w = this.timeline.canvasGeometry.width - x
+    const ch = this.timeline.canvasGeometry.height
+    const y = Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * ch)
+    const h = Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * ch)
+
+    drawStripyBar(
+        ctx,
+        x, y,
+        w, h,
+        stripeCfg.stripeWidth * dpr,
+        getSlopeWidth(stripeCfg.slope, h), // memoized
+        stripeCfg.speed * dpr,
+        stripeCfg.backgroundColor,
+        stripeCfg.stripeColor,
+    )
   }
 }
 

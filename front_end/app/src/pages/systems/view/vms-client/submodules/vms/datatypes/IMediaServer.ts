@@ -5,6 +5,7 @@ export interface IMediaServer {
   id: string,
   name: string,
   url: string,
+  status: string,
   cameras: Array<ICamera>,
 }
 

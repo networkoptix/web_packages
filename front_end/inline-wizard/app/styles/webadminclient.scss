@@ -19,7 +19,6 @@ body {
 .webadmin-wizard.panel{
   height:100%;
   width:100%;
-  padding-bottom: 58px;
   background-color : $light1;
 }
 
@@ -43,7 +42,6 @@ body {
 }
 
 .webadmin-wizard .panel-footer {
-  position : absolute;
   bottom   : 0;
   width    : 100%;
   border-top : 1px solid $additional_light4;
@@ -139,8 +137,9 @@ body {
 }
 
 .webadmin-wizard .new-style-checkbox {
-    .control-label {
+  .control-label {
     color : $dark9;
+    font-weight: 500 !important;
 
     &:hover {
       color : $dark6;

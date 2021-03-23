@@ -43,7 +43,8 @@ export class MenuNode {
         public asset_id = null,
         public related_asset_ids = [],
         public next_item = false,
-        public urlified = ''
+        public urlified = '',
+        public subtitle = '',
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

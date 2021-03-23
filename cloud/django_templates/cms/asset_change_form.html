@@ -56,6 +56,32 @@
             </div>
         {% endif %}
 
+        {% if related_nodes %}
+            <h2>Related Menu items</h2>
+            <div class="table-responsive" style="margin-bottom: 10px;">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <td><strong>Menu</strong></td>
+                        <td><strong>Node</strong></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for rel_node in related_nodes %}
+                        <tr>
+                            <td>
+                                {% if rel_node.menu %}<a href="{% url 'admin:cms_menu_change' rel_node.menu.id %}">{{ rel_node.menu.name }}</a>{% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'admin:cms_menunode_change' rel_node.node.id %}">{{ rel_node.node }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
         {% if current_versions %}
             <h2>Current Version for customization</h2>
             <div class="table-responsive">

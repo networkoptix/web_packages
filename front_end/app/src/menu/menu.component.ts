@@ -146,8 +146,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
-            if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
-                this.menuService.content = changes.content.currentValue.level1;
+            if (this.menuService.hasUpdatedContent(changes.content.currentValue.level1)) {
+                this.menuService.content = this.menuService.sanitizeContent(changes.content.currentValue.level1);
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices

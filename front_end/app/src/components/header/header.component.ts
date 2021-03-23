@@ -5,11 +5,11 @@ import {
 import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
-}                                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+}                                       from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
-} from 'rxjs';
+}                                       from 'rxjs';
 import { map, startWith }            from 'rxjs/operators';
 
 import { NxDialogsService }          from '@dialogs/dialogs.service';
@@ -396,12 +396,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.system.getInfoAndPermissions().then(() => {
                         this.singleSystem = true;
                         this.systemCounter = 1;
-                        this.system.infoSubject.subscribe((system) => {
-                            this.systems = [system];
-                            this.updateActiveSystem();
-                            this.updateActive();
-                            this.headerService.activeSystem = system.moduleInfo;
-                        });
+                        this.system.infoSubject
+                            .pipe(untilDestroyed(this))
+                            .subscribe((system) => {
+                                this.systems = [system];
+                                this.updateActiveSystem();
+                                this.updateActive();
+                                this.headerService.activeSystem = system.moduleInfo;
+                            });
                     });
                 });
             });

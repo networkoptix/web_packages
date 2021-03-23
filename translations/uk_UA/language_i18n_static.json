@@ -770,7 +770,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Час",
-            "Trial": "Пробна версія",
+            "Trial": "Час",
             "Professional": "Професіонал",
             "Analog": "Аналоговий",
             "Edge": "Edge",
@@ -801,7 +801,7 @@
             "required": "{number} more required",
             "activated": "Ліцензійний ключ активовано",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Пробна ліцензія активована. Починаючи з сьогоднішнього дня, ви можете записувати до 4-х камер протягом 30 днів."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {

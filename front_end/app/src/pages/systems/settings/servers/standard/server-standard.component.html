@@ -104,14 +104,20 @@
             <nx-section class="pl-3">
                 <div class="server-settings">
                     <span class="ellipsis text-column" translate>Port</span>
-                    <div style="width: 85px;">
-                        <nx-numeric
-                                [class]="'pl-2'"
-                                [min]="CONFIG.servers.port.min"
-                                [max]="CONFIG.servers.port.max"
-                                [disabled]="portChangeDisabled || serverUnavailable"
-                                [(ngModel)]="ipPortWatcher.value"
-                                (onChange)="onPortChange($event)"></nx-numeric>
+                    <div class="server-settings-port">
+                        <div style="width: 85px;">
+                            <nx-numeric
+                                    [class]="'pl-2'"
+                                    [min]="CONFIG.servers.port.min"
+                                    [max]="CONFIG.servers.port.max"
+                                    [disabled]="portChangeDisabled || serverUnavailable"
+                                    [(ngModel)]="ipPortWatcher.value"
+                                    (onChange)="onPortChange($event)"></nx-numeric>
+                        </div>
+                        <div class="ml-2">
+                            <span class="input-error" *ngIf="portBusy"
+                                  translate>Port is busy</span>
+                        </div>
                     </div>
                     <ng-container *ngIf="showAnalytics && dropdownStorages.length && !storagesLoading || storagesLoading">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>

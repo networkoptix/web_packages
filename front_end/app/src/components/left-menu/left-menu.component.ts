@@ -76,7 +76,7 @@ export class NxLeftMenuComponent {
                     if (action === 'update') {
                         updateActiveRoutes(node, true);
                         if (node.next_item) {
-                            this.relatedLinks.emit({ type: 'next', nodes: node.parentNode?.nodes || [] });
+                            this.relatedLinks.emit({ type: 'next', nodes: nodes || [] });
                         } else {
                             node.related_asset_ids.forEach(id => {
                                 findActiveNode(this.menuNodes, id, this.baseRoute + id, 'findRelated');
