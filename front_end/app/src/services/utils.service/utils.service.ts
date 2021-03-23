@@ -292,10 +292,6 @@ export class NxUtilsService {
     static htmlWiper(target) {
         // test HTML
         // <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=" onload="$.getScript('evil.js');1<2>3">
-        if (isArray(target)) {
-            // we use only first item
-            return target[0].replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '').trim();
-        }
-        return target?.replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '').trim();
+        return (isArray(target) ? target[0] : target)?.replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '');
     }
 }
