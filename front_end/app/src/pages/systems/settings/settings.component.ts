@@ -141,7 +141,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.setDesktopLayout();
         this.pageService.pageTitle = this.LANG.pageTitles.system?.();
         this.init();
     }
