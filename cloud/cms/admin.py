@@ -17,7 +17,7 @@ import nested_admin
 
 from cms.forms import *
 from cms.controllers import generate_structure, structure
-from cms.controllers.modify_db import get_records_for_version, generate_preview_link
+from cms.controllers.modify_db import generate_preview_links, get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
 from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu
 
@@ -560,6 +560,7 @@ class AssetAdmin(CMSAdmin):
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
         context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
+        context['preview_url_list'] = json.dumps(list(filter(lambda item: item, generate_preview_links(context=target_context, asset=asset, state="draft"))))
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
         context['order_options'] = order_options
 

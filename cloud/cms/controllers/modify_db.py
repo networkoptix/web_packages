@@ -472,31 +472,36 @@ def remove_unused_records(asset):
             record.delete()
 
 
-def generate_preview_link(context=None, asset=None, state=""):
+def generate_preview_links(context=None, asset=None, state=""):
     params = urlencode({'state': state, 'id': asset.id})
     if asset:
         if asset.is_integration:
-            return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
+            yield ('Integrations Preview', f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}")
         elif asset.is_article:
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
             article_url = article_url.value if article_url else "tmp_url"
-            return f'/content/{article_url}?{params}'
+            yield ('Article Preview', f'/content/{article_url}?{params}')
         elif asset.is_agreement:
-            return f'/agreement?{params}'
+            yield ('Agreement Preview', f'/agreement?{params}')
         elif asset.is_documentation:
-            for node in asset.nodes.all():
-                menu = node.get_parent()
+            menus = {node.get_parent() for node in asset.nodes.all()}
+            for menu in menus:
                 if menu.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]:
                     url = f'/docs/{menu.base_url}'
                     if menu.url:
                         url += f'/{menu.url}'
                     if menu.type == Menu.MENU_TYPES.docs_struct:
-                        return f'{url}?{params}'
-                    url += f'/{asset.id}?{params}'
-                    return url
-            return f'/docs/content/{asset.id}?{params}'
+                        yield (f'{menu.name} - Landing Menu Preview', f'{url}?{params}')
+                    else:
+                        url += f'/{asset.id}?{params}'
+                        yield (f'{menu.name} - KB Menu Preview' ,url)
+            yield ('Document Fallback Preview', f'/docs/content/{asset.id}?{params}')
 
-    return f"{context.url}?preview=true" if context and context.url else None
+    yield ('Other Preview', f"{context.url}?preview=true") if context and context.url else None
+
+def generate_preview_link(context=None, asset=None, state=""):
+    (_, default_preview) = next(generate_preview_links(context=context, asset=asset, state=state))
+    return default_preview
 
 
 def generate_preview(asset, context=None, version_id=None, send_to_review=False):
