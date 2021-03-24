@@ -88,12 +88,12 @@ export class NxLeftMenuComponent {
                     if (action === 'update') {
                         updateActiveRoutes(node, true);
                         if (node.next_item) {
-                            this.relatedLinks.emit({ type: 'next', nodes: nodes || [] });
+                            this.relatedLinks.emit({ type: 'next', nodes: nodes.filter(node => !node.indented) });
                         } else {
                             node.related_asset_ids.forEach(id => {
                                 findActiveNode(this.menuNodes, id, this.baseRoute + id, 'findRelated');
                             });
-                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes });
+                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes.filter(node => !node.indented) });
                         }
                     } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === targetAssetId)) {
                         relatedNodes.push(node);
