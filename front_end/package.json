@@ -3,7 +3,7 @@
   "version": "20.2.0",
   "scripts": {
     "ng": "ng",
-    "serve": "npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --open --proxy-config proxy.conf.local.json",
+    "serve": "npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --open --proxy-config proxy.conf.cloud-test.json",
     "serve-cloud-test": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.cloud-test.json",
     "serve-dev2": "npm run lang && npm run update-lang-types && ng serve --open --proxy-config proxy.conf.dev2.json",
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.json",
