@@ -560,7 +560,7 @@ class AssetAdmin(CMSAdmin):
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
         context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
-        context['preview_url_list'] = json.dumps(list(filter(lambda item: item, generate_preview_links(context=target_context, asset=asset, state="draft"))))
+        context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(context=target_context, asset=asset, state="draft"))))
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
         context['order_options'] = order_options
 
@@ -731,7 +731,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
                     is_integration or is_article or is_agreement)
         extra_context['whole_preview'] = is_integration or is_article or is_agreement
-        extra_context['preview_url_list'] = json.dumps(list(filter(lambda item: item, generate_preview_links(asset=version.asset, state="pending"))))
+        extra_context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(asset=version.asset, state="pending"))))
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
