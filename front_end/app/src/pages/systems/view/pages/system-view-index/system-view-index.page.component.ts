@@ -240,9 +240,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               archives[c.id] || [],
               c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
               (quality: string) => {
+                // console.log('WEBM', this.system.unsafeGetWebmUrl(c.id, -1, this._quality2resolution(quality)))
                 return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))
               },
               (t: ms, quality: string) => {
+                // console.log('WEBM', this.system.unsafeGetWebmUrl(c.id, t, this._quality2resolution(quality)))
                 return this.system.unsafeGetHlsUrl(c.id, t, this._quality2resolution(quality))
               },
               (t?: ms) => this.system.getCameraThumbnailUrl(c.id, 128, 128, t)
@@ -251,7 +253,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             return result
           })
         })))
-        console.log(`system ${this.system.id} view initialized`, this.hasCameras)
+        // console.log(`system ${this.system.id} view initialized`, this.hasCameras)
         this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {

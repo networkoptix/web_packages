@@ -100,7 +100,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this._camera_rotation === 0) {
       waitUntilThereIsVideoView.then(() => {
         this.videoView.nativeElement.style.transform = ''
-        console.log('video rotation reset')
+        // console.log('video rotation reset')
       })
     }
   }
@@ -108,27 +108,27 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public isBuffering: boolean = false
 
   protected _playVideo () {
-    console.log('video play request, promise is', this._playPromise)
+    // console.log('video play request, promise is', this._playPromise)
     this._playPromise = this.$video.play().then(() => {
-      console.log('play promise resolved', this._camera_rotation, this.vms.selectedCamera.rotation)
+      // console.log('play promise resolved', this._camera_rotation, this.vms.selectedCamera.rotation)
       if (this._camera_rotation) {
-        console.log('rotation change')
+        // console.log('rotation change')
         this.videoView.nativeElement.style.transform = `rotate(${this._camera_rotation}deg)`
       }
     }).catch(e => {
-      console.log('play promise catch', e)
+      // console.log('play promise catch', e)
     }).finally(() => {
-      console.log('play promise reset')
+      // console.log('play promise reset')
       this._playPromise = undefined
     })
   }
 
   protected _pauseVideo () {
-    console.log('pause video, play promise is', this._playPromise)
+    // console.log('pause video, play promise is', this._playPromise)
     if (this._playPromise) {
-      console.log('ignorring pause request')
+      // console.log('ignorring pause request')
     } else {
-      console.log('video.pause')
+      // console.log('video.pause')
       this.$video.pause()
     }
   }
@@ -136,10 +136,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
     switch (this.state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.log('PLAYBACK_MODE -> STOPPED')
+        // console.log('PLAYBACK_MODE -> STOPPED')
         this._setPlaybackSource('')
         this.videoView.nativeElement.style.transform = ''
-        console.log('video rotation reset')
+        // console.log('video rotation reset')
         if (prevState.mode !== this.state.mode) {
           this._stop()
         }
@@ -164,10 +164,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           const ps = prevState as ArchivePlaybackState
           if (ps.paused && !this.state.paused) {
-            console.log('PLAY 1')
+            // console.log('PLAY 1')
             this._playVideo()
           } else if (!ps.paused && this.state.paused) {
-            console.log('PAUSE 1')
+            // console.log('PAUSE 1')
             this._pauseVideo()
           // } else if (prevState.sourceUrl !== this.state.sourceUrl) {
           //   // console.log('gotta react on sourceUrl change ARCHIVE',
@@ -198,7 +198,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _stop () {
     this._lastTimeUpdateTimeStamp = undefined
-    console.log('PAUSE 2')
+    // console.log('PAUSE 2')
     this._pauseVideo()
     this.$video.currentTime = 0
   }
@@ -254,33 +254,33 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
                 // try to recover network error
-                console.log('fatal network error encountered, try to recover');
+                console.warn('fatal network error encountered, try to recover');
                 hls.startLoad();
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
-                console.log('fatal media error encountered, try to recover');
+                console.warn('fatal media error encountered, try to recover');
                 hls.recoverMediaError();
                 break;
               default:
-                console.log('cannot recover');
+                console.error('HLS error, cannot recover');
                 hls.destroy();
                 break;
             }
           }
         })
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          console.log('HLS manifest parsed')
+          // console.log('HLS manifest parsed')
           // this._playVideo()
           // console.log('PLAY 3 (HLS)')
         });
         hls.on(Hls.Events.FRAG_LOADED, () => {
-          console.log('HLS Fragment Loaded')
-          if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
-            if (!this.playback.state.started) {
-              console.log('HLS it was the first fragment')
-              // this.playback.handleStarted()
-            }
-          }
+          // console.log('HLS Fragment Loaded')
+          // if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
+          //   if (!this.playback.state.started) {
+          //     // console.log('HLS it was the first fragment')
+          //     // this.playback.handleStarted()
+          //   }
+          // }
         })
       } else {
         console.warn('HLS is not supported')
@@ -297,41 +297,41 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   public videoLoadStartHandler (e: MediaStreamEvent) {
-    console.log('video load start event', e)
+    // console.log('video load start event', e)
   }
 
   public videoLoadedMetadataHandler (e: MediaStreamEvent) {
-    console.log('video loaded metadata event', e)
+    // console.log('video loaded metadata event', e)
   }
 
   public videoLoadedDataHandler (e: MediaStreamEvent) {
-    console.log('video loaded data event', e)
+    // console.log('video loaded data event', e)
   }
 
   public videoCanPlayHandler (e: MediaStreamEvent) {
-    console.log('video can play event', e)
+    // console.log('video can play event', e)
     this._playVideo()
-    console.log('PLAY 3 (HLS)')
+    // console.log('PLAY 3 (HLS)')
   }
 
   public videoCanPlayThroughHandler (e: MediaStreamEvent) {
-    console.log('video can play through event', e)
+    // console.log('video can play through event', e)
   }
 
   public videoProgressHandler (e: MediaStreamEvent) {
-    console.log('video progress event', e)
+    // console.log('video progress event', e)
   }
 
   public videoPlayHandler (e: MediaStreamEvent) {
     // this.playback.handleStarted()
-    console.log('video play event', e)
+    // console.log('video play event', e)
     if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
       if (!this.playback.state.started) {
-        console.log('it was the first play event')
+        // console.log('it was the first play event')
         this.playback.handleStarted()
       }
     } else {
-      console.warn('video play event while playback state mode is STOPPED')
+      // console.warn('video play event while playback state mode is STOPPED')
     }
   }
 
@@ -364,26 +364,26 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public videoClickHandler (e: MouseEvent) {
-    console.log('video click')
+    // console.log('video click')
     if (this.playback.canPause) {
-      console.log('can pause -> pause')
+      // console.log('can pause -> pause')
       this._pauseVideo()
     } else if (this.playback.canUnpause) {
-      console.log('can unpause -> unpause')
+      // console.log('can unpause -> unpause')
       this.playback.unpause()
     } else if (this.playback.canStop) {
-      console.log('can stop -> stop')
+      // console.log('can stop -> stop')
       this.playback.stop()
     } else if (this.playback.canPlayLive) {
-      console.log('can play live -> play live')
+      // console.log('can play live -> play live')
       this.playback.playLive()
     } else {
-      console.log('can not respond on click in any meaningful way -> doing nothing')
+      // console.log('can not respond on click in any meaningful way -> doing nothing')
     }
   }
 
   public videoDblClickHandler (e: MouseEvent) {
-    console.log('video double click -> emitting upstairs')
+    // console.log('video double click -> emitting upstairs')
     this.videoDblClick.emit(true)
   }
 }

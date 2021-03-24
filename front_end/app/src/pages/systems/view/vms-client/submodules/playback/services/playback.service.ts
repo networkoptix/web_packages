@@ -84,7 +84,7 @@ export class PlaybackService {
       this._state.quality,
       this.vms.selectedCamera.getPosterUrl()
     )
-    console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
+    // console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
@@ -101,12 +101,12 @@ export class PlaybackService {
       this._state.quality,
       this.vms.selectedCamera.getPosterUrl(t)
     )
-    console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
+    // console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
   public stop () {
-    console.log('PLAYBACK.STOP()')
+    // console.log('PLAYBACK.STOP()')
     this._state = createInitialStoppedState(this._state.quality)
     this._emit()
   }
@@ -344,7 +344,7 @@ export class PlaybackService {
     if (this._state.quality === q) {
       return
     }
-    console.log('changeQuality', this._state.quality, '->', q)
+    // console.log('changeQuality', this._state.quality, '->', q)
     this._state.quality = q
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:

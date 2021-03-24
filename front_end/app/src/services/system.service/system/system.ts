@@ -540,6 +540,14 @@ export class NxSystem extends System {
         );
     }
 
+    public getWebmUrl(cameraId, position?, resolution = 'hi') {
+        return this.ensureSystemAuth().then(
+            () => position === -1
+                ? this.mediaserver.getLiveWebmUrl(cameraId, resolution)
+                : this.mediaserver.getWebmUrl(cameraId, position, resolution)
+        );
+    }
+
     public unsafeGetCameraLiveHlsUrl(cameraId, resolution = 'hi') {
         return this.mediaserver.getLiveHlsUrl(cameraId, resolution);
     }
@@ -548,6 +556,12 @@ export class NxSystem extends System {
         return position === -1
             ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
             : this.mediaserver.getHlsUrl(cameraId, position, resolution);
+    }
+
+    public unsafeGetWebmUrl(cameraId, position?, resolution = 'hi') {
+        return position === -1
+            ? this.mediaserver.getLiveWebmUrl(cameraId, resolution)
+            : this.mediaserver.getWebmUrl(cameraId, position, resolution);
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {

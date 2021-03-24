@@ -984,6 +984,14 @@ export class NxSystemAPI {
     getHlsUrl(cameraId, position, resolution = 'hi') {
         return `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
     }
+
+    getLiveWebmUrl(cameraId, resolution = 'hi') {
+        return `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.webm?${resolution}&auth=${this.authGet}`;
+    }
+
+    getWebmUrl(cameraId, position, resolution = 'hi') {
+        return `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.webm?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
+    }
     // </added by @gbezyuk for watch component>
 
     /** Merge Systems */

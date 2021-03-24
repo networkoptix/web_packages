@@ -68,7 +68,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
       default:
         this.disabled = true
     }
-    console.log('vms subject change, Disabled:', this.disabled)
+    // console.log('vms subject change, Disabled:', this.disabled)
     this.$self.classList[!this.disabled ? 'add' : 'remove']('enabled')
   }
 
