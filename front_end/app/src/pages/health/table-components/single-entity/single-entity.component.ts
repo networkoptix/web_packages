@@ -1,11 +1,10 @@
 import {
     Component, Input, OnChanges,
     ViewEncapsulation
-}                                   from '@angular/core';
-
-import { NxHealthService }          from '../../health.service';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { InfoBlockLine, InfoBlockSection } from '../../../../components/info-block/info-block.component';
+}                                          from '@angular/core';
+import { NxHealthService }                 from '../../health.service';
+import { NxConfigService, IConfig }        from '@services/nx-config';
+import { InfoBlockLine, InfoBlockSection } from '@src/components/info-block/info-block.component';
 
 @Component({
     selector      : 'nx-single-entity',
