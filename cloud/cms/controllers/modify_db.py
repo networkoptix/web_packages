@@ -497,7 +497,7 @@ def generate_preview_links(context=None, asset=None, state=""):
                         yield (f'{menu.name} - KB Menu Preview' ,url)
             yield ('Document Fallback Preview', f'/docs/content/{asset.id}?{params}')
 
-    yield ('Other Preview', f"{context.url}?preview=true") if context and context.url else None
+    yield ('Other Preview', f"{context.url}?preview=true") if context and context.url else (None, None)
 
 def generate_preview_link(context=None, asset=None, state=""):
     (_, default_preview) = next(generate_preview_links(context=context, asset=asset, state=state))
