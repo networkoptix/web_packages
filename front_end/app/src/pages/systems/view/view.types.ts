@@ -17,4 +17,6 @@ export interface INxViewCamera {
   status: CAMERA_STATUS
 }
 
-export type PlaybackQuality = 'auto' | 'low' | 'high'
+export type PlaybackQuality = 'auto' | 'low' | 'high' // | string ?
+
+export type PlaybackTransport = 'hls' | 'webm' // | 'rtsp' | 'mjpeg' ?

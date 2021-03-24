@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
 import { NxAccountService } from '@services/account.service'
 import { LocalStorageService } from 'ngx-webstorage'
-import { PlaybackQuality } from '../view.types'
-
+import { PlaybackTransport } from '../view.types'
 
 @Injectable({
   providedIn: 'root',
  })
-export class CameraQualityStorageService {
+export class CameraTransportStorageService {
   user = ''
   constructor (
     private localStorageService: LocalStorageService,
@@ -19,13 +18,13 @@ export class CameraQualityStorageService {
   }
 
   public get (cameraId: string) {
-    return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || 'auto'
+    return this.localStorageService.retrieve(`${this.user}_transport_${cameraId}`)
   }
 
-  public set (cameraId: string, quality: PlaybackQuality) {
-    this.localStorageService.store(`${this.user}_quality_${cameraId}`, quality)
+  public set (cameraId: string, transport: PlaybackTransport) {
+    this.localStorageService.store(`${this.user}_transport_${cameraId}`, transport)
   }
 
 }
 
-export default CameraQualityStorageService
+export default CameraTransportStorageService

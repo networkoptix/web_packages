@@ -1,6 +1,7 @@
 import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
+import { prepareSyntheticListenerFunctionName } from '@angular/compiler/src/render3/util'
 
 
 interface NameValue {
@@ -36,8 +37,8 @@ export class Camera implements ICamera {
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
-    public readonly getLiveVideoUrl: (quality: string) => string,
-    public readonly getArchiveVideoUrl: (t: ms, quality: string) => string,
+    public readonly getLiveVideoUrl: (transport: string, quality: string) => string,
+    public readonly getArchiveVideoUrl: (t: ms, transport: string, quality: string) => string,
     public readonly getPosterUrl: (t?: ms) => string,
   ) {
     this._initBirdView()
@@ -66,6 +67,7 @@ export class Camera implements ICamera {
   }
 
   public get hasHlsStream (): boolean {
+    // console.log('camera media streams', this.id, this.name, this._mediaStreams)
     return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls'))
   }
 
@@ -77,6 +79,21 @@ export class Camera implements ICamera {
   public get hasHighQualityHlsStream (): boolean {
     if (!this.hasHlsStream) return false
     return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && !this._resolutionIsLow(s.resolution))
+  }
+
+  public get hasWebmStream (): boolean {
+    console.log('camera media streams', this.id, this.name, this._mediaStreams)
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm'))
+  }
+
+  public get hasLowQualityWebmStream (): boolean {
+    if (!this.hasHlsStream) return false
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm') && this._resolutionIsLow(s.resolution))
+  }
+
+  public get hasHighQualityWebmStream (): boolean {
+    if (!this.hasHlsStream) return false
+    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm') && !this._resolutionIsLow(s.resolution))
   }
 
   protected _resolutionIsLow(s: string): boolean {

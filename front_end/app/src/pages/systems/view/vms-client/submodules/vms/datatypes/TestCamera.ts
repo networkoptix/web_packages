@@ -31,10 +31,6 @@ export class TestCamera implements ICamera {
     this._initBirdView()
   }
 
-  public getLiveVideoUrl () {
-    return this.liveVideoUrl
-  }
-
   public get hasHlsStream () {
     return true
   }
@@ -44,6 +40,18 @@ export class TestCamera implements ICamera {
   }
 
   public get hasHighQualityHlsStream () {
+    return true
+  }
+
+  public get hasWebStream () {
+    return true
+  }
+
+  public get hasLowQualityWebmStream () {
+    return true
+  }
+
+  public get hasHighQualityWebmStream () {
     return true
   }
 
@@ -71,12 +79,24 @@ export class TestCamera implements ICamera {
     return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start)
   }
 
-  public get liveVideoUrl () {
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+  public getLiveVideoUrl (transport: string, quality: string) {
+    switch (transport) {
+      case 'hls':
+        return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+      case 'webm':
+      default:
+        return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+    }
   }
 
-  public getArchiveVideoUrl (t: ms) {
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  public getArchiveVideoUrl (t: ms, transport: string, quality: string) {
+    switch (transport) {
+      case 'hls':
+        return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+      case 'webm':
+      default:
+        return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+    }
   }
 
   public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {

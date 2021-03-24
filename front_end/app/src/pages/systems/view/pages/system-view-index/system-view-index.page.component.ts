@@ -239,13 +239,23 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               archiveRanges[c.id] || new SimpleTimeRange(0, 0),
               archives[c.id] || [],
               c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
-              (quality: string) => {
-                // console.log('WEBM', this.system.unsafeGetWebmUrl(c.id, -1, this._quality2resolution(quality)))
-                return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))
+              (transport: string, quality: string) => {
+                switch (transport) {
+                  case 'hls':
+                    return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))
+                  case 'webm':
+                  default:
+                    return this.system.unsafeGetWebmUrl(c.id, -1, this._quality2resolution(quality))
+                }
               },
-              (t: ms, quality: string) => {
-                // console.log('WEBM', this.system.unsafeGetWebmUrl(c.id, t, this._quality2resolution(quality)))
-                return this.system.unsafeGetHlsUrl(c.id, t, this._quality2resolution(quality))
+              (t: ms, transport: string, quality: string) => {
+                switch (transport) {
+                  case 'hls':
+                    return this.system.unsafeGetHlsUrl(c.id, t, this._quality2resolution(quality))
+                  case 'webm':
+                  default:
+                    return this.system.unsafeGetWebmUrl(c.id, t, this._quality2resolution(quality))
+                }
               },
               (t?: ms) => this.system.getCameraThumbnailUrl(c.id, 128, 128, t)
             )

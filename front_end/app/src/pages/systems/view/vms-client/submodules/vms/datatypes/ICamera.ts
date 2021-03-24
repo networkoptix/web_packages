@@ -71,8 +71,8 @@ export interface ICamera {
 
   thumbnailUrl: string,
 
-  getLiveVideoUrl (quality: string),
-  getArchiveVideoUrl (t: ms, quality: string),
+  getLiveVideoUrl (transport: string, quality: string),
+  getArchiveVideoUrl (t: ms, transport: string, quality: string),
   getPosterUrl (t?: ms),
   getRecords (startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
   setRecords (range: ISimpleTimeRange, records: CameraArchive)
@@ -80,6 +80,10 @@ export interface ICamera {
   hasHlsStream: boolean,
   hasLowQualityHlsStream: boolean,
   hasHighQualityHlsStream: boolean,
+
+  hasWebmStream: boolean,
+  hasLowQualityWebmStream: boolean,
+  hasHighQualityWebmStream: boolean,
 
   rotation: int
 }

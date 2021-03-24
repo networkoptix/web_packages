@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core'
-import { INxViewCamera  } from '../../view.types'
+import { INxViewCamera, PlaybackQuality, PlaybackTransport  } from '../../view.types'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NxSystemService, NxSystem } from '../../../../../services/system.service'
 import { NxAccountService } from '../../../../../services/account.service'
@@ -14,7 +14,8 @@ import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/Vm
 import FpsMeterService from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
 import { NxConfigService, IConfig } from '../../../../../services/nx-config'
-import { PlaybackQuality, CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
+import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
+import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service'
 import sidebarLayout from '../sidebarLayout.cfg'
 
 
@@ -79,8 +80,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _animationFrameRequestHandler: number
 
     public settingsShown: boolean = false
-    public qualitiesAvailable: Array<PlaybackQuality> = [ ]
-    public qualitySelected: PlaybackQuality = 'auto'
+
+    public qualitiesAvailable: Array<PlaybackQuality> = []
+    public qualitySelected: PlaybackQuality
+
+    public transportsAvailable: Array<PlaybackTransport> = []
+    public transportSelected: PlaybackTransport
 
     public controlsShown: boolean = false
     public canViewArchives = false;
@@ -98,6 +103,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       protected systemService: NxSystemService,
       configService: NxConfigService,
       protected cameraQualityStorage: CameraQualityStorageService,
+      protected cameraTransportStorage: CameraTransportStorageService,
     ) {
       this.CONFIG = configService.getConfig();
       this._onRouteChange = this._onRouteChange.bind(this)
@@ -136,23 +142,35 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       document.addEventListener('mozfullscreenchange', onFSC)
 
       this._getRecords()
-      this._updateQualitiesAvailable()
+      this._updateStreamsAndQualitiesAvailable()
 
       this.$self.classList.add('animated')
     }
 
-    protected _updateQualitiesAvailable () {
+    protected _updateStreamsAndQualitiesAvailable () {
       this.qualitiesAvailable = []
+      this.transportsAvailable = []
       if (!this.camera) {
         return
       }
       if (this.camera.hasHlsStream) {
-        this.qualitiesAvailable.push('auto')
+        this.transportsAvailable.push('hls')
+        this.qualitiesAvailable.indexOf('auto') === -1 && this.qualitiesAvailable.push('auto')
         if (this.camera.hasHighQualityHlsStream) {
-          this.qualitiesAvailable.push('high')
+          this.qualitiesAvailable.indexOf('high') === -1 && this.qualitiesAvailable.push('high')
         }
         if (this.camera.hasLowQualityHlsStream) {
-          this.qualitiesAvailable.push('low')
+          this.qualitiesAvailable.indexOf('low') === -1 && this.qualitiesAvailable.push('low')
+        }
+      }
+      if (this.camera.hasWebmStream) {
+        this.transportsAvailable.push('webm')
+        this.qualitiesAvailable.indexOf('auto') === -1 && this.qualitiesAvailable.push('auto')
+        if (this.camera.hasHighQualityHlsStream) {
+          this.qualitiesAvailable.indexOf('high') === -1 && this.qualitiesAvailable.push('high')
+        }
+        if (this.camera.hasLowQualityHlsStream) {
+          this.qualitiesAvailable.indexOf('low') === -1 && this.qualitiesAvailable.push('low')
         }
       }
     }
@@ -280,9 +298,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       // console.log('ROUTE CHANGE: NEW CAMERA', this.id)
       this.vms.selectCamera(this.id)
       this.playback.stop()
+      this.resetTransport()
       this.resetQuality()
       this._getRecords()
-      this._updateQualitiesAvailable()
+      this._updateStreamsAndQualitiesAvailable()
 
       if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
         this.ux.isSidebarShown = false
@@ -364,6 +383,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public setQuality (q: PlaybackQuality) {
+      console.log('setQuality', q)
       if (this.qualitySelected === q) {
         return
       }
@@ -371,6 +391,21 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.cameraQualityStorage.set(this.id, q)
       // console.log('quality change', q)
       this.playback.changeQuality(q)
+    }
+
+    public resetTransport () {
+      this.setTransport(this.cameraTransportStorage.get(this.id) || 'webm')
+    }
+
+    public setTransport (st: PlaybackTransport) {
+      console.log('setTransport', st)
+      if (this.transportSelected === st) {
+        return
+      }
+      this.transportSelected = st
+      this.cameraTransportStorage.set(this.id, st)
+      // console.log('quality change', q)
+      this.playback.changeTransport(st)
     }
 
     public onVideoDblClick (_: boolean) {

@@ -19,6 +19,7 @@ import { VMS_MODE } from '../../vms/datatypes/VmsState'
 
 import TimelineService from '../../timeline/services/timeline.service'
 import { IRecord } from '../../vms/datatypes/ICamera'
+import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types'
 
 
 @Injectable({
@@ -31,7 +32,6 @@ export class PlaybackService {
     protected timeline: TimelineService,
   ) {
   }
-
 
   protected _subject = new BehaviorSubject<PlaybackState>(createInitialStoppedState())
 
@@ -80,8 +80,9 @@ export class PlaybackService {
       return
     }
     this._state = createInitialLiveState(
-      this.vms.selectedCamera.getLiveVideoUrl(this._state.quality),
+      this.vms.selectedCamera.getLiveVideoUrl(this._state.transport, this._state.quality),
       this._state.quality,
+      this._state.transport,
       this.vms.selectedCamera.getPosterUrl()
     )
     // console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
@@ -96,9 +97,10 @@ export class PlaybackService {
       this.stop()
     }
     this._state = createInitialArchiveState(
-      this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.quality),
+      this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.transport, this._state.quality),
       t,
       this._state.quality,
+      this._state.transport,
       this.vms.selectedCamera.getPosterUrl(t)
     )
     // console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
@@ -107,7 +109,10 @@ export class PlaybackService {
 
   public stop () {
     // console.log('PLAYBACK.STOP()')
-    this._state = createInitialStoppedState(this._state.quality)
+    this._state = createInitialStoppedState(
+      this._state.quality,
+      this._state.transport,
+    )
     this._emit()
   }
 
@@ -339,8 +344,27 @@ export class PlaybackService {
     }
   }
 
+  public changeTransport (st: PlaybackTransport) {
+    if (this._state.transport === st) {
+      return
+    }
+    this._state.transport = st
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        break
+      case PLAYBACK_MODE.LIVE:
+        this.stop()
+        setTimeout(() => this.playLive(), 0)
+        break
+      case PLAYBACK_MODE.ARCHIVE:
+        const t = this._state.currentTime
+        this.stop()
+        setTimeout(() => this.playArchive(t), 0)
+        break
+    }
+  }
 
-  public changeQuality (q: 'high' | 'low' | 'auto') {
+  public changeQuality (q: PlaybackQuality) {
     if (this._state.quality === q) {
       return
     }

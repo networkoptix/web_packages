@@ -46,6 +46,17 @@
       </div>
     </ng-template>
   </div>
+  <div class="section transportSelection">
+    <div class="caption">Transport</div>
+    <div class="options" *ngIf="transportsAvailable.length else noTransportsAvailable">
+      <div *ngFor="let st of transportsAvailable" class="option" [ngClass]="{ selected: transportSelected === st }" (click)="setTransport(st)">{{ st }}</div>
+    </div>
+    <ng-template #noTransportsAvailable>
+      <div class="options">
+        <div class="option disabled">N/A</div>
+      </div>
+    </ng-template>
+  </div>
 </div>
 
 <player *ngIf="camera && showPlayer else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>

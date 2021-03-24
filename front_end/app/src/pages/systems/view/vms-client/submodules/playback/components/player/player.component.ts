@@ -233,61 +233,71 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     const sourceUrl = this.state['sourceUrl']
     const posterUrl = this.state['posterUrl'] || null
 
-    if (sourceUrl.endsWith('mp4')) {
-      this._setPlaybackSource(sourceUrl)
-      setTimeout(() => this.isBuffering = true)
-      setTimeout(() => {
-        console.log('PLAY 2 (MP4 case)')
-        this._playVideo()
-      }, 1000)
+    if (!sourceUrl) {
+      console.warn("start playback request with empty sourceUrl")
+      return
+    }
 
-    } else if (sourceUrl.search('.m3u8') !== -1) {
-      if (Hls.isSupported()) {
-        setTimeout(() => this.isBuffering = true)
-        var hls = new Hls();
-        this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
-        hls.loadSource(sourceUrl);
-        hls.attachMedia(this.$video);
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          console.log('HLS.js ERROR', event, data)
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                // try to recover network error
-                console.warn('fatal network error encountered, try to recover');
-                hls.startLoad();
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                console.warn('fatal media error encountered, try to recover');
-                hls.recoverMediaError();
-                break;
-              default:
-                console.error('HLS error, cannot recover');
-                hls.destroy();
-                break;
+    const sourceUrlMainPart = sourceUrl.split('?')[0]
+    const sourceUrlParts = sourceUrlMainPart.split('.')
+    const sourceUrlExtension = sourceUrlParts[sourceUrlParts.length - 1]
+
+    switch (sourceUrlExtension) {
+      case 'm3u8':
+        if (Hls.isSupported()) {
+          setTimeout(() => this.isBuffering = true)
+          var hls = new Hls();
+          this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
+          hls.loadSource(sourceUrl);
+          hls.attachMedia(this.$video);
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            console.log('HLS.js ERROR', event, data)
+            if (data.fatal) {
+              switch (data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  // try to recover network error
+                  console.warn('fatal network error encountered, try to recover');
+                  hls.startLoad();
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  console.warn('fatal media error encountered, try to recover');
+                  hls.recoverMediaError();
+                  break;
+                default:
+                  console.error('HLS error, cannot recover');
+                  hls.destroy();
+                  break;
+              }
             }
-          }
-        })
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // console.log('HLS manifest parsed')
-          // this._playVideo()
-          // console.log('PLAY 3 (HLS)')
-        });
-        hls.on(Hls.Events.FRAG_LOADED, () => {
-          // console.log('HLS Fragment Loaded')
-          // if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
-          //   if (!this.playback.state.started) {
-          //     // console.log('HLS it was the first fragment')
-          //     // this.playback.handleStarted()
-          //   }
-          // }
-        })
-      } else {
-        console.warn('HLS is not supported')
-      }
-
-    } else {
-      console.warn('unsopported video source', sourceUrl)
+          })
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            console.log('HLS manifest parsed')
+            // this._playVideo()
+            // console.log('PLAY 3 (HLS)')
+          });
+          hls.on(Hls.Events.FRAG_LOADED, () => {
+            console.log('HLS Fragment Loaded')
+            // if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
+            //   if (!this.playback.state.started) {
+            //     // console.log('HLS it was the first fragment')
+            //     // this.playback.handleStarted()
+            //   }
+            // }
+          })
+        } else {
+          console.warn('HLS is not supported')
+        }
+      case 'mp4':
+      case 'webm':
+        this._setPlaybackSource(sourceUrl)
+        setTimeout(() => this.isBuffering = true)
+        setTimeout(() => {
+          // console.log('PLAY 2 (MP4 case)')
+          this._playVideo()
+        }, 1000)
+        break
+      default:
+        console.warn('unsupported video format/source', sourceUrlExtension, sourceUrl)
     }
   }
 
@@ -297,29 +307,29 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   public videoLoadStartHandler (e: MediaStreamEvent) {
-    // console.log('video load start event', e)
+    console.log('video load start event', e)
   }
 
   public videoLoadedMetadataHandler (e: MediaStreamEvent) {
-    // console.log('video loaded metadata event', e)
+    console.log('video loaded metadata event', e)
   }
 
   public videoLoadedDataHandler (e: MediaStreamEvent) {
-    // console.log('video loaded data event', e)
+    console.log('video loaded data event', e)
   }
 
   public videoCanPlayHandler (e: MediaStreamEvent) {
-    // console.log('video can play event', e)
+    console.log('video can play event', e)
     this._playVideo()
     // console.log('PLAY 3 (HLS)')
   }
 
   public videoCanPlayThroughHandler (e: MediaStreamEvent) {
-    // console.log('video can play through event', e)
+    console.log('video can play through event', e)
   }
 
   public videoProgressHandler (e: MediaStreamEvent) {
-    // console.log('video progress event', e)
+    console.log('video progress event', e)
   }
 
   public videoPlayHandler (e: MediaStreamEvent) {
