@@ -307,29 +307,29 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   public videoLoadStartHandler (e: MediaStreamEvent) {
-    // console.log('video load start event', e)
+    console.log('video load start event', e)
   }
 
   public videoLoadedMetadataHandler (e: MediaStreamEvent) {
-    // console.log('video loaded metadata event', e)
+    console.log('video loaded metadata event', e)
   }
 
   public videoLoadedDataHandler (e: MediaStreamEvent) {
-    // console.log('video loaded data event', e)
+    console.log('video loaded data event', e)
   }
 
   public videoCanPlayHandler (e: MediaStreamEvent) {
-    // console.log('video can play event', e)
+    console.log('video can play event', e)
     this._playVideo()
     // console.log('PLAY 3 (HLS)')
   }
 
   public videoCanPlayThroughHandler (e: MediaStreamEvent) {
-    // console.log('video can play through event', e)
+    console.log('video can play through event', e)
   }
 
   public videoProgressHandler (e: MediaStreamEvent) {
-    // console.log('video progress event', e)
+    console.log('video progress event', e)
   }
 
   public videoPlayHandler (e: MediaStreamEvent) {
