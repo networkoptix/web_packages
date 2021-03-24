@@ -731,6 +731,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
                     is_integration or is_article or is_agreement)
         extra_context['whole_preview'] = is_integration or is_article or is_agreement
+        extra_context['preview_url_list'] = json.dumps(list(filter(lambda item: item, generate_preview_links(asset=version.asset, state="pending"))))
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name

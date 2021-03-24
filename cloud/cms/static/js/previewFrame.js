@@ -1,5 +1,5 @@
 const cleanSrc = (url) => {
-    const srcPath = url.split('//')[1].split('/')
+    const srcPath = (url.split('//')[1] || url).split('/')
     srcPath[0] = ''
     const src = srcPath.join('/')
     return src
@@ -16,8 +16,13 @@ $(document).ready(function() {
                 }
             });
         }
+        
         if (previewUrlList) {
-            const previewFrame = document.getElementsByClassName('previewFrame')[0]
+            const previewFrame = document.getElementsByClassName('previewFrame')[0] || document.getElementById('content-preview')
+            const customPreviewFromQueryParam = new URLSearchParams(window.location.search).get('customPreview')
+            if (customPreviewFromQueryParam) {
+                previewFrame.src = customPreviewFromQueryParam
+            }
             const previewWrapper = previewFrame.parentNode
             const src = cleanSrc(previewFrame.src)
             const previewLabel = document.createElement('label')
@@ -45,8 +50,8 @@ $(document).ready(function() {
                     customPreviewInput.value = nextPreview
                 }
                 const searchParams = new URLSearchParams(window.location.search)
-                searchParams.set('customPreview', cleanSrc(previousPreview))
-                const updatedUrl = window.location.pathname + '?' + searchParams.toString()
+                searchParams.set('customPreview', cleanSrc(nextPreview))
+                const updatedUrl = window.location.pathname + '?' + decodeURIComponent(searchParams.toString())
                 history.pushState(null, '', updatedUrl)
                 
             })
