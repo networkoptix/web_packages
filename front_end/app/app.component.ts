@@ -2,7 +2,9 @@ import {
     Component, HostListener, Inject,
     ViewEncapsulation, ViewChild, ElementRef
 }                                                  from '@angular/core';
-import { ActivationStart, Event, Router }          from '@angular/router';
+import {
+    ActivationStart, Event, NavigationEnd, Router
+}                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
 import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
@@ -61,6 +63,7 @@ export class AppComponent {
         private applyService: NxApplyService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
+        private route: ActivatedRoute,
         private ribbonService: NxRibbonService,
         private uriService: NxUriService,
         private pageService: NxPageService,
@@ -68,6 +71,14 @@ export class AppComponent {
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
+
+        // hides header if an authorize (oauth) route
+        this.router.events
+            .pipe(filter(ev => ev instanceof NavigationEnd))
+            .subscribe((ev: NavigationEnd) => {
+                this.appStateService.authorizing = ev.url.includes('authorize');
+            });
+
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases

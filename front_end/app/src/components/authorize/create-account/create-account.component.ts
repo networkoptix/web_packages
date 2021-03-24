@@ -20,6 +20,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
+    @Input() smallView: boolean;
     @Input() existingEmail: string;
     @Input() accountInfo: {
         email: string;

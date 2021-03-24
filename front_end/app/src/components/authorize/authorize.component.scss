@@ -34,24 +34,40 @@
                     }
                 }
             }
+            .for-small {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                button.mobile-back-button {
+                    height: 36px !important;
+                    padding: 8px 0 4px 16px !important;
+                }
+                .authorize-header {
+                    padding: 0 16px 0 8px !important;
+                    margin: 8px 0 4px 0 !important;
+                }
+            }
+            .header-d .fill-color-main {
+                fill: $light4;
+            }
         }
     }
 }
 
 .authorize-main {
-    .main-w .stroke-color-main {
+    .main-w .stroke-color-main, .header-w .stroke-color-main {
         stroke: $dark9;
     }
 
-    .main-w .fill-color-main {
+    .main-w .fill-color-main, .header-w .fill-color-main {
         fill: $dark9;
     }
 
-    .main-d .stroke-color-main {
+    .main-d .stroke-color-main, .header-d .stroke-color-main {
         stroke: $light16;
     }
 
-    .main-d .fill-color-main {
+    .main-d .fill-color-main, .header-d .fill-color-main {
         fill: $light16;
     }
 

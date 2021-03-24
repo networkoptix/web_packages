@@ -1,6 +1,14 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
-    <h3 class="authorize-header">{{LANG.authorize.passResetHeader()}}</h3>
+    <div class="for-small">
+        <button *ngIf="smallView" class="btn mobile-back-button" type="button" (click)="goBack()">
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [applyClass]="true"></svg-icon>
+        </button>
+        <h3 class="authorize-header">{{ LANG.authorize.passResetHeader() }}</h3>
+    </div>
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
     <form #resetPasswordForm="ngForm" name="resetPasswordForm">
@@ -36,7 +44,7 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="right w-100">
-            <button class="btn text-button" type="button" (click)="goBack()">
+            <button class="btn text-button" type="button" (click)="goBack()" *ngIf="!smallView">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{'width.px': 24, 'height.px': 20}"

@@ -20,6 +20,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
+    @Input() smallView: boolean;
     @Input() resetEmail: string;
     @Output() resetEmailChange = new EventEmitter<string>();
     @Input() confirm: boolean;

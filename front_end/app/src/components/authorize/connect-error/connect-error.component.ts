@@ -20,6 +20,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
+    @Input() smallView: boolean;
     @Input() clientType: string;
     @Input() processTryAgain: Process;
     @Output() setCurrentState = new EventEmitter<string>();

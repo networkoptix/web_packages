@@ -21,6 +21,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
 
     @Input() viewType: string;
     @Input() clientType: string;
+    @Input() smallView: boolean;
     @Input() loginEmail: string;
     @Input() loginPassword: string;
     @Output() loginPasswordChange = new EventEmitter<string>();
