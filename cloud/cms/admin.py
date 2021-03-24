@@ -531,13 +531,15 @@ class AssetAdmin(CMSAdmin):
         if order not in order_options.keys():
             order = None
         context = {'errors': []}
+        target_context = Context.objects.get(id=context_id)
+        asset = Asset.objects.get(id=asset_id)
         if request.method == "POST" and 'asset_id' in request.POST:
             context['preview_link'], context['errors'] = page_editor(request)
             if 'SendReview' in request.POST and context['preview_link']:
-                return redirect(context['preview_link'].url)
-
-        target_context = Context.objects.get(id=context_id)
-        asset = Asset.objects.get(id=asset_id)
+                custom_preview = request.POST.get('customPreview', '') or generate_preview_link(target_context, asset, 'pending')
+                if custom_preview:
+                    custom_preview = "?customPreview=" + custom_preview.replace('draft', 'pending')
+                return redirect(f'{context["preview_link"].url}{custom_preview}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
@@ -696,6 +698,15 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['contexts'], extra_context['context_preview_links'] = get_records_for_version(version.asset,
                                                             version,
                                                             customization_review.customization)
+        custom_preview_from_params = request.GET.get('customPreview') or request.POST.get('customPreview')
+        custom_preview = custom_preview_from_params or customization_review.default_preview
+        if custom_preview:
+            extra_context['context_preview_links']['Content'] = custom_preview
+            if custom_preview_from_params and not customization_review.default_preview:
+                customization_review.default_preview = custom_preview
+                customization_review.save()
+                reviews = version.assetcustomizationreview_set.all()
+                reviews.update(default_preview=custom_preview)
 
         extra_context['review_states'] = AssetCustomizationReview.REVIEW_STATES
         # Exclude customization reviews that are not in the asset's customizations

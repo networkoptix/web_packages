@@ -1324,6 +1324,7 @@ class AssetCustomizationReview(models.Model):
     reviewed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
         related_name='accepted_%(class)s', on_delete=models.SET_NULL)
+    default_preview = models.TextField(blank=True)
 
     def __str__(self):
         return self.version.asset.__str__()

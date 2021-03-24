@@ -36,6 +36,7 @@
             <input type="hidden" name="context_id" value="{{ original.id }}">
             <input type="hidden" name="asset_id" value="{{ asset.id }}">
             <input type="hidden" name="currentLanguage" value="{{ language_code }}">
+            <input type="hidden" name="customPreview" value="" id="customPreviewInput">
             <input type="hidden" id="languageChanged">
             {% for fieldset, fields in custom_form.fieldsets.items %}
                 <fieldset class="module">
@@ -519,7 +520,9 @@
     }, {})
     const previewFrame = document.getElementsByClassName('previewFrame')[0]
     if (customPreview) {
-        previewFrame.src = customPreview
+        const customPreviewInput = document.getElementById('customPreviewInput')
+        customPreviewInput.value = previewFrame.src = customPreview
+        
     }
 </script>
     <script src="{% static 'js/previewFrame.js' %}"></script>
