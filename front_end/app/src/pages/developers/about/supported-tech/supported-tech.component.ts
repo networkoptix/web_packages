@@ -37,7 +37,7 @@ export class NxSupportedTechComponent {
                 nodes: nodes.map(({ url, assetId, ...node }) => ({
                     ...node,
                     assetId,
-                    url: url || assetId ? `/docs/content/${assetId}` : ''
+                    url: url || (assetId ? `/docs/content/${assetId}` : '')
                 }))
             }))
         };
