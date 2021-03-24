@@ -60,68 +60,68 @@
     @include typography.medium15dark9;
 
     & > .menu-link {
-        padding-left: 26px;
+        padding-left: 42px;
         &.arrow-padding {
-            padding-left: 26px;
+            padding-left: 42px;
         }
     }
     & > .left-menu-arrow {
-        padding-left: 4px;
+        padding-left:20px;
     }
     .has-state {
-        padding-left: 42px !important;
+        padding-left: 58px !important;
     }
 }
 
 .menu-level-2 {
     @extend .child-level;
     & > .menu-link {
-        padding-left: 42px;
+        padding-left: 58px;
     }
     & > .left-menu-arrow {
-        left: 22px;
-    }
-    .has-state {
-        padding-left: 68px !important;
-    }
-}
-
-.menu-level-3 {
-    @extend .child-level;
-    & > .menu-link {
-        padding-left: 68px;
-    }
-    & > .left-menu-arrow {
-        left: 46px;
+        left: 38px;
     }
     .has-state {
         padding-left: 84px !important;
     }
 }
 
+.menu-level-3 {
+    @extend .child-level;
+    & > .menu-link {
+        padding-left: 84px;
+    }
+    & > .left-menu-arrow {
+        left: 62px;
+    }
+    .has-state {
+        padding-left: 100px !important;
+    }
+}
+
 .menu-level-4 {
     @extend .child-level;
     & > .menu-link {
-        padding-left: 94px;
+        padding-left: 100px;
     }
     & > .left-menu-arrow {
-        left: 70px;
+        left: 86px;
     }
     .has-state {
-        padding-left: 120px !important;
+        padding-left: 136px !important;
     }
 }
 
 .menu-level-5 {
     @extend .child-level;
     & > .menu-link {
-        padding-left: 120px;
+        padding-left: 136px;
     }
     & > .left-menu-arrow {
-        left: 94px;
+        left: 110px;
     }
     .has-state {
-        padding-left: 146px !important;
+        padding-left: 162px !important;
     }
 }
 
