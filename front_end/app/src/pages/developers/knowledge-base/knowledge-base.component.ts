@@ -21,6 +21,7 @@ import { NxProcessService } from '../../../services/process.service';
 import { NxUriService } from '../../../services/uri.service';
 import { NxPageService } from '../../../services/page.service';
 import { NxAccountService, Account }    from '../../../services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 
 export enum CardClasses {
     NORMAL='text',
@@ -135,7 +136,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private uriService: NxUriService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
+        private appStateService: NxAppStateService
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
@@ -232,6 +234,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                     snapshot = snapshot.parent;
                 }
                 this.basePath = snapshot.paramMap.get('name');
+                this.appStateService.altBackground = this.basePath !== 'content';
                 this.menuName = this.CONFIG.docMenuMap[this.basePath]?.[this.kbName];
                 if (!this.menuName) {
                     const assetParam = snapshot.paramMap.get('level1') || snapshot.paramMap.get('kb-name');
@@ -370,6 +373,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy() {
+        this.appStateService.altBackground = false;
         this.ribbonService.hide();
     }
 };

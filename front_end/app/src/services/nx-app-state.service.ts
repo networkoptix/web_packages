@@ -17,6 +17,7 @@ export class NxAppStateService {
     // Do we have multiple row ribbon? -- TT
     heightWithRibbon = 'calc(100% - 81px)';
     heightWithoutRibbon = 'calc(100% - 48px)';
+    altBackground = false;
 
     constructor() {}
 

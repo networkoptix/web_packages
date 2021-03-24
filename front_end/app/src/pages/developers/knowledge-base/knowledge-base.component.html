@@ -1,5 +1,5 @@
 <ng-template #preloader>
-    <div class="wide-section">
+    <div class="preloader-wrapper">
         <nx-pre-loader></nx-pre-loader>
     </div>
 </ng-template>
@@ -80,7 +80,7 @@
 </ng-template>
 <!-- End of Search Results Templates -->
 
-<div [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
+<div *ngIf="basePath" [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
     <nx-left-menu *ngIf="menuName" [menuName]="menuName"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
