@@ -23,6 +23,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
+    @Input() smallView: boolean;
     @Input() loginEmail: string;
     @Output() setCurrentState = new EventEmitter<string>();
     @Input() checkActivationProcess: Process;

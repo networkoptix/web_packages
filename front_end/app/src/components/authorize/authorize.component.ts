@@ -80,6 +80,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
     windowLargeEnough = false;
+    windowSmallEnough = false;
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
 
@@ -168,10 +169,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
 
             this.windowLargeEnough = window.innerWidth > 560 && window.innerHeight > 720 && this.viewType === 'web';
+            this.windowSmallEnough = window.innerWidth < 355;
             fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
                 const { innerHeight, innerWidth } = event.target;
                 this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
+                this.windowSmallEnough = innerWidth < 355;
             });
+            this.errorDialog$.next(true);
         });
     }
 

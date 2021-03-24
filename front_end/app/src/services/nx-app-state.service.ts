@@ -6,6 +6,7 @@ import { BehaviorSubject }           from 'rxjs';
 })
 export class NxAppStateService {
     readySubject = new BehaviorSubject(false);
+    authorizeSubject = new BehaviorSubject(false);
     ribbonSubject = new BehaviorSubject(false);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
@@ -60,5 +61,13 @@ export class NxAppStateService {
 
     set canManuallyAccess(canAccess: boolean) {
         this.manualAccessSubject$.next(canAccess);
+    }
+
+    set authorizing(authorize: boolean) {
+        this.authorizeSubject.next(authorize);
+    }
+
+    get authorizing() {
+        return this.authorizeSubject.getValue();
     }
 }

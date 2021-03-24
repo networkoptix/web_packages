@@ -1,6 +1,15 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
-    <h3 class="authorize-header">{{LANG.authorize.createAccountHeader()}}</h3>
+    <div class="for-small">
+        <button *ngIf="smallView"
+            class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('email')">
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [applyClass]="true"></svg-icon>
+        </button>
+        <h3 class="authorize-header">{{ LANG.authorize.createAccountHeader() }}</h3>
+    </div>
     <ng-container *ngIf="existingEmail">
         <div class="authorize-subheader">
             <span class="sub-header" translate>For</span>
@@ -117,7 +126,7 @@
             </button>
         </div>
         <div class="right">
-            <button class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
+            <button *ngIf="!smallView" class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
