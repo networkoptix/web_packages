@@ -115,7 +115,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
-                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=settings.CUSTOMIZATION
             )
             values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()

@@ -1283,11 +1283,27 @@ class ContentVersion(models.Model):
                 parent_in_review = self.asset.customizations.filter(
                     id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+
+            # Create missing reviews caused by adding/removing customizations to assets
+            for version in ContentVersion.objects.filter(
+                    ~Q(assetcustomizationreview__customization=customization), id__lt=self.id, asset=self.asset,
+                    assetcustomizationreview__isnull=False
+            ).distinct():
+                if parent_in_review:
+                    parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
+                    # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
+                    # If parent review exists but is pending, this one should be blocked
+                    if not parent_review or parent_review.state == pending:
+                        AssetCustomizationReview(customization=customization, version=version, state=blocked).save()
+                        continue
+                    elif customization.trust_parent:
+                        AssetCustomizationReview(customization=customization, version=version, state=parent_review.state).save()
+                        continue
+
+                AssetCustomizationReview(customization=customization, version=version, state=pending).save()
 
     @property
     def state(self):
@@ -2015,7 +2031,7 @@ class MenuNode(models.Model):
 
                 title_ds = document_dss['title']
                 url_ds = document_dss['url']
-                title = 'Untitled'
+                title = ''
                 url = ''
                 if node.name:
                     title = node.name
@@ -2031,15 +2047,21 @@ class MenuNode(models.Model):
                     elif node_structure['draft']:
                         asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
                         asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+
+                    if asset_title:
+                        asset_title = cloud_portal_asset.replace_global_values(asset_title, global_contexts_dict)
                     if not title and asset_title:
                         title = asset_title
+                        node_structure['name'] = title
+
                     if asset_url:
                         url = asset_url
                     elif asset_title:
                         url = asset_title
                     node_structure['urlified'] = node.asset.urlify(url) if url else None
 
-                node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict)
+                if 'name' not in node_structure:
+                    node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict) or 'Untitled'
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:
