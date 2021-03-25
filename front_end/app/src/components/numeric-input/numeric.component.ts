@@ -3,7 +3,7 @@ import {
     Input, OnInit, Output
 } from '@angular/core';
 import {
-    ControlValueAccessor, NG_VALUE_ACCESSOR
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator
 } from '@angular/forms';
 
 /* Usage
@@ -28,16 +28,22 @@ import {
             provide     : NG_VALUE_ACCESSOR,
             useExisting : forwardRef(() => NxNumericComponent),
             multi       : true
+        },
+        {
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxNumericComponent),
+            multi       : true
         }
     ]
 })
-export class NxNumericComponent implements OnInit, ControlValueAccessor {
+export class NxNumericComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() class: string;
     @Input() min: number;
     @Input() max: number;
     @Input() step: number;
     @Input() componentId: string;
     @Input() disabled;
+    @Input() required;
     @Input() placeholder = '- -';
 
     @Output() onChange = new EventEmitter<number>();
@@ -45,6 +51,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor {
     _value: number;
     _previousValue: number;
     _invalid: boolean;
+    _touched: boolean;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -54,7 +61,27 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor {
     private onChangeCallback = (_: any) => {
     };
 
+    // validates the form, returns null when valid else the validation object
+    public validate(c: FormControl) {
+        const err = {
+            requiredError: {
+                required: true
+            }
+        };
+
+        this._touched = c.touched;
+
+        if (this.required && !c.value) {
+            this._invalid = true;
+            return err;
+        } else {
+            this._invalid = false;
+            return null; // valid
+        }
+    }
+
     ngOnInit() {
+        this.required = (this.required !== undefined);// optional param
     }
 
     /**
@@ -99,7 +126,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor {
     }
 
     setValue() {
-        if (this._value >= this.min && this._value <= this.max) {
+        if (this._value === null || this._value >= this.min && this._value <= this.max) {
             this._previousValue = this._value;
             this.onTouchedCallback();
             this.onChangeCallback(this._value);

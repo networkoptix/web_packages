@@ -112,11 +112,15 @@
                                     [max]="CONFIG.servers.port.max"
                                     [disabled]="portChangeDisabled || serverUnavailable"
                                     [(ngModel)]="ipPortWatcher.value"
-                                    (onChange)="onPortChange($event)"></nx-numeric>
+                                    (onChange)="onPortChange($event)"
+                                    #serverPort="ngModel"
+                                    required></nx-numeric>
                         </div>
                         <div class="ml-2">
                             <span class="input-error" *ngIf="portBusy"
                                   translate>Port is busy</span>
+                            <span class="input-error" *ngIf="serverPort.invalid && serverPort.touched"
+                                  translate>Server port is required</span>
                         </div>
                     </div>
                     <ng-container *ngIf="showAnalytics && dropdownStorages.length && !storagesLoading || storagesLoading">
