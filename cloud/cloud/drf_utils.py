@@ -19,9 +19,14 @@ def cloud_exception_handler(exc, context):
         # Files with xml content type break when accessing data
         except UnsupportedMediaType:
             request_data = {}
+
         clean_passwords(request_data)
-        logger.info(f'Request: {request_data}\n'
-                    f'Error: {exc}')
+        if response.status_code == 401 and request.path.startswith('/api/notifications'):
+            logger.warning(f'Request: {request_data}\n'
+                           f'Error: {exc}')
+        else:
+            logger.info(f'Request: {request_data}\n'
+                        f'Error: {exc}')
         return response
     else:
         return handler(request, exc)
