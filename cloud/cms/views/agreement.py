@@ -45,7 +45,7 @@ def get_agreement(request):
         agreement_review = AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
-        ).order_by('-reviewed_date').first()
+        ).last()
 
         if not agreement_review:
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
@@ -146,7 +146,7 @@ def accept_agreement(request):
     agreement_review = AssetCustomizationReview.objects.filter(
         version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
         state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION, id=review_id
-    ).first()
+    ).last()
 
     if agreement_review:
         ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)

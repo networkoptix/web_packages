@@ -235,7 +235,7 @@ class ReviewVersionFilter(SimpleListFilter):
         if self.value() == self.LATEST_VERSION:
             asset_ids = set(queryset.values_list('version__asset', flat=True))
             review_ids = []
-            for review in AssetCustomizationReview.objects.all().order_by('-pk').select_related('version__asset'):
+            for review in AssetCustomizationReview.objects.all().select_related('version__asset'):
                 if review.version.asset.id in asset_ids:
                     review_ids.append(review.id)
                     asset_ids.remove(review.version.asset.id)
@@ -539,7 +539,7 @@ class AssetAdmin(CMSAdmin):
                 custom_preview = request.POST.get('customPreview', '') or generate_preview_link(target_context, asset, 'pending')
                 if custom_preview:
                     custom_preview = "?customPreview=" + custom_preview.replace('draft', 'pending')
-                return redirect(f'{context["preview_link"].url}{custom_preview}')
+                return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
@@ -758,7 +758,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     # TODO: filter visible reviews
     def get_queryset(self, request):
-        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request)
+        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request).order_by('-version_id')
         if not request.user.is_superuser:
             qs = qs.filter(Q(customization__name__in=request.user.customizations_with_permission('cms.publish_version')))
 

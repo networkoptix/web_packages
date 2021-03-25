@@ -541,6 +541,7 @@ class Asset(models.Model):
     def urlify(self, name=None):
         if name is None:
             name = self.name
+        name = re.sub(r'[^a-zA-Z0-9 ]+', '', name)
         name = name.lower().replace(' ', '-')
         return f'{self.id}-{name}'
 
@@ -585,7 +586,7 @@ class Asset(models.Model):
         accepted_reviews = AssetCustomizationReview.objects.filter(
             customization__name=customization, state=AssetCustomizationReview.REVIEW_STATES.accepted,
             version__asset__in=assets
-        ).order_by('-pk').select_related('version').only('version')
+        ).order_by('-version_id').select_related('version').only('version')
 
         for review in accepted_reviews:
             if review.version.asset_id not in version_dict:
@@ -1288,10 +1289,18 @@ class ContentVersion(models.Model):
                 AssetCustomizationReview(customization=customization, version=self, state=pending).save()
 
             # Create missing reviews caused by adding/removing customizations to assets
+            newest_accepted = None
             for version in ContentVersion.objects.filter(
                     ~Q(assetcustomizationreview__customization=customization), id__lt=self.id, asset=self.asset,
                     assetcustomizationreview__isnull=False
             ).distinct():
+                if not newest_accepted:
+                    newest_accepted = AssetCustomizationReview.objects.filter(version__asset=self.asset, customization=customization).last()
+                # If newest accepted review has newer version than this one, mark it as accepted.
+                if newest_accepted and newest_accepted.version.id > version.id:
+                    AssetCustomizationReview(customization=customization, version=version, state=AssetCustomizationReview.REVIEW_STATES.accepted).save()
+                    continue
+
                 if parent_in_review:
                     parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
                     # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
@@ -1318,6 +1327,11 @@ class ContentVersion(models.Model):
         return 'current'
 
 
+class AssetCustomizationReviewManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('version_id', '-pk')
+
+
 class AssetCustomizationReview(models.Model):
     class Meta:
         verbose_name = 'review'
@@ -1341,6 +1355,8 @@ class AssetCustomizationReview(models.Model):
         settings.AUTH_USER_MODEL, null=True, blank=True,
         related_name='accepted_%(class)s', on_delete=models.SET_NULL)
     default_preview = models.TextField(blank=True)
+
+    objects = AssetCustomizationReviewManager()
 
     def __str__(self):
         return self.version.asset.__str__()
@@ -1618,7 +1634,7 @@ class ContributorAgreement(models.Model):
         return AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-        ).order_by('-reviewed_date').first()
+        ).last()
 
     def is_valid(self):
         review = self.get_current()
@@ -2009,7 +2025,7 @@ class MenuNode(models.Model):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
                         customization=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending
-                    ).select_related('version').order_by('-id').first()
+                    ).select_related('version').last()
                 node_structure = {
                     'subtitle': node.subtitle,
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),

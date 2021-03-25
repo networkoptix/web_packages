@@ -107,7 +107,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
-    ).order_by('-pk').select_related('version__asset'):
+    ).order_by('-version_id').select_related('version__asset'):
         asset_id = review.version.asset.id
         if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
