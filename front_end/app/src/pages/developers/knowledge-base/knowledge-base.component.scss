@@ -29,6 +29,9 @@ $custom-xl: 1440px;
             position: sticky;
             overflow-y: auto;
             max-height: calc(100vh - 3rem);
+            &.with-ribbon {
+                max-height: calc(100vh - 3rem - 33px);
+            }
             top: 0;
             margin: -1rem 0 -1rem -1rem;
             grid-column: span 4;

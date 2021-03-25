@@ -131,7 +131,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private router: Router,
         private menusService: NxMenusService,
         private renderer2: Renderer2,
-        private ribbonService: NxRibbonService,
+        public ribbonService: NxRibbonService,
         private processService: NxProcessService,
         private uriService: NxUriService,
         private pageService: NxPageService,

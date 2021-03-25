@@ -9,7 +9,7 @@
             <div *ngIf="node.url;else noLink" class="menu-link"
                 (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state)"
                 (mouseleave)="mouseLeave$.next(node.asset_id)"
-                [ngClass]="{'arrow-padding': node.nodes.length, 'activated-highlight': firstUrl === node.url || activeNodeUrl === node.url, 'has-state': node.indented}"
+                [ngClass]="{'arrow-padding': node.nodes.length, 'has-state': node.indented}"
                 (click)="handleClick($event)"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
                 [queryParams]="{'state': node.state}"

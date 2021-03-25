@@ -82,6 +82,7 @@
 
 <div *ngIf="basePath" [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
     <nx-left-menu *ngIf="menuName" [menuName]="menuName"
+        [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
         (relatedLinks)="relatedLinks$.next($event)"
