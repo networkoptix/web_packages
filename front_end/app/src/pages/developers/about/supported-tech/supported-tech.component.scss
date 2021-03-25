@@ -21,9 +21,11 @@
     align-items: center;
     flex-direction: column;
     padding: 52px 16px 32px 16px;
+    margin: 84px auto;
     color: $dark10;
     @include bootstrap.media-breakpoint-down(xs) {
         padding: 48px 16px 12px 16px;
+        margin: 24px auto;
     }
 
     .heading-link {

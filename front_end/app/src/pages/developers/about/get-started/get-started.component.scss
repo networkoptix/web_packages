@@ -18,6 +18,10 @@ h2.get-started-heading {
     background: $light1;
     display: flex;
     justify-content: center;
+    margin-bottom: 84px;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-bottom: 24px;
+    }
 
     .get-started-blocks {
         flex-grow: 1;
