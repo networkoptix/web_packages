@@ -49,7 +49,7 @@
     </div>
 </ng-template>
 
-<nx-pre-loader *ngIf="!menuNodes;else leftMenu"></nx-pre-loader>
+<nx-pre-loader *ngIf="!menuNodes.length;else leftMenu"></nx-pre-loader>
 
 <ng-template #leftMenu>
     <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:menuNodes, level: 1}"></ng-container>

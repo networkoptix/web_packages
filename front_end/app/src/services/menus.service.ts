@@ -119,7 +119,7 @@ export class NxMenusService implements OnDestroy {
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
                     ? this.cloudApi.getMenu(name).pipe(
                         map((menu): [string, MenuStructure] => [login, menu]),
-                        startWith([login, menu])
+                        startWith([login, { ...menu, nodes: ignoreCache ? [] : menu.nodes }])
                     )
                     : Promise.resolve([login, menu])
                 ),
