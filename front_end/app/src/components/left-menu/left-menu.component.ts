@@ -72,11 +72,8 @@ export class NxLeftMenuComponent {
                 this.firstUrl = '';
             }
             const name = node.display_name || node.name;
-            const openNodeIndex = this.openNodes.indexOf(name);
-            if (openNodeIndex !== 1) {
-                this.openNodes.splice(openNodeIndex);
-            }
             this.activeRouteNodes.push(name);
+            this.openNodes.push(name);
             if (node.parentNode) {
                 updateActiveRoutes(node.parentNode);
             }
@@ -119,12 +116,42 @@ export class NxLeftMenuComponent {
     }
 
     toggleOpen(node: MenuNode) {
+        const getRootNode = (name, nodesToCheck = this.menuNodes, rootNode: MenuNodeWithParent[] = []) => {
+            const checkNode = (currentNode: MenuNodeWithParent) => {
+                const currentNodeName = currentNode.display_name || currentNode.name;
+                if (currentNodeName === name) {
+                    rootNode.push(currentNode);
+                } else {
+                    return getRootNode(name, currentNode.nodes, rootNode);
+                }
+            };
+            if (rootNode.length || !nodesToCheck) {
+                return;
+            }
+
+            nodesToCheck.forEach(checkNode);
+            return rootNode;
+        };
+        const getChildNodes = (nodeNames: string[], current: MenuNodeWithParent) => {
+            const pushCurrent = (current: MenuNodeWithParent) => {
+                const currentNodeName = current.display_name || current.name;
+                nodeNames.push(currentNodeName);
+                current.nodes.forEach(pushCurrent);
+            };
+            pushCurrent(current);
+            return nodeNames;
+        };
+        const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
+        const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.display_name || node.name;
+        if (this.activeRouteNodes.includes(name)) {
+            return;
+        }
         const nodeIndex = this.openNodes.indexOf(name);
         if (nodeIndex === -1) {
             this.openNodes.push(name);
         } else {
-            this.openNodes.splice(nodeIndex);
+            this.openNodes = this.openNodes.filter(filterTree(name));
         }
     }
 
