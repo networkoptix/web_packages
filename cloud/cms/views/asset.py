@@ -178,7 +178,7 @@ def page_editor(request):
     if "SendReview" in request.POST and not context_errors and not asset_errors:
         customization_reviews = AssetCustomizationReview.objects.\
             filter(state=AssetCustomizationReview.REVIEW_STATES.pending,
-                   version_id=ContentVersion.objects.filter(asset=asset).latest('version_id', 'created_date'))
+                   version_id=ContentVersion.objects.filter(asset=asset).latest('created_date'))
 
         # If the current customization is in the list of reviews go to that one.
         # Otherwise go to the first customization in the list of reviews.
