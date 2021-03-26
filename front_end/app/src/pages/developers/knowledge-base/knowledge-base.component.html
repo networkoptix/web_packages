@@ -115,7 +115,7 @@
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
                         <h4>
                             <ng-template #related>
-                                <ng-container translate>RELATED TOPICS</ng-container> }}
+                                <ng-container translate>RELATED TOPICS</ng-container>
                             </ng-template>
                             <ng-container *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</ng-container>
                         </h4>
