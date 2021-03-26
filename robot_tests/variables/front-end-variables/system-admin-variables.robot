@@ -310,7 +310,7 @@ ${MAX RTSP CONNECT DURATION LABEL}              //div[text()='${MAX RTSP CONNECT
 ${MAX SCENE ITEMS INPUT}                        //input[@id='maxSceneItems']
 ${MAX SCENE ITEMS LABEL}                        //div[text()='${MAX SCENE ITEMS TEXT}']
 ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}  //input[@id='maxVirtualCameraArchiveSynchronizationThreads']
-${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT}']
+# ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT}']
 ${MAX WEBM TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
 ${MAX WEBM TRANSCODERS LABEL}                   //div[text()='${MAX WEBM TRANSCODERS TEXT}']
 
@@ -322,7 +322,7 @@ ${MAX WEBM TRANSCODERS LABEL}                   //div[text()='${MAX WEBM TRANSCO
 ...    ${MAX SCENE ITEMS INPUT}
 ...    ${MAX SCENE ITEMS LABEL}
 ...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}
-...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}
+#...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}
 ...    ${MAX WEBM TRANSCODERS INPUT}
 ...    ${MAX WEBM TRANSCODERS LABEL}
 

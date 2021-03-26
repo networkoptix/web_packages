@@ -85,9 +85,18 @@ ${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
 ${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup"]
+${ARCHIVE BACKUP SWITCH SLIDER}     //span[@class="slider round"]
 ${ARCHIVE BACKUP SWITCH ENABLED}    //input[@id="archive-backup-switch" and @class="selected"]
 ${ARCHIVE BACKUP STREAMS MSG}       //p[contains(text(), "${ARCHIVE BACKUP STREAMS MSG TEXT}")]
 ${ARCHIVE BACKUP CLIENT MSG}        //p[contains(text(), "${ARCHIVE BACKUP CLIENT MSG TEXT}")]
+${ARCHIVE BACKUP SET CLIENT MSG}    //p[contains(text(), "${ARCHIVE BACKUP SET CLIENT MSG TEXT}")]
+${ARCHIVE BACKUP RESET MSG}         //p[contains(text(), "${ARCHIVE BACKUP RESET MSG TEXT}")]
+${BACKUP RESET BUTTON}              //button[contains(text(),"${RESET BACKUP BUTTON TEXT}")]
+${RESET BACKUP MODAL}               //nx-modal-reset-backup
+${RESET BACKUP MODAL TITLE}         ${RESET BACKUP MODAL}//h1 
+${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"]
+${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
+${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
 ${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
@@ -97,6 +106,11 @@ ${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 ${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
+
+${DELETE STORAGE MODAL}             //div[@class="modal-content"]
+${DELETE STORAGE CLOSE BUTTON}      ${DELETE STORAGE MODAL}//button[@aria-label="Close"]
+${DELETE STORAGE CANCEL BUTTON}     ${DELETE STORAGE MODAL}//button/span/parent::button
+${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON TEXT}")]
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]

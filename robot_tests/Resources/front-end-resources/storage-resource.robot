@@ -22,9 +22,10 @@ Storage Suite Setup
     Set Suite Variable     ${random}    ${random}
 
     @{server auth}=   Create List    admin    qweasd 123
-    Set Suite Variable    ${server auth}    ${server auth}
 
-    @{size} =    Create List    200000    20000    20000    12000    12000
+    Set Suite Variable    ${server auth}    ${server auth}   
+    
+    @{size} =    Create List    160000    40000    40000    12000    12000
 
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
     Open Connection    ${QA BURBANK IP}
@@ -363,3 +364,18 @@ Start Server
     @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     Close Connection
     Set Suite Variable    ${port${n}}    ${portnew[0]}
+
+Initialize Backup for User and System
+    [Arguments]    ${user}    ${system}
+    Log in to user and system    ${user}    ${system}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Element    ${SAVE BUTTON}
+    Sleep    2
+    ${backup initialized} =    Set Variable    ${TRUE} 
+    Set Suite Variable    ${backup initialized}     ${backup initialized} 
+    Log Out
