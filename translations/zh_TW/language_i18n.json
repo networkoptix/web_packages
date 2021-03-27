@@ -252,6 +252,7 @@
     "Server URL": "伺服器網址",
     "Server needs to be online to get license activated": "需保持伺服器在線才能啟用授權",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "設定新密碼",
     "Settings": "設定",
     "Settings displayed below are advanced.": "以下顯示設定為進階選項。",

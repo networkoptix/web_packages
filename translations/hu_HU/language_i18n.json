@@ -252,6 +252,7 @@
     "Server URL": "Szerver URL",
     "Server needs to be online to get license activated": "A szervernek online kell lennie ahhoz, hogy aktiválni lehessen",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "Új jelszó beállítása",
     "Settings": "Beállítások",
     "Settings displayed below are advanced.": "A kibővített beállítási lehetőségek alant találhatóak.",

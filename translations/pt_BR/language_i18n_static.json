@@ -652,6 +652,7 @@
         "detachSystemFailed": "Falha ao desconectar o servidor do sistema. Por favor, verifique se a senha inserida está correta e o servidor está online e tente novamente.",
         "detachSystemSuccess": "Servidor foi desanexado do sistema com sucesso.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Falha ao remover o servidor do sistema.",

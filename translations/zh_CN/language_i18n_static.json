@@ -652,6 +652,7 @@
         "detachSystemFailed": "无法从系统分离服务器。请检查输入密码是否正确以及服务器是否在线，然后重试。",
         "detachSystemSuccess": "服务器已成功从系统分离。",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "无法从系统中删除服务器。",

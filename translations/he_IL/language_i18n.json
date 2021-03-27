@@ -252,6 +252,7 @@
     "Server URL": "כתובת שרת",
     "Server needs to be online to get license activated": "השרת צריך להיות מקוון (מחובר לאינטרנט) כדי להפעיל את הרישיון",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "הגדר סיסמה חדשה",
     "Settings": "הגדרות",
     "Settings displayed below are advanced.": "ההגדרות המוצגות להלן הן הגדרות מתקדמות.",

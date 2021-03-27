@@ -652,6 +652,7 @@
         "detachSystemFailed": "Nie udało się odłączyć serwera od systemu. Proszę sprawdzić, czy hasło jest prawidłowe i czy serwer jest online, i spróbować ponownie.",
         "detachSystemSuccess": "Serwer został pomyślnie odłączony od systemu.",
         "portWarning": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
+        "portMissing": "Port number is required.",
         "refresh": "Odśwież",
         "refreshing": "Odświeżanie...",
         "removeMediaserverFailed": "Nie udało się usunąć serwera z systemu.",

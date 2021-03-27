@@ -252,6 +252,7 @@
     "Server URL": "URL ของเซิร์ฟเวอร์",
     "Server needs to be online to get license activated": "เซิร์ฟเวอร์จะต้องออนไลน์เพื่อให้สามารถเปิดใช้งานใบอนุญาตได้",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "ตั้งรหัสผ่านใหม่",
     "Settings": "การตั้งค่า",
     "Settings displayed below are advanced.": "การตั้งค่าที่แสดงด้านล่างเป็นขั้นสูง",

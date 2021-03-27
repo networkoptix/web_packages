@@ -252,6 +252,7 @@
     "Server URL": "Palvelimen URL",
     "Server needs to be online to get license activated": "Server needs to be online to get license activated",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "Aseta uusi salasana",
     "Settings": "Asetukset",
     "Settings displayed below are advanced.": "Settings displayed below are advanced.",

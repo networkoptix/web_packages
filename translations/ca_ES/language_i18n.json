@@ -252,6 +252,7 @@
     "Server URL": "URL del servidor",
     "Server needs to be online to get license activated": "El servidor ha d'estar connectat per activar la llicència",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "Establiu la nova contrasenya",
     "Settings": "Configuració",
     "Settings displayed below are advanced.": "Els paràmetres de configuració que es mostren a continuació són avançats.",

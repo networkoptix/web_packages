@@ -480,6 +480,9 @@
     "VERBOSE TEXT": "Ayrıntılı",
     "ARCHIVE BACKUP STREAMS MSG TEXT": "Secondary streams from all cameras on this server are being backed up in real time.",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "You can change the backup mode or select specific cameras in the desktop client.",
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archive mode and cameras to backup were set up with the desktop client.",
+    "ARCHIVE BACKUP RESET MSG TEXT": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
+    "RESET BACKUP BUTTON TEXT": "Reset Backup Settings",
     "RECORDING STOP WARNING TEXT": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
     "STORAGE PATH ALREADY ADDED TEXT": "Storage path is already added to this server",
@@ -489,5 +492,6 @@
     "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.238/networkDisk is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Add this storage anyway?",
-    "BACK TEXT": "Back"
+    "BACK TEXT": "Back",
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
 }

@@ -652,6 +652,7 @@
         "detachSystemFailed": "Error al desconectar el servidor del sistema. Verifique si la contraseña que ingresó es correcta y el servidor está en línea e intente nuevamente.",
         "detachSystemSuccess": "El servidor se desconectó correctamente del sistema.",
         "portWarning": "Los números de puerto menores de 1024 están restringidos. El servidor puede volverse inaccesible.",
+        "portMissing": "Port number is required.",
         "refresh": "Actualizar",
         "refreshing": "Actualizando...",
         "removeMediaserverFailed": "Error al eliminar el servidor del sistema.",

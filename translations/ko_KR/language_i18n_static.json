@@ -652,6 +652,7 @@
         "detachSystemFailed": "시스템에서 서버를 분리하지 못했습니다. 입력 한 비밀번호가 올 바르고 서버가 온라인인지 확인한 후 다시 시도하십시오.",
         "detachSystemSuccess": "서버에서 사용자가 제거되었습니다.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "시스템에서 서버를 제거하지 못했습니다.",

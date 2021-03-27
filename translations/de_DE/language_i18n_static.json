@@ -652,6 +652,7 @@
         "detachSystemFailed": "Server konnte nicht vom System getrennt werden. Bitte überprüfen Sie, ob das eingegebene Passwort korrekt ist und der Server online ist, und versuchen Sie es erneut.",
         "detachSystemSuccess": "Der Server wurde erfolgreich vom System getrennt.",
         "portWarning": "Portnummern unter 1024 sind eingeschränkt. Auf den Server kann nicht mehr zugegriffen werden.",
+        "portMissing": "Port number is required.",
         "refresh": "Aktualisieren",
         "refreshing": "Aktualisieren...",
         "removeMediaserverFailed": "Fehler beim Entfernen des Servers vom System.",

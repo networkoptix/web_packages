@@ -252,6 +252,7 @@
     "Server URL": "URL-адрес сервера",
     "Server needs to be online to get license activated": "Сервер должен быть в сети чтобы активировать лицензию",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "Задать новый пароль",
     "Settings": "Настройки",
     "Settings displayed below are advanced.": "Установки, отображаемые ниже, являются дополнительными.",

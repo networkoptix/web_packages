@@ -252,6 +252,7 @@
     "Server URL": "Server URL",
     "Server needs to be online to get license activated": "Serveren må være online for å få lisensen aktivert",
     "Server offline": "Server offline",
+    "Server port is required": "Server port is required",
     "Set New Password": "Angi et nytt passord",
     "Settings": "Innstillinger",
     "Settings displayed below are advanced.": "Innstillingene som vises nedenfor er avanserte.",

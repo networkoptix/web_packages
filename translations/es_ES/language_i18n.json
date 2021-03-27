@@ -252,6 +252,7 @@
     "Server URL": "URL del Servidor",
     "Server needs to be online to get license activated": "El servidor necesita estar conectado para obtener licencia activada",
     "Server offline": "Servidor fuera de línea",
+    "Server port is required": "Server port is required",
     "Set New Password": "Establecer nueva contraseña",
     "Settings": "Configuraciones",
     "Settings displayed below are advanced.": "Las configuraciones que se muestran a continuación son avanzadas.",
