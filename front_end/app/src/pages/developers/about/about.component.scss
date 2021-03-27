@@ -3,13 +3,14 @@
 @use 'bootstrap_utils' as bootstrap;
 
 .about-heading {
-    padding: 60px 16px;
+    padding: 0 16px;
+    margin: 60px auto;
     display: flex;
     align-items: center;
     flex-direction: column;
     color: $dark10;
     @include bootstrap.media-breakpoint-down(xs) {
-        padding: 44px 16px 16px 16px;
+        margin: 44px 0 16px 0;
     }
     & > h1 {
         font-family: $font-family-light;

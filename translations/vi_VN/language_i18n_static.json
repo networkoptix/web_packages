@@ -652,6 +652,7 @@
         "detachSystemFailed": "Không thể tách máy chủ khỏi hệ thống. Vui lòng kiểm tra xem mật khẩu bạn đã nhập có chính xác không và máy chủ đang trực tuyến và thử lại.",
         "detachSystemSuccess": "Máy chủ đã được tách ra khỏi hệ thống.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Không thể xóa máy chủ khỏi hệ thống.",

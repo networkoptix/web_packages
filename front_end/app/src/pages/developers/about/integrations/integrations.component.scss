@@ -21,13 +21,13 @@ $large-desktop-breakpoint: 1477px;
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 36px auto 0 auto;
+    margin: 36px auto;
     padding: 0;
     color: $dark10;
 
     @media screen and (min-width: $tablet-breakpoint) {
         padding: 0 8px;
-        margin-top: 96px !important;
+        margin: 96px  auto!important;
     }
 
     &-wrapper {

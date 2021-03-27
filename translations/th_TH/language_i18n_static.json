@@ -652,6 +652,7 @@
         "detachSystemFailed": "ไม่สามารถแยกเซิร์ฟเวอร์ออกจากระบบ โปรดตรวจสอบว่ารหัสผ่านที่คุณป้อนนั้นถูกต้องและเซิร์ฟเวอร์ออนไลน์แล้วลองอีกครั้ง",
         "detachSystemSuccess": "เซิร์ฟเวอร์แยกออกจากระบบเรียบร้อยแล้ว",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "ไม่สามารถลบเซิร์ฟเวอร์ออกจากระบบ",

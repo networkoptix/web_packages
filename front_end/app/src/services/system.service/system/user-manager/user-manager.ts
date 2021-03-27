@@ -37,6 +37,10 @@ export class UserManager {
         return this._accessRole;
     }
 
+    get noPermissions() {
+        return this.currentUser.permissions === '';
+    }
+
     set accessRole(accessRole) {
         this._accessRole = accessRole || '';
         this.checkPermissions();

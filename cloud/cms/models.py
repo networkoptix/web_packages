@@ -159,6 +159,10 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
             .replace("%CLOUD_NAME%", cloud_name)\
             .replace("%VMS_NAME%", vms_name)
+        landing_description = ''
+        landing_description_ds = DataStructure.objects.filter(context__name='Landing page', name='%SUBTITLE%').first()
+        if landing_description_ds:
+            landing_description = landing_description_ds.find_actual_value(asset)
 
         data = {
             'version_id': asset.version_id(),
@@ -188,6 +192,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
+                'landing_description': landing_description,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
@@ -536,6 +541,7 @@ class Asset(models.Model):
     def urlify(self, name=None):
         if name is None:
             name = self.name
+        name = re.sub(r'[^a-zA-Z0-9 ]+', '', name)
         name = name.lower().replace(' ', '-')
         return f'{self.id}-{name}'
 
@@ -580,7 +586,7 @@ class Asset(models.Model):
         accepted_reviews = AssetCustomizationReview.objects.filter(
             customization__name=customization, state=AssetCustomizationReview.REVIEW_STATES.accepted,
             version__asset__in=assets
-        ).order_by('-pk').select_related('version').only('version')
+        ).order_by('-version_id').select_related('version').only('version')
 
         for review in accepted_reviews:
             if review.version.asset_id not in version_dict:
@@ -1278,11 +1284,35 @@ class ContentVersion(models.Model):
                 parent_in_review = self.asset.customizations.filter(
                     id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+
+            # Create missing reviews caused by adding/removing customizations to assets
+            newest_accepted = None
+            for version in ContentVersion.objects.filter(
+                    ~Q(assetcustomizationreview__customization=customization), id__lt=self.id, asset=self.asset,
+                    assetcustomizationreview__isnull=False
+            ).distinct():
+                if not newest_accepted:
+                    newest_accepted = AssetCustomizationReview.objects.filter(version__asset=self.asset, customization=customization).last()
+                # If newest accepted review has newer version than this one, mark it as accepted.
+                if newest_accepted and newest_accepted.version.id > version.id:
+                    AssetCustomizationReview(customization=customization, version=version, state=AssetCustomizationReview.REVIEW_STATES.accepted).save()
+                    continue
+
+                if parent_in_review:
+                    parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
+                    # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
+                    # If parent review exists but is pending, this one should be blocked
+                    if not parent_review or parent_review.state == pending:
+                        AssetCustomizationReview(customization=customization, version=version, state=blocked).save()
+                        continue
+                    elif customization.trust_parent:
+                        AssetCustomizationReview(customization=customization, version=version, state=parent_review.state).save()
+                        continue
+
+                AssetCustomizationReview(customization=customization, version=version, state=pending).save()
 
     @property
     def state(self):
@@ -1295,6 +1325,11 @@ class ContentVersion(models.Model):
             return 'old'
 
         return 'current'
+
+
+class AssetCustomizationReviewManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('version_id', '-pk')
 
 
 class AssetCustomizationReview(models.Model):
@@ -1319,6 +1354,9 @@ class AssetCustomizationReview(models.Model):
     reviewed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
         related_name='accepted_%(class)s', on_delete=models.SET_NULL)
+    default_preview = models.TextField(blank=True)
+
+    objects = AssetCustomizationReviewManager()
 
     def __str__(self):
         return self.version.asset.__str__()
@@ -1596,7 +1634,7 @@ class ContributorAgreement(models.Model):
         return AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-        ).order_by('-reviewed_date').first()
+        ).last()
 
     def is_valid(self):
         review = self.get_current()
@@ -1987,7 +2025,7 @@ class MenuNode(models.Model):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
                         customization=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending
-                    ).select_related('version').order_by('-id').first()
+                    ).select_related('version').last()
                 node_structure = {
                     'subtitle': node.subtitle,
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
@@ -2009,7 +2047,7 @@ class MenuNode(models.Model):
 
                 title_ds = document_dss['title']
                 url_ds = document_dss['url']
-                title = 'Untitled'
+                title = ''
                 url = ''
                 if node.name:
                     title = node.name
@@ -2025,15 +2063,21 @@ class MenuNode(models.Model):
                     elif node_structure['draft']:
                         asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
                         asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+
+                    if asset_title:
+                        asset_title = cloud_portal_asset.replace_global_values(asset_title, global_contexts_dict)
                     if not title and asset_title:
                         title = asset_title
+                        node_structure['name'] = title
+
                     if asset_url:
                         url = asset_url
                     elif asset_title:
                         url = asset_title
                     node_structure['urlified'] = node.asset.urlify(url) if url else None
 
-                node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict)
+                if 'name' not in node_structure:
+                    node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict) or 'Untitled'
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:

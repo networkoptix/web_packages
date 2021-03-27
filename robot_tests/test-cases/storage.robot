@@ -13,6 +13,8 @@ ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",t
 ${storage string 2}    ${EMPTY}
 ${camera}      00-0D-F1-20-B5-02
 ${disk location}    /media/nxwitness-storages/disk1
+${backup initialized}    ${FALSE}
+${change focus}    //h4[contains(text(),"Storage")]
 
 *** Keywords ***
 Restart
@@ -692,7 +694,8 @@ Enable storage: Not in use -> Backup
     Click Element    ${ARCHIVE BACKUP CHECK BOX}
     Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Element    ${SAVE BUTTON}
-    # Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
+    ${backup initialized} =    Set Variable    ${TRUE} 
+    Set Suite Variable    ${backup initialized}     ${backup initialized} 
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${port0}    ${server auth}
     Reload Page
     Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
@@ -1418,17 +1421,335 @@ Add external storage: successful scenario with password
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Log To Console    C81596 ....... | PASS |
-
-Reindexing Main Archive Tooltip Shows
+    
+    
+Cancel deleting storage
+    [Tags]    C81573    deleting
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${DELETE STORAGE MODAL}            
+    ...    ${DELETE STORAGE CLOSE BUTTON}     
+    ...    ${DELETE STORAGE CANCEL BUTTON}      
+    ...    ${DELETE STORAGE DELETE BUTTON}    
+    Click Button      ${DELETE STORAGE CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${DELETE STORAGE MODAL}            
+    ...    ${DELETE STORAGE CLOSE BUTTON}     
+    ...    ${DELETE STORAGE CANCEL BUTTON}      
+    ...    ${DELETE STORAGE DELETE BUTTON}    
+    Click Button      ${DELETE STORAGE CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    
+Delete Inaccessible storage
+    [Tags]    C81573    deleting
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${DELETE STORAGE MODAL}            
+    ...    ${DELETE STORAGE CLOSE BUTTON}     
+    ...    ${DELETE STORAGE CANCEL BUTTON}      
+    ...    ${DELETE STORAGE DELETE BUTTON}    
+    Click Button    ${DELETE STORAGE DELETE BUTTON}
+    Wait Until Element Is Visible    ${ALERT}
+    Element Text Should Be    ${ALERT}     ${INNACCESSIBLE STORAGE DELETED TOAST TEXT}
+    Wait Until Element Is Visible    ${STORAGE LOCATIONS BLOCK} 
+    Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON}    
+    
+  
+Backup settings block availability for owner, administrator and other users
+    [Tags]    C81804    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}        
+    FOR    ${account}    IN    owner    admin        
+        Log in to user and system    ${${account}}     ${sysId0}
+        Wait Until Element is Visible with Retry    ${SERVERS LINK}
+        Click Link    ${SERVERS LINK}
+        Verify on Servers Page
+        Wait Until Elements Are Visible    ${ARCHIVE BACKUP CHECK BOX}    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG} 
+        Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+        Log Out
+    END
+    FOR    ${account}    IN    adv viewer    live viewer    viewer    custom
+        Log in to user and system    ${${account}}     ${sysId0}
+        Sleep     2
+        Element Should Not Be Visible    ${SERVERS LINK}
+        Log Out
+    END
+    
+Backup settings block is not shown if no one storage is assigned “Backup” mode
+    [Tags]    C81810    archive
+    @{disabled} =    Create List    disk3    disk1    disk2 
+    @{backups} =    Create List    
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible with Retry    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
-    Wait Until Element is Visible    ${STORAGE REINDEXING BLOCK}
+    Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
+
+Backup off
+    [Tags]    C81807    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
+    
+Backup on – default settings
+    [Tags]    C81808    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page  
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP CHECK BOX}    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    
+Backup on – custom settings
+    [Tags]    C81809    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page  
+    Wait Until Elements Are Visible   
+    ...    ${ARCHIVE BACKUP CHECK BOX} 
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    
+It is not necessary to apply changes to make the backup settings block appear
+    [Tags]    C81811    archive
+    @{disabled} =    Create List    disk3    disk1    disk2 
+    @{backups} =    Create List    
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
+    Log    Step 2
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}/parent::button
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
+    Log    Step 3
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}/parent::button
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}//parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
+    Log    Step 4
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
+    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}//parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}//parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}//parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
+    Log    Step 5
+    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
+    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}//parent::button
+    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}//parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
+    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}//parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a  
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    
+Cancel Backup enabling
+    [Tags]    C83183    archive
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Element    ${change focus}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}   
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
+    
+Cancel Backup disabling - default settings
+    [Tags]    C83184    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP CHECK BOX}    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Not Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}   
+    Click Element    ${change focus}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}        
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}     ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}   
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+        
+Cancel Backup disabling - custom settings
+    [Tags]    C83185    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Not Visible     
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON}   
+    Click Element    ${change focus}
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
+    Click Button    ${CANCEL BUTTON}
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}        
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+     
+Cancel resetting backup settings for system of 1 server
+    [Tags]    C83328    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    Click Button    ${BACKUP RESET BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${RESET BACKUP MODAL}               
+    ...    ${RESET BACKUP MODAL TITLE}          
+    ...    ${RESET BACKUP RESET BUTTON}        
+    ...    ${RESET BACKUP CLOSE BUTTON}        
+    ...    ${RESET BACKUP CANCEL BUTTON}
+    Click Button     ${RESET BACKUP CLOSE BUTTON}
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON}   
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    Click Button    ${BACKUP RESET BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${RESET BACKUP MODAL}               
+    ...    ${RESET BACKUP MODAL TITLE}          
+    ...    ${RESET BACKUP RESET BUTTON}        
+    ...    ${RESET BACKUP CLOSE BUTTON}        
+    ...    ${RESET BACKUP CANCEL BUTTON}
+    Click Button     ${RESET BACKUP CANCEL BUTTON} 
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON}   
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}       
+    
+Reset backup settings for system of 1 server
+    [Tags]    C83330    archive
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${owner}     ${sysId0}
+    Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${port0}    ${server auth}
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    
+    ...    ${ARCHIVE BACKUP CHECK BOX}
+    ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
+    ...    ${ARCHIVE BACKUP RESET MSG}         
+    ...    ${BACKUP RESET BUTTON} 
+    Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
+    
+    ${files disk0} =    Verify Recorded Video Files    disk0
+    ${files disk1} =    Verify Recorded Video Files    disk1
+    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
+    ${files 2 disk1} =    Verify Recorded Video Files    disk1
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Should Be True    ${files 2 disk0} > ${files disk0}
+    Should Be True    ${files disk1} == ${files 2 disk1}    
+
+    Click Button    ${BACKUP RESET BUTTON} 
+    Wait Until Elements Are Visible
+    ...    ${RESET BACKUP MODAL}               
+    ...    ${RESET BACKUP MODAL TITLE}          
+    ...    ${RESET BACKUP RESET BUTTON}        
+    ...    ${RESET BACKUP CLOSE BUTTON}        
+    ...    ${RESET BACKUP CANCEL BUTTON}
+    Click Button    ${RESET BACKUP RESET BUTTON} 
+    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}  
+    
+    ${files 3 disk1} =    Wait Until Files Are Recorded    disk1    100
+    
+Reindex archive block owerview: only Main storage
+    [Tags]    C81605
+    @{disabled} =    Create List    disk2    disk3     
+    @{backups} =    Create List    
+    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}  
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    ${STORAGE REINDEXING BLOCK}    #${STORAGE REINDEXING MAIN}     ${STORAGE REINDEX MAIN BUTTON}
     Sleep    2
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
     Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
-
+    
+Reindex archive block owerview: Main and Backup storages
+    [Tags]    C81606
+    Log in to user and system    ${owner}     ${sysId0}
+    Wait Until Element is Visible with Retry    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE REINDEXING BLOCK}    
+    #...    ${STORAGE REINDEXING MAIN}     
+    ...    ${STORAGE REINDEX MAIN BUTTON}
+    ...    ${STORAGE REINDEX BACKUP BUTTON}
+    #...    ${STORAGE REINDEXING BACKUP}
+    Sleep    2
+    Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
+    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
+    Mouse Over    ${change focus} 
+    Mouse Over    ${STORAGE REINDEX BACKUP BUTTON}
+    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
+     
 # Reindex Main Storage Successfully FUTURE (need to make sure there's an archive or else reindexing will go too quickly)
 #     Verify on Servers Page
 #     Wait Until Elements are Visible

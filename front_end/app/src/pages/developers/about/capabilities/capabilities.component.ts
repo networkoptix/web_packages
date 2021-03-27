@@ -39,7 +39,7 @@ export class NxCapabilitiesComponent {
             ...this.capabilitiesNode,
             nodes: this.capabilitiesNode.nodes.map(({
                 url, assetId, ...capability
-            }) => ({ ...capability, assetId, url: url || assetId ? `/docs/content/${assetId}` : '' }))
+            }) => ({ ...capability, assetId, url: url || (assetId ? `/docs/content/${assetId}` : '') }))
         };
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title', 'nodes'],

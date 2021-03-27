@@ -321,7 +321,7 @@
     "UNRESTRICTED ACCESS CONNECT TEXT": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
     "WHATS NEW TEXT": "新着情報",
     "ENABLE AUTO DISCOVERY TEXT": "カメラとサーバーの自動検出を有効にする",
-    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "有効にすると、システムは新しいカメラとサーバーを検出します。また、カメラのステータスの更新を取得するために、カメラに検出リクエストを自動的かつ永続的に送信します。フェイルオーバーが有効になっている一部のサーバーでは、ステータスチェックの禁止が無視される場合があります。",
+    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "有効にすると、システムは新しいカメラとサーバーを検出します。また、カメラのステータスの更新を取得するために、カメラに検出リクエストを自動的かつ継続的に送信します。フェイルオーバーが有効になっている一部のサーバーでは、ステータスチェックの禁止が無視される場合があります。",
     "SEND ANONYMOUS USAGE TEXT": "匿名の使用状況とクラッシュ統計を開発者に送信する",
     "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "カメラモジュール、ファームウェアバージョン、サーバー数など、システムに関する情報が含まれます。個人情報は含まれず、完全に匿名です。",
     "ALLOW SYSTEM OPTIMIZE TEXT": "カメラ設定の最適化有効",
@@ -329,7 +329,7 @@
     "ENABLE AUDIT TRAIL DESCRIPTION TEXT": "すべてのユーザーアクションを追跡して記録します。",
     "ALLOW ONLY SECURE TEXT": "安全な接続のみを許可する",
     "ENCRYPT VIDEO TRAFFIC TEXT": "ビデオトラフィックを暗号化する",
-    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "クライアントサーバーのビデオトラフィックのみ暗号化できます。",
+    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "クライアント・サーバー間の映像トラフィックのみ暗号化できます。",
     "LIMIT SESSION DURATION TEXT": "セッション時間を制限",
     "RELEASES TAB TEXT": "リリース",
     "PATCHES TAB TEXT": "パッチ",
@@ -480,6 +480,9 @@
     "VERBOSE TEXT": "詳細",
     "ARCHIVE BACKUP STREAMS MSG TEXT": "このサーバー上のすべてのカメラからのセカンダリストリームがリアルタイムでバックアップされています。",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "デスクトップクライアントで、バックアップモードの変更やカメラの選択ができます。",
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archive mode and cameras to backup were set up with the desktop client.",
+    "ARCHIVE BACKUP RESET MSG TEXT": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
+    "RESET BACKUP BUTTON TEXT": "Reset Backup Settings",
     "RECORDING STOP WARNING TEXT": "この保存場所への録画は停止しますが、古い映像は削除され続けます。",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "この保存先への録画は停止されていますが、古い映像は引き続き削除されています。",
     "STORAGE PATH ALREADY ADDED TEXT": "このストレージパスは既にこのサーバーに追加されています",
@@ -489,5 +492,6 @@
     "STORAGE PATH ALREADY USED TEXT": "ストレージパス //10.1.5.238/networkDisk は既に別のサーバーで使用されています。",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "ひとつの保存先を複数サーバーで使用することは推奨されません。",
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
-    "BACK TEXT": "戻る"
+    "BACK TEXT": "戻る",
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
 }

@@ -128,12 +128,18 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                 });
             }
             // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({error: {resultCode: result.resultCode}});
+            return Promise.reject({ error : { resultCode : result.resultCode } });
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
                 // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({resultCode: result.error.resultCode});
+                return Promise.reject({ resultCode : result.error.resultCode });
             }
+        }).then(result => {
+            // Add the reload back until we solve the issues with configservice
+            if (result.data?.resultCode === this.CONFIG.responseOk) {
+                setTimeout(() => this.window.location.reload());
+            }
+            return result;
         });
     }
 

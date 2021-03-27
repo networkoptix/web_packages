@@ -4,8 +4,8 @@ import {
 }                                   from '@angular/core';
 import { Router }                   from '@angular/router';
 
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxMenuService }            from '../menu.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxMenuService }            from '@src/menu';
 
 /* Usage
  */
@@ -26,6 +26,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     itemPath: string;
     _toggle: boolean;
     _type: string;
+    _searchableItemsLength: number;
 
     CONFIG: IConfig;
 
@@ -54,6 +55,9 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         }
 
         if (changes.item?.currentValue) {
+            if (this.searchMode) {
+                this._searchableItemsLength = changes.item.currentValue.level3.filter((itm) => !itm.horizontal).length;
+            }
             this._toggle = changes.item.currentValue.toggle;
         }
     }

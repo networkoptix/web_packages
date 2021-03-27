@@ -22,7 +22,7 @@
 
     <div>
         <div class="search-results-label" *ngIf="searchMode && _toggle">
-            <span translate [translateParams]="{ count: item.level3.length }">result</span>
+            <span translate [translateParams]="{ count: _searchableItemsLength }">result</span>
         </div>
         <div class="search-results" *ngIf="searchMode">
             <svg-icon [src]="CONFIG.icons.dir + _type + '.svg'"

@@ -527,6 +527,18 @@ export class NxApplyService {
         }
     }
 
+    public setInvalidField(name) {
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).setInvalidField(name);
+        }
+    }
+
+    public unsetInvalidField(name) {
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).unsetInvalidField(name);
+        }
+    }
+
     /**
      * Whats happening here
      * 1) For each watcher create a new observable that only fires when the observable

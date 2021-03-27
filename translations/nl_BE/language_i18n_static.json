@@ -652,6 +652,7 @@
         "detachSystemFailed": "Kan de server niet loskoppelen van het systeem. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
         "detachSystemSuccess": "De server is succesvol losgekoppeld van het systeem.",
         "portWarning": "Poortnummers minder dan 1024 zijn gereserveerd. De server kan ontoegankelijk worden.",
+        "portMissing": "Port number is required.",
         "refresh": "Vernieuwen",
         "refreshing": "Vernieuwen...",
         "removeMediaserverFailed": "Kan de server niet van het systeem verwijderen.",
@@ -801,7 +802,7 @@
             "required": "{number} meer vereist",
             "activated": "Licentie geactiveerd",
             "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
     "settingsConfig": {

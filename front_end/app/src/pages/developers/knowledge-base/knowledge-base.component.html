@@ -1,5 +1,5 @@
 <ng-template #preloader>
-    <div class="wide-section">
+    <div class="preloader-wrapper">
         <nx-pre-loader></nx-pre-loader>
     </div>
 </ng-template>
@@ -80,8 +80,9 @@
 </ng-template>
 <!-- End of Search Results Templates -->
 
-<div [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
+<div *ngIf="basePath" [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
     <nx-left-menu *ngIf="menuName" [menuName]="menuName"
+        [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
         [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
         (relatedLinks)="relatedLinks$.next($event)"
@@ -112,8 +113,13 @@
                     </div>
                     <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
-                        <h4>{{ (relatedLinks$ | async).type === 'next' ? 'NEXT ARTICLE:' : 'RELATED TOPICS' }}</h4>
-                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url">
+                        <h4>
+                            <ng-template #related>
+                                <ng-container translate>RELATED TOPICS</ng-container>
+                            </ng-template>
+                            <ng-container *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</ng-container>
+                        </h4>
+                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url" [queryParams]="{'state': link.state}">
                             {{link.display_name || link.name}}
                         </a>
                     </div>

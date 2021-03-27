@@ -340,6 +340,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.isAvailable = true;
                     this.system.isOnline = true;
                     this.settingsService.system = this.system;
+                    setTimeout(() => {
+                        this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+                    });
                     this.systemSubscription = this.system.infoSubject.subscribe(() => {
                         this.systemReady();
                         this.updateAlert();

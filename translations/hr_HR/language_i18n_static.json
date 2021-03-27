@@ -652,6 +652,7 @@
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Failed to remove the server from system.",

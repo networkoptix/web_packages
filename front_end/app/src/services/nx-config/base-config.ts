@@ -34,6 +34,7 @@ export interface BaseConfig {
     ipvd: Ipvd;
     isInIframe: boolean;
     isLocal: boolean;
+    landing: Landing;
     layout: Layout;
     maintenanceTimeout: number;
     maxServers: number;
@@ -89,6 +90,10 @@ export interface Developers {
     landing: {
         adminLink: string;
     }
+}
+
+export interface Landing {
+    description: string;
 }
 
 export interface FooterItem {

@@ -17,7 +17,7 @@ import nested_admin
 
 from cms.forms import *
 from cms.controllers import generate_structure, structure
-from cms.controllers.modify_db import get_records_for_version, generate_preview_link
+from cms.controllers.modify_db import generate_preview_links, get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
 from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu
 
@@ -235,7 +235,7 @@ class ReviewVersionFilter(SimpleListFilter):
         if self.value() == self.LATEST_VERSION:
             asset_ids = set(queryset.values_list('version__asset', flat=True))
             review_ids = []
-            for review in AssetCustomizationReview.objects.all().order_by('-pk').select_related('version__asset'):
+            for review in AssetCustomizationReview.objects.all().select_related('version__asset'):
                 if review.version.asset.id in asset_ids:
                     review_ids.append(review.id)
                     asset_ids.remove(review.version.asset.id)
@@ -531,13 +531,15 @@ class AssetAdmin(CMSAdmin):
         if order not in order_options.keys():
             order = None
         context = {'errors': []}
+        target_context = Context.objects.get(id=context_id)
+        asset = Asset.objects.get(id=asset_id)
         if request.method == "POST" and 'asset_id' in request.POST:
             context['preview_link'], context['errors'] = page_editor(request)
             if 'SendReview' in request.POST and context['preview_link']:
-                return redirect(context['preview_link'].url)
-
-        target_context = Context.objects.get(id=context_id)
-        asset = Asset.objects.get(id=asset_id)
+                custom_preview = request.POST.get('customPreview', '') or generate_preview_link(target_context, asset, 'pending')
+                if custom_preview:
+                    custom_preview = "?customPreview=" + custom_preview.replace('draft', 'pending')
+                return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
@@ -558,6 +560,7 @@ class AssetAdmin(CMSAdmin):
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
         context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
+        context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(context=target_context, asset=asset, state="draft"))))
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
         context['order_options'] = order_options
 
@@ -696,6 +699,15 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['contexts'], extra_context['context_preview_links'] = get_records_for_version(version.asset,
                                                             version,
                                                             customization_review.customization)
+        custom_preview_from_params = request.GET.get('customPreview') or request.POST.get('customPreview')
+        custom_preview = custom_preview_from_params or customization_review.default_preview
+        if custom_preview:
+            extra_context['context_preview_links']['Content'] = custom_preview
+            if custom_preview_from_params and not customization_review.default_preview:
+                customization_review.default_preview = custom_preview
+                customization_review.save()
+                reviews = version.assetcustomizationreview_set.all()
+                reviews.update(default_preview=custom_preview)
 
         extra_context['review_states'] = AssetCustomizationReview.REVIEW_STATES
         # Exclude customization reviews that are not in the asset's customizations
@@ -719,6 +731,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
                     is_integration or is_article or is_agreement)
         extra_context['whole_preview'] = is_integration or is_article or is_agreement
+        extra_context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(asset=version.asset, state="pending"))))
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
@@ -745,7 +758,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     # TODO: filter visible reviews
     def get_queryset(self, request):
-        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request)
+        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request).order_by('-version_id')
         if not request.user.is_superuser:
             qs = qs.filter(Q(customization__name__in=request.user.customizations_with_permission('cms.publish_version')))
 

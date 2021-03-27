@@ -50,7 +50,7 @@ def get_article(request, url_param, **kwargs):
             version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
             version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
-        ).order_by('-reviewed_date').first()
+        ).last()
         if article_review:
             # Check that that the asset's current url still matches
             article = article_review.version.asset

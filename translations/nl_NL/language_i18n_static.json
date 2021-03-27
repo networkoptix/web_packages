@@ -652,6 +652,7 @@
         "detachSystemFailed": "Kan de server niet loskoppelen van het systeem. Controleer of het ingevoerde wachtwoord juist is en de server online is en probeer het opnieuw.",
         "detachSystemSuccess": "De server is succesvol losgekoppeld van het systeem.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Kan de server niet van het systeem verwijderen.",

@@ -374,11 +374,16 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         if (port && port >= this.CONFIG.servers.port.min && port < this.CONFIG.servers.port.max) {
             this.ipPortWatcher.value = port;
         }
-        if (this.ipPortWatcher.value !== null && this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
+        if (this.ipPortWatcher.value === null) {
+            this.applyService.setInvalidField('port');
+            this.applyService.setWarn(this.LANG.servers.portMissing?.());
+            return;
+        } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
             this.applyService.setWarn(this.LANG.servers.portWarning?.());
         } else {
             this.applyService.setWarn('');
         }
+        this.applyService.unsetInvalidField('port');
     }
 
     private setSystemStorageChosen(storage) {

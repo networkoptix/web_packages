@@ -652,6 +652,7 @@
         "detachSystemFailed": "Не удалось отключить сервер от системы. Пожалуйста, проверьте, правильно ли вы ввели пароль, и подключен ли сервер к сети, и попробуйте снова.",
         "detachSystemSuccess": "Сервер был успешно отключен от системы.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Не удалось удалить сервер из системы.",

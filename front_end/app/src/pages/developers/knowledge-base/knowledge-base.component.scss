@@ -2,8 +2,9 @@
 @use '../../../styles/typography';
 @use 'bootstrap_utils' as bootstrap;
 
-$custom-lg: 992px;
+$custom-lg: 1200px;
 $custom-xl: 1440px;
+
 
 .page-wrapper, .content-only {
     display: grid;
@@ -13,13 +14,14 @@ $custom-xl: 1440px;
     padding: 1rem;
     min-height: 100%;
     grid-auto-rows: min-content;
+    max-width: $custom-xl;
     @include bootstrap.media-breakpoint-up(md) {
         grid-auto-rows: auto;
     }
     nx-left-menu {
         background: $additional_light2;
         margin: -1rem -1rem 1rem -1rem;
-        padding: 1rem;
+        padding: 1rem 0;
         grid-column: span 12;
         grid-row: 1 / -1;
 
@@ -27,6 +29,9 @@ $custom-xl: 1440px;
             position: sticky;
             overflow-y: auto;
             max-height: calc(100vh - 3rem);
+            &.with-ribbon {
+                max-height: calc(100vh - 3rem - 33px);
+            }
             top: 0;
             margin: -1rem 0 -1rem -1rem;
             grid-column: span 4;
@@ -39,9 +44,10 @@ $custom-xl: 1440px;
 
 .content-only {
     background: transparent;
+    margin: 0 auto;
     & > div {
         grid-column: 1  / -1;
-        @media (min-width: $custom-lg) {
+        @include bootstrap.media-breakpoint-up(lg) {
             grid-column: 2  / -2;
         }
         @media (min-width: $custom-xl) {
@@ -57,6 +63,9 @@ $custom-xl: 1440px;
     grid-column: span 12;
     @include bootstrap.media-breakpoint-up(lg) {
         grid-column: span 8;
+    }
+    @media (min-width: $custom-lg) {
+        grid-column: span 7;
     }
 }
 
@@ -103,7 +112,7 @@ $custom-xl: 1440px;
     &:visited {
         color: $dark19 !important;
         &:hover {
-            color: $dark14 !important;
+            color: $light14 !important;
         }
     }
 }
@@ -134,6 +143,14 @@ $custom-xl: 1440px;
     a {
         display: block;
     }
+}
+
+.preloader-wrapper {
+    @extend .wide-section;
+    height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 ::ng-deep .article-content {

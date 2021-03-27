@@ -688,6 +688,7 @@ export interface Servers {
     detachSystemFailed:       any;
     detachSystemSuccess:      any;
     portWarning:              any;
+    portMissing:              any;
     refresh:                  any;
     refreshing:               any;
     removeMediaserverFailed:  any;
@@ -1600,6 +1601,7 @@ const typeMap: any = {
         { json: "detachSystemFailed", js: "detachSystemFailed", typ: "any" },
         { json: "detachSystemSuccess", js: "detachSystemSuccess", typ: "any" },
         { json: "portWarning", js: "portWarning", typ: "any" },
+        { json: "portMissing", js: "portMissing", typ: "any" },
         { json: "refresh", js: "refresh", typ: "any" },
         { json: "refreshing", js: "refreshing", typ: "any" },
         { json: "removeMediaserverFailed", js: "removeMediaserverFailed", typ: "any" },

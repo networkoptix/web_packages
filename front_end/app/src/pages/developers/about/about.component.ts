@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { UntilDestroy }     from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 import { BehaviorSubject }  from 'rxjs';
 
 import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
 import { NxHeaderService }      from '../../../services/nx-header.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivationStart, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
 import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
@@ -12,6 +12,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxMenusService } from '../../../services/menus.service';
 import { NxPageService } from '../../../services/page.service';
 import { NxAccountService, Account } from '../../../services/account.service';
+import { filter } from 'rxjs/operators';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -80,7 +81,21 @@ export class NxAboutComponent {
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
-        this.baseName = this.route.snapshot.paramMap.get('name');
+        this.loadMenu(this.route.snapshot.paramMap.get('name'));
+        this.router.events.pipe(
+            filter((event) => event instanceof ActivationStart),
+            untilDestroyed(this)
+        ).subscribe((event: any) => {
+            this.loadMenu(event?.snapshot?.params?.name);
+        });
+    }
+
+    loadMenu(baseName) {
+        this.aboutStructure = null;
+        if (!baseName) {
+            return;
+        }
+        this.baseName = baseName;
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
             setTimeout(this.pageService.show404);

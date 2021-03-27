@@ -374,3 +374,8 @@ img.light {
     position: sticky;
     top: 40px;
 }
+
+#preview-select-label {
+    text-align: center;
+    padding: 8px 16px;
+}

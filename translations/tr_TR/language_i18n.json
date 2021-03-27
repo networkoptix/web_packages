@@ -178,6 +178,7 @@
     "Motion detection is disabled": "Hareket algılama devre dışı",
     "Move Cloud Storage": "Bulut Depolama Alanını Taşı",
     "Move to...": "Şuraya taşı...",
+    "NEXT ARTICLE:": "NEXT ARTICLE:",
     "NO IMAGE": "GÖRÜNTÜ YOK",
     "Name": "İsim",
     "New License": "Yeni Lisans",
@@ -217,6 +218,7 @@
     "Port is busy": "Port is busy",
     "Press \"Connect System to %CLOUD_NAME%\"": "Sistem %CLOUD_NAME% e bağlan\"",
     "Quality": "Kalite",
+    "RELATED TOPICS": "RELATED TOPICS",
     "Recording": "Kaydediliyor",
     "Reindex Archive": "Arşivi tekrar indexle",
     "Reindex Backup Storage": "Reindex Yedekleme Depolaması",
@@ -250,6 +252,7 @@
     "Server URL": "Sunucu URL'si",
     "Server needs to be online to get license activated": "Lisansın etkinleştirilmesi için sunucunun çevrimiçi olması gerekir",
     "Server offline": "Sunucu çevrimdışı",
+    "Server port is required": "Server port is required",
     "Set New Password": "Yeni Parola belirle",
     "Settings": "Ayarlar",
     "Settings displayed below are advanced.": "Aşağıda gösterilen ayarlar ileri düzeydedir.",
@@ -325,4 +328,3 @@
     "result": "result",
     "you": "sen"
 }
-
