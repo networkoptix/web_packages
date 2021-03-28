@@ -480,9 +480,9 @@
     "VERBOSE TEXT": "詳細",
     "ARCHIVE BACKUP STREAMS MSG TEXT": "このサーバー上のすべてのカメラからのセカンダリストリームがリアルタイムでバックアップされています。",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "デスクトップクライアントで、バックアップモードの変更やカメラの選択ができます。",
-    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archive mode and cameras to backup were set up with the desktop client.",
-    "ARCHIVE BACKUP RESET MSG TEXT": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
-    "RESET BACKUP BUTTON TEXT": "Reset Backup Settings",
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "デスクトップクライアントを使用してアーカイブモードとバックアップするカメラを設定しました。",
+    "ARCHIVE BACKUP RESET MSG TEXT": "バックアップ設定をデフォルトにリセットすることで、すべてのカメラからのセカンダリーストリームをリアルタイムでバックアップできます。",
+    "RESET BACKUP BUTTON TEXT": "バックアップ設定をリセット",
     "RECORDING STOP WARNING TEXT": "この保存場所への録画は停止しますが、古い映像は削除され続けます。",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "この保存先への録画は停止されていますが、古い映像は引き続き削除されています。",
     "STORAGE PATH ALREADY ADDED TEXT": "このストレージパスは既にこのサーバーに追加されています",
@@ -493,5 +493,5 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "ひとつの保存先を複数サーバーで使用することは推奨されません。",
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
     "BACK TEXT": "戻る",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "ストレージ/無効/ HDウィットネスメディアが削除されました"
 }

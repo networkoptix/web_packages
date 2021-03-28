@@ -652,7 +652,7 @@
         "detachSystemFailed": "Impossible de détacher le serveur du système. Veuillez vérifier si le mot de passe que vous avez entré est correct et que le serveur est en ligne et réessayez.",
         "detachSystemSuccess": "Le serveur a été détaché du système avec succès.",
         "portWarning": "Les numéros de port inférieurs à 1024 sont restreints. Le serveur peut devenir inaccessible.",
-        "portMissing": "Port number is required.",
+        "portMissing": "Le numéro de port est requis.",
         "refresh": "Rafraîchir",
         "refreshing": "Rafraîchissement...",
         "removeMediaserverFailed": "Impossible de supprimer le serveur du système.",
