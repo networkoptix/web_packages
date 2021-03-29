@@ -80,7 +80,7 @@
                                              src="data:image/png;base64,{{ field.value }}">
                                     </div>
                                     <div>
-                                        <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}" download>
+                                        <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}&show_image={{True}}" target="_blank">
                                             Download Original
                                         </a>
                                     </div>

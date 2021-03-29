@@ -375,7 +375,7 @@ def make_preview(request):
 
 def response_attachment(data, filename, content_type):
     response = HttpResponse(data, content_type=content_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" else ""}filename={filename}'
     response.set_cookie('filename', filename, max_age=10)
     return response
 
@@ -571,6 +571,7 @@ def download_all_asset_structures(request, asset_type):
 @permission_required('cms.change_asset')
 def download_file(request, path):
     asset = Asset.objects.filter(id=request.GET.get("asset_id")).first()
+    show_image = request.GET.get("show_image")
 
     if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
         raise PermissionDenied
@@ -580,7 +581,7 @@ def download_file(request, path):
     preview = 'draft' in request.GET
     file = filldata.read_customized_file(path, asset, language_code, version_id, preview)
     if file:
-        return response_attachment(file, os.path.basename(path), "application")
+        return response_attachment(file, os.path.basename(path), "image/png" if show_image else "application")
     raise HttpResponseBadRequest("File does not exist")
 
 
