@@ -45,7 +45,7 @@ def update_draft_state(review_id, target_state, user):
         review.reviewed_date = datetime.now()
         review.save()
 
-    review.update_between_published_and_current(user, target_state)
+    review.update_current_and_older(user, target_state)
 
     return None
 

@@ -686,6 +686,13 @@ def update_asset_customization_reviews(sender, instance, action, pk_set, **kwarg
                 filter(version__asset=instance, customization_id__in=pk_set):
             asset_customization_review.update_children_reviews()
 
+    if action == 'post_add':
+        customizations = Customization.objects.filter(pk__in=pk_set)
+        for customization in customizations:
+            version = ContentVersion.objects.filter(asset=instance).order_by('-id').first()
+            if version:
+                ContentVersion.create_missing_reviews(instance, version, customization)
+
 
 class Context(models.Model):
     class Meta:
@@ -1268,6 +1275,35 @@ class ContentVersion(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @staticmethod
+    def create_missing_reviews(asset, version, customization, parent_in_review=None):
+        blocked = AssetCustomizationReview.REVIEW_STATES.blocked
+        pending = AssetCustomizationReview.REVIEW_STATES.pending
+
+        if parent_in_review is None and customization.parent:
+            parent_in_review = asset.customizations.filter(
+                id=customization.parent.id).exists()
+
+        for version in ContentVersion.objects.filter(
+                ~Q(assetcustomizationreview__customization=customization), id__lt=version.id,
+                id__gt=asset.version_id(customization.name),
+                asset=asset, assetcustomizationreview__isnull=False
+        ).distinct():
+            review = None
+            if parent_in_review:
+                parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
+                # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
+                # If parent review exists but is pending, this one should be blocked
+                if not parent_review or parent_review.state == pending:
+                    review = AssetCustomizationReview(customization=customization, version=version, state=blocked)
+                elif customization.trust_parent:
+                    review = AssetCustomizationReview(customization=customization, version=version,
+                                                      state=parent_review.state)
+            if not review:
+                review = AssetCustomizationReview(customization=customization, version=version, state=pending).save()
+            review.save()
+            review.update_children_reviews()
+
     def create_reviews(self):
         blocked = AssetCustomizationReview.REVIEW_STATES.blocked
         pending = AssetCustomizationReview.REVIEW_STATES.pending
@@ -1289,30 +1325,7 @@ class ContentVersion(models.Model):
                 AssetCustomizationReview(customization=customization, version=self, state=pending).save()
 
             # Create missing reviews caused by adding/removing customizations to assets
-            newest_accepted = None
-            for version in ContentVersion.objects.filter(
-                    ~Q(assetcustomizationreview__customization=customization), id__lt=self.id, asset=self.asset,
-                    assetcustomizationreview__isnull=False
-            ).distinct():
-                if not newest_accepted:
-                    newest_accepted = AssetCustomizationReview.objects.filter(version__asset=self.asset, customization=customization).last()
-                # If newest accepted review has newer version than this one, mark it as accepted.
-                if newest_accepted and newest_accepted.version.id > version.id:
-                    AssetCustomizationReview(customization=customization, version=version, state=AssetCustomizationReview.REVIEW_STATES.accepted).save()
-                    continue
-
-                if parent_in_review:
-                    parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
-                    # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
-                    # If parent review exists but is pending, this one should be blocked
-                    if not parent_review or parent_review.state == pending:
-                        AssetCustomizationReview(customization=customization, version=version, state=blocked).save()
-                        continue
-                    elif customization.trust_parent:
-                        AssetCustomizationReview(customization=customization, version=version, state=parent_review.state).save()
-                        continue
-
-                AssetCustomizationReview(customization=customization, version=version, state=pending).save()
+            self.create_missing_reviews(self.asset, self, customization, parent_in_review)
 
     @property
     def state(self):
@@ -1414,9 +1427,9 @@ class AssetCustomizationReview(models.Model):
         self.save()
         self.update_children_reviews()
 
-    def update_between_published_and_current(self, user, state):
+    def update_current_and_older(self, user, state):
         asset = self.version.asset
-        customization_reviews = AssetCustomizationReview.objects.\
+        customization_reviews = AssetCustomizationReview.objects. \
             filter(version__id__gt=asset.version_id(self.customization),
                    version__id__lte=self.version_id,
                    version__asset=asset,
