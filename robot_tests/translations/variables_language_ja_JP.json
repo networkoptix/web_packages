@@ -493,5 +493,5 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "ひとつの保存先を複数サーバーで使用することは推奨されません。",
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
     "BACK TEXT": "戻る",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "ストレージ/無効/ HDウィットネスメディアが削除されました"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "無効なストレージが削除されました"
 }
