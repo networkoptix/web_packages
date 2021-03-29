@@ -66,7 +66,10 @@
 </div></ng-template>
 
 <div *ngIf="camera" class="controls">
-  <div class="controls-toggling-ear" [ngClass]="{ shown: controlsShown }" (click)="handleControlsTogglingEarClick()"></div>
+  <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
+    <div class="controls-toggling-ear"  (click)="handleControlsTogglingEarClick()"></div>
+  </div>
+
   <playback-controls [enabled]="camera && showPlayer"></playback-controls>
   <zoom-controls></zoom-controls>
   <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
