@@ -41,7 +41,7 @@ async function setPreviewState(asset_id, create_id, el, state) {
 }
 
 function updateEnabled(id, element, customizations) {
-    const enabledContainer = django.jQuery(element).closest('.field-asset').siblings('.field-enabled');
+    const enabledContainer = django.jQuery(element).closest('.djn-inline-form').find('.form-row.field-enabled');
     if (all_customizations) {
         const enabledField = enabledContainer.find('select');
         enabledField.multiselect('deselectAll', false);
