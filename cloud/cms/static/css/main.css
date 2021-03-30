@@ -411,8 +411,11 @@ img.light {
 }
 
 .status-loader {
-    margin-left: -16px;
-    margin-right: 8px;
     -webkit-animation: glyphicon-spin-r 2s infinite linear;
     animation: glyphicon-spin-r 2s infinite linear;
+}
+
+#status-glpyh {
+    margin-left: -16px;
+    margin-right: 8px;
 }

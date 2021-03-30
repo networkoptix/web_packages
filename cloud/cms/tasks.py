@@ -70,7 +70,9 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
 
 
 @shared_task
-def async_import_assets_from_json(assets_list, user_id, publish=False):
+def async_import_assets_from_json(json_cache_id, user_id, publish=False):
+    DOWNLOAD_CACHE = PackagesCache()
+    assets_list = DOWNLOAD_CACHE.get(json_cache_id)
     user = Account.objects.get(pk=user_id)
     current = 0
     total = len(assets_list)
