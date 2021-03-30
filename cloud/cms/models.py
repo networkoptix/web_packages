@@ -1300,7 +1300,7 @@ class ContentVersion(models.Model):
                     review = AssetCustomizationReview(customization=customization, version=version,
                                                       state=parent_review.state)
             if not review:
-                review = AssetCustomizationReview(customization=customization, version=version, state=pending).save()
+                review = AssetCustomizationReview(customization=customization, version=version, state=pending)
             review.save()
             review.update_children_reviews()
 
