@@ -244,7 +244,7 @@ Changing of reserved space is shown in the table
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
-    Should Contain  ${reserved}    10.0
+    Should Contain  ${reserved}    15.3
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Element is Visible    ${RESERVED SPACE ADVANCED}
@@ -931,6 +931,7 @@ Disabling storage warnings - Backup storages
 
 Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
+    # This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk1
     Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
@@ -972,6 +973,7 @@ Disabling storage warnings aren't shown - Main storages
 
 Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
+    # This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3    disk1
     @{backups} =    Create List     disk2
     Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
@@ -1183,37 +1185,34 @@ Add external storage: Wrong login or password
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys     ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
-    Press Keys      ${AS MODAL LOGIN INPUT}      incorrect
-    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
-    Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${AS MODAL PASSWORD INVALID}
-    ...
-    Delete All Text     ${AS MODAL LOGIN INPUT}
-    Delete All Text     ${AS MODAL PASSWORD INPUT}
-    Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
-    Press Keys      ${AS MODAL PASSWORD INPUT}     incorrect
+    Input Text      ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
+    Input Text      ${AS MODAL LOGIN INPUT}      incorrect
+    Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
     Wait Until Elements Are Visible
     ...    ${AS MODAL PASSWORD INVALID}
 
-    Delete All Text     ${AS MODAL LOGIN INPUT}
-    Delete All Text     ${AS MODAL PASSWORD INPUT}
-    Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
+    Input Text      ${AS MODAL LOGIN INPUT}      qaburbank    clear=True
+    Input Text      ${AS MODAL PASSWORD INPUT}     incorrect    clear=True
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${AS MODAL PASSWORD INVALID}
+    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
+    Delete All Text      ${AS MODAL LOGIN INPUT}      
+    Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}    clear=True
     Click Button    ${AS MODAL SUBMIT BUTTON}
     Wait Until Elements Are Visible
     ...    ${AS MODAL PASSWORD INVALID}
 
-    Delete All Text     ${AS MODAL LOGIN INPUT}
-    Delete All Text     ${AS MODAL PASSWORD INPUT}
-    Press Keys      ${AS MODAL LOGIN INPUT}     qaburbank
-    Click Button    ${AS MODAL SUBMIT BUTTON}
+    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
+    Input Text      ${AS MODAL LOGIN INPUT}      qaburbank   clear=True
+    Delete All Text      ${AS MODAL PASSWORD INPUT}  
     Wait Until Elements Are Visible
     ...    ${AS MODAL PASSWORD INVALID}
 
-    Delete All Text      ${AS MODAL LOGIN INPUT}
-    Delete All Text     ${AS MODAL PASSWORD INPUT}
+    Delete All Text      ${AS MODAL LOGIN INPUT}       
+    Delete All Text     ${AS MODAL PASSWORD INPUT}     
     Click Button    ${AS MODAL SUBMIT BUTTON}
     Wait Until Elements are Visible
     ...    ${AS MODAL PASSWORD INVALID}

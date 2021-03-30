@@ -45,7 +45,7 @@ def update_draft_state(review_id, target_state, user):
         review.reviewed_date = datetime.now()
         review.save()
 
-    review.update_between_published_and_current(user, target_state)
+    review.update_current_and_older(user, target_state)
 
     return None
 
@@ -485,7 +485,7 @@ def generate_preview_links(context=None, asset=None, state=""):
             yield ('Agreement Preview', f'/agreement?{params}')
         elif asset.is_documentation:
             menus = {node.get_parent() for node in asset.nodes.all()}
-            for menu in menus:
+            for menu in sorted(menus, key=lambda menu: menu.type):
                 if menu.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]:
                     url = f'/docs/{menu.base_url}'
                     if menu.url:

@@ -252,7 +252,7 @@
     "Server URL": "サーバー URL",
     "Server needs to be online to get license activated": "ライセンスを有効にするにはサーバーをオンラインにする必要があります",
     "Server offline": "サーバーオフライン",
-    "Server port is required": "Server port is required",
+    "Server port is required": "サーバーポートが必要です。",
     "Set New Password": "新しいパスワードを設定",
     "Settings": "設定",
     "Settings displayed below are advanced.": "以下は詳細設定です。",

@@ -480,9 +480,9 @@
     "VERBOSE TEXT": "Verbose",
     "ARCHIVE BACKUP STREAMS MSG TEXT": "Les flux secondaires de toutes les caméras de ce serveur sont sauvegardés en temps réel.",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "Vous pouvez changer le mode de sauvegarde ou sélectionner des caméras spécifiques dans le client.",
-    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archive mode and cameras to backup were set up with the desktop client.",
-    "ARCHIVE BACKUP RESET MSG TEXT": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
-    "RESET BACKUP BUTTON TEXT": "Reset Backup Settings",
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Le mode d'archivage et les sauvegardes des caméras ont été configurées avec l'application client.",
+    "ARCHIVE BACKUP RESET MSG TEXT": "Vous pouvez réinitialiser les paramètres de sauvegarde par défaut pour sauvegarder les flux secondaires de toutes les caméras en temps réel.",
+    "RESET BACKUP BUTTON TEXT": "Réinitialiser les paramètres de sauvegarde",
     "RECORDING STOP WARNING TEXT": "L'enregistrement vers cet emplacement de stockage s'arrêtera. Cependant, les séquences obsolètes de cet emplacement continueront d'être supprimées.",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "L'enregistrement vers cet emplacement de stockage est arrêté. Cependant, les séquences obsolètes de cet emplacement sont toujours en cours de suppression.",
     "STORAGE PATH ALREADY ADDED TEXT": "Le chemin de stockage est déjà ajouté à ce serveur",
@@ -493,5 +493,5 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Il n'est pas recommandé d'utiliser un emplacement d'enregistrement pour différents serveurs.",
     "ADD THIS STORAGE ANYWAY TEXT": "Ajouter tout de même ce stockage ?",
     "BACK TEXT": "Précédent",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Stockage /invalid/HD Witness Media supprimé"
 }

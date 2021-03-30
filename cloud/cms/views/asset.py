@@ -1,4 +1,5 @@
 
+from cms.views.celery import download_result
 from util.helpers import get_admin_url
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
@@ -23,7 +24,7 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.tasks import get_package_cache_key, make_package
+from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure
 
 from ..controllers.documentation import DOC_CACHE
 from ..views.integration import INTEGRATION_CACHE
@@ -375,7 +376,7 @@ def make_preview(request):
 
 def response_attachment(data, filename, content_type):
     response = HttpResponse(data, content_type=content_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" else ""}filename={filename}'
     response.set_cookie('filename', filename, max_age=10)
     return response
 
@@ -388,6 +389,8 @@ asset_settings_wiki = "For more information please go to " \
 @api_view(["GET", "POST"])
 @permission_classes((IsSuperuser,))
 def asset_settings(request, asset_id):
+    task = ''
+    force = False
     PACKAGE_CACHE = PackagesCache()
     form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
     asset = Asset.objects.get(pk=asset_id)
@@ -423,8 +426,8 @@ def asset_settings(request, asset_id):
                 structure.update_asset_by_json(asset, loaded_json[0], request.user)
                 messages.success(request, "Content updated")
             elif import_assets_from_json:
-                structure.import_assets_from_json(loaded_json, request.user, publish=import_assets_from_json_publish)
-                messages.success(request, "Assets imported")
+                task = async_import_assets_from_json.apply_async(args=[loaded_json, request.user.id, import_assets_from_json_publish])
+                messages.info(request, 'Starting assets import')
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             else:
@@ -461,7 +464,8 @@ def asset_settings(request, asset_id):
                 messages.add_message(request, log_type, item[1])
     else:
         form = AssetSettingsForm(user=request.user)
-    messages.info(request, 'Checking asset names...')
+    if not force:
+        messages.info(request, 'Checking asset names...')
     return render(request, 'cms/asset_settings.html',
                   {'asset': asset,
                    'form': form,
@@ -472,28 +476,27 @@ def asset_settings(request, asset_id):
                    'site_url': admin.site.site_url,
                    'site_header': admin.site.site_header,
                    'site_title': admin.site.site_title,
+                   'task_id': str(task),
                    'title': 'Settings for %s' % asset.name})
 
 
-@require_http_methods(["GET"])
+@api_view(["GET", "POST"])
 @permission_required('cms.change_asset')
 def download_current_structure(request, asset_id):
-    use_actual_values = "get_values" in request.GET
-    output_format = request.GET.get("format", "json")
-    asset = Asset.objects.filter(id=asset_id).last()
-    if asset_id and asset:
-        if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
-            raise PermissionDenied
-        data = generate_structure.from_database(asset, use_actual_values)
-        file_name = "structure.json"
-        if output_format == "html":
-            data = data[0]
-            content = structure_to_html.process_structure_json(data)
-            file_name = f"{data['type']}.html"
-        else:
-            content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, file_name, 'application')
-    return HttpResponseBadRequest("Asset not given or found")
+    output_format = request.query_params.get("output_format", "json")
+    asset = Asset.objects.get(id=asset_id)
+    cache_key = get_package_cache_key(asset, structure_format=output_format)
+    structure_info = PACKAGES_CACHE.get(cache_key)
+    if not structure_info:
+        use_actual_values = "get_values" in request.query_params
+        task = make_structure.apply_async(kwargs={'asset_id': asset_id,
+            'output_format': output_format, 'use_actual_values': use_actual_values,
+            'user_id': request.user.id})
+        PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False, "task_id": str(task)}
+        return api_success({"msg": f"Building the {asset} structure", "is_ready": False, "task_id": str(task)})
+    task_id = structure_info.get("task_id")
+    is_ready = bool(PACKAGES_CACHE.get(task_id))
+    return api_success({"msg": f"{asset} structure is ready" if is_ready else f"{asset} structure is not ready", "is_ready": is_ready, "task_id": structure_info.get("task_id")})
 
 
 def sub_doc_urls(matchobj):
@@ -548,29 +551,28 @@ def prepare_asset_exports(asset, asset_dict):
         prepare_doc_urls(asset_dict)
 
 
-@require_http_methods(["GET"])
+@api_view(["GET", "POST"])
 @permission_required('cms.change_asset')
 def download_all_asset_structures(request, asset_type):
-    assets = Asset.objects.filter(asset_type__type=asset_type)
-    data = []
-    for asset in assets:
-        if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
-            continue
-        asset_dict = generate_structure.from_database(asset, True)[0]
-        asset_dict['name'] = asset.name
-        asset_dict['uuid'] = str(asset.uuid)
-        asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
-        prepare_asset_exports(asset, asset_dict)
-        data.append(asset_dict)
-    content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-    file_name = "structure.json"
-    return response_attachment(content, file_name, 'application')
+    last_asset = Asset.objects.filter(asset_type__type=asset_type).latest('contentversion')
+    cache_key = f'all-asset-structures-{asset_type}-{last_asset.id}-{last_asset.version_id()}'
+    asset_type_name = AssetType.objects.get(type=asset_type)
+    structure_info = PACKAGES_CACHE.get(cache_key)
+    if not structure_info:
+        task = make_structure.apply_async(kwargs={
+            'asset_type': asset_type, 'user_id': request.user.id})
+        PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False, "task_id": str(task)}
+        return api_success({"msg": f"Building the All {asset_type_name} structures", "is_ready": False, "task_id": str(task)})
+    task_id = structure_info.get("task_id")
+    is_ready = bool(PACKAGES_CACHE.get(task_id))
+    return api_success({"msg": f"All {asset_type_name} structures is ready" if is_ready else f"All {asset_type_name} structures is not ready", "is_ready": is_ready, "task_id": structure_info.get("task_id")})
 
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_asset')
 def download_file(request, path):
     asset = Asset.objects.filter(id=request.GET.get("asset_id")).first()
+    show_image = request.GET.get("show_image")
 
     if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
         raise PermissionDenied
@@ -580,7 +582,7 @@ def download_file(request, path):
     preview = 'draft' in request.GET
     file = filldata.read_customized_file(path, asset, language_code, version_id, preview)
     if file:
-        return response_attachment(file, os.path.basename(path), "application")
+        return response_attachment(file, os.path.basename(path), "image/png" if show_image else "application")
     raise HttpResponseBadRequest("File does not exist")
 
 

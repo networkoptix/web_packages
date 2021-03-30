@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.core.cache import caches
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
@@ -45,11 +46,14 @@ def get_mobile_compatible_customization():
 
 class IsAuthenticatedUserOrSystem(BasePermission):
     def has_permission(self, request, view):
-        return request.user == 'system' or request.user.is_authenticated
+        return getattr(request.user, 'is_system', False) or request.user.is_authenticated
 
 
 class CloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
+        request.data['username'] = user
+        request.data['password'] = password
+        request.data['systemId'] = request.data.get('systemId', user)
         authentication_cache = caches['push_authentication']
         system = authentication_cache.get(f'{user}:{password}')
         if system:
@@ -71,11 +75,9 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
                 except APINotAuthorisedException:
                     raise exceptions.AuthenticationFailed('Invalid system credentials')
 
-        request.data['username'] = user
-        request.data['password'] = password
-        request.data['systemId'] = request.data.get('systemId', user)
-
-        return 'system', None
+        system_account = AnonymousUser()
+        system_account.is_system = True
+        return system_account, None
 
 
 class CloudAccountBasicAuthentication(BasicAuthentication):

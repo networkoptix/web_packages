@@ -480,9 +480,9 @@
     "VERBOSE TEXT": "Uitgebreid",
     "ARCHIVE BACKUP STREAMS MSG TEXT": "Secundaire streams van alle camera's op deze server worden in realtime geback-upt.",
     "ARCHIVE BACKUP CLIENT MSG TEXT": "U kunt de back-upmodus wijzigen of specifieke camera's selecteren in de desktopclient.",
-    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archive mode and cameras to backup were set up with the desktop client.",
-    "ARCHIVE BACKUP RESET MSG TEXT": "You can reset backup settings to default to backup secondary streams from all cameras in real time.",
-    "RESET BACKUP BUTTON TEXT": "Reset Backup Settings",
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT": "Archiefmodus en camera's om een back-up te maken zijn met de desktopclient ingesteld.",
+    "ARCHIVE BACKUP RESET MSG TEXT": "U kunt de standaardinstellingen voor back-up herstellen om in realtime een back-up te maken van secundaire streams van alle camera's.",
+    "RESET BACKUP BUTTON TEXT": "Reset back-upinstellingen",
     "RECORDING STOP WARNING TEXT": "Opname naar deze opslaglocatie zal stoppen. Echter, verouderde beelden blijven verwijderd worden.",
     "STORAGE DELETION ALERT TOOLTIP TEXT": "Opname naar deze opslaglocatie is gestopt. Echter, verouderde beelden worden nog steeds verwijderd.",
     "STORAGE PATH ALREADY ADDED TEXT": "Het opslagpad is al aan deze server toegevoegd",
@@ -493,5 +493,5 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Het is niet aanbevolen om één opnamelocatie te gebruiken voor verschillende servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Deze opslag toch toevoegen?",
     "BACK TEXT": "Terug",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Opslag / ongeldige / HD Witness Media verwijderd"
 }

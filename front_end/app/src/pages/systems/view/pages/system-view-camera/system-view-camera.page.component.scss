@@ -11,7 +11,7 @@ $border-color: $light6;
 
 :host {
   width: 100vw;
-  height: calc(100vh - 48px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -49,9 +49,9 @@ $border-color: $light6;
 
   &.controls-shown {
     > .controls {
-      position: relative;
       bottom: 0;
     }
+
     > player,
     > .offline-message {
       height: calc(100vh - 48px - 100px);
@@ -60,7 +60,7 @@ $border-color: $light6;
     &.is-full-screen {
       > player,
       > .offline-message {
-        height: calc(100vh - 100px);
+        height: calc(100% - 100px);
       }
     }
   }
@@ -255,11 +255,11 @@ $border-color: $light6;
     flex-grow: 1;
     flex-shrink: 0;
     background-color: $player-background;
-    height: calc(100vh - 48px);
+    height: calc(100% - 48px);
     // transition: all .2s ease-in-out;
   }
   > .offline-message {
-    height: calc(100vh - 48px);
+    height: calc(100% - 48px);
     flex-grow: 1;
     flex-shrink: 0;
     display: flex;
@@ -313,31 +313,59 @@ $border-color: $light6;
     z-index: 100;
     background: $additional_light2;
 
-    > .controls-toggling-ear {
-      position: absolute;
-      z-index: 1000;
-      top: -16px;
-      left: calc(50% - 40px/2);
-      height: 16px;
-      width: 40px;
-      cursor: pointer;
-      background : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
-      background-size: 16px 16px;
-      box-shadow: 0px -2px 0px 0px rgba(0,0,0,0.1);
+    > .controls-toggling-ear--wrapper {
+        position : absolute;
+        top      : -16px;
+        left     : calc(50% - 70px/2);
+        width    : 16px;
+        height   : 40px;
 
-      opacity: 0.8;
-      // transition: opacity .2s ease-in-out;
-      &:hover {
-        opacity: 1.0;
-      }
+        @include bootstrap.media-breakpoint-down(md) {
+            content    : "";
+            position   : absolute;
+            top        : -50px;
+            width      : 70px;
+            height     : 50px;
+            background : transparent;
+        }
 
-      transform: rotate(180deg);
-      border-radius: 0 0 2px 2px;
+        &.shown {
+            @include bootstrap.media-breakpoint-down(sm) {
+                right : 0;
+            }
 
-      &.shown {
-        transform: rotate(0deg);
-        border-radius: 2px 2px 0 0;
-      }
+            .sidebar-toggling-ear {
+                transform     : rotate(0deg);
+                border-radius : 0 2px 2px 0;
+
+                @include bootstrap.media-breakpoint-down(sm) {
+                    float : right;
+                }
+            }
+        }
+
+        .controls-toggling-ear {
+            width           : 40px;
+            height          : 16px;
+            background      : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
+            background-size : 16px 16px;
+            box-shadow      : 0 2px 0 0 rgba(0, 0, 0, 0.1);
+            cursor          : pointer;
+            opacity         : 0.8;
+
+            &:hover {
+                opacity : 1.0;
+            }
+
+            @include bootstrap.media-breakpoint-down(md) {
+                position : absolute;
+                bottom   : 0;
+                left     : 14px;
+            }
+
+            transform           : rotate(180deg);
+            border-radius       : 2px 0 0 2px;
+        }
     }
 
     > playback-controls {

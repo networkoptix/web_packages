@@ -6,7 +6,6 @@ from api.helpers.exceptions import APIException, api_success
 
 from cms.models import PackagesCache
 from cms.permissions import IsSuperuser
-from cms.views.asset import response_attachment
 
 
 @api_view(["GET"])
@@ -19,6 +18,7 @@ def check_status(request, task_id):
 @api_view(["GET"])
 @permission_classes((IsSuperuser,))
 def download_result(request, task_id):
+    from cms.views.asset import response_attachment
     DOWNLOAD_CACHE = PackagesCache()
     result = DOWNLOAD_CACHE.get(task_id)
     if not result:

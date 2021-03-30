@@ -2,13 +2,22 @@
 
 :host {
     .media-server-list {
+        *::-webkit-scrollbar-track {
+            -webkit-box-shadow    : initial;
+            -webkit-border-radius : initial;
+            border-radius         : initial;
+
+            background-color      : $additional_light2;
+        }
 
         .server-list {
+            position       : absolute;
             display        : flex;
             flex-direction : column;
-            padding: 0 8px;
-            height : calc(100vh - 92px);
-            overflow: auto;
+            padding        : 0 8px;
+            height         : calc(100% - 44px); // minus search box
+            width          : 100%;
+            overflow       : auto;
 
             .server {
                 width: 100%;

@@ -9,7 +9,7 @@
     top: 48px;
     bottom: 0;
     right: 0;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100% - 100px);
 
     display: flex;
     flex-direction: column;
@@ -71,8 +71,8 @@
         width: 320px;
         left: -320px;
         @include bootstrap.media-breakpoint-down(sm) {
-            width: 100vw;
-            left: -100vw;
+            width: 100%;
+            left: -100%;
         }
 
         top: 0;
