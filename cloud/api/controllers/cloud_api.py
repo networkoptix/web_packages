@@ -1,6 +1,5 @@
 from hashlib import md5, sha256
 import base64
-import os
 import random
 import string
 import logging
@@ -57,13 +56,14 @@ def auto_refresh_token(func):
             })
         res = None
         try:
-            res = func(request, **kwargs)
+            res = func(request, *args, **kwargs)
             res.raise_for_status()
             return res
         except requests.exceptions.HTTPError as e:
             response_data = hasattr(res, "json") and res.json()
             if not refresh_token:
-                if response_data["resultCode"] == ErrorCodes.not_authorized.value:
+                if response_data["resultCode"] in [ErrorCodes.not_authorized.value,
+                                                   ErrorCodes.account_not_activated.value]:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
@@ -92,8 +92,8 @@ class TempLogin:
 
     def __exit__(self):
         """Deletes the tokens"""
-        Auth.delete_token(self.access_token)
         Auth.delete_token(self.refresh_token)
+        Auth.delete_token(self.access_token)
 
     @classmethod
     def tokens(cls):
@@ -143,7 +143,7 @@ def post_wrapper(url, params=None, auth=None, data=None, json=None, headers=None
     if params:
         default_params.update(params)
 
-    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}')
+    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}\nData: {data}')
 
     return requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers)
 
@@ -573,7 +573,8 @@ class Auth(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def get_code(email="", password="", client_id=CLIENT_ID, grant_type=GRANT_TYPE.password, ip=None, refresh_token=None):
+    def get_code(email="", password="", client_id=CLIENT_ID, grant_type=GRANT_TYPE.password,
+                 ip=None, redirect_uri="", refresh_token=None):
         headers = {
             "X-Forwarded-For": ip
         }
@@ -582,6 +583,9 @@ class Auth(object):
             "grant_type": grant_type,
             "response_type": Auth.RESPONSE_TYPE.code
         }
+
+        if redirect_uri:
+            params["redirect_uri"] = redirect_uri
 
         if grant_type == Auth.GRANT_TYPE.password:
             params.update({
@@ -640,13 +644,14 @@ class Auth(object):
     @staticmethod
     @validate_response
     def validate_token(access_token):
-        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}")
+        headers = {"Authorization": f"Bearer {access_token}"}
+        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def delete_token(request, token):
-        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}")
+    def delete_token(request, token, headers=None):
+        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", headers=headers)
 
     @staticmethod
     @validate_response

@@ -8,7 +8,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api.account_backend import get_ip
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import require_params, api_success, APIRequestException
+from api.helpers.exceptions import (
+    require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes
+)
 
 access_token__body = openapi.Schema(description="An access token.", type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
@@ -25,7 +27,7 @@ token__body = openapi.Schema(description="An access or refresh token.", type=ope
 
 def get_param(request, name):
     """Depending on request method it extracts value from query_params or body."""
-    if request.METHOD == "GET":
+    if request.method == "GET":
         return request.query_params.get(name)
     return request.data.get(name)
 
@@ -55,20 +57,24 @@ def set_params_for_redirect(code, state):
 @api_view(["GET"])
 @permission_classes((AllowAny, ))
 def authenticate(request):
-    require_params(request, ("client_id", "email", "password", "redirect_url", "response_type"))
+    require_params(request, ("client_id", "email", "password", "redirect_uri", "response_type"))
     if request.query_params["response_type"] != Auth.RESPONSE_TYPE.code:
         raise APIRequestException("Invalid value for response_type. It must be code.")
 
     ip = get_ip(request)
-    redirect_url = request.query_params["redirect_url"]
+    redirect_uri = request.query_params["redirect_uri"]
     state = request.query_params.get("state")
 
-    code = Auth.get_code(email=request.query_params["email"],
-                         password=request.query_params["password"],
-                         client_id=request.query_params["client_id"],
-                         ip=ip)
+    try:
+        code = Auth.get_code(email=request.query_params["email"],
+                             password=request.query_params["password"],
+                             client_id=request.query_params["client_id"],
+                             ip=ip,
+                             redirect_uri=redirect_uri)
+    except APILogicException:
+        raise APINotAuthorisedException("Invalid credentials", error_code=ErrorCodes.not_authorized)
 
-    return api_success({"link": f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}"})
+    return api_success({"link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}"})
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,
@@ -85,18 +91,19 @@ def authenticate(request):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated, ))
 def authenticate_with_session(request):
-    require_params(request, ("redirect_url", "response_type"))
+    require_params(request, ("redirect_uri", "response_type"))
     if request.query_params["response_type"] != Auth.RESPONSE_TYPE.code:
         raise APIRequestException("Invalid value for response_type. It must be code.")
 
     ip = get_ip(request)
-    redirect_url = request.query_params["redirect_url"]
+    redirect_uri = request.query_params["redirect_uri"]
     state = request.query_params.get("state")
     code = Auth.get_code(grant_type=Auth.GRANT_TYPE.refresh_token,
                          refresh_token=request.session.get("refresh_token"),
-                         ip=ip)
+                         ip=ip,
+                         redirect_uri=redirect_uri)
 
-    return redirect(f"{redirect_url}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
+    return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -140,23 +147,26 @@ def token(request):
     ip = get_ip(request)
 
     if grant_type == Auth.GRANT_TYPE.password:
-        require_params(request, ("email", "password", "client_id"))
+        require_params(request, ("email", "password", "client_id", "redirect_uri"))
         email = get_param(request, "email")
         password = get_param(request, "password")
         client_id = get_param(request, "client_id")
+        redirect_uri = get_param(request, "redirect_uri")
+        state = get_param(request, 'state')
 
-        if response_type == Auth.RESPONSE_TYPE.token:
-            return Auth.get_token(email, password, client_id=client_id, ip=ip)
+        if response_type == Auth.RESPONSE_TYPE.code:
+            code = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri)
+            return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
     elif response_type == Auth.RESPONSE_TYPE.token:
         if grant_type == Auth.GRANT_TYPE.authorization_code:
             require_params(request, ("code",))
-            return Auth.get_access_token(get_param(request, "code"), ip=ip)
+            return api_success(Auth.get_access_token(get_param(request, "code"), ip=ip))
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             require_params(request, "refresh_token")
-            return Auth.get_refresh_token(get_param(request, ["refresh_token"]), ip=ip)
+            return api_success(Auth.get_refresh_token(get_param(request, ["refresh_token"]), ip=ip))
 
-    raise APIRequestException("Invalid grant_type and response_type combination")
+    raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -188,4 +198,4 @@ def revoke_token(request):
 @permission_classes((AllowAny, ))
 def validate_token(request):
     require_params(request, ("token", ))
-    return api_success(Auth.validate_token(request.data["token"]))
+    return api_success(Auth.validate_token(request.query_params["token"]))
