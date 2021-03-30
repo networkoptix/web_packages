@@ -7,7 +7,9 @@ from django.utils.html import format_html
 from jsonfield import JSONField
 
 from api.controllers.cloud_api import Account as cloud_api_account
-from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
+from api.helpers.exceptions import (
+    APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes
+)
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions
 from cloud.settings import CUSTOMIZATION
 
@@ -94,12 +96,12 @@ class AccountManager(models.Manager):
         return True
 
     @staticmethod
-    def check_if_activated(request, email, password, ip):
+    def check_if_activated(request, email, password):
         activated = False
         try:
-            cloud_api_account.get(request, email, password, ip)  # try to authenticate with clouddb to check if activated
+            cloud_api_account.get(request, email, password)  # try to authenticate with clouddb to check if activated
             activated = True
-        except APILogicException as exception:
+        except (APILogicException, APINotAuthorisedException) as exception:
             if exception.error_code != ErrorCodes.account_not_activated:
                 raise exception
         return activated
@@ -290,6 +292,7 @@ def group_saved(sender, created, signal, instance, **kwargs):
 
 post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
 post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
+
 
 class AccountCustomProperty(models.Model):
     class Meta:

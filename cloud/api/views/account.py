@@ -62,10 +62,28 @@ def extract_tokens(token):
 
 
 def kill_tokens(request):
-    for key in ['access_token', 'refresh_token']:
+    for key in ['refresh_token', 'access_token']:
         token = request.session.get(key)
         if token:
-            Auth.delete_token(token)
+            Auth.delete_token(request, token)
+
+
+def login_helper(request, token, user):
+    django.contrib.auth.login(request, user)
+    request.session['access_token'] = token['access_token']
+    request.session['refresh_token'] = token['refresh_token']
+
+    # If the user does not have an activated_date set it to the current time
+    if not user.activated_date:
+        user.activated_date = timezone.now()
+        user.save()
+
+    request.session['time'] = time.time()
+    if 'timezone' in request.data:
+        request.session['timezone'] = request.data['timezone']
+
+    serializer = AccountSerializer(user, many=False)
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -103,7 +121,7 @@ def register(request):
         models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
 
     logger.debug('/api/account/register checking if activated')
-    activated = models.AccountManager().check_if_activated(request, data['email'], data['password'], data.pop('IP', ''))
+    activated = models.AccountManager().check_if_activated(request, data['email'], data['password'])
     logger.debug('/api/account/register completed')
     return api_success({'activated': activated})
 
@@ -147,21 +165,29 @@ def login(request):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
-    django.contrib.auth.login(request, user)
-    request.session['access_token'] = token['access_token']
-    request.session['refresh_token'] = token['refresh_token']
+    if 'remember' not in request.data or not request.data['remember']:
+        request.session.set_expiry(0)
+    else:
+        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
 
-    # If the user does not have an activated_date set it to the current time
-    if not user.activated_date:
-        user.activated_date = timezone.now()
-        user.save()
+    return login_helper(request, token, user)
 
-    request.session['time'] = time.time()
-    if 'timezone' in request.data:
-        request.session['timezone'] = request.data['timezone']
 
-    serializer = AccountSerializer(user, many=False)
-    return api_success(serializer.data)
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def login_with_code(request):
+    require_params(request, ["code"])
+    ip = get_ip(request)
+    token = Auth.get_access_token(request.data.get("code"), ip)
+    validate_token = Auth.validate_token(token['access_token'])
+
+    try:
+        user = models.Account.objects.get(email=validate_token['username'])
+    except models.Account.DoesNotExist:
+        raise APINotFoundException("User not in cloud")
+
+    return login_helper(request, token, user)
+
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
