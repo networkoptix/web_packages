@@ -76,7 +76,7 @@ describe('Bootstrap Provider', () => {
         expect(CONFIG.cloudHost).toBe(cloudHost);
         expect(CONFIG.cloudSystemId).toBe(resultSettings.cloudSystemId);
         expect(CONFIG.localSystemId).toBe(resultSettings.localSystemId);
-        expect(CONFIG.localSystemName).toBe(resultSettings.systemName);
+        expect(CONFIG.system.name).toBe(resultSettings.name);
         expect(CONFIG.localServerId).toBe(resultSettings.id);
     });
 
