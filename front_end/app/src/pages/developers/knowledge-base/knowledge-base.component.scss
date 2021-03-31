@@ -201,4 +201,45 @@ $custom-xl: 1440px;
         max-width: 100%;
         height: auto;
     }
+
+    .code-block-common {
+        border-radius: 2px;
+        font-size: rem(13px);
+        font-weight: normal;
+        letter-spacing: normal;
+        font-family: robotomonoregular, monospace;
+        border: solid 1px $dark11;
+        background-color: $dark13;
+        color: $additional_light1;
+    }
+
+    code {
+        @extend .code-block-common;
+        padding: 2px 4px;
+        display: inline-block;
+        line-height: 1;
+    }
+    pre {
+        @extend .code-block-common;
+        margin: 16px 0 24px 0;
+        padding: 12px 8px;
+        counter-reset: line;
+        & > * {
+            position: relative;
+            padding-left: 31px;
+            display: block;
+            &:before {
+                width: 19px;
+                text-align: right;
+                counter-increment: line;
+                content: counter(line);
+                font-size: rem(13px);
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: $light12;
+            }
+        }
+    }
 }
