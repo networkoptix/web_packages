@@ -148,6 +148,7 @@ export interface AccessRoles {
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     allMediaPermissionFlag: string;
+    viewArchivesPermissionFlag: string,
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];

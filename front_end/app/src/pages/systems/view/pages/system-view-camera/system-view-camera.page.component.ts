@@ -83,6 +83,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public qualitySelected: PlaybackQuality = 'auto'
 
     public controlsShown: boolean = false
+    public canViewArchives = false;
 
     constructor (
       protected self: ElementRef,
@@ -217,7 +218,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     this.getRecordsInProgress = undefined;
                 });
             }
-        });
+        }).finally(_ => this.system.userManager.getUsersDataFromTheSystem().then(_ => {
+          this.canViewArchives = this.system.userManager.permissions.viewArchives;
+        }));
     }
 
     public ngAfterViewInit () {

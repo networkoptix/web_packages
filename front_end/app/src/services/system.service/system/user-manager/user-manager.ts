@@ -73,16 +73,18 @@ export class UserManager {
     checkPermissions() {
         const isMine = this.isMine || this.currentUser?.isLocalOwner;
         const permissions: SystemPermissions = {
-            editAdmins  : isMine,
-            editUsers   : isMine,
-            isAdmin     : isMine,
-            editCameras : isMine
+            editAdmins   : isMine,
+            editUsers    : isMine,
+            isAdmin      : isMine,
+            editCameras  : isMine,
+            viewArchives : isMine
         };
         if (!isMine && this.currentUser) {
             const userRole = this.currentUser.role;
             permissions.editUsers = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
             permissions.isAdmin = this.isAdmin(this.currentUser);
             permissions.editCameras = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.editCameraPermissionFlag) >= 0;
+            permissions.viewArchives = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.viewArchivesPermissionFlag) >= 0;
         } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole.toLowerCase()) > -1) {
             permissions.editUsers = true;
             permissions.isAdmin = true;
