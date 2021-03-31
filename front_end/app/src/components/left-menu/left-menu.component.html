@@ -1,15 +1,14 @@
 <ng-template #recursiveNodes let-nodes="nodes" let-level="level">
     <div *ngFor="let node of nodes">
         <div *ngIf="level === 1 ||
-            openNodes.concat(activeRouteNodes)
-                .includes(
+            openNodes.includes(
                     node.parentNode.display_name || node.parentNode.name
                 )"
             [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
                 (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state)"
                 (mouseleave)="mouseLeave$.next(node.asset_id)"
-                [ngClass]="{'arrow-padding': node.nodes.length, 'activated-highlight': firstUrl === node.url || activeNodeUrl === node.url && (!!document.location.search === !!node.state), 'has-state': node.indented}"
+                [ngClass]="{'arrow-padding': node.nodes.length, 'activated-highlight': firstUrl === node.url || highlightedTopNode === (node.display_name || node.name) || activeNodeUrl === node.url && (!!document.location.search === !!node.state), 'has-state': node.indented}"
                 (click)="handleClick($event)"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
                 [queryParams]="{'state': node.state}"
@@ -31,12 +30,12 @@
             <ng-template #noLink>
                 <div class="menu-link"
                     (click)="toggleOpen(node)"
-                    [ngClass]="node.nodes.length && 'arrow-padding'"
+                    [ngClass]="{'arrow-padding': node.nodes.length, 'activated-highlight': highlightedTopNode === (node.display_name || node.name)}"
                 >{{node.display_name || node.name}}</div>
             </ng-template>
             <div (click)="toggleOpen(node)" [ngClass]="{
                 'left-menu-arrow': node.nodes.length,
-                'down': openNodes.concat(activeRouteNodes).includes(node.displayName || node.name),
+                'down': openNodes.includes(node.displayName || node.name),
                 'd-none': !node.nodes.length}">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_expand.svg'"
