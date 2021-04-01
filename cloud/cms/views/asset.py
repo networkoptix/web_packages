@@ -266,8 +266,10 @@ def review(request):
                     blocked_marker = next_review.id
                 elif blocked_marker == next_review.id:
                     break
+                continue
             elif next_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
                 yield next_review
+            blocked_marker = None
 
     review_id = request.POST.get('review_id')
     asset_review = AssetCustomizationReview.objects.filter(id=review_id).first()
