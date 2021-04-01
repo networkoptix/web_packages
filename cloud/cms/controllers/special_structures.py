@@ -11,7 +11,6 @@ class SpecialStructures:
     """
     def __init__(self):
         self.function_dict = {}
-        self.add_function("%SUPPORT_LINK%", self.calc_support_link, 'Support Link', 'Link for support page')
         self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization, 'Customization Name', 'Name of the current customization')
         self.add_function("%LANGUAGES%", self.calc_lang_codes, hidden=True)
         self.add_function("%CLOUD_LINK%", self.calc_cloud_link, 'Cloud Link', 'Link to the cloud portal with protocol', shortcut=True)
@@ -76,10 +75,6 @@ class SpecialStructures:
         return conf["cloud_portal"]["url"].replace("http:", "https:")
 
     @staticmethod
-    def calc_support_link(asset: Asset):
-        return SpecialStructures.get_global_value(asset, "%SUPPORT_LINK%")
-
-    @staticmethod
     def calc_license_type(asset: Asset):
         return LicenseType.get_license_types()
 
@@ -133,8 +128,8 @@ class SpecialStructures:
     def calc_vms_lin_path(asset: Asset):
         lin_path = SpecialStructures.get_vms_default_ds_value(asset, '%VMS_LIN_PATH%')
         if lin_path:
-            return f'/opt/{lin_path}/mediaserver'
-        return '/opt/{vmsName}/mediaserver'
+            return f'/opt/{lin_path}'
+        return '/opt/{vmsName}'
 
     @staticmethod
     def calc_vms_company_id(asset: Asset):
