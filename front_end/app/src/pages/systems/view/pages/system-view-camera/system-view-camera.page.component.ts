@@ -16,6 +16,7 @@ import WebClientUxService, { WebclientUxState } from '../../services/webclient-u
 import { NxConfigService, IConfig } from '../../../../../services/nx-config'
 import { PlaybackQuality, CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
 import sidebarLayout from '../sidebarLayout.cfg'
+import { NxUtilsService } from '@services/utils.service'
 
 
 function requestFullscreen (el) {
@@ -190,7 +191,30 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
                 this.getRecordsInProgress = undefined;
             } else {
-                this.system.getCameraRecords(this.id, 0, now, 1).then(ar => {
+                this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
+                    const [{ vmsTimeOffset, serverId }] = await this.system.getServerTimes();
+                    const offsetsByServer = this.system.mediaservers.reduce((
+                        reduced, { id, addParams, timeInfo = {} }: any
+                    ) => ({
+                        ...reduced,
+                        [id]: serverId === id ? 0 : parseInt(
+                          timeInfo?.timeZoneOffset ??
+                          (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
+                          vmsTimeOffset
+                        ) - vmsTimeOffset
+                    }), {});
+
+                    const timezoneAdjusted = [];
+                    ar.reply.forEach(({ guid, periods }) => {
+                        const cleanId = NxUtilsService.cleanId(guid);
+                        periods.forEach(period => {
+                            timezoneAdjusted.push({
+                                ...period,
+                                startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
+                            });
+                        });
+                    });
+                    ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
                     console.log('got camera archive range', this.id, ar);
                     if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                         console.log('empty archive');

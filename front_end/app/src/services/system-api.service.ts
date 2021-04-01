@@ -909,7 +909,7 @@ export class NxSystemAPI {
             params.limit = limit;
         }
         // RecordedTimePeriods
-        return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
+        return this.get(`/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`, params);
     }
 
     /* End of Working with archive */
