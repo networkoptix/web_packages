@@ -541,7 +541,7 @@ class Asset(models.Model):
     def urlify(self, name=None):
         if name is None:
             name = self.name
-        name = re.sub(r'[^a-zA-Z0-9 ]+', '', name)
+        name = re.sub(r'[^a-zA-Z0-9- ]+', '', name)
         name = name.lower().replace(' ', '-')
         return f'{self.id}-{name}'
 
@@ -2084,10 +2084,10 @@ class MenuNode(models.Model):
                         node_structure['name'] = title
 
                     if asset_url:
-                        url = asset_url
+                        url = f'{node.asset.id}-{asset_url}'
                     elif asset_title:
-                        url = asset_title
-                    node_structure['urlified'] = node.asset.urlify(url) if url else None
+                        url = node.asset.urlify(asset_title)
+                    node_structure['urlified'] = url or None
 
                 if 'name' not in node_structure:
                     node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict) or 'Untitled'
