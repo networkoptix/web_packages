@@ -1,6 +1,6 @@
 <div class="dropdown"
      [ngClass]="{'header-nav-show': show, show: show}"
-     (click)="dropdownNode && headerService.handleNav(dropdownNode)"
+     (click)="dropdownNode && headerService.handleNav(dropdownNode, $event)"
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
