@@ -374,9 +374,9 @@ def make_preview(request):
     return HttpResponse(redirect_url)
 
 
-def response_attachment(data, filename, content_type):
+def response_attachment(data, filename, content_type, attachment=False):
     response = HttpResponse(data, content_type=content_type)
-    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" else ""}filename={filename}'
+    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" or attachment else ""}filename={filename}'
     response.set_cookie('filename', filename, max_age=10)
     return response
 

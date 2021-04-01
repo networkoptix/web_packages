@@ -481,8 +481,9 @@ class AssetAdmin(CMSAdmin):
         return super().response_change(request, obj)
 
     def response_add(self, request, obj, post_url_continue=None):
-        if '_save' in request.POST and (not request.user.is_superuser or
-                                        obj.asset_type.type == AssetType.ASSET_TYPES.documentation):
+        if '_save' in request.POST and \
+                (not request.user.is_superuser or obj.asset_type.type == AssetType.ASSET_TYPES.documentation) and \
+                not request.GET.get('_popup', False):
             return redirect(reverse('admin:pages', args=[obj.id]))
         return super().response_add(request, obj, post_url_continue)
 
