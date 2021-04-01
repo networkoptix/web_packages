@@ -17,7 +17,7 @@
             &:active {
                 background: theme_variables.$dark13 !important;
             }
-        
+
         }
     }
     &.show {
@@ -34,13 +34,21 @@
                 background: theme_variables.$dark12 !important;
                 border: 1px solid theme_variables.$dark11 !important;
             }
-            
+
         }
     }
 
     #nav-sub-menu-dropdown {
         & span {
             background: theme_variables.$additional_light1 !important;
-        } 
+        }
+    }
+
+    svg-icon {
+        bottom : 10px !important;
+
+        #Path-2-Copy {
+            stroke : theme_variables.$additional_light1 !important;
+        }
     }
 }

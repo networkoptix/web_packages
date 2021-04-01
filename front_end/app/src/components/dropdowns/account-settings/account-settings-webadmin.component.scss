@@ -4,35 +4,31 @@
 .st0 {
     fill-rule: evenodd;
     clip-rule: evenodd;
-    fill: theme_variables.$additional_light1 !important;
+    fill: theme_variables.$light1 !important;
 }
 
 #accountSettingsSelect {
-    color: theme_variables.$additional_light1 !important;
+    color: theme_variables.$light1 !important;
 }
 
 .popup {
     &.arrow {
-        // border-bottom-color: green !important;
+        border-bottom-color : theme_variables.$dark11 !important;
 
         &.small-override {
             left: 12px !important;
-        }
-
-        &::after {
-            border-bottom-color: theme_variables.$dark11 !important;
         }
     }
 }
 
 .dropdown {
     & button {
-        color: theme_variables.$additional_light1 !important;
+        color: theme_variables.$light1 !important;
     }
     &:not(.show) {
         & > #accountSettingsSelect {
             background: theme_variables.$dark14 !important;
-            color: theme_variables.$additional_light1 !important;
+            color: theme_variables.$light1 !important;
             border: 1px solid transparent !important;
             &:hover {
                 background: theme_variables.$dark15 !important;
@@ -40,15 +36,15 @@
             &:active {
                 background: theme_variables.$dark13 !important;
             }
-        
+
         }
     }
     &.show {
         & > #accountSettingsSelect {
-            color: theme_variables.$additional_light1 !important;
+            color: theme_variables.$light1 !important;
             border: 1px solid theme_variables.$dark11 !important;
             background: theme_variables.$dark12 !important;
-            border: 1px solid theme_variables.$dark11 !important;
+
             &:hover {
                 background: theme_variables.$dark13 !important;
                 border: 1px solid theme_variables.$dark12 !important;
@@ -57,7 +53,7 @@
                 background: theme_variables.$dark12 !important;
                 border: 1px solid theme_variables.$dark11 !important;
             }
-            
+
         }
     }
 }

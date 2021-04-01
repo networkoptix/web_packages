@@ -133,12 +133,6 @@ header {
         }
     }
 
-    .dropdown-menu > ul:last-of-type {
-        li:last-of-type {
-            margin-bottom : 4px;
-        }
-    }
-
     .dropdown-menu {
         margin-top       : 3px;
         background-color : $additional_light1;
@@ -162,14 +156,6 @@ header {
             padding         : 0;
             margin          : 0;
             list-style-type : none;
-        }
-
-        &--footer {
-            li:last-of-type {
-                margin-bottom : 4px;
-            }
-
-            margin-bottom : 4px !important;
         }
 
         .multi-column-dropdown {
