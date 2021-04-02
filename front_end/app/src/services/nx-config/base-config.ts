@@ -467,7 +467,7 @@ export interface SystemSettings {
     admin: Admin;
     cloudStorage: Admin;
     users: Admin;
-    servers: Admin;
+    servers: Server;
     general: Admin;
     licenses: Admin;
     buttons: Buttons;
@@ -478,6 +478,13 @@ export interface Admin {
     id: string;
     icon?: string;
     path: string;
+}
+
+export interface Server extends Admin {
+    statusIcons: {
+        offline: string;
+        online: string;
+    }
 }
 
 export interface Cameras extends Admin {
