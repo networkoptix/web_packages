@@ -105,7 +105,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         ).toPromise();
     }
 
-    logout(doNotRedirect = false) {
+    logout(doNotRedirect = false, skipReload = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -117,12 +117,12 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect);
+                    this.logoutHelper(doNotRedirect, skipReload);
                 }
             });
     }
 
-    logoutHelper(doNotRedirect = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false) {
         this.mediaServerApi
             .logout()
             .finally(() => {
@@ -133,13 +133,13 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
-                            setTimeout(() => this.window.location.reload());
+                            setTimeout(() => skipReload && this.window.location.reload());
                         });
+                } else if (!skipReload) {
+                    setTimeout(() => {
+                        this.window.location.reload();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.window.location.reload();
-                });
             });
     }
 

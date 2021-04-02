@@ -168,7 +168,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean) {
+    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -182,7 +182,8 @@ export class NxDialogsService {
             closable      : true,
             location      : this.location,
             keepPage      : (keepPage !== undefined) ? keepPage : true,
-            redirectClose : redirectClose || false
+            redirectClose : redirectClose || false,
+            redirectHome
         };
 
         if (this.CONFIG.isLocal) {
