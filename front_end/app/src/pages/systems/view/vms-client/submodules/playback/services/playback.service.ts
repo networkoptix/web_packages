@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, OnDestroy } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 
 import assertNever from '../../../utils/assertNever'
@@ -25,12 +25,26 @@ import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.typ
 @Injectable({
   providedIn: 'root',
  })
-export class PlaybackService {
+export class PlaybackService implements OnDestroy {
 
   constructor (
     protected vms: VideoManagementSystemService,
     protected timeline: TimelineService,
   ) {
+    this._animationFrameRequestHandler =
+      requestAnimationFrame(this.onAnimationFrame.bind(this))
+  }
+
+  protected _animationFrameRequestHandler: number
+
+  public onAnimationFrame (): void {
+    this.handleAnimationFrame()
+    this._animationFrameRequestHandler =
+      requestAnimationFrame(this.onAnimationFrame.bind(this))
+  }
+
+  public ngOnDestroy (): void {
+    cancelAnimationFrame(this._animationFrameRequestHandler)
   }
 
   protected _subject = new BehaviorSubject<PlaybackState>(createInitialStoppedState())
@@ -212,6 +226,51 @@ export class PlaybackService {
       default:
         assertNever(this._state)
     }
+  }
+
+  protected _previousFrameTime: ms
+
+  public handleAnimationFrame () {
+    const thisFrameTime = Date.now()
+    if (this._previousFrameTime === undefined) {
+      this._previousFrameTime = thisFrameTime
+      return
+    }
+
+    switch (this._state.mode) {
+      case PLAYBACK_MODE.STOPPED:
+        break
+
+      case PLAYBACK_MODE.LIVE:
+        this.handleTimeUpdate(-1)
+        this._state.currentTime = Date.now()
+        this._emit()
+        break
+
+      case PLAYBACK_MODE.ARCHIVE:
+        const diff = thisFrameTime - this._previousFrameTime
+        if (this._state.started && !this._state.paused) {
+          // console.log('started', diff, this._state.currentTime)
+          this._state.currentTime += diff
+
+          if (!this.isBeyondVisibleRange) {
+            const marginMs = this.timeline.canvasWidthToDuration(100)
+            // make time marker appear fixed while the timeline scrolls, not the contrary
+            if (this._state.currentTime > this.timeline.visibleRange.start + marginMs
+              && this._state.currentTime < this.timeline.visibleRange.end
+            ) {
+              this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff)
+            }
+          }
+          this._jumpOverTheGapIfNeeded()
+
+          this._emit()
+        } else {
+          // console.log('not started')
+        }
+    }
+
+    this._previousFrameTime = thisFrameTime
   }
 
   public get isBeyondVisibleRange (): boolean {
