@@ -1,5 +1,5 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+<header #createHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <div class="for-small">
         <button *ngIf="smallView"
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('email')">
@@ -13,11 +13,12 @@
     <ng-container *ngIf="existingEmail">
         <div class="authorize-subheader">
             <span class="sub-header" translate>For</span>
-            <span class="for-account">{{existingEmail}}</span>
+            <span class="for-account" (click)="setCurrentState.emit('email')">{{existingEmail}}</span>
         </div>
     </ng-container>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    [ngStyle]="{ 'height': 'calc(100% - ' + createHeader.offsetHeight + 'px)' }">
     <form #createAccountForm="ngForm" class="form" [ngClass]="{'hide-errors': hideErrors}">
         <div class="create-row" *ngIf="!existingEmail">
             <div class="email d-flex flex-column" [ngClass]="{ 'hasError': createAccountEmail.invalid && (createAccountEmail.dirty || createAccountEmail.touched) }">
@@ -108,9 +109,9 @@
                 </nx-checkbox>
                 <label class="mb-0" for="termsAndConditions">
                     <span class="mr-1" translate>I agree to the</span>
-                    <a href="" target="_blank" translate>Terms and Conditions</a>
+                    <a [href]="footerItems[1].url" target="_blank" translate>Terms and Conditions</a>
                     <span class="mx-1" translate>and</span>
-                    <a href="" target="_blank" translate>Privacy policy</a>
+                    <a [href]="footerItems[2].url" target="_blank" translate>Privacy policy</a>
                 </label>
             </div>
             <p *ngIf="termsConditions.touched && !termsAndConditions" class="error-label mt-2 mb-0" translate>Required</p>

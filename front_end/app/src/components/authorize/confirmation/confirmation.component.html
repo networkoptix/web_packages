@@ -5,11 +5,11 @@
             [src]="CONFIG.icons.dirSectionPlaceholder + 'success' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'" 
             [svgStyle]="{'width.px': 280, 'height.px': 120}"
             [applyClass]="true"></svg-icon>
-        <h3 class="authorize-header mt-3">{{LANG.authorize.connectedText()}}</h3>
+        <h3 class="authorize-header mt-3">{{ clientType === 'setupWizard' ? LANG.authorize.setupConnectedText() : LANG.authorize.connectedText()}}</h3>
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="d-flex justify-content-end w-100">
-            <button class="btn btn-primary" type="submit" translate>OK</button>
+            <button class="btn btn-primary" type="submit" (click)="confirm()" translate>OK</button>
         </div>
     </footer>
 </main>

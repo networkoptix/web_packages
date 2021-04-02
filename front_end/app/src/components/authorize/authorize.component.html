@@ -27,7 +27,8 @@
             *ngSwitchCase="AuthorizeState.create"
             [viewType]="viewType"
             [smallView]="windowSmallEnough"
-            [existingEmail]="existingEmail"
+            [loginEmail]="loginEmail"
+            [footerItems]="footerItems"
             [(accountInfo)]="accountInfo"
             [createAccountProcess]="createProcess"
             [errorCode]="createErrorCode"
@@ -47,6 +48,8 @@
         <nx-authorize-confirmation-component 
             *ngSwitchCase="AuthorizeState.confirm"
             [viewType]="viewType"
+            [clientType]="clientType"
+            [confirm]="redirect"
         ></nx-authorize-confirmation-component>
         <nx-authorize-reset-request-component
             *ngSwitchCase="AuthorizeState.request"
@@ -67,6 +70,7 @@
             [(password)]="resetPassword"
             [newPasswordProcess]="resetPasswordProcess"
             [loginProcess]="loginPostNewPasswordProcess"
+            (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-reset-password-component>
     </div>
     <div class="auth-overlay" *ngIf="errorDialog$.value">
