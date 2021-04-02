@@ -7,6 +7,7 @@ import { ms, int } from '../../../../utils/type-aliases'
 import Hls from 'hls.js'
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
+import { filter } from 'rxjs/operators';
 
 
 const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
@@ -31,6 +32,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _camera_rotation: int = 0
 
+  public livePaused = false
+
   constructor (
     public playback: PlaybackService,
     public vms: VideoManagementSystemService,
@@ -46,6 +49,14 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public ngOnInit (): void {
     // this.subscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
     this.onVmsSubjectChange(this.vms.state)
+    this.playback.livePaused$.pipe(filter(state => !!state)).subscribe(state => {
+      if (state === 'restartVideo') {
+        this.$video.play()
+        this.playback.livePaused = false
+      } else {
+        this._pauseVideo()
+      }
+    })
   }
 
   protected _animationFrameRequestHandler: number
@@ -365,18 +376,27 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public videoClickHandler (e: MouseEvent) {
     console.log('video click')
-    if (this.playback.canPause) {
+    const canPauseLive = (this.playback.canStop && !this.playback.canPlayLive)
+    if (this.playback.canPause || canPauseLive && !this.playback.livePaused) {
       console.log('can pause -> pause')
       this._pauseVideo()
+      if (!canPauseLive) {
+        this.playback.pause()
+      }
+      this.playback.livePaused = canPauseLive;
+    } else if (this.playback.canPlayLive || this.playback.livePaused) {
+      console.log('can play live -> play live')
+      if (this.playback.livePaused) {
+        this.playback.stop();
+      }
+      this.playback.playLive()
+      this.playback.livePaused = false;
     } else if (this.playback.canUnpause) {
       console.log('can unpause -> unpause')
       this.playback.unpause()
     } else if (this.playback.canStop) {
       console.log('can stop -> stop')
       this.playback.stop()
-    } else if (this.playback.canPlayLive) {
-      console.log('can play live -> play live')
-      this.playback.playLive()
     } else {
       console.log('can not respond on click in any meaningful way -> doing nothing')
     }
