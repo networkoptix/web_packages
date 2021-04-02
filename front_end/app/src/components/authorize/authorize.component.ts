@@ -37,7 +37,8 @@ interface AuthorizeParams {
     state?: string,
     code?: string,
     client_type?: ClientType,
-    view_type?: 'desktop' | 'mobile' | 'web'
+    view_type?: 'desktop' | 'mobile' | 'web',
+    message?: 'passwordReset' | 'activated'
 };
 
 export enum AuthorizeState {
@@ -60,6 +61,7 @@ export enum ClientType {
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb'
 };
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-authorize-component',
@@ -95,14 +97,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     shouldStayLoggedIn: boolean;
 
     // create account
-    existingEmail: string;
     createProcess: Process;
     accountInfo: {
         email: string;
         password: string;
         firstName: string;
         lastName: string;
-    }
+    };
 
     createErrorCode: [inputType: string, errorCode: string];
 
@@ -161,11 +162,17 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.viewType = this.initialData.view_type || 'web';
             this.currentState = AuthorizeState.email;
 
-            // for reset password
-            this.resetPasswordCode = this.route.snapshot?.params.code;
-            if (this.resetPasswordCode) {
+            // add something to handle fromEmail
+            const message = this.route.snapshot?.params.message;
+            if (message === 'passwordReset') {
+                this.resetPasswordCode = this.route.snapshot?.params.code;
                 this.resetPasswordEmail = atob(this.resetPasswordCode).split(':')[1];
                 this.currentState = AuthorizeState.reset;
+            } else if (message === 'activated') {
+                this.fromEmail$.next(true);
+                this.activated$.next(true);
+                // get email, too
+                this.currentState = AuthorizeState.activate;
             }
 
             this.windowLargeEnough = window.innerWidth > 560 && window.innerHeight > 720 && this.viewType === 'web';
@@ -175,7 +182,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
                 this.windowSmallEnough = innerWidth < 355;
             });
-            this.errorDialog$.next(true);
         });
     }
 
@@ -189,6 +195,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     initProcesses() {
         this.checkEmailProcess = this.processService.createProcess(
             async() => {
+                this.emailErrorCode = '';
                 const res = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
                 if (this.currentState === AuthorizeState.activate && res.active) {
                     return this.login();
@@ -218,7 +225,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             { ignoreError: true },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
-                window.location.href = res.link;
+                if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
+                    this.currentState = AuthorizeState.confirm;
+                } else {
+                    window.location.href = res.link;
+                }
             },
             err => {
                 console.error('err from loginProcess', err);
@@ -245,14 +256,16 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 } else {
                     // if we support code in the future, so that account can be activated upon registration
                     // then res.activated === true
+                    this.loginEmail = this.accountInfo.email;
                     this.currentState = AuthorizeState.activate;
                 }
             },
             err => {
                 if (err.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
+                } else {
+                    this.handleCloudConnectionError(err, this.createProcess);
                 }
-                this.handleCloudConnectionError(err, this.createProcess);
             }
         );
 
@@ -290,9 +303,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.loginPostNewPasswordProcess = this.processService.createProcess(() => {
-            this.loginPassword = this.resetPassword;
-            this.loginEmail = this.resetPasswordEmail; // || localStorage.email
-            // get email from local storage
+            this.loginEmail = this.resetPasswordEmail; // || localStorage.email?
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });
@@ -308,6 +319,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.response_type || 'code',
             this.initialData.state
         );
+    }
+
+    redirect = () => {
+        window.location.href = this.initialData.redirect_url;
     }
 
     stayingLoggedIn(stayLoggedIn: boolean) {

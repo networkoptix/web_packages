@@ -1,5 +1,5 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
+<header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <svg-icon nx-add-svg-src
         [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
         [svgStyle]="{'width.px': 280, 'height.px': 120}"
@@ -7,7 +7,8 @@
     <h3 class="authorize-header">{{ header }}</h3>
     <h4 *ngIf="subHeader" class="authorize-subheader">{{ subHeader }}</h4>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    [ngStyle]="{ 'height': 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }">
     <form #emailForm="ngForm" name="emailForm" class="form">
         <ng-container *ngIf="!CONFIG.isLocal; else webadmin">
             <label for="authorizeEmail" class="mb-2" translate>Email</label>
@@ -15,15 +16,16 @@
                 type="email"
                 id="authorizeEmail"
                 name="email"
-                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
+                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty && email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
                 [(ngModel)]="loginEmail"
                 #email="ngModel"
                 autocomplete="email"
                 required
+                email
                 nxFocusMe>
-            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="mt-2">
+            <div *ngIf="email.invalid && (email.dirty && email.touched)" class="mt-2">
                 <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
-                <p *ngIf="email.errors.wrongEmail" class="error-label" translate>Invalid email</p>
+                <p *ngIf="email.errors.email" class="error-label" translate>Invalid email</p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
                     <p class="my-2 error-label" translate>Account not activated.</p>
                     <p><a href="resendLink" target="_blank" translate>Resend activation email.</a></p>
@@ -48,7 +50,7 @@
                 #login="ngModel"
                 required
                 nxFocusMe>
-            <ng-container *ngIf="login.invalid && (login.dirty || login.touched)">
+            <ng-container *ngIf="login.invalid && (login.dirty && login.touched)">
                 <p *ngif="login.errors.required" class="error-label" translate>Enter login</p>
                 <ng-container *ngIf="login.errors.accountNotActivated">
                     <p class="mb-2 error-label" translate>Account not activated.</p>

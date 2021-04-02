@@ -6,7 +6,7 @@
             [svgStyle]="{'width.px': 280, 'height.px': 120}"
             [applyClass]="true"></svg-icon>
         <div class="for-small">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && smallView"
+            <button *ngIf="clientType === 'loginToWebadmin' && smallView"
                 class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
@@ -24,7 +24,7 @@
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && !smallView"
+            <button *ngIf="clientType === 'loginToWebadmin' && !smallView"
                 class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"

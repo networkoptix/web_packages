@@ -26,6 +26,7 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
     @Input() confirm: boolean;
     @Input() newPasswordProcess: Process;
     @Input() loginProcess: Process;
+    @Output() setCurrentState = new EventEmitter<string>();
     // @Input() errorCode: string;
     hideErrors: boolean;
     weakPassword = false;

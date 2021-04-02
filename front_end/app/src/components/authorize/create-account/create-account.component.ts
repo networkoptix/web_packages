@@ -21,7 +21,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Input() viewType: string;
     @Input() smallView: boolean;
-    @Input() existingEmail: string;
+    @Input() loginEmail: string;
+    @Input() footerItems: { name: string, url: string }[];
     @Input() accountInfo: {
         email: string;
         password: string;
@@ -38,6 +39,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Output() setCurrentState = new EventEmitter<string>();
 
+    existingEmail: string;
     createEmail: string;
     createFirstName: string;
     createLastName: string;
@@ -62,6 +64,14 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     }
 
     ngOnInit(): void {
+        if (this.loginEmail) {
+            if (this.viewType === 'setupWizard') {
+                this.existingEmail = this.loginEmail;
+            } else {
+                this.createEmail = this.loginEmail;
+            }
+        }
+
         this.onCreateSubmit = () => {
             this.accountInfoChange.emit({
                 email     : this.existingEmail || this.createEmail,

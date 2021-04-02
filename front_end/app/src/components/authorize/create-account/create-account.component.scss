@@ -3,7 +3,6 @@
 @use '../../../../styles/theme_variables' as *;
 
 main form {
-    padding: 36px 16px;
     .create-row {
         display: flex;
         .email, .first-name, .last-name, .password {

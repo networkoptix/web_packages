@@ -32,7 +32,8 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
 
     sendPassword: any;
     @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
-    stayLoggedIn = false;
+    stayLoggedIn = true;
+    passwordToggle = true;
     header: string;
     subHeader: string;
     templateText: {

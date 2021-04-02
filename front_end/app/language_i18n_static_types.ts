@@ -106,6 +106,7 @@ export interface Authorize {
     connectErrorAdditional:     any;
     setupErrorAdditional:       any;
     connectedText:              any;
+    setupConnectedText:         any;
     stayLoggedInHelpText:       any;
     termsAndConditionsHelpText: any;
 }
@@ -1119,6 +1120,7 @@ const typeMap: any = {
         { json: "connectErrorAdditional", js: "connectErrorAdditional", typ: "any" },
         { json: "setupErrorAdditional", js: "setupErrorAdditional", typ: "any" },
         { json: "connectedText", js: "connectedText", typ: "any" },
+        { json: "setupConnectedText", js: "setupConnectedText", typ: "any" },
         { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
         { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
     ], false),
