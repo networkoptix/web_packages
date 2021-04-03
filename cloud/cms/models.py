@@ -1486,7 +1486,7 @@ class ExternalFileManager(models.Manager):
             external_file_obj.save()
             external_file_obj.file=file
         else:
-            if external_file_obj.file:
+            if external_file_obj.file and MediaStorage().exists(external_file_obj.file.name):
                 external_raw_bytes = b''
                 for count, chunk in enumerate(external_file_obj.file.chunks()):
                     if count < 5:
