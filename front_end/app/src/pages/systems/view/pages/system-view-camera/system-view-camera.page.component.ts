@@ -242,9 +242,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     this.getRecordsInProgress = undefined;
                 });
             }
-        }).finally(_ => this.system.userManager.getUsersDataFromTheSystem().then(_ => {
-          this.canViewArchives = this.system.userManager.permissions.viewArchives;
-        }));
+        }).finally(_ => {
+          this.system.userManager.getUsersDataFromTheSystem().then(_ => {
+            this.canViewArchives = this.system.userManager.permissions.viewArchives;
+          });
+        });
     }
 
     public ngAfterViewInit () {
