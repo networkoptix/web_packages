@@ -76,7 +76,10 @@ export class AppComponent {
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd))
             .subscribe((ev: NavigationEnd) => {
-                this.appStateService.authorizing = ev.url.includes('authorize');
+                this.appStateService.authorizing =
+                    ev.url.includes('authorize') ||
+                    ev.url.includes('activate') ||
+                    ev.url.includes('restore_password');
             });
 
 

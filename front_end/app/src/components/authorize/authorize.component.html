@@ -41,7 +41,7 @@
             [loginEmail]="loginEmail"
             (setCurrentState)="setCurrentState($event)"
             [checkActivationProcess]="checkEmailProcess"
-            [loginProcess]="loginProcess"
+            [loginProcess]="loginPostExternalProcess"
             [activated$]="activated$"
             [fromEmail$]="fromEmail$"
         ></nx-authorize-activate-account-component>
@@ -57,7 +57,7 @@
             [smallView]="windowSmallEnough"
             [confirm]="confirmRequest"
             [(resetEmail)]="resetPasswordEmail"
-            [loginProcess]="loginPostPasswordRequestProcess"
+            [loginProcess]="loginPostExternalProcess"
             [resetRequestProcess]="resetRequestProcess"
             [errorCode]="resetRequestErrorCode"
             (setCurrentState)="setCurrentState($event)"
@@ -66,10 +66,10 @@
             *ngSwitchCase="AuthorizeState.reset"
             [viewType]="viewType"
             [confirm]="confirmReset"
-            [loginEmail]="resetPasswordEmail"
+            [loginEmail]="loginEmail"
             [(password)]="resetPassword"
             [newPasswordProcess]="resetPasswordProcess"
-            [loginProcess]="loginPostNewPasswordProcess"
+            [loginProcess]="loginPostExternalProcess"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-reset-password-component>
     </div>

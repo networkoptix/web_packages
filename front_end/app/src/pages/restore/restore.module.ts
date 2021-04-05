@@ -39,10 +39,10 @@ export class SuccessResolver implements Resolve<any> {
 }
 
 const appRoutes: Routes = [
-    { path: 'restore_password', component: NxRestoreComponent, resolve: { uriParam: ParamResolver} },
+    { path: 'restore_password', component: NxRestoreComponent, resolve: { uriParam: ParamResolver } },
     { path: 'restore_password/sent', component: NxRestoreComponent, resolve: { uriParam: SentResolver } },
     { path: 'restore_password/success', component: NxRestoreComponent, resolve: { uriParam: SuccessResolver } },
-    { path: 'restore_password/:code', redirectTo: 'authorize/:code' } // potentially temporary
+    { path: 'restore_password/:code', redirectTo: 'authorize/restore_password/:code' }
 ];
 
 // TODO: Remove it after test
