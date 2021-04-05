@@ -217,6 +217,16 @@ Log Out No Language
     Click Link    ${LOG OUT BUTTON}
     Validate Log Out
 
+Log Out Japanese
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+    Wait Until Page Contains Element    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    .05    #Ubuntu was clicking too soon
+    Click Button    ${ACCOUNT DROPDOWN}
+    Wait Until Element Is Visible    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
+    Click Link    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
+    Validate Log Out    
+    
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
@@ -853,24 +863,24 @@ Delete All Local Users
 Check Password Badge
     [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
+    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}     Wait Until Element Is Visible    ${PASSWORD INCORRECT BADGE}
     ...    ELSE IF    '''${pass}''' in ${fair passwords}          Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
     ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}  
 
     Mouse Over    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO SHORT TEXT}"]
-    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
 
-    Run Keyword If    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
+    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge stays    ${PASSWORD INCORRECT BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Move focus and check badge stays    ${PASSWORD IS TOO SHORT BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
     ...    ELSE IF    '''${pass}''' in ${good passwords}         Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
 
@@ -1157,3 +1167,12 @@ Verify Horizontal Scrollbar Exists
     ${width in}     ${height in} =    Get Element Size    ${inner element}
     Should Be True    ${width out} < ${width in}    
     
+Delete All Text
+    [Arguments]    ${input}
+    ${text} =    Get Element Attribute    ${input}    value
+    ${length} =    Get Length    ${text}
+    ${length} =    Evaluate    ${length} + 1
+    Click Element    ${input}
+    FOR    ${n}    IN RANGE    ${length}
+        Press Keys    None     BACKSPACE 
+    END

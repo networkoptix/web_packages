@@ -71,14 +71,14 @@ class NoptixLibrary(object):
         else:
             locator.send_keys(Keys.CONTROL + 'v')
 
-    def delete_all_text(self, locator):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        element = seleniumlib.find_element(locator)
-        text = seleniumlib.get_text(locator)
-        logger.debug(text)
-        element.send_keys(Keys.END)
-        for x in range(len(text)):
-            element.send_keys(Keys.BACKSPACE)
+#     def delete_all_text(self, locator):
+#         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+#         element = seleniumlib.find_element(locator)
+#         text = seleniumlib.get_text(locator)
+#         logger.debug(text)
+#         element.send_keys(Keys.END)
+#         for x in range(len(text)):
+#             element.send_keys(Keys.BACKSPACE)
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
