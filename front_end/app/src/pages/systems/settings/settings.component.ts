@@ -539,7 +539,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                     serversNode.level3.push({
                         id              : server.id,
-                        icon            : this.getServerStatusIcon(server),
+                        svgIcon         : this.getServerStatusIcon(server),
                         label           : server.name,
                         path            : `servers/${id}`,
                         additionalLabel : server.ip,
