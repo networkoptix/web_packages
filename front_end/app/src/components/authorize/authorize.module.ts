@@ -23,12 +23,9 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
 
 export const authorizedRoutes: Routes = [
-    {
-        path        : 'authorize',
-        component   : NxAuthorizeComponent,
-        canActivate : []
-    },
-    { path: 'authorize/:code', component: NxAuthorizeComponent } // potentially temporary
+    { path: 'authorize', component: NxAuthorizeComponent },
+    { path: 'authorize/activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
+    { path: 'authorize/restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } }
 ];
 
 @NgModule({

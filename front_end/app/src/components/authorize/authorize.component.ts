@@ -4,7 +4,7 @@ import {
     Component, OnDestroy, OnInit, ViewEncapsulation
 }                                 from '@angular/core';
 import {
-    ActivatedRoute
+    ActivatedRoute, UrlSegment
 }                                 from '@angular/router';
 import { UntilDestroy }           from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent }        from 'rxjs';
@@ -13,19 +13,12 @@ import { debounceTime }            from 'rxjs/operators';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import {
-    NxSystem, NxSystemService
-}                                    from '@services/system.service';
-import { NxSystemsService }          from '@services/systems.service';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxUtilsService }            from '@services/utils.service';
 import { NxUriService }              from '@services/uri.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
-import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxAppStateService }         from '@services/nx-app-state.service';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 
 interface AuthorizeParams {
@@ -85,6 +78,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     windowSmallEnough = false;
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
+    codeFromRoute: string;
 
     // email
     loginEmail: string;
@@ -108,21 +102,19 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     createErrorCode: [inputType: string, errorCode: string];
 
     // activated
+    loginPostExternalProcess: Process;
     activated$ = new BehaviorSubject<boolean>(false);
     fromEmail$ = new BehaviorSubject<boolean>(false);
 
     // password reset request
     confirmRequest: boolean;
     resetPasswordEmail: string;
-    loginPostPasswordResetProcess: Process;
     resetRequestProcess: Process;
     resetRequestErrorCode: string;
 
     // reset password
     confirmReset: boolean;
     resetPassword: string;
-    resetPasswordCode: string;
-    loginPostNewPasswordProcess: Process;
     resetPasswordProcess: Process;
 
     errorDialog$ = new BehaviorSubject<boolean>(false);
@@ -135,14 +127,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private cloudService: NxCloudApiService,
         private processService: NxProcessService
         // private pageService: NxPageService,
-        // private dialogs: NxDialogsService,
-        // private systemService: NxSystemService,
-        // private systemsService: NxSystemsService,
         // private uriService: NxUriService,
         // private router: Router,
-        // private scrollMechanicsService: NxScrollMechanicsService,
-        // private applyService: NxApplyService,
-        // private appStateService: NxAppStateService
+        // private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -153,28 +140,16 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // should save email to local storage on login
+        // should save email to local storage on login?
         this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
         this.initProcesses();
+
+        const { action } = this.route.snapshot?.data;
+        if (action) {
+            this.codeFromRoute = this.route.snapshot.params.code;
+            this.loginEmail = atob(this.codeFromRoute).split(':')[1];
+        }
         this.route.queryParams.subscribe((params: any) => {
-            this.initialData = NxUtilsService.deepCopy(params);
-            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
-            this.viewType = this.initialData.view_type || 'web';
-            this.currentState = AuthorizeState.email;
-
-            // add something to handle fromEmail
-            const message = this.route.snapshot?.params.message;
-            if (message === 'passwordReset') {
-                this.resetPasswordCode = this.route.snapshot?.params.code;
-                this.resetPasswordEmail = atob(this.resetPasswordCode).split(':')[1];
-                this.currentState = AuthorizeState.reset;
-            } else if (message === 'activated') {
-                this.fromEmail$.next(true);
-                this.activated$.next(true);
-                // get email, too
-                this.currentState = AuthorizeState.activate;
-            }
-
             this.windowLargeEnough = window.innerWidth > 560 && window.innerHeight > 720 && this.viewType === 'web';
             this.windowSmallEnough = window.innerWidth < 355;
             fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
@@ -182,6 +157,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
                 this.windowSmallEnough = innerWidth < 355;
             });
+
+            this.initialData = NxUtilsService.deepCopy(params);
+            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
+            this.viewType = this.initialData.view_type || 'web';
+
+            if (action === 'reset_password') {
+                this.currentState = AuthorizeState.reset;
+            } else if (action === 'activate') {
+                this.fromEmail$.next(true);
+                this.activated$.next(true);
+                this.currentState = AuthorizeState.activate;
+            } else {
+                this.currentState = AuthorizeState.email;
+            }
         });
     }
 
@@ -274,6 +263,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             { ignoreError: true },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
+                this.loginEmail = this.resetPasswordEmail;
                 this.confirmRequest = true;
             },
             err => {
@@ -283,14 +273,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.loginPostPasswordResetProcess = this.processService.createProcess(() => {
-            this.loginEmail = this.resetPasswordEmail;
-            this.currentState = AuthorizeState.password;
-            return Promise.resolve();
-        });
-
         this.resetPasswordProcess = this.processService.createProcess(
-            () => this.cloudService.restorePassword(this.resetPasswordCode, this.resetPassword),
+            () => this.cloudService.restorePassword(this.codeFromRoute, this.resetPassword),
             { ignoreError: true },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -302,8 +286,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.loginPostNewPasswordProcess = this.processService.createProcess(() => {
-            this.loginEmail = this.resetPasswordEmail; // || localStorage.email?
+        this.loginPostExternalProcess = this.processService.createProcess(() => {
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });
