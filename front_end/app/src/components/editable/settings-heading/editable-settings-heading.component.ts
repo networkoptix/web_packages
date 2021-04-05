@@ -30,7 +30,7 @@ export class NxEditableSettingsHeading {
     }
 
     set name(value) {
-        this.nameWatcher.value = NxUtilsService.htmlWiper(value);
+        this.nameWatcher.value = value;
     }
 
     handleBlur() {

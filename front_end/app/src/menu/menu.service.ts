@@ -164,12 +164,15 @@ export class NxMenuService implements OnDestroy {
         return clean.map((node) => {
             if (node.level3?.length) {
                 node.level3.forEach(item => {
-                    item.label = NxUtilsService.htmlWiper(item.label);
+                    if (item.label) {
+                        item.label = NxUtilsService.htmlToEntity(item.label);
+                        // item.label = item.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    }
                     if (item.additionalLabel) {
-                        item.additionalLabel = NxUtilsService.htmlWiper(item.additionalLabel);
+                        item.additionalLabel = NxUtilsService.htmlToEntity(item.additionalLabel);
                     }
                     if (item.additionalText) {
-                        item.additionalText = NxUtilsService.htmlWiper(item.additionalText);
+                        item.additionalText = NxUtilsService.htmlToEntity(item.additionalText);
                     }
                 });
             }

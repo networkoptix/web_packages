@@ -294,4 +294,8 @@ export class NxUtilsService {
         // <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=" onload="$.getScript('evil.js');1<2>3">
         return (isArray(target) ? target[0] : target)?.replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '');
     }
+
+    static htmlToEntity(target) {
+        return (isArray(target) ? target[0] : target)?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 }
