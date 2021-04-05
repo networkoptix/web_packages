@@ -53,7 +53,7 @@ export abstract class BaseAccount implements OnDestroy {
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
     abstract get(forceUpdate?: boolean): Promise<Account>;
-    abstract login(email: string, password: string, remember: boolean): any;
+    abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
     abstract logout(doNotRedirect?: boolean, skipReload?): void;
     abstract requireLogin(): Promise<any>;
     abstract loginAllServers(login: string, password: string, remember: boolean): Promise<any>;

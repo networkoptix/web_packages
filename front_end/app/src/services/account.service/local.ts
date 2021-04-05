@@ -75,7 +75,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         }
     }
 
-    login(login, password, remember = false) {
+    login(login, password, remember = false, navigateHome = false) {
         return this.mediaServerApi.login(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
