@@ -266,8 +266,10 @@ def review(request):
                     blocked_marker = next_review.id
                 elif blocked_marker == next_review.id:
                     break
+                continue
             elif next_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
                 yield next_review
+            blocked_marker = None
 
     review_id = request.POST.get('review_id')
     asset_review = AssetCustomizationReview.objects.filter(id=review_id).first()
@@ -374,9 +376,9 @@ def make_preview(request):
     return HttpResponse(redirect_url)
 
 
-def response_attachment(data, filename, content_type):
+def response_attachment(data, filename, content_type, attachment=False):
     response = HttpResponse(data, content_type=content_type)
-    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" else ""}filename={filename}'
+    response['Content-Disposition'] = f'{"attachment; " if content_type == "application" or attachment else ""}filename={filename}'
     response.set_cookie('filename', filename, max_age=10)
     return response
 
@@ -426,7 +428,9 @@ def asset_settings(request, asset_id):
                 structure.update_asset_by_json(asset, loaded_json[0], request.user)
                 messages.success(request, "Content updated")
             elif import_assets_from_json:
-                task = async_import_assets_from_json.apply_async(args=[loaded_json, request.user.id, import_assets_from_json_publish])
+                json_cache_id = uuid.uuid4()
+                PACKAGE_CACHE[json_cache_id] = loaded_json
+                task = async_import_assets_from_json.apply_async(args=[json_cache_id, request.user.id, import_assets_from_json_publish])
                 messages.info(request, 'Starting assets import')
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')

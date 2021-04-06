@@ -36,7 +36,8 @@ export class CameraManager {
                 return Promise.reject(new Error(`Request to server has failed ${cameras}`));
             }
         }
-        const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, ...camera }: ICamera) => {
+        const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
+            const backupType = deprecatedBackupType || (<any>camera).backupQuality;
             const server = serverTimes.find(({ serverId }) => serverId === parentId);
             let dayOfWeek;
             let secondsToday;
@@ -105,7 +106,7 @@ export class CameraManager {
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
         });
         this.cameras = mappedCameras;
         return mappedCameras;

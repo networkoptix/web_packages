@@ -65,7 +65,7 @@
   <span>{{ camera.isOffline ? 'offline' : (camera.isUnauthorized ? 'authentication required' : 'error' ) }}</span>
 </div></ng-template>
 
-<div *ngIf="camera" class="controls">
+<div *ngIf="canViewArchives camera" class="controls">
   <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
     <div class="controls-toggling-ear"  (click)="handleControlsTogglingEarClick()"></div>
   </div>

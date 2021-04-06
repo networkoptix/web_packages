@@ -43,6 +43,15 @@ export class PlaybackService {
     return this._subject
   }
 
+  public livePaused$ = new BehaviorSubject<boolean | 'restartVideo'>(false)
+
+  public get livePaused () {
+    return <boolean | 'restartVideo'>!!this.livePaused$.value;
+  }
+
+  public set livePaused (value: boolean | 'restartVideo') {
+    this.livePaused$.next(value)
+  }
 
   protected _state: PlaybackState = createInitialStoppedState()
 
@@ -76,6 +85,7 @@ export class PlaybackService {
   }
 
   public playLive () {
+    this.livePaused = false
     if (!this.canPlayLive) {
       return
     }

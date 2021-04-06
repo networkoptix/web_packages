@@ -74,6 +74,9 @@ export class NxSystemStorageComponent implements OnInit {
     beingUpdated = [];
     cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
+    // Used for checking if changing backup should use updated APIs
+    legacySystem = true;
+
     stopReindex$ = new Subject<TARGET_STORAGE>();
     currentStorageState: CurrentStorageState;
     dropdownOffset$ = new BehaviorSubject(0);
@@ -175,10 +178,11 @@ export class NxSystemStorageComponent implements OnInit {
                     this.serverId, !!this.currentStorageState.onlineBackups
                 ).catch(err => {
                     console.error(err);
-                    return { backup: false, custom: false };
+                    return { backup: false, custom: false, legacy: true };
                 });
                 this.customSettings = backupState.custom;
                 this.isBackupOn.originalValue = backupState.backup;
+                this.legacySystem = backupState.legacy;
                 this.setupWatchers();
                 if (this.loading && this.currentStorageState.beingChecked) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -326,34 +330,46 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     setDefaultBackupSettings = async() => {
-        await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
-        await this.system.updateOrGetSystemSettings({
-            backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
-        }).toPromise();
-        await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
-        await this.system.serverManager.initSystemMediaServers();
-        const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
-            if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
-                let retries = 5;
-                const update = () => {
-                    if (retries < 5) {
-                        console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
-                    }
-                    retries--;
-                    return this.system.setCameraUserSettings(
-                        this.serverId, camera.id,
-                        { backupType: 'CameraBackupLowQuality' }
-                    ).catch(() => retries ? update() : console.error('failed to save camera.id'));
-                };
-                cameras.push(update);
-            }
-            return cameras;
-        }, [] as (() => Promise<ChangedIdReturned>)[]);
-        await of(...cameraSettingsToSave).pipe(
-            bufferCount(30),
-            concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
-        ).toPromise();
-        await this.system.update();
+        if (!this.legacySystem) {
+            const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({
+                id,
+                backupPolicy      : 'CameraBackupDefault',
+                backupQuality     : 'CameraBackupDefault',
+                backupType        : 'CameraBackupDefault',
+                backupContentType : 'archive'
+            }));
+            await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
+        }
+        await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start', this.legacySystem);
+        if (this.legacySystem) {
+            await this.system.updateOrGetSystemSettings({
+                backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
+            }).toPromise();
+            await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
+            await this.system.serverManager.initSystemMediaServers();
+            const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
+                if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
+                    let retries = 5;
+                    const update = () => {
+                        if (retries < 5) {
+                            console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
+                        }
+                        retries--;
+                        return this.system.setCameraUserSettings(
+                            this.serverId, camera.id,
+                            { backupType: 'CameraBackupLowQuality' }
+                        ).catch(() => retries ? update() : console.error('failed to save camera.id'));
+                    };
+                    cameras.push(update);
+                }
+                return cameras;
+            }, [] as (() => Promise<ChangedIdReturned>)[]);
+            await of(...cameraSettingsToSave).pipe(
+                bufferCount(30),
+                concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
+            ).toPromise();
+            await this.system.update();
+        }
         this.customSettings = false;
         this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = true;
         return Promise.resolve();
@@ -362,11 +378,14 @@ export class NxSystemStorageComponent implements OnInit {
     turnOffBackup = async(retries = 5) => {
         this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = !retries;
         await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
-        const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId);
-
+        if (!this.legacySystem) {
+            const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({ id, backupPolicy: 'off' }));
+            await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
+        }
+        const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId, this.legacySystem ? null : 'stop', this.legacySystem);
         const state = backupControlRes && backupControlRes.reply?.state;
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
-        if (state !== 'BackupState_None') {
+        if (this.legacySystem && state !== 'BackupState_None') {
             await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
             return this.turnOffBackup(retries - 1);
         } else {

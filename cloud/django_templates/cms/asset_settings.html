@@ -56,7 +56,7 @@ Example for vms
             {{ field.label_tag }}
             <div id="{{field.label}}" style="display:inline-block;">
                 {{ field }}
-                
+
                 {% if field.help_text %}
                 <p class="help">{{ field.help_text|safe }}</p>
                 {% endif %}
@@ -124,14 +124,13 @@ Example for vms
                 if (message.classList.contains('hide')) {
                     message.classList.remove('hide')
                 }
-            }) 
+            })
             cookieCheckInterval = setInterval(checkCookie, 100);
         }
 
         function togglePending (showPending) {
             const pending = document.getElementById('pending')
             const done = document.getElementById('done')
-            console.log({pending, done})
             if (showPending) {
                 pending.style = "display:block;"
                 done.style = "display:none;"
@@ -238,7 +237,7 @@ Example for vms
         (function checkTaskStatus(taskId) {
             if(!taskId) return;
             const messageList = document.getElementsByClassName('messagelist')[0]
-            const spinner = '<span class="glyphicon glyphicon-repeat status-loader"></span>'
+            const spinner = '<span class="glyphicon glyphicon-repeat status-loader" id="status-glpyh"></span>'
             let asyncStatusInfo = document.getElementById('async-status-info')
             if (!asyncStatusInfo) {
                 asyncStatusInfo = document.createElement('li')
@@ -257,6 +256,9 @@ Example for vms
                     state = `Processing asset ${status.current} out of ${status.total}`
                     setTimeout(() => checkTaskStatus(taskId), pollingInterval * 3)
                 } else if(status === 'SUCCESS'){
+                    const glyphSpan = document.getElementById('status-glpyh')
+                    glyphSpan.classList.remove('glyphicon-repeat', 'status-loader')
+                    glyphSpan.classList.add('glyphicon-ok-sign')
                     state = 'Done processing assets'
                 } else if(status === 'PENDING') {
                     state = 'Processing assets...'

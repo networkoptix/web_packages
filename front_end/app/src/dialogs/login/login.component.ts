@@ -26,6 +26,7 @@ export class LoginModalContent implements OnInit {
     @Input() cancellable;
     @Input() closable;
     @Input() keepPage;
+    @Input() redirectHome;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -131,7 +132,7 @@ export class LoginModalContent implements OnInit {
                 return Promise.reject();
             }
 
-            return this.account.login(this.auth.email, this.password, this.remember);
+            return this.account.login(this.auth.email, this.password, this.remember, this.redirectHome);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {

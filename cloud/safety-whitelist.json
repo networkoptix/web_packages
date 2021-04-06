@@ -13,5 +13,9 @@
   "39646": {
     "name": "django",
     "note": "Django 2.2.19 fixes a security issue in 2.2.18 (CVE-2021-23336)."
+  },
+  "40072": {
+    "name": "lxml",
+    "note": "The HTML cleaner in lxml 4.6.3 no longer includes the HTML5 'formaction' attribute to avoid it from allowing JavaScript to pass through."
   }
 }

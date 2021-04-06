@@ -23,4 +23,4 @@ def download_result(request, task_id):
     result = DOWNLOAD_CACHE.get(task_id)
     if not result:
         return APIException('File not available', 404)
-    return response_attachment(result['file'], result['file_name'], 'application/json')
+    return response_attachment(result['file'], result['file_name'], 'application/json', attachment=True)

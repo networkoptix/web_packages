@@ -41,6 +41,7 @@ def threaded_test_run(output, language):
         "-e " "licenses "
         "-e " "merge "
         "-e " "customizations "
+        "-e " "storage "
         "-v " f"ENV:{ENVIRONMENT} "
         "-v " f"SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
         "-V " f"getvars.py:{CUSTOMIZATION}:{language} "
@@ -57,6 +58,7 @@ def threaded_test_run(output, language):
         "-e", "merge",
         "-e", "licenses",
         "-e", "customizations",
+        "-e", "storage",
         "--output", "serial.xml",
         "test-cases"
         ],

@@ -180,7 +180,7 @@ export class NxRegisterComponent implements OnInit {
                         });
 
                     this.accountService
-                        .login(this.accountInfo.email, this.accountInfo.password, true)
+                        .login(this.accountInfo.email, this.accountInfo.password, true, true)
                         // @ts-ignore -- TODO: Need to exclude this from webadmin routes
                         .then(() => {
                             this.registerSuccess = true;

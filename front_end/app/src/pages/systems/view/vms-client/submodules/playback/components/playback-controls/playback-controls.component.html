@@ -2,8 +2,8 @@
     class="playback-control-button"
     [ngClass]="{
         'enabled': enabled,
-        'play': btnClass === 'play',
-        'pause': btnClass === 'pause'
+        'play': btnClass === 'play' || (playback.livePaused$ | async),
+        'pause': btnClass === 'pause' && !(playback.livePaused$ | async)
     }"
     (click)="handleClick()"
 >

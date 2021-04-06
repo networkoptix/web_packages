@@ -90,7 +90,7 @@ def kb_for_article(request, doc_id):
     nodes = doc.nodes.all()
     menus = {node.get_parent() for node in nodes}
     for menu in menus:
-        if menu.base_url and menu.url:
+        if menu.base_url and menu.url and menu.enabled:
             return {'base': menu.base_url, 'kb_name': menu.url}
     raise APINotFoundException(error_data={'id': doc_id}, error_text='Kb not found')
 

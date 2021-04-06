@@ -32,12 +32,12 @@ export const nxConfig: IConfig = {
         }
     },
     defaultLanguage : 'en_US',
-    developers : {
-        landing : {
-            adminLink : '/admin/cms/menu/%ID%/change/'
+    developers      : {
+        landing: {
+            adminLink: '/admin/cms/menu/%ID%/change/'
         }
     },
-    dialogs         : {
+    dialogs: {
         message: {
             subjects: {
                 integration          : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
@@ -239,8 +239,8 @@ export const nxConfig: IConfig = {
             rows: 20
         }
     },
-    landing : {
-        description : ''
+    landing: {
+        description: ''
     },
     maintenanceTimeout : 60 * 1000,
     maxServers         : 100, // The maximum amount of server that can be in a system
@@ -283,9 +283,13 @@ export const nxConfig: IConfig = {
                 path : 'users'
             },
             servers: {
-                id   : 'servers',
-                icon : 'servers',
-                path : 'servers'
+                id          : 'servers',
+                icon        : 'servers',
+                path        : 'servers',
+                statusIcons : {
+                    offline : 'device_offline',
+                    online  : ''
+                }
             },
             cameras: {
                 id          : 'cameras',
@@ -293,7 +297,7 @@ export const nxConfig: IConfig = {
                 path        : 'cameras',
                 statusIcons : {
                     archive      : 'camera_archive',
-                    offline      : 'camera_offline',
+                    offline      : 'device_offline',
                     recording    : 'camera_recording',
                     scheduled    : 'camera_scheduled',
                     unauthorized : 'camera_unauthorized',
@@ -388,12 +392,12 @@ export const nxConfig: IConfig = {
         cloudStorageSize          : 0,
         healthMonitorCacheTimeout : 60
     },
-    cloudName       : '',
-    cloudHost       : '',
-    cloudSystemId   : '',
-    localSystemId   : '',
-    localServerId   : '',
-    company         : {
+    cloudName     : '',
+    cloudHost     : '',
+    cloudSystemId : '',
+    localSystemId : '',
+    localServerId : '',
+    company       : {
         copyrightYear : '',
         links         : {
             privacy : '',
@@ -416,15 +420,16 @@ export const nxConfig: IConfig = {
 
     // Legacy webadmin config
     accessRoles: {
-        adminAccess               : ['cloudadmin', 'owner', 'administrator'],
-        unshare                   : 'none',
-        default                   : 'Viewer',
-        custom                    : 'custom',
-        editUserPermissionFlag    : 'GlobalAdminPermission',
-        editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
-        globalAdminPermissionFlag : 'GlobalAdminPermission',
-        allMediaPermissionFlag    : 'GlobalAccessAllMediaPermission',
-        customPermission          : {
+        adminAccess                : ['cloudadmin', 'owner', 'administrator'],
+        unshare                    : 'none',
+        default                    : 'Viewer',
+        custom                     : 'custom',
+        editUserPermissionFlag     : 'GlobalAdminPermission',
+        editCameraPermissionFlag   : 'GlobalEditCamerasPermission',
+        globalAdminPermissionFlag  : 'GlobalAdminPermission',
+        allMediaPermissionFlag     : 'GlobalAccessAllMediaPermission',
+        viewArchivesPermissionFlag : 'GlobalViewArchivePermission',
+        customPermission           : {
             name        : 'Custom',
             permissions : 'NoPermission'
         },
@@ -578,7 +583,7 @@ export const nxConfig: IConfig = {
         syncTimeEpsilon            : { type: 'number' },
 
         maxVirtualCameraArchiveSynchronizationThreads : { type: 'number' },
-        maxEventLogRecords                       : { type: 'number' },
+        maxEventLogRecords                            : { type: 'number' },
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
     }

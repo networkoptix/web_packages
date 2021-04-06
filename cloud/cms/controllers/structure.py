@@ -502,9 +502,13 @@ def update_asset_type(asset_type, asset_type_structure):
 
 
 def external_file_to_content_file(url):
-    file_content = requests.get(url).content
+    file_request = requests.get(url)
+    file_content = file_request.content
+    content_type = file_request.headers.get('Content-Type', 'image/png')
     filename = url.split('/')[-1]
-    return ContentFile(file_content, name=filename)
+    content_file = ContentFile(file_content, name=filename)
+    content_file.content_type = content_type
+    return content_file
 
 
 def generate_kb_path_from_var(article_dict):
@@ -537,7 +541,6 @@ def update_asset_by_json(asset, asset_json, user):
 
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
-        context_model = None
         try:
             context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
         except Context.DoesNotExist:

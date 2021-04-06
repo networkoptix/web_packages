@@ -88,8 +88,8 @@ export class ServerManager {
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
 
-    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
-        return this.mediaserverConnections[serverId].backupControl(action);
+    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop', legacySystem = true) {
+        return this.mediaserverConnections[serverId].backupControl(action, legacySystem);
     }
 
     getLicenses() {

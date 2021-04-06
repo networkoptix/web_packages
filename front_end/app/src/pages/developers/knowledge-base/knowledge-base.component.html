@@ -8,13 +8,13 @@
 
 <ng-template #normalCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
 <ng-template #contentCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 

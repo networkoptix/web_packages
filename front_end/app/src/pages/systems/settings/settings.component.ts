@@ -527,6 +527,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
+                const byParam = NxUtilsService.byParam((server: any) => {
+                    return server.name.toLowerCase();
+                }, NxUtilsService.sortASC);
+                this.system.servers.sort(byParam);
+
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
@@ -534,10 +539,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                     serversNode.level3.push({
                         id              : server.id,
-                        icon            : '',
+                        svgIcon         : this.getServerStatusIcon(server),
                         label           : server.name,
                         path            : `servers/${id}`,
-                        additionalLabel : server.ip
+                        additionalLabel : server.ip,
+                        indent          : true,
+                        disabled        : server.status.toLowerCase() === 'offline'
                     });
                 });
             }
@@ -580,6 +587,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     getCameraStatusIcon({ status }) {
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+    }
+
+    getServerStatusIcon({ status }) {
+        return this.CONFIG.menus.systemSettings.servers.statusIcons[status.toLowerCase()];
     }
 
     cleanUrl() {

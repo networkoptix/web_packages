@@ -4,44 +4,41 @@ nx-header-language-select {
     .dropdown {
         position: relative !important;
         height: 41px;
-        margin: 3px 3px 3px 0px;
+        margin: 3px 3px 3px 0;
         display: flex;
         color: theme_variables.$additional_light1 !important;
-        & button#dropdownMenuButton > {
+        & > button#dropdownMenuButton {
             color: theme_variables.$additional_light1 !important;
-        }
-        &:not(.show) {
-            & > button#dropdownMenuButton {
-                background: theme_variables.$dark14 !important;
-                color: theme_variables.$additional_light1 !important;
-                border: 1px solid transparent !important;
-                &:hover {
-                    background: theme_variables.$dark15 !important;
-                }
-                &:active {
-                    background: theme_variables.$dark13 !important;
-                }
-            
+            background : theme_variables.$dark14 !important;
+            border     : 1px solid transparent !important;
+
+            &:hover {
+                background : theme_variables.$dark15 !important;
+            }
+
+            &:active {
+                background : theme_variables.$dark13 !important;
             }
         }
-        &.show {
+
+        &.dropdown-show {
             & > button#dropdownMenuButton {
                 color: theme_variables.$additional_light1 !important;
                 border: 1px solid theme_variables.$dark11 !important;
-                background: theme_variables.$dark12 !important;
-                border: 1px solid theme_variables.$dark11 !important;
+                background: theme_variables.$dark11 !important;
+
                 &:hover {
-                    background: 1px theme_variables.$dark13 !important;
-                    border: 1px solid theme_variables.$dark12 !important;
-                }
-                &:active {
-                    background: theme_variables.$dark12 !important;
+                    background: 1px theme_variables.$dark11 !important;
                     border: 1px solid theme_variables.$dark11 !important;
                 }
-                
+                &:active {
+                    background: theme_variables.$dark11 !important;
+                    border: 1px solid theme_variables.$dark11 !important;
+                }
+
             }
         }
-    
+
         button#dropdownMenuButton.btn.btn-dropdown-toggle.dropdown-toggle {
             padding: 5px 27px 5px 8px !important;
             height: 41px !important;
@@ -51,13 +48,13 @@ nx-header-language-select {
                 bottom: 10px !important;
                 background: theme_variables.$additional_light1 !important;
             }
-    
+
             & > .lang-sm {
                 margin-right: 4px !important;
             }
-            
+
         }
-    
+
         &.short.alt-style {
             width: auto !important;
         }

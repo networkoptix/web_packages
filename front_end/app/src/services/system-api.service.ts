@@ -4,7 +4,7 @@ import { Location }                            from '@angular/common';
 import md5                                     from 'md5';
 import { from, of, throwError, Observable }    from 'rxjs';
 import {
-    flatMap, map, mergeMap, retryWhen, timeout, tap, catchError
+    flatMap, map, mergeMap, retryWhen, timeout, tap
 }                                              from 'rxjs/operators';
 
 import { NxConfigService, IConfig }            from './nx-config';
@@ -16,7 +16,6 @@ import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
 import { environment }                         from '@environments/environment';
-import { NxUtilsService } from './utils.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -493,7 +492,15 @@ export class NxSystemAPI {
         return this.get('/api/getEvents', { from, to, cameraId, event_type, action_type, brule_id }).toPromise();
     }
 
-    backupControl(action?: 'start' | 'stop') {
+    backupControl(action?: 'start' | 'stop', legacySystem = true) {
+        if (!legacySystem) {
+            const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
+            return this.post(backupEndpoint, {
+                caption          : action,
+                backupNewCameras : true,
+                quality          : 'CameraBackupBoth'
+            }).toPromise();
+        }
         return this.get('/api/backupControl', action && { action }).toPromise();
     }
 
@@ -902,7 +909,7 @@ export class NxSystemAPI {
             params.limit = limit;
         }
         // RecordedTimePeriods
-        return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
+        return this.get(`/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`, params);
     }
 
     /* End of Working with archive */

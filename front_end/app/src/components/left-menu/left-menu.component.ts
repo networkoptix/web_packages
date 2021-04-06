@@ -39,6 +39,7 @@ export class NxLeftMenuComponent {
     prefetchedDocuments = [];
     firstUrl = '';
     activeNodeUrl = '';
+    highlightedTopNode: string;
     ignoreQuery = true;
 
     constructor(
@@ -113,6 +114,7 @@ export class NxLeftMenuComponent {
             this.firstUrl = getFirstUrl(this.menuNodes);
             this.updateActive(this.firstUrl);
         }
+        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
     }
 
     toggleOpen(node: MenuNode) {
@@ -144,15 +146,13 @@ export class NxLeftMenuComponent {
         const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
         const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.display_name || node.name;
-        if (this.activeRouteNodes.includes(name)) {
-            return;
-        }
         const nodeIndex = this.openNodes.indexOf(name);
         if (nodeIndex === -1) {
             this.openNodes.push(name);
         } else {
             this.openNodes = this.openNodes.filter(filterTree(name));
         }
+        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
     }
 
     prefetchAsset(assetId, state) {

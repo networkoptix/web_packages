@@ -89,11 +89,12 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
 
 
   protected playLive () {
-    if (!this.canPlayLive) {
+    if (!this.canPlayLive && !this.playback.livePaused) {
       return false
     }
     this.selection.reset()
     this.playback.playLive()
+    this.playback.livePaused = 'restartVideo';
     return true
   }
 
@@ -115,6 +116,11 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
   }
 
   protected unpause () {
+    if (this.playback.canPlayLive || this.playback.livePaused) {
+      this.playLive()
+      this.playback.livePaused = false;
+      return true
+    }
     if (!this.canUnpause) {
       return false
     }
@@ -123,14 +129,18 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
   }
 
   protected togglePause () {
-    if (this.canPause) {
-      this.selection.reset()
+    const canPauseLive = (this.playback.canStop && !this.playback.canPlayLive && !this.playback.livePaused)
+    if (this.playback.canPause || canPauseLive) {
+      this.playback.livePaused = canPauseLive
+      if (!canPauseLive) {
+        this.selection.reset()
+      }
       this.playback.pause()
       return true
-    } else if (this.canUnpause) {
-      this.playback.unpause()
+    } else if (this.canUnpause || this.playback.livePaused) {
+      this.unpause()
       return true
-    }
+     }
     return false
   }
 }
