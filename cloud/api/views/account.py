@@ -407,7 +407,7 @@ def check_account_in_portal(request):
     email = request.data['email']
     email_exists = models.AccountManager.is_email_in_portal(email)
     return api_success({
-        'active': email_exists and models.Account.objects.get(email=email).is_active,
+        'active': email_exists and models.Account.objects.get(email=email).activated_date != None,
         'emailExists': email_exists
     })
 
