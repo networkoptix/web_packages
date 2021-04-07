@@ -245,7 +245,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     const posterUrl = this.state['posterUrl'] || null
 
     if (sourceUrl.endsWith('mp4')) {
-      this._setPlaybackSource(sourceUrl)
+      this._setPlaybackSource(sourceUrl, posterUrl)
       setTimeout(() => this.isBuffering = true)
       setTimeout(() => {
         console.log('PLAY 2 (MP4 case)')
@@ -293,8 +293,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           }
         })
-      } else {
-        console.warn('HLS is not supported')
+      } else if (this.videoView.nativeElement.canPlayType('application/vnd.apple.mpegurl')){
+        this._setPlaybackSource(sourceUrl, posterUrl)
+        setTimeout(() => this.isBuffering = true)
+        setTimeout(() => {
+          this._playVideo()
+        }, 1000)
       }
 
     } else {
@@ -307,33 +311,33 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.playback.handlePaused()
   // }
 
-  public videoLoadStartHandler (e: MediaStreamEvent) {
+  public videoLoadStartHandler (e: Event) {
     console.log('video load start event', e)
   }
 
-  public videoLoadedMetadataHandler (e: MediaStreamEvent) {
+  public videoLoadedMetadataHandler (e: Event) {
     console.log('video loaded metadata event', e)
   }
 
-  public videoLoadedDataHandler (e: MediaStreamEvent) {
+  public videoLoadedDataHandler (e: Event) {
     console.log('video loaded data event', e)
   }
 
-  public videoCanPlayHandler (e: MediaStreamEvent) {
+  public videoCanPlayHandler (e: Event) {
     console.log('video can play event', e)
     this._playVideo()
     console.log('PLAY 3 (HLS)')
   }
 
-  public videoCanPlayThroughHandler (e: MediaStreamEvent) {
+  public videoCanPlayThroughHandler (e: Event) {
     console.log('video can play through event', e)
   }
 
-  public videoProgressHandler (e: MediaStreamEvent) {
+  public videoProgressHandler (e: Event) {
     console.log('video progress event', e)
   }
 
-  public videoPlayHandler (e: MediaStreamEvent) {
+  public videoPlayHandler (e: Event) {
     // this.playback.handleStarted()
     console.log('video play event', e)
     if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {

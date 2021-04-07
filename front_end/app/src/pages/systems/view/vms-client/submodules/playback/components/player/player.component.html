@@ -1,22 +1,19 @@
-<!-- Player ({{ mode }}) {{ isBuffering && 'buffering' }} -->
-<video #video [muted]="true"
-  (loadstart)="videoLoadStartHandler($event)"
-  (loadedmetadata)="videoLoadedMetadataHandler($event)"
-  (loadeddata)="videoLoadedDataHandler($event)"
-  (canplay)="videoCanPlayHandler($event)"
-  (canplaythrough)="videoCanPlayThroughHandler($event)"
-  (progress)="videoProgressHandler($event)"
-  (play)="videoPlayHandler($event)"
+<video #video
+       playsinline
+       [muted]="true"
+       (loadstart)="videoLoadStartHandler($event)"
+       (loadedmetadata)="videoLoadedMetadataHandler($event)"
+       (loadeddata)="videoLoadedDataHandler($event)"
+       (canplay)="videoCanPlayHandler($event)"
+       (canplaythrough)="videoCanPlayThroughHandler($event)"
+       (progress)="videoProgressHandler($event)"
+       (play)="videoPlayHandler($event)"
 
-  (click)="videoClickHandler($event)"
-  (dblclick)="videoDblClickHandler($event)"
->
+       (click)="videoClickHandler($event)"
+       (dblclick)="videoDblClickHandler($event)">
   <source #videoSource src="" type="video/mp4">
 </video>
+
 <div class="overlay" [ngClass]="{ 'buffering': isBuffering }">
   <nx-pre-loader></nx-pre-loader>
 </div>
-
-<!-- *ngStyle="{
-  'transform': 'rotate(' + _camera_rotation + ' deg)'
-}" -->

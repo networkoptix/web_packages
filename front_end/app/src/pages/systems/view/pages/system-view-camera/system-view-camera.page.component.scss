@@ -330,11 +330,11 @@ $border-color: $light6;
         }
 
         &.shown {
-            @include bootstrap.media-breakpoint-down(sm) {
+            @include bootstrap.media-breakpoint-down(md) {
                 right : 0;
             }
 
-            .sidebar-toggling-ear {
+            .controls-toggling-ear {
                 transform     : rotate(0deg);
                 border-radius : 0 2px 2px 0;
 
