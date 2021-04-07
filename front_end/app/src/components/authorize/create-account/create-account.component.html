@@ -30,6 +30,7 @@
                     [hideErrors]="hideErrors"
                     [(ngModel)]="createEmail"
                     [lockEmail]="false"
+                    [readonly]="createAccountProcess?.processing"
                     [form]="createAccountForm"
                     [web]="viewType === 'web'"
                     #createAccountEmail="ngModel"
@@ -48,6 +49,7 @@
                     type="text"
                     id="firstName"
                     name="firstName"
+                    [disabled]="createAccountProcess?.processing"
                     [ngClass]="{ 'invalid-state': firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required }"
                     [(ngModel)]="createFirstName"
                     #firstName="ngModel"
@@ -62,6 +64,7 @@
                     type="text"
                     id="lastName"
                     name="lastName"
+                    [disabled]="createAccountProcess?.processing"
                     [ngClass]="{ 'invalid-state': lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required }"
                     [(ngModel)]="createLastName"
                     #lastName="ngModel"
@@ -81,6 +84,7 @@
                     [hasError]="weakPassword"
                     class="form-component"
                     [(ngModel)]="createPassword"
+                    [readonly]="createAccountProcess?.processing"
                     [form]="createAccountForm"
                     [component]="createAccountPassword"
                     [web]="viewType === 'web'"
@@ -104,6 +108,7 @@
                     [(ngModel)]="termsAndConditions"
                     #termsConditions="ngModel"
                     componentId="termsAndConditions"
+                    [disabled]="createAccountProcess?.processing"
                     required
                     [description]="LANG.authorize.termsAndConditionsHelpText">
                 </nx-checkbox>

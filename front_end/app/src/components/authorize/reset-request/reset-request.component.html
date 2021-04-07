@@ -16,16 +16,17 @@
         <ng-container *ngIf="!confirm; else resetConfirm">
             <label for="authorizeEmail" translate>Email</label>
             <input
-            type="email"
-            id="resetPasswordEmail"
-            name="resetPasswordEmail"
-            [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) }"
-            [(ngModel)]="resetEmail"
-            #email="ngModel"
-            autocomplete="email"
-            required
-            email
-            nxFocusMe>
+                type="email"
+                id="resetPasswordEmail"
+                name="resetPasswordEmail"
+                [ngClass]="{ 'invalid-state': email.invalid && (email.dirty || email.touched) }"
+                [(ngModel)]="resetEmail"
+                [disabled]="resetRequestProcess.processing"
+                #email="ngModel"
+                autocomplete="email"
+                required
+                email
+                nxFocusMe>
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
                 <p *ngIf="email.errors.required" class="error-label mt-2 mb-0" translate>Enter email</p>
                 <p *ngIf="email.errors.email" class="error-label mt-2 mb-0" translate>Invalid email</p>

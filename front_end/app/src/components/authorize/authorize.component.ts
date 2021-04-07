@@ -1,25 +1,24 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
 import {
-    Component, OnDestroy, OnInit, ViewEncapsulation
-}                                 from '@angular/core';
-import {
-    ActivatedRoute, UrlSegment
-}                                 from '@angular/router';
-import { UntilDestroy }           from '@ngneat/until-destroy';
-import { BehaviorSubject, fromEvent }        from 'rxjs';
-import { debounceTime }            from 'rxjs/operators';
+    Component, Inject, OnDestroy, OnInit, ViewEncapsulation
+}                                     from '@angular/core';
+import { ActivatedRoute, Router }     from '@angular/router';
+import { UntilDestroy }               from '@ngneat/until-destroy';
+import { BehaviorSubject, fromEvent } from 'rxjs';
+import { debounceTime }               from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { Account, NxAccountService } from '@services/account.service';
 import { NxUtilsService }            from '@services/utils.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { WINDOW }                    from '@services/window-provider';
+import { Account, NxAccountService } from '@services/account.service';
 import { NxUriService }              from '@services/uri.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxPageService }             from '@services/page.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
 
 interface AuthorizeParams {
     response_type: string,
@@ -125,10 +124,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private router: Router,
+        @Inject(WINDOW) private window: Window
         // private pageService: NxPageService,
         // private uriService: NxUriService,
-        // private router: Router,
         // private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.LANG = languageService.translations;
@@ -149,22 +149,29 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.codeFromRoute = this.route.snapshot.params.code;
             this.loginEmail = atob(this.codeFromRoute).split(':')[1];
         }
-        this.route.queryParams.subscribe((params: any) => {
-            this.windowLargeEnough = window.innerWidth > 560 && window.innerHeight > 720 && this.viewType === 'web';
-            this.windowSmallEnough = window.innerWidth < 355;
-            fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
+        this.route.queryParams.subscribe(async(params: any) => {
+            this.initialData = NxUtilsService.deepCopy(params);
+            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
+            this.viewType = this.initialData.view_type || 'web';
+
+            this.windowLargeEnough = this.window.innerWidth > 560 && this.window.innerHeight > 720 && this.viewType === 'web';
+            this.windowSmallEnough = this.window.innerWidth < 355;
+            fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
                 const { innerHeight, innerWidth } = event.target;
                 this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
                 this.windowSmallEnough = innerWidth < 355;
             });
 
-            this.initialData = NxUtilsService.deepCopy(params);
-            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
-            this.viewType = this.initialData.view_type || 'web';
+            if (this.clientType === ClientType.loginCloud) {
+                this.initialData.client_id = 'cloud';
+                this.initialData.redirect_url = '';
+                this.initialData.response_type = 'code';
+            }
 
             if (action === 'reset_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (action === 'activate') {
+                await this.cloudService.activate(this.codeFromRoute).catch(err => console.error(err));
                 this.fromEmail$.next(true);
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;
@@ -182,6 +189,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     initProcesses() {
+        const timeoutMs = 3000;
         this.checkEmailProcess = this.processService.createProcess(
             async() => {
                 this.emailErrorCode = '';
@@ -191,16 +199,24 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
                 return Promise.resolve(res);
             },
-            { ignoreError: true },
+            { ignoreError: true, timeoutMs },
             ({ emailExists, active }) => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 if (this.currentState === AuthorizeState.email) {
-                    emailExists
-                        ? this.currentState = AuthorizeState.password
-                        : this.emailErrorCode = 'accountDoesNotExist';
+                    if (!emailExists) {
+                        this.emailErrorCode = 'accountDoesNotExist';
+                    } else if (!active) {
+                        this.emailErrorCode = 'accountNotActivated';
+                    } else {
+                        this.currentState = AuthorizeState.password;
+                    }
                 }
-                if (this.currentState === AuthorizeState.activate && !active) {
-                    this.activated$.next(false);
+                if (this.currentState === AuthorizeState.activate) {
+                    if (active) {
+                        this.redirect();
+                    } else {
+                        this.activated$.next(false);
+                    }
                 }
             },
             err => {
@@ -211,18 +227,26 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
         this.loginProcess = this.processService.createProcess(
             this.login,
-            { ignoreError: true },
+            { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
+                    this.initialData.redirect_url = res.link;
                     this.currentState = AuthorizeState.confirm;
                 } else {
-                    window.location.href = res.link;
+                    this.redirect(res.link);
                 }
             },
             err => {
                 console.error('err from loginProcess', err);
-                this.handleCloudConnectionError(err, this.loginProcess);
+                if (err?.errorText) {
+                    if (err.errorText === 'Invalid credentials') {
+                        this.passwordErrorCode = 'wrongPassword';
+                    }
+                    // error for too many login attempts still needed
+                } else {
+                    this.handleCloudConnectionError(err, this.loginProcess);
+                }
             }
         );
 
@@ -235,7 +259,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.accountInfo.firstName,
                 this.accountInfo.lastName,
                 undefined) // code, not needed right now
-            , { ignoreError: true },
+            , { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 if (res.resultCode === 'alreadyExists') {
@@ -260,22 +284,21 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
         this.resetRequestProcess = this.processService.createProcess(
             () => this.cloudService.restorePasswordRequest(this.resetPasswordEmail),
-            { ignoreError: true },
+            { ignoreError: true, timeoutMs },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 this.loginEmail = this.resetPasswordEmail;
                 this.confirmRequest = true;
             },
             err => {
-                this.resetRequestErrorCode = 'accountDoesNotExist';
-                this.handleCloudConnectionError(err, this.resetRequestProcess);
                 console.error('err in reset request process', err);
+                this.handleCloudConnectionError(err, this.resetRequestProcess);
             }
         );
 
         this.resetPasswordProcess = this.processService.createProcess(
             () => this.cloudService.restorePassword(this.codeFromRoute, this.resetPassword),
-            { ignoreError: true },
+            { ignoreError: true, timeoutMs },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 this.confirmReset = true;
@@ -293,19 +316,34 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = () => {
-        // should pass in some data to denote whether user should stay logged in or not (this.shouldStayLoggedIn)
+        // should pass in some data to denote whether user should stay logged in or not? (this.shouldStayLoggedIn)
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
-            this.initialData.client_id || 'cloud_portal', // take out hard coded strings before pushing to production
-            this.initialData.redirect_url || 'http://localhost:9000/',
-            this.initialData.response_type || 'code',
+            this.initialData.client_id, // use for testing || 'cloud',
+            this.initialData.redirect_url, // || 'http://localhost:9000/',
+            this.initialData.response_type, // || 'code',
             this.initialData.state
         );
     }
 
-    redirect = () => {
-        window.location.href = this.initialData.redirect_url;
+    checkIfActivated = async() => {
+        const { active } = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
+        if (active) {
+            this.activated$.next(true);
+        }
+    }
+
+    reactivate = () => {
+        return this.cloudService.reactivate(this.loginEmail);
+    }
+
+    redirect = (route?: string) => {
+        if (route || this.initialData?.redirect_url) {
+            this.window.location.href = route || this.initialData.redirect_url;
+        } else {
+            this.router.navigate(['systems']);
+        }
     }
 
     stayingLoggedIn(stayLoggedIn: boolean) {

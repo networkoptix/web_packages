@@ -21,6 +21,7 @@
                 #email="ngModel"
                 autocomplete="email"
                 required
+                [readonly]="emailProcess.processing"
                 email
                 nxFocusMe>
             <div *ngIf="email.invalid && (email.dirty && email.touched)" class="mt-2">
@@ -28,7 +29,7 @@
                 <p *ngIf="email.errors.email" class="error-label" translate>Invalid email</p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
                     <p class="my-2 error-label" translate>Account not activated.</p>
-                    <p><a href="resendLink" target="_blank" translate>Resend activation email.</a></p>
+                    <p><a href="" (click)="reactivate()" translate>Resend activation email.</a></p>
                 </ng-container>
                 <ng-container *ngIf="email.errors.accountDoesNotExist">
                     <p class="my-2" translate>Account does not exist.</p>
@@ -48,6 +49,7 @@
                 [(ngModel)]="loginEmail"
                 [ngClass]="{ 'invalid-state': login.errors?.required || login.errors?.accountNotAccessSystem }"
                 #login="ngModel"
+                [readonly]="emailProcess.processing"
                 required
                 nxFocusMe>
             <ng-container *ngIf="login.invalid && (login.dirty && login.touched)">

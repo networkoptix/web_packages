@@ -306,7 +306,7 @@ export class NxCloudApiService {
             .set('email', email)
             .set('password', password)
             .set('client_id', clientId)
-            .set('redirect_url', redirectUrl)
+            .set('redirect_uri', redirectUrl)
             .set('response_type', responseType);
         if (state) {
             params = params.set('state', state);
@@ -324,6 +324,10 @@ export class NxCloudApiService {
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
+    }
+
+    loginCode(code: string) {
+        return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
