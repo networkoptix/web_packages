@@ -172,6 +172,7 @@ export class NxSystemAPI {
 
         if (environment.isLocal) {
             headers = headers.set('X-Runtime-Guid', this.cookieService.get('x-runtime-guid'));
+            headers = headers.set('X-CSRFToken', this.cookieService.get('x-runtime-guid'));
         }
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -978,11 +979,19 @@ export class NxSystemAPI {
     }
 
     getLiveHlsUrl(cameraId, resolution = 'hi') {
-        return `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
+        let url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
+        if (this.authGet) {
+            url = `${url}&auth=${this.authGet}`;
+        }
+        return url;
     }
 
     getHlsUrl(cameraId, position, resolution = 'hi') {
-        return `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
+        let url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&pos=${Math.floor(position)}`;
+        if (this.authGet) {
+            url = `${url}&auth=${this.authGet}`;
+        }
+        return url;
     }
     // </added by @gbezyuk for watch component>
 
