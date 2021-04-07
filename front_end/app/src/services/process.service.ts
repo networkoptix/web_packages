@@ -1,6 +1,8 @@
-import { Injectable }                 from '@angular/core';
-import { Observable, Subject, defer } from 'rxjs';
-import { takeUntil, tap }                  from 'rxjs/operators';
+import { Injectable }                from '@angular/core';
+import {
+    Observable, Subject, defer, race, timer
+}                                    from 'rxjs';
+import { map, takeUntil }            from 'rxjs/operators';
 
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService }            from '../dialogs/toast.service';
@@ -24,7 +26,8 @@ export class Process {
         logoutForbidden    : false,
         successMessage     : '',
         ignoreError        : false,
-        name               : ''
+        name               : '',
+        timeoutMs          : 0
     };
 
     // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
@@ -66,7 +69,14 @@ export class Process {
             first(data);
             second(data);
         };
-        this.caller$.subscribe(
+        const obs = this.settings.timeoutMs ? race(
+            timer(this.settings.timeoutMs)
+                .pipe(map(() => {
+                    throw Error(`timeout of ${this.settings.timeoutMs}ms`);
+                })),
+            this.caller$
+        ) : this.caller$;
+        obs.subscribe(
             chain(successHandler, this.onSuccess),
             chain(errorHandler, this.onError),
             this.onComplete
@@ -242,6 +252,7 @@ export interface ProcessSettings {
     successMessage: string;
     ignoreError?: boolean;
     name?: string;
+    timeoutMs: number;
 }
 
 export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {

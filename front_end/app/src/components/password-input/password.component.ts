@@ -38,6 +38,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
+    @Input() readonly = false;
     @Input() hideErrors = false;
     @Input() hasError = false;
     @Input() showTag = true;

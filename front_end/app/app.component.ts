@@ -3,7 +3,7 @@ import {
     ViewEncapsulation, ViewChild, ElementRef
 }                                                  from '@angular/core';
 import {
-    ActivationStart, Event, NavigationEnd, Router
+    ActivatedRoute, ActivationStart, Event, NavigationEnd, Router
 }                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
@@ -19,6 +19,7 @@ import { NxPageService }                           from '@services/page.service'
 import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
 import { NxDialogsService }                        from '@dialogs/dialogs.service';
 import { NxConfigService, IConfig }                from '@services/nx-config';
+import { NxCloudApiService }                       from '@services/nx-cloud-api';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -58,6 +59,7 @@ export class AppComponent {
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
+        private cloudApiService: NxCloudApiService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,
@@ -75,13 +77,17 @@ export class AppComponent {
         // hides header if an authorize (oauth) route
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd))
-            .subscribe((ev: NavigationEnd) => {
+            .subscribe(async(ev: NavigationEnd) => {
                 this.appStateService.authorizing =
                     ev.url.includes('authorize') ||
                     ev.url.includes('activate') ||
                     ev.url.includes('restore_password');
-            });
 
+                if (ev.url.startsWith('/?code=')) {
+                    await this.cloudApiService.loginCode(ev.url.slice(7));
+                    window.location.href = '/systems';
+                }
+            });
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases

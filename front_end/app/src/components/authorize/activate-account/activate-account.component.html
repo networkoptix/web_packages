@@ -13,7 +13,7 @@
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
     [ngStyle]="{ 'height': activateHeader ? 'calc(100% - ' + activateHeader.offsetHeight + 'px)' : '100%' }">
-    <form #activateAccountForm>
+    <form #activateAccountForm="ngForm">
         <svg-icon nx-add-svg-src
             [src]="CONFIG.icons.dirSectionPlaceholder + ((activated$ | async) ? 'success' : 'mail') + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
             [svgStyle]="{'width.px': 280, 'height.px': 120}"

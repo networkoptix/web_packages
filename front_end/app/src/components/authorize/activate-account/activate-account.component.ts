@@ -7,8 +7,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
-import { combineLatest, Observable } from 'rxjs';
-import { map }                       from 'rxjs/operators';
+import {
+    combineLatest, Observable, interval
+}                                    from 'rxjs';
+import { filter, map, takeUntil }    from 'rxjs/operators';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
@@ -27,6 +29,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     @Input() loginEmail: string;
     @Output() setCurrentState = new EventEmitter<string>();
     @Input() checkActivationProcess: Process;
+    @Input() checkIfActivated: () => {};
     @Input() loginProcess: Process;
     @Input() activated$: Observable<boolean>;
     @Input() fromEmail$: Observable<boolean>;
@@ -56,6 +59,11 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
                 { accountEmail: this.loginEmail || '' }
             );
         }));
+
+        // automatically checks if activated every 5 seconds
+        interval(5000)
+            .pipe(takeUntil(this.activated$.pipe(filter(activated => activated === true))))
+            .subscribe(this.checkIfActivated);
     }
 
     ngOnDestroy(): void {}

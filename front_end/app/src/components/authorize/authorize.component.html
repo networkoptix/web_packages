@@ -9,6 +9,7 @@
             [(loginEmail)]="loginEmail"
             [emailProcess]="checkEmailProcess"
             [errorCode]="emailErrorCode"
+            [reactivate]="reactivate"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-email-component>
         <nx-authorize-password-component 
@@ -41,6 +42,7 @@
             [loginEmail]="loginEmail"
             (setCurrentState)="setCurrentState($event)"
             [checkActivationProcess]="checkEmailProcess"
+            [checkIfActivated]="checkIfActivated"
             [loginProcess]="loginPostExternalProcess"
             [activated$]="activated$"
             [fromEmail$]="fromEmail$"

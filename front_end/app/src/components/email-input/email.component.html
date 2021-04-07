@@ -5,6 +5,7 @@
        [id]="componentId" [name]="componentId"
        [ngClass]="{'hide-errors': hideErrors, 'form-control': web}"
        type="email"
+       [readonly]="readonly"
        required
        autocomplete="off"
        maxlength="255"
@@ -15,6 +16,7 @@
        type="text"
        name="registerEmailLocked"
        class="form-control"
+       [readonly]="readonly"
        [ngClass]="{'hide-errors': hideErrors}"
        [(ngModel)]="value"
        readonly>

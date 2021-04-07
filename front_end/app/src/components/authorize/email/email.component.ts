@@ -25,6 +25,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Output() loginEmailChange = new EventEmitter<string>();
     @Input() emailProcess: Process;
     @Input() errorCode: string;
+    @Input() reactivate: () => Promise<any>;
     @Output() setCurrentState = new EventEmitter<string>();
 
     sendEmail: any;
