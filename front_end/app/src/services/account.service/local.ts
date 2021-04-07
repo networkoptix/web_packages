@@ -4,7 +4,7 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { forkJoin }                  from 'rxjs';
-import { tap, catchError, map }      from 'rxjs/operators';
+import { tap, catchError, flatMap }  from 'rxjs/operators';
 
 import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
@@ -93,18 +93,6 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             );
     }
 
-    loginAllServers(login, password, remember = false) {
-        return this.mediaServerApi.getMediaServers(false).pipe(
-            map((servers: any) =>
-                forkJoin(servers.map((server) => {
-                    const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
-                    });
-                    return newServer.login(login, password, remember);
-                }))
-            )
-        ).toPromise();
-    }
-
     logout(doNotRedirect = false, skipReload = false) {
         this.account = undefined;
 
@@ -133,7 +121,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
-                            setTimeout(() => skipReload && this.window.location.reload());
+                            setTimeout(() => !skipReload && this.window.location.reload());
                         });
                 } else if (!skipReload) {
                     setTimeout(() => {

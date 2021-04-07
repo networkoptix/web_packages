@@ -56,7 +56,6 @@ export abstract class BaseAccount implements OnDestroy {
     abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
     abstract logout(doNotRedirect?: boolean, skipReload?): void;
     abstract requireLogin(): Promise<any>;
-    abstract loginAllServers(login: string, password: string, remember: boolean): Promise<any>;
 
     constructor(
         configService: NxConfigService,
