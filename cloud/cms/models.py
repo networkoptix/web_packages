@@ -402,8 +402,8 @@ class Customization(models.Model):
         super(Customization, self).save(*args, **kwargs)
         if create_cloud_portal_asset:
             # Default cloud portal asset type
-            asset_type = AssetType.objects.get(name="", single_customization=True,
-                                               type=AssetType.ASSET_TYPES.cloud_portal)
+            asset_type, _ = AssetType.objects.get_or_create(name="", single_customization=True,
+                                                            type=AssetType.ASSET_TYPES.cloud_portal)
             cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
                                                 asset_type=asset_type)
             cloud_portal.customizations.set([self])
