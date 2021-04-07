@@ -135,14 +135,7 @@ export class LoginWebadminModalContent implements OnInit {
                 }
             }
         }, (result) => {
-            if (this.CONFIG.isLocal) {
-                return this.account.loginAllServers(this.auth.email, this.password, this.remember)
-                    .then(() => {
-                        this.window.location.reload();
-                        return this.activeModal.close(result);
-                    });
-            }
-            this.activeModal.close();
+            this.activeModal.close(result);
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             if (this.keepPage) {

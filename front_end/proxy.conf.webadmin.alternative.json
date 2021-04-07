@@ -11,6 +11,18 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/hls/*": {
+    "target": "https://10.1.5.210:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/hls/*": {
+    "target": "https://10.1.5.210:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/ec2/*": {
     "target": "https://10.1.5.210:7001",
     "secure": false,
@@ -24,7 +36,7 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/language_compiled.json": {
-    "target": "https://localhost:9000",
+    "target": "https://localhost:9001",
     "pathRewrite": {
       "^/static/lang_en_US/": ""
     },
@@ -39,7 +51,7 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/*": {
-    "target": "https://localhost:9000",
+    "target": "https://localhost:9001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -48,7 +60,7 @@
     }
   },
   "/static/*": {
-    "target": "https://localhost:9000",
+    "target": "https://localhost:9001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
