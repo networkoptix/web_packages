@@ -207,7 +207,7 @@ $custom-xl: 1440px;
         font-size: rem(13px);
         font-weight: normal;
         letter-spacing: normal;
-        font-family: robotomonoregular, monospace;
+        font-family: robotomonoregular, monospace !important;
         border: solid 1px $dark11;
         background-color: $dark13;
         color: $additional_light1;
@@ -242,6 +242,7 @@ $custom-xl: 1440px;
                 left: 0;
                 top: 0;
                 color: $light12;
+                font-weight: 400 !important;
             }
         }
     }
