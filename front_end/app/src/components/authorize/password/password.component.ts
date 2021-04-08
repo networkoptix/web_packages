@@ -28,11 +28,11 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Input() passwordProcess: Process;
     @Input() errorCode: string;
     @Output() setCurrentState = new EventEmitter<string>();
-    @Output() isStayingLoggedIn = new EventEmitter<boolean>();
+    // @Output() isStayingLoggedIn = new EventEmitter<boolean>(); stayLoggedIn likely to be removed
 
     sendPassword: any;
     @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
-    stayLoggedIn = true;
+    // stayLoggedIn = true;
     passwordToggle = true;
     header: string;
     subHeader: string;
@@ -56,7 +56,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
         this.setText();
         this.sendPassword = () => {
             this.loginPasswordChange.emit(this.loginPassword);
-            this.isStayingLoggedIn.emit(this.stayLoggedIn);
+            // this.isStayingLoggedIn.emit(this.stayLoggedIn);
         };
     }
 
