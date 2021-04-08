@@ -848,7 +848,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     lockGrid(lock: boolean) {
-        if (this.isMobile) {
+        if (!this.isMobile) {
             this.motionGridChangeWatcher.value = lock;
         }
     }

@@ -215,7 +215,6 @@ function build_webadmin_locally() {
     [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
-    [[ -d front_end/node_modules ]] && rm -rf front_end/node_modules
     pushd $BUILD_DIR
         . "$REPO/../webadmin/build.sh"
     popd

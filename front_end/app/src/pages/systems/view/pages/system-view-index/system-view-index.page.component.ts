@@ -190,7 +190,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
         // (check archive presence mode)
-        if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
+        if (this.system.userManager.permissions.isAdmin ||
+            this.system.userManager.isLiveViewer() ||
+            this.system.userManager.noPermissions) {
           return Promise.resolve();
         }
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
