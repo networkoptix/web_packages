@@ -19,7 +19,7 @@
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty && email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
                 [(ngModel)]="loginEmail"
                 #email="ngModel"
-                autocomplete="email"
+                autocomplete="off"
                 required
                 [readonly]="emailProcess.processing"
                 email
@@ -28,17 +28,17 @@
                 <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
                 <p *ngIf="email.errors.email" class="error-label" translate>Invalid email</p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
-                    <p class="my-2 error-label" translate>Account not activated.</p>
-                    <p><a href="" (click)="reactivate()" translate>Resend activation email.</a></p>
+                    <p class="mb-2 error-label" translate>Account not activated.</p>
+                    <p class="fake-link" (click)="reactivate()" translate>Resend activation email.</p>
                 </ng-container>
                 <ng-container *ngIf="email.errors.accountDoesNotExist">
-                    <p class="my-2" translate>Account does not exist.</p>
+                    <p class="mb-2" translate>Account does not exist.</p>
                     <p translate>You can create account with this email address or try to enter a different one.</p>
                 </ng-container>
                 <p *ngIf="email.errors.accountNotAccessSystem" class="error-label" translate>Account doesn't have access to this system.</p>
                 <p *ngIf="email.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
             </div>
-            <p *ngIf="['connectSystemToCloud', 'setupWizard'].includes(clientType)" translate>This account will get owner access level</p>
+            <p *ngIf="['connectSystemToCloud', 'setupWizard'].includes(clientType)" class="mt-2" translate>This account will get owner access level</p>
         </ng-container>
         <ng-template #webadmin>
             <label for="authorizeLogin" translate>Login</label>
@@ -46,6 +46,7 @@
                 type="text"
                 id="authorizeLogin"
                 name="login"
+                autocomplete="off"
                 [(ngModel)]="loginEmail"
                 [ngClass]="{ 'invalid-state': login.errors?.required || login.errors?.accountNotAccessSystem }"
                 #login="ngModel"

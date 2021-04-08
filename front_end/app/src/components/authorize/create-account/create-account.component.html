@@ -53,7 +53,7 @@
                     [ngClass]="{ 'invalid-state': firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required }"
                     [(ngModel)]="createFirstName"
                     #firstName="ngModel"
-                    autocomplete="given-name"
+                    autocomplete="off"
                     required
                     nxFocusMe>
                 <p *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
@@ -68,7 +68,7 @@
                     [ngClass]="{ 'invalid-state': lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required }"
                     [(ngModel)]="createLastName"
                     #lastName="ngModel"
-                    autocomplete="family-name"
+                    autocomplete="off"
                     required
                     nxFocusMe>
                 <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>

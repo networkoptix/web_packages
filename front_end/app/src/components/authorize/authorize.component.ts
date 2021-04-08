@@ -87,7 +87,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginProcess: Process;
     loginPassword: string;
     passwordErrorCode: string;
-    shouldStayLoggedIn: boolean;
+    // shouldStayLoggedIn: boolean;
 
     // create account
     createProcess: Process;
@@ -226,8 +226,15 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.loginProcess = this.processService.createProcess(
-            this.login,
-            { ignoreError: true, timeoutMs },
+            () => {
+                this.passwordErrorCode = '';
+                return this.login();
+            },
+            {
+                ignoreUnauthorized : true,
+                ignoreError        : true,
+                timeoutMs
+            },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
@@ -239,11 +246,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             err => {
                 console.error('err from loginProcess', err);
-                if (err?.errorText) {
-                    if (err.errorText === 'Invalid credentials') {
+                if (err?.resultCode) {
+                    if (err.resultCode === 'notAuthorized') {
                         this.passwordErrorCode = 'wrongPassword';
+                    } else if (err.resultCode === 'accountBlocked') {
+                        this.passwordErrorCode = 'lockedOut';
                     }
-                    // error for too many login attempts still needed
                 } else {
                     this.handleCloudConnectionError(err, this.loginProcess);
                 }
@@ -316,7 +324,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = () => {
-        // should pass in some data to denote whether user should stay logged in or not? (this.shouldStayLoggedIn)
+        // should pass in some data to denote whether user should stay logged in or not? (this.shouldStayLoggedIn) likely to be removed
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -346,9 +354,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
-    stayingLoggedIn(stayLoggedIn: boolean) {
-        this.shouldStayLoggedIn = stayLoggedIn;
-    }
+    // stayingLoggedIn(stayLoggedIn: boolean) {
+    //     this.shouldStayLoggedIn = stayLoggedIn;
+    // }
 
     ngOnDestroy() {}
 }
