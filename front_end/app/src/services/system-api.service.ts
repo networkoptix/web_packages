@@ -534,15 +534,6 @@ export class NxSystemAPI {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;
-        // View tab needs authKey. The mediaserver does not like runtime-guid.
-        if (environment.isLocal) {
-            this.authGet = authGet || this.cookieService.get('authGet');
-            this.authPost = authPost || this.cookieService.get('authPost');
-            this.authPlay = authPlay || this.cookieService.get('authPlay');
-            this.cookieService.set('authGet', this.authGet);
-            this.cookieService.set('authPost', this.authPost);
-            this.cookieService.set('authPlay', this.authPlay);
-        }
     }
 
     /* End of Authentication  */
