@@ -137,7 +137,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
             if (result.data?.resultCode === this.CONFIG.responseOk) {
-                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(this.window.location.reload)
+                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload);
             }
             return result;
         });
