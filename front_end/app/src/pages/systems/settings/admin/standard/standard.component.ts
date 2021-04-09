@@ -116,7 +116,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     setWatcherValues(settings) {
         this.applyService.setVisible(false);
-        // this.applyService.hardReset();
+        // this.applyService.reset(true);
         const sw = this.settingsWatchers;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];

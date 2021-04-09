@@ -107,7 +107,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.setOriginal();
             this.applyService.reset();
             return result;
@@ -137,7 +137,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.storageService.langChanged = false;
         }
-        this.applyService.hardReset();
+        this.applyService.reset(true);
         this.applyService.setVisible();
     }
 
