@@ -960,7 +960,7 @@ Create Docker Server
     [Return]    ${port1}
 
 Setup Docker Server
-    [Arguments]    ${image}=4.1_test
+    [Arguments]    ${image}=43750
     ${server}=   Create Dictionary
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
