@@ -186,8 +186,8 @@ def login_with_code(request):
     except models.Account.DoesNotExist:
         raise APINotFoundException("User not in cloud")
 
+    request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
     return login_helper(request, token, user)
-
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
