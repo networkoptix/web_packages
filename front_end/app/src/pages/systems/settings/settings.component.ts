@@ -77,6 +77,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
+    private systemInfoSubscription: Subscription;
     private checkMergeSubscription: Subscription;
 
     private origSelectedSection: string;
@@ -264,8 +265,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.system) {
             this.system.stopPoll();
+            this.system.ribbonService.hide();
         }
-        this.system.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }
 
@@ -274,80 +275,103 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then((account) => {
-                if (account && !this.CONFIG.isLocal) {
-                    // Starts the systems poll if starting on a system.
-                    if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
-                        this.systemsService.getSystems(account.email);
-                    }
-                    this.account = account;
-                    this.system = this.systemService.createSystem(this.account.email, this.systemId);
-                    this.system.show404 = false;
-                    this.gettingSystem.run().catch(() => {
-                        this.systemNoAccess = true;
-                    });
+                if (account) {
+                    if (!this.CONFIG.isLocal) {
+                        this.account = account;
+                        // Starts the systems poll if starting on a system.
+                        if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
+                            this.systemsService.getSystems(account.email);
+                        }
 
-                    if (this.systemSubscription) {
-                        this.systemSubscription.unsubscribe();
-                    }
-                    this.systemSubscription = this.system.infoSubject
-                        .pipe(
-                            filter((system: any) => system !== undefined),
-                            tap(({ isOnline }) => {
-                                this.applyService.isOnline$.next(!!isOnline);
-                                if (isOnline) {
-                                    this.system.ribbonService.hide();
-                                } else {
-                                    this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                        if (this.systemSubscription) {
+                            this.systemSubscription.unsubscribe();
+                        }
+                        this.systemSubscription = this.systemsService
+                            .systemsSubject
+                            .subscribe((systems) => {
+                                if (!systems.filter(s => s.id === this.systemId).length) {
+                                    if (systems.length === 1) {
+                                        this.router.navigate([`/systems/${systems[0].id}`]);
+                                    } else {
+                                        this.router.navigate(['/systems']);
+                                    }
+                                    return;
                                 }
-                            })
-                        )
-                        .subscribe(() => {
-                            // if system is removed while on page, redirects to systems page
-                            if (
-                                this.system && this.systemsService.systems &&
-                                !this.systemsService.systems.some(system => system.id === this.system.id) &&
-                                !this.CONFIG.isLocal) {
-                                this.uriService.updateURI('/systems');
-                            }
-                            if (this.system.isAvailable) {
-                                this.updateAlert();
-                            }
-                            if (this.system.canViewInfo()) {
-                                // Makes request to get health, this is used to cache request.
-                                this.system.mediaserver.getAggregateHealthReport().subscribe();
-                            }
 
+                                this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                                this.system.show404 = false;
+                                this.gettingSystem.run().catch(() => {
+                                    this.systemNoAccess = true;
+                                });
+
+                                if (this.systemInfoSubscription) {
+                                    this.systemInfoSubscription.unsubscribe();
+                                }
+                                this.systemInfoSubscription = this.system.infoSubject
+                                    .pipe(
+                                        filter((system: any) => system !== undefined),
+                                        tap(({ isOnline }) => {
+                                            this.applyService.isOnline$.next(!!isOnline);
+                                            if (isOnline) {
+                                                this.system.ribbonService.hide();
+                                            } else {
+                                                this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                            }
+                                        })
+                                    )
+                                    .subscribe(() => {
+                                        // if system is removed while on page, redirects to systems page
+                                        if (
+                                            this.system && this.systemsService.systems &&
+                                            !this.systemsService.systems.some(system => system.id === this.system.id) &&
+                                            !this.CONFIG.isLocal) {
+                                            this.uriService.updateURI('/systems');
+                                        }
+                                        if (this.system.isAvailable) {
+                                            this.updateAlert();
+                                        }
+                                        if (this.system.canViewInfo()) {
+                                            // Makes request to get health, this is used to cache request.
+                                            this.system.mediaserver.getAggregateHealthReport().subscribe();
+                                        }
+
+                                        this.updateMenu();
+                                    });
+
+                                if (this.connectionSubscription) {
+                                    this.connectionSubscription.unsubscribe();
+                                }
+                                this.connectionSubscription = this.system.connectionSubject
+                                    .pipe(filter((connectionLost: boolean) => connectionLost))
+                                    .subscribe(_ => {
+                                        this.connectionLost();
+                                    });
+                            });
+                    } else {
+                        // this.systemsService.stopPoll();
+                        if (!this.settingsService.system) {
+                            this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                        }
+                        this.system = this.settingsService.system;
+                        this.system.update();
+                        this.system.getInfoAndPermissions();
+                        this.systems = [this.system];
+                        this.system.isAvailable = true;
+                        this.system.isOnline = true;
+                        this.settingsService.system = this.system;
+                        setTimeout(() => {
+                            this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
+                        });
+
+                        if (this.systemInfoSubscription) {
+                            this.systemInfoSubscription.unsubscribe();
+                        }
+                        this.systemInfoSubscription = this.system.infoSubject.subscribe(() => {
+                            this.systemReady();
+                            this.updateAlert();
                             this.updateMenu();
                         });
-
-                    if (this.connectionSubscription) {
-                        this.connectionSubscription.unsubscribe();
                     }
-                    this.connectionSubscription = this.system.connectionSubject
-                        .pipe(filter((connectionLost: boolean) => connectionLost))
-                        .subscribe(_ => {
-                            this.connectionLost();
-                        });
-                } else if (this.CONFIG.isLocal && account) {
-                    // this.systemsService.stopPoll();
-                    if (!this.settingsService.system) {
-                        this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-                    }
-                    this.system = this.settingsService.system;
-                    this.system.update();
-                    this.system.getInfoAndPermissions();
-                    this.systems = [this.system];
-                    this.system.isAvailable = true;
-                    this.system.isOnline = true;
-                    this.settingsService.system = this.system;
-                    setTimeout(() => {
-                        this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
-                    });
-                    this.systemSubscription = this.system.infoSubject.subscribe(() => {
-                        this.systemReady();
-                        this.updateAlert();
-                        this.updateMenu();
-                    });
                 }
             });
     }

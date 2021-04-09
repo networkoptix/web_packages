@@ -38,7 +38,7 @@ export class UserManager {
     }
 
     get noPermissions() {
-        return this.currentUser.permissions === '';
+        return this.currentUser?.permissions === '';
     }
 
     set accessRole(accessRole) {

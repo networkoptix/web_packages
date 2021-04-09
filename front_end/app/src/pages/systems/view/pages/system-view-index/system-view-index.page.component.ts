@@ -17,14 +17,18 @@ import WebClientUxService, { WebclientUxState } from '../../services/webclient-u
 import { exception } from 'console'
 import { NxConfigService, IConfig } from '@services/nx-config'
 
-import sidebarLayout from '../sidebarLayout.cfg'
+import sidebarLayout        from '../sidebarLayout.cfg'
+import { NxSystemsService } from '../../../../../services/systems.service';
+import { UntilDestroy }     from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'nx-system-view-index-page',
   templateUrl: 'system-view-index.page.component.html',
   styleUrls: ['system-view-index.page.component.scss']
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
+  private systemsSubscription: Subscription;
 
   protected _state: VmsState
   protected _vmsStateSubscription: Subscription
@@ -33,6 +37,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
   public systemId: string
   public system: NxSystem
+  public systems: NxSystem[];
 
   protected CONFIG: IConfig;
 
@@ -87,6 +92,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected route: ActivatedRoute,
     protected accountService: NxAccountService,
     protected systemService: NxSystemService,
+    protected systemsService: NxSystemsService,
     protected vms: VideoManagementSystemService,
     protected timeline: TimelineService,
     protected ux: WebClientUxService,
@@ -104,6 +110,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._routerParamsSubscription = this.route.params.subscribe(this._onRouteChange)
     this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
     this.onResize({ target: { innerWidth: window.innerWidth } })
+
+    this.systemsSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
+      this.systems = systems;
+      this._initSystem();
+    });
   }
 
   public ngOnDestroy (): void {
@@ -151,26 +162,29 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     return undefined
   }
 
-  protected _initSystem () {
-    this.vms.reset()
-    // console.log('initSystem entered')
+  protected _initSystem() {
+    this.vms.reset();
 
     const createSystem = () => {
       return this.accountService.get().then(account => {
         if (!account) {
-          console.warn('accountService returned no account')
-          return Promise.reject()
+          return Promise.reject();
         }
+
         if (this.CONFIG.isLocal) {
           this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-          console.log('local system created', this.system)
-          return Promise.resolve()
-        } else {
-          this.system = this.systemService.createSystem(account.email, this.systemId)
-          return Promise.resolve()
+          return Promise.resolve();
+        } else if (this.systems) {
+              if (this.systems.filter(s => s.id === this.systemId).length) {
+                this.system = this.systemService.createSystem(account.email, this.systemId);
+                return Promise.resolve();
+              }
+
+              this.router.navigate(['/systems']);
+              return Promise.reject();
         }
-      })
-    }
+      });
+    };
 
     createSystem()
     .then(() => this.system.getMediaServersAndCameras())
@@ -189,12 +203,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
-        // (check archive presence mode)
-        if (this.system.userManager.permissions.isAdmin ||
-            this.system.userManager.isLiveViewer() ||
-            this.system.userManager.noPermissions) {
+        if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
           return Promise.resolve();
         }
+        // (check archive presence mode)
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
           const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length)
           // console.log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
@@ -269,8 +281,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
       })
     }).catch(e => {
-      console.warn(`system ${this.system.id} view initialization failed`, e)
-      this._setInitializationState(true, true)
+      console.warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
+      setTimeout(() => this._setInitializationState(true, true));
     })
   }
 
