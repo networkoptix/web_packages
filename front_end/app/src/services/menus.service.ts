@@ -181,8 +181,12 @@ export class NxMenusService implements OnDestroy {
         return { ...node, display_name, name, nodes, breadcrumbs };
     }
 
-    getUrl(systemId: string, endpoint = this.endpoint) {
+    getUrl(systemId: string, endpoint = this.endpoint, home = false) {
         let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        if (home) {
+            return url;
+        }
+
         if (!this.CONFIG.isLocal && systemId) {
             if (endpoint.view) {
                 url += '/view';
