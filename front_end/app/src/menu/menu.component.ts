@@ -125,7 +125,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             .subscribe(() => {
                 const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
                 if (item) {
-                    this.navItemIdx++;
+                    this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
                     this.menuService.navItemId = this.navItems[this.navItemIdx].id;
                     this.router
                         .navigate([`${this.content.base}/${item.path}`], { queryParams: { search: this.menuModel.query } })
