@@ -76,16 +76,18 @@ export class AppComponent {
 
         // hides header if an authorize (oauth) route
         this.router.events
-            .pipe(filter(ev => ev instanceof NavigationEnd))
-            .subscribe(async(ev: NavigationEnd) => {
+            .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
+            .subscribe((ev: NavigationEnd) => {
                 this.appStateService.authorizing =
                     ev.url.includes('authorize') ||
                     ev.url.includes('activate') ||
                     ev.url.includes('restore_password');
 
                 if (ev.url.startsWith('/?code=')) {
-                    await this.cloudApiService.loginCode(ev.url.slice(7));
-                    window.location.href = '/systems';
+                    return this.cloudApiService.loginCode(ev.url.slice(7))
+                        .then(() => {
+                            this.window.location.href = '/systems';
+                        });
                 }
             });
 
