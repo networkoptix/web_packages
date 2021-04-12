@@ -14,20 +14,39 @@ def add_asset_ds_pair(apps, schema_editor):
         for file in external_files:
             asset_ds_pair, _ = AssetDsPair.objects.get_or_create(asset=file.asset, data_structure=file.data_structure)
             md5 = str(file.md5)
+
+            if not md5:
+                try:
+                    file.delete()
+                except IOError:
+                    pass
+                continue
+
+            old_url = str(file.file.name)
+            new_url = None
+
             if md5 in existing_files:
                 existing_files[md5].asset_ds_pair.add(asset_ds_pair)
-                old_url = str(file.file.name)
-                new_url = existing_files[md5].file.file.name
-                if file.asset.asset_type.id == 6 and old_url != new_url:
+                new_url = existing_files[md5].file.name
+                if file.asset.asset_type.id == 6 and new_url and old_url != new_url:
                     for data_record in file.data_structure.datarecord_set.all():
                         if old_url in data_record.value:
                             data_record.value = data_record.value.replace(old_url, new_url)
                             data_record.save()
-                file.delete()
+                if new_url:
+                    file.delete()
+                else:
+                    existing_files[md5].file = file.file
+
             else:
                 file.asset_ds_pair.add(asset_ds_pair)
                 existing_files[md5] = file
+        
+        processed_files = ExternalFile.objects.all()
 
+        for file in processed_files:
+            if not file.asset_ds_pair.count():
+                file.delete()
 
 def reverse_add_asset_ds_pair(apps, schema_editor):
     if not settings.LOCAL_ENVIRONMENT and not settings.INSTANCE == 'LOCAL':
@@ -55,6 +74,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(
+            'DROP TABLE IF EXISTS cms_externalfile_asset_ds_pair;DROP TABLE IF EXISTS cms_assetdspair;',
+            migrations.RunSQL.noop),
         migrations.AlterField(
             model_name='externalfile',
             name='md5',
