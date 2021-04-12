@@ -38,7 +38,7 @@ h2 {
 }
 
 h3 {
-    @include font-source($font-family-regular, $h3-font-size, $dark9);
+    @include font-source($font-family-medium, $h3-font-size, $dark9);
     margin-top    : ($line-height-computed / 2);
     margin-bottom : ($line-height-computed / 4);
 }

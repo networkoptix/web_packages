@@ -304,7 +304,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                             return this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, this.kbService.activeAssetId, state)
                                 .pipe(
                                     tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
-                                        const title = originalTitle ? `<h1 class="page-title">${originalTitle}</h1>` : originalTitle;
+                                        const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
                                         if (state) {
                                             this.showRibbon(this.kbService.activeAssetId, reviewId);
                                         }
