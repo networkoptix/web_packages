@@ -21,7 +21,7 @@ import { NxUtilsService } from '@services/utils.service'
 
 function requestFullscreen (el) {
   if (!el) {
-    return
+    return false
   }
   const docEl = window.document.documentElement;
   const requestFullScreen =
@@ -36,6 +36,7 @@ function requestFullscreen (el) {
   } else {
     console.log('can not enter full screen', docEl)
   }
+  return !!requestFullScreen
 }
 
 function exitFullscreen () {
@@ -365,7 +366,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public toggleFullScreen ($event?) {
       console.log('toggleFullScreen')
       $event?.stopPropagation()
-      this.ux.isFullScreen = !getFullscreenElement()
+      const canRequestFullscreen = requestFullscreen(this.self.nativeElement.parentElement)
+      if (!canRequestFullscreen) {
+        this.ux.alternateFullScreen$.next(!this.ux.alternateFullScreen$.value)
+      }
+      this.ux.isFullScreen =  canRequestFullscreen && !getFullscreenElement()
     }
 
     public stopSettingsClickPropagation ($event) {
