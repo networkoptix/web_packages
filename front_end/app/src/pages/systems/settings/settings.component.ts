@@ -290,11 +290,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             .systemsSubject
                             .subscribe((systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
-                                    if (systems.length === 1) {
-                                        this.router.navigate([`/systems/${systems[0].id}`]);
-                                    } else {
-                                        this.router.navigate(['/systems']);
-                                    }
+                                    this.systemNoAccess = true;
                                     return;
                                 }
 
