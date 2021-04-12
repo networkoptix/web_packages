@@ -65,6 +65,12 @@
       "^/static/lang_en_US/views": "/views"
     }
   },
+  "/static/lang_ru_RU/*": {
+    "target": "https://cloud-test.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/languages.json": {
     "target": "https://cloud-test.hdw.mx",
     "secure": false,
