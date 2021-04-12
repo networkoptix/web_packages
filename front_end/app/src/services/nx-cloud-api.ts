@@ -3,7 +3,7 @@ import {
     HttpClient, HttpHeaders, HttpParams
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
-import { catchError, concatMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
 import { EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
@@ -24,8 +24,21 @@ export const DOC_TYPES = {
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
     descriptor.value = function(...args) {
-        return from(
-            this.accountService.get().then(account => {
+        return of('').pipe(
+            switchMap(_ => {
+                if (this.currentAccount !== undefined) {
+                    return of(this.currentAccount);
+                }
+                return this.accountService.get().then(account => {
+                    if (account) {
+                        this.currentAccount = account;
+                    } else {
+                        this.currentAccount = null;
+                    }
+                    return account;
+                });
+            }),
+            switchMap((account: Account) => {
                 if (account?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
@@ -35,9 +48,7 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
                 }
                 return originalMethod.apply(this, args);
             })
-        ).pipe(switchMap((result: any) => {
-            return result;
-        }));
+        );
     };
 };
 
@@ -76,6 +87,7 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 export class NxCloudApiService {
     private CONFIG: IConfig;
     private accountService: any;
+    private currentAccount: Account;
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
 
@@ -90,6 +102,13 @@ export class NxCloudApiService {
         this.CONFIG = configService.getConfig();
         setTimeout(_ => {
             this.accountService = injector.get(NxAccountService);
+            this.accountService.accountSubject.subscribe(account => {
+                if (account) {
+                    this.currentAccount = account;
+                } else {
+                    this.currentAccount = null;
+                }
+            });
         });
     }
 
@@ -307,7 +326,13 @@ export class NxCloudApiService {
         if (forceUpdate) {
             headers = headers.set('reset-cache', 'reset');
         }
-        return this.http.get<Account>(endpoint, { headers });
+        return this.http.get<Account>(endpoint, { headers })
+            .pipe(
+                map(account => {
+                    account.isCloud = true;
+                    return account;
+                })
+            );
     }
 
     getCustomAccountProperty(property: string, username?: string) {
