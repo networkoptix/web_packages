@@ -18,7 +18,7 @@ import { exception } from 'console'
 import { NxConfigService, IConfig } from '@services/nx-config'
 
 import sidebarLayout        from '../sidebarLayout.cfg'
-import { NxSystemsService } from '../../../../../services/systems.service';
+import { NxSystemsService } from '@services/systems.service';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
@@ -203,10 +203,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const archives = {}
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
-        if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
+        // (check archive presence mode)
+        if (!this.system.userManager.permissions.viewArchives) {
           return Promise.resolve();
         }
-        // (check archive presence mode)
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
           const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length)
           // console.log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
