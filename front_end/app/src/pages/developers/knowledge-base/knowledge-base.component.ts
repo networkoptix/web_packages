@@ -305,7 +305,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                                 .pipe(
                                     tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
                                         const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
-                                        if (state || this.account?.is_superuser) {
+                                        if (state || this.kbService.account?.is_superuser) {
                                             this.showRibbon(this.kbService.activeAssetId, state, reviewId);
                                         }
                                         this.search = { ...this.search };
