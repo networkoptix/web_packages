@@ -42,6 +42,7 @@ def clone_asset(request, asset_id):
     asset.name = clone_name
     asset.created_by = created_by
     asset.primary_group = None
+    asset.uuid = uuid.uuid4()
     asset.save()
 
     old_asset = Asset.objects.get(id=asset_id)
