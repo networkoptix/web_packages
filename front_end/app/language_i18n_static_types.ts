@@ -657,10 +657,11 @@ export interface BeingMerged {
 }
 
 export interface RibbonIntegration {
-    accept:         any;
-    reject:         any;
-    backToEditText: any;
-    previewRibbon:  any;
+    accept:          any;
+    reject:          any;
+    backToEditText:  any;
+    previewRibbon:   any;
+    publishedRibbon: any;
 }
 
 export interface Search {
@@ -1575,6 +1576,7 @@ const typeMap: any = {
         { json: "reject", js: "reject", typ: "any" },
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
+        { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },

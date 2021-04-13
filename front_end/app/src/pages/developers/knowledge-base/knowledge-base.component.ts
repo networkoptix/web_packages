@@ -165,7 +165,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         });
     }
 
-    showRibbon(id, reviewId?) {
+    showRibbon(id, state, reviewId?) {
         const ribbonActions: RibbonActionInput[] = [
             {
                 type  : 'link',
@@ -201,7 +201,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             );
         }
         this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon(),
+            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
             ribbonActions
         );
     }
@@ -305,8 +305,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                                 .pipe(
                                     tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
                                         const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
-                                        if (state) {
-                                            this.showRibbon(this.kbService.activeAssetId, reviewId);
+                                        if (state || this.account?.is_superuser) {
+                                            this.showRibbon(this.kbService.activeAssetId, state, reviewId);
                                         }
                                         this.search = { ...this.search };
                                         this.pageService.pageTitle = originalTitle;
