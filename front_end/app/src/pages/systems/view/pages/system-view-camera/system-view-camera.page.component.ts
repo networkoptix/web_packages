@@ -369,6 +369,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       const canRequestFullscreen = requestFullscreen(this.self.nativeElement.parentElement)
       if (!canRequestFullscreen) {
         this.ux.alternateFullScreen$.next(!this.ux.alternateFullScreen$.value)
+        // Resets the alternateFullScreen to allow opening once fullscreen is closed
+        this.ux.alternateFullScreen$.next(false)
       }
       this.ux.isFullScreen =  canRequestFullscreen && !getFullscreenElement()
     }
