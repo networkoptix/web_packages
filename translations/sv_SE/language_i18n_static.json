@@ -652,7 +652,6 @@
         "detachSystemFailed": "Det gick inte att ta bort servern från systemet. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
         "detachSystemSuccess": "Servern kopplades bort från systemet.",
         "portWarning": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
-        "portMissing": "Port number is required.",
         "refresh": "Uppdatera",
         "refreshing": "Uppdaterar...",
         "removeMediaserverFailed": "Det gick inte att ta bort servern från systemet.",

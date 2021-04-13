@@ -719,7 +719,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     setCamera = (forceUpdate = false) => {
-        this.applyService.hardReset();
+        this.applyService.reset(true);
         this.applyService.setVisible(false);
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera?.id && !forceUpdate) {
             return;

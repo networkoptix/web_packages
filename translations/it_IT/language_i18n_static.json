@@ -652,7 +652,6 @@
         "detachSystemFailed": "Impossibile scollegare il server dal sistema. Verificare se la password inserita è corretta ed il server è online e riprovare.",
         "detachSystemSuccess": "Il server è stato scollegato correttamente dal sistema.",
         "portWarning": "I numeri di porta inferiori a 1024 sono limitati. Il server potrebbe diventare inaccessibile.",
-        "portMissing": "Port number is required.",
         "refresh": "Aggiornare",
         "refreshing": "Aggiornamento...",
         "removeMediaserverFailed": "Rimozione del server dal sistema non riuscita.",

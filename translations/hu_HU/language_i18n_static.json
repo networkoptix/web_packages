@@ -652,7 +652,6 @@
         "detachSystemFailed": "Nem sikerült kiszolgálót leválasztani a rendszerről. Ellenőrizze, hogy a megadott jelszó helyes-e, és a kiszolgáló online, - és próbálkozzon újra.",
         "detachSystemSuccess": "A szervert sikeresen leválasztottuk a rendszertől.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Nem sikerült eltávolítani a kiszolgálót a rendszerből.",

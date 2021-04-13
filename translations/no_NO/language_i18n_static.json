@@ -652,7 +652,6 @@
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",

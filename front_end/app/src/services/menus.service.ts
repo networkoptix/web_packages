@@ -94,7 +94,7 @@ export class NxMenusService implements OnDestroy {
             }, {});
     }
 
-    getMenu = (name: string, withCurrentSystem = false, ignoreCache = false) => {
+    getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
         let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
 
         if (this.CONFIG.isLocal) {
@@ -118,8 +118,7 @@ export class NxMenusService implements OnDestroy {
             .pipe(
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
                     ? this.cloudApi.getMenu(name).pipe(
-                        map((menu): [string, MenuStructure] => [login, menu]),
-                        startWith([login, { ...menu, nodes: ignoreCache ? [] : menu.nodes }])
+                        map((menu): [string, MenuStructure] => [login, menu])
                     )
                     : Promise.resolve([login, menu])
                 ),
@@ -181,8 +180,12 @@ export class NxMenusService implements OnDestroy {
         return { ...node, display_name, name, nodes, breadcrumbs };
     }
 
-    getUrl(systemId: string, endpoint = this.endpoint) {
+    getUrl(systemId: string, endpoint = this.endpoint, home = false) {
         let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        if (home) {
+            return url;
+        }
+
         if (!this.CONFIG.isLocal && systemId) {
             if (endpoint.view) {
                 url += '/view';

@@ -8,6 +8,7 @@ import Hls from 'hls.js'
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import { filter } from 'rxjs/operators';
+import WebClientUxService from '@pages/systems/view/services/webclient-ux.service';
 
 
 const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
@@ -37,6 +38,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor (
     public playback: PlaybackService,
     public vms: VideoManagementSystemService,
+    public ux: WebClientUxService
   ) {
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
     this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
@@ -72,6 +74,14 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this.ux.alternateFullScreen$.subscribe(fullscreen => {
+      if (!fullscreen) return
+      try {
+        this.videoView.nativeElement.webkitEnterFullscreen()
+      } catch (e) {
+        console.error(e)
+      }
+    })
   }
 
   public ngOnDestroy (): void {

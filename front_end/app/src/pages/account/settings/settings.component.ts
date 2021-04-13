@@ -10,19 +10,19 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 import { first }                     from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { NxMenuService }             from '../../../menu';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { NxStorageService }          from '../../../services/storage.service';
-import { NxSessionService }          from '../../../services/session.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxApplyService, Watcher }   from '@services/apply.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxMenuService }             from '@src/menu';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
+import { NxSessionService }          from '@services/session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -68,8 +68,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private pageService: NxPageService,
-        private sessionService: NxSessionService
+        private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -86,7 +85,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 let lang = Promise.resolve();
                 if (this.langCode !== this.account.language) {
                     this.account.language = this.langCode;
-                    this.sessionService.language = this.langCode;
+
                     lang = new Promise<any>((resolve) => {
                         return this.cloudApiService
                             .changeLanguage(this.langCode)
@@ -103,11 +102,10 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
-            successMessage  : this.LANG.account.accountSavedSuccess(),
             errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.setOriginal();
             this.applyService.reset();
             return result;
@@ -137,7 +135,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.storageService.langChanged = false;
         }
-        this.applyService.hardReset();
+        this.applyService.reset(true);
         this.applyService.setVisible();
     }
 

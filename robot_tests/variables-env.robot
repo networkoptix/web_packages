@@ -1,5 +1,5 @@
 *** Variables ***
-
+${IMAGE 4.3}                          4.3.32703
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx
@@ -115,4 +115,4 @@ ${NOAUTH CAMERA PASSWORD}             qweasd123
 #Docker server machine info
 ${QA BURBANK IP}                      10.1.5.238
 ${QA BURBANK USER}                    qaburbank
-${QA BURBANK PASS}                    QABurbank777$ 
+${QA BURBANK PASS}                    QABurbank777$

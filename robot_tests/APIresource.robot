@@ -13,8 +13,7 @@ Merge Systems
     [Documentation]    Merge two cloud systems which have the same owner via cdb API
     [Arguments]    ${auth}    ${primary id}    ${secondary id}
     ${data}=   Create Dictionary    systemId=${secondary id}
-    # hardcoded url below because ${ENV} uses https see Jira CQA-165
-    Create Digest Session    merge session    http://cloud-test.hdw.mx    auth=${auth}    disable_warnings=1
+    Create Digest Session    merge session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    merge session    /cdb/system/${primary id}/merged_systems/    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -76,7 +75,7 @@ Connect System to Cloud
 Rename System
     [Arguments]    ${auth}    ${system id}    ${new name}
     &{data}=   Create Dictionary    systemId=${system id}    name=${new name}
-    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    verify=False    disable_warnings=1
+    Create Session    Rename System session    ${ENV}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -91,7 +90,7 @@ Share
 
 Get Cloud System Settings
     [Arguments]    ${auth}    ${system id}
-    Create Digest Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Get System Settings session   /cdb/system/get?systemId=${system id}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['systems'][0]}
@@ -103,6 +102,14 @@ Get Cloud System Users
     ${resp}=   Get Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
+
+Get Account Info
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}
+    ${auth}=   Create List    ${email}    ${password}
+    Create Session    Get Account Info    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Account Info    /cdb/account/get
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
 
 # Alternative way to reset Account password - via cdb directly.
 # "Change Account Password" keyword is preferred.
@@ -225,7 +232,7 @@ Restore Factory Defaults
 Detach Server From System
     [Arguments]    ${server url}    ${auth}
     &{data}=   Create Dictionary    currentPassword=${auth[1]}
-    Create Digest Session    Detach From System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
+    Create Session    Detach From System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Detach From System session     /api/detachFromSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -402,7 +409,7 @@ Set All Camera Add Params
     ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
-    
+
 Get User Roles
     [Arguments]    ${server url}    ${auth}
     Create Digest Session    Get user roles    ${server url}    auth=${auth}    disable_warnings=1
@@ -499,7 +506,7 @@ Get Storages via API
     Create Digest Session    returnedStorages    ${server url}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemStorages}=   Get Request    returnedStorages   /ec2/getStorages  timeout=10
     [Return]    ${systemStorages.json()}
-   
+
 Save Storages via API
     [Arguments]    ${data}    ${server url}
     Create Digest Session    modifyStorage    ${server url}    auth=${AUTO SYS AUTH}    disable_warnings=1
@@ -548,27 +555,35 @@ Get Relays
        Append To List    ${relays}    ${obj}[domain]
     END
     [Return]    ${relays}
-    
+
 Get Camera User Attributes
-    [Arguments]    ${server url}    ${auth}    
+    [Arguments]    ${server url}    ${auth}
     Create Digest Session    Get Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
     ${resp}=   Get Request    Get Camera Attributes   ec2/getCameraUserAttributesList    timeout=10
     [Return]    ${resp.json()}
-    
-Save Camera User Attributes   
+
+Save Camera User Attributes
     [Arguments]    ${server url}    ${auth}    ${data}
     Create Digest Session    Save Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
     ${resp}=   Post Request    Save Camera Attributes   ec2/saveCameraUserAttributesList   json=${data}     timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    
+
 Get Media Server Attributes
-    [Arguments]    ${server url}    ${auth}    
+    [Arguments]    ${server url}    ${auth}
     Create Digest Session    Get Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
     ${resp}=   Get Request    Get Media Server Attributes   ec2/getMediaServerUserAttributesList    timeout=10
     [Return]    ${resp.json()}
 
-Save Media Server Attributes   
-    [Arguments]    ${server url}    ${auth}   ${data}
+Save Media Server Attributes
+    [Arguments]    ${server url}    ${auth}    ${data}
     Create Digest Session    Save Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
     ${resp}=   Post Request    Save Media Server Attributes   ec2/saveMediaServerUserAttributesList   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
+Add Virtual Camera
+    [Arguments]    ${server url}    ${auth}    ${camera name}
+    ${data}=   Create Dictionary    name=${camera name}
+
+    Create Digest Session    Add Camera Session    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Add Camera Session   /api/virtualCamera/add   json=${data}     timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200

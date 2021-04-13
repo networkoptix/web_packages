@@ -336,7 +336,7 @@ $border-color: $light6;
 
             .controls-toggling-ear {
                 transform     : rotate(0deg);
-                border-radius : 0 2px 2px 0;
+                border-radius : 2px 2px 0 0;
 
                 @include bootstrap.media-breakpoint-down(sm) {
                     float : right;
@@ -364,7 +364,7 @@ $border-color: $light6;
             }
 
             transform           : rotate(180deg);
-            border-radius       : 2px 0 0 2px;
+            border-radius       : 0 0 2px 2px;
         }
     }
 

@@ -159,6 +159,14 @@ Log in to Auto Tests System
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
+Log in to system
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${False}    button=${None}
+    
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -950,11 +958,11 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=4.1_test    ${storage string}=${EMPTY}
+    [Arguments]    ${name}     ${image}=4.1_test    ${storage string}=${EMPTY}    ${VMS}=-e VMS=old
     ${mac}=   Get Random MAC
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --privileged --mac-address=${mac} ${storage string} ${image}
+    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 ${VMS} --privileged --mac-address=${mac} ${storage string} ${image}
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}

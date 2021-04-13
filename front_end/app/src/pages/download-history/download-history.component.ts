@@ -172,7 +172,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     });
             } else {
                 this.canViewRelease = true;
-                this.getData();
+                (this.build === undefined ? Promise.resolve() : this.accountService.requireLogin())
+                    .then(() => this.getData());
             }
         });
     }

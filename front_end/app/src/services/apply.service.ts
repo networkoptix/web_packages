@@ -222,29 +222,21 @@ export class NxApplyService {
     }
 
     /**
-     * Resets all watchers to undefined. This should be used when the component stays the
+     * If hardReset is false all watchers are set to their first undefined value.
+     * If hardReset is true all watchers are set to undefined. This should be used when the component stays the
      * same but the data changes. For an example of how to use this function look at
      * NxSystemUsersComponent.
      */
-    hardReset() {
+    reset(hardReset = false) {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
-                watcher.value = undefined;
+                hardReset ? watcher.value = undefined : watcher.reset();
             });
         }
         this.locked = false;
         this.setWarn('');
-    }
-
-    // Resets all watchers to their first value that wasn't undefined.
-    reset(nonSystem = false) {
-        if (this.watchers) {
-            this.watchers.forEach((watcher) => {
-                watcher.reset();
-            });
-        }
-        this.locked = false;
-        this.setWarn('');
+        this.applyComponentInstance.invalidFields = [];
+        this.applyComponentInstance._disabled = false;
     }
 
     private touched() {

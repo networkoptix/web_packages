@@ -40,7 +40,7 @@
     </div>
     <div class="px-2 position-relative">
         <input #loadReport id="loadReport" type="file" (change)="uploadFile()" style="visibility: hidden;">
-        <button class="btn btn-text position-absolute p-0" style="height: 20px; top: 0" (click)="openFile()">
+        <button class="btn btn-text position-absolute p-0" style="height: 20px; top: 0; padding-left: 0 !important;" (click)="openFile()">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'report.svg'"></svg-icon>
             <span translate>Import Another Report</span>
         </button>

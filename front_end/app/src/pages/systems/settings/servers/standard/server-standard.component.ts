@@ -169,6 +169,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.saveSettings,
             () => {
                 this.applyService.reset();
+                this.applyService.unsetInvalidField('port');
                 this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
                     this.selectDefaultStorage();
                 this.setSystemStorageChosen(this.selectedStorage);
@@ -376,7 +377,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
         if (this.ipPortWatcher.value === null) {
             this.applyService.setInvalidField('port');
-            this.applyService.setWarn(this.LANG.servers.portMissing?.());
             return;
         } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
             this.applyService.setWarn(this.LANG.servers.portWarning?.());

@@ -13,37 +13,19 @@ ${url}         ${ENV}
 *** Keywords ***
 Health Monitor Setup
     Open Browser and go to URL    ${url}
-    ${owner}=   Register and activate account with random email    mark    hamil    ${password}
-    @{auth}=    Create List    ${owner}    ${password}
-    Set Suite Variable    ${owner}    ${owner}
-    ${server}=   Setup Docker Server
-    Set Suite Variable    ${cont1 name}    ${server}[name]
-    Set Suite Variable    ${cont1 id}    ${server}[id]
-    Set Suite Variable    ${cont1 port}    ${server}[port]
-    ${sysId1}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${cont1 port}    System 1    ${owner}    ${password}
-    Set Suite Variable    ${sysId1}    ${sysId1}
-
-    ${server}=   Setup Docker Server
-    Set Suite Variable    ${cont2 name}    ${server}[name]
-    Set Suite Variable    ${cont2 id}    ${server}[id]
-    Set Suite Variable    ${cont2 port}    ${server}[port]
-    ${sysId2}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${cont2 port}    System 2    ${owner}    ${password}
-    Set Suite Variable    ${sysId2}    ${sysId2}
+    #system(name,port,cont,owner,id) 
+    #local auth, cloud auth, server url, 
+    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
+    Create Base Cloud System    image=32750
+    
+    #name, port, id
+    ${system 2}=   Setup Docker Server    image=32750
+    Set Suite Variable    ${system 2}    ${system 2}
+    Setup Local System    https://${QA BURBANK IP}:${system 2['port']}    ${password}    HMserver2
+    ${system 2['cloud id']}=   Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${system 2['port']}    HMserver2    ${system['owner']}    ${password}
+    Set Suite Variable    ${system 2['cloud id']}    ${system 2['cloud id']}
     Sleep    30
-    Stop Docker Server    ${cont2 name}
-
-    &{users}=    Register and Activate Generic Users
-    Set Suite Variable    ${admin}          ${users}[admin]
-    Set Suite Variable    ${viewer}         ${users}[viewer]
-    Set Suite Variable    ${live viewer}    ${users}[liveViewer]
-    Set Suite Variable    ${adv viewer}     ${users}[advViewer]
-    Set Suite Variable    ${custom}         ${users}[custom]
-    Sleep    5
-    Add user to cloud system if not there    ${sysId1}    cloudAdmin        ${admin}          auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    viewer            ${viewer}         auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    advancedViewer    ${adv viewer}     auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    custom            ${custom}         auth=${auth}
-    Add user to cloud system if not there    ${sysId1}    liveViewer        ${live viewer}    auth=${auth}
+    Stop Docker Server    ${system 2['id']}
 
 Open New Browser On Failure
     Close Browser
@@ -119,37 +101,41 @@ Check Details Panel Alerts
 
 Health Monitor Suite Teardown
     Close All Browsers
-    Stop Docker Server    ${cont1 id}
-    Stop Docker Server    ${cont2 id}
-    Delete Docker Server    ${cont1 id}
-    Delete Docker Server    ${cont2 id}
+    Disconnect Server via API    ${local auth}    ${system['id']}    ${password}    ${system['owner']}
+    Disconnect Server via API    ${local auth}    ${system 2['id']}    ${password}    ${system['owner']}
+    Stop Docker Server    ${system['id']}
+    Stop Docker Server    ${system 2['id']}
+    Delete Docker Server    ${system['id']}
+    Delete Docker Server    ${system 2['id']}
+
+
 *** Test Cases ***
 Owner Has Access to Health Monitoring
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Admin Has Access to Health Monitoring
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${admin}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${users['cloudAdmin']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Going to Health Monitor when System is Offline Shows Offline Message
-    Go To    ${url}/systems/${sysId2}
-    Log In    ${owner}    ${password}    button=None
+    Log In    ${system['owner']}    ${password}
+    Go To    ${url}/systems/${system 2['cloud id']}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible    ${HM SYSTEM OFFLINE}    ${HM SYSTEM CANNOT BE ACCESSED}
 
 Json Upload Works
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -161,8 +147,8 @@ Json Upload Works
     #Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
 
 Json Upload Works on Offline System
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -176,8 +162,8 @@ Json Upload Works on Offline System
 
 Advanced Viewer Does Not Have Access To Health Monitor
     # Advanced Viewer
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${adv viewer}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${users['advancedViewer']}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -185,8 +171,8 @@ Advanced Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${viewer}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${users['viewer']}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -194,8 +180,8 @@ Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Live Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${live viewer}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${users['liveViewer']}    ${password}    button=None
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -203,8 +189,8 @@ Live Viewer Does Not Have Access To Health Monitor
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 No Alerts Message Shows When There Are No Alerts
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -213,8 +199,8 @@ No Alerts Message Shows When There Are No Alerts
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Can Close Out of Json Imported Mode
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -228,8 +214,8 @@ Can Close Out of Json Imported Mode
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -243,8 +229,8 @@ Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header 
 
 Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     [Tags]    C69785
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -261,8 +247,8 @@ Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     Count All Alerts and Validate Totals Shown
 
 Hardware Types with Only One Item Should Show Tiles and not Show Tables
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -300,8 +286,8 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     Page Should Not Contain Element    ${HM TABLE}
 
 Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
-    Go To    ${url}/systems/${sysId1}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${system['id']}
+    Log In    ${system['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}

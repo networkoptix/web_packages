@@ -1,14 +1,14 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { UntilDestroy }                from '@ngneat/until-destroy';
 import {
     BehaviorSubject, combineLatest, SubscriptionLike
 } from 'rxjs';
 
 import { BaseDropdown }              from '../injDropdown';
-import { environment }               from '../../../../environments/environment';
-import { NxConfigService }           from '../../../services/nx-config';
-import { Account, NxAccountService } from '../../../services/account.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { environment }               from '@environments/environment';
+import { NxConfigService }           from '@services/nx-config';
+import { Account, NxAccountService } from '@services/account.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,7 +19,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
     @Input() small = false;
-
+    @ViewChild('dropdown') dropdown: ElementRef;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
     rightOffset$ = new BehaviorSubject(0);
@@ -61,7 +61,13 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
             .subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
-                    this.rightOffset$.next(Math.max(button - dropdown + 18, 0) | 0);
+                    const self: any = this?.dropdown.nativeElement;
+                    let widthFromRightEdge = 0;
+                    if (this.CONFIG.isLocal && self?.parentNode.nextSibling) {
+                        widthFromRightEdge = -1 * self.parentNode.nextSibling.offsetWidth;
+                    }
+
+                    this.rightOffset$.next(Math.max(button - dropdown + 18, widthFromRightEdge) | 0);
                 }
             });
     }
