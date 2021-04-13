@@ -295,19 +295,20 @@ User is logged out of browser after a password change in another browser
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
 
-Remember Me Checkbox
-    [Tags]    C41567
-    Log    Step 1
-    Log In With Remember Me    ${email}    ${password}
-    Log    Step 2
-    Persist Current Login State    ${url}
-    Validate Log In    ${email}
-    Log    Step 3
-    Log Out
-    Persist Current Login State    ${url}
-    Validate Log Out
-    Log In With Remember Me    ${login user}    ${password}     remember me=False
-    Log    Step 4
-    Validate Log In    ${login user}
-    Persist Current Login State    ${url}
-    Validate Log Out
+# Remember Me Checkbox
+# Commented out due to CQA-172
+    # [Tags]    C41567
+    # Log    Step 1
+    # Log In With Remember Me    ${email}    ${password}
+    # Log    Step 2
+    # Persist Current Login State    ${url}
+    # Validate Log In    ${email}
+    # Log    Step 3
+    # Log Out
+    # Persist Current Login State    ${url}
+    # Validate Log Out
+    # Log In With Remember Me    ${login user}    ${password}     remember me=False
+    # Log    Step 4
+    # Validate Log In    ${login user}
+    # Persist Current Login State    ${url}
+    # Validate Log Out
