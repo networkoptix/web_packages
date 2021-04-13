@@ -1,20 +1,38 @@
 *** Keywords ***
+
 # Setups and teardowns
 System Admin Suite Setup
-    Create Base Cloud System
-    Sleep    60
+    Create Base Cloud System    image=${IMAGE 4.3}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
+    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${local auth}    ${CAMERA NAME}
+    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
+        ...    ${local auth}
+        ...    https://${QABURBANK IP}:${local system}[port]
+        ...    local_viewer
+        ...    ${permissions}[viewer]
+        ...    noptixautoqa+local_viewer@gmail.com
+        ...    local_viewer
+        ...    ${base password}
+        ...    is cloud=${False}
+    Set Suite Variable    ${local system}
+    Sleep    30
     Open browser and go to URL    ${ENV}
 
 System Admin Suite Teardown
     Delete Base Cloud System
+    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[cont]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
 
+System Admin Test Setup
+    Skip If Irrelevant
+
 System Admin Test Restart
-    Common Restart Logout    ${ENV}
+    Skip If Irrelevant
+    Run keyword and ignore error    Log Out
     Run keyword and ignore error    Rename System    ${local auth}    ${system}[id]    ${system}[name]
-    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
-    Start Docker Server    ${system}[cont]
+    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
 
 # Waits
 Wait until settings are visible
@@ -231,6 +249,21 @@ Evaluate Session Limit
     ${number}=   Evaluate    ${multiplier}*${value}
     Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
 
+# Search
+Validate Search Input
+    [Arguments]    ${view page}=${False}
+    Run Keyword If    ${view page}==${True}    Wait until elements are visible
+        ...    ${VIEW SEARCH INPUT}
+        ...    ${VIEW SEARCH DETAILS TOGGLER}
+        ...    ELSE    Wait until elements are visible
+            ...    ${SEARCH INPUT}
+            ...    ${SEARCH ICON}
+
+Search For
+    [Arguments]    ${text}
+    Validate Search Input
+    Input Text    ${SEARCH INPUT}    ${text}
+
 # API - based
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
@@ -241,6 +274,7 @@ Evaluate Log Level via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${logLevel}=   Get Log Level    ${auth}    ${server url}
     Dictionary should contain item    ${logLevel}    ${key}    ${expected value}
+
 
 # Misc
 Checkbox Is Selected

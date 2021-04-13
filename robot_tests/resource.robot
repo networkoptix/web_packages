@@ -159,6 +159,14 @@ Log in to Auto Tests System
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
+Log in to system
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${False}    button=${None}
+
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -174,7 +182,7 @@ Check Log In
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log Out cloud
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log Out Cloud
     ...    ELSE    Log Out Web Admin
 
 Log Out Cloud
@@ -202,7 +210,7 @@ Validate Log Out
 
 Validate Log Out Web Admin
     Sleep    5
-    Element Should Be Visible    //input[@id="login_email"]        
+    Element Should Be Visible    //input[@id="login_email"]
     Element Should Be Visible    //input[@id="login_password"]
     Element Should Be Visible    //button[@type="submit"]
     Wait Until Element Is Not Visible    locator
@@ -217,16 +225,6 @@ Log Out No Language
     Click Link    ${LOG OUT BUTTON}
     Validate Log Out
 
-Log Out Japanese
-    Wait Until Page Does Not Contain Element    ${BACKDROP}
-    Wait Until Page Contains Element    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
-    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    Sleep    .05    #Ubuntu was clicking too soon
-    Click Button    ${ACCOUNT DROPDOWN}
-    Wait Until Element Is Visible    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
-    Click Link    //header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]/..
-    Validate Log Out    
-    
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
@@ -326,6 +324,8 @@ Disconnect all systems from account
         Disconnect    ${ENV}    ${email}    ${password}    ${sys}
     END
 
+Get Account Id By Email
+    [Arguments]    ${email}
 # Replaced with "Restore password using API"
 Restore password
     [Arguments]    ${email}
@@ -364,7 +364,7 @@ Restore Password using API
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Click Element    ${USERS LIST LINK}
 
 Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -756,7 +756,7 @@ Get All Descendant WebElements
 
 #Wait Until Number Of Tabs Are Open
 #    [Arguments]    ${number}
-#    FOR    
+#    FOR
 #    @{tabs}=   Get Window Handles
 #    ${current tabs}=   Get length    ${tabs}
 #    Wait For Condition       return ${current tabs}==${number}
@@ -863,24 +863,24 @@ Delete All Local Users
 Check Password Badge
     [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
-    ...    ELSE IF    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}     Wait Until Element Is Visible    ${PASSWORD INCORRECT BADGE}
     ...    ELSE IF    '''${pass}''' in ${fair passwords}          Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
     ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}  
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
 
     Mouse Over    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO SHORT TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
 
-    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
-    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
+    Run Keyword If    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Move focus and check badge stays    ${PASSWORD INCORRECT BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Move focus and check badge stays    ${PASSWORD IS TOO SHORT BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD IS FAIR BADGE}
     ...    ELSE IF    '''${pass}''' in ${good passwords}         Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
 
@@ -931,7 +931,7 @@ Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
     ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
     [Return]    ${lang dict}
-    
+
 Log In If Needed
     [Arguments]    ${email}    ${password}
     ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
@@ -1000,7 +1000,7 @@ Setup Custom Docker Server
     [Return]    ${server}
 
 Setup Docker System
-    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${cloud email}=${None}
     ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
     Set To Dictionary    ${system}    cont=${system}[cont]
@@ -1015,7 +1015,7 @@ Setup Docker System
     [Return]    ${system}
 
 Create Base Cloud System
-    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${add users}=${True}
+    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${add users}=${True}
     [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
     ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
     ...               where "Create Base Cloud System" is called
@@ -1043,19 +1043,19 @@ Create Base Cloud System
         ...    ${local auth}
         ...    ${server url}
         ...    ${email}
-        ...    ${permissions}[${role}]    
+        ...    ${permissions}[${role}]
         ...    ${email}
         ...    Cloud User
         ...    ${base password}
 
-        Save User    
-        ...    ${local auth}    
-        ...    ${server url}    
-        ...    Local+${role}    
-        ...    ${permissions}[${role}]    
-        ...    noptixautoqa+local_${role}@gmail.com    
-        ...    Local User    
-        ...    ${base password}    
+        Save User
+        ...    ${local auth}
+        ...    ${server url}
+        ...    Local+${role}
+        ...    ${permissions}[${role}]
+        ...    noptixautoqa+local_${role}@gmail.com
+        ...    Local User
+        ...    ${base password}
         ...    is cloud=${False}
         Set To Dictionary    ${users}    ${role}=${email}
         Set To Dictionary    ${local users}    ${role}=Local+${role}
@@ -1154,25 +1154,19 @@ Wait Until Element is Visible with Retry
     ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
     Run Keyword If    ${load} == ${FALSE}    Reload Page
     Wait Until Element is Visible    ${element}   timeout=${timeout}
-    
+
 Verify No Horizontal Scrollbar
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be Equal As Numbers    ${width out}    ${width in} 
-    
+    Should Be Equal As Numbers    ${width out}    ${width in}
+
 Verify Horizontal Scrollbar Exists
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be True    ${width out} < ${width in}    
-    
-Delete All Text
-    [Arguments]    ${input}
-    ${text} =    Get Element Attribute    ${input}    value
-    ${length} =    Get Length    ${text}
-    ${length} =    Evaluate    ${length} + 1
-    Click Element    ${input}
-    FOR    ${n}    IN RANGE    ${length}
-        Press Keys    None     BACKSPACE 
-    END
+    Should Be True    ${width out} < ${width in}
+
+Skip If Irrelevant
+    ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
+    Skip If    not ${relevant}    Test skipped - not relevant
