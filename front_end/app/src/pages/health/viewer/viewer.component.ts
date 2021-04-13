@@ -460,6 +460,13 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         let file;
         this.healthService.importedData = true;
 
+        // move away so page|data will be reloaded w/ .navigate([this.menu.base + '/alerts'])
+        this.router
+            .navigate([this.menu.base])
+            .catch(error => {
+                console.error(error);
+            });
+
         if (files[0]?.fileEntry) {
             file = files[0].fileEntry as FileSystemFileEntry;
         } else {
@@ -479,7 +486,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     });
 
                 const systemName = NxLanguageProviderService.translate(
-                    this.LANG.headerLabels.healthReportForSystem?.(),
+                    this.LANG.headerLabels.healthReportForSystem,
                     { systemName: data.system || '' }
                 );
                 this.headerService.currentLocation = {

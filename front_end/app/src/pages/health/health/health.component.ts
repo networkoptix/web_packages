@@ -482,7 +482,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         const systems: any = Object.values(this.healthService.values.systems);
         this.reportSnapshot = NxUtilsService.deepCopy(data);
         this.reportSnapshot.time = new Date().toJSON();
-        this.reportSnapshot.system = systems[0].info.systemName;
+        this.reportSnapshot.system = systems[0].info.name;
     }
 
     exportReport() {
