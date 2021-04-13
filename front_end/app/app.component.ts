@@ -86,12 +86,7 @@ export class AppComponent {
                 if (ev.url.startsWith('/?code=')) {
                     return this.cloudApiService.loginCode(ev.url.slice(7))
                         .then(() => {
-                            // this.window.location.href = '/systems';
-                            // this.window.location.reload();
-                            this.router.navigate(['systems']);
-                            // .then(() => {
-                            //     this.window.location.reload();
-                            // });
+                            this.window.location.reload();
                         });
                 }
             });
