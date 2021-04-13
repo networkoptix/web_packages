@@ -235,8 +235,10 @@ export class NxApplyService {
         }
         this.locked = false;
         this.setWarn('');
-        this.applyComponentInstance.invalidFields = [];
-        this.applyComponentInstance._disabled = false;
+        if (this.applyComponentInstance) {
+            this.applyComponentInstance.invalidFields = [];
+            this.applyComponentInstance._disabled = false;
+        }
     }
 
     private touched() {
