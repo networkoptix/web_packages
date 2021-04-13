@@ -28,6 +28,10 @@
         }
     }
 
+    &[type="password"] {
+        font-family: 'Roboto', 'Helvetica', sans-serif; // reset font to show dots and not Japanese currency
+    }
+
     &:hover {
         border-color : $light8;
     }

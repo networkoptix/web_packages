@@ -145,7 +145,7 @@
         align-items: center;
         justify-content: center;
         text-transform: uppercase;
-        font-family : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family : $font-family-light;
         font-size: 40px;
         line-height: 48px;
         color: $light10; // the spec says just "light", and it's kinda weird
