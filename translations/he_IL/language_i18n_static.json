@@ -652,7 +652,6 @@
         "detachSystemFailed": "ניתוק השרת מהמערכת נכשל. אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת אינו במצב לא מקוון ונסה שוב.",
         "detachSystemSuccess": "השרת נותק בהצלחה מהמערכת.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "הסרת השרת מהמערכת נכשלה.",

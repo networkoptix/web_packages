@@ -254,7 +254,7 @@
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "このシステムはNx Cloudに接続されていますが、所有者が異なります。クラウドシステムは所有者アカウントが同じ場合にのみ統合できます。",
     "SERVER HAS INCOMPATIBLE VERSION TEXT": "システムのソフトウェアバージョンが一致していません。両方とも 最新ビルドにアップデートしてください。",
     "SERVER IS INACCESSIBLE TEXT": "%SERVER% のサーバーにアクセスできません。",
-    "SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT": "現在のシステムと互換性のない古いソフトウェアバージョンがあります",
+    "SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT": "現在のシステムと互換性のない古いソフトウェアバージョンです。",
     "SYSTEM HAS A NEWER SOFTWARE VERSION TEXT": "現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを更新してください",
     "SERVER HAS AN OLDER SOFTWARE VERSION TEXT": "このサーバーには、現在のシステムと互換性のない古いバージョンのソフトウェアがあります。 最新のビルドに更新して、現在のビルドと統合します。",
     "SYSTEM IS BEING MERGED TEXT": "このシステムと統合されています",
