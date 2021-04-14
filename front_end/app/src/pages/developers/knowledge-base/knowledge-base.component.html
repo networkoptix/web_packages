@@ -61,7 +61,7 @@
 
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
-        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch()" [innerHTML]="doc.title" class="doc-link"></a>
+        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title" class="doc-link"></a>
         <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
