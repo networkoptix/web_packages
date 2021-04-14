@@ -82,13 +82,6 @@ export class AppComponent {
                     ev.url.includes('authorize') ||
                     ev.url.includes('activate') ||
                     ev.url.includes('restore_password');
-
-                if (ev.url.startsWith('/?code=')) {
-                    return this.cloudApiService.loginCode(ev.url.slice(7))
-                        .then(() => {
-                            this.window.location.reload();
-                        });
-                }
             });
 
         /* No real need to update often unless some browser have major upgrade
