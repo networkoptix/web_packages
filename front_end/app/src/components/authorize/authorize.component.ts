@@ -235,11 +235,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 ignoreError        : true,
                 timeoutMs
             },
-            res => {
+            async res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
                     this.initialData.redirect_url = res.link;
                     this.currentState = AuthorizeState.confirm;
+                } else if (res?.link.startsWith('?code=')) {
+                    await this.cloudService.loginCode(res.link.slice(6));
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 } else {
                     this.redirect(res.link);
                 }
