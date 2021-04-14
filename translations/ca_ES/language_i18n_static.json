@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Torna a les interfícies d'edició",
-            "previewRibbon": "Aquesta pàgina és una previsualització dels últims canvis i no coincideix amb la versió disponible públicament."
+            "previewRibbon": "Aquesta pàgina és una previsualització dels últims canvis i no coincideix amb la versió disponible públicament.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "El sistema està desconnectat. És possible que alguns paràmetres no estiguin disponibles.",
         "systemsMerging": "Aquest sistema està actualment en una operació de combinació."

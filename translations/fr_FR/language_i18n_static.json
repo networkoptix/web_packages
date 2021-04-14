@@ -623,7 +623,8 @@
             "accept": "Accepter",
             "reject": "Refuser",
             "backToEditText": "Retour aux interfaces d'édition",
-            "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique."
+            "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."

@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Terug naar het bewerken van de interface",
-            "previewRibbon": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie."
+            "previewRibbon": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."

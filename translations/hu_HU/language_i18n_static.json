@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Vissza a szerkesztő felületekhez",
-            "previewRibbon": "Ez az oldal a legfrissebb változások előnézete, és nem egyezik meg a nyilvánosan elérhető verzióval."
+            "previewRibbon": "Ez az oldal a legfrissebb változások előnézete, és nem egyezik meg a nyilvánosan elérhető verzióval.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "A rendszer offline állapotban van. Előfordulhat, hogy egyes beállítások nem érhetők el.",
         "systemsMerging": "Ez a rendszer jelenleg részt vesz egy egyesítési műveletben."

@@ -623,7 +623,8 @@
             "accept": "承諾",
             "reject": "拒否",
             "backToEditText": "編集インターフェースに戻る",
-            "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
+            "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"

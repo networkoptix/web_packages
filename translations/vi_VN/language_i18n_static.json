@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Quay lại giao diện chỉnh sửa",
-            "previewRibbon": "Trang này là bản xem trước của những thay đổi mới nhất và nó không phù hợp với phiên bản có sẵn công khai."
+            "previewRibbon": "Trang này là bản xem trước của những thay đổi mới nhất và nó không phù hợp với phiên bản có sẵn công khai.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Hệ thống đang ngoại tuyến. Một số cài đặt có thể không có sẵn.",
         "systemsMerging": "Hệ thống này hiện đang tham gia vào một hoạt động hợp nhất."
