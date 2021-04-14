@@ -344,12 +344,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
                         this.toastService.show(
                             this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
-                            { classname: 'success' });
+                            {
+                                classname : this.CONFIG.toast.success,
+                                autohide  : true,
+                                delay     : this.CONFIG.alertTimeout
+                            });
                     }, err => {
                         console.error(err);
                         this.toastService.show(
                             this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
-                            { classname: 'danger' }
+                            { classname: this.CONFIG.toast.danger }
                         );
                     },
                     this.updateAndGoToSystems
