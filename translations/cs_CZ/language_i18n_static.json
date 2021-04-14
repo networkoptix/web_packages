@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Zpět na editační rozhraní",
-            "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi."
+            "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Systém je offline. Některá nastavení nemusí být k dispozici.",
         "systemsMerging": "Tento systém se v současné době slučuje."

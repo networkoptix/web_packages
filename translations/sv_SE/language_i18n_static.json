@@ -623,7 +623,8 @@
             "accept": "Godkänn",
             "reject": "Avvisa",
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
-            "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen."
+            "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
         "systemsMerging": "Detta system är för närvarande involverat i en sammanslagningsoperation."

@@ -88,8 +88,11 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.searchMode = false;
     };
 
-    navigateSearch() {
-        this.searchMode = false;
+    navigateSearch(event) {
+        const openNewWindow = event?.metaKey || event?.ctrlKey;
+        if (!openNewWindow) {
+            this.searchMode = false;
+        }
     }
 
     projectedLinkHandler({url, target}: { url: string, target: string }) {

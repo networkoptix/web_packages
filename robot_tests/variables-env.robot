@@ -1,5 +1,6 @@
 *** Variables ***
 ${IMAGE 4.3}                          4.3.32703
+${IMAGE 4.1}                          4.1_test
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx

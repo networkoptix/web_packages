@@ -14,7 +14,7 @@ CLOUD_NOTIFICATIONS_USERS_TEMPLATE = \
     "            <h3 class=\"panel-title\">{{name}}</h3>" \
     "        </div>" \
     "        <div class=\"panel-body\" id=\"{{name}}_users\">" \
-    "            {{users}}" \
+    "            {{{users}}}" \
     "        </div>" \
     "    </div>" \
     "    {{/users_by_customization}}" \

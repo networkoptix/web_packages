@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Düzeleme arayüzüne dön",
-            "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
+            "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
         "systemsMerging": "Bu sistem şu anda bir birleştirme işleminde yer almaktadır."

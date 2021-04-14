@@ -43,7 +43,7 @@ export class CloudConnectModalContent implements OnInit {
     @ViewChild('connectForm', { static: true }) connectForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.auth = { email: this.storageService.email };
+        this.auth = { email: '' };
         this.next = '';
         this.password = '';
         this.remember = true;

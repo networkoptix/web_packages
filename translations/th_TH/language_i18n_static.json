@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
-            "previewRibbon": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ"
+            "previewRibbon": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "ระบบออฟไลน์ การตั้งค่าบางอย่างอาจไม่สามารถใช้ได้",
         "systemsMerging": "ขณะนี้ระบบนี้มีส่วนร่วมในการดำเนินการผสาน"

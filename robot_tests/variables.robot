@@ -112,6 +112,8 @@ ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM
 #In system settings
 ${SYSTEM NAME}                        //div/nx-editable-settings-heading//h2
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
+${SYSTEM OFFLINE HEADER}              //h2[@name="OFFLINE" and contains(text(),"${SYSTEM OFFLINE TEXT}")]
+${THIS SYSTEM IS OFFLINE}             //div[@name="OFFLINE" and contains(text(),"${THIS SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[contains(@class, "edit-button")]
