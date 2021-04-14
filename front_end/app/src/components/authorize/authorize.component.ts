@@ -242,7 +242,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.currentState = AuthorizeState.confirm;
                 } else if (res?.link.startsWith('?code=')) {
                     await this.cloudService.loginCode(res.link.slice(6));
-                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                    setTimeout(() => {
+                        this.router.navigate([this.CONFIG.redirect.authorised]);
+                    });
                 } else {
                     this.redirect(res.link);
                 }
